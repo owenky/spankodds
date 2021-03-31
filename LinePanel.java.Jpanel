@@ -1,0 +1,60 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
+import javax.swing.*;
+   
+   
+   public class LinePanel extends JPanel {
+
+        private JLabel top;
+        private JLabel bottom;
+		public static ImageIcon ICON_UP = new ImageIcon("ArrUp.gif");
+		public static ImageIcon ICON_DOWN = new ImageIcon("ArrDown.gif");
+		public static ImageIcon ICON_BLANK = new ImageIcon("blank.gif");
+				
+        LinePanel() {
+
+            super(new GridLayout(2,0));
+		    setOpaque(true);
+			top = new JLabel("",ICON_BLANK,SwingConstants.LEADING);
+			bottom = new JLabel("",ICON_BLANK,SwingConstants.LEADING);
+			top.setOpaque(true);
+			bottom.setOpaque(true);
+			add(top);
+			add(bottom);
+          
+        }
+
+  
+
+  
+
+		public void setLines(SpreadTotalView stv)
+		{
+			LineData[] boxes = stv.getCurrentBoxes();
+			setTop(boxes[0]);
+			setBottom(boxes[1]);
+			//validate();
+			
+			
+		}
+  
+        public void setTop(LineData ld) 
+		{
+			top.setIcon(ld.getIcon());
+			top.setText(ld.getData());
+			top.setHorizontalAlignment(SwingConstants.LEADING);
+			top.setBackground(ld.getBackgroundColor());
+			
+        }
+        public void setBottom(LineData ld) 
+		{
+			bottom.setIcon(ld.getIcon());
+			bottom.setText(ld.getData());
+			bottom.setHorizontalAlignment(SwingConstants.LEADING);
+			bottom.setBackground(ld.getBackgroundColor());
+        }			
+    }

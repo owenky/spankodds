@@ -1,0 +1,31 @@
+new game! 7143~7143~7144~1593673200000~1593687600000~T. Gooch~S. Straka~Goo~Str~11~0~0~7143~11~false~false~false~T. Gooch~S. Straka~~~0~0~~~false~false~~null~
+Exception in thread "AWT-EventQueue-0" java.lang.ArrayIndexOutOfBoundsException: Array index out of range: 0
+       at java.util.Vector.get(Unknown Source)
+        at MainScreen.addGame(MainScreen.java:223)
+        at SportsTabPane.addGame(SportsTabPane.java:184)
+        at AppController$4.run(AppController.java:807)
+        at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+        at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+        at java.awt.EventQueue.access$500(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.awt.EventQueue$3.run(Unknown Source)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+        at java.awt.EventQueue.dispatchEvent(Unknown Source)
+        at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+        at java.awt.EventDispatchThread.run(Unknown Source)
+
+
+
+
+new bug
+exception lines consumer java.lang.NullPointerException
+ActiveMQMapMessage {commandId = 59, responseRequired = false, messageId = ID:SIA-S2-49495-1593839505968-1:1:1:1:55, originalDestination = null, originalTransactionId = null, producerId = ID:SIA-S2-49495-1593839505968-1:1:1:1, destination = topic://spankoddsin.LINECHANGE, transactionId = null, expiration = 0, timestamp = 1593840164840, arrival = 0, brokerInTime = 1593840164841, brokerOutTime = 1593840164841, correlationId = null, replyTo = null, persistent = false, type = null, priority = 4, groupID = null, groupSequence = 0, targetConsumerId = null, compressed = false, userID = null, content = null, marshalledProperties = null, dataStructure = null, redeliveryCounter = 0, size = 0, properties = null, readOnlyProperties = true, readOnlyBody = true, droppable = false, jmsXGroupFirstForConsumer = false} ActiveMQMapMessage{ theTable = {} }
+
+
+exception scores consumer java.lang.NullPointerException
+ActiveMQMapMessage {commandId = 8, responseRequired = false, messageId = ID:SIA-S2-50395-1594004725523-5:1:1:1:4, originalDestination = null, originalTransactionId = null, producerId = ID:SIA-S2-50395-1594004725523-5:1:1:1, destination = topic://spankoddsin.SCORECHANGE, transactionId = null, expiration = 0, timestamp = 1594005133417, arrival = 0, brokerInTime = 1594005133418, brokerOutTime = 1594005133418, correlationId = null, replyTo = null, persistent = false, type = null, priority = 4, groupID = null, groupSequence = 0, targetConsumerId = null, compressed = false, userID = null, content = org.apache.activemq.util.ByteSequence@7ccf476, marshalledProperties = org.apache.activemq.util.ByteSequence@90b0aff, dataStructure = null, redeliveryCounter = 0, size = 0, properties = {messageType=ScoreChange}, readOnlyProperties = true, readOnlyBody = true, droppable = false, jmsXGroupFirstForConsumer = false} ActiveMQMapMessage{ theTable = {visitorscoresupplemental=, timer=, currentvisitorscore=3, homescoresupplemental=, eventnumber=6853, period=9, currenthomescore=6, gamestatusts=1593994332000, scorets=1593994332000, status=Final} }

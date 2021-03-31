@@ -1,0 +1,131 @@
+import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javax.swing.SwingUtilities;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javafx.embed.swing.SwingNode;
+import java.util.Vector;
+import javafx.geometry.Side;
+
+public class SportsTabPane2 extends TabPane
+{
+
+public LinesTable2 currentscrollpane;
+public JTable currenttable;
+
+
+public LinesTable2 scrollpane;
+public JTable table;	
+public LinesTableData dataModel;	
+public SwingNode swingNode;
+public long cleartime = 1000;
+boolean firsttime = true;
+public Vector whichgames;
+	
+//adjustcolumns after line update	
+		
+		public SportsTabPane2()
+		{
+	
+			setSide(Side.LEFT);
+			System.out.println("initializing tabs");
+			//AppController.addTabPane(this);
+			/*
+			swingNode = new SwingNode();
+			createAndSetSwingContent(swingNode,whichgames);
+			
+	
+			
+			Tab tab1 = new Tab("Today",new Label("HELLO THERE"));
+			Tab tab2 = new Tab("NFL",swingNode);
+			tab1.setClosable(false);
+			tab2.setClosable(false);
+			this.getTabs().add(tab1);
+			this.getTabs().add(tab2);	
+			*/
+			
+			Tab tab1 = new Tab("Today",new Label("aaHelp Info"));
+			Tab tab2 = new Tab("NFL",new Label("bbHelp Info"));
+			Tab tab3;
+		
+			tab3 = new Tab("Help",new Label("Help Info"));
+			
+			tab3.setClosable(false);
+			this.getTabs().add(tab1);
+			this.getTabs().add(tab2);	
+			this.getTabs().add(tab3);	
+
+		
+		//	tab1.init();
+		//	tab2.init();
+		
+			//setCurrentTable(tab2.table);
+			//setCurrentScrollPane(tab2.scrollpane);
+			
+			
+			
+			getSelectionModel().select(tab1);
+			
+			
+		}
+		
+	public void setCurrentTable(JTable table)	
+	{
+		currenttable = table;
+	}
+	public JTable getCurrentTable()	
+	{
+		return currenttable;
+	}
+	public void setCurrentScrollPane(LinesTable2 sp)	
+	{
+		currentscrollpane = sp;
+	}
+	public LinesTable2 getCurrentScrollPane()	
+	{
+		return currentscrollpane;
+	}		
+	
+	
+		private void createAndSetSwingContent(final SwingNode swingNode,Vector whichgames) 
+		{
+			try
+			{
+             SwingUtilities.invokeLater(new Runnable() {
+                 @Override
+                 public void run() {
+					 //frame = new StocksTable();
+					 System.out.println("inside createswingnode!");
+					 scrollpane = new LinesTable2();
+					 System.out.println("aaaaaaaaaaaa");
+					//  dataModel = new LinesTableData(cleartime);
+					  dataModel = new LinesTableData();
+					 System.out.println("ccccc");
+					 AppController.addDataModel(dataModel);
+					 table = scrollpane.getTable();
+					 System.out.println("dddd"+table);
+					 table.setModel(dataModel);
+					 scrollpane.adjustColumns(false);
+					 swingNode.setContent(scrollpane);
+					 System.out.println("SN TABLE="+table);
+					 
+					 //AppController.setLinesTable(scrollpane);
+					 //AppController.setLinesTableData(m_data);
+						
+                 }
+             });
+			}
+			catch(Exception ex)
+			{
+				System.out.println("exception ddd"+ex);
+			}
+         }
+	
+	
+	
+
+}

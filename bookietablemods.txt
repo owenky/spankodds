@@ -1,0 +1,104 @@
+update bookies set shortname="Bovda" where bookie_id=5;
+update bookies set shortname="BetMn" where bookie_id=6;
+update bookies set shortname="Match" where bookie_id=10;
+update bookies set shortname="5Dime" where bookie_id=14;
+update bookies set shortname="SBtng" where bookie_id=15;
+update bookies set shortname="BOnln" where bookie_id=16;
+update bookies set shortname="Pincl" where bookie_id=17;
+update bookies set name="Tradewinds", shortname="Twind" where bookie_id=19;
+update bookies set shortname="Hertg" where bookie_id=22;
+update bookies set shortname="Horzn" where bookie_id=26;
+update bookies set shortname="SpoBt" where bookie_id=29;
+update bookies set shortname="Catln" where bookie_id=31;
+update bookies set shortname="Grnde" where bookie_id=32;
+update bookies set shortname="Bucey" where bookie_id=33;
+update bookies set shortname="IAspo" where bookie_id=37;
+update bookies set shortname="Mirge" where bookie_id=41;
+update bookies set name="Hilton",shortname="Hiltn" where bookie_id=42;
+update bookies set shortname="BtPhx" where bookie_id=43;
+
+
+update bookies set shortname="PPH" where bookie_id=46;
+update bookies set shortname="EsySt" where bookie_id=49;
+update bookies set shortname="SPont" where bookie_id=53;
+update bookies set shortname="5DimR" where bookie_id=55;
+update bookies set name="Wager Dm",shortname="Wdm" where bookie_id=59;
+update bookies set shortname="PepMl" where bookie_id=63;
+delete from bookies where bookie_id=67;
+delete from bookies where bookie_id=74;
+delete from bookies where bookie_id=85;
+update bookies set name="First Fidelity",shortname="FiF" where bookie_id=68;
+update bookies set shortname="Coast" where bookie_id=70;
+update bookies set shortname="Statn" where bookie_id=71;
+update bookies set shortname="Caesr" where bookie_id=72;
+update bookies set shortname="ClnBt" where bookie_id=77;
+update bookies set shortname="Atlnt" where bookie_id=83;
+update bookies set shortname="WagWb" where bookie_id=88;
+update bookies set name="Bet Eagle",shortname="Eagle" where bookie_id=107;
+update bookies set name="Golden Nugget LV",shortname="GNLV" where bookie_id=110;
+update bookies set shortname="WgABC" where bookie_id=113;
+
+
+
+update bookies set shortname="PlyCR" where bookie_id=118;
+update bookies set shortname="TopBt" where bookie_id=119;
+update bookies set shortname="OSB" where bookie_id=120;
+update bookies set shortname="LoVig" where bookie_id=139;
+update bookies set shortname="STS" where bookie_id=140;
+update bookies set shortname="LnPro" where bookie_id=145;
+update bookies set shortname="WgMad" where bookie_id=166;
+update bookies set shortname="BtHkg" where bookie_id=168;
+
+update bookies set shortname="LvBet" where bookie_id=171;
+update bookies set shortname="Bt365" where bookie_id=175;
+update bookies set shortname="MyBke" where bookie_id=182;
+update bookies set shortname="UcaBt" where bookie_id=187;
+update bookies set shortname="Vs247" where bookie_id=190;
+
+update bookies set shortname="ElCrb" where bookie_id=191;
+update bookies set shortname="GTBts" where bookie_id=196;
+update bookies set shortname="DSI" where bookie_id=199;
+update bookies set name="BetCRIS",shortname="CRIS" where bookie_id=204;
+update bookies set shortname="Ace" where bookie_id=205;
+update bookies set shortname="BtFai" where bookie_id=208;
+update bookies set shortname="BtIsn" where bookie_id=209;
+update bookies set shortname="Dolar" where bookie_id=214;
+update bookies set shortname="Premr" where bookie_id=220;
+update bookies set shortname="Viet" where bookie_id=224;
+update bookies set shortname="SBAU" where bookie_id=225;
+update bookies set shortname="Baldi" where bookie_id=228;
+update bookies set shortname="DimeB" where bookie_id=242;
+update bookies set shortname="DKngs" where bookie_id=256;
+update bookies set shortname="SPerl" where bookie_id=260;
+update bookies set shortname="PlMgm" where bookie_id=266;
+update bookies set shortname="MonBl" where bookie_id=268;
+update bookies set shortname="BfThn" where bookie_id=269;
+update bookies set shortname="IsLta" where bookie_id=276;
+update bookies set shortname="PRivr" where bookie_id=277;
+update bookies set shortname="Rt66" where bookie_id=281;
+update bookies set shortname="TScor" where bookie_id=282;
+update bookies set shortname="BRvge" where bookie_id=283;
+
+
+
+
+delete from bookies where bookie_id=55;
+delete from bookies where bookie_id=67;
+delete from bookies where bookie_id=74;
+delete from bookies where bookie_id=85;
+delete from bookies where bookie_id=115;
+delete from bookies where bookie_id=130;
+delete from bookies where bookie_id=132;
+delete from bookies where bookie_id=156;
+delete from bookies where bookie_id=169;
+delete from bookies where bookie_id=213;
+delete from bookies where bookie_id=215;
+delete from bookies where bookie_id=218;
+delete from bookies where bookie_id=250;
+delete from bookies where bookie_id=253;
+delete from bookies where bookie_id=262;
+delete from bookies where bookie_id=263;
+delete from bookies where bookie_id=270;
+delete from bookies where bookie_id=273;
+delete from bookies where bookie_id=286;
+
