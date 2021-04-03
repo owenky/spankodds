@@ -3,8 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.sia</groupId>
+        <artifactId>common-client-dependency</artifactId>
+        <version>1.0.0</version>
+        <relativePath>dependencies_xml</relativePath>
+    </parent>
 
-    <groupId>com.sia</groupId>
     <artifactId>client</artifactId>
     <version>1.0.0</version>
     <name>sia-client</name>
@@ -20,113 +25,113 @@
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
-    <dependencies>
+    <!-- dependencies>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-action</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-action-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-action-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-autocomplete</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-autocomplete-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-autocomplete-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-common</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-common-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-common-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-core</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-core-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-core-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-graphics</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-graphics-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-graphics-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-painters</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-painters-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-painters-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>swingx-plaf</artifactId>
             <version>1.6.5</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/swingx-plaf-1.6.5-1.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/swingx-plaf-1.6.5-1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>activemq-all</artifactId>
             <version>5.15.12</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/activemq-all-5.15.12.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/activemq-all-5.15.12.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-grids</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-grids.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-grids.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-common</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-common.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-common.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-components</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-components.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-components.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-dialogs</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-dialogs.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-dialogs.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-dock</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-dock.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-dock.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-pivot</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-pivot.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-pivot.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-shortcut</artifactId>
             <version>0.0.0</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/jars/jide-shortcut.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/jide-shortcut.jar</systemPath>
         </dependency>
-    </dependencies>
+    </dependencies -->
     <build>
         <plugins>
             <plugin>
