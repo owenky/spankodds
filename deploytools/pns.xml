@@ -28,8 +28,8 @@
 					 <fileset refid="jars2pack"/>
 				</p200ant>
 
-				<signjar jar="${target_path}/${target_jarfile}" keystore="DigitCertAndJarSign/oosbt.jks"
-						storepass="oksbt5798138" alias="oksbt" keypass="oksbt5798138" />
+				<signjar jar="${target_path}/${target_jarfile}" keystore="DigitCertAndJarSign/sia.jks"
+						storepass="sia04032021" alias="sia" keypass="sia04032021" />
 
 				<p200ant destdir="${target_path}/" segmentLimit="-1" >
 					<fileset refid="jars2pack"/>

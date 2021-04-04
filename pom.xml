@@ -25,113 +25,6 @@
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
-    <!-- dependencies>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-action</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-action-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-autocomplete</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-autocomplete-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-common</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-common-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-core</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-core-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-graphics</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-graphics-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-painters</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-painters-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>swingx-plaf</artifactId>
-            <version>1.6.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/swingx-plaf-1.6.5-1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>activemq-all</artifactId>
-            <version>5.15.12</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/activemq-all-5.15.12.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-grids</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-grids.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-common</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-common.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-components</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-components.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-dialogs</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-dialogs.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-dock</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-dock.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-pivot</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-pivot.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sia</groupId>
-            <artifactId>jide-shortcut</artifactId>
-            <version>0.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/jide-shortcut.jar</systemPath>
-        </dependency>
-    </dependencies -->
     <build>
         <plugins>
             <plugin>
@@ -153,6 +46,24 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>sign</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keystore>${key.store}</keystore>
+                    <alias>${key.alias}</alias>
+                    <storepass>${store.password}</storepass>
+                    <keypass>${key.password}</keypass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
