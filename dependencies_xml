@@ -26,12 +26,6 @@
 		<key.alias>oksbt</key.alias>
 		<key.store>${key.store.path}${key.store.name}</key.store>
 	</properties>
-    <repositories>
-        <repository>
-            <id>sia-github</id>
-            <url> https://github.com/owenky/spankodds/raw/repository</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.sia</groupId>
