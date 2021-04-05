@@ -19,10 +19,12 @@
 		<!-- following to skip unit test when running " mvn clean package" -->
 		<maven.test.skip>true</maven.test.skip>
 		<!-- following used for jar singing -->
+		<key.store.path>${user.dir}/DigitCertAndJarSign/</key.store.path>
+		<key.store.name>oosbt.jks</key.store.name>
 		<store.password>oksbt5798138</store.password>
 		<key.password>oksbt5798138</key.password>
-		<key.store.name>oosbt.jks</key.store.name>
 		<key.alias>oksbt</key.alias>
+		<key.store>${key.store.path}${key.store.name}</key.store>
 	</properties>
     <repositories>
         <repository>
