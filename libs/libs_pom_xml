@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--parent>
+        <groupId>com.sia</groupId>
+        <artifactId>common-client-dependency</artifactId>
+        <version>1.0.0</version>
+        <relativePath>dependencies_xml</relativePath>
+    </parent -->
+
+    <groupId>com.sia</groupId>
+    <artifactId>sia-libs</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
+		<!-- following to skip unit test when running " mvn clean package" -->
+		<maven.test.skip>true</maven.test.skip>
+		<!-- following used for jar singing -->
+		<key.store.path>${user.dir}/DigitCertAndJarSign/</key.store.path>
+		<key.store.name>oosbt.jks</key.store.name>
+		<store.password>oksbt5798138</store.password>
+		<key.password>oksbt5798138</key.password>
+		<key.alias>oksbt</key.alias>
+		<key.store>${key.store.path}${key.store.name}</key.store>
+	</properties>
+    <repositories>
+        <repository>
+            <id>sia-github</id>
+            <url> https://github.com/owenky/spankodds/raw/repository</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-action</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-autocomplete</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-common</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-core</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-graphics</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-painters</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-plaf</artifactId>
+            <version>1.6.5</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.15.12</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-grids</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-common</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-components</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-dialogs</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-dock</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-pivot</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-shortcut</artifactId>
+            <version>0.0.0</version>
+
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>library-build</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <library.build>true</library.build>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>library-fat-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                                   <artifactId>maven-jarsigner-plugin</artifactId>
+                                   <version>3.0.0</version>
+                                   <executions>
+                                       <execution>
+                                           <id>sign</id>
+                                           <goals>
+                                               <goal>sign</goal>
+                                           </goals>
+                                       </execution>
+                                   </executions>
+                                   <configuration>
+                                       <keystore>${key.store}</keystore>
+                                       <alias>${key.alias}</alias>
+                                       <storepass>${store.password}</storepass>
+                                       <keypass>${key.password}</keypass>
+                                   </configuration>
+                               </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
