@@ -8,7 +8,7 @@
         <groupId>com.sia</groupId>
         <artifactId>common-client-dependency</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../dependencies_xml</relativePath>
+        <relativePath>../../../dependencies.xml</relativePath>
     </parent>
     <!-- run this pom via libs.bat  because it set value to LIBS.VERSION (must be upper case) -->
     <groupId>com.sia</groupId>

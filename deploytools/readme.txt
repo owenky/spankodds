@@ -17,7 +17,7 @@ Steps to create maven repository of dependencies in dependencies:  ( use spankod
 1) Clone your project in a separate folder
    git clone git@github.com:owenky/spankodds.git sialibs
 2) cd sialibs
-3) Create a new branch (here named repository, seems it has to be name repository -- 04/04/2021)
+3) Create a new branch (here named repository)
    git branch repository   #(look like branch name has to be repository)
 4) Switch to that branch
    git checkout repository
@@ -27,4 +27,10 @@ Steps to create maven repository of dependencies in dependencies:  ( use spankod
    copy *jars from jars folder to sialibs
    copy libs/install.bat to sialibs
    run install.bat
-7)
+7) add following to dependencies_xml
+   <repositories>
+           <repository>
+               <id>sia-github</id>
+               <url> https://github.com/owenky/spankodds/raw/repository</url>
+           </repository>
+       </repositories>

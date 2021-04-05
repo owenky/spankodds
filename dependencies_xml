@@ -19,110 +19,107 @@
 		<!-- following to skip unit test when running " mvn clean package" -->
 		<maven.test.skip>true</maven.test.skip>
 		<!-- following used for jar singing -->
-		<key.store.path>${user.dir}/DigitCertAndJarSign\</key.store.path>
 		<store.password>oksbt5798138</store.password>
 		<key.password>oksbt5798138</key.password>
 		<key.store.name>oosbt.jks</key.store.name>
 		<key.alias>oksbt</key.alias>
 	</properties>
+    <repositories>
+        <repository>
+            <id>sia-github</id>
+            <url> https://github.com/owenky/spankodds/raw/repository</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-action</artifactId>
+            <version>1.6.5</version>
 
-<repositories>
-    <repository>
-       <id>sia-github</id>
-       <url>https://raw.github.com/owenky/spankodds/raw/repository/</url>
-    </repository>
-</repositories>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-autocomplete</artifactId>
+            <version>1.6.5</version>
 
-	    <dependencies>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-action</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-common</artifactId>
+            <version>1.6.5</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-autocomplete</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-core</artifactId>
+            <version>1.6.5</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-common</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-graphics</artifactId>
+            <version>1.6.5</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-core</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-painters</artifactId>
+            <version>1.6.5</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-graphics</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>swingx-plaf</artifactId>
+            <version>1.6.5</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-painters</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.15.12</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>swingx-plaf</artifactId>
-                <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-grids</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>activemq-all</artifactId>
-                <version>5.15.12</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-common</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-grids</artifactId>
-                <version>0.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-components</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-common</artifactId>
-                <version>0.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-dialogs</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-components</artifactId>
-                <version>0.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-dock</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-dialogs</artifactId>
-                <version>0.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-pivot</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-dock</artifactId>
-                <version>0.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>jide-shortcut</artifactId>
+            <version>0.0.0</version>
 
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-pivot</artifactId>
-                <version>0.0.0</version>
-
-            </dependency>
-            <dependency>
-                <groupId>com.sia</groupId>
-                <artifactId>jide-shortcut</artifactId>
-                <version>0.0.0</version>
-
-            </dependency>
-        </dependencies>
+        </dependency>
+    </dependencies>
 </project>

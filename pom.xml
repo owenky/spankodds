@@ -13,17 +13,8 @@
     <artifactId>client</artifactId>
     <version>1.0.0</version>
     <name>sia-client</name>
-    <description>client applicaiton of spankodds</description>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
-        <!-- following to skip unit test when running " mvn clean package" -->
-        <maven.test.skip>true</maven.test.skip>
-    </properties>
+    <packaging>jar</packaging>
+    <description>client application of spankodds</description>
 
     <build>
         <plugins>
@@ -46,24 +37,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jarsigner-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>sign</id>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keystore>${key.store}</keystore>
-                    <alias>${key.alias}</alias>
-                    <storepass>${store.password}</storepass>
-                    <keypass>${key.password}</keypass>
-                </configuration>
             </plugin>
         </plugins>
     </build>

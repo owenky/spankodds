@@ -13,4 +13,4 @@ call mvn install:install-file -Dfile=jide-components.jar -DgroupId=com.sia  -Dar
 call mvn install:install-file -Dfile=jide-dialogs.jar -DgroupId=com.sia  -DartifactId=jide-dialogs -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-dock.jar -DgroupId=com.sia  -DartifactId=jide-dock -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-pivot.jar -DgroupId=com.sia  -DartifactId=jide-pivot -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
-call mvn install:install-file -Dfile=jide-shortcut.jar -DgroupId=com.sia  -DartifactId=jide-pivot -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
+call mvn install:install-file -Dfile=jide-shortcut.jar -DgroupId=com.sia  -DartifactId=jide-shortcut -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
