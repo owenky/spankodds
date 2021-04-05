@@ -15,4 +15,3 @@ call mvn install:install-file -Dfile=jide-dialogs.jar -DgroupId=com.sia  -Dartif
 call mvn install:install-file -Dfile=jide-dock.jar -DgroupId=com.sia  -DartifactId=jide-dock -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-pivot.jar -DgroupId=com.sia  -DartifactId=jide-pivot -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-shortcut.jar -DgroupId=com.sia  -DartifactId=jide-shortcut -Dversion=0.0.0 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
-call mvn install:install-file -Dfile=keytool-maven-plugin-1.5.jar -DgroupId=org.codehaus.mojo  -DartifactId=keytool-maven-plugin -Dversion=1.5 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
