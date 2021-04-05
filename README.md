@@ -1,5 +1,6 @@
 # spankodds
-host maven dependency
+host maven dependency. Do NOT delete this branch.
+
 to use this repository, add following to pom.xml
  <repositories>
         <repository>
