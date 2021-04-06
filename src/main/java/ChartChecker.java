@@ -1,15 +1,15 @@
-import java.io.*;
-import javax.swing.*;
-import java.util.*;
-import java.awt.event.*;
 import java.awt.Color;
-import java.io.BufferedOutputStream;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 public class ChartChecker
  {
 	javax.swing.Timer timer;
@@ -84,7 +84,8 @@ public class ChartChecker
 					try
 					{
 						 filename=AppController.getUser().getChartFileName();
-						File f=new File(filename);
+						URL resource = getClass().getClassLoader().getResource(filename);
+						File f=new File(resource.toURI());
 						sc = new Scanner(f);    
 						 sc.useDelimiter("\n");  
 						 url=sc.next();
