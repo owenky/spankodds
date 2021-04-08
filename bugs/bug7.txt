@@ -3,7 +3,7 @@ Exception in thread "AWT-EventQueue-0" java.lang.ArrayIndexOutOfBoundsException:
        at java.util.Vector.get(Unknown Source)
         at MainScreen.addGame(MainScreen.java:223)
         at SportsTabPane.addGame(SportsTabPane.java:184)
-        at AppController$4.run(AppController.java:807)
+        at com.sia.client.ui.AppController$4.run(com.sia.client.ui.AppController.java:807)
         at java.awt.event.InvocationEvent.dispatch(Unknown Source)
         at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
         at java.awt.EventQueue.access$500(Unknown Source)
