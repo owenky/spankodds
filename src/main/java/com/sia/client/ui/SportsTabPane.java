@@ -1,21 +1,28 @@
 package com.sia.client.ui;
 
-import javax.swing.SwingUtilities;
-import javax.swing.JTable;
+import com.sia.client.config.Utils;
 
-import java.util.Vector;
-import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.JLabel;
+import javax.swing.plaf.TabbedPaneUI;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.plaf.TabbedPaneUI;
+import java.net.URL;
+import java.util.List;
+import java.util.Vector;
 public class SportsTabPane extends JTabbedPane implements Cloneable
 {
 
@@ -173,16 +180,18 @@ public SportsTabPane thispane ;
 		loadlabel.setOpaque(true);
 		//loadgif = new ImageIcon(ImageIO.read(getClass().getResource("loader2.gif")));
 		}
-		catch(Exception ex) {}			
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
 			
-			System.out.println("initializing tabs");
-			AppController.addTabPane(this);
+		System.out.println("initializing tabs");
+		AppController.addTabPane(this);
 
-			System.out.println("initializing tabs2");		
+		System.out.println("initializing tabs2");
 					
-			System.out.println("initializing tabs3");			
+		System.out.println("initializing tabs3");
 			
-				addListeners();		
+		addListeners();
 			
 				/*	addTab("Football",new ImageIcon("football.png"),new MainScreen("Football"),"Football");
 					System.out.println("initializing tabs4");
@@ -195,56 +204,38 @@ public SportsTabPane thispane ;
 					addTab("Golf",new ImageIcon("golf.png"),new MainScreen("Golf"),"Golf");			
 					addTab("Tennis",new ImageIcon("tennis.png"),new MainScreen("Tennis"),"Tennis");	
 					addTab("Today",new ImageIcon("today.png"),new MainScreen("Today"),"Today");*/
-					Vector maintabs=AppController.getMainTabVec();
-					System.out.println(maintabs);
-					for(int i=0;i<maintabs.size();i++)
-						{
-							String title=(String)maintabs.get(i);
-							String img="";
-						if(title.equals("Football"))
-							{
-								img="football.png";
-							}
-							else if(title.equals("Basketball"))
-							{
-								img="basketball.png";
-							}
-							else if(title.equals("Baseball"))
-							{
-								img="Baseball.png";
-							}
-							else if(title.equals("Hockey"))
-							{
-								img="Hockey.png";
-							}
-							else if(title.equals("Fighting"))
-							{
-								img="boxing.png";
-							}
-							else if(title.equals("Soccer"))
-							{
-								img="Soccer.png";
-							}
-							else if(title.equals("Auto Racing"))
-							{
-								img="flag.png";
-							}
-							else if(title.equals("Golf"))
-							{
-								img="Golf.png";
-							}
-							else if(title.equals("Tennis"))
-							{
-								img="Tennis.png";
-							}
-							else if(title.equals("Today")){
-								img="Today.png";
-							}
-							else{
-							}
-		
-						addTab(title,new ImageIcon(img),new MainScreen(title),title);
-						}
+			List<String> maintabs=AppController.getMainTabVec();
+			System.out.println(maintabs);
+			for (String title : maintabs) {
+				String img = null;
+				if (title.equals("Football")) {
+					img = "football.png";
+				} else if (title.equals("Basketball")) {
+					img = "basketball.png";
+				} else if (title.equals("Baseball")) {
+					img = "Baseball.png";
+				} else if (title.equals("Hockey")) {
+					img = "Hockey.png";
+				} else if (title.equals("Fighting")) {
+					img = "boxing.png";
+				} else if (title.equals("Soccer")) {
+					img = "Soccer.png";
+				} else if (title.equals("Auto Racing")) {
+					img = "flag.png";
+				} else if (title.equals("Golf")) {
+					img = "Golf.png";
+				} else if (title.equals("Tennis")) {
+					img = "Tennis.png";
+				} else if (title.equals("Today")) {
+					img = "Today.png";
+				} else {
+				}
+
+				if (null != img) {
+					URL imgResource = Utils.getMediaResource(img);
+					addTab(title, new ImageIcon(imgResource), new MainScreen(title), title);
+				}
+			}
 					
 					Vector customtabs = AppController.getCustomTabsVec();
 					//adding=|851 07/03|851 07/04|852 07/04|853 07/04*new1*true*false*false*true*true?

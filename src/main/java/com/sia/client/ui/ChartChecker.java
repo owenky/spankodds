@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -86,7 +88,10 @@ public class ChartChecker
 					try
 					{
 						 filename=AppController.getUser().getChartFileName();
-						URL resource = getClass().getClassLoader().getResource(filename);
+						 // TODO temp
+						filename = filename.substring(3);
+						// end of TODO
+						URL resource = Utils.getConfigResource(filename);
 						File f=new File(resource.toURI());
 						sc = new Scanner(f);    
 						 sc.useDelimiter("\n");  

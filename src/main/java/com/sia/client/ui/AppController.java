@@ -161,15 +161,13 @@ public static void initializSpotsTabPaneVector()
 	SpotsTabPaneVector.put(8,"Tennis");
 	SpotsTabPaneVector.put(9,"Today");
 }
-public static Vector getMainTabVec()
+public static Vector<String> getMainTabVec()
 {
-		Collection<String> al=(Collection)SpotsTabPaneVector.values();
-		Iterator itr=al.iterator();
-		Vector vec=new Vector();
-		while(itr.hasNext())
-		{
+		Collection<String> al=SpotsTabPaneVector.values();
+		Iterator<String> itr=al.iterator();
+		Vector<String> vec=new Vector<>();
+		while(itr.hasNext()) {
 			vec.add(itr.next());
-			
 		}
 		return vec;
 	
