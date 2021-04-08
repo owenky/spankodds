@@ -3,16 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <repositories>
+        <repository>
+            <id>sia-github</id>
+            <url>https://github.com/owenky/spankodds/raw/repository</url>
+        </repository>
+    </repositories>
     <parent>
         <groupId>com.sia</groupId>
         <artifactId>common-client-dependency</artifactId>
         <version>1.0.0</version>
-        <relativePath>dependencies_xml</relativePath>
     </parent>
 
+    <groupId>com.sia</groupId>
     <artifactId>client</artifactId>
     <version>1.0.0</version>
-    <name>sia-client</name>
+    <name>client</name>
     <packaging>jar</packaging>
     <description>client application of spankodds</description>
 
@@ -38,6 +44,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-jarsigner-plugin</artifactId>
+               <version>3.0.0</version>
+               <executions>
+                   <execution>
+                       <id>sign</id>
+                       <goals>
+                           <goal>sign</goal>
+                       </goals>
+                   </execution>
+               </executions>
+               <configuration>
+                   <keystore>${key.store}</keystore>
+                   <alias>${key.alias}</alias>
+                   <storepass>${store.password}</storepass>
+                   <keypass>${key.password}</keypass>
+               </configuration>
+           </plugin>
         </plugins>
     </build>
 </project>
