@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="6.0+" codebase="http://Sof300732.com/"  href="http://Sof300732.com/app/spankodds.jnlp" xmlns:jfx="JavaFx"  >
+<information>
+<offline-allowed/> 
+<shortcut online="true">
+<desktop/>
+<menu submenu="Sports Information Analysis"/>
+</shortcut>
+	<title>Spank Odds</title>
+	<vendor>Sports Information Analysis</vendor>
+<homepage href="http://Sof300732.com"/>
+
+	<!-- icon kind= "splash" href="aliape/banner2.JPG"/ -->
+</information>
+<resources>
+<property name="jnlp.packEnabled" value="true" />	<j2se version="1.8.0_00+" href=" http://java.sun.com/products/autodl/j2se" initial-heap-size="64m" max-heap-size="512m" java-vm-args="-dsa -Xnoclassgc  -verbose:gc -Xrunhprof:heap=sites -d32" />
+	<jar href="app/spankodds.jar" download="eager" />
+	<jar href="app/libs.jar" download="eager" />
+
+<jfx:javafx-runtime version="2.1+" href="http://javadl.sun.com/webapps/download/GetFile/javafx-latest/windows-i586/javafx2.jnlp"/>
+</resources>
+<update check="always" policy="always" />
+<security>
+	<all-permissions/>
+</security>
+<application-desc main-class="SpankOdds" >
+</application-desc>
+</jnlp>
