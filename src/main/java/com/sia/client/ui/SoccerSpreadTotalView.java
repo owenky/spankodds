@@ -1,9 +1,11 @@
 package com.sia.client.ui;
 
-import java.sql.Timestamp;
-import java.util.*;
-import javax.swing.*;
+import com.sia.client.config.Utils;
+
+import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.sql.Timestamp;
+import java.util.Random;
 
 public class SoccerSpreadTotalView 
 {
@@ -16,9 +18,9 @@ public class SoccerSpreadTotalView
   //public static ImageIcon ICON_UP = new ImageIcon("angleup.png");
   //public static ImageIcon ICON_DOWN = new ImageIcon("angledown.png");
   
-  public static ImageIcon ICON_UP = new ImageIcon("moveup.png");
-  public static ImageIcon ICON_DOWN = new ImageIcon("movedown.png");
-  public static ImageIcon ICON_BLANK = new ImageIcon("blank.gif");
+  public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("moveup.png"));
+  public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("movedown.png"));
+  public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank.gif"));
 	Spreadline sl;
 	Totalline tl;
 	Moneyline ml;
