@@ -206,8 +206,10 @@ public SportsTabPane thispane ;
 					addTab("Today",new ImageIcon("today.png"),new MainScreen("Today"),"Today");*/
 			List<String> maintabs=AppController.getMainTabVec();
 			System.out.println(maintabs);
-			for (String title : maintabs) {
-				String img = null;
+			for(int i=0;i<maintabs.size();i++)
+			{
+				String title=maintabs.get(i);
+				String img="";
 				if (title.equals("Football")) {
 					img = "football.png";
 				} else if (title.equals("Basketball")) {
