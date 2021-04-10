@@ -133,42 +133,46 @@ public class SpankOdds {
 		
 	}
 
-    private void createGui() 
-	{
-				// owen took out 7/11/2020
-				System.out.println("creating gui");
-               		stb = new SportsTabPane();
-					tv = new TopView(stb);
-					smb = new SportsMenuBar(stb,tv);
-	
+    private void createGui() {
+
+		SwingUtilities.invokeLater( () -> {
+
+			// owen took out 7/11/2020
+			System.out.println("creating gui");
+			stb = new SportsTabPane();
+			tv = new TopView(stb);
+			smb = new SportsMenuBar(stb,tv);
+		});
     }
 	
 	
-	private void showGui()
-	{
+	private void showGui() {
 		//frame = new OddsFrame(stb,tv);
 		//frame.setVisible(true);	
-		
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                System.out.println("Window Closing! ");
-				AppController.removeFrame(frame);
-                
-            }
-        });
-				frame.setLayout(new BorderLayout(1,1));
-				frame.getContentPane().add(tv,BorderLayout.PAGE_START);
-				frame.getContentPane().add(stb,BorderLayout.CENTER);
-				frame.setJMenuBar(smb);
-				AppController.addFrame(frame,stb);
-				
-				frame.setSize(950, 800);
-				
-				frame.setVisible(true);	
-						
-		
+		SwingUtilities.invokeLater(
+				() -> {
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(WindowEvent e) {
+							System.out.println("Window Closing! ");
+							AppController.removeFrame(frame);
+							System.exit(0);
+
+						}
+					});
+					frame.setLayout(new BorderLayout(1, 1));
+					frame.getContentPane().add(tv, BorderLayout.PAGE_START);
+					frame.getContentPane().add(stb, BorderLayout.CENTER);
+					frame.setJMenuBar(smb);
+					AppController.addFrame(frame, stb);
+
+					frame.setSize(950, 800);
+
+					frame.setVisible(true);
+
+				}
+		);
 		
 		
 	}
