@@ -4,9 +4,9 @@ import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
 
-import java.util.*;
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.util.List;
 
 public class ChartView 
 {

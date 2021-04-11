@@ -1,6 +1,5 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import com.sia.client.model.ChartData2;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -8,7 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
-class Test 
+public class Test
 
 {
 	static ArrayList <ChartData2> cl=new ArrayList <ChartData2>();

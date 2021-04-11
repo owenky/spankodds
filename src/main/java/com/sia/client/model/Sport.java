@@ -1,25 +1,20 @@
 package com.sia.client.model;
 
 public class Sport {
-	int	sport_id;
-	int league_id;
-	int parentleague_id; 
-	int region_id; 
-	int numperiods; 
-	double timeperperiod; 
-	double halftimeminutes;
+	public int	sport_id;
+	public int league_id;
+	public int parentleague_id;
+	public int region_id;
+	public int numperiods;
+	public double timeperperiod;
+	public double halftimeminutes;
 
-	String leaguename;
-	String leagueabbr;
-	String sportname;
-	String sportabbr;
-	boolean moneylinedefault;
+	public String leaguename;
+	public String leagueabbr;
+	public String sportname;
+	public String sportabbr;
+	public boolean moneylinedefault;
 
-	
-
-	
-	
-	
 	public Sport(int sport_id,int league_id,int parentleague_id,int region_id,int numperiods,double timeperperiod,double halftimeminutes,
 				 String leaguename,String leagueabbr,String sportname,String sportabbr,boolean moneylinedefault) {
 	this.sport_id = sport_id;

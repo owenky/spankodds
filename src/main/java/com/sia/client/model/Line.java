@@ -6,11 +6,11 @@ import com.sia.client.ui.AsciiChar;
 public class Line
 {
 
-int bookieid;
-int gameid;
-int period;
-String type;
-String whowasbet = "";
+	public int bookieid;
+	public int gameid;
+	public int period;
+	public String type;
+	public String whowasbet = "";
 
 public static void main(String args[])
 {
