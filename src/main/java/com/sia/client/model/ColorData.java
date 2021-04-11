@@ -1,15 +1,6 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.io.*;
-import java.text.*;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import java.awt.Color;
 
 public class ColorData {
 

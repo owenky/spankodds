@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.ColorData;
+
 import java.awt.*;
 
 import javax.swing.*;

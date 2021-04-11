@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.ColorData;
 import com.sia.client.model.ColumnData;
 
 import javax.swing.JLabel;

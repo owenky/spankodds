@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.ColorData;
+
 import javax.swing.ImageIcon;
 
 public class StockData {
