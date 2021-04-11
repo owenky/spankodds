@@ -1297,12 +1297,6 @@ Vector tabpanes = AppController.getTabPanes();
 		 if(ct > cleartime) { cleartime = ct; }
 
 		System.out.println("about to draw...teammaxlength="+currentmaxlength);
-		
-	
-
-		
-		
-		
 				SwingUtilities.invokeLater(new Runnable()
 					{
 					public void run()
@@ -1329,24 +1323,11 @@ Vector tabpanes = AppController.getTabPanes();
 		});
 		
 		timer.start();
-System.out.println("timer start");		
-		
-	
-		
-					
-		
+System.out.println("timer start");
 			//com.sia.client.ui.AppController.addDataModels(getDataModels());
-			
-		
 	}
-	
-	
-
-	
-		public void firedatamodels()
-		{
-			for (int i =0;i <datamodelsvec.size();i++)
-			{
+		public void firedatamodels() {
+			for (int i =0;i <datamodelsvec.size();i++) {
 				LinesTableData ltd = (LinesTableData)datamodelsvec.get(i);
 				ltd.fire();
 			}
@@ -1466,8 +1447,6 @@ System.out.println("timer start");
 		 }
 		 else if(b.getBookie_id() == 993)
 		 {
-			 
-			 
 			if(shortteam) 
 			{
 			column.setPreferredWidth(30) ;				
@@ -1580,20 +1559,11 @@ System.out.println("timer start");
 		int LID = 0;
 	
 		
-		if( (newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) 
-																	// dont show header if its blank!
-																	//however must show final for scrollpane purposes
+		if( (newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
 		{
-			
 			showit = false;
-			
 		}
-		
-		
-		
-			
 		JLabel label = new JLabel("                                                                                                                                                      "+
-		
 		gamegroupheaders.get(j)+
 		"                                                                                                                                                      "+
 		"                                                                                                                                                      "+
@@ -1647,39 +1617,17 @@ System.out.println("timer start");
 			
 		}
 		JTable tablex ;
-		if((gamegroupheaders.get(j)+"").contains("Soccer")|| (LID==9) )
-		{
-			//System.out.println("Soc=========================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
+		if((gamegroupheaders.get(j)+"").contains("Soccer")|| (LID==9) ) {
 			tablex= new SoccerTableView();
-
-			
-			//tablex.getColumnModel().setDefaultRenderer(Object.class, new LineRenderer("soccer"));
-			//tablex.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
 			tablex.setRowHeight(60);
-		}
-		else{
-			//System.out.println("Non-Socc================================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
+		} else{
 			tablex= new RegularTableView();
-			
-		//tablex.setDefaultRenderer(Object.class, new LineRenderer(""));
-		
 			tablex.setRowHeight(30);
-		//tablex.getColumnModel().setDefaultRenderer(Object.class, new LineRenderer());
-			//tablex.getColumnModel().setCellRenderer(new LineRenderer());
-		//	tablex.setColumnModel( table0.getColumnModel() );
 		
 		}
+		tablex.setName("Table"+j);
 		alltables.add(tablex);
-		//jidetable feature tablex.setColumnAutoResizable(true);
 		tablex.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-
-		//System.out.println("eee");
-		
-       // tablex.setRowHeight(30);
-	  // LID==9;
-	 
-		
-		//LID = (int) gamegroupLeagueID.get(j);
 		tablex.setColumnModel( table0.getColumnModel() );
 	
         tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
@@ -1692,7 +1640,6 @@ System.out.println("timer start");
 	
 		//System.out.println("aaa "+vecofgamegroups.size());
 		LinesTableData dataModel = new LinesTableData(display,period,cleartime,newgamegroupvec,tablex,timesort,shortteam,opener,last);
-
 		tablex.setModel(dataModel);
 		
 		//System.out.println("bbb");
@@ -1826,7 +1773,7 @@ System.out.println("gamergroup headers end..."+new java.util.Date());
 	 /*  	
 		for(int j=0;j<hiddencols.size();j++)
 		{
-			com.sia.client.ui.Bookie b = (com.sia.client.ui.Bookie)hiddencols.get(j);
+			Bookie b = (Bookie)hiddencols.get(j);
 			//System.out.println("hiding "+b);
 			tcm0.hideColumn(b.getShortname());
 		}		

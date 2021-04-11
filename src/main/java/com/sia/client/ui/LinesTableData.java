@@ -1,12 +1,26 @@
 package com.sia.client.ui;
 
-import java.awt.*;
-import java.util.*;
-import java.text.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
 
 //public class LinesTableData extends AbstractTableModel implements TableColumnModelListener {
 	public class LinesTableData extends DefaultTableModel implements TableColumnModelListener {
@@ -103,7 +117,7 @@ else
 /*
 public TableColumn addColumn(int bookieid)
 {
-	com.sia.client.ui.Bookie b = getBookie(bookieid);
+	Bookie b = getBookie(bookieid);
 	System.out.println("OLD COLUMN COUNT IS "+getColumnCount());
 	System.out.println("OLD COLUMN COUNT IS "+getColumnCount());
 	TableColumn column = new TableColumn(getColumnCount(),78, new LineRenderer(), null);

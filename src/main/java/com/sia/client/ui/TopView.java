@@ -1,9 +1,22 @@
 package com.sia.client.ui;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
 public class TopView extends JPanel  implements ItemListener,Cloneable
 {
@@ -101,7 +114,7 @@ public class TopView extends JPanel  implements ItemListener,Cloneable
 			 
 			 sortBut = new JButton("Time sort");
 			 
-			 addBookieBut = new JButton("Add com.sia.client.ui.Bookie");
+			 addBookieBut = new JButton("Add Bookie");
 			 shrinkTeamBut = new JButton("Short Team");
 			 newWindowBut = new JButton("New Window");
 			 alertBut = new JButton("Alert");

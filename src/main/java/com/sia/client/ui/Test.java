@@ -1,11 +1,11 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.ChartData2;
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
 class Test 
 
 {

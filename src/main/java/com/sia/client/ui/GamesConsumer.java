@@ -53,7 +53,7 @@ public class GamesConsumer implements MessageListener {
 		System.setProperty("javax.net.ssl.keyStorePassword","password");
 		System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME")+"\\conf\\client.ts");
 		AppController.createLoggedInConnection("reguser","0hbaby*(");
-		//com.sia.client.ui.AppController.createLoggedInConnection("guest","spank0dds4ever");
+		//AppController.createLoggedInConnection("guest","spank0dds4ever");
     	GamesConsumer consumer = new GamesConsumer(AppController.getConnectionFactory(),AppController.getLoggedInConnection(),"spankoddsin.GAMECHANGE");
     	
     }
@@ -356,7 +356,7 @@ String tc = new java.util.Date()+"..PITCHING CHANGE!!!<HTML><H1>Pitching Change<
 						System.out.println(tc);
 					}
 					
-					//com.sia.client.ui.AppController.refreshTabs();
+					//AppController.refreshTabs();
 				} 
 			else if(messagetype.equals("NEWORUPDATE2")) // this comes from deleteyesterdaygamesandpublish whith a few additional flags
 			{
@@ -535,14 +535,14 @@ String tc = new java.util.Date()+"..PITCHING CHANGE!!!<HTML><H1>Pitching Change<
 					g.setScorets(new Timestamp(Long.parseLong(scorets)));
 					
 					AppController.addGame(g,repaint);
-					//com.sia.client.ui.AppController.refreshTabs();
+					//AppController.refreshTabs();
 				} 				
 			else if(messagetype.equals("REMOVE"))
 			{
 				String data = textMessage.getText(); // this is gamenumber
 			//	System.out.print("ABOUT TO REMOVE="+data+".");
 				String[] gameidarr = data.split("~");
-				//com.sia.client.ui.AppController.removeGame(Integer.parseInt(data));
+				//AppController.removeGame(Integer.parseInt(data));
 				AppController.removeGames(gameidarr);
 
 

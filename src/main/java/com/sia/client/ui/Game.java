@@ -1,7 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.Bookie;
-
 public class Game
 {
 	

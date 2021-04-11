@@ -1,22 +1,19 @@
 package com.sia.client.ui;
 
-import java.util.UUID;
-
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import javax.jms.MapMessage;
 import javax.jms.TextMessage;
-
-
-import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 // bam 79106... 79092
 // res 9767...9764
@@ -188,7 +185,7 @@ public class LoginClient implements MessageListener {
 
 						
 					  }					  
-					  else if(messageType.equals("com.sia.client.ui.Bookie"))
+					  else if(messageType.equals("Bookie"))
 					  {
 						  TextMessage textMessage = (TextMessage)message;
 						  String text = textMessage.getText();

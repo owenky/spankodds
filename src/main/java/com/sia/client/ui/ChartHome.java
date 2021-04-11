@@ -72,8 +72,8 @@ public class ChartHome extends javax.swing.JFrame
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 				DownloadAuth.loadFile();
-				com.sia.client.ui.ChartHome.filename=DownloadAuth.filename;
-               jLabel1.setText(com.sia.client.ui.ChartHome.filename);
+				ChartHome.filename=DownloadAuth.filename;
+               jLabel1.setText(ChartHome.filename);
 			   jButton3.setEnabled(true);
             }
         });
@@ -283,11 +283,11 @@ public class ChartHome extends javax.swing.JFrame
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }

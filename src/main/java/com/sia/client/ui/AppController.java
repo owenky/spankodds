@@ -1533,22 +1533,22 @@ public static void addTeamTotalline(TeamTotalline teamtotal)
 
 
 /*
-public static Spreadline getSpreadline(com.sia.client.ui.Bookie b,Game g)
+public static Spreadline getSpreadline(Bookie b,Game g)
 {
 	return spreads.get(b.getBookie_id()+"-"+g.getGame_id());
 }
 
-public static Totalline getTotalline(com.sia.client.ui.Bookie b,Game g)
+public static Totalline getTotalline(Bookie b,Game g)
 {
 	return totals.get(b.getBookie_id()+"-"+g.getGame_id());
 }
-public static Moneyline getMoneyline(com.sia.client.ui.Bookie b,Game g)
+public static Moneyline getMoneyline(Bookie b,Game g)
 {
 	return moneylines.get(b.getBookie_id()+"-"+g.getGame_id());
 }
 
 
-public static TeamTotalline getTeamTotalline(com.sia.client.ui.Bookie b,Game g)
+public static TeamTotalline getTeamTotalline(Bookie b,Game g)
 {
 	return teamtotals.get(b.getBookie_id()+"-"+g.getGame_id());
 }
@@ -1573,20 +1573,20 @@ public static TeamTotalline getTeamTotalline(int b,Game g)
 	return teamtotals.get(b+"-"+g.getGame_id());
 }
 
-public static Spreadline getSpreadline(com.sia.client.ui.Bookie b,int g)
+public static Spreadline getSpreadline(Bookie b,int g)
 {
 	return spreads.get(b.getBookie_id()+"-"+g);
 }
 
-public static Totalline getTotalline(com.sia.client.ui.Bookie b,int g)
+public static Totalline getTotalline(Bookie b,int g)
 {
 	return totals.get(b.getBookie_id()+"-"+g);
 }
-public static Moneyline getMoneyline(com.sia.client.ui.Bookie b,int g)
+public static Moneyline getMoneyline(Bookie b,int g)
 {
 	return moneylines.get(b.getBookie_id()+"-"+g);
 }
-public static TeamTotalline getTeamTotalline(com.sia.client.ui.Bookie b,int g)
+public static TeamTotalline getTeamTotalline(Bookie b,int g)
 {
 	return teamtotals.get(b.getBookie_id()+"-"+g);
 }

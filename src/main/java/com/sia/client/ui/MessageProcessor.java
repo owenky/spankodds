@@ -1,8 +1,5 @@
 package com.sia.client.ui;
 
-import java.sql.Timestamp;
-import java.util.*;
-
 
 public class MessageProcessor 
 {
@@ -39,9 +36,9 @@ public class MessageProcessor
 				
 				
 			}
-			else if(message is add com.sia.client.ui.Bookie)
+			else if(message is add Bookie)
 			{
-				com.sia.client.ui.Bookie b = new com.sia.client.ui.Bookie(bid,name,shortname,website,mlbmoneylinetype);
+				Bookie b = new Bookie(bid,name,shortname,website,mlbmoneylinetype);
 				com.sia.client.ui.AppController.addBookie(b);
 			}
 			else if(message is add SpreadLine)

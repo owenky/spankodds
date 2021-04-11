@@ -1,8 +1,8 @@
 package com.sia.client.ui;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import java.awt.Component;
 
 public class LineRenderer extends LinePanel  implements TableCellRenderer {
 	 
@@ -36,7 +36,7 @@ public class LineRenderer extends LinePanel  implements TableCellRenderer {
 			{
 				if(row == 0 && column == 0)
 				{
-					System.out.println("value is null"+row+ "src/main" +column);
+					System.out.println("value is null"+row+ "src/main" +column+", table name="+table.getName());
 				}	
 				return null;
 			}

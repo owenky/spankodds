@@ -1,5 +1,17 @@
 package com.sia.client.ui;
 
+import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -7,27 +19,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Vector;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.ListSelectionModel;
-import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JCheckBox;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Vector;
 
 public class BookieColumnController2 extends JPanel {
 
@@ -85,7 +84,7 @@ public class BookieColumnController2 extends JPanel {
   private JButton saveButton;
   private JCheckBox showopen;
   
-  private JFrame f = new JFrame("com.sia.client.ui.Bookie Columns");
+  private JFrame f = new JFrame("Bookie Columns");
 
   public BookieColumnController2()
   {
@@ -352,7 +351,7 @@ private void fillListModel(MyListModel model, ListModel newValues,int atindex) {
         1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
         EMPTY_INSETS, 0, 0));
 		
-	showopen = new JCheckBox("Show com.sia.client.ui.Bookie Opener");
+	showopen = new JCheckBox("Show Bookie Opener");
    add(showopen, new GridBagConstraints(0, 6, 1, 1, 0, 0,
         GridBagConstraints.CENTER, GridBagConstraints.NONE,
         EMPTY_INSETS, 0, 0));
