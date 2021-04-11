@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.ColumnData;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameDateSorter;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;

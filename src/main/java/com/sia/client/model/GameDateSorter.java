@@ -1,9 +1,7 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import com.sia.client.model.Game;
-
-import java.util.Comparator;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 public class GameDateSorter implements Comparator<Game>
 {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

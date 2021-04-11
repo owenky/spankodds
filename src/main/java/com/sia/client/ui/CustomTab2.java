@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.Game;
+import com.sia.client.model.GameDateSorter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -668,7 +669,7 @@ private void init()
 		try
 		{
 
-			Collections.sort(allgames, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));			
+			Collections.sort(allgames, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
 			//Collections.sort(allgames, new GameLeagueSorter());	
 			//System.out.println("sorted by league");
 			Collections.sort(allgames, new GameDateSorter());			

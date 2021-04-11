@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.Game;
+import com.sia.client.model.GameDateSorter;
 
 import java.awt.*;
 import javax.swing.*;    
@@ -69,7 +70,7 @@ public class CustomTab extends JPanel{
 		try
 		{
 
-			Collections.sort(allgames, new GameDateSorter().thenComparing(new GameNumSorter()));			
+			Collections.sort(allgames, new GameDateSorter().thenComparing(new GameNumSorter()));
 			
 		}
 		catch(Exception ex)
