@@ -1,5 +1,7 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
+import com.sia.client.ui.AppController;
+import com.sia.client.ui.LinesConsumer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
