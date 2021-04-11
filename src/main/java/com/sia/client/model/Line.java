@@ -1,6 +1,7 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import com.sia.client.model.Game;
+import com.sia.client.ui.AppController;
+import com.sia.client.ui.AsciiChar;
 
 public class Line
 {

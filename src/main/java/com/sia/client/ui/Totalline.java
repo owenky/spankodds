@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Line;
+
 import java.sql.Timestamp;
 import java.io.Serializable;
 

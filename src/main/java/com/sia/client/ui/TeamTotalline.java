@@ -1,9 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.AsciiChar;
-import com.sia.client.ui.BestLines;
-import com.sia.client.ui.Line;
-import com.sia.client.ui.LineAlertManager;
+import com.sia.client.model.Line;
 
 public class TeamTotalline extends Line
 {
