@@ -1,6 +1,4 @@
-package com.sia.client.ui;
-
-import com.sia.client.model.Game;
+package com.sia.client.model;
 
 import java.util.Comparator;
  

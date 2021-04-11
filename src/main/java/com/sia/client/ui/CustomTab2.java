@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
+import com.sia.client.model.GameNumSorter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
