@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.media.SoundPlayer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;

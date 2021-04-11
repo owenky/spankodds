@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.media.SoundPlayer;
+
 import java.util.Vector;
 
 public class LineAlertManager
