@@ -1,4 +1,4 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
 import java.sql.Timestamp;
 import java.util.Vector;
