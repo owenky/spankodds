@@ -1,7 +1,5 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import java.util.Hashtable;
-import java.io.Serializable;
 public class Bookie implements java.io.Serializable
 {
 	

@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Bookie;
+
 import java.sql.Timestamp;
 import java.util.*;
 import javax.swing.*;

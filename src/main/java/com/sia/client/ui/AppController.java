@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Bookie;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -35,7 +36,7 @@ public static Vector<LineAlertNode> linealertnodes = new Vector();
 public static Vector<SportsTabPane> tabpanes = new Vector();
 public static Vector<SportsMenuBar> menubars = new Vector();
 
-public static Hashtable<String,Bookie> bookies = new Hashtable();
+public static Hashtable<String, Bookie> bookies = new Hashtable();
 public static Hashtable<String,String> bookieshortnameids = new Hashtable();
 public static Hashtable<String, Sport> sports = new Hashtable();
 public static Hashtable<String, Game> games = new Hashtable();

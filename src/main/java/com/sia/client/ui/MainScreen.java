@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Bookie;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

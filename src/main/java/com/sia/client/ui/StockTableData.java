@@ -1,10 +1,13 @@
 package com.sia.client.ui;
 
-import java.util.*;
-import java.text.*;
+import com.sia.client.model.ColumnData;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JLabel;
+import javax.swing.table.AbstractTableModel;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
 
 public class StockTableData extends AbstractTableModel {
 

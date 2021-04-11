@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.Bookie;
 
 import javax.swing.ImageIcon;
 import java.awt.Color;

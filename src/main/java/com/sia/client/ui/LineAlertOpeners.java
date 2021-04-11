@@ -21,6 +21,7 @@ import com.jidesoft.plaf.LookAndFeelFactory;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import com.jidesoft.swing.JideToggleButton;
+import com.sia.client.model.Bookie;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.Clip;

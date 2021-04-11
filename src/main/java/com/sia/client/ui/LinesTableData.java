@@ -1,5 +1,8 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Bookie;
+import com.sia.client.model.ColumnData;
+
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,7 +35,7 @@ public int period = 0;
 public Hashtable<String,TableColumn> tablecolumnhash = new Hashtable();
 //Vector<String> gamesIdVec = com.sia.client.ui.AppController.getGamesIdVec();
 Vector<Game> gamesVec;
-Hashtable<String,Bookie> bookies = AppController.getBookies();
+Hashtable<String, Bookie> bookies = AppController.getBookies();
 Vector<Bookie> bookiesVec = AppController.getBookiesVec();
 
 boolean timesort = false;
@@ -121,7 +124,7 @@ public TableColumn addColumn(int bookieid)
 	System.out.println("OLD COLUMN COUNT IS "+getColumnCount());
 	System.out.println("OLD COLUMN COUNT IS "+getColumnCount());
 	TableColumn column = new TableColumn(getColumnCount(),78, new LineRenderer(), null);
-	m_columns.add(new com.sia.client.ui.ColumnData(b.getBookie_id(), b.toString(),78, JLabel.RIGHT) );
+	m_columns.add(new ColumnData(b.getBookie_id(), b.toString(),78, JLabel.RIGHT) );
 	tablecolumnhash.put(""+bookieid,column);
 	printStv(3);
 		for(int i=0; i< gamesIdVec.size(); i++)
@@ -164,7 +167,7 @@ public TableColumn removeColumn(int bookieid)
 	printStv(3);
 	for(int cnt =0; cnt <m_columns.size();cnt++)
 	{
-		com.sia.client.ui.ColumnData cd = m_columns.get(cnt);
+		ColumnData cd = m_columns.get(cnt);
 		if(cd.bookie_id == bookieid)
 		{
 			
@@ -534,10 +537,10 @@ public void clearColors()
 	
 
 		
-	//	m_columns.add(new com.sia.client.ui.ColumnData(990, "Details", 40, JLabel.RIGHT) );
-	//	m_columns.add(new com.sia.client.ui.ColumnData(991, "Time", 40, JLabel.RIGHT) );
-	//	m_columns.add(new com.sia.client.ui.ColumnData(992, "Gm#", 30, JLabel.LEFT) );
-	//	m_columns.add(new com.sia.client.ui.ColumnData(993, "Team", 160, JLabel.LEFT) );
+	//	m_columns.add(new ColumnData(990, "Details", 40, JLabel.RIGHT) );
+	//	m_columns.add(new ColumnData(991, "Time", 40, JLabel.RIGHT) );
+	//	m_columns.add(new ColumnData(992, "Gm#", 30, JLabel.LEFT) );
+	//	m_columns.add(new ColumnData(993, "Team", 160, JLabel.LEFT) );
 		
 	
 	//System.out.println("LTDbookiesvec size="+bookiesVec.size());
