@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.ColorData;
+import com.sia.client.model.LineData;
 
 import java.awt.*;
 

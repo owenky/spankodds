@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.LineData;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
