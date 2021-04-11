@@ -1,4 +1,8 @@
-package com.sia.client.ui;
+package com.sia.client.model;
+
+import com.sia.client.ui.BestLines;
+import com.sia.client.ui.Line;
+import com.sia.client.ui.LineAlertManager;
 
 import java.sql.Timestamp;
 import java.io.Serializable;

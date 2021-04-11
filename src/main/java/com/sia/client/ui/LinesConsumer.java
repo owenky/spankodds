@@ -9,6 +9,7 @@ import javax.jms.MessageListener;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
+import com.sia.client.model.Moneyline;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class LinesConsumer implements MessageListener {

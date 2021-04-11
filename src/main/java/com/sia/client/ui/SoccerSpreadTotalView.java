@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 
 import javax.swing.ImageIcon;
