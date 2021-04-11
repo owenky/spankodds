@@ -14,7 +14,7 @@ public class Game
 	String hometeam;
 	String shortvisitorteam;
 	String shorthometeam;
-	int league_id;
+	public int league_id;
 	int currentvisitorscore;
 	int currenthomescore;
 	int finalvisitorscore;
