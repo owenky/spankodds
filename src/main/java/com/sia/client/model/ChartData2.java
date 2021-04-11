@@ -1,6 +1,8 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import javax.swing.*;
+import com.sia.client.ui.ChartView;
+
+import javax.swing.ImageIcon;
 import java.awt.Color;
 class ChartData2
 {

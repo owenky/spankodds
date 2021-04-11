@@ -1,6 +1,5 @@
 package com.sia.client.model;
 
-import com.sia.client.ui.BestLines;
 import com.sia.client.ui.LineAlertManager;
 
 import java.sql.Timestamp;

@@ -1,6 +1,8 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.ChartData2;
+import com.sia.client.model.ChartData3;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

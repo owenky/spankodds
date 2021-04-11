@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.ChartData2;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;

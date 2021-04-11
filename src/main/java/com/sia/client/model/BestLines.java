@@ -1,18 +1,16 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-import com.sia.client.model.Bookie;
-import com.sia.client.model.Moneyline;
+import com.sia.client.ui.AppController;
+import com.sia.client.ui.Spreadline;
+import com.sia.client.ui.TeamTotalline;
+import com.sia.client.ui.Totalline;
 
 import java.util.Vector;
 
 
-public class BestLines
-{
+public class BestLines {
 
-
-
-	public static void calculatebestspread(int gameid,int period)
-	{
+	public static void calculatebestspread(int gameid,int period) {
 		Vector shownbookies = AppController.getShownCols();
 		Vector fixedbookies = AppController.getFixedCols();
 		
