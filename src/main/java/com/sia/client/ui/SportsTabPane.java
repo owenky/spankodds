@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.Game;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;

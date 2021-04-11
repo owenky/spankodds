@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.Bookie;
+import com.sia.client.model.Game;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;

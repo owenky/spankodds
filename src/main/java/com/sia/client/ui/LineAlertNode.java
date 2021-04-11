@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Game;
+
 import java.util.Vector;
 import java.util.Hashtable;
 

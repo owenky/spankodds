@@ -10,6 +10,7 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import com.sia.client.media.SoundPlayer;
+import com.sia.client.model.Game;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.sound.sampled.AudioInputStream;

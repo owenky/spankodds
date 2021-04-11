@@ -1,6 +1,4 @@
-package com.sia.client.ui;
-
-import com.sia.client.model.Bookie;
+package com.sia.client.model;
 
 public class Game
 {

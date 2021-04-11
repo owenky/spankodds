@@ -1,8 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Game;
+
 import java.util.Comparator;
 import java.text.SimpleDateFormat;
-public class GameTimeSorter implements Comparator<Game> 
+public class GameTimeSorter implements Comparator<Game>
 {
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm"); 
     public int compare(Game g1, Game g2) 

@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Game;
+
 import javax.swing.*;
 import java.awt.Color;
 

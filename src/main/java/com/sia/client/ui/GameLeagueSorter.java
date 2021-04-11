@@ -1,8 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.Game;
+
 import java.util.Comparator;
  
-public class GameLeagueSorter implements Comparator<Game> 
+public class GameLeagueSorter implements Comparator<Game>
 {
     public int compare(Game g1, Game g2) 
     {

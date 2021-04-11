@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.Game;
+import com.sia.client.model.Game;
 
 import java.util.concurrent.ArrayBlockingQueue;
 

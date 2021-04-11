@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.media.SoundPlayer;
+import com.sia.client.model.Game;
 
 import java.util.Vector;
 
