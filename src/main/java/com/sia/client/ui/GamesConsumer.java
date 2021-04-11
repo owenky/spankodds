@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
+import com.sia.client.model.Sport;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;

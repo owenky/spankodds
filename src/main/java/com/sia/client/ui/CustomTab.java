@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
+import com.sia.client.model.Sport;
 
 import java.awt.*;
 import javax.swing.*;    

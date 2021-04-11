@@ -9,6 +9,7 @@ import com.jidesoft.swing.PartialSide;
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.TreeUtils;
 import com.sia.client.media.SoundPlayer;
+import com.sia.client.model.Sport;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;

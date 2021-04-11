@@ -1,25 +1,51 @@
 package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
    
-import java.awt.*;   
-import com.jidesoft.swing.*;
-import com.jidesoft.tree.TreeUtils;
-
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.*;
-   
-import java.util.Vector;
-import java.util.Hashtable;
-
 import com.jidesoft.plaf.LookAndFeelFactory;
+import com.jidesoft.swing.CheckBoxTree;
+import com.jidesoft.swing.JideTitledBorder;
+import com.jidesoft.swing.PartialEtchedBorder;
+import com.jidesoft.swing.PartialSide;
+import com.jidesoft.swing.SearchableUtils;
+import com.jidesoft.tree.TreeUtils;
+import com.sia.client.model.Sport;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Hashtable;
+import java.util.Vector;
 
 
 public class SportCustomTab { 

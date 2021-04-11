@@ -1,7 +1,6 @@
-package com.sia.client.ui;
+package com.sia.client.model;
 
-public class Sport 
-{
+public class Sport {
 	int	sport_id;
 	int league_id;
 	int parentleague_id; 
@@ -22,8 +21,7 @@ public class Sport
 	
 	
 	public Sport(int sport_id,int league_id,int parentleague_id,int region_id,int numperiods,double timeperperiod,double halftimeminutes,
-				 String leaguename,String leagueabbr,String sportname,String sportabbr,boolean moneylinedefault)
-{
+				 String leaguename,String leagueabbr,String sportname,String sportabbr,boolean moneylinedefault) {
 	this.sport_id = sport_id;
 	this.league_id = league_id;
 	this.parentleague_id = parentleague_id;

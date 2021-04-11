@@ -5,6 +5,7 @@ import com.sia.client.model.ColumnData;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
+import com.sia.client.model.Sport;
 import com.sia.client.model.User;
 
 import javax.swing.JLabel;

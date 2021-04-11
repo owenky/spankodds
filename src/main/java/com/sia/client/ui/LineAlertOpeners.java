@@ -23,6 +23,7 @@ import javax.swing.event.ChangeListener;
 import com.jidesoft.swing.JideToggleButton;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.Sport;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.Clip;

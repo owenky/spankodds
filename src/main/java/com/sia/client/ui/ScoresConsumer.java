@@ -1,21 +1,21 @@
 package com.sia.client.ui;
 
+import com.sia.client.media.SoundPlayer;
+import com.sia.client.model.Game;
+import com.sia.client.model.Sport;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
 import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.MessageListener;
 import javax.jms.MapMessage;
 import javax.jms.Message;
-
-import com.sia.client.media.SoundPlayer;
-import com.sia.client.model.Game;
-import org.apache.activemq.ActiveMQConnectionFactory;
-
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.Session;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.Clip;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.io.File;
 
 public class ScoresConsumer implements MessageListener {
