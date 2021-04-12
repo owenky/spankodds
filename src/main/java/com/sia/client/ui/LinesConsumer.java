@@ -17,10 +17,8 @@ import static com.sia.client.config.Utils.log;
 
 public class LinesConsumer implements MessageListener {
 
-    private static String brokerURL = "failover:(tcp://sof300732.com:61616)";
     //private static String brokerURL = "failover:(ssl://localhost:61617)";
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
-    private static ActiveMQConnectionFactory factory;
     int gameid = 0;
     private transient Connection connection;
     private transient Session session;
@@ -28,9 +26,7 @@ public class LinesConsumer implements MessageListener {
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
-        this.factory = factory;
         this.connection = connection;
-
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         Destination destination = session.createTopic(linesconsumerqueue + "?consumer.retroactive=true");
         MessageConsumer messageConsumer = session.createConsumer(destination);
@@ -39,7 +35,7 @@ public class LinesConsumer implements MessageListener {
     }
 
     public void close() throws JMSException {
-        if (connection != null) {
+        if (null != connection) {
             connection.close();
         }
     }
@@ -59,7 +55,7 @@ public class LinesConsumer implements MessageListener {
 
 
             boolean isopener = false;
-            if (isopenerS.equals("1")) {
+            if ("1".equals(isopenerS)) {
                 isopener = true;
             }
 
@@ -72,7 +68,7 @@ public class LinesConsumer implements MessageListener {
             //	System.out.println("received PINNY line change=\n"+mapMessage.toString());
             //	}
 
-            if (changetype.equals("LineChangeSpread")) {
+            if ("LineChangeSpread".equals(changetype)) {
                 double newvisitorspread = 0;
                 double newhomespread = 0;
                 double newvisitorjuice = 0;
@@ -80,35 +76,35 @@ public class LinesConsumer implements MessageListener {
                 try {
                     newvisitorspread = mapMessage.getDouble("newvisitorspread");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newhomespread = mapMessage.getDouble("newhomespread");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newvisitorjuice = mapMessage.getDouble("newvisitorjuice");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newhomejuice = mapMessage.getDouble("newhomejuice");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + 1000 * 60 * 60 * 3;
+                    newlongts = newlongts + (1000 * 60 * 60 * 3);
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = message.getJMSTimestamp();
 
                 Spreadline sl = AppController.getSpreadline(bookieid, gameid, period);
-                if (sl != null) {
+                if (null != sl) {
                     sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new java.sql.Timestamp(newlongts), isopener);
                 } else {
                     sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new java.sql.Timestamp(newlongts), period);
@@ -120,7 +116,7 @@ public class LinesConsumer implements MessageListener {
 
                     AppController.addSpreadline(sl);
                 }
-            } else if (changetype.equals("LineChangeTotal")) {
+            } else if ("LineChangeTotal".equals(changetype)) {
 
 
                 double newover = 0;
@@ -130,28 +126,28 @@ public class LinesConsumer implements MessageListener {
                 try {
                     newover = mapMessage.getDouble("newover");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newunder = mapMessage.getDouble("newunder");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newoverjuice = mapMessage.getDouble("newoverjuice");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newunderjuice = mapMessage.getDouble("newunderjuice");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + 1000 * 60 * 60 * 3;
+                    newlongts = newlongts + (1000 * 60 * 60 * 3);
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
@@ -159,7 +155,7 @@ public class LinesConsumer implements MessageListener {
 
 
                 Totalline tl = AppController.getTotalline(bookieid, gameid, period);
-                if (tl != null) {
+                if (null != tl) {
                     tl.recordMove(newover, newoverjuice, newunder, newunderjuice, new java.sql.Timestamp(newlongts), isopener);
                 } else {
                     tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, new java.sql.Timestamp(newlongts), period);
@@ -172,7 +168,7 @@ public class LinesConsumer implements MessageListener {
                 }
 //{gameid=211013, newunderjuice=-115.0, newunder=2.5, newlongts=1590351272000, bookieid=49, newoverjuice=-115.0, isopener=1, newover=2.5}
 
-            } else if (changetype.equals("LineChangeTeamTotal")) {
+            } else if ("LineChangeTeamTotal".equals(changetype)) {
                 double newvisitorover = 0;
                 double newvisitorunder = 0;
                 double newvisitoroverjuice = 0;
@@ -185,49 +181,49 @@ public class LinesConsumer implements MessageListener {
                 try {
                     newvisitorover = mapMessage.getDouble("newvisitorover");
                 } catch (Exception ex) {
-                	log(ex);
+                    log(ex);
                 }
                 try {
                     newvisitorunder = mapMessage.getDouble("newvisitorunder");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newvisitoroverjuice = mapMessage.getDouble("newvisitoroverjuice");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newvisitorunderjuice = mapMessage.getDouble("newvisitorunderjuice");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
 
                 try {
                     newhomeover = mapMessage.getDouble("newhomeover");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newhomeunder = mapMessage.getDouble("newhomeunder");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newhomeoverjuice = mapMessage.getDouble("newhomeoverjuice");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newhomeunderjuice = mapMessage.getDouble("newhomeunderjuice");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newlongts = mapMessage.getLong("newlongts");
                     newlongts = newlongts + 1000 * 60 * 60 * 3;
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
@@ -235,7 +231,7 @@ public class LinesConsumer implements MessageListener {
 
 
                 TeamTotalline ttl = AppController.getTeamTotalline(bookieid, gameid, period);
-                if (ttl != null) {
+                if (null != ttl) {
 
                     ttl.recordMove(newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
                             newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice,
@@ -252,31 +248,31 @@ public class LinesConsumer implements MessageListener {
                 }
 //{gameid=211013, newunderjuice=-115.0, newunder=2.5, newlongts=1590351272000, bookieid=49, newoverjuice=-115.0, isopener=1, newover=2.5}
 
-            } else if (changetype.equals("LineChangeMoney")) {
+            } else if ("LineChangeMoney".equals(changetype)) {
                 double newvisitorjuice = 0;
                 double newhomejuice = 0;
                 double newdrawjuice = 0;
                 try {
                     newvisitorjuice = mapMessage.getDouble("newvisitorjuice");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newhomejuice = mapMessage.getDouble("newhomejuice");
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newdrawjuice = mapMessage.getDouble("newdrawjuice");
                 } catch (Exception ex) {
                     newdrawjuice = 0;
-					log(ex);
+                    log(ex);
                 }
                 try {
                     newlongts = mapMessage.getLong("newlongts");
                     newlongts = newlongts + 1000 * 60 * 60 * 3;
                 } catch (Exception ex) {
-					log(ex);
+                    log(ex);
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
@@ -299,7 +295,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
 
-                if (ml != null) {
+                if (null != ml) {
                     ml.recordMove(newvisitorjuice, newhomejuice, newdrawjuice, new java.sql.Timestamp(newlongts), isopener);
                 } else {
                     ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, new java.sql.Timestamp(newlongts), period);
@@ -319,14 +315,14 @@ public class LinesConsumer implements MessageListener {
 
         } catch (Exception e) {
             log(mapMessage.toString());
-			log(e);
+            log(e);
 
         }
         try {
             AppController.fireAllTableDataChanged("" + gameid);
         } catch (Exception ex) {
             //	System.out.println("exception linesconsumer firetabledatachanged "+ex);
-			log(ex);
+            log(ex);
         }
     }
 

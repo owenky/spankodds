@@ -1,11 +1,11 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.ChartData2;
 import com.sia.client.model.ChartData3;
 
+import javax.swing.Timer;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -16,9 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import static com.sia.client.config.Utils.log;
+
 public class ChartChecker {
-    static List<ChartData2> cl = new ArrayList<ChartData2>();
-    static List<ChartData3> cl1 = new ArrayList<ChartData3>();
+    static List<ChartData2> cl = new ArrayList<>();
+    static List<ChartData3> cl1 = new ArrayList<>();
     static int amt = 1;
     static String filename = "No File Selected";
     static int updatetime = 5;
@@ -39,27 +41,26 @@ public class ChartChecker {
     }
 
     public void startOver() {
-        System.out.println("Starting over chart checker..");
+        Utils.ensureNotEdtThread();
+        log("Starting over chart checker..");
         try {
             amt = AppController.getUser().getChartMinAmtNotify();
             if (timer != null && timer.isRunning()) {
                 timer.stop();
             }
-            timer = new javax.swing.Timer(AppController.getUser().getChartSecsRefresh() * 1000, new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    if (numprocessed++ % 50 == 0) {
-                        cl.clear();
-                        cl1.clear();
-                        firsttime = true;
-                        System.out.println("Processing chartchecker file=" + AppController.getUser().getChartFileName() + "..secs=" + AppController.getUser().getChartSecsRefresh() + "..amt=" + AppController.getUser().getChartMinAmtNotify() + ".." + numprocessed + " at " + new java.util.Date());
-                    }
-                    init();
-                    //processData();
+
+            timer = new javax.swing.Timer(AppController.getUser().getChartSecsRefresh() * 1000, evt -> {
+                if (numprocessed++ % 50 == 0) {
+                    cl.clear();
+                    cl1.clear();
+                    firsttime = true;
+                    log("Processing chartchecker file=" + AppController.getUser().getChartFileName() + "..secs=" + AppController.getUser().getChartSecsRefresh() + "..amt=" + AppController.getUser().getChartMinAmtNotify() + ".." + numprocessed + " at " + new java.util.Date());
                 }
+//                init();
             });
             timer.start();
         } catch (Exception ex) {
-            System.out.println("exception starting timer " + ex);
+            log( ex);
             //startOver();
         }
 
@@ -67,6 +68,7 @@ public class ChartChecker {
 
 
     public void init() {
+        Utils.ensureNotEdtThread();
         try {
 
             //*******************************Url Data Reading********************************
@@ -86,7 +88,8 @@ public class ChartChecker {
                     sc.close();
                     //System.out.println("**************************************iam from Url Now**********************");
                 } catch (Exception e) {
-                    System.out.println("ERROR OPENING FILE..." + AppController.getUser().getChartFileName());
+                    log("ERROR OPENING FILE..." + AppController.getUser().getChartFileName());
+                    log(e);
                     errormsg = "Please check your URL/USER NAME/PASSWORD";
                     //new ShowError().setVisible(true);
                     cl.clear();
@@ -107,7 +110,7 @@ public class ChartChecker {
                 while (sc.hasNext()) {
                     count1++;
                     String s = sc.next();
-                    int ln = (int) s.charAt(0);
+                    int ln = s.charAt(0);
                     if (ln == 13) {
                         break;
                     }
@@ -125,9 +128,9 @@ public class ChartChecker {
                     cd.gn = gn;
                     cd.p = p;
                     int found = 0;
-                    Iterator itr = cl.iterator();
+                    Iterator<ChartData2> itr = cl.iterator();
                     while (itr.hasNext()) {
-                        ChartData2 cd2 = (ChartData2) itr.next();
+                        ChartData2 cd2 = itr.next();
                         if (cd2.gn == gn && cd2.p == p) {
                             found = 1;
                             break;
@@ -156,9 +159,9 @@ public class ChartChecker {
                         break;
                     }
                     if (asc == 13) {
-                        StringBuffer sb = new StringBuffer(s);
+                        StringBuilder sb = new StringBuilder(s);
                         sb.insert(s.length() - 1, ',');
-                        s = (String) sb.toString();
+                        s = sb.toString();
                     }
                     String[] s1 = s.split(",", 14);
                     gn = Integer.parseInt(s1[0]);
@@ -203,19 +206,13 @@ public class ChartChecker {
                 ChartData3 cd3 = new ChartData3();
                 cd3.gn = gn;
                 cd3.p = p;
-                Iterator itr1 = cl1.iterator();
-                while (itr1.hasNext()) {
-                    ChartData3 cd4 = (ChartData3) itr1.next();
-                    if (cd4.gn == gn && cd4.p == p) {
+                for (final ChartData3 cd4 : cl1) {
+                    if ((cd4.gn == gn) && (cd4.p == p)) {
                         found = 1;
                         break;
-                    } else {
-                        continue;
                     }
                 }
-                if (found == 1) {
-                    continue;
-                } else {
+                if (1 != found) {
                     cl1.add(cd3);
                 }
             }
@@ -395,7 +392,7 @@ public class ChartChecker {
 
 
         } catch (Exception ex) {
-            System.out.println("exception init chart data " + ex);
+            log(ex);
         }
     }
 
@@ -415,7 +412,7 @@ public class ChartChecker {
             connection.setRequestProperty("Authorization", "Basic " + authEncoded);
 
 
-            InputStream in = (InputStream) connection.getInputStream();
+            InputStream in = connection.getInputStream();
 
             String URLData = "";
             for (int b; (b = in.read()) != -1; ) {
@@ -450,9 +447,9 @@ public class ChartChecker {
                 cd.gn = gn;
                 cd.p = p;
                 int found = 0;
-                Iterator itr = cl.iterator();
+                Iterator<ChartData2> itr = cl.iterator();
                 while (itr.hasNext()) {
-                    ChartData2 cd2 = (ChartData2) itr.next();
+                    ChartData2 cd2 = itr.next();
                     if (cd2.gn == gn && cd2.p == p) {
                         found = 1;
                         break;
@@ -472,14 +469,14 @@ public class ChartChecker {
                 String s = line[i1];
                 int idx = s.length() - 1;
                 int asc = s.charAt(idx);
-                int ln = (int) s.charAt(0);
+                int ln = s.charAt(0);
                 if (ln == 13) {
                     break;
                 }
                 if (asc == 13) {
-                    StringBuffer sb = new StringBuffer(s);
+                    StringBuilder sb = new StringBuilder(s);
                     sb.insert(s.length() - 1, ',');
-                    s = (String) sb.toString();
+                    s = sb.toString();
                 }
                 String[] s1 = s.split(",", 14);
                 int gn = Integer.parseInt(s1[0]);
@@ -514,7 +511,8 @@ public class ChartChecker {
             }
 
         } catch (Exception e) {
-            System.out.println("URL BAD! " + e + " " + new java.util.Date());
+            log("URL BAD! " + e + " " + new java.util.Date());
+            log(e);
             cl.clear();
             cl1.clear();
             //errormsg="Plese check your URL/USER NAME/PASSWORD";
