@@ -5,13 +5,24 @@ import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Sport;
 
-import java.awt.*;
-import javax.swing.*;    
-import javax.swing.event.*; 
-import javax.swing.tree.*; 
-import java.util.Vector; 
-import java.util.Collections; 
-import java.text.SimpleDateFormat; 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import java.awt.BorderLayout;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Vector;
  
 public class CustomTab extends JPanel{  
  
@@ -331,14 +342,5 @@ public class CustomTab extends JPanel{
  
     // Display the frame.    
     jfrm.setVisible(true);    
-  }    
-     
-  public static void main(String args[]) {    
-    // Create the frame on the event dispatching thread.    
-    SwingUtilities.invokeLater(new Runnable() {    
-      public void run() {    
-        new CustomTab(); 
-      }    
-    });    
-  }    
+  }
 }

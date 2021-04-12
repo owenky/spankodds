@@ -10,7 +10,6 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -25,6 +24,8 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+
+import static com.sia.client.config.Utils.checkAndRunInEDT;
 
 public class AppController {
 
@@ -190,29 +191,17 @@ public class AppController {
 
     public static void addLineAlertNode(LineAlertNode lan) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                linealertnodes.add(lan);
-            }
-        });
+        checkAndRunInEDT(() -> linealertnodes.add(lan));
     }
 
     public static void removeLineAlertNode(LineAlertNode lan) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                linealertnodes.remove(lan);
-            }
-        });
+        checkAndRunInEDT(() -> linealertnodes.remove(lan));
     }
 
     public static void replaceLineAlertNode(LineAlertNode oldlan, LineAlertNode newlan) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                Collections.replaceAll(linealertnodes, oldlan, newlan);
-            }
-        });
+        checkAndRunInEDT(() -> Collections.replaceAll(linealertnodes, oldlan, newlan));
     }
 
     public static boolean isLineAlertNameAvailable(String name) {
@@ -656,13 +645,9 @@ public class AppController {
 
     public static void fireAllTableStructureChanged() {
         for (int i = 0; i < dataModels.size(); i++) {
-            LinesTableData ltd = (LinesTableData) dataModels.get(i);
+            LinesTableData ltd = dataModels.get(i);
 
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    ltd.fireTableStructureChanged();
-                }
-            });
+            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
 
 
         }
@@ -865,60 +850,58 @@ public class AppController {
     }
 
     public static void removeGame(int gameid) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                for (int k = 0; k < tabpanes.size(); k++) {
+        checkAndRunInEDT(() -> {
+            for (int k = 0; k < tabpanes.size(); k++) {
 
-                    SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
-                    stb.removeGame("" + gameid);
+                SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+                stb.removeGame("" + gameid);
 
-                }
-                Game g = null;
-                if (games.get(gameid + "") != null) {
-                    g = games.get(gameid + "");
-                    gamesVec.remove(g);
-
-                }
-                games.remove(gameid + "");
-                for (int j = 0; j < bookiesVec.size(); j++) {
-                    Bookie b = bookiesVec.get(j);
-                    int bid = b.getBookie_id();
-                    spreads.remove(bid + "-" + gameid);
-                    totals.remove(bid + "-" + gameid);
-                    moneylines.remove(bid + "-" + gameid);
-                    teamtotals.remove(bid + "-" + gameid);
-                    h1spreads.remove(bid + "-" + gameid);
-                    h1totals.remove(bid + "-" + gameid);
-                    h1moneylines.remove(bid + "-" + gameid);
-                    h1teamtotals.remove(bid + "-" + gameid);
-                    h2spreads.remove(bid + "-" + gameid);
-                    h2totals.remove(bid + "-" + gameid);
-                    h2moneylines.remove(bid + "-" + gameid);
-                    h2teamtotals.remove(bid + "-" + gameid);
-                    q1spreads.remove(bid + "-" + gameid);
-                    q1totals.remove(bid + "-" + gameid);
-                    q1moneylines.remove(bid + "-" + gameid);
-                    q1teamtotals.remove(bid + "-" + gameid);
-                    q2spreads.remove(bid + "-" + gameid);
-                    q2totals.remove(bid + "-" + gameid);
-                    q2moneylines.remove(bid + "-" + gameid);
-                    q2teamtotals.remove(bid + "-" + gameid);
-                    q3spreads.remove(bid + "-" + gameid);
-                    q3totals.remove(bid + "-" + gameid);
-                    q3moneylines.remove(bid + "-" + gameid);
-                    q3teamtotals.remove(bid + "-" + gameid);
-                    q4spreads.remove(bid + "-" + gameid);
-                    q4totals.remove(bid + "-" + gameid);
-                    q4moneylines.remove(bid + "-" + gameid);
-                    q4teamtotals.remove(bid + "-" + gameid);
-                    livespreads.remove(bid + "-" + gameid);
-                    livetotals.remove(bid + "-" + gameid);
-                    livemoneylines.remove(bid + "-" + gameid);
-                    liveteamtotals.remove(bid + "-" + gameid);
-
-                }
-                g = null;
             }
+            Game g = null;
+            if (games.get(gameid + "") != null) {
+                g = games.get(gameid + "");
+                gamesVec.remove(g);
+
+            }
+            games.remove(gameid + "");
+            for (int j = 0; j < bookiesVec.size(); j++) {
+                Bookie b = bookiesVec.get(j);
+                int bid = b.getBookie_id();
+                spreads.remove(bid + "-" + gameid);
+                totals.remove(bid + "-" + gameid);
+                moneylines.remove(bid + "-" + gameid);
+                teamtotals.remove(bid + "-" + gameid);
+                h1spreads.remove(bid + "-" + gameid);
+                h1totals.remove(bid + "-" + gameid);
+                h1moneylines.remove(bid + "-" + gameid);
+                h1teamtotals.remove(bid + "-" + gameid);
+                h2spreads.remove(bid + "-" + gameid);
+                h2totals.remove(bid + "-" + gameid);
+                h2moneylines.remove(bid + "-" + gameid);
+                h2teamtotals.remove(bid + "-" + gameid);
+                q1spreads.remove(bid + "-" + gameid);
+                q1totals.remove(bid + "-" + gameid);
+                q1moneylines.remove(bid + "-" + gameid);
+                q1teamtotals.remove(bid + "-" + gameid);
+                q2spreads.remove(bid + "-" + gameid);
+                q2totals.remove(bid + "-" + gameid);
+                q2moneylines.remove(bid + "-" + gameid);
+                q2teamtotals.remove(bid + "-" + gameid);
+                q3spreads.remove(bid + "-" + gameid);
+                q3totals.remove(bid + "-" + gameid);
+                q3moneylines.remove(bid + "-" + gameid);
+                q3teamtotals.remove(bid + "-" + gameid);
+                q4spreads.remove(bid + "-" + gameid);
+                q4totals.remove(bid + "-" + gameid);
+                q4moneylines.remove(bid + "-" + gameid);
+                q4teamtotals.remove(bid + "-" + gameid);
+                livespreads.remove(bid + "-" + gameid);
+                livetotals.remove(bid + "-" + gameid);
+                livemoneylines.remove(bid + "-" + gameid);
+                liveteamtotals.remove(bid + "-" + gameid);
+
+            }
+            g = null;
         });
     }
 
@@ -930,71 +913,69 @@ public class AppController {
     }
 
     public static void removeGames(String[] gameidarr) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                for (int k = 0; k < tabpanes.size(); k++) {
+        checkAndRunInEDT(() -> {
+            for (int k = 0; k < tabpanes.size(); k++) {
 
-                    SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
-                    stb.removeGames(gameidarr);
+                SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+                stb.removeGames(gameidarr);
 
 
-                }
-                if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
-                    return;
-                }
+            }
+            if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
+                return;
+            }
 
-                for (int i = 0; i < gameidarr.length; i++) {
-                    try {
-                        Game g = null;
-                        String gameid = gameidarr[i];
+            for (int i = 0; i < gameidarr.length; i++) {
+                try {
+                    Game g = null;
+                    String gameid = gameidarr[i];
 
-                        if (games.get(gameid) != null) {
-                            g = games.get(gameid);
-                            gamesVec.remove(g);
+                    if (games.get(gameid) != null) {
+                        g = games.get(gameid);
+                        gamesVec.remove(g);
 
-                        }
-                        games.remove(gameid + "");
-                        for (int j = 0; j < bookiesVec.size(); j++) {
-                            Bookie b = bookiesVec.get(j);
-                            int bid = b.getBookie_id();
-                            spreads.remove(bid + "-" + gameid);
-                            totals.remove(bid + "-" + gameid);
-                            moneylines.remove(bid + "-" + gameid);
-                            teamtotals.remove(bid + "-" + gameid);
-                            h1spreads.remove(bid + "-" + gameid);
-                            h1totals.remove(bid + "-" + gameid);
-                            h1moneylines.remove(bid + "-" + gameid);
-                            h1teamtotals.remove(bid + "-" + gameid);
-                            h2spreads.remove(bid + "-" + gameid);
-                            h2totals.remove(bid + "-" + gameid);
-                            h2moneylines.remove(bid + "-" + gameid);
-                            h2teamtotals.remove(bid + "-" + gameid);
-                            q1spreads.remove(bid + "-" + gameid);
-                            q1totals.remove(bid + "-" + gameid);
-                            q1moneylines.remove(bid + "-" + gameid);
-                            q1teamtotals.remove(bid + "-" + gameid);
-                            q2spreads.remove(bid + "-" + gameid);
-                            q2totals.remove(bid + "-" + gameid);
-                            q2moneylines.remove(bid + "-" + gameid);
-                            q2teamtotals.remove(bid + "-" + gameid);
-                            q3spreads.remove(bid + "-" + gameid);
-                            q3totals.remove(bid + "-" + gameid);
-                            q3moneylines.remove(bid + "-" + gameid);
-                            q3teamtotals.remove(bid + "-" + gameid);
-                            q4spreads.remove(bid + "-" + gameid);
-                            q4totals.remove(bid + "-" + gameid);
-                            q4moneylines.remove(bid + "-" + gameid);
-                            q4teamtotals.remove(bid + "-" + gameid);
-                            livespreads.remove(bid + "-" + gameid);
-                            livetotals.remove(bid + "-" + gameid);
-                            livemoneylines.remove(bid + "-" + gameid);
-                            liveteamtotals.remove(bid + "-" + gameid);
-
-                        }
-                        g = null;
-                    } catch (Exception ex) {
-                        System.out.println("exception removing games in appcontroller " + ex);
                     }
+                    games.remove(gameid + "");
+                    for (int j = 0; j < bookiesVec.size(); j++) {
+                        Bookie b = bookiesVec.get(j);
+                        int bid = b.getBookie_id();
+                        spreads.remove(bid + "-" + gameid);
+                        totals.remove(bid + "-" + gameid);
+                        moneylines.remove(bid + "-" + gameid);
+                        teamtotals.remove(bid + "-" + gameid);
+                        h1spreads.remove(bid + "-" + gameid);
+                        h1totals.remove(bid + "-" + gameid);
+                        h1moneylines.remove(bid + "-" + gameid);
+                        h1teamtotals.remove(bid + "-" + gameid);
+                        h2spreads.remove(bid + "-" + gameid);
+                        h2totals.remove(bid + "-" + gameid);
+                        h2moneylines.remove(bid + "-" + gameid);
+                        h2teamtotals.remove(bid + "-" + gameid);
+                        q1spreads.remove(bid + "-" + gameid);
+                        q1totals.remove(bid + "-" + gameid);
+                        q1moneylines.remove(bid + "-" + gameid);
+                        q1teamtotals.remove(bid + "-" + gameid);
+                        q2spreads.remove(bid + "-" + gameid);
+                        q2totals.remove(bid + "-" + gameid);
+                        q2moneylines.remove(bid + "-" + gameid);
+                        q2teamtotals.remove(bid + "-" + gameid);
+                        q3spreads.remove(bid + "-" + gameid);
+                        q3totals.remove(bid + "-" + gameid);
+                        q3moneylines.remove(bid + "-" + gameid);
+                        q3teamtotals.remove(bid + "-" + gameid);
+                        q4spreads.remove(bid + "-" + gameid);
+                        q4totals.remove(bid + "-" + gameid);
+                        q4moneylines.remove(bid + "-" + gameid);
+                        q4teamtotals.remove(bid + "-" + gameid);
+                        livespreads.remove(bid + "-" + gameid);
+                        livetotals.remove(bid + "-" + gameid);
+                        livemoneylines.remove(bid + "-" + gameid);
+                        liveteamtotals.remove(bid + "-" + gameid);
+
+                    }
+                    g = null;
+                } catch (Exception ex) {
+                    System.out.println("exception removing games in appcontroller " + ex);
                 }
             }
         });
@@ -1048,24 +1029,22 @@ public class AppController {
 		gamesIdVec.add(g.getGame_id()+"");
 	}
 */
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                if (games.get(g.getGame_id() + "") == null) {
-                    //System.out.println("adding new gmid="+g.getGame_id());
-                    gamesVec.add(g);
-                    games.put(g.getGame_id() + "", g);
-                    for (int k = 0; k < tabpanes.size(); k++) {
+        checkAndRunInEDT(() -> {
+            if (games.get(g.getGame_id() + "") == null) {
+                //System.out.println("adding new gmid="+g.getGame_id());
+                gamesVec.add(g);
+                games.put(g.getGame_id() + "", g);
+                for (int k = 0; k < tabpanes.size(); k++) {
 
-                        SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
-                        stb.addGame(g, repaint);
+                    SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+                    stb.addGame(g, repaint);
 
-                    }
-                } else // just an update
-                {
-                    games.put(g.getGame_id() + "", g);
                 }
-
+            } else // just an update
+            {
+                games.put(g.getGame_id() + "", g);
             }
+
         });
 
 
@@ -1075,14 +1054,12 @@ public class AppController {
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                for (int k = 0; k < tabpanes.size(); k++) {
+        checkAndRunInEDT(() -> {
+            for (int k = 0; k < tabpanes.size(); k++) {
 
-                    SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
-                    stb.moveGameToThisHeader(g, header);
+                SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+                stb.moveGameToThisHeader(g, header);
 
-                }
             }
         });
     }

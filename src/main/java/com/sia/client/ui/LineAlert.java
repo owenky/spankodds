@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -2137,16 +2136,6 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
         }
     }
-
-    public static void main(String args[]) {
-        // Create the frame on the event dispatching thread.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new LineAlert("");
-            }
-        });
-    }
-
     public void itemStateChanged(ItemEvent e) {
         // if the state combobox is changed
         //System.out.println("IN ITEM STATE CHANGED="+e.getSource());

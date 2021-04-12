@@ -1,238 +1,220 @@
 package com.sia.client.ui;
 
-import java.awt.*;
-import java.beans.*;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-
 import java.util.Vector;
 
-import com.sia.client.ui.AppController;
-import com.sia.client.ui.LinesTableData;
+import static com.sia.client.config.Utils.checkAndRunInEDT;
 
 /**
- *  The TableColumnManager can be used to manage TableColumns. It will give the
- *  user the ability to hide columns and then reshow them in their last viewed
- *  position. This functionality is supported by a popup menu added to the
- *  table header of the table. The TableColumnModel is still used to control
- *  the view for the table. The manager will inovoke the appropriate methods
- *  of the TableColumnModel to hide/show columns as required.
- *
+ * The TableColumnManager can be used to manage TableColumns. It will give the
+ * user the ability to hide columns and then reshow them in their last viewed
+ * position. This functionality is supported by a popup menu added to the
+ * table header of the table. The TableColumnModel is still used to control
+ * the view for the table. The manager will inovoke the appropriate methods
+ * of the TableColumnModel to hide/show columns as required.
  */
 public class TableColumnManager
-	implements java.awt.event.MouseListener, java.awt.event.ActionListener, javax.swing.event.TableColumnModelListener, java.beans.PropertyChangeListener
-{
-	//private JTable table;
-	private JTable table;
-	private TableColumnModel tcm;
-	private boolean menuPopup;
-	private String fixed="";
-	private List<TableColumn> allColumns;
+        implements java.awt.event.MouseListener, java.awt.event.ActionListener, javax.swing.event.TableColumnModelListener, java.beans.PropertyChangeListener {
+    //private JTable table;
+    private JTable table;
+    private TableColumnModel tcm;
+    private boolean menuPopup;
+    private String fixed = "";
+    private List<TableColumn> allColumns;
 
     /**
-     *  Convenience constructor for creating a TableColumnManager for a table.
-     *  Support for a popup menu on the table header will be enabled.
+     * Convenience constructor for creating a TableColumnManager for a table.
+     * Support for a popup menu on the table header will be enabled.
      *
-     *  @param table the table whose TableColumns will managed.
+     * @param table the table whose TableColumns will managed.
      */
-	public TableColumnManager(JTable table,String fixed)
-	{
-		
-		this(table, true,fixed);
-	}
+    public TableColumnManager(JTable table, String fixed) {
+
+        this(table, true, fixed);
+    }
 
     /**
-     *  Create a TableColumnManager for a table.
+     * Create a TableColumnManager for a table.
      *
-     *  @param table the table whose TableColumns will managed.
-     *  @param menuPopup enable or disable a popup menu to allow the users to
-     *                   manager the visibility of TableColumns.
+     * @param table     the table whose TableColumns will managed.
+     * @param menuPopup enable or disable a popup menu to allow the users to
+     *                  manager the visibility of TableColumns.
      */
-	public TableColumnManager(JTable table, boolean menuPopup,String fixed)
-	{
-		this.table = table;
-		this.fixed = fixed;
-		setMenuPopup( menuPopup );
+    public TableColumnManager(JTable table, boolean menuPopup, String fixed) {
+        this.table = table;
+        this.fixed = fixed;
+        setMenuPopup(menuPopup);
 
-		table.addPropertyChangeListener( this );
-		reset();
-	}
-
-	/**
-	 *  Reset the TableColumnManager to only manage the TableColumns that are
-	 *  currently visible in the table.
-	 *
-	 *  Generally this method should only be invoked by the TableColumnManager
-	 *  when the TableModel of the table is changed.
-	 */
-	public void reset()
-	{
-		table.getColumnModel().removeColumnModelListener( this );
-		tcm = table.getColumnModel();
-		tcm.addColumnModelListener( this );
-
-		//  Keep a duplicate TableColumns for managing hidden TableColumns
-
-		int count = tcm.getColumnCount();
-		allColumns = new ArrayList<TableColumn>(count);
-
-		for (int i = 0; i < count; i++)
-		{
-			allColumns.add( tcm.getColumn( i ) );
-		}
-	}
+        table.addPropertyChangeListener(this);
+        reset();
+    }
 
     /**
-     *  Get the popup support.
-     *
-     *  @returns the popup support
+     * Reset the TableColumnManager to only manage the TableColumns that are
+     * currently visible in the table.
+     * <p>
+     * Generally this method should only be invoked by the TableColumnManager
+     * when the TableModel of the table is changed.
      */
-	public boolean isMenuPopup()
-	{
-		return menuPopup;
-	}
+    public void reset() {
+        table.getColumnModel().removeColumnModelListener(this);
+        tcm = table.getColumnModel();
+        tcm.addColumnModelListener(this);
+
+        //  Keep a duplicate TableColumns for managing hidden TableColumns
+
+        int count = tcm.getColumnCount();
+        allColumns = new ArrayList<TableColumn>(count);
+
+        for (int i = 0; i < count; i++) {
+            allColumns.add(tcm.getColumn(i));
+        }
+    }
 
     /**
-     *  Add/remove support for a popup menu to the table header. The popup
-     *  menu will give the user control over which columns are visible.
+     * Get the popup support.
      *
-     *  @param  menuPopop when true support for displaying a popup menu is added
-     *                    otherwise the popup menu is removed.
+     * @returns the popup support
      */
-	public void setMenuPopup(boolean menuPopup)
-	{
-		table.getTableHeader().removeMouseListener( this );
-
-		if (menuPopup)
-			table.getTableHeader().addMouseListener( this );
-
-		this.menuPopup = menuPopup;
-	}
+    public boolean isMenuPopup() {
+        return menuPopup;
+    }
 
     /**
-     *  Hide a column from view in the table.
+     * Add/remove support for a popup menu to the table header. The popup
+     * menu will give the user control over which columns are visible.
      *
-     *  @param  modelColumn  the column index from the TableModel
-     *                       of the column to be removed
+     * @param menuPopup when true support for displaying a popup menu is added
+     *                  otherwise the popup menu is removed.
      */
-	public void hideColumn(int modelColumn)
-	{
-		int viewColumn = table.convertColumnIndexToView( modelColumn );
+    public void setMenuPopup(boolean menuPopup) {
+        table.getTableHeader().removeMouseListener(this);
 
-		if (viewColumn != -1)
-		{
-			TableColumn column = tcm.getColumn(viewColumn);
-			hideColumn(column);
-		}
-	}
+        if (menuPopup) {
+            table.getTableHeader().addMouseListener(this);
+        }
+
+        this.menuPopup = menuPopup;
+    }
 
     /**
-     *  Hide a column from view in the table.
+     * Hide a column from view in the table.
      *
-     *  @param  columnName   the column name of the column to be removed
+     * @param modelColumn the column index from the TableModel
+     *                    of the column to be removed
      */
-	public void hideColumn(Object columnName)
-	{
-		//System.out.println("in hide column");
-		if (columnName == null) return;
-		
-		for (int i = 0; i < tcm.getColumnCount(); i++)
-		{
-			TableColumn column = tcm.getColumn( i );
-			//System.out.println("columnname is.."+columnName+"..header value is.."+column.getHeaderValue()+"..");	
-			if (columnName.toString().equals(column.getHeaderValue()+""))
-			{
-				hideColumn( column );
-				break;
-			}
-		}
-		//System.out.println("leaving hide column");
-	}
+    public void hideColumn(int modelColumn) {
+        int viewColumn = table.convertColumnIndexToView(modelColumn);
+
+        if (viewColumn != -1) {
+            TableColumn column = tcm.getColumn(viewColumn);
+            hideColumn(column);
+        }
+    }
 
     /**
-     *  Hide a column from view in the table.
+     * Hide a column from view in the table.
      *
-     *  @param  column  the TableColumn to be removed from the
-     *                  TableColumnModel of the table
+     * @param column the TableColumn to be removed from the
+     *               TableColumnModel of the table
      */
-	public void hideColumn(TableColumn column)
-	{
-		if (tcm.getColumnCount() == 1) return;
+    public void hideColumn(TableColumn column) {
+        if (tcm.getColumnCount() == 1) {
+            return;
+        }
 
-		//  Ignore changes to the TableColumnModel made by the TableColumnManager
+        //  Ignore changes to the TableColumnModel made by the TableColumnManager
 
-		tcm.removeColumnModelListener( this );
-		tcm.removeColumn( column );
-		tcm.addColumnModelListener( this );
-	}
+        tcm.removeColumnModelListener(this);
+        tcm.removeColumn(column);
+        tcm.addColumnModelListener(this);
+    }
 
     /**
-     *  Show a hidden column in the table.
+     * Hide a column from view in the table.
      *
-     *  @param  modelColumn  the column index from the TableModel
-     *                       of the column to be added
+     * @param columnName the column name of the column to be removed
      */
-	public void showColumn(int modelColumn)
-	{
-		for (TableColumn column : allColumns)
-		{
-			if (column.getModelIndex() == modelColumn)
-			{
-				showColumn( column );
-				break;
-			}
-		}
-	}
+    public void hideColumn(Object columnName) {
+        //System.out.println("in hide column");
+        if (columnName == null) {
+            return;
+        }
+
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            TableColumn column = tcm.getColumn(i);
+            //System.out.println("columnname is.."+columnName+"..header value is.."+column.getHeaderValue()+"..");
+            if (columnName.toString().equals(column.getHeaderValue() + "")) {
+                hideColumn(column);
+                break;
+            }
+        }
+        //System.out.println("leaving hide column");
+    }
 
     /**
-     *  Show a hidden column in the table.
+     * Show a hidden column in the table.
      *
-     *  @param  columnName   the column name from the TableModel
-     *                       of the column to be added
+     * @param modelColumn the column index from the TableModel
+     *                    of the column to be added
      */
-	public void showColumn(Object columnName)
-	{
-		for (TableColumn column : allColumns)
-		{
-			if (column.getHeaderValue().equals(columnName.toString()))
-			{
-				showColumn( column );
-				break;
-			}
-		}
-	}
+    public void showColumn(int modelColumn) {
+        for (TableColumn column : allColumns) {
+            if (column.getModelIndex() == modelColumn) {
+                showColumn(column);
+                break;
+            }
+        }
+    }
 
     /**
-     *  Show a hidden column in the table. The column will be positioned
-     *  at its proper place in the view of the table.
+     * Show a hidden column in the table. The column will be positioned
+     * at its proper place in the view of the table.
      *
-     *  @param  column   the TableColumn to be shown.
+     * @param column the TableColumn to be shown.
      */
-	private void showColumn(TableColumn column)
-	{
-		//  Ignore changes to the TableColumnModel made by the TableColumnManager
+    private void showColumn(TableColumn column) {
+        //  Ignore changes to the TableColumnModel made by the TableColumnManager
 
-		tcm.removeColumnModelListener( this );
+        tcm.removeColumnModelListener(this);
 
-		//  Add the column to the end of the table
+        //  Add the column to the end of the table
 
-		tcm.addColumn( column );
-		String columnString = "";
-		for (int i = 0; i < tcm.getColumnCount(); i++)
-		{
-			TableColumn col = tcm.getColumn( i );
-			columnString = columnString+col.getIdentifier()+",";
-		}
-		
-		System.out.println("COLUMNSTRING="+fixed+"="+columnString);
-		//  Move the column to its position before it was hidden.
-		//  (Multiple columns may be hidden so we need to find the first
-		//  visible column before this column so the column can be moved
-		//  to the appropriate position)
+        tcm.addColumn(column);
+        String columnString = "";
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            TableColumn col = tcm.getColumn(i);
+            columnString = columnString + col.getIdentifier() + ",";
+        }
+
+        System.out.println("COLUMNSTRING=" + fixed + "=" + columnString);
+        //  Move the column to its position before it was hidden.
+        //  (Multiple columns may be hidden so we need to find the first
+        //  visible column before this column so the column can be moved
+        //  to the appropriate position)
 		/*
 		int position = allColumns.indexOf( column );
 		int from = tcm.getColumnCount() - 1;
@@ -251,39 +233,52 @@ public class TableColumnManager
 
 		tcm.moveColumn(from, to);
 		*/
-		tcm.addColumnModelListener( this );
-	}
-//
+        tcm.addColumnModelListener(this);
+    }
+
+    /**
+     * Show a hidden column in the table.
+     *
+     * @param columnName the column name from the TableModel
+     *                   of the column to be added
+     */
+    public void showColumn(Object columnName) {
+        for (TableColumn column : allColumns) {
+            if (column.getHeaderValue().equals(columnName.toString())) {
+                showColumn(column);
+                break;
+            }
+        }
+    }
+
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    //
 //  Implement MouseListener
 //
-	public void mousePressed(MouseEvent e)
-	{
-		checkForPopup( e );
-	}
+    public void mousePressed(MouseEvent e) {
+        checkForPopup(e);
+    }
 
-	public void mouseReleased(MouseEvent e)
-	{
-		checkForPopup( e );
-	}
+    public void mouseReleased(MouseEvent e) {
+        checkForPopup(e);
+    }
 
-	public void mouseClicked(MouseEvent e) {}
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
-	private void checkForPopup(MouseEvent e)
-	{
-		if (e.isPopupTrigger())
-		{
-			JTableHeader header = (JTableHeader)e.getComponent();
-			int column = header.columnAtPoint( e.getPoint() );
-					SwingUtilities.invokeLater(new Runnable() {
-		public void run() {
-			showPopup(column);
-			}
-		});
+    public void mouseExited(MouseEvent e) {
+    }
 
-		}
-	}
+    private void checkForPopup(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            JTableHeader header = (JTableHeader) e.getComponent();
+            int column = header.columnAtPoint(e.getPoint());
+            checkAndRunInEDT(() -> showPopup(column));
+
+        }
+    }
 
     /*
      *  Show a popup containing items for all the columns found in the
@@ -292,48 +287,44 @@ public class TableColumnManager
      *
      *  @param  index  index of the table header column that was clicked
      */
-	 
-	 
 
-	 
-	 
-	private void showPopup(int index)
-	{
 
-		Object headerValue = tcm.getColumn( index ).getHeaderValue();
-		int columnCount = tcm.getColumnCount();
+    private void showPopup(int index) {
 
-		System.out.println("headervalue is "+headerValue);
-		System.out.println("index is "+index);
-		
-		
-		JColorChooser chooser = new JColorChooser();
-        
+        Object headerValue = tcm.getColumn(index).getHeaderValue();
+        int columnCount = tcm.getColumnCount();
+
+        System.out.println("headervalue is " + headerValue);
+        System.out.println("index is " + index);
+
+
+        JColorChooser chooser = new JColorChooser();
+
         chooser.getSelectionModel().addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent arg0) {
                 Color color2 = chooser.getColor();
                 System.out.println(color2);
-				
+
             }
         });
-		
-		
-        JDialog dialog = JColorChooser.createDialog(null, headerValue+" Color",
+
+
+        JDialog dialog = JColorChooser.createDialog(null, headerValue + " Color",
                 true, chooser, null, null);
-		
-		
-		dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-		JTableHeader header = table.getTableHeader();		
-		Rectangle r = header.getHeaderRect( index );
-		//popup.show(header, r.x, r.height);
-		Point p = r.getLocation();
-		SwingUtilities.convertPointToScreen(p, header);
+
+
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        JTableHeader header = table.getTableHeader();
+        Rectangle r = header.getHeaderRect(index);
+        //popup.show(header, r.x, r.height);
+        Point p = r.getLocation();
+        SwingUtilities.convertPointToScreen(p, header);
         dialog.setLocation(p.x, p.y + r.getSize().height);
-		//dialog.setLocationRelativeTo(r);
+        //dialog.setLocationRelativeTo(r);
         dialog.setVisible(true);
-		
-		Color color = chooser.getColor();
+
+        Color color = chooser.getColor();
 		
 		
 		/*
@@ -358,21 +349,19 @@ public class TableColumnManager
 		colorPicker.show();
 		Color color = null;
 		*/
-		
-		
-		//Color color=JColorChooser.showDialog(null,"Select a color",com.sia.client.ui.AppController.bookiecolors.get(""+headerValue));
-		if(color != null)
-		{
-		System.out.println("color chosen was "+color);
-		String bookieid = (String)AppController.getBookieId(headerValue.toString());
-		AppController.getBookieColors().put(bookieid,color);
-		Vector dm = AppController.getDataModels();
-			for(int i=0; i< dm.size(); i++)
-			{
-				
-				((LinesTableData)dm.get(i)).fireTableDataChanged();
-			}
-		}
+
+
+        //Color color=JColorChooser.showDialog(null,"Select a color",com.sia.client.ui.AppController.bookiecolors.get(""+headerValue));
+        if (color != null) {
+            System.out.println("color chosen was " + color);
+            String bookieid = (String) AppController.getBookieId(headerValue.toString());
+            AppController.getBookieColors().put(bookieid, color);
+            Vector dm = AppController.getDataModels();
+            for (int i = 0; i < dm.size(); i++) {
+
+                ((LinesTableData) dm.get(i)).fireTableDataChanged();
+            }
+        }
 		/*
 		JPopupMenu popup = new SelectPopupMenu();
 
@@ -410,16 +399,16 @@ public class TableColumnManager
 		Rectangle r = header.getHeaderRect( index );
 		popup.show(header, r.x, r.height);
 		*/
-	}
-//
+    }
+
+    //
 //  Implement ActionListener
 //
     /*
      *  A table column will either be added to the table or removed from the
      *  table depending on the state of the menu item that was clicked.
      */
-	public void actionPerformed(ActionEvent event)
-    {
+    public void actionPerformed(ActionEvent event) {
 		/*
 		JMenuItem item = (JMenuItem)event.getSource();
 
@@ -432,102 +421,96 @@ public class TableColumnManager
 			hideColumn(item.getText());
 		}
 		*/
-	}
-//
-//  Implement TableColumnModelListener
-//
-    public void columnAdded(TableColumnModelEvent e)
-    {
-    	//  A table column was added to the TableColumnModel so we need
-    	//  to update the manager to track this column
-
-    	TableColumn column = tcm.getColumn( e.getToIndex() );
-
-		if (allColumns.contains( column ))
-			return;
-		else
-			allColumns.add( column );
     }
 
-	public void columnMoved(TableColumnModelEvent e)
-	{
-		
-		if (e.getFromIndex() == e.getToIndex()) return;
-
-		//  A table column has been moved one position to the left or right
-		//  in the view of the table so we need to update the manager to
-		//  track the new location
-
-		int index = e.getToIndex();
-		TableColumn column = tcm.getColumn( index );
-		allColumns.remove( column );
-
-		if (index == 0)
-		{
-			allColumns.add(0, column);
-		}
-		else
-		{
-			index--;
-			TableColumn visibleColumn = tcm.getColumn( index );
-			int insertionColumn = allColumns.indexOf( visibleColumn );
-			allColumns.add(insertionColumn + 1, column);
-		}
-		String columnString = "";
-		for (int i = 0; i < tcm.getColumnCount(); i++)
-		{
-			TableColumn col = tcm.getColumn( i );
-			columnString = columnString+","+col.getIdentifier();
-		}
-		
-		System.out.println(fixed+"COLUMNSTRINGAFTERMOVE="+columnString);
-		if(fixed.equals(""))
-		{
-			AppController.getUser().setBookieColumnPrefs(columnString.substring(1));
-		}
-		else
-		{
-			AppController.getUser().setFixedColumnPrefs(columnString.substring(1));
-		}
-	}
-
-	public void columnMarginChanged(ChangeEvent e) {}
-	public void columnRemoved(TableColumnModelEvent e) {}
-	public void columnSelectionChanged(ListSelectionEvent e) {}
+    //
+//  Implement TableColumnModelListener
 //
+    public void columnAdded(TableColumnModelEvent e) {
+        //  A table column was added to the TableColumnModel so we need
+        //  to update the manager to track this column
+
+        TableColumn column = tcm.getColumn(e.getToIndex());
+
+        if (allColumns.contains(column)) {
+            return;
+        } else {
+            allColumns.add(column);
+        }
+    }
+
+    public void columnRemoved(TableColumnModelEvent e) {
+    }
+
+    public void columnMoved(TableColumnModelEvent e) {
+
+        if (e.getFromIndex() == e.getToIndex()) {
+            return;
+        }
+
+        //  A table column has been moved one position to the left or right
+        //  in the view of the table so we need to update the manager to
+        //  track the new location
+
+        int index = e.getToIndex();
+        TableColumn column = tcm.getColumn(index);
+        allColumns.remove(column);
+
+        if (index == 0) {
+            allColumns.add(0, column);
+        } else {
+            index--;
+            TableColumn visibleColumn = tcm.getColumn(index);
+            int insertionColumn = allColumns.indexOf(visibleColumn);
+            allColumns.add(insertionColumn + 1, column);
+        }
+        String columnString = "";
+        for (int i = 0; i < tcm.getColumnCount(); i++) {
+            TableColumn col = tcm.getColumn(i);
+            columnString = columnString + "," + col.getIdentifier();
+        }
+
+        System.out.println(fixed + "COLUMNSTRINGAFTERMOVE=" + columnString);
+        if (fixed.equals("")) {
+            AppController.getUser().setBookieColumnPrefs(columnString.substring(1));
+        } else {
+            AppController.getUser().setFixedColumnPrefs(columnString.substring(1));
+        }
+    }
+
+    public void columnMarginChanged(ChangeEvent e) {
+    }
+
+    public void columnSelectionChanged(ListSelectionEvent e) {
+    }
+
+    //
 //  Implement PropertyChangeListener
 //
-	public void propertyChange(PropertyChangeEvent e)
-	{
-		if ("model".equals(e.getPropertyName()))
-		{
-			if (table.getAutoCreateColumnsFromModel())
-				reset();
-		}
-	}
+    public void propertyChange(PropertyChangeEvent e) {
+        if ("model".equals(e.getPropertyName())) {
+            if (table.getAutoCreateColumnsFromModel()) {
+                reset();
+            }
+        }
+    }
 
-	/*
-	 *  Allows you to select a specific menu item when the popup is
-	 *  displayed. (ie. this is a bug? fix)
-	 */
-	class SelectPopupMenu extends JPopupMenu
-	{
-		@Override
-		public void setSelected(Component sel)
-		{
-			int index = getComponentIndex( sel );
-			getSelectionModel().setSelectedIndex(index);
-			final MenuElement me[] = new MenuElement[2];
-			me[0]=(MenuElement)this;
-			me[1]=getSubElements()[index];
+    /*
+     *  Allows you to select a specific menu item when the popup is
+     *  displayed. (ie. this is a bug? fix)
+     */
+    class SelectPopupMenu extends JPopupMenu {
+        @Override
+        public void setSelected(Component sel) {
+            int index = getComponentIndex(sel);
+            getSelectionModel().setSelectedIndex(index);
+            final MenuElement me[] = new MenuElement[2];
+            me[0] = (MenuElement) this;
+            me[1] = getSubElements()[index];
 
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					MenuSelectionManager.defaultManager().setSelectedPath(me);
-				}
-			});
-		}
-	};
+            checkAndRunInEDT(() -> MenuSelectionManager.defaultManager().setSelectedPath(me));
+        }
+    }
+
+    ;
 }

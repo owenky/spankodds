@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -33,6 +32,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
+
+import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
 public class MainScreen extends JPanel {
     public Vector datamodelsvec = new Vector();
@@ -980,20 +982,17 @@ public class MainScreen extends JPanel {
         System.out.println("about to draw...teammaxlength=" + currentmaxlength);
 
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                drawIt();
-                System.out.println("done drawing");
-            }
+        checkAndRunInEDT(() -> {
+            drawIt();
+            log("done drawing");
         });
 
         timer = new Timer(1000, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {
                 try {
-
                     firedatamodels();
                 } catch (Exception ex) {
-                    System.out.println("exception firing data models " + ex);
+                    log(ex);
                 }
 
             }
@@ -1635,11 +1634,7 @@ public class MainScreen extends JPanel {
     public void firedatamodels2() {
         for (int i = 0; i < datamodelsvec.size(); i++) {
             LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    ltd.fireTableStructureChanged();
-                }
-            });
+            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
         }
     }
 

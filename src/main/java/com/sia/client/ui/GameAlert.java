@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -724,16 +723,6 @@ public class GameAlert {
         }
         return null;
     }
-
-    public static void main(String args[]) {
-        // Create the frame on the event dispatching thread.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new GameAlert("");
-            }
-        });
-    }
-
     public void playSound(String file) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());

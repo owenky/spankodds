@@ -6,13 +6,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
+
+import static com.sia.client.config.Utils.checkAndRunInEDT;
 
 public class SportsMenuBar extends JMenuBar {
 
@@ -46,35 +47,21 @@ public class SportsMenuBar extends JMenuBar {
         add(bookiemenu);
 
         JMenuItem bookiecolumn = new JMenuItem("Manage");
-        bookiecolumn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                // AudioClip clipfinal = new AudioClip("c:\\spankoddsclient\\final.wav");
-                //  clipfinal.play();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        BookieColumnController2 bcc2 = new BookieColumnController2();
+        bookiecolumn.addActionListener(ae -> {
+            // AudioClip clipfinal = new AudioClip("c:\\spankoddsclient\\final.wav");
+            //  clipfinal.play();
+            checkAndRunInEDT(() -> {
+                BookieColumnController2 bcc2 = new BookieColumnController2();
+            });
 
 
-                    }
-                });
-
-
-            }
         });
         JMenuItem bookiecolumn1 = new JMenuItem("Chart");
         bookiecolumn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 // AudioClip clipfinal = new AudioClip("c:\\spankoddsclient\\final.wav");
                 //  clipfinal.play();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        new ChartHome().setVisible(true);
-
-
-                    }
-                });
+                checkAndRunInEDT(() -> new ChartHome().setVisible(true));
 
 
             }
@@ -961,43 +948,31 @@ public class SportsMenuBar extends JMenuBar {
                 }
             });
             temp.add(manage);
-            manage.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
+            manage.addActionListener(ae -> checkAndRunInEDT(() -> {
+                int idx = stb.indexOfTab(temp.getText());
+                new CustomTab2(stb.getTitleAt(idx), idx);
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            int idx = stb.indexOfTab(temp.getText());
-                            new CustomTab2(stb.getTitleAt(idx), idx);
-
-                        }
-                    });
-
-                }
-            });
+            }));
 
             temp.add(hide);
-            hide.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
+            hide.addActionListener(ae -> {
 
-                    //stb.remove(idx);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            int idx = stb.indexOfTab(temp.getText());
-                            AppController.removeCustomTab(stb.getTitleAt(idx));
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int j = 0; j < tabpanes.size(); j++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(j);
-                                tp.setSelectedIndex(0);
-                                tp.remove(idx);
-                            }
-                            go.setEnabled(false);
-                            hide.setEnabled(false);
-                        }
-                    });
+                //stb.remove(idx);
+                checkAndRunInEDT(() -> {
+                    int idx = stb.indexOfTab(temp.getText());
+                    AppController.removeCustomTab(stb.getTitleAt(idx));
+                    Vector tabpanes = AppController.getTabPanes();
+                    System.out.println("tabpanes size= " + tabpanes.size());
+                    for (int j = 0; j < tabpanes.size(); j++) {
+                        SportsTabPane tp = (SportsTabPane) tabpanes.get(j);
+                        tp.setSelectedIndex(0);
+                        tp.remove(idx);
+                    }
+                    go.setEnabled(false);
+                    hide.setEnabled(false);
+                });
 
 
-                }
             });
 
 
@@ -1130,17 +1105,7 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenuItem addnew = new JMenuItem("Add New...");
         tabsmenu.add(addnew);
-        addnew.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        new CustomTab2();
-
-                    }
-                });
-            }
-        });
-
+        addnew.addActionListener(ae -> checkAndRunInEDT(() -> new CustomTab2()));
 
     }
 

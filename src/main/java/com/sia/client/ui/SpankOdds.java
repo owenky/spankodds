@@ -11,11 +11,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 
@@ -61,12 +61,7 @@ public class SpankOdds {
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new SpankOdds().showLoginDialog();
-            }
-        });
+        checkAndRunInEDT(() -> new SpankOdds().showLoginDialog());
     }
 
     private void showLoginDialog() {
@@ -154,7 +149,7 @@ public class SpankOdds {
     private void showGui() {
         //frame = new OddsFrame(stb,tv);
         //frame.setVisible(true);
-        SwingUtilities.invokeLater(
+        checkAndRunInEDT(
                 () -> {
                     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     frame.addWindowListener(new WindowAdapter() {
@@ -184,7 +179,7 @@ public class SpankOdds {
 
     private void createGui() {
 
-        SwingUtilities.invokeLater(() -> {
+        checkAndRunInEDT(() -> {
 
             // owen took out 7/11/2020
             log("creating gui");

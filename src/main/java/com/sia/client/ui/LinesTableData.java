@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -30,6 +29,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+
+import static com.sia.client.config.Utils.checkAndRunInEDT;
 
 //public class LinesTableData extends AbstractTableModel implements TableColumnModelListener {
 public class LinesTableData extends DefaultTableModel implements TableColumnModelListener {
@@ -259,11 +260,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public void showOpener() {
         showingOpener = true;
         showingPrior = false;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
 
     }
 
@@ -371,11 +368,7 @@ public TableColumn removeColumn(int bookieid)
     public void showPrior() {
         showingOpener = false;
         showingPrior = true;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
     public boolean isInView() {
@@ -475,11 +468,7 @@ public TableColumn removeColumn(int bookieid)
     public void showCurrent() {
         showingOpener = false;
         showingPrior = false;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
     public String getDisplayType() {
@@ -489,11 +478,7 @@ public TableColumn removeColumn(int bookieid)
 
     public void setDisplayType(String d) {
         display = d;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
     public int getPeriodType() {
@@ -503,11 +488,7 @@ public TableColumn removeColumn(int bookieid)
 
     public void setPeriodType(int d) {
         period = d;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
     public void clearColors() {
@@ -556,11 +537,7 @@ public TableColumn removeColumn(int bookieid)
 
             }
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
 
     }
 
@@ -600,11 +577,7 @@ public TableColumn removeColumn(int bookieid)
     public void setValueAt(Object value, int rowIndex, int colIndex) {
         stv[rowIndex][colIndex] = value;
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
 
     }
 
@@ -617,11 +590,7 @@ public TableColumn removeColumn(int bookieid)
         thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
         Container comp = scrollpane.getParent();
         comp.revalidate();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
 
     }
 
@@ -634,11 +603,7 @@ public TableColumn removeColumn(int bookieid)
         thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
         Container comp = scrollpane.getParent();
         comp.revalidate();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
     public void checktofire(String gameid) {
@@ -652,11 +617,7 @@ public TableColumn removeColumn(int bookieid)
     public void fire() {
         //m_table.selectAll();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                fireTableDataChanged();
-            }
-        });
+        checkAndRunInEDT(() -> fireTableDataChanged());
 
 
         //System.out.println("fired change inside ltd "+new java.util.Date());
