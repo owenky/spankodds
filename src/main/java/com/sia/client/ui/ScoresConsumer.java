@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -54,6 +55,7 @@ public class ScoresConsumer implements MessageListener {
     }
 
     public void onMessage(Message message) {
+        Utils.ensureNotEdtThread();
         int gameid = 0;
         try {
 

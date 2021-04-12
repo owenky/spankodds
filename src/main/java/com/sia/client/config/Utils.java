@@ -65,4 +65,9 @@ public abstract class Utils {
             JOptionPane.showMessageDialog(parentComponent, message);
         });
     }
+    public static void ensureNotEdtThread() {
+        if ( SwingUtilities.isEventDispatchThread()) {
+            log(new Exception("Worker Thread Vialation: This action should not happen in EDT"));
+        }
+    }
 }

@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
 public class AppController {
 
@@ -695,7 +696,7 @@ public class AppController {
                 loggedInConnection = connectionFactory.createConnection(un, pw);
             }
         } catch (Exception e) {
-            System.out.println("error establishing loggedin connection! " + e);
+            log(e);
         }
         return loggedInConnection;
     }
@@ -709,7 +710,7 @@ public class AppController {
         try {
             linesConsumer = new LinesConsumer(connectionFactory, loggedInConnection, linechangesQueue);
         } catch (Exception e) {
-            System.out.println("error establishing loggedin connection! lines consumer" + e);
+            log(e);
         }
 
     }
@@ -718,7 +719,7 @@ public class AppController {
         try {
             scoresConsumer = new ScoresConsumer(connectionFactory, loggedInConnection, scorechangesQueue);
         } catch (Exception e) {
-            System.out.println("error establishing loggedin connection! scores consumer" + e);
+            log(e);
         }
 
     }
@@ -727,7 +728,7 @@ public class AppController {
         try {
             urgentsConsumer = new UrgentsConsumer(connectionFactory, loggedInConnection, urgentQueue);
         } catch (Exception e) {
-            System.out.println("error establishing loggedin connection! urgents consumer" + e);
+            log(e);
         }
 
     }
@@ -737,7 +738,7 @@ public class AppController {
         try {
             gamesConsumer = new GamesConsumer(connectionFactory, loggedInConnection, gamechangesQueue);
         } catch (Exception e) {
-            System.out.println("error establishing loggedin connection! games consumer " + e);
+            log(e);
         }
 
     }
@@ -746,7 +747,7 @@ public class AppController {
         try {
             chartchecker = new ChartChecker();
         } catch (Exception e) {
-            System.out.println("error creating chartchecker " + e);
+            log(e);
         }
 
     }
@@ -762,7 +763,7 @@ public class AppController {
                 guestConnection = connectionFactory.createConnection("guest", "spank0dds4ever");
             }
         } catch (Exception e) {
-            System.out.println("error establishing guest connection! " + e);
+            log(e);
         }
         return guestConnection;
     }
@@ -792,6 +793,7 @@ public class AppController {
                     System.out.println(Color.decode(color));
                     bookiecolors.put(id, Color.decode(color));
                 } catch (Exception ex) {
+                    log(ex);
                 }
 
             }
@@ -807,6 +809,7 @@ public class AppController {
                 String[] tabelements = customtab.split("\\*");
                 addCustomTab(tabelements[1], customtab);
             } catch (Exception ex) {
+                log(ex);
             }
 
         }
@@ -975,7 +978,7 @@ public class AppController {
                     }
                     g = null;
                 } catch (Exception ex) {
-                    System.out.println("exception removing games in appcontroller " + ex);
+                    log( ex);
                 }
             }
         });
@@ -1174,7 +1177,7 @@ public class AppController {
             q4totals.put(total.getBookieid() + "-" + total.getGameid(), total);
         } else {
             livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
-            System.out.println("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
+            log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
         }
 
         //LineAlertOpeners.totalOpenerAlert(total);
