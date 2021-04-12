@@ -55,6 +55,7 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 
@@ -421,21 +422,20 @@ public class GameAlert {
             }
         });
 
-        testpopupBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
-                        "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
+        testpopupBut.addActionListener(ae -> {
 
-                        "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
-                        "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
-                        "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm);
-                System.out.println("popupsecs=" + popupsecs);
+            new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
+                    "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
 
-            }
+                    "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
+                    "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
+                    "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm);
+            log("popupsecs=" + popupsecs);
         });
 
-        customsoundBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+        customsoundBut.addActionListener(ae -> {
+
+            checkAndRunInEDT(() -> {
                 int returnVal = fc.showOpenDialog(jfrm);
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -457,8 +457,7 @@ public class GameAlert {
                 } else {
                     //log.append("Open command cancelled by user." + newline);
                 }
-
-            }
+            });
         });
 
 

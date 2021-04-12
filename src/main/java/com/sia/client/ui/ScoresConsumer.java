@@ -16,7 +16,6 @@ import javax.jms.Session;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.SwingUtilities;
 import java.io.File;
 
 import static com.sia.client.config.Utils.*;
@@ -135,22 +134,22 @@ public class ScoresConsumer implements MessageListener {
 
                             if (goodsport) {
                                 if (popup) {
-                                    SwingUtilities.invokeLater(() -> {
-                                        String hrmin = AppController.getCurrentHoursMinutes();
-                                        String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-"
-                                                + g.getShorthometeam() + "-" + currenthomescore;
 
-                                        String popalertname = "Alert at:" + hrmin + "\nFINAL :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                                    String hrmin = AppController.getCurrentHoursMinutes();
+                                    String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-"
+                                            + g.getShorthometeam() + "-" + currenthomescore;
 
-                                        AppController.alertsVector.addElement(popalertname);
+                                    String popalertname = "Alert at:" + hrmin + "\nFINAL :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 
-                                        new UrgentMessage("<HTML><H1>FINAL</H1><FONT COLOR=BLUE>" +
-                                                s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                                    AppController.alertsVector.addElement(popalertname);
 
-                                                "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
-                                                "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD><TD>" + currenthomescore + "</TR>" +
-                                                "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-                                    });
+                                    new UrgentMessage("<HTML><H1>FINAL</H1><FONT COLOR=BLUE>" +
+                                            s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                                            "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
+                                            "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD><TD>" + currenthomescore + "</TR>" +
+                                            "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
+
 
                                 }
 
@@ -222,21 +221,21 @@ public class ScoresConsumer implements MessageListener {
 
                             if (goodsport) {
                                 if (popup) {
-                                    SwingUtilities.invokeLater(() -> {
-                                        String hrmin = AppController.getCurrentHoursMinutes();
-                                        String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
-                                        String popalertname = "Alert at:" + hrmin + "\nSTARTED :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                                    String hrmin = AppController.getCurrentHoursMinutes();
+                                    String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
-                                        AppController.alertsVector.addElement(popalertname);
+                                    String popalertname = "Alert at:" + hrmin + "\nSTARTED :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 
-                                        new UrgentMessage("<HTML><H1>STARTED</H1><FONT COLOR=BLUE>" +
-                                                s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                                    AppController.alertsVector.addElement(popalertname);
 
-                                                "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD></TR>" +
-                                                "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD></TR>" +
-                                                "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-                                    });
+                                    new UrgentMessage("<HTML><H1>STARTED</H1><FONT COLOR=BLUE>" +
+                                            s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                                            "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD></TR>" +
+                                            "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD></TR>" +
+                                            "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
+
                                 }
 
                                 if (sound) {
@@ -307,21 +306,21 @@ public class ScoresConsumer implements MessageListener {
 
                             if (goodsport) {
                                 if (popup) {
-                                    SwingUtilities.invokeLater(() -> {
-                                        String hrmin = AppController.getCurrentHoursMinutes();
-                                        String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
-                                        String popalertname = "Alert at:" + hrmin + "\nHALFTIME :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
-                                        AppController.alertsVector.addElement(popalertname);
+                                    String hrmin = AppController.getCurrentHoursMinutes();
+                                    String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
+
+                                    String popalertname = "Alert at:" + hrmin + "\nHALFTIME :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                                    AppController.alertsVector.addElement(popalertname);
 
 
-                                        new UrgentMessage("<HTML><H1>HALFTIME</H1><FONT COLOR=BLUE>" +
-                                                s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                                    new UrgentMessage("<HTML><H1>HALFTIME</H1><FONT COLOR=BLUE>" +
+                                            s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
 
-                                                "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
-                                                "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD><TD>" + currenthomescore + "</TR>" +
-                                                "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-                                    });
+                                            "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
+                                            "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD><TD>" + currenthomescore + "</TR>" +
+                                            "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
+
                                 }
 
                                 if (sound) {

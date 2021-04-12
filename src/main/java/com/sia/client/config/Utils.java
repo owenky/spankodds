@@ -1,6 +1,10 @@
 package com.sia.client.config;
 
 import javax.jms.MapMessage;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import java.awt.Component;
+import java.awt.HeadlessException;
 import java.net.URL;
 
 public abstract class Utils {
@@ -48,5 +52,17 @@ public abstract class Utils {
             log(e);
             return defaultValue;
         }
+    }
+    public static void checkAndRunInEDT(Runnable r) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater(r);
+        }
+    }
+    public static void showMessageDialog(Component parentComponent, Object message) throws HeadlessException {
+        checkAndRunInEDT(()-> {
+            JOptionPane.showMessageDialog(parentComponent, message);
+        });
     }
 }
