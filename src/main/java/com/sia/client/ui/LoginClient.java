@@ -383,7 +383,7 @@ public class LoginClient implements MessageListener {
                 AppController.createUrgentsConsumer();
                 AppController.createLinesConsumer();
                 AppController.createChartChecker();
-                System.out.println("Unsubscribing....." + new java.util.Date());
+                log("Unsubscribing....." + new java.util.Date());
                 consumer.close();
 
             }

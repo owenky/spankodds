@@ -32,8 +32,6 @@ public class AppController {
 
 
     public static Vector alertsVector = new Vector();
-
-
     public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
     public static Vector<String> customTabsVec = new Vector();
@@ -745,7 +743,7 @@ public class AppController {
 
     public static void createChartChecker() {
         try {
-            chartchecker = new ChartChecker();
+            chartchecker = ChartChecker.instance();
         } catch (Exception e) {
             log(e);
         }
@@ -1405,5 +1403,4 @@ public static TeamTotalline getTeamTotalline(Bookie b,int g)
     public UrgentsConsumer getUrgentsConsumer() {
         return urgentsConsumer;
     }
-
 }

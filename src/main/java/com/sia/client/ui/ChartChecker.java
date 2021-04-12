@@ -14,17 +14,21 @@ import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static com.sia.client.config.Utils.log;
 
 public class ChartChecker {
-    static List<ChartData2> cl = new ArrayList<>();
-    static List<ChartData3> cl1 = new ArrayList<>();
-    static int amt = 1;
-    static String filename = "No File Selected";
-    static int updatetime = 5;
-    static String errormsg;
-    javax.swing.Timer timer;
+
+    private static final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
+    private static ChartChecker instance;
+    List<ChartData2> cl = new ArrayList<>();
+    List<ChartData3> cl1 = new ArrayList<>();
+    int amt = 1;
+    String filename = "No File Selected";
+    String errormsg;
     boolean firsttime = true;
     String url = "";
     String uname = "";
@@ -35,38 +39,43 @@ public class ChartChecker {
     int count1;
     int count2;
 
-    public ChartChecker() {
-        startOver();
+    private ChartChecker() {
     }
 
-    public void startOver() {
+    public static synchronized ChartChecker instance() {
+        if (null == instance) {
+            instance = new ChartChecker();
+            instance.startOver();
+        }
+        return instance;
+    }
+    public static List<ChartData3> getCl1 () {
+        return instance().cl1;
+    }
+    public static List<ChartData2> getCl () {
+        return instance().cl;
+    }
+    private void startOver() {
         Utils.ensureNotEdtThread();
         log("Starting over chart checker..");
-        try {
-            amt = AppController.getUser().getChartMinAmtNotify();
-            if (timer != null && timer.isRunning()) {
-                timer.stop();
-            }
 
-            timer = new javax.swing.Timer(AppController.getUser().getChartSecsRefresh() * 1000, evt -> {
-                if (numprocessed++ % 50 == 0) {
-                    cl.clear();
-                    cl1.clear();
-                    firsttime = true;
-                    log("Processing chartchecker file=" + AppController.getUser().getChartFileName() + "..secs=" + AppController.getUser().getChartSecsRefresh() + "..amt=" + AppController.getUser().getChartMinAmtNotify() + ".." + numprocessed + " at " + new java.util.Date());
-                }
-//                init();
-            });
-            timer.start();
-        } catch (Exception ex) {
-            log( ex);
-            //startOver();
-        }
+        Runnable schduledAction = () -> {
+            amt = AppController.getUser().getChartMinAmtNotify();
+            if (numprocessed++ % 50 == 0) {
+                cl.clear();
+                cl1.clear();
+                firsttime = true;
+                log("Processing chartchecker file=" + AppController.getUser().getChartFileName()
+                        + "..secs=" + AppController.getUser().getChartSecsRefresh() + "..amt=" + AppController.getUser().getChartMinAmtNotify() + ".." + numprocessed + " at " + new java.util.Date());
+            }
+            init();
+        };
+        scheduledThreadPoolExecutor.schedule(schduledAction, AppController.getUser().getChartSecsRefresh(), TimeUnit.SECONDS);
 
     }
 
 
-    public void init() {
+    public synchronized void init() {
         Utils.ensureNotEdtThread();
         try {
 
@@ -397,7 +406,7 @@ public class ChartChecker {
 
 
     //Method for preparing the url data into chart
-    public void prepareURLData(String urlStr, String user, String pass) {
+    private void prepareURLData(String urlStr, String user, String pass) {
 
         try {
             // URL url = new URL ("http://69.125.22.204:9452/tcscsvdbfeed.txt");
@@ -517,10 +526,7 @@ public class ChartChecker {
             //errormsg="Plese check your URL/USER NAME/PASSWORD";
             //new ShowError().setVisible(true);
         }
-
     }
-
-
 }
 	
 	
