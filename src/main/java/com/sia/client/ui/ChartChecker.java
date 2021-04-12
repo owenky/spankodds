@@ -4,7 +4,6 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.ChartData2;
 import com.sia.client.model.ChartData3;
 
-import javax.swing.Timer;
 import java.awt.Color;
 import java.io.File;
 import java.io.InputStream;
