@@ -22,7 +22,7 @@ import static com.sia.client.config.Utils.log;
 
 public class ChartChecker {
 
-    private static final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
+    private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = null;
     private static ChartChecker instance;
     List<ChartData2> cl = new ArrayList<>();
     List<ChartData3> cl1 = new ArrayList<>();
@@ -35,7 +35,7 @@ public class ChartChecker {
     String password = "";
     int numprocessed = 0;
     Scanner sc;
-    int gn, p, asa, hsa, oa, ua, ama, hma, dma, aTToa, aTTua, hTToa, hTTua, r1, r2;
+    int gn, p, asa, hsa, oa, ua, ama, hma, dma, aTToa, aTTua, hTToa, hTTua;
     int count1;
     int count2;
 
@@ -55,10 +55,14 @@ public class ChartChecker {
     public static List<ChartData2> getCl () {
         return instance().cl;
     }
-    private void startOver() {
+    public void startOver() {
         Utils.ensureNotEdtThread();
-        log("Starting over chart checker..");
+        if ( null !=scheduledThreadPoolExecutor ) {
+            log("Starting over chart checker..");
+            scheduledThreadPoolExecutor.shutdownNow();
+        }
 
+        scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
         Runnable schduledAction = () -> {
             amt = AppController.getUser().getChartMinAmtNotify();
             if (numprocessed++ % 50 == 0) {

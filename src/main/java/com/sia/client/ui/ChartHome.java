@@ -243,7 +243,7 @@ public class ChartHome extends javax.swing.JFrame
 	   //ct=new ChartThread();
 	   //ct.start();
 	   // here we tell chartchecker to start over with new info!!!
-//	   AppController.getChartChecker().startOver();
+	   AppController.getChartChecker().startOver();
 	   
 		dispose();
     } 
