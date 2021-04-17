@@ -42,13 +42,6 @@
                         <id>create-jar</id>
                         <configuration>
                             <minimizeJar>true</minimizeJar>
-                            <transformers>
-                                <!-- add Main-Class to manifest file -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.sia.client.ui.SpankOdds</mainClass>
-                                    <Permissions>all-permissions</Permissions>
-                                </transformer>
-                            </transformers>
                             <!-- finalName>${project.artifactId}</finalName -->
                         </configuration>
                     </execution>
