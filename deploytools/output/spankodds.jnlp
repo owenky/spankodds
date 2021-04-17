@@ -23,6 +23,6 @@
 <security>
 	<all-permissions/>
 </security>
-<application-desc main-class="SpankOdds" >
+<application-desc main-class="com.sia.client.ui.SpankOdds" >
 </application-desc>
 </jnlp>
