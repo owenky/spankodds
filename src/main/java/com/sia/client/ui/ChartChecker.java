@@ -64,6 +64,7 @@ public class ChartChecker {
 
         scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
         Runnable schduledAction = () -> {
+
             amt = AppController.getUser().getChartMinAmtNotify();
             if (numprocessed++ % 50 == 0) {
                 cl.clear();
@@ -74,7 +75,7 @@ public class ChartChecker {
             }
             init();
         };
-        scheduledThreadPoolExecutor.schedule(schduledAction, AppController.getUser().getChartSecsRefresh(), TimeUnit.SECONDS);
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(schduledAction, 0L,AppController.getUser().getChartSecsRefresh(), TimeUnit.SECONDS);
 
     }
 
@@ -107,12 +108,12 @@ public class ChartChecker {
                     cl.clear();
                 }
             }
-//*******************************Local file Reading********************************				
+//*******************************Local file Reading********************************
             else {
                 cl.clear();
                 //cl1.clear();
                 //	System.out.println("**************************************iam from Local file Now**********************");
-                //amt=com.sia.client.ui.ChartHome.warnamount;
+                //amt=ChartHome.warnamount;
                 filename = AppController.getUser().getChartFileName();
                 File f = new File(filename);
                 sc = new Scanner(f);
@@ -157,6 +158,7 @@ public class ChartChecker {
                     }
                 }
                 sc.close();
+                filename = AppController.getUser().getChartFileName();
                 File f1 = new File(filename);
                 Scanner sc1 = new Scanner(f1);
                 sc1.useDelimiter("\n");
@@ -218,13 +220,19 @@ public class ChartChecker {
                 ChartData3 cd3 = new ChartData3();
                 cd3.gn = gn;
                 cd3.p = p;
-                for (final ChartData3 cd4 : cl1) {
-                    if ((cd4.gn == gn) && (cd4.p == p)) {
+                Iterator itr1 = cl1.iterator();
+                while (itr1.hasNext()) {
+                    ChartData3 cd4 = (ChartData3) itr1.next();
+                    if (cd4.gn == gn && cd4.p == p) {
                         found = 1;
                         break;
+                    } else {
+                        continue;
                     }
                 }
-                if (1 != found) {
+                if (found == 1) {
+                    continue;
+                } else {
                     cl1.add(cd3);
                 }
             }
@@ -530,7 +538,10 @@ public class ChartChecker {
             //errormsg="Plese check your URL/USER NAME/PASSWORD";
             //new ShowError().setVisible(true);
         }
+
     }
+
+
 }
 	
 	

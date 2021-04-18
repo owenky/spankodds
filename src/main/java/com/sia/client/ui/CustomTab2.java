@@ -230,140 +230,150 @@ public class CustomTab2 extends JPanel {
             System.out.println("exception sorting " + ex);
             ex.printStackTrace();
         }
+        Game g = null;
+        try {
 
-        for (int k = 0; k < allgames.size(); k++) {
+            for (int k = 0; k < allgames.size(); k++) {
 
-            String gameid = "";
-            Game g = (Game) allgames.get(k);
-
-
-            if (g == null) {
-                System.out.println("skipping gameid=" + gameid + "...cuz of null game");
-                continue;
-            } else {
-                gameid = "" + g.getGame_id();
-            }
-            if (g.getGamedate() == null) {
-                System.out.println("skipping gameid=" + gameid + "...cuz of null game date");
-                continue;
-            }
-
-            String gamedate = sdf.format(g.getGamedate());
-            int leagueid = g.getLeague_id();
+                String gameid = "";
+                g = (Game) allgames.get(k);
 
 
-            Sport s = AppController.getSport("" + leagueid);
-
-            Sport s2;
-
-
-            //System.out.println(s.getSportname());
-            if (s == null) {
-                System.out.println("skipping " + leagueid + "...cuz of null sport");
-                continue;
-            }
-
-            if (s.getSportname().equalsIgnoreCase("Football")) {
-                currenttreenode = football;
-            } else if (s.getSportname().equalsIgnoreCase("Basketball")) {
-                currenttreenode = basketball;
-            } else if (s.getSportname().equalsIgnoreCase("Baseball")) {
-                currenttreenode = baseball;
-            } else if (s.getSportname().equalsIgnoreCase("Hockey")) {
-                currenttreenode = hockey;
-            } else if (s.getSportname().equalsIgnoreCase("Fighting")) {
-                currenttreenode = fighting;
-            } else if (s.getSportname().equalsIgnoreCase("Soccer")) {
-                currenttreenode = soccer;
-            } else if (s.getSportname().equalsIgnoreCase("Auto Racing")) {
-                currenttreenode = autoracing;
-            } else if (s.getSportname().equalsIgnoreCase("Golf")) {
-                currenttreenode = golf;
-            } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
-                currenttreenode = tennis;
-            } else {
-                System.out.println("should never enter gameid=" + g.getGame_id());
-                currenttreenode = football;
-
-            }
-
-
-            if (leagueid == 9) // soccer need to look at subleagueid
-            {
-                leagueid = g.getSubleague_id();
-
-                s2 = AppController.getSport("" + leagueid);
-
-            } else {
-                s2 = s;
-            }
-
-            String description = g.getDescription();
-            if (description == null || description.equalsIgnoreCase("null")) {
-                description = "";
-            }
-
-            if (g.getStatus() == null) {
-                g.setStatus("");
-            }
-            if (g.getTimeremaining() == null) {
-                g.setTimeremaining("");
-            }
-
-
-            if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
-                    || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
-
-            ) {
-
-                //finalgames.add(g);
-                //System.out.println("skipping "+g.getGame_id());
-                continue;
-
-            }
-            // adding inprogress games to custyom tabs!
-            //else if(!g.getStatus().equalsIgnoreCase("NULL") && !g.getStatus().equals(""))
-            //{
-            //	continue;
-            //inprogressgames.add(g);
-            //}
-            else if (g.isSeriesprice()) {
-                continue;
-                //seriesgames.add(g);
-            } else if (g.isForprop()) {
-                continue;
-                //seriesgames.add(g);
-            } else if (g.isIngame() || description.indexOf("In-Game") != -1) {
-                continue;
-                //ingamegames.add(g);
-            } else if (!lastdate.equals(gamedate) || lastleagueid != leagueid) // new date or new league!
-            {
-                if (lastleagueid <= 4 || leagueid <= 4) {
-                    //System.out.println("new!...lastdate="+lastdate+"..gamedate="+g.getGamedate()+".."+lastleagueid+"..new="+leagueid);
+                if (g == null) {
+                    System.out.println("skipping gameid=" + gameid + "...cuz of null game");
+                    continue;
+                } else {
+                    gameid = "" + g.getGame_id();
                 }
-                lastdate = gamedate;
-                lastleagueid = leagueid;
-                gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
+                if (g.getGamedate() == null) {
+                    System.out.println("skipping gameid=" + gameid + "...cuz of null game date");
+                    continue;
+                }
 
-                //	currenttreenode.add(new InvisibleNode(s2.getLeaguename()+" "+sdf2.format(g.getGamedate())));
-                sporthash.put(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()), currenttreenode);
-                mainhash.put(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()), leagueid + " " + sdf2.format(g.getGamedate()));
-                Vector v2 = new Vector();
-                //v2.add(gameid);
-                v2.add(g);
-                gamegroupvec.add(v2);
-                currentvec = v2;
-            } else // same date
-            {
-                //currentvec.add(gameid);
-                currentvec.add(g);
+                String gamedate = sdf.format(g.getGamedate());
+
+                int leagueid = g.getLeague_id();
+
+
+                Sport s = AppController.getSport("" + leagueid);
+
+                Sport s2;
+
+
+                //System.out.println(s.getSportname());
+                if (s == null) {
+                    System.out.println("skipping " + leagueid + "...cuz of null sport");
+                    continue;
+                }
+
+                if (s.getSportname().equalsIgnoreCase("Football")) {
+                    currenttreenode = football;
+                } else if (s.getSportname().equalsIgnoreCase("Basketball")) {
+                    currenttreenode = basketball;
+                } else if (s.getSportname().equalsIgnoreCase("Baseball")) {
+                    currenttreenode = baseball;
+                } else if (s.getSportname().equalsIgnoreCase("Hockey")) {
+                    currenttreenode = hockey;
+                } else if (s.getSportname().equalsIgnoreCase("Fighting")) {
+                    currenttreenode = fighting;
+                } else if (s.getSportname().equalsIgnoreCase("Soccer")) {
+                    currenttreenode = soccer;
+                } else if (s.getSportname().equalsIgnoreCase("Auto Racing")) {
+                    currenttreenode = autoracing;
+                } else if (s.getSportname().equalsIgnoreCase("Golf")) {
+                    currenttreenode = golf;
+                } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
+                    currenttreenode = tennis;
+                } else {
+                    System.out.println("should never enter gameid=" + g.getGame_id());
+                    currenttreenode = football;
+
+                }
+
+
+                if (leagueid == 9) // soccer need to look at subleagueid
+                {
+                    leagueid = g.getSubleague_id();
+
+                    s2 = AppController.getSport("" + leagueid);
+
+                } else {
+                    s2 = s;
+                }
+
+                if (s2 == null) {
+                    System.out.println("skipping " + leagueid + "...cuz of null sport2");
+                    continue;
+                }
+                String description = g.getDescription();
+                if (description == null || description.equalsIgnoreCase("null")) {
+                    description = "";
+                }
+
+                if (g.getStatus() == null) {
+                    g.setStatus("");
+                }
+                if (g.getTimeremaining() == null) {
+                    g.setTimeremaining("");
+                }
+
+
+                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
+                        || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
+
+                ) {
+
+                    //finalgames.add(g);
+                    //System.out.println("skipping "+g.getGame_id());
+                    continue;
+
+                }
+                // adding inprogress games to custyom tabs!
+                //else if(!g.getStatus().equalsIgnoreCase("NULL") && !g.getStatus().equals(""))
+                //{
+                //	continue;
+                //inprogressgames.add(g);
+                //}
+                else if (g.isSeriesprice()) {
+                    continue;
+                    //seriesgames.add(g);
+                } else if (g.isForprop()) {
+                    continue;
+                    //seriesgames.add(g);
+                } else if (g.isIngame() || description.indexOf("In-Game") != -1) {
+                    continue;
+                    //ingamegames.add(g);
+                } else if (!lastdate.equals(gamedate) || lastleagueid != leagueid) // new date or new league!
+                {
+                    if (lastleagueid <= 4 || leagueid <= 4) {
+                        //System.out.println("new!...lastdate="+lastdate+"..gamedate="+g.getGamedate()+".."+lastleagueid+"..new="+leagueid);
+                    }
+                    lastdate = gamedate;
+                    lastleagueid = leagueid;
+                    gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
+
+                    //	currenttreenode.add(new InvisibleNode(s2.getLeaguename()+" "+sdf2.format(g.getGamedate())));
+                    sporthash.put(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()), currenttreenode);
+                    mainhash.put(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()), leagueid + " " + sdf2.format(g.getGamedate()));
+                    Vector v2 = new Vector();
+                    //v2.add(gameid);
+                    v2.add(g);
+                    gamegroupvec.add(v2);
+                    currentvec = v2;
+                } else // same date
+                {
+                    //currentvec.add(gameid);
+                    currentvec.add(g);
+
+                }
+
 
             }
-
-
+        } catch (Exception ex) {
+            System.out.println("exception going through all games... " + ex);
+            System.out.println("game=" + g.getGame_id() + "...leagueid=" + g.getLeague_id() + "..subleagueid=" + g.getSubleague_id());
+            // System.out.println("sport="+s);
         }
-
-
         for (int j = 0; j < gamegroupvec.size(); j++) {
             Vector thisvec = (Vector) gamegroupvec.elementAt(j);
             int numgames = thisvec.size();
@@ -530,7 +540,7 @@ public class CustomTab2 extends JPanel {
 
                             addDestinationElements(new Object[]{selPath.getLastPathComponent()});
 
-                            System.out.println("node=" + node.toString() + "src/main");
+                            System.out.println("node=" + node.toString() + "..");
                             pathhash.put(node.toString(), selPath);
                             node.setVisible(false);
                             ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
@@ -610,7 +620,7 @@ public class CustomTab2 extends JPanel {
         destList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
-                    System.out.println("Double clicked on.." + destList.getSelectedValue() + "src/main");
+                    System.out.println("Double clicked on.." + destList.getSelectedValue() + "..");
                     TreePath tp = (TreePath) pathhash.get(destList.getSelectedValue() + "");
                     System.out.println("treepath=" + tp);
                     InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
@@ -993,77 +1003,77 @@ public class CustomTab2 extends JPanel {
                 checkAndRunInEDT(() -> {
 
 
-                    Vector tabpanes = AppController.getTabPanes();
-                    System.out.println("tabpanes size= " + tabpanes.size());
-                    for (int i = 0; i < tabpanes.size(); i++) {
-                        SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                        int numtabs = tp.getTabCount();
-                        System.out.println("numtabs= " + numtabs);
+                        Vector tabpanes = AppController.getTabPanes();
+                        System.out.println("tabpanes size= " + tabpanes.size());
+                        for (int i = 0; i < tabpanes.size(); i++) {
+                            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                            int numtabs = tp.getTabCount();
+                            System.out.println("numtabs= " + numtabs);
 
-                        tp.removeTabAt(numtabs - 1);
-                        MainScreen ms = new MainScreen(tab, customvec);
-                        ms.setShowHeaders(includeheaders.isSelected());
-                        ms.setShowSeries(includeseries.isSelected());
-                        ms.setShowIngame(includeingame.isSelected());
-                        ms.setShowAdded(includeadded.isSelected());
-                        ms.setShowExtra(includeextra.isSelected());
-                        ms.setShowProps(includeprops.isSelected());
-                        tp.addTab(ms.getName(), null, ms, ms.getName());
+                            tp.removeTabAt(numtabs - 1);
+                            MainScreen ms = new MainScreen(tab, customvec);
+                            ms.setShowHeaders(includeheaders.isSelected());
+                            ms.setShowSeries(includeseries.isSelected());
+                            ms.setShowIngame(includeingame.isSelected());
+                            ms.setShowAdded(includeadded.isSelected());
+                            ms.setShowExtra(includeextra.isSelected());
+                            ms.setShowProps(includeprops.isSelected());
+                            tp.addTab(ms.getName(), null, ms, ms.getName());
 
-                            /*
-                            JPanel pnlTab = new JPanel(new GridBagLayout());
-                            pnlTab.setOpaque(false);
-                            JLabel lblTitle = new JLabel(ms.getName());
-                            JButton btnClose = new JButton("x");
+								/*
+								JPanel pnlTab = new JPanel(new GridBagLayout());
+								pnlTab.setOpaque(false);
+								JLabel lblTitle = new JLabel(ms.getName());
+								JButton btnClose = new JButton("x");
 
-                            GridBagConstraints gbc = new GridBagConstraints();
-                            gbc.gridx = 0;
-                            gbc.gridy = 0;
-                            gbc.weightx = 1;
+								GridBagConstraints gbc = new GridBagConstraints();
+								gbc.gridx = 0;
+								gbc.gridy = 0;
+								gbc.weightx = 1;
 
-                            pnlTab.add(lblTitle, gbc);
+								pnlTab.add(lblTitle, gbc);
 
-                            gbc.gridx++;
-                            gbc.weightx = 0;
-                            pnlTab.add(btnClose, gbc);
+								gbc.gridx++;
+								gbc.weightx = 0;
+								pnlTab.add(btnClose, gbc);
 
-                            tp.setTabComponentAt(tp.getTabCount()-1, pnlTab);
+								tp.setTabComponentAt(tp.getTabCount()-1, pnlTab);
 
-                            //btnClose.addActionListener(myCloseActionHandler);
+								//btnClose.addActionListener(myCloseActionHandler);
 
-                            */
+								*/
 
-                        tp.addTab("+", null, null, "+");
+                            tp.addTab("+", null, null, "+");
 
 
-                    }
+                        }
 
 
                 });
             } else {
                 checkAndRunInEDT(() -> {
 
-                    Vector tabpanes = AppController.getTabPanes();
-                    System.out.println("tabpanes size= " + tabpanes.size());
-                    for (int i = 0; i < tabpanes.size(); i++) {
-                        SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                        int numtabs = tp.getTabCount();
-                        System.out.println("numtabs= " + numtabs);
+                        Vector tabpanes = AppController.getTabPanes();
+                        System.out.println("tabpanes size= " + tabpanes.size());
+                        for (int i = 0; i < tabpanes.size(); i++) {
+                            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                            int numtabs = tp.getTabCount();
+                            System.out.println("numtabs= " + numtabs);
 
-                        MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
-                        oldms.makeDataModelsVisible(false);
-                        oldms.destroyMe();
+                            MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
+                            oldms.makeDataModelsVisible(false);
+                            oldms.destroyMe();
 
-                        MainScreen ms = new MainScreen(tab, customvec);
-                        ms.setShowHeaders(includeheaders.isSelected());
-                        ms.setShowSeries(includeseries.isSelected());
-                        ms.setShowIngame(includeingame.isSelected());
-                        ms.setShowAdded(includeadded.isSelected());
-                        ms.setShowExtra(includeextra.isSelected());
-                        ms.setShowProps(includeprops.isSelected());
-                        tp.setComponentAt(tabindex, ms);
-                        tp.refreshCurrentTab();
-                    }
+                            MainScreen ms = new MainScreen(tab, customvec);
+                            ms.setShowHeaders(includeheaders.isSelected());
+                            ms.setShowSeries(includeseries.isSelected());
+                            ms.setShowIngame(includeingame.isSelected());
+                            ms.setShowAdded(includeadded.isSelected());
+                            ms.setShowExtra(includeextra.isSelected());
+                            ms.setShowProps(includeprops.isSelected());
+                            tp.setComponentAt(tabindex, ms);
+                            tp.refreshCurrentTab();
+                        }
                 });
 
             }
@@ -1110,7 +1120,7 @@ public class CustomTab2 extends JPanel {
 
                         addDestinationElements(new Object[]{selPath.getLastPathComponent()});
 
-                        System.out.println("node=" + node.toString() + "src/main");
+                        System.out.println("node=" + node.toString() + "..");
                         pathhash.put(node.toString(), selPath);
                         node.setVisible(false);
                         ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);

@@ -1,14 +1,15 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.ColorData;
 
 import javax.swing.ImageIcon;
 
 public class StockData {
 
-  public static ImageIcon ICON_UP = new ImageIcon("ArrUp.gif");
-  public static ImageIcon ICON_DOWN = new ImageIcon("ArrDown.gif");
-  public static ImageIcon ICON_BLANK = new ImageIcon("blank.gif");
+  public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("ArrUp.gif"));
+  public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("ArrDown.gif"));
+  public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank.gif"));
 
   public IconData m_symbol;
   public String    m_name;

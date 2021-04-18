@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -19,16 +18,23 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 
-import static com.sia.client.config.Utils.*;
+import static com.sia.client.config.Utils.log;
 
 public class ScoresConsumer implements MessageListener {
 
+    private static String brokerURL = "failover:(tcp://sof300732.com:61616)";
+    // private static String brokerURL = "failover:(ssl://localhost:61617)";
+    //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
+
+    private static ActiveMQConnectionFactory factory;
+    int gameid = 0;
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
+        this.factory = factory;
         this.connection = connection;
 
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -43,7 +49,7 @@ public class ScoresConsumer implements MessageListener {
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
         AppController.createLoggedInConnection("reguser", "0hbaby*(");
-        //com.sia.client.ui.AppController.createLoggedInConnection("guest","spank0dds4ever");
+        //AppController.createLoggedInConnection("guest","spank0dds4ever");
         LinesConsumer consumer = new LinesConsumer(AppController.getConnectionFactory(), AppController.getLoggedInConnection(), "spankoddsin.LINECHANGE");
 
     }
@@ -55,8 +61,6 @@ public class ScoresConsumer implements MessageListener {
     }
 
     public void onMessage(Message message) {
-        Utils.ensureNotEdtThread();
-        int gameid = 0;
         try {
 
             mapMessage = (MapMessage) message;
@@ -64,27 +68,80 @@ public class ScoresConsumer implements MessageListener {
             String changetype = mapMessage.getStringProperty("messageType");
 
 
-            if ("ScoreChange".equals(changetype)) {
+            if (changetype.equals("ScoreChange")) {
                 gameid = mapMessage.getInt("eventnumber");
-                final String period = getString(mapMessage, "period");
-                final String timer = getString(mapMessage, "timer");
-                final String status = getString(mapMessage, "status");
-                final long gamestatuslong = getLong(mapMessage, "gamestatusts", 100L);
-                final int currentvisitorscore = getInt(mapMessage, "currentvisitorscore");
-                final String visitorscoresupplemental = getString(mapMessage, "visitorscoresupplemental");
-                final long scorets = getLong(mapMessage, "scorets", 100L);
-                final int currenthomescore = getInt(mapMessage, "currenthomescore");
-                final String homescoresupplemental = getString(mapMessage, "homescoresupplemental");
 
-                final Game g = AppController.getGame(gameid);
-                if (null != g) {
+
+                String period = "";
+                String timer = "";
+                String status = "";
+                long gamestatuslong = 100;
+                int currentvisitorscore = 0;
+                String visitorscoresupplemental = "";
+                long scorets = 100;
+                int currenthomescore = 0;
+                String homescoresupplemental = "";
+
+
+                try {
+                    period = mapMessage.getString("period");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    timer = mapMessage.getString("timer");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    status = mapMessage.getString("status");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    gamestatuslong = mapMessage.getLong("gamestatusts");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    currentvisitorscore = mapMessage.getInt("currentvisitorscore");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    visitorscoresupplemental = mapMessage.getString("visitorscoresupplemental");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    scorets = mapMessage.getLong("scorets");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    currenthomescore = mapMessage.getInt("currenthomescore");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    homescoresupplemental = mapMessage.getString("homescoresupplemental");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+
+                //scorets =scorets +1000*60*60*3;
+                //gamestatuslong =gamestatuslong +1000*60*60*3;
+
+                Game g = AppController.getGame(gameid);
+                boolean refreshtabs = false;
+                if (g != null) {
 
                     //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
-                    if ("Final".equalsIgnoreCase(status) || "Win".equalsIgnoreCase(status)) {
+                    if (status.equalsIgnoreCase("Final") || status.equalsIgnoreCase("Win")) {
                         if (!g.getStatus().equals(status)) // just became final
                         {
 
-                            final Sport s = AppController.getSport(g.getLeague_id());
+                            Sport s = AppController.getSport(g.getLeague_id());
 
                             int id = s.getParentleague_id();
                             if (id == 9) {
@@ -92,11 +149,14 @@ public class ScoresConsumer implements MessageListener {
                             } else {
                                 AppController.moveGameToThisHeader(g, "FINAL");
                             }
+                            refreshtabs = true;
                             String finalprefs = AppController.getUser().getFinalAlert();
-                            log("game " + gameid + "..just went final");
-                            String[] finalarr = finalprefs.split("\\|");
+                            System.out.println("game " + gameid + "..just went final");
+                            String finalarr[] = finalprefs.split("\\|");
                             boolean popup = false;
                             boolean sound = false;
+                            int popupsecs = 15;
+                            int location = 6;
                             String audiofile = "";
                             String[] sports;
                             boolean goodsport = false;
@@ -111,10 +171,16 @@ public class ScoresConsumer implements MessageListener {
                             } catch (Exception ex) {
                                 log(ex);
                             }
-
-                            final int popupsecs = parseInt(finalarr[2], 15);
-                            final int location = parseInt(finalarr[3], 6);
-
+                            try {
+                                popupsecs = Integer.parseInt(finalarr[2]);
+                            } catch (Exception ex) {
+                                log(ex);
+                            }
+                            try {
+                                location = Integer.parseInt(finalarr[3]);
+                            } catch (Exception ex) {
+                                log(ex);
+                            }
                             try {
                                 audiofile = finalarr[4];
                             } catch (Exception ex) {
@@ -125,7 +191,7 @@ public class ScoresConsumer implements MessageListener {
                                 for (int j = 0; j < sports.length; j++) {
                                     String sportid = sports[j];
                                     if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname())
-                                            || "All Sports".equalsIgnoreCase(sportid)) {
+                                            || sportid.equalsIgnoreCase("All Sports")) {
                                         goodsport = true;
                                         break;
                                     }
@@ -136,23 +202,19 @@ public class ScoresConsumer implements MessageListener {
 
                             if (goodsport) {
                                 if (popup) {
-
                                     String hrmin = AppController.getCurrentHoursMinutes();
-                                    String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-"
-                                            + g.getShorthometeam() + "-" + currenthomescore;
+                                    String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
                                     String popalertname = "Alert at:" + hrmin + "\nFINAL :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 
                                     AppController.alertsVector.addElement(popalertname);
 
-                                    new UrgentMessage("<HTML><H1>FINAL</H1><FONT COLOR=BLUE>" +
-                                            s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                                    new UrgentMessage("<HTML><H2>FINAL " + s.getLeaguename() + "</H2>" +
+                                            "<TABLE cellspacing=1 cellpadding=1>" +
 
                                             "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
                                             "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD><TD>" + currenthomescore + "</TR>" +
-                                            "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-
-
+                                            "</TABLE></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
                                 }
 
                                 if (sound) {
@@ -164,7 +226,10 @@ public class ScoresConsumer implements MessageListener {
                                     }
                                 }
 
+
                             }
+                            refreshtabs = true;
+
 
                         }
                     } else if (g.getStatus() == null || g.getStatus().equalsIgnoreCase("NULL") || g.getStatus().equals("")) {
@@ -181,10 +246,15 @@ public class ScoresConsumer implements MessageListener {
                             }
 
 
+                            refreshtabs = true;
+
+
                             String prefs = AppController.getUser().getStartedAlert();
-                            String[] arr = prefs.split("\\|");
+                            String arr[] = prefs.split("\\|");
                             boolean popup = false;
                             boolean sound = false;
+                            int popupsecs = 15;
+                            int location = 6;
                             String audiofile = "";
                             String[] sports;
                             boolean goodsport = false;
@@ -199,10 +269,16 @@ public class ScoresConsumer implements MessageListener {
                             } catch (Exception ex) {
                                 log(ex);
                             }
-
-                            final int popupsecs = parseInt(arr[2], 15);
-                            final int location = parseInt(arr[3], 6);
-
+                            try {
+                                popupsecs = Integer.parseInt(arr[2]);
+                            } catch (Exception ex) {
+                                log(ex);
+                            }
+                            try {
+                                location = Integer.parseInt(arr[3]);
+                            } catch (Exception ex) {
+                                log(ex);
+                            }
                             try {
                                 audiofile = arr[4];
                             } catch (Exception ex) {
@@ -223,7 +299,6 @@ public class ScoresConsumer implements MessageListener {
 
                             if (goodsport) {
                                 if (popup) {
-
                                     String hrmin = AppController.getCurrentHoursMinutes();
                                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
@@ -237,11 +312,11 @@ public class ScoresConsumer implements MessageListener {
                                             "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD></TR>" +
                                             "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD></TR>" +
                                             "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-
                                 }
 
                                 if (sound) {
                                     if (audiofile.equals("")) {
+                                        //playSound("started.wav");
                                         new SoundPlayer("started.wav");
                                     } else {
                                         //playSound(audiofile);
@@ -258,6 +333,7 @@ public class ScoresConsumer implements MessageListener {
                         if (!g.getStatus().equals(status)) // just became halftime
                         {
                             log("game " + gameid + "..just went to halftime");
+                            refreshtabs = true;
                             Sport s = AppController.getSport(g.getLeague_id());
                             int id = s.getParentleague_id();
                             if (id == 9) {
@@ -265,11 +341,14 @@ public class ScoresConsumer implements MessageListener {
                             } else {
                                 AppController.moveGameToThisHeader(g, "Halftime");
                             }
+                            refreshtabs = true;
 
                             String prefs = AppController.getUser().getHalftimeAlert();
-                            String[] arr = prefs.split("\\|");
+                            String arr[] = prefs.split("\\|");
                             boolean popup = false;
                             boolean sound = false;
+                            int popupsecs = 15;
+                            int location = 6;
                             String audiofile = "";
                             String[] sports;
                             boolean goodsport = false;
@@ -284,10 +363,16 @@ public class ScoresConsumer implements MessageListener {
                             } catch (Exception ex) {
                                 log(ex);
                             }
-
-                            final int popupsecs = parseInt(arr[2], 15);
-                            final int location = parseInt(arr[3], 6);
-
+                            try {
+                                popupsecs = Integer.parseInt(arr[2]);
+                            } catch (Exception ex) {
+                                log(ex);
+                            }
+                            try {
+                                location = Integer.parseInt(arr[3]);
+                            } catch (Exception ex) {
+                                log(ex);
+                            }
                             try {
                                 audiofile = arr[4];
                             } catch (Exception ex) {
@@ -308,7 +393,6 @@ public class ScoresConsumer implements MessageListener {
 
                             if (goodsport) {
                                 if (popup) {
-
                                     String hrmin = AppController.getCurrentHoursMinutes();
                                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
@@ -322,7 +406,6 @@ public class ScoresConsumer implements MessageListener {
                                             "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
                                             "<TR><TD>" + g.getHomegamenumber() + "</TD><TD>" + g.getHometeam() + "</TD><TD>" + currenthomescore + "</TR>" +
                                             "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-
                                 }
 
                                 if (sound) {
@@ -340,11 +423,12 @@ public class ScoresConsumer implements MessageListener {
 
 
                         }
-                    } else if ("Time".equalsIgnoreCase(g.getStatus()))    // its already halftime // instead may make index of a :?
+                    } else if (g.getStatus().equalsIgnoreCase("Time"))    // its already halftime // instead may make index of a :?
                     {
                         if (!g.getStatus().equals(status)) // halftime just finished
                         {
                             log("game " + gameid + "..just went out of halftime");
+                            refreshtabs = true;
                             Sport s = AppController.getSport(g.getLeague_id());
                             int id = s.getParentleague_id();
                             if (id == 9) {
@@ -361,16 +445,21 @@ public class ScoresConsumer implements MessageListener {
                     g.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,
                             new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
 
+                    if (refreshtabs) {
+
+                    } else {
+
+                    }
                 } else {
-                    Game g2 = new Game();
-                    g2.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,
+                    g = new Game();
+                    g.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,
                             new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
-                    AppController.addGame(g2);
+                    AppController.addGame(g);
                 }
 
             }
 
-            //com.sia.client.ui.AppController.fireAllTableDataChanged();
+            //AppController.fireAllTableDataChanged();
 
 
         } catch (Exception e) {

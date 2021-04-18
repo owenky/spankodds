@@ -32,6 +32,8 @@ public class AppController {
 
 
     public static Vector alertsVector = new Vector();
+
+
     public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
     public static Vector<String> customTabsVec = new Vector();
@@ -105,6 +107,7 @@ public class AppController {
     public static Connection loggedInConnection;
 
     public static String loginQueue = "spankodds.LOGIN";
+    public static String userPrefsQueue = "spankodds.USERPREFS";
     public static String linechangesQueue = "spankoddsin.LINECHANGE";
     public static String gamechangesQueue = "spankoddsin.GAMECHANGE";
     public static String scorechangesQueue = "spankoddsin.SCORECHANGE";
@@ -116,6 +119,8 @@ public class AppController {
     public static GamesConsumer gamesConsumer;
     public static ScoresConsumer scoresConsumer;
     public static UrgentsConsumer urgentsConsumer;
+
+    public static UserPrefsProducer userPrefsProducer;
 
     public static ChartChecker chartchecker;
 
@@ -163,9 +168,9 @@ public class AppController {
     }
 
     public static Vector getMainTabVec() {
-        Collection<String> al = (Collection) SpotsTabPaneVector.values();
-        Iterator itr = al.iterator();
-        Vector vec = new Vector();
+        Collection<String> al = SpotsTabPaneVector.values();
+        Iterator<String> itr = al.iterator();
+        Vector<String> vec = new Vector();
         while (itr.hasNext()) {
             vec.add(itr.next());
 
@@ -676,6 +681,10 @@ public class AppController {
         return loginQueue;
     }
 
+    public static String getUserPrefsQueue() {
+        return userPrefsQueue;
+    }
+
     public static ActiveMQConnectionFactory getConnectionFactory() {
         return connectionFactory;
     }
@@ -694,6 +703,7 @@ public class AppController {
                 loggedInConnection = connectionFactory.createConnection(un, pw);
             }
         } catch (Exception e) {
+            log("error establishing loggedin connection! ");
             log(e);
         }
         return loggedInConnection;
@@ -708,6 +718,7 @@ public class AppController {
         try {
             linesConsumer = new LinesConsumer(connectionFactory, loggedInConnection, linechangesQueue);
         } catch (Exception e) {
+            log("error establishing loggedin connection! lines consumer");
             log(e);
         }
 
@@ -717,6 +728,7 @@ public class AppController {
         try {
             scoresConsumer = new ScoresConsumer(connectionFactory, loggedInConnection, scorechangesQueue);
         } catch (Exception e) {
+            log("error establishing loggedin connection! scores consumer");
             log(e);
         }
 
@@ -726,16 +738,17 @@ public class AppController {
         try {
             urgentsConsumer = new UrgentsConsumer(connectionFactory, loggedInConnection, urgentQueue);
         } catch (Exception e) {
+            log("error establishing loggedin connection! urgents consumer");
             log(e);
         }
 
     }
 
-
     public static void createGamesConsumer() {
         try {
             gamesConsumer = new GamesConsumer(connectionFactory, loggedInConnection, gamechangesQueue);
         } catch (Exception e) {
+            log("error establishing loggedin connection! games consumer ");
             log(e);
         }
 
@@ -745,6 +758,7 @@ public class AppController {
         try {
             chartchecker = ChartChecker.instance();
         } catch (Exception e) {
+            log("error creating chartchecker " + e);
             log(e);
         }
 
@@ -754,6 +768,23 @@ public class AppController {
         return chartchecker;
     }
 
+    public static UserPrefsProducer getUserPrefsProducer() {
+        if (userPrefsProducer == null) {
+            System.out.println("creating userprefsproducer!!!");
+            createUserPrefsProducer();
+        }
+        return userPrefsProducer;
+    }
+
+    public static void createUserPrefsProducer() {
+        try {
+            userPrefsProducer = new UserPrefsProducer();
+        } catch (Exception e) {
+            System.out.println("error creating userprefs producer! " + e);
+        }
+
+    }
+
     public static Connection getGuestConnection() {
 
         try {
@@ -761,6 +792,7 @@ public class AppController {
                 guestConnection = connectionFactory.createConnection("guest", "spank0dds4ever");
             }
         } catch (Exception e) {
+            log("error establishing guest connection! ");
             log(e);
         }
         return guestConnection;
@@ -976,7 +1008,7 @@ public class AppController {
                     }
                     g = null;
                 } catch (Exception ex) {
-                    log( ex);
+                    log(ex);
                 }
             }
         });
@@ -1202,7 +1234,7 @@ public class AppController {
             q4moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
         } else {
             livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-            System.out.println("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
+            log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
         }
 //LineAlertOpeners.moneyOpenerAlert(ml);
     }
@@ -1403,4 +1435,5 @@ public static TeamTotalline getTeamTotalline(Bookie b,int g)
     public UrgentsConsumer getUrgentsConsumer() {
         return urgentsConsumer;
     }
+
 }

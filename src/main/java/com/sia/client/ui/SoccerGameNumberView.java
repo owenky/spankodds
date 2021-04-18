@@ -1,16 +1,17 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class SoccerGameNumberView 
 {
 
-	public static ImageIcon ICON_UP = new ImageIcon("ArrUp.gif");
-    public static ImageIcon ICON_DOWN = new ImageIcon("ArrDown.gif");
+	public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("ArrUp.gif"));
+    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("ArrDown.gif"));
     public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
 	Spreadline sl;
 	Totalline tl;

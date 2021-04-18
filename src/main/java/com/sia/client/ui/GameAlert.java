@@ -8,6 +8,7 @@ import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Sport;
 
@@ -351,10 +352,10 @@ public class GameAlert {
         JComboBox popuplocation = new JComboBox(display2);
 
 
-        JideToggleButton upperright = new JideToggleButton(new ImageIcon("upperright.png"));
-        JideToggleButton upperleft = new JideToggleButton(new ImageIcon("upperleft.png"));
-        JideToggleButton lowerright = new JideToggleButton(new ImageIcon("lowerright.png"));
-        JideToggleButton lowerleft = new JideToggleButton(new ImageIcon("lowerleft.png"));
+        JideToggleButton upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
+        JideToggleButton upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
+        JideToggleButton lowerright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerright.png")));
+        JideToggleButton lowerleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerleft.png")));
 
         upperright.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -723,6 +724,7 @@ public class GameAlert {
         }
         return null;
     }
+
     public void playSound(String file) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());

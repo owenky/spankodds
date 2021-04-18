@@ -3,7 +3,6 @@ package com.sia.client.ui;
 import com.jidesoft.alert.Alert;
 import com.jidesoft.alert.AlertGroup;
 import com.jidesoft.animation.CustomAnimation;
-import com.jidesoft.icons.IconsFactory;
 import com.jidesoft.swing.JideButton;
 import com.jidesoft.swing.JideSwingUtilities;
 import com.jidesoft.swing.PaintPanel;
@@ -12,6 +11,7 @@ import com.sia.client.config.Utils;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -57,7 +57,8 @@ public class UrgentMessage {
 
 
         JPanel rightPanel = new JPanel(new GridLayout(1, 2, 0, 0));
-        JideButton closeButton = createButton(IconsFactory.getImageIcon(UrgentMessage.class, "close.png"));
+//        JideButton closeButton = createButton(IconsFactory.getImageIcon(UrgentMessage.class, "close.png"));
+        JideButton closeButton = createButton(new ImageIcon(Utils.getMediaResource("close.png")));
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 alert.hidePopupImmediately();

@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
@@ -9,9 +10,9 @@ import java.awt.Color;
 
 public class ChartView {
 
-    public static ImageIcon ICON_UP = new ImageIcon("moveup.png");
-    public static ImageIcon ICON_DOWN = new ImageIcon("movedown.png");
-    public static ImageIcon ICON_BLANK = new ImageIcon("blank2.gif");
+    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("moveup.png"));
+    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("movedown.png"));
+    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
     public static LineData[] boxes = new LineData[2];
     public static LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     public static LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);

@@ -983,13 +983,14 @@ public class MainScreen extends JPanel {
 
 
         checkAndRunInEDT(() -> {
-            drawIt();
+                drawIt();
             log("done drawing");
         });
 
         timer = new Timer(1000, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {
                 try {
+
                     firedatamodels();
                 } catch (Exception ex) {
                     log(ex);
@@ -1057,7 +1058,10 @@ public class MainScreen extends JPanel {
                 } else {
                     s2 = s;
                 }
-
+                if (s2 == null) {
+                    //System.out.println("skipping "+leagueid+"...cuz of null sport");
+                    continue;
+                }
                 if (header.equals(s2.getLeaguename() + " " + sdf2.format(g.getGamedate())) || header.equals(leagueid + " " + sdf2.format(g.getGamedate()))) {
                     newgamesvec.add(g);
                 } else {

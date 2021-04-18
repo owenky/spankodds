@@ -34,6 +34,7 @@ public class SpankOdds {
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
+        log("CHANGE1 ");
 	/*	try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -155,9 +156,9 @@ public class SpankOdds {
                     frame.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
-                            System.out.println("Window Closing! ");
+                            log("Window Closing! ");
+                            AppController.getUserPrefsProducer().sendUserPrefs();
                             AppController.removeFrame(frame);
-                            System.exit(0);
 
                         }
                     });

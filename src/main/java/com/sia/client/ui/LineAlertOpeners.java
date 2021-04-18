@@ -7,6 +7,7 @@ import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -74,10 +75,10 @@ class LineAlertOpeners implements ItemListener {
     boolean editing = false;
     LineAlertNode lan = null;
     JLabel welcome = new JLabel("LINE ALERT");
-    JideToggleButton upperright = new JideToggleButton(new ImageIcon("upperright.png"));
-    JideToggleButton upperleft = new JideToggleButton(new ImageIcon("upperleft.png"));
-    JideToggleButton lowerright = new JideToggleButton(new ImageIcon("lowerright.png"));
-    JideToggleButton lowerleft = new JideToggleButton(new ImageIcon("lowerleft.png"));
+    JideToggleButton upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
+    JideToggleButton upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
+    JideToggleButton lowerright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerright.png")));
+    JideToggleButton lowerleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerleft.png")));
     JComboBox renotifyComboBox;
     JButton testsound = new JButton("Test Sound");
     JButton testpopup = new JButton("Test Popup");
@@ -1267,6 +1268,7 @@ class LineAlertOpeners implements ItemListener {
             JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
         }
     }
+
     public static void spreadOpenerAlert(int Gid, int bid, int per, String opener, double newvisitorspread, double newvisitorjuice, double newhomespread, double newhomejuice) {
 
 
