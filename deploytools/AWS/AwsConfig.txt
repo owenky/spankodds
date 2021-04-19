@@ -1,0 +1,1 @@
+1) add app.sof300732.com CNAME app.sof300732.com.s3.us-east-1.amazonaws.com

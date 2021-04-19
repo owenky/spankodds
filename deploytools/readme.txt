@@ -1,5 +1,4 @@
-1£©To deploy spankodds JWS, upload following files to remote location http://Sof300732.com/app/
-   libs.jar.pack.gz, spankodds.pack.gz spankodds.jnlp
+1£©To deploy spankodds JWS, upload following files to AWS S3 bucket named app.sof300732.com
    NOTE: if libs.jar.pack.gz is already at location http://Sof300732.com/app/ and it has not changed, don't upload it. When JWS detects libs.jar.pack.gz not changed from
          user's local cache, it will skip downloading it to reduce download time.
 
