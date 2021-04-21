@@ -31,13 +31,13 @@
     </dependencies>
 
     <build>
-        <resources>
+        <!--resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <targetPath>${basedir}/target/classes/resources</targetPath>
                 <filtering>false</filtering>
             </resource>
-        </resources>
+        </resources -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

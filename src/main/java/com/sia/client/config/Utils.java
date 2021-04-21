@@ -18,9 +18,15 @@ public abstract class Utils {
     public static URL getResource(String resourceName) {
         URL  url = Utils.class.getResource(resourceName);
         if ( null == url) {
-            IllegalArgumentException e = new IllegalArgumentException("Can't find resource " + resourceName);
-            e.printStackTrace();
-            throw e;
+            log("Can't find resource "+resourceName+" using Utils.class.getResource()");
+            String resourceName2 = resourceName.substring(1);
+            log("Trying locating "+resourceName2+" Utils.class.getClassLoader().getResource()");
+            url = Utils.class.getClassLoader().getResource(resourceName2);
+            if ( null == url) {
+                IllegalArgumentException e = new IllegalArgumentException("Can't find resource " + resourceName2);
+                log(e);
+                throw e;
+            }
         }
         return url;
     }

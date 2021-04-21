@@ -127,7 +127,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 			}
 			else if(title.equals("Baseball"))
 			{
-				img="Baseball.png";
+				img="baseball.png";
 			}
 			else if(title.equals("Hockey"))
 			{
@@ -200,22 +200,21 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             } else if (title.equals("Basketball")) {
                 img = "basketball.png";
             } else if (title.equals("Baseball")) {
-                img = "Baseball.png";
+                img = "baseball.png";
             } else if (title.equals("Hockey")) {
-                img = "Hockey.png";
+                img = "hockey.png";
             } else if (title.equals("Fighting")) {
                 img = "boxing.png";
             } else if (title.equals("Soccer")) {
-                img = "Soccer.png";
+                img = "soccer.png";
             } else if (title.equals("Auto Racing")) {
                 img = "flag.png";
             } else if (title.equals("Golf")) {
-                img = "Golf.png";
+                img = "golf.png";
             } else if (title.equals("Tennis")) {
-                img = "Tennis.png";
+                img = "tennis.png";
             } else if (title.equals("Today")) {
-                img = "Today.png";
-            } else {
+                img = "today.png";
             }
 
             if (null != img) {

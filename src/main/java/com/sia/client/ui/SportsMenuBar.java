@@ -450,7 +450,7 @@ public class SportsMenuBar extends JMenuBar {
                             System.out.println("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Baseball", new ImageIcon(Utils.getMediaResource("Baseball.png")), new MainScreen("Baseball"), "Baseball", idx);
+                                tp.insertTab("Baseball", new ImageIcon(Utils.getMediaResource("baseball.png")), new MainScreen("Baseball"), "Baseball", idx);
                                 tp.setSelectedIndex(tp.indexOfTab("Baseball"));
 
                             }

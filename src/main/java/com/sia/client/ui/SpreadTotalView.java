@@ -16,9 +16,9 @@ public class SpreadTotalView
 {
 	public String display = "default";
 	public int period = 0;
-  //public static ImageIcon ICON_UP = new ImageIcon("ArrUp.gif");
+  //public static ImageIcon ICON_UP = new ImageIcon("arrup.gif");
   
-  //public static ImageIcon ICON_DOWN = new ImageIcon("ArrDown.gif");
+  //public static ImageIcon ICON_DOWN = new ImageIcon("arrdown.gif");
   //public static ImageIcon ICON_UP = new ImageIcon("uparrow5.png");
   //public static ImageIcon ICON_DOWN = new ImageIcon("downarrow5.png");
   //public static ImageIcon ICON_UP = new ImageIcon("angleup.png");

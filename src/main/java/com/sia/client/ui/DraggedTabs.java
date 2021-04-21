@@ -69,11 +69,11 @@
 			}
 			else if(title.equals("Baseball"))
 			{
-				img="Baseball.png";
+				img="baseball.png";
 			}
 			else if(title.equals("Hockey"))
 			{
-				img="Hockey.png";
+				img="hockey.png";
 			}
 			else if(title.equals("Fighting"))
 			{

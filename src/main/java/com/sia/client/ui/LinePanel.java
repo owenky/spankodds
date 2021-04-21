@@ -17,7 +17,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 public class LinePanel extends JPanel {
-    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("Blank2.gif"));
+    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
     static GridLayout gl;
     public JTable table;
     public DefaultListModel<JLabel> listModel = new DefaultListModel<>();

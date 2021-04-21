@@ -7,8 +7,8 @@ import javax.swing.ImageIcon;
 
 public class StockData {
 
-  public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("ArrUp.gif"));
-  public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("ArrDown.gif"));
+  public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
+  public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
   public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank.gif"));
 
   public IconData m_symbol;
