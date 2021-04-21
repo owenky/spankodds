@@ -21,9 +21,47 @@
     <name>client</name>
     <packaging>jar</packaging>
     <description>client application of spankodds</description>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.2.0</version>
+            <type>maven-plugin</type>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/resources</outputDirectory>
+                            <includeEmptyDirs>true</includeEmptyDirs>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <!--resource>
+                                    <directory>${basedir}/src/main/java/com/test/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/src/main/java/com/test/xml</directory>
+                                    <filtering>false</filtering>
+                                </resource-->
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -66,6 +104,33 @@
                    <keypass>${key.password}</keypass>
                </configuration>
            </plugin>
+            <plugin>
+                <groupId>com.github.batkinson.plugins</groupId>
+                <artifactId>maven-pack200-plugin</artifactId>
+                <version>1.0.1</version> <!-- ensure this matches your version -->
+                <executions>
+                    <execution>
+                        <id>normalize-jars</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>pack</goal>
+                        </goals>
+                        <configuration>
+                            <normalizeOnly>true</normalizeOnly>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pack-jars</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>pack</goal>
+                        </goals>
+                        <configuration>
+                            <normalizeOnly>false</normalizeOnly>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
