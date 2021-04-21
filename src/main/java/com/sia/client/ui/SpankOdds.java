@@ -9,6 +9,7 @@ import org.jdesktop.swingx.auth.LoginService;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import java.awt.BorderLayout;
@@ -152,25 +153,31 @@ public class SpankOdds {
         //frame.setVisible(true);
         checkAndRunInEDT(
                 () -> {
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    frame.addWindowListener(new WindowAdapter() {
-                        @Override
-                        public void windowClosing(WindowEvent e) {
-                            log("Window Closing! ");
-                            AppController.getUserPrefsProducer().sendUserPrefs();
-                            AppController.removeFrame(frame);
+                    try {
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                log("Window Closing! ");
+                                AppController.getUserPrefsProducer().sendUserPrefs();
+                                AppController.removeFrame(frame);
 
-                        }
-                    });
-                    frame.setLayout(new BorderLayout(1, 1));
-                    frame.getContentPane().add(tv, BorderLayout.PAGE_START);
-                    frame.getContentPane().add(stb, BorderLayout.CENTER);
-                    frame.setJMenuBar(smb);
-                    AppController.addFrame(frame, stb);
+                            }
+                        });
+                        frame.setLayout(new BorderLayout(1, 1));
+                        frame.getContentPane().add(tv, BorderLayout.PAGE_START);
+                        frame.getContentPane().add(stb, BorderLayout.CENTER);
+                        frame.setJMenuBar(smb);
+                        AppController.addFrame(frame, stb);
 
-                    frame.setSize(950, 800);
+                        frame.setSize(950, 800);
 
-                    frame.setVisible(true);
+                        frame.setVisible(true);
+
+                    } catch( Exception e) {
+                        JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n"+e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);
+                        System.exit(-1);
+                    }
 
                 }
         );

@@ -4,4 +4,4 @@ rem this program packs jars in libs folder and sign it.
 rem
 echo on
 call env.bat
-call mvn install -f ../libs/libs_pom_xml
+call mvn clean install -f ../libs/libs_pom_xml

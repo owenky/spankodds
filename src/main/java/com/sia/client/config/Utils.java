@@ -10,10 +10,19 @@ import java.net.URL;
 public abstract class Utils {
 
     public static URL getMediaResource(String resourceName) {
-        return Utils.class.getClassLoader().getResource(SiaConst.ImgPath+resourceName);
+        return getResource(SiaConst.ImgPath+resourceName);
     }
     public static URL getConfigResource(String resourceName) {
-        return Utils.class.getClassLoader().getResource(SiaConst.ConfigPath+resourceName);
+        return getResource(SiaConst.ConfigPath+resourceName);
+    }
+    public static URL getResource(String resourceName) {
+        URL  url = Utils.class.getResource(resourceName);
+        if ( null == url) {
+            IllegalArgumentException e = new IllegalArgumentException("Can't find resource " + resourceName);
+            e.printStackTrace();
+            throw e;
+        }
+        return url;
     }
     public static void log(Exception e) {
         e.printStackTrace();
