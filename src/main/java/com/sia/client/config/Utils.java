@@ -6,9 +6,17 @@ import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public abstract class Utils {
 
+    private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
     }
@@ -83,6 +91,13 @@ public abstract class Utils {
     public static void ensureNotEdtThread() {
         if ( SwingUtilities.isEventDispatchThread()) {
             log(new Exception("Worker Thread Vialation: This action should not happen in EDT"));
+        }
+    }
+    public static void ensureBackgroundExecution(Runnable r) {
+        if ( SwingUtilities.isEventDispatchThread()) {
+            executorService.submit(r);
+        } else {
+            r.run();
         }
     }
 }

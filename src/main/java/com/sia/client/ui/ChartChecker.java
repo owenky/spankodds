@@ -56,10 +56,10 @@ public class ChartChecker {
         return instance().cl;
     }
     public void startOver() {
-        Utils.ensureNotEdtThread();
+
         if ( null !=scheduledThreadPoolExecutor ) {
             log("Starting over chart checker..");
-            scheduledThreadPoolExecutor.shutdownNow();
+            Utils.ensureBackgroundExecution(this::init);
         }
 
         scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
@@ -80,7 +80,7 @@ public class ChartChecker {
     }
 
 
-    public synchronized void init() {
+    private synchronized void init() {
         Utils.ensureNotEdtThread();
         try {
 
