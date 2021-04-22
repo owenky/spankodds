@@ -37,7 +37,7 @@ public class LineAlertManager {
                 if (lan.doesthislinequalify(line)) {
                     System.out.println("about to send alert..");
 
-                    String html = "<html><body><H1>MAJOR LINE MOVE&nbsp;<FONT COLOR=BLUE>" + lan.getName() + "</H1>" +
+                    String html = "<html><body><H2>LINE MOVE&nbsp;<FONT COLOR=BLUE>" + lan.getName() + "</H2>" +
                             "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
                     if (line instanceof Spreadline) {
 

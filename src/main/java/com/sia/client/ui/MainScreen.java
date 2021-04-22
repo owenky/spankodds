@@ -752,6 +752,7 @@ public class MainScreen extends JPanel {
                     s2 = s;
                 }
 
+
                 String description = g.getDescription();
                 if (description == null || description.equalsIgnoreCase("null")) {
                     description = "";
@@ -983,7 +984,7 @@ public class MainScreen extends JPanel {
 
 
         checkAndRunInEDT(() -> {
-                drawIt();
+            drawIt();
             log("done drawing");
         });
 
@@ -1025,10 +1026,13 @@ public class MainScreen extends JPanel {
                 Game g = (Game) gamesvec.get(k);
 
                 //System.out.println("bklppll"+g.getGame_id());
-                if (g == null) {
+                if (g == null)
+                {
                     //System.out.println("skipping gameid="+gameid+"...cuz of null game");
                     continue;
-                } else {
+                }
+                else
+                {
                     gameid = "" + g.getGame_id();
                 }
                 if (g.getGamedate() == null) {
@@ -1127,7 +1131,7 @@ public class MainScreen extends JPanel {
 
         Vector newBookiesVec = AppController.getBookiesVec();
         for (int i = 0; i < newBookiesVec.size(); i++) {
-            System.out.println("booooooooooooooooooooooooooooooook" + newBookiesVec.get(i));
+            //System.out.println("booooooooooooooooooooooooooooooook" + newBookiesVec.get(i));
         }
         final JPanel tablePanel1 = new JPanel();
         ScrollablePanel tablePanel = new ScrollablePanel();

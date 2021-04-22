@@ -66,6 +66,27 @@ public class UserPrefsProducer {
         } catch (Exception ex) {
             System.out.println("exception preparing column colors! " + ex);
         }
+        try {
+            String tabsindex = "";
+            Vector tabsvec = AppController.getMainTabVec();
+            Enumeration tabsenum = tabsvec.elements();
+            while (tabsenum.hasMoreElements()) {
+                String tab = "" + tabsenum.nextElement();
+
+                tabsindex = tabsindex + tab +  ",";
+            }
+            if (tabsindex.length() > 0) {
+                tabsindex = tabsindex.substring(0, tabsindex.length() - 1);
+            }
+            System.out.println("SENDING TABSINDEX=" + tabsindex);
+            u.setTabsIndex(tabsindex);
+
+        } catch (Exception ex) {
+            System.out.println("exception preparing tabs index! " + ex);
+        }
+
+
+
 
         try {
             String customtabs = "";
@@ -86,6 +107,31 @@ public class UserPrefsProducer {
         } catch (Exception ex) {
             System.out.println("exception preparing customtabs! " + ex);
         }
+
+        try {
+            String linealerts = "";
+
+            Vector<LineAlertNode> linealertsvec = AppController.getLineAlertNodes();
+            Enumeration enumlinealerts = linealertsvec.elements();
+            while (enumlinealerts.hasMoreElements()) {
+                LineAlertNode lan = (LineAlertNode)enumlinealerts.nextElement();
+
+                if(lan.getName().equals("Please Select Line Alert"))
+                {
+                    continue;
+                }
+                linealerts = linealerts + lan.toStorageString() + "?";
+            }
+            if (linealerts.length() > 0) {
+                linealerts = linealerts.substring(0, linealerts.length() - 1);
+            }
+            System.out.println("SENDING LINEALERTS=" + linealerts);
+            u.setLineAlerts(linealerts);
+
+        } catch (Exception ex) {
+            System.out.println("exception preparing customtabs! " + ex);
+        }
+
 
         try {
             MapMessage mapMessage = session.createMapMessage();
@@ -133,6 +179,10 @@ public class UserPrefsProducer {
             mapMessage.setString("bigearnalert", u.getBigearnAlert());
             mapMessage.setString("officialalert", u.getOfficialAlert());
             mapMessage.setString("startedalert", u.getStartedAlert());
+
+            mapMessage.setString("tabsindex", u.getTabsIndex());
+
+            mapMessage.setString("linealerts", u.getLineAlerts());
 
             this.producer.send(mapMessage);
         } catch (Exception ex) {

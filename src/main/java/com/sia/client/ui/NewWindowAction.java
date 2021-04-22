@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
+//import com.sia.client.model.User;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -7,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Image;
+import javax.imageio.ImageIO;
+import java.net.URL;
 
 public class NewWindowAction implements ActionListener {
 
@@ -21,7 +26,18 @@ public class NewWindowAction implements ActionListener {
         SportsMenuBar smb = new SportsMenuBar(stbnew, tv);
         //new OddsFrame(stbnew,tv);
 
-        JFrame frame = new JFrame("Spank Odds");
+        JFrame frame = new JFrame(AppController.getUser().getUsername()+" Logged In");
+        String spankoddsicon = "spanky.jpg";
+
+        try {
+            URL imgResource = Utils.getMediaResource(spankoddsicon);
+            Image spankyimage = ImageIO.read(imgResource);
+            frame.setIconImage(spankyimage);
+        }
+        catch(Exception ex)
+        {
+            System.out.println("exception loading image!! "+ex);
+        }
         frame.setJMenuBar(smb);
 
         //	SportsTabPane stbnew = (SportsTabPane)((SportsTabPane)stb).clone();

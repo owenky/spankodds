@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 
+
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
 public class SportsMenuBar extends JMenuBar {

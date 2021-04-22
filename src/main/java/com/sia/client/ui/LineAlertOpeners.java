@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.media.SoundPlayer;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.CheckBoxTree;
 import com.jidesoft.swing.JideTitledBorder;

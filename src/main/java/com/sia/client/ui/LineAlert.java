@@ -7,6 +7,7 @@ import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.sia.client.config.Utils;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Sport;
 
@@ -208,6 +209,8 @@ public class LineAlert implements ItemListener {
     int[] gameperiodintlist = new int[10];
     String[] percentagelist = new String[100];
     String[] audiolist = new String[8];
+   // String[] audiofile = new String[5];
+   Vector<String> audiofilevec = new Vector<String>();
     JComboBox sportComboBox;
     JComboBox lanComboBox;
     JComboBox gameperiodComboBox;
@@ -217,7 +220,7 @@ public class LineAlert implements ItemListener {
     private CheckBoxTree sportsbooktree;
     private Hashtable leaguenameidhash = new Hashtable();
     private Hashtable bookienameidhash = new Hashtable();
-    private String alerttype = "";
+    private String alerttype = "Line Alert";
 
     public LineAlert(String atype) {
         linealertname.setDocument(new JTextFieldLimit(20));
@@ -230,10 +233,25 @@ public class LineAlert implements ItemListener {
 
         audiolist[0] = "Major Line Move";
         audiolist[1] = "Minor Line Move";
-        audiolist[2] = "Beep";
-        audiolist[3] = "Horn";
-        audiolist[3] = "Scream";
-        audiolist[4] = "Choose Custom Audio";
+        audiolist[2] = "Beep1";
+        audiolist[3] = "Beep2";
+        audiolist[4] = "Beep3";
+        audiolist[5] = "Horn";
+        audiolist[6] = "Double Horn";
+        audiolist[7] = "Scream";
+
+        audiofilevec.add("majorlinemove.wav");
+        audiofilevec.add("minorlinemove.wav");
+        audiofilevec.add("beep1.wav");
+        audiofilevec.add("beep2.wav");
+        audiofilevec.add("beep3.wav");
+        audiofilevec.add("horn.wav");
+        audiofilevec.add("doublehorn.wav");
+        audiofilevec.add("scream.wav");
+
+
+
+        //audiolist[4] = "Choose Custom Audio";
 
 
         gameperiodlist[0] = "Full Game";
@@ -445,8 +463,19 @@ public class LineAlert implements ItemListener {
         sportComboBox = new JComboBox(sportlist);
         sportComboBox.setMaximumRowCount(sportlist.length);
 
-        lanComboBox = new JComboBox(AppController.getLineAlertNodes());
 
+        if(AppController.getLineAlertNodes().size() == 0)
+        {
+            Vector deflan = new Vector();
+            deflan.add("No Line Alerts Stored");
+            lanComboBox = new JComboBox(deflan);
+            lanComboBox.setSelectedIndex(0);
+        }
+        else
+        {
+            lanComboBox = new JComboBox(AppController.getLineAlertNodes());
+            lanComboBox.setSelectedIndex(-1);
+        }
 
         spreadptsComboBox = new JComboBox(ptslist);
         totalptsComboBox = new JComboBox(ptslist);
@@ -734,10 +763,14 @@ else if(alerttype.equalsIgnoreCase("Injury"))
         radioPanel.add(lowerright);
 
 
+
+
+
         testsoundBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 try {
-                    playSound(defaultsoundfileplay);
+                    new SoundPlayer(defaultsoundfileplay, true);
+                    //playSound(defaultsoundfileplay);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error Playing File!");
                 }
@@ -999,7 +1032,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                         Double.parseDouble(spreadptsComboBox.getModel().getSelectedItem().toString()),
                         Integer.parseInt(centslist[spreadjuiceComboBox.getSelectedIndex()]),
                         Double.parseDouble(percentagelist[spreadpercentageComboBox.getSelectedIndex()]),
-                        spreadaudiocheckbox.isSelected(), audiolist[spreadaudioComboBox.getSelectedIndex()],
+                        spreadaudiocheckbox.isSelected(), audiofilevec.elementAt(spreadaudioComboBox.getSelectedIndex()),
                         spreadpopupcheckbox.isSelected(), spreadpopuplocationint, Integer.parseInt(secslist[spreadpopupsecsComboBox.getSelectedIndex()]),
                         Double.parseDouble(minslist[renotifyComboBox.getSelectedIndex()]),
 
@@ -1010,7 +1043,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                         Double.parseDouble(totalptsComboBox.getModel().getSelectedItem().toString()),
                         Integer.parseInt(centslist[totaljuiceComboBox.getSelectedIndex()]),
                         Double.parseDouble(percentagelist[totalpercentageComboBox.getSelectedIndex()]),
-                        totalaudiocheckbox.isSelected(), audiolist[totalaudioComboBox.getSelectedIndex()],
+                        totalaudiocheckbox.isSelected(), audiofilevec.elementAt(totalaudioComboBox.getSelectedIndex()),
                         totalpopupcheckbox.isSelected(), totalpopuplocationint, Integer.parseInt(secslist[totalpopupsecsComboBox.getSelectedIndex()]),
                         Double.parseDouble(minslist[renotifytotalComboBox.getSelectedIndex()]),
 
@@ -1020,7 +1053,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                         moneylinemoveatallButton.isSelected(), moneylinemovelinejuiceButton.isSelected(), moneylinemovepercentagebutton.isSelected(),
                         Integer.parseInt(centslist[moneylinejuiceComboBox.getSelectedIndex()]),
                         Double.parseDouble(percentagelist[moneylinepercentageComboBox.getSelectedIndex()]),
-                        moneylineaudiocheckbox.isSelected(), audiolist[moneylineaudioComboBox.getSelectedIndex()],
+                        moneylineaudiocheckbox.isSelected(),audiofilevec.elementAt(moneylineaudioComboBox.getSelectedIndex()),
                         moneylinepopupcheckbox.isSelected(), moneylinepopuplocationint, Integer.parseInt(secslist[moneylinepopupsecsComboBox.getSelectedIndex()]),
                         Double.parseDouble(minslist[renotifymoneylineComboBox.getSelectedIndex()]),
 
@@ -1032,7 +1065,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                         Double.parseDouble(teamtotalptsComboBox.getModel().getSelectedItem().toString()),
                         Integer.parseInt(centslist[teamtotaljuiceComboBox.getSelectedIndex()]),
                         Double.parseDouble(percentagelist[teamtotalpercentageComboBox.getSelectedIndex()]),
-                        teamtotalaudiocheckbox.isSelected(), audiolist[teamtotalaudioComboBox.getSelectedIndex()],
+                        teamtotalaudiocheckbox.isSelected(),audiofilevec.elementAt(teamtotalaudioComboBox.getSelectedIndex()),
                         teamtotalpopupcheckbox.isSelected(), teamtotalpopuplocationint, Integer.parseInt(secslist[teamtotalpopupsecsComboBox.getSelectedIndex()]),
                         Double.parseDouble(minslist[renotifyteamtotalComboBox.getSelectedIndex()])
                 );
@@ -1063,7 +1096,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
         sportComboBox.setSelectedIndex(0);
         sportComboBox.addItemListener(this);
-        lanComboBox.setSelectedIndex(0);
+       // lanComboBox.setSelectedIndex(0);
         lanComboBox.addItemListener(this);
 
         JLabel ifwithin = new JLabel("If within ");
@@ -1188,6 +1221,100 @@ else if(alerttype.equalsIgnoreCase("Injury"))
         moneylinepopuplocation = new JComboBox(display2);
         teamtotalpopuplocation = new JComboBox(display2);
 
+
+        testspreadsoundBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    new SoundPlayer(audiofilevec.elementAt(spreadaudioComboBox.getSelectedIndex()), true);
+                    //playSound(defaultsoundfileplay);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error Playing File!");
+                }
+            }
+        });
+
+        testtotalsoundBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    new SoundPlayer(audiofilevec.elementAt(totalaudioComboBox.getSelectedIndex()), true);
+                    //playSound(defaultsoundfileplay);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error Playing File!");
+                }
+            }
+        });
+
+        testteamtotalsoundBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    new SoundPlayer(audiofilevec.elementAt(teamtotalaudioComboBox.getSelectedIndex()), true);
+                    //playSound(defaultsoundfileplay);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error Playing File!");
+                }
+            }
+        });
+
+        testmoneylinesoundBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    new SoundPlayer(audiofilevec.elementAt(moneylineaudioComboBox.getSelectedIndex()), true);
+                    //playSound(defaultsoundfileplay);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error Playing File!");
+                }
+            }
+        });
+
+        testspreadpopupBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
+                        "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
+                        "</TABLE></FONT></HTML>", Integer.parseInt(secslist[spreadpopupsecsComboBox.getSelectedIndex()]) * 1000, spreadpopuplocationint, jfrm);
+
+
+            }
+        });
+
+        testtotalpopupBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
+                        "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
+                        "</TABLE></FONT></HTML>", Integer.parseInt(secslist[totalpopupsecsComboBox.getSelectedIndex()]) * 1000, totalpopuplocationint, jfrm);
+
+
+            }
+        });
+        testteamtotalpopupBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
+                        "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
+                        "</TABLE></FONT></HTML>", Integer.parseInt(secslist[teamtotalpopupsecsComboBox.getSelectedIndex()]) * 1000, teamtotalpopuplocationint, jfrm);
+
+
+            }
+        });
+        testmoneylinepopupBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
+                        "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
+                        "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
+                        "</TABLE></FONT></HTML>", Integer.parseInt(secslist[moneylinepopupsecsComboBox.getSelectedIndex()]) * 1000, moneylinepopuplocationint, jfrm);
+
+
+            }
+        });
 
         spreadupperright.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -2228,7 +2355,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             spreadjuiceComboBox.setSelectedItem("" + lan.getSpreadJuiceMove());
             spreadpercentageComboBox.setSelectedItem("" + lan.getSpreadPercentageMove());
             spreadaudiocheckbox.setSelected(lan.isSpreadPlayAudio());
-            spreadaudioComboBox.setSelectedItem("" + lan.getSpreadAudioFileName());
+
+            spreadaudioComboBox.setSelectedIndex(audiofilevec.indexOf(lan.getSpreadAudioFileName()));
             spreadpopupcheckbox.setSelected(lan.isSpreadShowPopup());
             spreadpopuplocationint = lan.getSpreadPopupLocation();
             if (spreadpopuplocationint == SwingConstants.NORTH_EAST) {
@@ -2278,7 +2406,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             totaljuiceComboBox.setSelectedItem("" + lan.getTotalJuiceMove());
             totalpercentageComboBox.setSelectedItem("" + lan.getTotalPercentageMove());
             totalaudiocheckbox.setSelected(lan.isTotalPlayAudio());
-            totalaudioComboBox.setSelectedItem("" + lan.getTotalAudioFileName());
+            totalaudioComboBox.setSelectedIndex(audiofilevec.indexOf(lan.getTotalAudioFileName()));
+
             totalpopupcheckbox.setSelected(lan.isTotalShowPopup());
             totalpopuplocationint = lan.getTotalPopupLocation();
             if (totalpopuplocationint == SwingConstants.NORTH_EAST) {
@@ -2303,7 +2432,9 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             teamtotaljuiceComboBox.setSelectedItem("" + lan.getTeamtotalJuiceMove());
             teamtotalpercentageComboBox.setSelectedItem("" + lan.getTeamtotalPercentageMove());
             teamtotalaudiocheckbox.setSelected(lan.isTeamtotalPlayAudio());
-            teamtotalaudioComboBox.setSelectedItem("" + lan.getTeamtotalAudioFileName());
+
+            teamtotalaudioComboBox.setSelectedIndex(audiofilevec.indexOf(lan.getTeamtotalAudioFileName()));
+
             teamtotalpopupcheckbox.setSelected(lan.isTeamtotalShowPopup());
             teamtotalpopuplocationint = lan.getTeamtotalPopupLocation();
             if (teamtotalpopuplocationint == SwingConstants.NORTH_EAST) {
@@ -2327,7 +2458,9 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             moneylinejuiceComboBox.setSelectedItem("" + lan.getMoneylineJuiceMove());
             moneylinepercentageComboBox.setSelectedItem("" + lan.getMoneylinePercentageMove());
             moneylineaudiocheckbox.setSelected(lan.isMoneylinePlayAudio());
-            moneylineaudioComboBox.setSelectedItem("" + lan.getMoneylineAudioFileName());
+
+            moneylineaudioComboBox.setSelectedIndex(audiofilevec.indexOf(lan.getMoneylineAudioFileName()));
+
             moneylinepopupcheckbox.setSelected(lan.isMoneylineShowPopup());
             moneylinepopuplocationint = lan.getMoneylinePopupLocation();
             if (moneylinepopuplocationint == SwingConstants.NORTH_EAST) {
