@@ -928,7 +928,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
                     }
                 }
-
+                // printing
 
                 //sportselected = sportselected.substring(1);
                 System.out.println("lan=" + name);
