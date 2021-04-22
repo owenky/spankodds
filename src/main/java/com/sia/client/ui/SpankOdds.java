@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.CheckThreadViolationRepaintManager;
+import com.sia.client.config.Utils;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;
@@ -15,6 +16,9 @@ import javax.swing.RepaintManager;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Image;
+import javax.imageio.ImageIO;
+import java.net.URL;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -70,6 +74,17 @@ public class SpankOdds {
 
         RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
         frame = new JFrame("Spank Odds");
+        String spankoddsicon = "spanky.jpg";
+
+        try {
+            URL imgResource = Utils.getMediaResource(spankoddsicon);
+            Image spankyimage = ImageIO.read(imgResource);
+            frame.setIconImage(spankyimage);
+        }
+        catch(Exception ex)
+        {
+            System.out.println("exception loading image!! "+ex);
+        }
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
 
@@ -125,6 +140,7 @@ public class SpankOdds {
                 System.out.println(new java.util.Date());
                 boolean loggedin = client.isloggedin();
                 if (loggedin) {
+                    frame.setTitle(name+" Logged In");
                     createGui();
 
 

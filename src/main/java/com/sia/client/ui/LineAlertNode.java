@@ -425,8 +425,85 @@ public class LineAlertNode
 		this.teamtotalpopupsecs=teamtotalpopupsecs;
 		this.teamtotalminsrenotify=teamtotalminsrenotify;
 	}
-	
-	
+
+	public String toStorageString()
+	{
+		String delimiter = "!";
+		String sportscodesstring = sportcodes.toString();
+		sportscodesstring = sportscodesstring.replace("[","");
+		sportscodesstring = sportscodesstring.replace("]","");
+		sportscodesstring = sportscodesstring.replaceAll(" ","");
+
+		String bookiecodesstring = bookiecodes.toString();
+		bookiecodesstring = bookiecodesstring.replace("[","");
+		bookiecodesstring = bookiecodesstring.replace("]","");
+		bookiecodesstring = bookiecodesstring.replaceAll(" ","");
+		String retValue = name+delimiter+
+				sport+delimiter+
+				period+delimiter+
+				sportscodesstring+delimiter+
+				bookiecodesstring+delimiter+
+				isspreadcheck+delimiter+
+				spreadsecs+delimiter+
+				spreadnumbookies+delimiter+
+				isspreadmoveatall+delimiter+
+				isspreadptsmove+delimiter+
+				isspreadpercentagemove+delimiter+
+				spreadptsmove+delimiter+
+				spreadjuicemove+delimiter+
+				spreadpercentagemove+delimiter+
+				isspreadplayaudio+delimiter+
+				spreadaudiofilename+delimiter+
+				isspreadshowpopup+delimiter+
+				spreadpopuplocation+delimiter+
+				spreadpopupsecs+delimiter+
+				spreadminsrenotify+delimiter+
+				istotalcheck+delimiter+
+				totalsecs+delimiter+
+				totalnumbookies+delimiter+
+				istotalmoveatall+delimiter+
+				istotalptsmove+delimiter+
+				istotalpercentagemove+delimiter+
+				totalptsmove+delimiter+
+				totaljuicemove+delimiter+
+				totalpercentagemove+delimiter+
+				istotalplayaudio+delimiter+
+				totalaudiofilename+delimiter+
+				istotalshowpopup+delimiter+
+				totalpopuplocation+delimiter+
+				totalpopupsecs+delimiter+
+				totalminsrenotify+delimiter+
+				ismoneylinecheck+delimiter+
+				moneylinesecs+delimiter+
+				moneylinenumbookies+delimiter+
+				ismoneylinemoveatall+delimiter+
+				ismoneylinejuicemove+delimiter+
+				ismoneylinepercentagemove+delimiter+
+				moneylinejuicemove+delimiter+
+				moneylinepercentagemove+delimiter+
+				ismoneylineplayaudio+delimiter+
+				moneylineaudiofilename+delimiter+
+				ismoneylineshowpopup+delimiter+
+				moneylinepopuplocation+delimiter+
+				moneylinepopupsecs+delimiter+
+				moneylineminsrenotify+delimiter+
+				isteamtotalcheck+delimiter+
+				teamtotalsecs+delimiter+
+				teamtotalnumbookies+delimiter+
+				isteamtotalmoveatall+delimiter+
+				isteamtotalptsmove+delimiter+
+				isteamtotalpercentagemove+delimiter+
+				teamtotalptsmove+delimiter+
+				teamtotaljuicemove+delimiter+
+				teamtotalpercentagemove+delimiter+
+				isteamtotalplayaudio+delimiter+
+				teamtotalaudiofilename+delimiter+
+				isteamtotalshowpopup+delimiter+
+				teamtotalpopuplocation+delimiter+
+				teamtotalpopupsecs+delimiter+
+				teamtotalminsrenotify;
+			return retValue;
+	}
 	
 	public Vector getSportCodes()
 	{

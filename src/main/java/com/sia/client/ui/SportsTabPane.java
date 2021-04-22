@@ -400,6 +400,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         hideItem.addActionListener(e14 -> checkAndRunInEDT(() -> {
                             //new SportCustomTab(thispane.getTitleAt(tabindex),tabindex);
                             AppController.SpotsTabPaneVector.remove(tabindex);
+                            //AppController.SportsTabPaneVector.remove(TabName);
 
                             Vector tabpanes = AppController.getTabPanes();
                             System.out.println("tabpanes size= " + tabpanes.size());

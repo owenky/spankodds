@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.Arrays;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -151,10 +152,121 @@ public class AppController {
     public static ArrayList<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<LineOpenerAlertNode>();
 
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<Integer, String>();
+    public static Vector<String> SportsTabPaneVector = new Vector<String>();
+
+    public static void initializeSportsTabPaneVectorFromUser()
+    {
+        String[] tabsindex = u.getTabsIndex().split(",");
+        for(int i = 0; i < tabsindex.length; i++)
+        {
+            SpotsTabPaneVector.put(i, tabsindex[i]);
+            // will be using this instead
+            SportsTabPaneVector.add(tabsindex[i]);
+
+        }
+    }
+
+    public static void initializeLineAlertVectorFromUser()
+    {
+        String[] linealerts = u.getLineAlerts().split("\\?");
+        for(int i = 0; i < linealerts.length; i++)
+        {
+         try {
+             String[] lanitems = linealerts[i].split("!");
+             String[] sportselected = lanitems[3].split(",");
+             String[] bookieselected = lanitems[4].split(",");
+             for(int k=0; k< sportselected.length;k++)
+             {
+                 System.out.println("sport"+k+"="+sportselected[k]);
+             }
+             Vector sportselectedvec = new Vector(Arrays.asList(sportselected));
+             Vector bookieselectedvec = new Vector(Arrays.asList(bookieselected));
+             int j = 5;
+             LineAlertNode lan2 = new LineAlertNode(
+                     lanitems[0],
+                     lanitems[1],
+                     Integer.parseInt(lanitems[2]),
+                     sportselectedvec,
+                     bookieselectedvec,
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     lanitems[j++],
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     lanitems[j++],
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     lanitems[j++],
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
 
 
-    public static void initializSpotsTabPaneVector() {
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++]),
+                     Boolean.parseBoolean(lanitems[j++]),
+                     lanitems[j++],
+                     Boolean.parseBoolean(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Integer.parseInt(lanitems[j++]),
+                     Double.parseDouble(lanitems[j++])
+             );
 
+             linealertnodes.add(lan2);
+         }
+         catch(Exception ex)
+         {
+             System.out.println("exception loading in line alert="+linealerts[i]);
+             System.out.println(ex);
+         }
+
+        }
+    }
+
+    public static void initializSpotsTabPaneVector()
+    {
+/*
         SpotsTabPaneVector.put(0, "Football");
         SpotsTabPaneVector.put(1, "Basketball");
         SpotsTabPaneVector.put(2, "Baseball");
@@ -165,6 +277,8 @@ public class AppController {
         SpotsTabPaneVector.put(7, "Golf");
         SpotsTabPaneVector.put(8, "Tennis");
         SpotsTabPaneVector.put(9, "Today");
+
+ */
     }
 
     public static Vector getMainTabVec() {
@@ -374,8 +488,8 @@ public class AppController {
     }
 
     public static Vector getLineAlertNodes() {
-        if (linealertnodes.size() == 0) {
-            linealertnodes.add(new LineAlertNode("Please Select Line Alert"));
+        if (linealertnodes.size() != 0) {
+           // linealertnodes.add(0,new LineAlertNode("Please Select Line Alert"));
         }
         return linealertnodes;
     }

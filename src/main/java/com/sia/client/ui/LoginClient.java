@@ -188,10 +188,23 @@ public class LoginClient implements MessageListener {
                             array[34],
                             array[35],
                             Integer.parseInt(array[36]),
-                            Integer.parseInt(array[37])
+                            Integer.parseInt(array[37]),
+                            array[38],
+                            array[39]
                     );
                     System.out.println("ABOUT TO CALL SETUSER!!!");
                     AppController.setUser(user);
+
+                    AppController.initializeSportsTabPaneVectorFromUser();
+                    try
+                    {
+                        AppController.initializeLineAlertVectorFromUser();
+                    }
+                    catch(Exception ex)
+                    {
+                        System.out.println("exception loading in linealerts.."+ex);
+
+                    }
 
                 }
 

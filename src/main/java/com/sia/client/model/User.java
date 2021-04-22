@@ -53,7 +53,8 @@ public class User {
     int chartminamtnotify = 25;
     int chartsecsrefresh = 30;
 
-
+    String tabsindex;
+    String linealerts;
     public User(String username, String password, String email, String address, String city, String state, String country, String phoenumber,
                 String timezone, String oddstype, String notificationmethod, String subscriptiontype, boolean isloggedin,
                 String bookiecolumnprefs, String fixedcolumnprefs,
@@ -79,7 +80,9 @@ public class User {
                 String tennispref,
                 String chartfilename,
                 int chartminamtnotify,
-                int chartsecsrefresh
+                int chartsecsrefresh,
+                String tabsindex,
+                String linealerts
     ) {
         this.email = email;
         this.password = password;
@@ -123,6 +126,8 @@ public class User {
         this.chartfilename = chartfilename;
         this.chartminamtnotify = chartminamtnotify;
         this.chartsecsrefresh = chartsecsrefresh;
+        this.tabsindex = tabsindex;
+        this.linealerts = linealerts;
 
 
         logintime = new Timestamp(new java.util.Date().getTime());
@@ -131,6 +136,22 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getTabsIndex() {
+        return tabsindex;
+    }
+
+    public void setTabsIndex(String s) {
+        tabsindex = s;
+    }
+
+    public String getLineAlerts() {
+        return linealerts;
+    }
+
+    public void setLineAlerts(String s) {
+        linealerts = s;
     }
 
 
