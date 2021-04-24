@@ -51,6 +51,7 @@
                             <Permissions>all-permissions</Permissions>
                         </manifestEntries>
                     </archive>
+                    <finalName>spankodds</finalName>
                 </configuration>
                 <executions>
                     <execution>

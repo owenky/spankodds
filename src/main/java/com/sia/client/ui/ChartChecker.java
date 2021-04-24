@@ -101,8 +101,10 @@ public class ChartChecker {
                     sc.close();
                     //System.out.println("**************************************iam from Url Now**********************");
                 } catch (Exception e) {
-                    log("ERROR OPENING FILE..." + AppController.getUser().getChartFileName());
-                    log(e);
+                    //TODO disable log() fordeb debug 04-23-2021
+//                    log("ERROR OPENING FILE..." + AppController.getUser().getChartFileName());
+//                    log(e);
+                    //ENd of TODO
                     errormsg = "Please check your URL/USER NAME/PASSWORD";
                     //new ShowError().setVisible(true);
                     cl.clear();

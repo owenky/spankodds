@@ -1,1 +1,2 @@
-1) add app.sof300732.com CNAME app.sof300732.com.s3.us-east-1.amazonaws.com
+1) add app1.sof300732.com CNAME app1.sof300732.com.s3.us-east-1.amazonaws.com
+2) CloudFront domain name: dqvb9s42cfsfx.cloudfront.net

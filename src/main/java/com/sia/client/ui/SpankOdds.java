@@ -8,16 +8,16 @@ import org.jdesktop.swingx.auth.LoginEvent;
 import org.jdesktop.swingx.auth.LoginListener;
 import org.jdesktop.swingx.auth.LoginService;
 
+import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.Image;
-import javax.imageio.ImageIO;
 import java.net.URL;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -26,6 +26,7 @@ import static com.sia.client.config.Utils.log;
 
 public class SpankOdds {
 
+    private static final String version="20210422001";
     SportsTabPane stb;
     TopView tv;
     SportsMenuBar smb;
@@ -73,7 +74,7 @@ public class SpankOdds {
     private void showLoginDialog() {
 
         RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
-        frame = new JFrame("Spank Odds");
+        frame = new JFrame("Spank Odds )"+version+")");
         String spankoddsicon = "spanky.jpg";
 
         try {
