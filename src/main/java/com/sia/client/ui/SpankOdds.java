@@ -153,6 +153,11 @@ public class SpankOdds {
 
         loginService.addLoginListener(loginListener);
         loginPane.setLoginService(loginService);
+        loginPane.addPropertyChangeListener(evt-> {
+            if ( "status".equals(evt.getPropertyName()) && JXLoginPane.Status.CANCELLED.equals(evt.getNewValue())) {
+                System.exit(0);
+            }
+        });
 
         JXLoginPane.JXLoginDialog dialog = new JXLoginPane.JXLoginDialog(frame, loginPane);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -162,6 +167,7 @@ public class SpankOdds {
         // and still need to dispose main JFrame to exiting application
         if (loginPane.getStatus() == JXLoginPane.Status.CANCELLED) {
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            System.exit(0);
         }
     }
 
