@@ -69,12 +69,11 @@
             <version>1.6.5</version>
 
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.sia</groupId>
             <artifactId>activemq-all</artifactId>
             <version>5.15.12</version>
-
-        </dependency>
+        </dependency -->
         <dependency>
             <groupId>com.sia</groupId>
             <artifactId>jide-grids</artifactId>
@@ -115,7 +114,11 @@
             <groupId>com.sia</groupId>
             <artifactId>jide-shortcut</artifactId>
             <version>0.0.0</version>
-
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.7.0</version>
         </dependency>
     </dependencies>
 </project>

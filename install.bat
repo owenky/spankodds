@@ -1,4 +1,4 @@
-rem run it sialibs folder where jars reside
+rem run it in sialibs folder where jars reside
 call mvn install:install-file -Dfile=dependencies_xml -DgroupId=com.sia  -DartifactId=common-client-dependency -Dversion=1.0.0 -Dpackaging=pom -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=swingx-action-1.6.5-1.jar -DgroupId=com.sia  -DartifactId=swingx-action -Dversion=1.6.5 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=swingx-autocomplete-1.6.5-1.jar -DgroupId=com.sia  -DartifactId=swingx-autocomplete -Dversion=1.6.5 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
