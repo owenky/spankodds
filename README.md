@@ -1,10 +1,4 @@
 # spankodds
-host maven dependency. Do NOT delete this branch.
-To update repository, run install in local repository branch. Jars and pom should be copied from jars branch
-to use this repository, add following to pom.xml
- <repositories>
-        <repository>
-            <id>sia-github</id>
-            <url> https://github.com/owenky/spankodds/raw/repository</url>
-        </repository>
-    </repositories>
+Do NOT delete this branch
+contains third party jars and poms ( dependencies_xml) for repository of dependencies of  spankodds client applications. 
+Those jars are used for create repository of maven dependencies by install.bat in repository/install.bat
