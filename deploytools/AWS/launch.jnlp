@@ -12,7 +12,7 @@
 
 	</information>
 	<resources>
-		<property name="jnlp.packEnabled" value="false" />	<j2se version="1.8.0_00+" href=" http://java.sun.com/products/autodl/j2se" initial-heap-size="64m" max-heap-size="512m" java-vm-args="-dsa -Xnoclassgc  -verbose:gc -Xrunhprof:heap=sites -d32" />
+		<property name="jnlp.packEnabled" value="true" />	<j2se version="1.8.0_00+" href=" http://java.sun.com/products/autodl/j2se" initial-heap-size="64m" max-heap-size="512m" java-vm-args="-dsa -Xnoclassgc  -verbose:gc -Xrunhprof:heap=sites -d32" />
 		<jar href="spankodds.jar" download="eager" />
 		<jar href="libs.jar" download="eager" />
 

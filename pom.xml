@@ -28,6 +28,11 @@
             <version>3.2.0</version>
             <type>maven-plugin</type>
         </dependency-->
+        <dependency>
+            <groupId>com.github.batkinson.plugins</groupId>
+            <artifactId>maven-pack200-plugin</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -56,9 +61,38 @@
                 <executions>
                     <execution>
                         <id>create-jar</id>
+                        <phase>package</phase>
                         <configuration>
                             <minimizeJar>true</minimizeJar>
-                            <!-- finalName>${project.artifactId}</finalName -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.batkinson.plugins</groupId>
+                <artifactId>maven-pack200-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <id>normalize-jars</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>pack</goal>
+                        </goals>
+                        <configuration>
+                            <normalizeOnly>true</normalizeOnly>
+                            <processMainArtifact>true</processMainArtifact>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pack-jars</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>pack</goal>
+                        </goals>
+                        <configuration>
+                            <normalizeOnly>false</normalizeOnly>
+                            <processMainArtifact>true</processMainArtifact>
                         </configuration>
                     </execution>
                 </executions>
@@ -82,33 +116,6 @@
                    <keypass>${key.password}</keypass>
                </configuration>
            </plugin>
-            <!--plugin>
-                <groupId>com.github.batkinson.plugins</groupId>
-                <artifactId>maven-pack200-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>normalize-jars</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>pack</goal>
-                        </goals>
-                        <configuration>
-                            <normalizeOnly>true</normalizeOnly>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>pack-jars</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>pack</goal>
-                        </goals>
-                        <configuration>
-                            <normalizeOnly>false</normalizeOnly>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin-->
         </plugins>
     </build>
 </project>

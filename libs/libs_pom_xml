@@ -36,6 +36,9 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
                         <version>3.2.0</version>
+                        <configuration>
+                            <!--finalName>libs</finalName -->
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>library-fat-jar</id>
@@ -43,6 +46,35 @@
                                 <goals>
                                     <goal>shade</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.batkinson.plugins</groupId>
+                        <artifactId>maven-pack200-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>normalize-jars</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>true</normalizeOnly>
+                                    <processMainArtifact>true</processMainArtifact>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pack-jars</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>false</normalizeOnly>
+                                    <processMainArtifact>true</processMainArtifact>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

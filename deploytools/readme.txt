@@ -11,3 +11,11 @@
    spankodds.pack.gz will be generated in target folder
 
 4) launch.jnlp is in current folder
+=================================================================
+To create following github repository
+ <repository>
+           <id>sia-github</id>
+           <url>https://github.com/owenky/spankodds/raw/repository</url>
+</repository>
+
+see sialib branch and repository branch README.md
