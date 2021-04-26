@@ -1,28 +1,24 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.User;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.MapMessage;
-import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import java.awt.Color;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 public class UserPrefsProducer {
-    public boolean loginresultback = false;
     User u = AppController.getUser();
     Connection connection;
-    boolean loggedin = false;
-    String delimiter = "~";
     private Session session;
     private MessageProducer producer;
-    private MessageConsumer consumer;
-    private Destination tempDest;
 
     public UserPrefsProducer() {
         try {
@@ -40,19 +36,18 @@ public class UserPrefsProducer {
             connection.start();
 
         } catch (Exception ex) {
-            System.out.println("problem with constructor " + ex);
+            Utils.log("problem with constructor " + ex);
         }
     }
 
     public void sendUserPrefs() {
-
+        Utils.ensureNotEdtThread();
         try {
             String colorprefs = "";
-            Hashtable bookiecolors = AppController.getBookieColors();
-            Enumeration enumcolors = bookiecolors.keys();
-            while (enumcolors.hasMoreElements()) {
-                String bookieid = "" + enumcolors.nextElement();
-                java.awt.Color color = (java.awt.Color) bookiecolors.get(bookieid);
+            Map<String, Color> bookiecolors = AppController.getBookieColors();
+            for (final String s : bookiecolors.keySet()) {
+                String bookieid = "" + s;
+                Color color = bookiecolors.get(bookieid);
                 int rgb = color.getRGB();
                 String hex = String.format("#%06X", (0xFFFFFF & rgb));
                 colorprefs = colorprefs + bookieid + "=" + hex + ",";
@@ -82,7 +77,7 @@ public class UserPrefsProducer {
             u.setTabsIndex(tabsindex);
 
         } catch (Exception ex) {
-            System.out.println("exception preparing tabs index! " + ex);
+            Utils.log("exception preparing tabs index! " + ex);
         }
 
 

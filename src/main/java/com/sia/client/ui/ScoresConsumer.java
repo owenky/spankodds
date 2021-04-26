@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -13,10 +14,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.File;
 
 import static com.sia.client.config.Utils.log;
 
@@ -59,8 +56,9 @@ public class ScoresConsumer implements MessageListener {
             connection.close();
         }
     }
-
+    @Override
     public void onMessage(Message message) {
+        Utils.ensureNotEdtThread();
         try {
 
             mapMessage = (MapMessage) message;
@@ -474,18 +472,18 @@ public class ScoresConsumer implements MessageListener {
             log(ex);
         }
     }
-
-    public void playSound(String file) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            log("Error with playing sound.");
-            log(ex);
-        }
-    }
-
+//
+//    public void playSound(String file) {
+//        try {
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
+//            Clip clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.start();
+//        } catch (Exception ex) {
+//            log("Error with playing sound.");
+//            log(ex);
+//        }
+//    }
+//
 
 }

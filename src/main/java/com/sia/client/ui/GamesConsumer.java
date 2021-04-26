@@ -14,11 +14,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
@@ -58,7 +54,7 @@ public class GamesConsumer implements MessageListener {
             connection.close();
         }
     }
-
+    @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
@@ -591,16 +587,16 @@ public class GamesConsumer implements MessageListener {
 
 
     }
-
-    public void playSound(String file) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            log(ex);
-        }
-    }
+//
+//    public void playSound(String file) {
+//        try {
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
+//            Clip clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.start();
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
+//    }
 
 }

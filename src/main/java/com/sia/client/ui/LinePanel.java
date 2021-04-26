@@ -274,7 +274,7 @@ public class LinePanel extends JPanel {
             String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
             String bookieid = AppController.getBookieId(bookie);
-            Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
+            Color colcolor = AppController.getBookieColors().get(bookieid);
             //System.out.println("bookie-color="+bookie+".."+bookieid+".."+colcolor);
 
             Color bgcolor = ld.getBackgroundColor();

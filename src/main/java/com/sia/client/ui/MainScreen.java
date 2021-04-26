@@ -5,6 +5,7 @@ import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
 import com.sia.client.model.User;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -325,6 +327,7 @@ public class MainScreen extends JPanel {
                 }
 
             } catch (Exception ex) {
+                log(ex);
             }
 
 
@@ -1259,6 +1262,7 @@ public class MainScreen extends JPanel {
 
 
         JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
+fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
         fixedtables.add(fixed0);
 	/*	if(name.equalsIgnoreCase("soccer"))
 		{
@@ -1276,10 +1280,10 @@ public class MainScreen extends JPanel {
         JTableHeader tableHeaderfixed = fixed0.getTableHeader();
         Font headerFontfixed = new Font("Verdana", Font.BOLD, 11);
         tableHeaderfixed.setFont(headerFontfixed);
-        TableColumnManager tcmfixed0 = new TableColumnManager(fixed0, "fixed");
+//        TableColumnManager tcmfixed0 = new TableColumnManager(fixed0, "fixed");
 
         //owen inserted 6/26
-        TableColumnAdjuster tcafixed0 = new TableColumnAdjuster(fixed0);
+//        TableColumnAdjuster tcafixed0 = new TableColumnAdjuster(fixed0);
         //fixed0.setColumnAutoResizable(true);
         scrollPane0.setRowHeaderView(fixed0);
         scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
@@ -1292,7 +1296,7 @@ public class MainScreen extends JPanel {
         scrollPane0.removeMouseWheelListener(scrollPane0.getMouseWheelListeners()[0]);
 
 
-        System.out.println("gamergroup headers start..." + new java.util.Date());
+        log("gamergroup headers start..." + new java.util.Date());
 
         Vector oldgamegroupvec = new Vector();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
@@ -1530,7 +1534,7 @@ public class MainScreen extends JPanel {
             oldgamegroupvec = newgamegroupvec;
         }
 
-        System.out.println("gamergroup headers end..." + new java.util.Date());
+        log("gamergroup headers end..." + new java.util.Date());
 
 	 /*
 		for(int j=0;j<hiddencols.size();j++)
@@ -1540,7 +1544,7 @@ public class MainScreen extends JPanel {
 			tcm0.hideColumn(b.getShortname());
 		}
 	*/
-        System.out.println("hidden end..." + new java.util.Date());
+        log("hidden end..." + new java.util.Date());
         //scrollPane0.setBorder(new EmptyBorder(0, 0, 0, 50));
         JScrollPane scrollPane = new JScrollPane(tablePanel);
         //tablePanel.setBorder(new EmptyBorder(0, 0, 0, 5));
@@ -1556,7 +1560,7 @@ public class MainScreen extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
         add(bar, BorderLayout.PAGE_END);
         AppController.addDataModels(getDataModels());
-        System.out.println("Datamodels size is :" + AppController.getDataModels().size());
+        log("Datamodels size is :" + AppController.getDataModels().size());
         adjustcols(false);
         firedatamodels();
 
@@ -1570,9 +1574,10 @@ public class MainScreen extends JPanel {
                     if (timer2count > 12) {
                         timer2count = 0;
                         ((Timer) e.getSource()).stop();
+                        log("drawit end..." + new java.util.Date());
                     }
                 } catch (Exception ex) {
-                    System.out.println("exception firing data models " + ex);
+                    log("exception firing data models " + ex);
                 }
 
             }
@@ -1580,9 +1585,7 @@ public class MainScreen extends JPanel {
         //timer2.setRepeats(false);
 
         timer2.start();
-        System.out.println("timer2 start");
-
-        System.out.println("drawit end..." + new java.util.Date());
+        log("timer2 start");
     }
 
     public void firedatamodels() {
@@ -1591,10 +1594,16 @@ public class MainScreen extends JPanel {
             ltd.fire();
         }
     }
+private int tableCount=0;
+    private JTable makeFixedRowHeader(int fixedColumns, JTable main, boolean deletefrommain) {
 
-    public JTable makeFixedRowHeader(int fixedColumns, JTable main, boolean deletefrommain) {
-
-        JTable fixed = new JTable();
+        JTable fixed = new JTable() {
+            @Override
+            public void setBorder(Border b) {
+                super.setBorder(b);
+            }
+        };
+log("table count="+(++tableCount));
         fixed.setAutoCreateColumnsFromModel(false);
         fixed.setModel(main.getModel());
         fixed.setSelectionModel(main.getSelectionModel());

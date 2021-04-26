@@ -39,7 +39,7 @@ public class LinesConsumer implements MessageListener {
             connection.close();
         }
     }
-
+    @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
