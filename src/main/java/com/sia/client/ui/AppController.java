@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Moneyline;
@@ -146,7 +147,7 @@ public class AppController {
     public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
     public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
     public static LineOpenerAlertNode hockey = new LineOpenerAlertNode("Hockey");
-    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode("Soccer");
+    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode(SiaConst.SoccerStr);
     public static LineOpenerAlertNode fighting = new LineOpenerAlertNode("Fighting");
     public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");

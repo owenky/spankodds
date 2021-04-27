@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 
@@ -205,7 +206,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 img = "hockey.png";
             } else if (title.equals("Fighting")) {
                 img = "boxing.png";
-            } else if (title.equals("Soccer")) {
+            } else if (title.equalsIgnoreCase(SiaConst.SoccerStr)) {
                 img = "soccer.png";
             } else if (title.equals("Auto Racing")) {
                 img = "flag.png";
@@ -361,7 +362,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                     String TabName = thispane.getTitleAt(tabindex);
 
 
-                    if (!(TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals("Soccer") || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
+                    if (!(TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals(SiaConst.SoccerStr) || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
                         System.out.println("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
                         JPopupMenu jPopupMenu = new JPopupMenu();
                         JMenuItem editItem = new JMenuItem("Edit " + thispane.getTitleAt(tabindex));
@@ -388,7 +389,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
 
                     }
-                    if ((TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals("Soccer") || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
+                    if ((TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals(SiaConst.SoccerStr) || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
                         System.out.println("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
                         JPopupMenu jPopupMenu = new JPopupMenu();
                         JMenuItem manageItem = new JMenuItem("Manage " + thispane.getTitleAt(tabindex));

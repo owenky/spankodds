@@ -1,71 +1,39 @@
 package com.sia.client.ui;
 
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import java.awt.Component;
 
-public class LineRenderer extends LinePanel implements TableCellRenderer {
+public class LineRenderer implements TableCellRenderer {
 
-
+    private LinePanel linePanel;
+    private String name;
     public LineRenderer() {
         super();
-
-        // System.out.println(table);
     }
 
     public LineRenderer(String name) {
-        super(name);
-
-
+        this.name = name;
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-                                                   boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-
+/*
         // here value will be infoview,teamview,gmnumview,timeview,or spreadtotalview....
         // when it gets instantiated in LinesTableData it will be set with a border color and size
         // whch will be used as top border here to seperate sports and dates
 
         if (value == null) {
             if (row == 0 && column == 0) {
-                System.out.println("value is null" + row + ".." + column);
+                log("value is null" + row + ".." + column);
             }
             return null;
-        } else {
-            if (row == 0 && column == 0) {
-                //	System.out.println("value is "+value+"..."+row+".."+column);
-            }
-
         }
 
-        if (row == 2) {
-            //MatteBorder mb = new MatteBorder(15,-1,-1,-1, new Color(0,0,128));
-            //this.setBorder(mb);
-			/*
-				if(value instanceof TeamView)
-				{
-					
-					//TitledBorder tb = new TitledBorder(mb, "Some Long Text", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION);
-					TitledBorder tb = new TitledBorder("Some Long Text");
-					this.setBorder(tb);
-
-
-				}
-				else
-				{
-					MatteBorder mb2 = new MatteBorder(15,-1,-1,-1, new Color(0,0,128));
-					this.setBorder(mb2);
-					//this.setBorder(BorderFactory.createMatteBorder(15,-1,-1,-1, new Color(0,0,128)));
-				}
-			*/
-        } else {
-            // this.setBorder(null);
-            //	this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        }
-
-        this.table = table;
+        LinePanel lp = getLinePanel();
+        lp.table = table;
         // int rowHeight = table.getRowHeight();
         // System.out.println(this.table);
         //(this.table).setRowHeight(60);
@@ -75,36 +43,39 @@ public class LineRenderer extends LinePanel implements TableCellRenderer {
 
         //table.setRowHeight(30);
         if (value instanceof SpreadTotalView) {
-
-
-            setLines((SpreadTotalView) value, row, column);
+            lp.setLines((SpreadTotalView) value, row, column);
         } else if (value instanceof SoccerSpreadTotalView) {
-
-
-            setSoccerLines((SoccerSpreadTotalView) value, row, column);
+            lp.setSoccerLines((SoccerSpreadTotalView) value, row, column);
 
         } else if (value instanceof TeamView) {
-            setTeams((TeamView) value, row, column);
+            lp.setTeams((TeamView) value, row, column);
         } else if (value instanceof GameNumberView) {
-            setGamenumbers((GameNumberView) value, row, column);
+            lp.setGamenumbers((GameNumberView) value, row, column);
         } else if (value instanceof SoccerGameNumberView) {
-
-            setSoccerGamenumbers((SoccerGameNumberView) value, row, column);
+            lp.setSoccerGamenumbers((SoccerGameNumberView) value, row, column);
 
         } else if (value instanceof TimeView) {
-            setTime((TimeView) value, row, column);
+            lp.setTime((TimeView) value, row, column);
         } else if (value instanceof ChartView) {
-            setChart((ChartView) value, row, column);
+            lp.setChart((ChartView) value, row, column);
         } else if (value instanceof SoccerChartView) {
-            setSoccerChart((SoccerChartView) value, row, column);
+            lp.setSoccerChart((SoccerChartView) value, row, column);
         } else if (value instanceof InfoView) {
-            setInfo((InfoView) value, row, column);
+            lp.setInfo((InfoView) value, row, column);
         } else if (value instanceof HeaderView) {
-            setHeader((HeaderView) value, row, column);
+            lp.setHeader((HeaderView) value, row, column);
         }
 
+        lp.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+        return lp;
+        */
 
-        return this;
+        return new JLabel("test-"+table.getName());
     }
-
+    private LinePanel getLinePanel() {
+        if ( null == linePanel) {
+            linePanel = new LinePanel(name);
+        }
+        return linePanel;
+    }
 }

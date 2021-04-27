@@ -6,6 +6,7 @@ import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
@@ -455,7 +456,7 @@ public class LineAlert implements ItemListener {
         sportlist[2] = "Basketball";
         sportlist[3] = "Baseball";
         sportlist[4] = "Hockey";
-        sportlist[5] = "Soccer";
+        sportlist[5] = SiaConst.SoccerStr;
         sportlist[6] = "Fighting";
         sportlist[7] = "Golf";
         sportlist[8] = "Tennis";
@@ -2328,7 +2329,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             editing = true;
             lan = (LineAlertNode) AppController.getLineAlertNodes().elementAt(lanComboBox.getSelectedIndex());
             sport = lan.getSport();
-            if (lan.getSport().equals("Soccer")) {
+            if (lan.getSport().equalsIgnoreCase(SiaConst.SoccerStr)) {
                 DefaultComboBoxModel model = new DefaultComboBoxModel(soccerptslist);
                 spreadptsComboBox.setModel(model);
                 DefaultComboBoxModel model2 = new DefaultComboBoxModel(soccerptslist);

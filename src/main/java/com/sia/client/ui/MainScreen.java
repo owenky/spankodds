@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -16,7 +17,6 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
-import javax.swing.border.Border;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -507,7 +507,7 @@ public class MainScreen extends JPanel {
                 }
 
             }
-        } else if (name.equalsIgnoreCase("soccer")) {
+        } else if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
             boolean all = false;
             String soccerpref = AppController.getUser().getSoccerPref();
             prefs = soccerpref.split("\\|");
@@ -518,7 +518,7 @@ public class MainScreen extends JPanel {
             String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("soccer")) {
+                if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
                     all = true;
                 }
                 this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
@@ -1152,13 +1152,14 @@ public class MainScreen extends JPanel {
         //  Only the Table Header is displayed
 
         JTable table0 = new JTable();
+ table0.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
         alltables.add(table0);
         table0.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table0.setPreferredScrollableViewportSize(table0.getPreferredSize());
         table0.setOpaque(true);
         table0.changeSelection(0, 0, false, false);
         table0.setAutoCreateColumnsFromModel(false);
-        if (name.equalsIgnoreCase("soccer")) {
+        if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
             table0.setRowHeight(60);
         } else {
             table0.setRowHeight(30);
@@ -1262,7 +1263,6 @@ public class MainScreen extends JPanel {
 
 
         JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
-fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
         fixedtables.add(fixed0);
 	/*	if(name.equalsIgnoreCase("soccer"))
 		{
@@ -1333,11 +1333,11 @@ fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
 
 
             //JLabel label = new JLabel("<html><body>" +gamegroupheaders.get(j)+"</body></html>");
-            if ((gamegroupheaders.get(j) + "").contains("Soccer")) {
+            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr)) {
 
-                if (name.equalsIgnoreCase("soccer") || (oldgamegroupvec.size() == 0)) {
+                if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
                     String orginal = gamegroupheaders.get(j) + "";
-                    String nameWithoutSoccer = orginal.replace("Soccer", "");
+                    String nameWithoutSoccer = orginal.replace(SiaConst.SoccerStr, "");
                     label.setText("                                                                                                                                                      " +
 
                             nameWithoutSoccer +
@@ -1373,7 +1373,7 @@ fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
 
             }
             JTable tablex;
-            if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
+            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                 //System.out.println("Soc=========================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
                 tablex = new SoccerTableView();
 
@@ -1394,6 +1394,7 @@ fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
 
             }
             tablex.setName("table" + j);
+tablex.setBorder(BorderFactory.createLineBorder(Color.PINK,3));
             alltables.add(tablex);
             //jidetable feature tablex.setColumnAutoResizable(true);
             tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1453,14 +1454,15 @@ fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
 
 
                 JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, true);
+fixedx.setBorder(BorderFactory.createLineBorder(Color.RED,3));
                 fixedtables.add(fixedx);
                 //fixedx.setColumnAutoResizable(true);
                 fixedx.setColumnModel(fixed0.getColumnModel());
                 //fixedx.setDefaultRenderer(Object.class, new LineRenderer());
 
-                if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
+                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                     fixedx.setRowHeight(60);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
+                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr));
                 } else {
                     fixedx.setRowHeight(30);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());
@@ -1482,13 +1484,14 @@ fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
                 scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
                 JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, false);
+fixedx.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
                 fixedtables.add(fixedx);
                 fixedx.setColumnModel(fixed0.getColumnModel());
 
                 //fixedx.setColumnAutoResizable(true);
-                if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
+                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                     fixedx.setRowHeight(60);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
+                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr));
                 } else {
                     fixedx.setRowHeight(30);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());
@@ -1597,12 +1600,7 @@ fixed0.setBorder(BorderFactory.createLineBorder(Color.RED));
 private int tableCount=0;
     private JTable makeFixedRowHeader(int fixedColumns, JTable main, boolean deletefrommain) {
 
-        JTable fixed = new JTable() {
-            @Override
-            public void setBorder(Border b) {
-                super.setBorder(b);
-            }
-        };
+        JTable fixed = new JTable();
 log("table count="+(++tableCount));
         fixed.setAutoCreateColumnsFromModel(false);
         fixed.setModel(main.getModel());
@@ -1657,34 +1655,34 @@ log("table count="+(++tableCount));
 
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
-        for (int i = 0; i < alltables.size(); i++) {
-            JTable table = (JTable) alltables.get(i);
-            table = null;
-        }
-        for (int i = 0; i < fixedtables.size(); i++) {
-            JTable table = (JTable) fixedtables.get(i);
-            table = null;
-        }
-        for (int i = 0; i < renderers.size(); i++) {
-            LineRenderer ren = (LineRenderer) renderers.get(i);
-            ren = null;
-        }
-        for (int i = 0; i < columns.size(); i++) {
-            TableColumn col = (TableColumn) columns.get(i);
-            col = null;
-        }
-        for (int i = 0; i < managers.size(); i++) {
-            TableColumnManager col = (TableColumnManager) managers.get(i);
-            col = null;
-        }
-        for (int i = 0; i < adjusters.size(); i++) {
-            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
-            col = null;
-        }
-        for (int i = 0; i < datamodelsvec.size(); i++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            ltd = null;
-        }
+//        for (int i = 0; i < alltables.size(); i++) {
+//            JTable table = (JTable) alltables.get(i);
+//            table = null;
+//        }
+//        for (int i = 0; i < fixedtables.size(); i++) {
+//            JTable table = (JTable) fixedtables.get(i);
+//            table = null;
+//        }
+//        for (int i = 0; i < renderers.size(); i++) {
+//            LineRenderer ren = (LineRenderer) renderers.get(i);
+//            ren = null;
+//        }
+//        for (int i = 0; i < columns.size(); i++) {
+//            TableColumn col = (TableColumn) columns.get(i);
+//            col = null;
+//        }
+//        for (int i = 0; i < managers.size(); i++) {
+//            TableColumnManager col = (TableColumnManager) managers.get(i);
+//            col = null;
+//        }
+//        for (int i = 0; i < adjusters.size(); i++) {
+//            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
+//            col = null;
+//        }
+//        for (int i = 0; i < datamodelsvec.size(); i++) {
+//            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
+//            ltd = null;
+//        }
         alltables.clear();
         fixedtables.clear();
         renderers.clear();

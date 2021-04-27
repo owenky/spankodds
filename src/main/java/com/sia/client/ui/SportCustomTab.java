@@ -7,6 +7,7 @@ import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Sport;
 
 import javax.swing.BorderFactory;
@@ -95,7 +96,7 @@ public class SportCustomTab {
             userpref = AppController.getUser().getFightingPref();
             System.out.println("userprefs =" + userpref);
 
-        } else if (alerttype.equalsIgnoreCase("Soccer")) {
+        } else if (alerttype.equalsIgnoreCase(SiaConst.SoccerStr)) {
             userpref = AppController.getUser().getSoccerPref();
             System.out.println("userprefs =" + userpref);
 
@@ -436,7 +437,7 @@ public class SportCustomTab {
                 } else if (alerttype.equalsIgnoreCase("Fighting")) {
                     tabVal = 4;
                     AppController.getUser().setFightingPref(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Soccer")) {
+                } else if (alerttype.equalsIgnoreCase(SiaConst.SoccerStr)) {
                     tabVal = 5;
                     AppController.getUser().setSoccerPref(newuserprefs);
                 } else if (alerttype.equalsIgnoreCase("Auto racing")) {

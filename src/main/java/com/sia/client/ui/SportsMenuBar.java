@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 
 import javax.swing.ImageIcon;
@@ -15,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
-
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
@@ -635,7 +635,7 @@ public class SportsMenuBar extends JMenuBar {
 
 
         //*****************soccer*************************
-        JMenu soccer = new JMenu("Soccer");
+        JMenu soccer = new JMenu(SiaConst.SoccerStr);
         tabsmenu.add(soccer);
         soccer.addMenuListener(new MenuListener() {
 
@@ -649,7 +649,7 @@ public class SportsMenuBar extends JMenuBar {
                 int tp = 0;
                 int j;
                 for (j = 0; j < tc; j++) {
-                    if (stb.getTitleAt(j).equalsIgnoreCase("Soccer")) {
+                    if (stb.getTitleAt(j).equalsIgnoreCase(SiaConst.SoccerStr)) {
                         tp = 1;
                         break;
                     }
@@ -657,20 +657,20 @@ public class SportsMenuBar extends JMenuBar {
                 soccer.add(go);
                 go.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        stb.setSelectedIndex(stb.indexOfTab("Soccer"));
+                        stb.setSelectedIndex(stb.indexOfTab(SiaConst.SoccerStr));
                     }
                 });
                 soccer.add(manage);
                 manage.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        new SportCustomTab("Soccer", stb.indexOfTab("Soccer"));
+                        new SportCustomTab(SiaConst.SoccerStr, stb.indexOfTab(SiaConst.SoccerStr));
                     }
                 });
                 if (tp == 1) {
                     soccer.add(hide);
                     hide.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ae) {
-                            int idx = stb.indexOfTab("Soccer");
+                            int idx = stb.indexOfTab(SiaConst.SoccerStr);
                             AppController.SpotsTabPaneVector.remove(5);
 
                             Vector tabpanes = AppController.getTabPanes();
@@ -687,16 +687,16 @@ public class SportsMenuBar extends JMenuBar {
                     soccer.add(unhide);
                     unhide.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(5, "Soccer");
+                            AppController.SpotsTabPaneVector.put(5, SiaConst.SoccerStr);
                             Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Soccer");
+                            int idx = currentvec.indexOf(SiaConst.SoccerStr);
 
                             Vector tabpanes = AppController.getTabPanes();
                             System.out.println("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Soccer", new ImageIcon(Utils.getMediaResource("soccer.png")), new MainScreen("Soccer"), "Soccer", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Soccer"));
+                                tp.insertTab(SiaConst.SoccerStr, new ImageIcon(Utils.getMediaResource("soccer.png")), new MainScreen(SiaConst.SoccerStr), SiaConst.SoccerStr, idx);
+                                tp.setSelectedIndex(tp.indexOfTab(SiaConst.SoccerStr));
 
                             }
 
