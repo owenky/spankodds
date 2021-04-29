@@ -3,7 +3,6 @@ package com.sia.client.ui;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
-import com.sia.client.model.User;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -39,7 +38,6 @@ import static com.sia.client.config.Utils.log;
 public class MainScreen extends JPanel {
     public Vector datamodelsvec = new Vector();
     public Timer timer;
-    public Timer timer2;
     public int timer2count = 0;
     public int currentmaxlength = 0;
     public String name;
@@ -50,7 +48,6 @@ public class MainScreen extends JPanel {
     public String display = "default";
     public int period = 0;
     public Vector alltables = new Vector();//
-    public Vector fixedtables = new Vector();//
     public Vector renderers = new Vector();//
     public Vector columns = new Vector();//
     public Vector adjusters = new Vector();//
@@ -112,10 +109,8 @@ public class MainScreen extends JPanel {
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("MainScreen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.add(new MainScreen());
         frame.setPreferredSize(new Dimension(400, 300));
         frame.pack();
-        // frame.setLocationByPlatform( true );
         frame.setVisible(true);
     }
 
@@ -194,21 +189,16 @@ public class MainScreen extends JPanel {
         for (int i = 0; i < gamegroupheaders.size(); i++) {
             String header = (String) gamegroupheaders.get(i);
             if (header.equals(title)) {
-
-                //Vector thisgamegroup = (Vector)vecofgamegroups.get(i);
-                //thisgamegroup.add(g);
                 LinesTableData thisltd = (LinesTableData) datamodelsvec.get(i);
                 thisltd.addGame(g, repaint);
                 break;
             }
         }
-        //this may not find anything becasue header is not on main screen i.e. game not applicable to current main screen
     }
 
     public void moveGameToThisHeader(Game g, String header) {
         Game thisgame = null;
 
-        //System.out.println("moved---------------------------------");
         for (int k = 0; k < datamodelsvec.size(); k++) {
             LinesTableData ltd = (LinesTableData) datamodelsvec.get(k);
             thisgame = ltd.removeGameId("" + g.getGame_id());
@@ -216,13 +206,6 @@ public class MainScreen extends JPanel {
                 break;
             }
         }
-	/*
-		if(thisgame == null) // lastly check halftimedatamodel
-		{
-			thisgame = halftimedatamodel.removeGameId(""+g.getGame_id());
-		}
-	*/
-
         // now lets see if i found it in either
         if (thisgame != null) // i did find it
         {
@@ -247,21 +230,7 @@ public class MainScreen extends JPanel {
                 ltd.addGame(thisgame, true);
 
             }
-            Vector tabpanes = AppController.getTabPanes();
-		/*	for(int i=0;i<tabpanes.size();i++)
-								{
-							SportsTabPane tp = (SportsTabPane)tabpanes.get(i);
-
-
-								tp.refreshCurrentTab();
-								}*/
-
-
         }
-        //this.createMe();
-        //
-
-
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
@@ -269,14 +238,8 @@ public class MainScreen extends JPanel {
         // add progress
         this.setOpaque(true);
 
-        //ImageIcon loadgif = new ImageIcon("ajax-loader.gif");
-        //ImageIcon loadgif = new ImageIcon("football.gif");
-
-
         add(loadlabel);
 
-
-        //destroyMe();
         this.display = display;
         this.period = period;
         this.timesort = timesort;
@@ -287,13 +250,12 @@ public class MainScreen extends JPanel {
         Vector gamegroupheadervec = new Vector();
         Vector gamegroupLeagueIDvec = new Vector();
         Vector currentvec = new Vector();
-        Vector gamesVec = new Vector();
 
 
         Vector allgames = new Vector();
 
 
-        int maxlength = 0;
+        int maxlength;
         currentmaxlength = 0;
         String prefs[];
 
@@ -307,7 +269,6 @@ public class MainScreen extends JPanel {
             if (Boolean.parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            //	System.out.println(prefs[2]);
             String tmp[] = {};
             try {
                 if (prefs.length > 2) {
@@ -332,7 +293,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -340,7 +300,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -374,7 +333,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -382,7 +340,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //	System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -413,7 +370,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //	System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -421,7 +377,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //	System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -452,7 +407,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //	System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -460,7 +414,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -491,7 +444,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //	System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -499,7 +451,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -530,7 +481,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -538,7 +488,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -569,7 +518,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -577,7 +525,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -608,7 +555,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -670,30 +616,12 @@ public class MainScreen extends JPanel {
             allgames = allgamesforpref;
         }
 
-
-        Vector allsports = AppController.getSportsVec();
         java.util.Date today = new java.util.Date();
 
         String lastdate = null;
         int lastleagueid = 0;
 
-        System.out.println("timesort?=" + timesort + "..allgames size=" + allgames.size());
-		/*try
-		{
-			if(timesort)
-			{
-				Collections.sort(allgames, new GameDateSorter().thenComparing(new GameTimeSorter()).thenComparing(new GameNumSorter()));
-			}
-			else
-			{
-				Collections.sort(allgames, new GameDateSorter().thenComparing(new GameNumSorter()));
-			}
-		}
-		catch(Exception ex)
-		{
-			System.out.println("exception sorting "+ex);
-		}*/
-
+        log("timesort?=" + timesort + "..allgames size=" + allgames.size());
 
         allgames = transformGamesVecToCustomGamesVec(customheaders, allgames);
 
@@ -721,9 +649,6 @@ public class MainScreen extends JPanel {
             Sport s = AppController.getSport("" + leagueid);
 
             Sport s2;
-
-
-            //System.out.println(s.getSportname());
             if (s == null) {
                 System.out.println("skipping " + leagueid + "...cuz of null sport");
                 continue;
@@ -839,12 +764,10 @@ public class MainScreen extends JPanel {
                     lastleagueid = leagueid;
                     Vector v = new Vector();
                     gamegroupvec.add(v);
-                    //v.add(gameid);
                     v.add(g);
                     currentvec = v;
                 } else if (!lastdate.equals(gamedate) || lastleagueid != leagueid) // new date or new league!
                 {
-                    //System.out.println("newdate!...lastdate="+lastdate+"..gamedate="+g.getGamedate());
                     lastdate = gamedate;
                     lastleagueid = leagueid;
                     gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
@@ -856,7 +779,6 @@ public class MainScreen extends JPanel {
                     currentvec = v2;
                 } else // same date
                 {
-                    //currentvec.add(gameid);
                     currentvec.add(g);
 
                 }
@@ -943,8 +865,6 @@ public class MainScreen extends JPanel {
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.insertElementAt(new Vector(), 0);
         }
-        //=======================================================
-
 
         if (halftimegamessoccer.size() > 0) {
             gamegroupheadervec.insertElementAt("Soccer Halftime", 1);
@@ -955,23 +875,6 @@ public class MainScreen extends JPanel {
             gamegroupLeagueIDvec.add(9);
             gamegroupvec.insertElementAt(new Vector(), 1);
         }
-        //========================================================
-		/*
-		if(gamegroupvec.size() == 0)
-		{
-			setContent(new Label("No Games"));
-
-		}
-		else
-		{
-
-		createAndSetSwingContent(myParent.swingNode);
-		//System.out.println("this="+this);
-		setContent(myParent.swingNode);
-
-		// moving this to create part below firedatamodels();
-		}
-		*/
         vecofgamegroups = gamegroupvec;
         gamegroupheaders = gamegroupheadervec;
         gamegroupLeagueID = gamegroupLeagueIDvec;
@@ -1001,18 +904,11 @@ public class MainScreen extends JPanel {
         });
 
         timer.start();
-        System.out.println("timer start");
-
-
-        //AppController.addDataModels(getDataModels());
-
-
+        log("timer start");
     }
 
     public Vector transformGamesVecToCustomGamesVec(Vector customheaders, Vector gamesvec) {
-        System.out.println("lollll" + customheaders);
 
-        java.util.Date today = new java.util.Date();
         if (customheaders.size() == 0) {
             return gamesvec;
         }
@@ -1021,27 +917,16 @@ public class MainScreen extends JPanel {
 
             String header = (String) customheaders.elementAt(i);
             for (int k = 0; k < gamesvec.size(); k++) {
-
-                String gameid = "";
                 Game g = (Game) gamesvec.get(k);
-
-                //System.out.println("bklppll"+g.getGame_id());
-                if (g == null)
-                {
+                if (g == null) {
                     //System.out.println("skipping gameid="+gameid+"...cuz of null game");
                     continue;
                 }
-                else
-                {
-                    gameid = "" + g.getGame_id();
-                }
+
                 if (g.getGamedate() == null) {
-                    //System.out.println("skipping gameid="+gameid+"...cuz of null game date");
                     continue;
                 }
 
-                String gamedate = sdf.format(g.getGamedate());
-                String todaysgames = sdf.format(today);
                 int leagueid = g.getLeague_id();
                 Sport s = AppController.getSport("" + leagueid);
 
@@ -1130,10 +1015,6 @@ public class MainScreen extends JPanel {
     public void drawIt() {
 
         Vector newBookiesVec = AppController.getBookiesVec();
-        for (int i = 0; i < newBookiesVec.size(); i++) {
-            //System.out.println("booooooooooooooooooooooooooooooook" + newBookiesVec.get(i));
-        }
-        final JPanel tablePanel1 = new JPanel();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
 
@@ -1142,11 +1023,6 @@ public class MainScreen extends JPanel {
         tablePanel.setScrollableHeight(ScrollablePanel.ScrollableSizeHint.STRETCH);
 
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
-        //tablePanel.setLayout( new BoxLayout(tablePanel, BoxLayout.PAGE_AXIS) );
-
-
-        //setLayout( new BorderLayout(0,0) );
-        //  Only the Table Header is displayed
 
         JTable table0 = new JTable();
         alltables.add(table0);
@@ -1164,14 +1040,8 @@ public class MainScreen extends JPanel {
         JTableHeader tableHeader = table0.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
-        //jidetable feature table0.setColumnAutoResizable(true);
+
         JScrollPane scrollPane0 = new JScrollPane(table0);
-
-        User user = AppController.getUser();
-        String bookiecolumnprefs = user.getBookieColumnPrefs();
-        String fixedcolumnprefs = user.getFixedColumnPrefs();
-        //System.out.println("BCM="+bookiecolumnprefs);
-
 
         Vector hiddencols = AppController.getHiddenCols();
         for (int k = 0; k < newBookiesVec.size(); k++) {
@@ -1181,22 +1051,9 @@ public class MainScreen extends JPanel {
                 continue;
             }
             TableColumn column;
-		/*if(name.equalsIgnoreCase("soccer"))
-		{
-			System.out.println("soccer pressed");
-			LineRenderer lr = new LineRenderer(name);
-			renderers.add(lr);
-			column = new TableColumn(k,30, lr, null);
-		}*/
-            //else
-            {
-                LineRenderer lr = new LineRenderer();
-                //	renderers.add(lr);
-                column = new TableColumn(k, 30, null, null);
-            }
 
+            column = new TableColumn(k, 30, null, null);
 
-            // column = new TableColumn(k,30, lr, null);
             column.setHeaderValue(b.getShortname() + "");
             column.setIdentifier("" + b.getBookie_id());
             if (b.getBookie_id() == 990) {
@@ -1214,19 +1071,16 @@ public class MainScreen extends JPanel {
                     column.setPreferredWidth(30);
                 } else {
                     column.setPreferredWidth(currentmaxlength * 7);
-                    //column.setPreferredWidth(150) ;
                 }
 
             } else if (b.getBookie_id() > 1000) {
                 column.setMinWidth(10);
                 column.setPreferredWidth(65);
             } else {
-                //column.setPreferredWidth(50) ;
                 column.setMinWidth(10);
                 column.setPreferredWidth(30);
             }
 
-            //owen took this out 6/18
             table0.addColumn(column);
             columns.add(column);
         }
@@ -1238,54 +1092,28 @@ public class MainScreen extends JPanel {
 
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
-
-        //owen took this out 6/18
         table0.addColumn(blankcol);
 
 
         columns.add(blankcol);
-
-        //owen put this in 6/18
-        //table0.setColumnModel(AppController.getColumnModel());
-
-
         TableColumnManager tcm0 = new TableColumnManager(table0, "");
         TableColumnAdjuster tca0 = new TableColumnAdjuster(table0);
         managers.add(tcm0);
         adjusters.add(tca0);
         LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), table0, timesort, shortteam, opener, last);
         table0.setModel(dataModel0);
-        //datamodelsvec.add(dataModel0);
-
-
         JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
-        fixedtables.add(fixed0);
-	/*	if(name.equalsIgnoreCase("soccer"))
-		{
-			fixed0.setRowHeight(60);
-		}
-		else{
-			fixed0.setRowHeight(30);
-		}*/
-        //fixed0.setRowHeight(30);
 
         fixed0.setPreferredScrollableViewportSize(fixed0.getPreferredSize());
 
-        //owen added this 6/18
-        //fixed0.setColumnModel(AppController.getFixedColumnModel());
         JTableHeader tableHeaderfixed = fixed0.getTableHeader();
         Font headerFontfixed = new Font("Verdana", Font.BOLD, 11);
         tableHeaderfixed.setFont(headerFontfixed);
-        TableColumnManager tcmfixed0 = new TableColumnManager(fixed0, "fixed");
 
-        //owen inserted 6/26
-        TableColumnAdjuster tcafixed0 = new TableColumnAdjuster(fixed0);
-        //fixed0.setColumnAutoResizable(true);
         scrollPane0.setRowHeaderView(fixed0);
         scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
         tca0.adjustColumns();
 
-        //adjusters.add(tcafixed0);
 
         scrollPane0.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scrollPane0.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
@@ -1299,19 +1127,10 @@ public class MainScreen extends JPanel {
             boolean showit = true;
             Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
 
-            //System.out.println(gamegroupheaders.get(j)+"--------"+newgamegroupvec);
-            for (int i = 0; i < newgamegroupvec.size(); i++) {
-                Game g = (Game) newgamegroupvec.get(i);
-                //System.out.println("+++++"+g.getGame_id()+"+++++++");
-            }
-            //	System.out.println(gamegroupLeagueID.get(j));
-
             int LID = 0;
 
 
-            if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL"))
-            // dont show header if its blank!
-            //however must show final for scrollpane purposes
+            if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
             {
 
                 showit = false;
@@ -1328,7 +1147,6 @@ public class MainScreen extends JPanel {
                     "                                                                                                                                                      ");
 
 
-            //JLabel label = new JLabel("<html><body>" +gamegroupheaders.get(j)+"</body></html>");
             if ((gamegroupheaders.get(j) + "").contains("Soccer")) {
 
                 if (name.equalsIgnoreCase("soccer") || (oldgamegroupvec.size() == 0)) {
@@ -1346,20 +1164,11 @@ public class MainScreen extends JPanel {
                 } else {
                     showit = false;
                 }
-                //System.out.print("s");
             }
             label.setOpaque(true);
 
-
-            //label.setPreferredSize(new Dimension(1, 1)); // this is the key part.
-
             label.setBackground(new Color(0, 0, 128));
             label.setForeground(Color.WHITE);
-            //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            //int screenWidth = screenSize.width;
-            //label.setMinimumSize(new Dimension(screenWidth,20));
-
-            //label.setAlignmentX(Component.CENTER_ALIGNMENT);
             for (int k = 0; k < newgamegroupvec.size(); k++) {
                 //Vector eachGame =(Vector) newgamegroupvec.get(k);
                 Game g = (Game) newgamegroupvec.get(k);
@@ -1370,77 +1179,32 @@ public class MainScreen extends JPanel {
             }
             JTable tablex;
             if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
-                //System.out.println("Soc=========================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
                 tablex = new SoccerTableView();
-
-
-                //tablex.getColumnModel().setDefaultRenderer(Object.class, new LineRenderer("soccer"));
-                //tablex.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
                 tablex.setRowHeight(60);
             } else {
-                //System.out.println("Non-Socc================================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
                 tablex = new RegularTableView();
-
-                //tablex.setDefaultRenderer(Object.class, new LineRenderer(""));
-
                 tablex.setRowHeight(30);
-                //tablex.getColumnModel().setDefaultRenderer(Object.class, new LineRenderer());
-                //tablex.getColumnModel().setCellRenderer(new LineRenderer());
-                //	tablex.setColumnModel( table0.getColumnModel() );
-
             }
             tablex.setName("table" + j);
             alltables.add(tablex);
-            //jidetable feature tablex.setColumnAutoResizable(true);
             tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-            //System.out.println("eee");
-
-            // tablex.setRowHeight(30);
-            // LID==9;
-
-
-            //LID = (int) gamegroupLeagueID.get(j);
             tablex.setColumnModel(table0.getColumnModel());
-
             tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
-            //System.out.println("ggg");
             tablex.setOpaque(true);
 
             tablex.changeSelection(0, 0, false, false);
             tablex.setAutoCreateColumnsFromModel(false);
-
-
-            //System.out.println("aaa "+vecofgamegroups.size());
             LinesTableData dataModel = new LinesTableData(display, period, cleartime, newgamegroupvec, tablex, timesort, shortteam, opener, last);
 
             tablex.setModel(dataModel);
-
-            //System.out.println("bbb");
-            //AppController.addDataModel(dataModel);
-            //System.out.println("ccc");
             datamodelsvec.add(dataModel);
-            //System.out.println("ddd");
-
-            //System.out.println("hhh");
             JScrollPane scrollPanex = new JScrollPane(tablex);
-            //System.out.println("iii");
-
-
-            //TableColumnManager tcmx= new TableColumnManager(tablex,"");
-
             TableColumnAdjuster tcax = new TableColumnAdjuster(tablex);
-
-
-            //--------------------------------------------------------------------------------------------------------------------
-
             adjusters.add(tcax);
 
 
             scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            //System.out.println("lll");
             scrollPanex.getHorizontalScrollBar().setModel(scrollPane0.getHorizontalScrollBar().getModel());
-            //System.out.println("mmm");
             if (j == vecofgamegroups.size() - 1) // last group
             {
 
@@ -1449,7 +1213,6 @@ public class MainScreen extends JPanel {
 
 
                 JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, true);
-                fixedtables.add(fixedx);
                 //fixedx.setColumnAutoResizable(true);
                 fixedx.setColumnModel(fixed0.getColumnModel());
                 //fixedx.setDefaultRenderer(Object.class, new LineRenderer());
@@ -1465,23 +1228,16 @@ public class MainScreen extends JPanel {
 
                 TableColumnManager tcmx = new TableColumnManager(fixedx, "fixed");
 
-                //owen added 6/26
-                TableColumnAdjuster tcafx = new TableColumnAdjuster(fixedx);
-
-
                 managers.add(tcmx);
                 scrollPanex.setRowHeaderView(fixedx);
-                //	scrollPanex.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedx.getTableHeader());
                 tcax.adjustColumns();
 
             } else {
                 scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
                 JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, false);
-                fixedtables.add(fixedx);
                 fixedx.setColumnModel(fixed0.getColumnModel());
 
-                //fixedx.setColumnAutoResizable(true);
                 if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
                     fixedx.setRowHeight(60);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
@@ -1489,20 +1245,11 @@ public class MainScreen extends JPanel {
                     fixedx.setRowHeight(30);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());
                 }
-                //fixedx.setRowHeight(30);
 
                 fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
                 TableColumnManager tcmx = new TableColumnManager(fixedx, "fixed");
-
-
-                //owen added 6/26
-                TableColumnAdjuster tcafx = new TableColumnAdjuster(fixedx);
-
                 managers.add(tcmx);
                 scrollPanex.setRowHeaderView(fixedx);
-                //	scrollPanex.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedx.getTableHeader());
-                //	tcax.adjustColumns();
-
             }
 
 
@@ -1512,10 +1259,6 @@ public class MainScreen extends JPanel {
                 if (showit) {
                     tablePanel.add(label);
                 }
-            } else {
-                //JLabel lab = new JLabel(new ImageIcon("blueline.png"));
-                //lab.setPreferredSize(new Dimension(900,2));
-                //tablePanel.add(lab);
             }
             if (newgamegroupvec.size() > 0) {
                 scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
@@ -1525,25 +1268,12 @@ public class MainScreen extends JPanel {
             tablePanel.add(scrollPanex);
             scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
 
-
-            //scrollPanex.setBorder(new EmptyBorder(0, 0, 0, 10));
             oldgamegroupvec = newgamegroupvec;
         }
 
-        System.out.println("gamergroup headers end..." + new java.util.Date());
-
-	 /*
-		for(int j=0;j<hiddencols.size();j++)
-		{
-			Bookie b = (Bookie)hiddencols.get(j);
-			//System.out.println("hiding "+b);
-			tcm0.hideColumn(b.getShortname());
-		}
-	*/
-        System.out.println("hidden end..." + new java.util.Date());
-        //scrollPane0.setBorder(new EmptyBorder(0, 0, 0, 50));
+        log("gamergroup headers end..." + new java.util.Date());
+        log("hidden end..." + new java.util.Date());
         JScrollPane scrollPane = new JScrollPane(tablePanel);
-        //tablePanel.setBorder(new EmptyBorder(0, 0, 0, 5));
         scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
@@ -1563,7 +1293,6 @@ public class MainScreen extends JPanel {
         Timer timer2 = new Timer(500, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //System.out.println("about to run timer2!");
 
                     adjustcols(false);
                     timer2count++;
@@ -1577,12 +1306,10 @@ public class MainScreen extends JPanel {
 
             }
         });
-        //timer2.setRepeats(false);
 
         timer2.start();
-        System.out.println("timer2 start");
-
-        System.out.println("drawit end..." + new java.util.Date());
+        log("timer2 start");
+        log("drawit end..." + new java.util.Date());
     }
 
     public void firedatamodels() {
@@ -1627,57 +1354,15 @@ public class MainScreen extends JPanel {
     }
 
     public void adjustcols(boolean includeheader) {
-        //	SwingUtilities.invokeLater(new Runnable()
-        //	{
-        //	public void run()
-        //	{
         for (int i = 0; i < adjusters.size(); i++) {
             TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
             col.adjustColumns(includeheader);
-        }
-        //}
-        //});
-    }
-
-    public void firedatamodels2() {
-        for (int i = 0; i < datamodelsvec.size(); i++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
         }
     }
 
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
-        for (int i = 0; i < alltables.size(); i++) {
-            JTable table = (JTable) alltables.get(i);
-            table = null;
-        }
-        for (int i = 0; i < fixedtables.size(); i++) {
-            JTable table = (JTable) fixedtables.get(i);
-            table = null;
-        }
-        for (int i = 0; i < renderers.size(); i++) {
-            LineRenderer ren = (LineRenderer) renderers.get(i);
-            ren = null;
-        }
-        for (int i = 0; i < columns.size(); i++) {
-            TableColumn col = (TableColumn) columns.get(i);
-            col = null;
-        }
-        for (int i = 0; i < managers.size(); i++) {
-            TableColumnManager col = (TableColumnManager) managers.get(i);
-            col = null;
-        }
-        for (int i = 0; i < adjusters.size(); i++) {
-            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
-            col = null;
-        }
-        for (int i = 0; i < datamodelsvec.size(); i++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            ltd = null;
-        }
         alltables.clear();
-        fixedtables.clear();
         renderers.clear();
         columns.clear();
         managers.clear();
@@ -1701,7 +1386,7 @@ public class MainScreen extends JPanel {
         if (timer != null) {
             timer.stop();
         }
-        System.out.println("destroyed mainscreen!!!!");
+        log("destroyed mainscreen!!!!");
 
     }
 }
