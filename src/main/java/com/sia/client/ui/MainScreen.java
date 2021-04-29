@@ -1139,6 +1139,7 @@ public class MainScreen extends JPanel {
         final JPanel tablePanel1 = new JPanel();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
+tablePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 
 
         //changed this to stretch for Vertical Scroll Bar to appear if frame is resized and data can not fit in viewport
@@ -1152,7 +1153,7 @@ public class MainScreen extends JPanel {
         //  Only the Table Header is displayed
 
         JTable table0 = new JTable();
- table0.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
+ table0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
         alltables.add(table0);
         table0.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table0.setPreferredScrollableViewportSize(table0.getPreferredSize());
@@ -1170,6 +1171,7 @@ public class MainScreen extends JPanel {
         tableHeader.setFont(headerFont);
         //jidetable feature table0.setColumnAutoResizable(true);
         JScrollPane scrollPane0 = new JScrollPane(table0);
+scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
 
         User user = AppController.getUser();
         String bookiecolumnprefs = user.getBookieColumnPrefs();
@@ -1555,7 +1557,7 @@ fixedx.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         JScrollBar bar = lastScrollPane.getHorizontalScrollBar();
-
+bar.setBorder(BorderFactory.createLineBorder(Color.YELLOW,3));
 
         removeAll();
         revalidate();
