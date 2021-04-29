@@ -4,7 +4,6 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
-import com.sia.client.model.User;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -41,7 +40,6 @@ import static com.sia.client.config.Utils.log;
 public class MainScreen extends JPanel {
     public Vector datamodelsvec = new Vector();
     public Timer timer;
-    public Timer timer2;
     public int timer2count = 0;
     public int currentmaxlength = 0;
     public String name;
@@ -103,8 +101,6 @@ public class MainScreen extends JPanel {
         this.showextra = showextra;
         this.showprops = showprops;
         cleartime = new java.util.Date().getTime();
-
-
     }
 
     public static void main(String[] args) {
@@ -120,15 +116,9 @@ public class MainScreen extends JPanel {
         // frame.setLocationByPlatform( true );
         frame.setVisible(true);
     }
-
-    public void setCustomHeaders(Vector v) {
-        customheaders = v;
-    }
-
     public String getName() {
         return name;
     }
-
     public void setName(String n) {
         name = n;
     }
@@ -140,7 +130,6 @@ public class MainScreen extends JPanel {
         }
 
     }
-
     public Vector getDataModels() {
         return datamodelsvec;
     }
@@ -209,8 +198,6 @@ public class MainScreen extends JPanel {
 
     public void moveGameToThisHeader(Game g, String header) {
         Game thisgame = null;
-
-        //System.out.println("moved---------------------------------");
         for (int k = 0; k < datamodelsvec.size(); k++) {
             LinesTableData ltd = (LinesTableData) datamodelsvec.get(k);
             thisgame = ltd.removeGameId("" + g.getGame_id());
@@ -218,13 +205,6 @@ public class MainScreen extends JPanel {
                 break;
             }
         }
-	/*
-		if(thisgame == null) // lastly check halftimedatamodel
-		{
-			thisgame = halftimedatamodel.removeGameId(""+g.getGame_id());
-		}
-	*/
-
         // now lets see if i found it in either
         if (thisgame != null) // i did find it
         {
@@ -250,35 +230,14 @@ public class MainScreen extends JPanel {
 
             }
             Vector tabpanes = AppController.getTabPanes();
-		/*	for(int i=0;i<tabpanes.size();i++)
-								{
-							SportsTabPane tp = (SportsTabPane)tabpanes.get(i);
-
-
-								tp.refreshCurrentTab();
-								}*/
-
-
         }
-        //this.createMe();
-        //
-
 
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
         setLayout(new BorderLayout(0, 0));
-        // add progress
         this.setOpaque(true);
-
-        //ImageIcon loadgif = new ImageIcon("ajax-loader.gif");
-        //ImageIcon loadgif = new ImageIcon("football.gif");
-
-
         add(loadlabel);
-
-
-        //destroyMe();
         this.display = display;
         this.period = period;
         this.timesort = timesort;
@@ -289,9 +248,6 @@ public class MainScreen extends JPanel {
         Vector gamegroupheadervec = new Vector();
         Vector gamegroupLeagueIDvec = new Vector();
         Vector currentvec = new Vector();
-        Vector gamesVec = new Vector();
-
-
         Vector allgames = new Vector();
 
 
@@ -309,7 +265,6 @@ public class MainScreen extends JPanel {
             if (Boolean.parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            //	System.out.println(prefs[2]);
             String tmp[] = {};
             try {
                 if (prefs.length > 2) {
@@ -335,7 +290,6 @@ public class MainScreen extends JPanel {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = (Game) allgamesforpref.get(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -343,7 +297,6 @@ public class MainScreen extends JPanel {
                 Date x = c.getTime();
 
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
-                    //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -1133,25 +1086,14 @@ public class MainScreen extends JPanel {
     public void drawIt() {
 
         Vector newBookiesVec = AppController.getBookiesVec();
-        for (int i = 0; i < newBookiesVec.size(); i++) {
-            //System.out.println("booooooooooooooooooooooooooooooook" + newBookiesVec.get(i));
-        }
         final JPanel tablePanel1 = new JPanel();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
 tablePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 
-
         //changed this to stretch for Vertical Scroll Bar to appear if frame is resized and data can not fit in viewport
         tablePanel.setScrollableHeight(ScrollablePanel.ScrollableSizeHint.STRETCH);
-
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
-        //tablePanel.setLayout( new BoxLayout(tablePanel, BoxLayout.PAGE_AXIS) );
-
-
-        //setLayout( new BorderLayout(0,0) );
-        //  Only the Table Header is displayed
-
         JTable table0 = new JTable();
  table0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
         alltables.add(table0);
@@ -1165,44 +1107,21 @@ tablePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
         } else {
             table0.setRowHeight(30);
         }
-        //table0.setRowHeight(30);
         JTableHeader tableHeader = table0.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
-        //jidetable feature table0.setColumnAutoResizable(true);
         JScrollPane scrollPane0 = new JScrollPane(table0);
 scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
-
-        User user = AppController.getUser();
-        String bookiecolumnprefs = user.getBookieColumnPrefs();
-        String fixedcolumnprefs = user.getFixedColumnPrefs();
-        //System.out.println("BCM="+bookiecolumnprefs);
-
-
         Vector hiddencols = AppController.getHiddenCols();
         for (int k = 0; k < newBookiesVec.size(); k++) {
             Bookie b = (Bookie) newBookiesVec.get(k);
-
             if (hiddencols.contains(b)) {
                 continue;
             }
             TableColumn column;
-		/*if(name.equalsIgnoreCase("soccer"))
-		{
-			System.out.println("soccer pressed");
-			LineRenderer lr = new LineRenderer(name);
-			renderers.add(lr);
-			column = new TableColumn(k,30, lr, null);
-		}*/
-            //else
-            {
-                LineRenderer lr = new LineRenderer();
-                //	renderers.add(lr);
-                column = new TableColumn(k, 30, null, null);
-            }
 
-
-            // column = new TableColumn(k,30, lr, null);
+            LineRenderer lr = new LineRenderer();
+            column = new TableColumn(k, 30, null, null);
             column.setHeaderValue(b.getShortname() + "");
             column.setIdentifier("" + b.getBookie_id());
             if (b.getBookie_id() == 990) {
@@ -1214,25 +1133,19 @@ scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
             } else if (b.getBookie_id() == 992) {
                 column.setPreferredWidth(45);
             } else if (b.getBookie_id() == 993) {
-
-
                 if (shortteam) {
                     column.setPreferredWidth(30);
                 } else {
                     column.setPreferredWidth(currentmaxlength * 7);
-                    //column.setPreferredWidth(150) ;
                 }
 
             } else if (b.getBookie_id() > 1000) {
                 column.setMinWidth(10);
                 column.setPreferredWidth(65);
             } else {
-                //column.setPreferredWidth(50) ;
                 column.setMinWidth(10);
                 column.setPreferredWidth(30);
             }
-
-            //owen took this out 6/18
             table0.addColumn(column);
             columns.add(column);
         }
@@ -1244,87 +1157,45 @@ scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
 
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
-
-        //owen took this out 6/18
         table0.addColumn(blankcol);
 
 
         columns.add(blankcol);
-
-        //owen put this in 6/18
-        //table0.setColumnModel(AppController.getColumnModel());
-
-
         TableColumnManager tcm0 = new TableColumnManager(table0, "");
         TableColumnAdjuster tca0 = new TableColumnAdjuster(table0);
         managers.add(tcm0);
         adjusters.add(tca0);
         LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), table0, timesort, shortteam, opener, last);
         table0.setModel(dataModel0);
-        //datamodelsvec.add(dataModel0);
-
-
         JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
         fixedtables.add(fixed0);
-	/*	if(name.equalsIgnoreCase("soccer"))
-		{
-			fixed0.setRowHeight(60);
-		}
-		else{
-			fixed0.setRowHeight(30);
-		}*/
-        //fixed0.setRowHeight(30);
-
         fixed0.setPreferredScrollableViewportSize(fixed0.getPreferredSize());
-
-        //owen added this 6/18
-        //fixed0.setColumnModel(AppController.getFixedColumnModel());
         JTableHeader tableHeaderfixed = fixed0.getTableHeader();
         Font headerFontfixed = new Font("Verdana", Font.BOLD, 11);
         tableHeaderfixed.setFont(headerFontfixed);
-//        TableColumnManager tcmfixed0 = new TableColumnManager(fixed0, "fixed");
-
-        //owen inserted 6/26
-//        TableColumnAdjuster tcafixed0 = new TableColumnAdjuster(fixed0);
-        //fixed0.setColumnAutoResizable(true);
         scrollPane0.setRowHeaderView(fixed0);
         scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
         tca0.adjustColumns();
-
-        //adjusters.add(tcafixed0);
-
         scrollPane0.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scrollPane0.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
         scrollPane0.removeMouseWheelListener(scrollPane0.getMouseWheelListeners()[0]);
 
-
         log("gamergroup headers start..." + new java.util.Date());
-
         Vector oldgamegroupvec = new Vector();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             boolean showit = true;
             Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-
-            //System.out.println(gamegroupheaders.get(j)+"--------"+newgamegroupvec);
             for (int i = 0; i < newgamegroupvec.size(); i++) {
                 Game g = (Game) newgamegroupvec.get(i);
-                //System.out.println("+++++"+g.getGame_id()+"+++++++");
             }
-            //	System.out.println(gamegroupLeagueID.get(j));
-
             int LID = 0;
 
 
             if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL"))
-            // dont show header if its blank!
-            //however must show final for scrollpane purposes
+            // dont show header if its blank! however must show final for scrollpane purposes
             {
-
                 showit = false;
-
             }
-
-
             JLabel label = new JLabel("                                                                                                                                                      " +
 
                     gamegroupheaders.get(j) +
@@ -1332,9 +1203,6 @@ scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
                     "                                                                                                                                                      " +
                     "                                                                                                                                                      " +
                     "                                                                                                                                                      ");
-
-
-            //JLabel label = new JLabel("<html><body>" +gamegroupheaders.get(j)+"</body></html>");
             if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr)) {
 
                 if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
@@ -1352,22 +1220,11 @@ scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
                 } else {
                     showit = false;
                 }
-                //System.out.print("s");
             }
             label.setOpaque(true);
-
-
-            //label.setPreferredSize(new Dimension(1, 1)); // this is the key part.
-
             label.setBackground(new Color(0, 0, 128));
             label.setForeground(Color.WHITE);
-            //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            //int screenWidth = screenSize.width;
-            //label.setMinimumSize(new Dimension(screenWidth,20));
-
-            //label.setAlignmentX(Component.CENTER_ALIGNMENT);
             for (int k = 0; k < newgamegroupvec.size(); k++) {
-                //Vector eachGame =(Vector) newgamegroupvec.get(k);
                 Game g = (Game) newgamegroupvec.get(k);
                 int leagueid = g.getLeague_id();
                 Sport s = AppController.getSport("" + leagueid);
@@ -1376,92 +1233,43 @@ scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
             }
             JTable tablex;
             if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-                //System.out.println("Soc=========================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
                 tablex = new SoccerTableView();
-
-
-                //tablex.getColumnModel().setDefaultRenderer(Object.class, new LineRenderer("soccer"));
-                //tablex.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
                 tablex.setRowHeight(60);
             } else {
-                //System.out.println("Non-Socc================================================================================="+gamegroupheaders.get(j)+"-lid="+LID);
                 tablex = new RegularTableView();
-
-                //tablex.setDefaultRenderer(Object.class, new LineRenderer(""));
-
                 tablex.setRowHeight(30);
-                //tablex.getColumnModel().setDefaultRenderer(Object.class, new LineRenderer());
-                //tablex.getColumnModel().setCellRenderer(new LineRenderer());
-                //	tablex.setColumnModel( table0.getColumnModel() );
-
             }
             tablex.setName("table" + j);
 tablex.setBorder(BorderFactory.createLineBorder(Color.PINK,3));
             alltables.add(tablex);
-            //jidetable feature tablex.setColumnAutoResizable(true);
             tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-            //System.out.println("eee");
-
-            // tablex.setRowHeight(30);
-            // LID==9;
-
-
-            //LID = (int) gamegroupLeagueID.get(j);
             tablex.setColumnModel(table0.getColumnModel());
-
             tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
-            //System.out.println("ggg");
             tablex.setOpaque(true);
 
             tablex.changeSelection(0, 0, false, false);
             tablex.setAutoCreateColumnsFromModel(false);
 
-
-            //System.out.println("aaa "+vecofgamegroups.size());
             LinesTableData dataModel = new LinesTableData(display, period, cleartime, newgamegroupvec, tablex, timesort, shortteam, opener, last);
 
             tablex.setModel(dataModel);
-
-            //System.out.println("bbb");
-            //AppController.addDataModel(dataModel);
-            //System.out.println("ccc");
             datamodelsvec.add(dataModel);
-            //System.out.println("ddd");
-
-            //System.out.println("hhh");
             JScrollPane scrollPanex = new JScrollPane(tablex);
-            //System.out.println("iii");
-
-
-            //TableColumnManager tcmx= new TableColumnManager(tablex,"");
-
             TableColumnAdjuster tcax = new TableColumnAdjuster(tablex);
-
-
-            //--------------------------------------------------------------------------------------------------------------------
-
             adjusters.add(tcax);
 
 
             scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            //System.out.println("lll");
             scrollPanex.getHorizontalScrollBar().setModel(scrollPane0.getHorizontalScrollBar().getModel());
             //System.out.println("mmm");
             if (j == vecofgamegroups.size() - 1) // last group
             {
-
                 scrollPanex.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                 lastScrollPane = scrollPanex;
-
-
                 JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, true);
 fixedx.setBorder(BorderFactory.createLineBorder(Color.RED,3));
                 fixedtables.add(fixedx);
-                //fixedx.setColumnAutoResizable(true);
                 fixedx.setColumnModel(fixed0.getColumnModel());
-                //fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-
                 if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                     fixedx.setRowHeight(60);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr));
@@ -1472,16 +1280,9 @@ fixedx.setBorder(BorderFactory.createLineBorder(Color.RED,3));
                 fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
 
                 TableColumnManager tcmx = new TableColumnManager(fixedx, "fixed");
-
-                //owen added 6/26
-                TableColumnAdjuster tcafx = new TableColumnAdjuster(fixedx);
-
-
                 managers.add(tcmx);
                 scrollPanex.setRowHeaderView(fixedx);
-                //	scrollPanex.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedx.getTableHeader());
                 tcax.adjustColumns();
-
             } else {
                 scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
 
@@ -1489,8 +1290,6 @@ fixedx.setBorder(BorderFactory.createLineBorder(Color.RED,3));
 fixedx.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
                 fixedtables.add(fixedx);
                 fixedx.setColumnModel(fixed0.getColumnModel());
-
-                //fixedx.setColumnAutoResizable(true);
                 if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                     fixedx.setRowHeight(60);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr));
@@ -1498,33 +1297,20 @@ fixedx.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
                     fixedx.setRowHeight(30);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());
                 }
-                //fixedx.setRowHeight(30);
-
                 fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
                 TableColumnManager tcmx = new TableColumnManager(fixedx, "fixed");
-
-
-                //owen added 6/26
                 TableColumnAdjuster tcafx = new TableColumnAdjuster(fixedx);
 
                 managers.add(tcmx);
                 scrollPanex.setRowHeaderView(fixedx);
-                //	scrollPanex.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedx.getTableHeader());
-                //	tcax.adjustColumns();
-
             }
 
 
             tablex.setTableHeader(null); // this has to be placed all the way down here!!!!
-            //System.out.println("nnn");
             if (isShowHeaders()) {
                 if (showit) {
                     tablePanel.add(label);
                 }
-            } else {
-                //JLabel lab = new JLabel(new ImageIcon("blueline.png"));
-                //lab.setPreferredSize(new Dimension(900,2));
-                //tablePanel.add(lab);
             }
             if (newgamegroupvec.size() > 0) {
                 scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
@@ -1534,25 +1320,12 @@ fixedx.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
             tablePanel.add(scrollPanex);
             scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
 
-
-            //scrollPanex.setBorder(new EmptyBorder(0, 0, 0, 10));
             oldgamegroupvec = newgamegroupvec;
         }
 
         log("gamergroup headers end..." + new java.util.Date());
-
-	 /*
-		for(int j=0;j<hiddencols.size();j++)
-		{
-			Bookie b = (Bookie)hiddencols.get(j);
-			//System.out.println("hiding "+b);
-			tcm0.hideColumn(b.getShortname());
-		}
-	*/
         log("hidden end..." + new java.util.Date());
-        //scrollPane0.setBorder(new EmptyBorder(0, 0, 0, 50));
         JScrollPane scrollPane = new JScrollPane(tablePanel);
-        //tablePanel.setBorder(new EmptyBorder(0, 0, 0, 5));
         scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
@@ -1572,8 +1345,6 @@ bar.setBorder(BorderFactory.createLineBorder(Color.YELLOW,3));
         Timer timer2 = new Timer(500, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //System.out.println("about to run timer2!");
-
                     adjustcols(false);
                     timer2count++;
                     if (timer2count > 12) {
@@ -1587,8 +1358,6 @@ bar.setBorder(BorderFactory.createLineBorder(Color.YELLOW,3));
 
             }
         });
-        //timer2.setRepeats(false);
-
         timer2.start();
         log("timer2 start");
     }
@@ -1608,8 +1377,6 @@ log("table count="+(++tableCount));
         fixed.setModel(main.getModel());
         fixed.setSelectionModel(main.getSelectionModel());
         fixed.setFocusable(false);
-
-
         for (int i = 0; i < fixedColumns; i++) {
             TableColumnModel columnModel = main.getColumnModel();
             if (deletefrommain) {
@@ -1623,10 +1390,8 @@ log("table count="+(++tableCount));
             }
 
         }
-
         return fixed;
     }
-
     public boolean isShowHeaders() {
         return showheaders;
     }
@@ -1634,57 +1399,14 @@ log("table count="+(++tableCount));
     public void setShowHeaders(boolean b) {
         showheaders = b;
     }
-
     public void adjustcols(boolean includeheader) {
-        //	SwingUtilities.invokeLater(new Runnable()
-        //	{
-        //	public void run()
-        //	{
         for (int i = 0; i < adjusters.size(); i++) {
             TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
             col.adjustColumns(includeheader);
         }
-        //}
-        //});
     }
-
-    public void firedatamodels2() {
-        for (int i = 0; i < datamodelsvec.size(); i++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
-        }
-    }
-
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
-//        for (int i = 0; i < alltables.size(); i++) {
-//            JTable table = (JTable) alltables.get(i);
-//            table = null;
-//        }
-//        for (int i = 0; i < fixedtables.size(); i++) {
-//            JTable table = (JTable) fixedtables.get(i);
-//            table = null;
-//        }
-//        for (int i = 0; i < renderers.size(); i++) {
-//            LineRenderer ren = (LineRenderer) renderers.get(i);
-//            ren = null;
-//        }
-//        for (int i = 0; i < columns.size(); i++) {
-//            TableColumn col = (TableColumn) columns.get(i);
-//            col = null;
-//        }
-//        for (int i = 0; i < managers.size(); i++) {
-//            TableColumnManager col = (TableColumnManager) managers.get(i);
-//            col = null;
-//        }
-//        for (int i = 0; i < adjusters.size(); i++) {
-//            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
-//            col = null;
-//        }
-//        for (int i = 0; i < datamodelsvec.size(); i++) {
-//            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-//            ltd = null;
-//        }
         alltables.clear();
         fixedtables.clear();
         renderers.clear();
@@ -1703,14 +1425,11 @@ log("table count="+(++tableCount));
         halftimegamessoccer.clear();
         seriesgamessoccer.clear();
         ingamegamessoccer.clear();
-
-
         removeAll();
 
         if (timer != null) {
             timer.stop();
         }
         System.out.println("destroyed mainscreen!!!!");
-
     }
 }
