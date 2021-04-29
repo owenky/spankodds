@@ -8,6 +8,7 @@ import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Sport;
@@ -630,7 +631,7 @@ public class GameAlert {
         DefaultMutableTreeNode basketball = new DefaultMutableTreeNode("Basketball");
         DefaultMutableTreeNode baseball = new DefaultMutableTreeNode("Baseball");
         DefaultMutableTreeNode hockey = new DefaultMutableTreeNode("Hockey");
-        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode("Soccer");
+        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SiaConst.SoccerStr);
         DefaultMutableTreeNode fighting = new DefaultMutableTreeNode("Fighting");
         DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf");
         DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis");
@@ -666,7 +667,7 @@ public class GameAlert {
                     tempnode = baseball;
                 } else if (sport.getSportname().equals("Hockey")) {
                     tempnode = hockey;
-                } else if (sport.getSportname().equals("Soccer")) {
+                } else if (sport.getSportname().equals(SiaConst.SoccerStr)) {
                     tempnode = soccer;
                 } else if (sport.getSportname().equals("Fighting")) {
                     tempnode = fighting;

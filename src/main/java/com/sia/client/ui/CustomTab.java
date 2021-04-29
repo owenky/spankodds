@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
@@ -55,7 +56,7 @@ public class CustomTab extends JPanel{
 	DefaultMutableTreeNode baseball = new DefaultMutableTreeNode("Baseball"); 
 	DefaultMutableTreeNode hockey = new DefaultMutableTreeNode("Hockey"); 
 	DefaultMutableTreeNode fighting = new DefaultMutableTreeNode("Fighting"); 
-	DefaultMutableTreeNode soccer = new DefaultMutableTreeNode("Soccer"); 
+	DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SiaConst.SoccerStr);
 	DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode("Auto Racing"); 
 	DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf"); 
 	DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis"); 
@@ -148,7 +149,7 @@ public class CustomTab extends JPanel{
 			{
 				currenttreenode = fighting;
 			}
-			else if(s.getSportname().equalsIgnoreCase("Soccer"))
+			else if(s.getSportname().equalsIgnoreCase(SiaConst.SoccerStr))
 			{
 				currenttreenode = soccer;
 			}

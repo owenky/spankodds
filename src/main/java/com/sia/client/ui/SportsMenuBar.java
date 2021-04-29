@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 
 import javax.swing.ImageIcon;
@@ -15,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
-
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
@@ -635,7 +635,7 @@ public class SportsMenuBar extends JMenuBar {
 
 
         //*****************soccer*************************
-        JMenu soccer = new JMenu("Soccer");
+        JMenu soccer = new JMenu(SiaConst.SoccerStr);
         tabsmenu.add(soccer);
         soccer.addMenuListener(new MenuListener() {
 
@@ -649,7 +649,7 @@ public class SportsMenuBar extends JMenuBar {
                 int tp = 0;
                 int j;
                 for (j = 0; j < tc; j++) {
-                    if (stb.getTitleAt(j).equalsIgnoreCase("Soccer")) {
+                    if (stb.getTitleAt(j).equalsIgnoreCase(SiaConst.SoccerStr)) {
                         tp = 1;
                         break;
                     }
@@ -657,20 +657,20 @@ public class SportsMenuBar extends JMenuBar {
                 soccer.add(go);
                 go.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        stb.setSelectedIndex(stb.indexOfTab("Soccer"));
+                        stb.setSelectedIndex(stb.indexOfTab(SiaConst.SoccerStr));
                     }
                 });
                 soccer.add(manage);
                 manage.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        new SportCustomTab("Soccer", stb.indexOfTab("Soccer"));
+                        new SportCustomTab(SiaConst.SoccerStr, stb.indexOfTab(SiaConst.SoccerStr));
                     }
                 });
                 if (tp == 1) {
                     soccer.add(hide);
                     hide.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ae) {
-                            int idx = stb.indexOfTab("Soccer");
+                            int idx = stb.indexOfTab(SiaConst.SoccerStr);
                             AppController.SpotsTabPaneVector.remove(5);
 
                             Vector tabpanes = AppController.getTabPanes();
@@ -687,16 +687,16 @@ public class SportsMenuBar extends JMenuBar {
                     soccer.add(unhide);
                     unhide.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(5, "Soccer");
+                            AppController.SpotsTabPaneVector.put(5, SiaConst.SoccerStr);
                             Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Soccer");
+                            int idx = currentvec.indexOf(SiaConst.SoccerStr);
 
                             Vector tabpanes = AppController.getTabPanes();
                             System.out.println("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Soccer", new ImageIcon(Utils.getMediaResource("soccer.png")), new MainScreen("Soccer"), "Soccer", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Soccer"));
+                                tp.insertTab(SiaConst.SoccerStr, new ImageIcon(Utils.getMediaResource("soccer.png")), new MainScreen(SiaConst.SoccerStr), SiaConst.SoccerStr, idx);
+                                tp.setSelectedIndex(tp.indexOfTab(SiaConst.SoccerStr));
 
                             }
 
@@ -1015,131 +1015,6 @@ public class SportsMenuBar extends JMenuBar {
                 }
             });
 
-
-
-
-
-
-			/*
-				temp.addMenuListener(new MenuListener() {
-
-       public void menuSelected(MenuEvent e) {
-		   temp.removeAll();
-		   String menuname=temp.getText();
-			JMenuItem go=new JMenuItem("Goto");
-			JMenuItem manage=new JMenuItem("Edit");
-			JMenuItem hide=new JMenuItem("remove");
-			JMenuItem unhide=new JMenuItem("unHide");
-			int tc=stb.getTabCount();
-			int tp=0;
-			int j;
-			for(j=0;j<tc;j++)
-			{
-				if(stb.getTitleAt(j).equalsIgnoreCase(menuname))
-				{
-					tp=1;
-					break;
-				}
-			}
-			tennis.add(go);
-			go.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent ae)
-					{
-						stb.setSelectedIndex(stb.indexOfTab(menuname));
-					}
-				});
-			tennis.add(manage);
-			manage.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent ae)
-					{
-						new CustomTab2();
-					}
-				});
-			if(tp==1)
-			{
-				tennis.add(hide);
-					hide.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent ae)
-					{
-						int idx=stb.indexOfTab(menuname);
-						stb.remove(idx);
-						go.setEnabled(false);
-					}
-				});
-			}
-			else{
-				tennis.add(unhide);
-				unhide.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent ae)
-					{
-						stb.insertTab(menuname,null,null,menuname,8);
-						stb.setSelectedIndex(stb.indexOfTab(menuname));
-						go.setEnabled(true);
-					}
-				});
-				go.setEnabled(false);
-			}
-
-	   }
-	     public void menuCanceled(MenuEvent me){}
-		 public void menuDeselected(MenuEvent me){}
-				});	*/
-
-
-
-
-
-
-/*
-
-										editItem.addActionListener(new ActionListener() {
-
-											@Override
-											public void actionPerformed(ActionEvent e)
-											{
-													SwingUtilities.invokeLater(new Runnable()
-													{
-													public void run()
-													{
-														new CustomTab2(thispane.getTitleAt(tabindex),tabindex);
-
-													}
-													});
-
-
-
-
-											}
-										});
-										removeItem.addActionListener(new ActionListener() {
-
-											@Override
-											public void actionPerformed(ActionEvent e)
-											{
-													SwingUtilities.invokeLater(new Runnable()
-													{
-													public void run()
-													{
-													    AppController.removeCustomTab(thispane.getTitleAt(tabindex));
-														Vector tabpanes = AppController.getTabPanes();
-														System.out.println("tabpanes size= "+tabpanes.size());
-													    for(int i=0; i< tabpanes.size(); i++)
-														{
-															SportsTabPane tp = (SportsTabPane)tabpanes.get(i);
-															tp.setSelectedIndex(0);
-															tp.remove(tabindex);
-														}
-
-													}
-													});
-
-
-											}
-										});
-
-				*/
-
-
         }
 
 
@@ -1166,122 +1041,4 @@ public class SportsMenuBar extends JMenuBar {
         this.init();
         AppController.addMenuBar(this);
     }
-
-    /* public static void papulateSubMenus(){
-   /*	i=0;
-       j=0;
-     for(i=0;i<9;i++)
-               {
-               tabsmenu.getItem(i).removeAll();
-               JMenuItem go=new JMenuItem("Goto");
-               JMenuItem manage=new JMenuItem("Manage");
-               JMenuItem hide=new JMenuItem("Hide");
-               JMenuItem unhide=new JMenuItem("unHide");
-               int tc=stb.getTabCount();
-               int tp=0;
-
-               for(j=0;j<tc;j++)
-               {
-                   if(stb.getTitleAt(j).equalsIgnoreCase(tabsmenu.getItem(i).getLabel()))
-                   {
-                       tp=1;
-                       break;
-                   }
-               }
-               tabsmenu.getItem(i).add(go);
-               tabsmenu.getItem(i).add(manage);
-               if(tp==1)
-               {
-                   tabsmenu.getItem(i).add(hide);
-                   hide.addActionListener(new ActionListener(){
-                       int j1=j;
-                   public void	actionPerformed(ActionEvent ae){
-                           SwingUtilities.invokeLater(new Runnable()
-                       {
-                       public void run()
-                       {
-                           stb.remove(j1);
-
-                       }
-                       });
-
-
-               }
-               }
-               );
-               }
-               else{
-                   tabsmenu.getItem(i).add(unhide);
-                   go.setEnabled(false);
-                   unhide.addActionListener(new ActionListener(){
-                       public void actionPerformed(ActionEvent ae){
-                           int i1=i;
-                           SwingUtilities.invokeLater(new Runnable()
-                       {
-                       public void run()
-                       {
-                           if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Football"))
-                           {
-                               stb.insertTab("Football",new ImageIcon("football.png"),new MainScreen("Football"),"Football",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Basketball"))
-                           {
-                               stb.insertTab("Basketball",new ImageIcon("basketball.png"),new MainScreen("Basketball"),"Basketball",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Baseball"))
-                           {
-                               stb.insertTab("Baseball",new ImageIcon("baseball.png"),new MainScreen("Baseball"),"Baseball",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Hockey"))
-                           {
-                               stb.insertTab("Hockey",new ImageIcon("hockey.png"),new MainScreen("Hockey"),"Hockey",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Fighting"))
-                           {
-                               stb.insertTab("Fighting",new ImageIcon("boxing.png"),new MainScreen("Fighting"),"Fighting",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Soccer"))
-                           {
-                               stb.insertTab("Soccer",new ImageIcon("soccer.png"),new MainScreen("Soccer"),"Soccer",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Auto Racing"))
-                           {
-                               stb.insertTab("Auto Racing",new ImageIcon("flag.png"),new MainScreen("Auto Racing"),"Auto Racing",0);
-
-                           }
-                           else if(tabsmenu.getItem(i1).getLabel().equalsIgnoreCase("Golf"))
-                           {
-                               stb.insertTab("Golf",new ImageIcon("golf.png"),new MainScreen("Golf"),"Golf",0);
-
-                           }
-                           else
-                           {
-                               stb.insertTab("Tennis",new ImageIcon("tennis.png"),new MainScreen("Tennis"),"Tennis",0);
-
-                           }
-                           go.setEnabled(true);
-
-                       }
-                       });
-               }
-
-
-               });
-
-     }
-
-               }
-     }*/
-    public void refresh() {
-
-
-    }
-
-
 }

@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -455,7 +456,7 @@ public class MainScreen extends JPanel {
                 }
 
             }
-        } else if (name.equalsIgnoreCase("soccer")) {
+        } else if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
             boolean all = false;
             String soccerpref = AppController.getUser().getSoccerPref();
             prefs = soccerpref.split("\\|");
@@ -466,7 +467,7 @@ public class MainScreen extends JPanel {
             String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("soccer")) {
+                if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
                     all = true;
                 }
                 this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
@@ -1031,7 +1032,7 @@ public class MainScreen extends JPanel {
         table0.setOpaque(true);
         table0.changeSelection(0, 0, false, false);
         table0.setAutoCreateColumnsFromModel(false);
-        if (name.equalsIgnoreCase("soccer")) {
+        if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
             table0.setRowHeight(60);
         } else {
             table0.setRowHeight(30);
@@ -1147,11 +1148,11 @@ public class MainScreen extends JPanel {
                     "                                                                                                                                                      ");
 
 
-            if ((gamegroupheaders.get(j) + "").contains("Soccer")) {
+            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr)) {
 
-                if (name.equalsIgnoreCase("soccer") || (oldgamegroupvec.size() == 0)) {
+                if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
                     String orginal = gamegroupheaders.get(j) + "";
-                    String nameWithoutSoccer = orginal.replace("Soccer", "");
+                    String nameWithoutSoccer = orginal.replace(SiaConst.SoccerStr, "");
                     label.setText("                                                                                                                                                      " +
 
                             nameWithoutSoccer +
@@ -1178,7 +1179,7 @@ public class MainScreen extends JPanel {
 
             }
             JTable tablex;
-            if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
+            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                 tablex = new SoccerTableView();
                 tablex.setRowHeight(60);
             } else {
@@ -1217,9 +1218,9 @@ public class MainScreen extends JPanel {
                 fixedx.setColumnModel(fixed0.getColumnModel());
                 //fixedx.setDefaultRenderer(Object.class, new LineRenderer());
 
-                if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
+                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                     fixedx.setRowHeight(60);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
+                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
                 } else {
                     fixedx.setRowHeight(30);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());
@@ -1238,9 +1239,9 @@ public class MainScreen extends JPanel {
                 JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, false);
                 fixedx.setColumnModel(fixed0.getColumnModel());
 
-                if ((gamegroupheaders.get(j) + "").contains("Soccer") || (LID == 9)) {
+                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
                     fixedx.setRowHeight(60);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer("soccer"));
+                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
                 } else {
                     fixedx.setRowHeight(30);
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());

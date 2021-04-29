@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Moneyline;
@@ -16,6 +17,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +26,6 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.Arrays;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -144,7 +145,7 @@ public class AppController {
     public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
     public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
     public static LineOpenerAlertNode hockey = new LineOpenerAlertNode("Hockey");
-    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode("Soccer");
+    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode(SiaConst.SoccerStr);
     public static LineOpenerAlertNode fighting = new LineOpenerAlertNode("Fighting");
     public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
@@ -266,19 +267,6 @@ public class AppController {
 
     public static void initializSpotsTabPaneVector()
     {
-/*
-        SpotsTabPaneVector.put(0, "Football");
-        SpotsTabPaneVector.put(1, "Basketball");
-        SpotsTabPaneVector.put(2, "Baseball");
-        SpotsTabPaneVector.put(3, "Hockey");
-        SpotsTabPaneVector.put(4, "Fighting");
-        SpotsTabPaneVector.put(5, "Soccer");
-        SpotsTabPaneVector.put(6, "Auto Racing");
-        SpotsTabPaneVector.put(7, "Golf");
-        SpotsTabPaneVector.put(8, "Tennis");
-        SpotsTabPaneVector.put(9, "Today");
-
- */
     }
 
     public static Vector getMainTabVec() {

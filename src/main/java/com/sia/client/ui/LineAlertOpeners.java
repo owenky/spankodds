@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.media.SoundPlayer;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.CheckBoxTree;
 import com.jidesoft.swing.JideTitledBorder;
@@ -8,6 +7,7 @@ import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
@@ -218,7 +218,7 @@ class LineAlertOpeners implements ItemListener {
         sportlist[2] = "Basketball";
         sportlist[3] = "Baseball";
         sportlist[4] = "Hockey";
-        sportlist[5] = "Soccer";
+        sportlist[5] = SiaConst.SoccerStr;
         sportlist[6] = "Fighting";
         sportlist[7] = "Golf";
         sportlist[8] = "Tennis";

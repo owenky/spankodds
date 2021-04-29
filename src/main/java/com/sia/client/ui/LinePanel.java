@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 
@@ -677,7 +678,7 @@ public class LinePanel extends JPanel {
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
         String display = "";
-        if ((this.name).equalsIgnoreCase("soccer")) {
+        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
             try {
 
                 LinesTableData ltd = (LinesTableData) (table.getModel());
@@ -717,7 +718,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes = stv.getCurrentBoxes();
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
-        if ((this.name).equalsIgnoreCase("soccer")) {
+        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
             LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
             setDraw(blank, row, col);
             setTotal(blank, row, col);
@@ -743,7 +744,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes = stv.getCurrentBoxes();
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
-        if ((this.name).equalsIgnoreCase("soccer")) {
+        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
             LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
             setDraw(blank, row, col);
             setTotal(blank, row, col);
@@ -810,7 +811,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes = stv.getCurrentBoxes();
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
-        if ((this.name).equalsIgnoreCase("soccer")) {
+        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
             LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
             setDraw(blank, row, col);
             setTotal(blank, row, col);

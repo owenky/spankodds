@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
@@ -159,7 +160,7 @@ public class CustomTab2 extends JPanel {
         illegalnames.add("baseball");
         illegalnames.add("hockey");
         illegalnames.add("fighting");
-        illegalnames.add("soccer");
+        illegalnames.add(SiaConst.SoccerStr.toLowerCase());
         illegalnames.add("auto racing");
         illegalnames.add("golf");
         illegalnames.add("tennis");
@@ -170,7 +171,7 @@ public class CustomTab2 extends JPanel {
         InvisibleNode baseball = new InvisibleNode("Baseball");
         InvisibleNode hockey = new InvisibleNode("Hockey");
         InvisibleNode fighting = new InvisibleNode("Fighting");
-        InvisibleNode soccer = new InvisibleNode("Soccer");
+        InvisibleNode soccer = new InvisibleNode(SiaConst.SoccerStr);
         InvisibleNode autoracing = new InvisibleNode("Auto Racing");
         InvisibleNode golf = new InvisibleNode("Golf");
         InvisibleNode tennis = new InvisibleNode("Tennis");
@@ -186,7 +187,7 @@ public class CustomTab2 extends JPanel {
             root.add(hockey);
         } else if (tabnamestr.equalsIgnoreCase("fighting")) {
             root.add(fighting);
-        } else if (tabnamestr.equalsIgnoreCase("soccer")) {
+        } else if (tabnamestr.equalsIgnoreCase(SiaConst.SoccerStr)) {
             root.add(soccer);
         } else if (tabnamestr.equalsIgnoreCase("Auto racing")) {
             root.add(autoracing);
@@ -276,7 +277,7 @@ public class CustomTab2 extends JPanel {
                     currenttreenode = hockey;
                 } else if (s.getSportname().equalsIgnoreCase("Fighting")) {
                     currenttreenode = fighting;
-                } else if (s.getSportname().equalsIgnoreCase("Soccer")) {
+                } else if (s.getSportname().equalsIgnoreCase(SiaConst.SoccerStr)) {
                     currenttreenode = soccer;
                 } else if (s.getSportname().equalsIgnoreCase("Auto Racing")) {
                     currenttreenode = autoracing;
