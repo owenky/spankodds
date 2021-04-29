@@ -38,7 +38,7 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class MainScreen extends JPanel {
-    public Vector datamodelsvec = new Vector();
+    private Vector datamodelsvec = new Vector();
     public Timer timer;
     public int timer2count = 0;
     public int currentmaxlength = 0;
@@ -186,8 +186,6 @@ public class MainScreen extends JPanel {
             String header = (String) gamegroupheaders.get(i);
             if (header.equals(title)) {
 
-                //Vector thisgamegroup = (Vector)vecofgamegroups.get(i);
-                //thisgamegroup.add(g);
                 LinesTableData thisltd = (LinesTableData) datamodelsvec.get(i);
                 thisltd.addGame(g, repaint);
                 break;
@@ -229,7 +227,6 @@ public class MainScreen extends JPanel {
                 ltd.addGame(thisgame, true);
 
             }
-            Vector tabpanes = AppController.getTabPanes();
         }
 
     }
@@ -1239,7 +1236,7 @@ scrollPane0.setBorder(BorderFactory.createLineBorder(Color.RED,3));
                 tablex = new RegularTableView();
                 tablex.setRowHeight(30);
             }
-            tablex.setName("table" + j);
+            tablex.setName("T" + j);
 tablex.setBorder(BorderFactory.createLineBorder(Color.PINK,3));
             alltables.add(tablex);
             tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

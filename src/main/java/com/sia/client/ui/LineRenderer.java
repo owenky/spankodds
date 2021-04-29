@@ -70,7 +70,7 @@ public class LineRenderer implements TableCellRenderer {
         return lp;
         */
 
-        return new JLabel("test-"+table.getName());
+        return new JLabel("test-"+table.getName()+"_"+column);
     }
     private LinePanel getLinePanel() {
         if ( null == linePanel) {
