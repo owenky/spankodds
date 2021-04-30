@@ -6,8 +6,6 @@ import com.sia.client.model.ColumnData;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
-import com.sia.client.model.Sport;
-import com.sia.client.model.User;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -18,41 +16,32 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
-//public class LinesTableData extends AbstractTableModel implements TableColumnModelListener {
 public class LinesTableData extends DefaultTableModel implements TableColumnModelListener {
-    //	public class LinesTableData extends AbstractSpanTableModel implements TableColumnModelListener {
 
-    public Vector<ColumnData> m_columns = new Vector();
+    public Vector<ColumnData> m_columns;
     public String display = AppController.getDisplayType();
     public int period = 0;
-    public Hashtable<String, TableColumn> tablecolumnhash = new Hashtable();
     public String sport = "";
     protected SimpleDateFormat m_frm;
-    protected NumberFormat m_volumeFormat;    // NEW
     protected Date m_date;
-    //Vector<String> gamesIdVec = AppController.getGamesIdVec();
     Vector<Game> gamesVec;
-    Hashtable<String, Bookie> bookies = AppController.getBookies();
-    Vector<Bookie> bookiesVec = AppController.getBookiesVec();
     boolean timesort = false;
     boolean shortteam = false;
     boolean inview = false;
-    Vector gamesIdVec;
-    Object[][] stv;
+    Vector<String> gamesIdVec;
+    //    Object[][] stv;
     boolean showingOpener = false;
     boolean showingPrior = false;
     int lastbookieremoved = 0;
@@ -60,58 +49,27 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     JTable thistable;
 
     public LinesTableData() {
+    }
+
+    public LinesTableData(long cleartime, Vector<Game> gamesVec) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
+        this.cleartime = cleartime;
+        this.gamesVec = gamesVec;
 
         setInitialData();
     }
 
-    public void setInitialData() {
+    private void setInitialData() {
         try {
             m_date = m_frm.parse("12/18/2004");
         } catch (java.text.ParseException ex) {
             m_date = null;
         }
-        //System.out.println("bbba");
-        User user = AppController.getUser();
-        String bookiecolumnprefs = user.getBookieColumnPrefs();
-        //String bookiefixedcolumnprefs = u.getBookieFixedColumnPrefs();
+        m_columns = new Vector<>();
 
-        Vector<String> bookieids = new Vector();
-        int fixedcols = 5;
-	/*
-	bookieids.add(""+990); //details
-	bookieids.add(""+991); // time
-	bookieids.add(""+992); //gmnum
-	bookieids.add(""+993); //team
-	*/
-        //System.out.println("ccc");
-        //System.out.println("bookiecolumnprefs="+bookiecolumnprefs);
-
-        stv = new Object[gamesVec.size() + 1][bookies.size() + 1];
-        bookiecolumnprefs = bookiecolumnprefs.trim();
-        bookiecolumnprefs = "," + bookiecolumnprefs + ",";
-
-        //System.out.println("bookiecolumnprefsafter="+bookiecolumnprefs);
-
-        m_columns = new Vector();
-
-
-        //	m_columns.add(new ColumnData(990, "Details", 40, JLabel.RIGHT) );
-        //	m_columns.add(new ColumnData(991, "Time", 40, JLabel.RIGHT) );
-        //	m_columns.add(new ColumnData(992, "Gm#", 30, JLabel.LEFT) );
-        //	m_columns.add(new ColumnData(993, "Team", 160, JLabel.LEFT) );
-
-
-        //System.out.println("LTDbookiesvec size="+bookiesVec.size());
-        //System.out.println("mcolumns size="+m_columns.size());
-        HeaderView hv = new HeaderView();
-        for (int j = 0; j < bookiesVec.size(); j++) {
-
-
-            Bookie b = bookiesVec.get(j);
-
+        for (int j = 0; j < LazyInitializer.bookiesVec.size(); j++) {
+            Bookie b = LazyInitializer.bookiesVec.get(j);
             int bookieid = b.getBookie_id();
-
 
             if (bookieid == 990) {
 
@@ -135,79 +93,59 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
             }
         }
-        //stv[0][j] = hv;
-        //for(int i=1; i<= gamesIdVec.size(); i++)
-        //System.out.println("timesort?="+timesort);
         if (timesort) {
-            Collections.sort(gamesVec, new GameDateSorter().thenComparing(new GameTimeSorter()).thenComparing(new GameNumSorter()));
+            gamesVec.sort(new GameDateSorter().thenComparing(new GameTimeSorter()).thenComparing(new GameNumSorter()));
         } else {
-            Collections.sort(gamesVec, new GameDateSorter().thenComparing(new GameNumSorter()));
+            gamesVec.sort(new GameDateSorter().thenComparing(new GameNumSorter()));
         }
 
-        gamesIdVec = new Vector();
+        gamesIdVec = new Vector<>();
+        Vector<Vector<Object>> dataVector = new Vector<>(gamesVec.size());
         for (int i = 0; i < gamesVec.size(); i++) {
-            Game g = (Game) gamesVec.get(i);
-
-            //System.out.println("game="+gameid);
+            Vector<Object> rowData = new Vector<>(LazyInitializer.bookiesVec.size());
+            dataVector.add(rowData);
+            Game g = gamesVec.get(i);
             String gameid = "" + g.getGame_id();
 
             gamesIdVec.add(gameid);
-            Sport s = AppController.getSport(g.getLeague_id());
             int leagueID = g.getLeague_id();
 
-            //System.out.println("LEAGUE ID "+g.getLeague_id());
-            //System.out.println("Sportname "+s.getSportname());
-            //System.out.println("this Sport "+sport);
-            if (!s.getSportname().equalsIgnoreCase(sport)) {
-                //continue;
-            }
-
-            for (int j = 0; j < bookiesVec.size(); j++) {
-                Bookie b = bookiesVec.get(j);
+            for (int j = 0; j < LazyInitializer.bookiesVec.size(); j++) {
+                Bookie b = LazyInitializer.bookiesVec.get(j);
+                Object value = "";
                 try {
-
-
                     int bookieid = b.getBookie_id();
                     if (bookieid == 990) {
-                        stv[i][j] = new InfoView(Integer.parseInt(gameid));
+                        value = new InfoView(Integer.parseInt(gameid));
                     } else if (bookieid == 991) {
-                        stv[i][j] = new TimeView(Integer.parseInt(gameid));
+                        value = new TimeView(Integer.parseInt(gameid));
                     } else if (bookieid == 992) {
                         if (leagueID == 9) {
-                            stv[i][j] = new SoccerGameNumberView(Integer.parseInt(gameid));
+                            value = new SoccerGameNumberView(Integer.parseInt(gameid));
                         } else {
-                            stv[i][j] = new GameNumberView(Integer.parseInt(gameid));
+                            value = new GameNumberView(Integer.parseInt(gameid));
                         }
 
                     } else if (bookieid == 993) {
-                        stv[i][j] = new TeamView(Integer.parseInt(gameid), shortteam);
+                        value = new TeamView(Integer.parseInt(gameid), shortteam);
                     } else if (bookieid == 994) {
                         if (leagueID == 9) {
-                            stv[i][j] = new SoccerChartView(Integer.parseInt(gameid));
+                            value = new SoccerChartView(Integer.parseInt(gameid));
                         } else {
-                            stv[i][j] = new ChartView(Integer.parseInt(gameid));
+                            value = new ChartView(Integer.parseInt(gameid));
                         }
-
                     } else {
-
                         if (leagueID == 9) {
-                            //System.out.println("soccerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-                            stv[i][j] = new SoccerSpreadTotalView(bookieid, Integer.parseInt(gameid), cleartime, this);
+                            value = new SoccerSpreadTotalView(bookieid, Integer.parseInt(gameid), cleartime, this);
                         } else {
-                            //System.out.println("otherrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-                            stv[i][j] = new SpreadTotalView(bookieid, Integer.parseInt(gameid), cleartime, this);
+                            value = new SpreadTotalView(bookieid, Integer.parseInt(gameid), cleartime, this);
                         }
-
 
                     }
                 } catch (Exception ex) {
-                    //	System.out.println("ltd exception "+ex);
-                    //	System.out.println("i="+i+"..j="+j);
-                    //	System.out.println("gamesvecsize="+gamesVec.size());
-                    //	System.out.println("bookie="+b+"....game="+gameid);
-                    //System.exit(0);
-                    ex.printStackTrace();
+                    log(ex);
                 }
+                rowData.add(value);
             }
 
             try {
@@ -221,26 +159,13 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
                 BestLines.calculatebestall(g.getGame_id(), 8);
                 BestLines.calculatebestall(g.getGame_id(), 9);
             } catch (Exception ex) {
-                System.out.println("error calculating best all " + ex);
+                log("error calculating best all " + ex);
             }
-
-
         }
-
-
-        //System.out.println("done with games! "+getRowCount());
-
+        setDataVector(dataVector, m_columns);
     }
 
-    public LinesTableData(long cleartime, Vector gamesVec) {
-        m_frm = new SimpleDateFormat("MM/dd/yyyy");
-        this.cleartime = cleartime;
-        this.gamesVec = gamesVec;
-
-        setInitialData();
-    }
-
-    public LinesTableData(String display, int period, long cleartime, Vector gamesVec, JTable thetable, boolean timesort, boolean shortteam, boolean opener, boolean last) {
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gamesVec, JTable thetable, boolean timesort, boolean shortteam, boolean opener, boolean last) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
         this.gamesVec = gamesVec;
@@ -264,107 +189,6 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
     }
 
-/*
-public boolean isCellSpanOn() {
-return true;
-}
-
-
-public CellSpan getCellSpanAt(int rowIndex, int columnIndex)
- {
-
-if (rowIndex % 5 == 0 )
-{
-return new CellSpan(rowIndex, 0, 1, getColumnCount());
-}
-else
-{
-	return null;
-}
-
-//return null;
-}
-*/
-
-
-/*
-public TableColumn addColumn(int bookieid)
-{
-	Bookie b = getBookie(bookieid);
-	System.out.println("OLD COLUMN COUNT IS "+getColumnCount());
-	System.out.println("OLD COLUMN COUNT IS "+getColumnCount());
-	TableColumn column = new TableColumn(getColumnCount(),78, new LineRenderer(), null);
-	m_columns.add(new ColumnData(b.getBookie_id(), b.toString(),78, JLabel.RIGHT) );
-	tablecolumnhash.put(""+bookieid,column);
-	printStv(3);
-		for(int i=0; i< gamesIdVec.size(); i++)
-		{
-				String gameid = gamesIdVec.get(i);
-				if(bookieid == 990)
-					{
-
-						stv[i][getColumnCount()-1] = new InfoView(Integer.parseInt(gameid));
-
-					}
-					else if(bookieid == 991)
-					{
-						stv[i][getColumnCount()-1] = new TimeView(Integer.parseInt(gameid));
-					}
-					else if(bookieid == 992)
-					{
-						stv[i][getColumnCount()-1] = new GameNumberView(Integer.parseInt(gameid));
-					}
-					else if(bookieid == 993)
-					{
-						stv[i][getColumnCount()-1] = new TeamView(Integer.parseInt(gameid));
-					}
-
-					else
-					{
-					 stv[i][getColumnCount()-1] = new SpreadTotalView(bookieid,Integer.parseInt(gameid));
-					}
-
-
-		}
-	printStv(3);
-	return column;
-
-}
-
-public TableColumn removeColumn(int bookieid)
-{
-	System.out.println("OLD COLUMN COUNT BEFORE REMOVAL "+getColumnCount());
-	printStv(3);
-	for(int cnt =0; cnt <m_columns.size();cnt++)
-	{
-		ColumnData cd = m_columns.get(cnt);
-		if(cd.bookie_id == bookieid)
-		{
-
-			// now i need to change the data and move it down
-			for(int cnt2 = cnt; cnt2 <m_columns.size();cnt2++)
-			{
-				for(int row=0;row<getRowCount();row++)
-				{
-					stv[row][cnt2] = stv[row][cnt2+1];
-				}
-			}
-
-			m_columns.remove(cnt);
-			break;
-		}
-
-	}
-	TableColumn column = tablecolumnhash.get(""+bookieid);
-	lastbookieremoved = bookieid;
-	System.out.println("NEW COLUMN COUNT AFTER REMOVAL "+getColumnCount());
-	printStv(3);
-	return column;
-
-
-}
-*/
-
     public void showPrior() {
         showingOpener = false;
         showingPrior = true;
@@ -384,50 +208,13 @@ public TableColumn removeColumn(int bookieid)
     }
 
     public void columnAdded(TableColumnModelEvent e) {
-        System.out.println("COLUMN ADDED!!! ");
+        log("COLUMN ADDED!!! ");
         printStv(3);
-	/*
-	int bookieid = m_columns.lastElement().bookie_id;
-	System.out.println("bookie i will put data in for "+bookieid);
-	System.out.println("COLUMN COUNT IS "+getColumnCount());
-	System.out.println("COLUMN ADDED!!! "+bookieid);
-	for(int i=0; i< gamesIdVec.size(); i++)
-	{
-			String gameid = gamesIdVec.get(i);
-			if(bookieid == 990)
-				{
-
-					stv[i][getColumnCount()-1] = new InfoView(Integer.parseInt(gameid));
-
-				}
-				else if(bookieid == 991)
-				{
-					stv[i][getColumnCount()-1] = new TimeView(Integer.parseInt(gameid));
-				}
-				else if(bookieid == 992)
-				{
-					stv[i][getColumnCount()-1] = new GameNumberView(Integer.parseInt(gameid));
-				}
-				else if(bookieid == 993)
-				{
-					stv[i][getColumnCount()-1] = new TeamView(Integer.parseInt(gameid));
-				}
-
-				else
-				{
-				 stv[i][getColumnCount()-1] = new SpreadTotalView(bookieid,Integer.parseInt(gameid));
-				}
-
-
-	}
-	*/
     }
 
     public void printStv(int gameid) {
         for (int j = 0; j < getColumnCount(); j++) {
-            //System.out.println("game="+gameid+".."+stv[gameid][j]+"..."+m_columns.get(j));
-            System.out.println("j=" + j + "...." + m_columns.get(j));
-
+            log("j=" + j + "...." + m_columns.get(j));
         }
 
     }
@@ -435,7 +222,6 @@ public TableColumn removeColumn(int bookieid)
     public void columnRemoved(TableColumnModelEvent e) {
         System.out.println("COLUMN Removed!!! " + lastbookieremoved);
         printStv(3);
-        //tablecolumnhash.remove(""+lastbookieremoved);
     }
 
     public void columnMoved(TableColumnModelEvent e) {
@@ -444,8 +230,7 @@ public TableColumn removeColumn(int bookieid)
     }
 
     public void columnMarginChanged(ChangeEvent e) {
-        System.out.println("Column MarginChanged!!!");
-
+        log("Column MarginChanged!!!");
     }
 
     public void columnSelectionChanged(ListSelectionEvent e) {
@@ -453,7 +238,7 @@ public TableColumn removeColumn(int bookieid)
     }
 
     public Bookie getBookie(int bookieid) {
-        return bookies.get("" + bookieid);
+        return LazyInitializer.bookies.get("" + bookieid);
 
     }
 
@@ -492,9 +277,7 @@ public TableColumn removeColumn(int bookieid)
     }
 
     public void clearColors() {
-        //printStv(451);
-        //System.out.println("rowcount="+getRowCount()+"..colcount="+getColumnCount());
-        System.out.println("=============cleared at " + new java.util.Date() + "..cols=" + getColumnCount());
+        log("=============cleared at " + new java.util.Date() + "..cols=" + getColumnCount());
         cleartime = new java.util.Date().getTime();
         for (int i = 0; i < getRowCount(); i++) {
 
@@ -541,44 +324,9 @@ public TableColumn removeColumn(int bookieid)
 
     }
 
-    public int getRowCount() {
-        return gamesVec == null ? 0 : gamesVec.size();
-        //return gamesIdVec==null ? 0 : gamesIdVec.size()+1;
-    }
-
-    public int getColumnCount() {
-        return m_columns.size();
-    }
-
-    public String getColumnName(int column) {
-        // System.out.println("colname="+m_columns.get(column).m_title);
-        return (m_columns.get(column)).m_title;
-    }
-
+    @Override
     public boolean isCellEditable(int nRow, int nCol) {
         return false;
-    }
-
-    public Object getValueAt(int nRow, int nCol) {
-        //  System.out.println("getting value at row="+nRow+"..column="+nCol+"===="+stv[nRow][nCol]);
-        try {
-            if (nRow < 0 || nRow >= getRowCount()) {
-                return "";
-            } else {
-                return stv[nRow][nCol];
-            }
-        } catch (Exception ex) {
-            System.out.println("exception getvalueat row=" + nRow + "..col=" + nCol + ".." + ex);
-            //try { Thread.sleep(10000);} catch(Exception e) {}
-        }
-        return "";
-    }
-
-    public void setValueAt(Object value, int rowIndex, int colIndex) {
-        stv[rowIndex][colIndex] = value;
-
-        checkAndRunInEDT(() -> fireTableDataChanged());
-
     }
 
     public void timesort() {
@@ -768,21 +516,15 @@ public TableColumn removeColumn(int bookieid)
         setInitialData();
     }
 
-    public void destroyMe() {
-        for (int i = 0; i < gamesVec.size(); i++) {
-            for (int j = 0; j < bookies.size(); j++) {
-                stv[i][j] = null;
-
-            }
-        }
-
-
-    }
-
     public String getTitle() {
         if (m_date == null) {
             return "Stock Quotes";
         }
         return "Stock Quotes at " + m_frm.format(m_date);
+    }
+
+    private static abstract class LazyInitializer {
+        private static final Hashtable<String, Bookie> bookies = AppController.getBookies();
+        private static final Vector<Bookie> bookiesVec = AppController.getBookiesVec();
     }
 }

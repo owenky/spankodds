@@ -1,7 +1,6 @@
 package com.sia.client.model;
 
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.Spreadline;
 import com.sia.client.ui.TeamTotalline;
 import com.sia.client.ui.Totalline;
 

@@ -21,7 +21,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,24 +47,20 @@ public class MainScreen extends JPanel {
     public boolean last = false;
     public String display = "default";
     public int period = 0;
-    public Vector alltables = new Vector();//
-    public Vector renderers = new Vector();//
-    public Vector columns = new Vector();//
-    public Vector adjusters = new Vector();//
-    public Vector managers = new Vector();//
-    public Vector gamegroupheaders = new Vector();
-    public Vector vecofgamegroups = new Vector();
-    public Vector gamegroupLeagueID = new Vector();
-    public Vector inprogressgames = new Vector();
-    public Vector halftimegames = new Vector();
-    public Vector finalgames = new Vector();
-    public Vector inprogressgamessoccer = new Vector();
-    public Vector halftimegamessoccer = new Vector();
-    public Vector finalgamessoccer = new Vector();
-    public Vector seriesgames = new Vector();
-    public Vector ingamegames = new Vector();
-    public Vector seriesgamessoccer = new Vector();
-    public Vector ingamegamessoccer = new Vector();
+    private Vector adjusters = new Vector();//
+    private Vector gamegroupheaders = new Vector();
+    private Vector vecofgamegroups = new Vector();
+    private Vector gamegroupLeagueID = new Vector();
+    private Vector inprogressgames = new Vector();
+    private Vector halftimegames = new Vector();
+    private Vector finalgames = new Vector();
+    private Vector inprogressgamessoccer = new Vector();
+    private Vector halftimegamessoccer = new Vector();
+    private Vector finalgamessoccer = new Vector();
+    private Vector seriesgames = new Vector();
+    private Vector ingamegames = new Vector();
+    private Vector seriesgamessoccer = new Vector();
+    private Vector ingamegamessoccer = new Vector();
     public SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     public SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
     public long cleartime;
@@ -101,10 +96,6 @@ public class MainScreen extends JPanel {
         cleartime = new java.util.Date().getTime();
 
 
-    }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> createAndShowGUI());
     }
 
     private static void createAndShowGUI() {
@@ -1015,6 +1006,7 @@ public class MainScreen extends JPanel {
 
     public void drawIt() {
 
+        MainGameTable mainGameTable = new MainGameTable();
         Vector newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -1026,7 +1018,6 @@ public class MainScreen extends JPanel {
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 
         JTable table0 = new JTable();
-        alltables.add(table0);
         table0.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table0.setPreferredScrollableViewportSize(table0.getPreferredSize());
         table0.setOpaque(true);
@@ -1037,7 +1028,6 @@ public class MainScreen extends JPanel {
         } else {
             table0.setRowHeight(30);
         }
-        //table0.setRowHeight(30);
         JTableHeader tableHeader = table0.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
@@ -1083,7 +1073,7 @@ public class MainScreen extends JPanel {
             }
 
             table0.addColumn(column);
-            columns.add(column);
+            mainGameTable.addColumn(column);
         }
 
         // here i'm adding a blank column
@@ -1094,12 +1084,8 @@ public class MainScreen extends JPanel {
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
         table0.addColumn(blankcol);
-
-
-        columns.add(blankcol);
         TableColumnManager tcm0 = new TableColumnManager(table0, "");
         TableColumnAdjuster tca0 = new TableColumnAdjuster(table0);
-        managers.add(tcm0);
         adjusters.add(tca0);
         LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), table0, timesort, shortteam, opener, last);
         table0.setModel(dataModel0);
@@ -1121,7 +1107,7 @@ public class MainScreen extends JPanel {
         scrollPane0.removeMouseWheelListener(scrollPane0.getMouseWheelListeners()[0]);
 
 
-        System.out.println("gamergroup headers start..." + new java.util.Date());
+        log("gamergroup headers start..." + new java.util.Date());
 
         Vector oldgamegroupvec = new Vector();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
@@ -1171,7 +1157,6 @@ public class MainScreen extends JPanel {
             label.setBackground(new Color(0, 0, 128));
             label.setForeground(Color.WHITE);
             for (int k = 0; k < newgamegroupvec.size(); k++) {
-                //Vector eachGame =(Vector) newgamegroupvec.get(k);
                 Game g = (Game) newgamegroupvec.get(k);
                 int leagueid = g.getLeague_id();
                 Sport s = AppController.getSport("" + leagueid);
@@ -1187,7 +1172,6 @@ public class MainScreen extends JPanel {
                 tablex.setRowHeight(30);
             }
             tablex.setName("table" + j);
-            alltables.add(tablex);
             tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             tablex.setColumnModel(table0.getColumnModel());
             tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
@@ -1226,10 +1210,6 @@ public class MainScreen extends JPanel {
                     fixedx.setDefaultRenderer(Object.class, new LineRenderer());
                 }
                 fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-
-                TableColumnManager tcmx = new TableColumnManager(fixedx, "fixed");
-
-                managers.add(tcmx);
                 scrollPanex.setRowHeaderView(fixedx);
                 tcax.adjustColumns();
 
@@ -1248,8 +1228,6 @@ public class MainScreen extends JPanel {
                 }
 
                 fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-                TableColumnManager tcmx = new TableColumnManager(fixedx, "fixed");
-                managers.add(tcmx);
                 scrollPanex.setRowHeaderView(fixedx);
             }
 
@@ -1266,7 +1244,9 @@ public class MainScreen extends JPanel {
             } else {
                 scrollPanex.setPreferredSize(new Dimension(1, 1));
             }
-            tablePanel.add(scrollPanex);
+            //TODO add tablemodel to MainGameTable
+            mainGameTable.addGameLine((LinesTableData)tablex.getModel());
+           tablePanel.add(scrollPanex);
             scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
 
             oldgamegroupvec = newgamegroupvec;
@@ -1284,7 +1264,10 @@ public class MainScreen extends JPanel {
         removeAll();
         revalidate();
         add(scrollPane0, BorderLayout.PAGE_START);
-        add(scrollPane, BorderLayout.CENTER);
+        //TODO add mainGameTable instead of scrollPane to center
+//        add(scrollPane, BorderLayout.CENTER);
+        add(mainGameTable, BorderLayout.CENTER);
+        //END OF TODO
         add(bar, BorderLayout.PAGE_END);
         AppController.addDataModels(getDataModels());
         System.out.println("Datamodels size is :" + AppController.getDataModels().size());
@@ -1363,10 +1346,6 @@ public class MainScreen extends JPanel {
 
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
-        alltables.clear();
-        renderers.clear();
-        columns.clear();
-        managers.clear();
         adjusters.clear();
         datamodelsvec.clear();
         inprogressgames.clear();

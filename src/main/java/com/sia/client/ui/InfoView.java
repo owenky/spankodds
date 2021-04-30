@@ -4,6 +4,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
+import com.sia.client.model.Spreadline;
 
 import javax.swing.ImageIcon;
 import java.awt.Color;

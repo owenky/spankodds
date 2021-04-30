@@ -5,6 +5,7 @@ import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
+import com.sia.client.model.Spreadline;
 import com.sia.client.model.User;
 
 import javax.jms.Connection;
