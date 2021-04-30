@@ -886,8 +886,8 @@ public class MainScreen extends JPanel {
         timer = new Timer(1000, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {
                 try {
-
                     firedatamodels();
+
                 } catch (Exception ex) {
                     log(ex);
                 }
@@ -895,7 +895,9 @@ public class MainScreen extends JPanel {
             }
         });
 
-        timer.start();
+        //TODO disable firedatamodels
+//        timer.start();
+        //END of debug TODO
         log("timer start");
     }
 
@@ -1003,10 +1005,9 @@ public class MainScreen extends JPanel {
     public void setShowIngame(boolean b) {
         showingame = b;
     }
-
     public void drawIt() {
 
-        MainGameTable mainGameTable = new MainGameTable();
+        MainGameTable mainGameTable = createMainGameTable();
         Vector newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -1084,7 +1085,6 @@ public class MainScreen extends JPanel {
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
         table0.addColumn(blankcol);
-        TableColumnManager tcm0 = new TableColumnManager(table0, "");
         TableColumnAdjuster tca0 = new TableColumnAdjuster(table0);
         adjusters.add(tca0);
         LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), table0, timesort, shortteam, opener, last);
@@ -1113,20 +1113,15 @@ public class MainScreen extends JPanel {
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             boolean showit = true;
             Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-
             int LID = 0;
-
 
             if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
             {
-
                 showit = false;
-
             }
 
 
             JLabel label = new JLabel("                                                                                                                                                      " +
-
                     gamegroupheaders.get(j) +
                     "                                                                                                                                                      " +
                     "                                                                                                                                                      " +
@@ -1153,7 +1148,6 @@ public class MainScreen extends JPanel {
                 }
             }
             label.setOpaque(true);
-
             label.setBackground(new Color(0, 0, 128));
             label.setForeground(Color.WHITE);
             for (int k = 0; k < newgamegroupvec.size(); k++) {
@@ -1266,13 +1260,17 @@ public class MainScreen extends JPanel {
         add(scrollPane0, BorderLayout.PAGE_START);
         //TODO add mainGameTable instead of scrollPane to center
 //        add(scrollPane, BorderLayout.CENTER);
+        mainGameTable.optimizeRowHeights();
         add(mainGameTable, BorderLayout.CENTER);
         //END OF TODO
         add(bar, BorderLayout.PAGE_END);
         AppController.addDataModels(getDataModels());
-        System.out.println("Datamodels size is :" + AppController.getDataModels().size());
-        adjustcols(false);
-        firedatamodels();
+        log("Datamodels size is :" + AppController.getDataModels().size());
+        //TODO disable following two lines
+        mainGameTable.adjustColumns(false);
+//        adjustcols(false);
+//        firedatamodels();
+        //END of TODO
 
         Timer timer2 = new Timer(500, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {
@@ -1285,22 +1283,27 @@ public class MainScreen extends JPanel {
                         ((Timer) e.getSource()).stop();
                     }
                 } catch (Exception ex) {
-                    System.out.println("exception firing data models " + ex);
+                    log("exception firing data models " + ex);
                 }
 
             }
         });
-
-        timer2.start();
+        //TODO disable it for debug
+//        timer2.start();
+        //END of Debug TODO
         log("timer2 start");
         log("drawit end..." + new java.util.Date());
     }
 
     public void firedatamodels() {
+        log(new Exception("disable firedatamodels"));
+        //TODO disable
+        /**
         for (int i = 0; i < datamodelsvec.size(); i++) {
             LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
             ltd.fire();
         }
+         */
     }
 
     public JTable makeFixedRowHeader(int fixedColumns, JTable main, boolean deletefrommain) {
@@ -1338,6 +1341,9 @@ public class MainScreen extends JPanel {
     }
 
     public void adjustcols(boolean includeheader) {
+        //TODO
+        log(new Exception("adjustcols called"));
+
         for (int i = 0; i < adjusters.size(); i++) {
             TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
             col.adjustColumns(includeheader);
@@ -1368,5 +1374,9 @@ public class MainScreen extends JPanel {
         }
         log("destroyed mainscreen!!!!");
 
+    }
+    private MainGameTable createMainGameTable() {
+        MainGameTable mainGameTable = new MainGameTable();
+        return mainGameTable;
     }
 }

@@ -10,9 +10,16 @@ import java.util.List;
 public class MainGameTableModel extends DefaultTableModel {
 
     private final List<LinesTableData> gameLines = new ArrayList<>();
+    private String name = null;
 
+
+    public MainGameTableModel() {
+    }
     public void addGameLine(LinesTableData gameLine) {
         gameLines.add(gameLine);
+        if ( null == name) {
+            setName(gameLine.getTitle());
+        }
     }
     @Override
     public Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -33,9 +40,8 @@ public class MainGameTableModel extends DefaultTableModel {
         }
         return rowCount;
     }
-    public boolean isSoccer(int row) {
-        LtdSrhStruct ltdSrhStruct = getLinesTableData(row);
-        return SiaConst.SoccerStr.equalsIgnoreCase(ltdSrhStruct.linesTableData.getTitle());
+    public boolean isSoccer() {
+        return SiaConst.SoccerStr.equalsIgnoreCase(name);
     }
     public LtdSrhStruct getLinesTableData(int rowModelIndex) {
         int modelIndex=0;
@@ -52,6 +58,12 @@ public class MainGameTableModel extends DefaultTableModel {
             throw new IllegalStateException("rowModeIndex:"+rowModelIndex+" is out of bound");
         }
         return new LtdSrhStruct(rtn,modelIndex);
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return this.name;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct {
