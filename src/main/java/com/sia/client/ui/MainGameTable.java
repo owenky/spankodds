@@ -11,6 +11,7 @@ public class MainGameTable extends JTable {
     private static final int SoccerRowHeight = 60;
     private static final int NormalRowHeight = 30;
     private TableColumnAdjuster tableColumnAdjuster;
+    private boolean isSoccer=false;
 
 
     public MainGameTable() {
@@ -25,7 +26,7 @@ public class MainGameTable extends JTable {
     }
     @Override
     public TableCellRenderer getCellRenderer(int row, int column) {
-        if (getModel().isSoccer()) {
+        if (isSoccer) {
             return new LineRenderer(SiaConst.SoccerStr);
         } else {
             return new LineRenderer();
@@ -38,18 +39,20 @@ public class MainGameTable extends JTable {
         return getModel().getLinesTableData(row).linesTableData;
     }
     public void optimizeRowHeights() {
-        if (getModel().isSoccer()) {
+        if (isSoccer) {
             setRowHeight(SoccerRowHeight);
         } else {
             setRowHeight(NormalRowHeight);
         }
 
     }
-    public String getName() {
-        return getModel().getName();
+    public boolean isSoccer() {
+        return isSoccer;
     }
+    @Override
     public void setName(String name) {
-        getModel().setName(name);
+        super.setName(name);
+        isSoccer = SiaConst.SoccerStr.equalsIgnoreCase(name);
     }
     public void adjustColumns(boolean includeHeaders) {
         getTableColumnAdjuster().adjustColumns(includeHeaders);

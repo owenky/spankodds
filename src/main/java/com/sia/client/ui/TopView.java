@@ -15,7 +15,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.util.Vector;
+import java.util.List;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
@@ -119,8 +119,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             }
         });
         alertsCombo = new JComboBox();
-        //alertsCombo.addItem("RECENT ALERTS LIST             ");
-
 
         alertsCombo.addFocusListener(new FocusAdapter() {
 
@@ -148,10 +146,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             add(lastBut);
             add(openerBut);
             add(sortBut);
-            // add(addBookieBut);
             add(shrinkTeamBut);
-            // add(newWindowBut);
-            // add(alertBut);
             add(adjustcolsBut);
             add(chartBut);
 
@@ -160,76 +155,10 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         });
 
     }
-/*	
-	public LinesTableData getDataModel()
-	{
-		
-			BorderPane bp = (BorderPane)getParent();
-			System.out.println("bp="+bp);
-			SportsTabPane stb = (SportsTabPane)bp.getCenter();
-			System.out.println("stb="+stb);
-			LinesTableData ltd = ((LinesTableData)stb.getCurrentTable().getModel());
-			return ltd;
-	}
-*/
 
     public void initEvents() {
 
-        //nwa = new NewWindowAction();
         newWindowBut.addActionListener(AppController.getNewWindowAction());
-
-			/*
-		newWindowBut.addActionListener(new ActionListener() {
-
-
-
-			 public void actionPerformed(ActionEvent ae)
-			{
-				// owen still need!
-
-
-					SportsTabPane stbnew = new SportsTabPane();
-					TopView tv = new TopView(stbnew);
-
-					//new OddsFrame(stbnew,tv);
-
-					JFrame frame = new JFrame("Spank Odds");
-
-
-				//	SportsTabPane stbnew = (SportsTabPane)((SportsTabPane)stb).clone();
-				//	TopView tv = (TopView)this.clone();
-					//owen gotta find a way to deep clone stb
-
-					JPanel mainpanel = new JPanel();
-					mainpanel.setLayout(new BorderLayout());
-					//mainpanel.add(tv,BorderLayout.CENTER);
-					mainpanel.add(tv,BorderLayout.PAGE_START);
-					mainpanel.add(stbnew,BorderLayout.CENTER);
-					//frame.setLayout(new BorderLayout());
-
-					frame.setContentPane(mainpanel);
-					frame.setSize(600, 600);
-
-					com.sia.client.ui.AppController.addFrame(frame,stbnew);
-					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					frame.addWindowListener(new WindowAdapter() {
-						@Override
-						public void windowClosing(WindowEvent e) {
-							System.out.println("Window Closing2! ");
-							com.sia.client.ui.AppController.removeFrame(frame);
-
-						}
-					});
-
-
-
-					//frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
-
-			}
-		});
-		*/
-
 
 // 1st HALF NOT VISIBLE USED TO SELECT 1st HALF FROM COMBO BOX!
 
@@ -372,26 +301,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
             }
         });
-
-
-		/*
-		clearAllBut.addActionListener(new ActionListener() {
-			 public void actionPerformed(ActionEvent ae)
-			{
-				System.out.println("clear all button pressed");
-				//com.sia.client.ui.AppController.getLinesTableData().clearColors();
-				long ct = (new java.util.Date()).getTime();
-				com.sia.client.ui.AppController.setClearAllTime(ct);
-				com.sia.client.ui.AppController.clearAll();
-				FireThreadManager.emptyIt();
-
-			}
-		});
-		*/
-
-
-// LAST BUTTON
-
         Action lastaction = new AbstractAction("Last") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -401,21 +310,19 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                     //com.sia.client.ui.AppController.getLinesTableData().showCurrent();
                     //getDataModel().showCurrent();
                     stb.setLast(false);
-                    Vector v = getAllDataModels();
+                    List<LinesTableData> v = getAllDataModels();
                     for (int j = 0; j < v.size(); j++) {
-                        ((LinesTableData) v.get(j)).showCurrent();
+                        v.get(j).showCurrent();
                     }
 
                 } else {
                     lastBut.setText("Current");
                     openerBut.setText("Opener");
-                    //com.sia.client.ui.AppController.getLinesTableData().showPrior();
-                    //getDataModel().showPrior();
                     stb.setLast(true);
 
-                    Vector v = getAllDataModels();
+                    List<LinesTableData> v = getAllDataModels();
                     for (int j = 0; j < v.size(); j++) {
-                        ((LinesTableData) v.get(j)).showPrior();
+                        v.get(j).showPrior();
                     }
 
                 }
@@ -430,47 +337,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         lastBut.getActionMap().put("lastAction", lastaction);
         lastBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 (KeyStroke) lastaction.getValue(Action.ACCELERATOR_KEY), "lastAction");
-// END LAST BUTTON
-
-
-
-/*
-		lastBut.addActionListener(new ActionListener() {
-			 public void actionPerformed(ActionEvent ae)
-			{
-				System.out.println("last button pressed");
-				if(lastBut.getText().equals("Current"))
-				{
-					lastBut.setText("Last");
-					//com.sia.client.ui.AppController.getLinesTableData().showCurrent();
-					//getDataModel().showCurrent();
-						stb.setLast(false);
-						Vector v = getAllDataModels();
-						for(int j=0; j < v.size(); j++)
-						{
-							((LinesTableData)v.get(j)).showCurrent();
-						}
-
-				}
-				else
-				{
-					lastBut.setText("Current");
-					openerBut.setText("Opener");
-					//com.sia.client.ui.AppController.getLinesTableData().showPrior();
-					//getDataModel().showPrior();
-						stb.setLast(true);
-
-						Vector v = getAllDataModels();
-						for(int j=0; j < v.size(); j++)
-						{
-							((LinesTableData)v.get(j)).showPrior();
-						}
-
-				}
-			}
-		});
-*/
-// OPENER BUTTON
 
         Action openeraction = new AbstractAction("Opener") {
             @Override
@@ -478,24 +344,19 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 System.out.println("opener button pressed");
                 if (openerBut.getText().equals("Current")) {
                     openerBut.setText("Opener");
-                    //com.sia.client.ui.AppController.getLinesTableData().showCurrent();
-                    //getDataModel().showCurrent();
                     stb.setOpener(false);
 
-                    Vector v = getAllDataModels();
+                    List<LinesTableData> v = getAllDataModels();
                     for (int j = 0; j < v.size(); j++) {
-                        ((LinesTableData) v.get(j)).showCurrent();
+                        v.get(j).showCurrent();
                     }
                 } else {
                     openerBut.setText("Current");
                     lastBut.setText("Last");
-                    //com.sia.client.ui.AppController.getLinesTableData().showOpener();
-
-                    //getDataModel().showOpener();
                     stb.setOpener(true);
-                    Vector v = getAllDataModels();
+                    List<LinesTableData> v = getAllDataModels();
                     for (int j = 0; j < v.size(); j++) {
-                        ((LinesTableData) v.get(j)).showOpener();
+                        v.get(j).showOpener();
                     }
 
                 }
@@ -509,65 +370,22 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         openerBut.getActionMap().put("openerAction", openeraction);
         openerBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 (KeyStroke) openeraction.getValue(Action.ACCELERATOR_KEY), "openerAction");
-// END OPENER BUTTON
-/*
-		openerBut.addActionListener(new ActionListener() {
-			 public void actionPerformed(ActionEvent ae)
-			{
-				System.out.println("opener button pressed");
-				if(openerBut.getText().equals("Current"))
-				{
-					openerBut.setText("Opener");
-					//com.sia.client.ui.AppController.getLinesTableData().showCurrent();
-					//getDataModel().showCurrent();
-						stb.setOpener(false);
-
-						Vector v = getAllDataModels();
-						for(int j=0; j < v.size(); j++)
-						{
-							((LinesTableData)v.get(j)).showCurrent();
-						}
-				}
-				else
-				{
-					openerBut.setText("Current");
-					lastBut.setText("Last");
-					//com.sia.client.ui.AppController.getLinesTableData().showOpener();
-
-					//getDataModel().showOpener();
-						stb.setOpener(true);
-						Vector v = getAllDataModels();
-						for(int j=0; j < v.size(); j++)
-						{
-							((LinesTableData)v.get(j)).showOpener();
-						}
-
-				}
-			}
-		});
-*/
         sortBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("sort button pressed");
                 if (sortBut.getText().equals("Time sort")) {
                     stb.setSort(true);
                     sortBut.setText("Gm# sort");
-                    //com.sia.client.ui.AppController.getLinesTableData().showCurrent();
-                    //getDataModel().showCurrent();
-                    Vector v = getAllDataModels();
+                    List<LinesTableData> v = getAllDataModels();
                     for (int j = 0; j < v.size(); j++) {
-                        ((LinesTableData) v.get(j)).timesort();
+                        v.get(j).timesort();
                     }
                 } else {
                     stb.setSort(false);
                     sortBut.setText("Time sort");
-
-                    //com.sia.client.ui.AppController.getLinesTableData().showOpener();
-
-                    //getDataModel().showOpener();
-                    Vector v = getAllDataModels();
+                    List<LinesTableData> v = getAllDataModels();
                     for (int j = 0; j < v.size(); j++) {
-                        ((LinesTableData) v.get(j)).gmnumsort();
+                        v.get(j).gmnumsort();
                     }
 
                 }
@@ -575,14 +393,14 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         });
 
         addBookieBut.addActionListener(ae -> {
-			// AudioClip clipfinal = new AudioClip("c:\\spankoddsclient\\final.wav");
-			//  clipfinal.play();
-			checkAndRunInEDT(() -> {
-				BookieColumnController2 bcc2 = new BookieColumnController2();
-			});
+            // AudioClip clipfinal = new AudioClip("c:\\spankoddsclient\\final.wav");
+            //  clipfinal.play();
+            checkAndRunInEDT(() -> {
+                BookieColumnController2 bcc2 = new BookieColumnController2();
+            });
 
 
-		});
+        });
 
         //owen this one we will have to repaint somehow
         shrinkTeamBut.addActionListener(new ActionListener() {
@@ -612,34 +430,26 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
     }
 
-    public Vector getAllDataModels() {
-        Vector ltd = stb.getAllDataModels();
-        return ltd;
-
+    public List<LinesTableData> getAllDataModels() {
+        return stb.getAllDataModels();
     }
 
     public void itemStateChanged(ItemEvent e) {
         // if the state combobox is changed
         if (e.getSource() == cb) {
-            Vector v = getAllDataModels();
+            List<LinesTableData> v = getAllDataModels();
             for (int j = 0; j < v.size(); j++) {
-                ((LinesTableData) v.get(j)).setDisplayType(display[cb.getSelectedIndex()]);
+                v.get(j).setDisplayType(display[cb.getSelectedIndex()]);
             }
             stb.setDisplay(display[cb.getSelectedIndex()]);
-            //cb.transferFocus();
             stb.requestFocusInWindow();
-            //	com.sia.client.ui.AppController.setDisplayType(display[cb.getSelectedIndex()]);
-            //owen took out getting period and siaplay from ltd
-            //com.sia.client.ui.ChartView.setItem(display[cb.getSelectedIndex()]);
-            //SoccerChartView.setItem(display[cb.getSelectedIndex()]);
 
         } else if (e.getSource() == periodcb) {
-            Vector v = getAllDataModels();
+            List<LinesTableData> v = getAllDataModels();
             for (int j = 0; j < v.size(); j++) {
-                ((LinesTableData) v.get(j)).setPeriodType(perioddisplay[periodcb.getSelectedIndex()]);
+                v.get(j).setPeriodType(perioddisplay[periodcb.getSelectedIndex()]);
             }
             stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
-            //periodcb.transferFocus();
             stb.requestFocusInWindow();
             //owen took out getting period and siaplay from ltd
             //	com.sia.client.ui.ChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
@@ -647,23 +457,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             System.out.println("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
         }
     }
-		/*
-	public LinesTable2 getScrollPane()
-	{
-		
-			BorderPane bp = (BorderPane)getParent();
-			System.out.println("bp="+bp);
-			SportsTabPane stb = (SportsTabPane)bp.getCenter();
-			System.out.println("stb="+stb);
-			LinesTable2 lt2 = stb.getCurrentScrollPane();
-			return lt2;
-	}
-*/
 
-    public Vector getCurrentDataModels() {
-        Vector ltd = stb.getCurrentDataModels();
-        return ltd;
-
+    public List<LinesTableData> getCurrentDataModels() {
+        return stb.getCurrentDataModels();
     }
 
 }

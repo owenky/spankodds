@@ -320,7 +320,7 @@ public class LinesConsumer implements MessageListener {
 
         }
         try {
-            AppController.fireAllTableDataChanged("" + gameid);
+            AppController.fireAllTableDataChanged(gameid);
         } catch (Exception ex) {
             //	System.out.println("exception linesconsumer firetabledatachanged "+ex);
             log(ex);

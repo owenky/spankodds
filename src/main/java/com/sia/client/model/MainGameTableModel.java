@@ -1,8 +1,9 @@
 package com.sia.client.model;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.ui.LinesTableData;
 
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +11,13 @@ import java.util.List;
 public class MainGameTableModel extends DefaultTableModel {
 
     private final List<LinesTableData> gameLines = new ArrayList<>();
-    private String name = null;
-
+    private final LinesTableDataListner linesTableDataListner = new LinesTableDataListner();
 
     public MainGameTableModel() {
     }
     public void addGameLine(LinesTableData gameLine) {
         gameLines.add(gameLine);
-        if ( null == name) {
-            setName(gameLine.getTitle());
-        }
+        removeAndAddTableModelListener(gameLine);
     }
     @Override
     public Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -40,9 +38,6 @@ public class MainGameTableModel extends DefaultTableModel {
         }
         return rowCount;
     }
-    public boolean isSoccer() {
-        return SiaConst.SoccerStr.equalsIgnoreCase(name);
-    }
     public LtdSrhStruct getLinesTableData(int rowModelIndex) {
         int modelIndex=0;
         LinesTableData rtn = null;
@@ -59,11 +54,13 @@ public class MainGameTableModel extends DefaultTableModel {
         }
         return new LtdSrhStruct(rtn,modelIndex);
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getName() {
-        return this.name;
+    private void removeAndAddTableModelListener(LinesTableData gameLine) {
+        for (TableModelListener l : gameLine.getTableModelListeners()) {
+            if ( l instanceof LinesTableDataListner) {
+                gameLine.removeTableModelListener(l);
+            }
+        }
+        gameLine.addTableModelListener(linesTableDataListner);
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct {
@@ -72,6 +69,14 @@ public class MainGameTableModel extends DefaultTableModel {
         public LtdSrhStruct(LinesTableData linesTableData,int offset) {
             this.linesTableData = linesTableData;
             this.offset = offset;
+        }
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    private class LinesTableDataListner implements TableModelListener {
+
+        @Override
+        public void tableChanged(final TableModelEvent e) {
+            MainGameTableModel.this.fireTableChanged(e);
         }
     }
 }

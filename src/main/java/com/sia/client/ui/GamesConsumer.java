@@ -50,7 +50,6 @@ public class GamesConsumer implements MessageListener {
         AppController.createLoggedInConnection("reguser", "0hbaby*(");
         //AppController.createLoggedInConnection("guest","spank0dds4ever");
         GamesConsumer consumer = new GamesConsumer(AppController.getConnectionFactory(), AppController.getLoggedInConnection(), "spankoddsin.GAMECHANGE");
-
     }
 
     public void close() throws JMSException {
@@ -58,7 +57,7 @@ public class GamesConsumer implements MessageListener {
             connection.close();
         }
     }
-
+    @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
@@ -83,78 +82,8 @@ public class GamesConsumer implements MessageListener {
 
                 String data = textMessage.getText();
                 log("new game! " + data);
-                String items[] = data.split("~");
+                String[] items = data.split("~");
                 int x = 0;
-//"483~483~484~1599980400000~1600016400000~TEST1~TEST2~PHI~WAS~1~0~0~483~1~false~false~false~Eagles~Redskins~Philadelphia~Washington~0~0~~~false~false";					
-
-// need to merge both of these
-//loginclient
-/*
-						  Game game = new Game(Integer.parseInt(array[0]),Integer.parseInt(array[1]),Integer.parseInt(array[2]),Integer.parseInt(array[3]),
-												Integer.parseInt(array[4]),new java.sql.Date(Long.parseLong(array[5])),new java.sql.Time(Long.parseLong(array[6])),
-												array[7],array[8],array[9],array[10],Integer.parseInt(array[11]),Integer.parseInt(array[12]),Integer.parseInt(array[13]),
-												Integer.parseInt(array[14]),Integer.parseInt(array[15]),array[16],array[17],array[18],array[19],array[20],array[21],
-												array[22],array[23]);
-						Game g = new Game(game_id,visitorgamenumber,homegamenumber,visitoraltgamenumber,homealtgamenumber,gamedateandtime,
-										  visitorteam,hometeam,shortvisitorteam,shorthometeam,sport,league,currentvisitorscore,
-										  currenthomescore,finalvisitorscore,finalhomescore,injurynotes,refsumpires,lineups,weather,
-										  location,status,period,specialnotes);												
-												
-						int game_id = rs.getInt("game_id");
-							
-						int visitorgamenumber = rs.getInt("visitorgamenumber");
-						int homegamenumber = rs.getInt("homegamenumber");
-						int visitoraltgamenumber = rs.getInt("visitoraltgamenumber");
-						int homealtgamenumber = rs.getInt("homealtgamenumber");
-						java.sql.Date gamedate = rs.getDate("gamedate");
-						java.sql.Time gametime = rs.getTime("gametime");
-						
-						
-						
-						String visitorteam = rs.getString("visitorteam");
-						String hometeam = rs.getString("hometeam");
-						String shortvisitorteam = rs.getString("shortvisitorteam");
-						String shorthometeam = rs.getString("shorthometeam");
-						int league_id = rs.getInt("league_id");
-						int currentvisitorscore = rs.getInt("currentvisitorscore");
-						int currenthomescore = rs.getInt("currenthomescore");
-						int finalvisitorscore = rs.getInt("finalvisitorscore");
-						int finalhomescore = rs.getInt("finalhomescore");
-						Blob injurynotesblob = rs.getBlob("injurynotes");
-						Blob refsumpiresblob = rs.getBlob("refsumpires");
-						Blob lineupsblob = rs.getBlob("lineups");
-						Blob weatherblob = rs.getBlob("weather");
-						Blob specialnotesblob = rs.getBlob("specialnotes");
-						
-						String location = rs.getString("location");
-						String status = rs.getString("status");
-						String period = rs.getString("period");
-						
-						if(location == null) location = "";
-						if(period == null) period = "";
-						String injurynotes = "";
-						String refsumpires = "";
-						String lineups = "";
-						String weather = "";
-						String specialnotes ="A";
-
-
-
-						try {injurynotes = new String(injurynotesblob.getBytes(1, (int) injurynotesblob.length()));} catch(Exception ex) {}
-						try {refsumpires = new String(refsumpiresblob.getBytes(1, (int) refsumpiresblob.length()));} catch(Exception ex) {}
-						try {lineups = new String(lineupsblob.getBytes(1, (int) lineupsblob.length()));} catch(Exception ex) {}
-						try {weather = new String(weatherblob.getBytes(1, (int) weatherblob.length()));} catch(Exception ex) {}
-						try {specialnotes = new String(specialnotesblob.getBytes(1, (int) specialnotesblob.length()));} catch(Exception ex) {}
-						long gamedatelong = gamedate.getTime();
-						long gametimelong = gametime.getTime();
-
-						text = ""+game_id+delimiter+visitorgamenumber+delimiter+homegamenumber+delimiter+visitoraltgamenumber+delimiter+homealtgamenumber+
-						delimiter+gamedatelong+delimiter+gametimelong+delimiter+visitorteam+delimiter+hometeam+delimiter+shortvisitorteam+delimiter+shorthometeam+
-						delimiter+league_id+delimiter+currentvisitorscore+delimiter+currenthomescore+delimiter+finalvisitorscore+
-						delimiter+finalhomescore+delimiter+injurynotes+delimiter+refsumpires+delimiter+lineups+delimiter+weather+delimiter+
-						location+delimiter+status+delimiter+period+delimiter+specialnotes;														
-												
-*/
 
                 String eventnumber = items[x++];
                 String visitorgamenumber = items[x++];
@@ -186,7 +115,7 @@ public class GamesConsumer implements MessageListener {
                 String status = items[x++];
                 String timeremaining = items[x++];
 
-                Game g = AppController.getGame(eventnumber);
+                Game g = AppController.getGame(Integer.parseInt(eventnumber));
                 if (g == null) {
                     g = new Game();
                 } else {
@@ -350,11 +279,9 @@ public class GamesConsumer implements MessageListener {
 
                         if (sound) {
                             if (audiofile.equals("")) {
-                                //playSound("timechange.wav");
                                 new SoundPlayer("timechange.wav");
                             } else {
                                 new SoundPlayer(audiofile);
-                                //playSound(audiofile);
                             }
                         }
 
@@ -365,88 +292,15 @@ public class GamesConsumer implements MessageListener {
                     } catch (Exception ex) {
                         log(ex);
                     }
-                    System.out.println(tc);
+                    log(tc);
                 }
-
-                //AppController.refreshTabs();
             } else if (messagetype.equals("NEWORUPDATE2")) // this comes from deleteyesterdaygamesandpublish whith a few additional flags
             {
 
                 String data = textMessage.getText();
-                System.out.println("new game! " + data);
+                log("new game! " + data);
                 String items[] = data.split("~");
                 int x = 0;
-//"483~483~484~1599980400000~1600016400000~TEST1~TEST2~PHI~WAS~1~0~0~483~1~false~false~false~Eagles~Redskins~Philadelphia~Washington~0~0~~~false~false";					
-
-// need to merge both of these
-//loginclient
-/*
-						  Game game = new Game(Integer.parseInt(array[0]),Integer.parseInt(array[1]),Integer.parseInt(array[2]),Integer.parseInt(array[3]),
-												Integer.parseInt(array[4]),new java.sql.Date(Long.parseLong(array[5])),new java.sql.Time(Long.parseLong(array[6])),
-												array[7],array[8],array[9],array[10],Integer.parseInt(array[11]),Integer.parseInt(array[12]),Integer.parseInt(array[13]),
-												Integer.parseInt(array[14]),Integer.parseInt(array[15]),array[16],array[17],array[18],array[19],array[20],array[21],
-												array[22],array[23]);
-						Game g = new Game(game_id,visitorgamenumber,homegamenumber,visitoraltgamenumber,homealtgamenumber,gamedateandtime,
-										  visitorteam,hometeam,shortvisitorteam,shorthometeam,sport,league,currentvisitorscore,
-										  currenthomescore,finalvisitorscore,finalhomescore,injurynotes,refsumpires,lineups,weather,
-										  location,status,period,specialnotes);												
-												
-						int game_id = rs.getInt("game_id");
-							
-						int visitorgamenumber = rs.getInt("visitorgamenumber");
-						int homegamenumber = rs.getInt("homegamenumber");
-						int visitoraltgamenumber = rs.getInt("visitoraltgamenumber");
-						int homealtgamenumber = rs.getInt("homealtgamenumber");
-						java.sql.Date gamedate = rs.getDate("gamedate");
-						java.sql.Time gametime = rs.getTime("gametime");
-						
-						
-						
-						String visitorteam = rs.getString("visitorteam");
-						String hometeam = rs.getString("hometeam");
-						String shortvisitorteam = rs.getString("shortvisitorteam");
-						String shorthometeam = rs.getString("shorthometeam");
-						int league_id = rs.getInt("league_id");
-						int currentvisitorscore = rs.getInt("currentvisitorscore");
-						int currenthomescore = rs.getInt("currenthomescore");
-						int finalvisitorscore = rs.getInt("finalvisitorscore");
-						int finalhomescore = rs.getInt("finalhomescore");
-						Blob injurynotesblob = rs.getBlob("injurynotes");
-						Blob refsumpiresblob = rs.getBlob("refsumpires");
-						Blob lineupsblob = rs.getBlob("lineups");
-						Blob weatherblob = rs.getBlob("weather");
-						Blob specialnotesblob = rs.getBlob("specialnotes");
-						
-						String location = rs.getString("location");
-						String status = rs.getString("status");
-						String period = rs.getString("period");
-						
-						if(location == null) location = "";
-						if(period == null) period = "";
-						String injurynotes = "";
-						String refsumpires = "";
-						String lineups = "";
-						String weather = "";
-						String specialnotes ="A";
-
-
-
-						try {injurynotes = new String(injurynotesblob.getBytes(1, (int) injurynotesblob.length()));} catch(Exception ex) {}
-						try {refsumpires = new String(refsumpiresblob.getBytes(1, (int) refsumpiresblob.length()));} catch(Exception ex) {}
-						try {lineups = new String(lineupsblob.getBytes(1, (int) lineupsblob.length()));} catch(Exception ex) {}
-						try {weather = new String(weatherblob.getBytes(1, (int) weatherblob.length()));} catch(Exception ex) {}
-						try {specialnotes = new String(specialnotesblob.getBytes(1, (int) specialnotesblob.length()));} catch(Exception ex) {}
-						long gamedatelong = gamedate.getTime();
-						long gametimelong = gametime.getTime();
-
-						text = ""+game_id+delimiter+visitorgamenumber+delimiter+homegamenumber+delimiter+visitoraltgamenumber+delimiter+homealtgamenumber+
-						delimiter+gamedatelong+delimiter+gametimelong+delimiter+visitorteam+delimiter+hometeam+delimiter+shortvisitorteam+delimiter+shorthometeam+
-						delimiter+league_id+delimiter+currentvisitorscore+delimiter+currenthomescore+delimiter+finalvisitorscore+
-						delimiter+finalhomescore+delimiter+injurynotes+delimiter+refsumpires+delimiter+lineups+delimiter+weather+delimiter+
-						location+delimiter+status+delimiter+period+delimiter+specialnotes;														
-												
-*/
-
                 String eventnumber = items[x++];
                 String visitorgamenumber = items[x++];
                 String homegamenumber = items[x++];
@@ -492,7 +346,7 @@ public class GamesConsumer implements MessageListener {
                 String scorets = items[x++];
 
 
-                Game g = AppController.getGame(eventnumber);
+                Game g = AppController.getGame(Integer.parseInt(eventnumber));
                 if (g == null) {
                     g = new Game();
                 }
@@ -583,7 +437,9 @@ public class GamesConsumer implements MessageListener {
             log(e);
         } finally {
             try {
-                out.close();
+                if ( null != out) {
+                    out.close();
+                }
             } catch (Exception ex) {
                 log(ex);
             }

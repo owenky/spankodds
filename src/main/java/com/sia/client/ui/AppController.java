@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.Games;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
@@ -24,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -48,7 +50,7 @@ public class AppController {
     public static Hashtable<String, Bookie> bookies = new Hashtable();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
     public static Hashtable<String, Sport> sports = new Hashtable();
-    public static Hashtable<String, Game> games = new Hashtable();
+    public static Games games = new Games();
 
     public static Vector<Bookie> openerbookiesVec = new Vector();
     public static Vector<Bookie> bookiesVec = new Vector();
@@ -57,7 +59,6 @@ public class AppController {
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
 
-    public static Vector<Game> gamesVec = new Vector();
     public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
@@ -487,9 +488,9 @@ public class AppController {
         return dataModels;
     }
 
-    public static void addDataModels(Vector v) {
+    public static void addDataModels(List<LinesTableData> v) {
         for (int i = 0; i < v.size(); i++) {
-            addDataModel((LinesTableData) v.get(i));
+            addDataModel( v.get(i));
         }
 
     }
@@ -501,10 +502,10 @@ public class AppController {
 
     }
 
-    public static void removeDataModels(Vector v) {
+    public static void removeDataModels(List<LinesTableData> v) {
         if (v != null) {
             for (int i = 0; i < v.size(); i++) {
-                removeDataModel((LinesTableData) v.get(i));
+                removeDataModel(v.get(i));
             }
         }
 
@@ -513,9 +514,7 @@ public class AppController {
     public static void removeDataModel(LinesTableData ltd) {
         if (ltd != null) {
             dataModels.remove(ltd);
-            //ltd.destroyMe(); // owen took out 6/4
         }
-        //ltd = null; // owen took out 6/4
 
     }
 
@@ -526,7 +525,7 @@ public class AppController {
 
     public static SportsTabPane getMainTabPane() {
 
-        return (SportsTabPane) tabpanes.get(0);
+        return tabpanes.get(0);
     }
 
     public static Vector getTabPanes() {
@@ -536,51 +535,8 @@ public class AppController {
 
     public static SportsMenuBar getMainMenuBar() {
 
-        return (SportsMenuBar) menubars.get(0);
+        return menubars.get(0);
     }
-
-  /*
-  public static void refreshTabs()
-  {
-	  for(int i=0; i< tabpanes.size(); i++)
-	  {
-		SportsTabPane tp = (SportsTabPane)tabpanes.get(i);
-		if(tp != null)
-		{
-			int j = tp.getSelectionModel().getSelectedIndex();
-			//System.out.println("selected index is "+j);
-			//tp.getSelectionModel().clearSelection(j);
-			//tp.getSelectionModel().select(j);
-			//tp.getSelectionModel().clearAndSelect(tp.getSelectionModel().getSelectedIndex());
-
-			tp.getSelectionModel().selectFirst();
-			tp.getSelectionModel().selectNext();
-			tp.getSelectionModel().select(j);
-
-		}
-	  }
-  }
-
-    public static void refreshTabs2()
-  {
-	  for(int i=0; i< tabpanes.size(); i++)
-	  {
-		SportsTabPane tp = (SportsTabPane)tabpanes.get(i);
-		if(tp != null)
-		{
-			SportsTab thistab = (SportsTab)tp.getSelectionModel().getSelectedItem();
-
-			//System.out.println("destroying...");
-			thistab.destroy();
-			//System.out.println("creating...");
-			thistab.create();
-			//System.out.println("all done");
-
-
-		}
-	  }
-  }
-   */
 
     public static Vector getMenuBars() {
 
@@ -589,14 +545,14 @@ public class AppController {
 
     public static void disableTabs() {
         for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+            SportsTabPane tp = tabpanes.get(i);
             tp.disableTabs();
         }
     }
 
     public static void enableTabs() {
         for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+            SportsTabPane tp = tabpanes.get(i);
             tp.enableTabs();
         }
     }
@@ -641,8 +597,6 @@ public class AppController {
                 customTabsVec.removeElementAt(index);
             }
         }
-
-
         customTabsHash.remove(key);
         repaintmenubars();
     }
@@ -671,83 +625,29 @@ public class AppController {
                 try {
                     tp.refreshCurrentTab();
                 } catch (Exception ex) {
+                    log(ex);
                 }
-
-			/*
-
-			int numtabs = tp.getTabCount();
-			if(currenttabindex == 0)
-			{
-				tp.setSelectedIndex(currenttabindex+1);
-				tp.setSelectedIndex(currenttabindex);
-			}
-			else
-			{
-				tp.setSelectedIndex(currenttabindex-1);
-				tp.setSelectedIndex(currenttabindex);
-			}
-			*/
             }
         }
     }
-  /*
-  public static void setUpStage(Stage stage)
-  {
-	  if(stage == null)
-	  {
-		  stage = new Stage();
-	  }
-	  SportsTabPane stb = new SportsTabPane();
-	  TopView tv = new TopView();
-	  BorderPane pane = new BorderPane(stb,tv,null,null,null);
-	  Scene mainscene =  new Scene(pane, 820, 750);
-	  stage.setScene(mainscene);
-
-
-  }
-*/
-
     public static void clearAll() {
         for (int k = 0; k < tabpanes.size(); k++) {
 
-            SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+            SportsTabPane stb = tabpanes.get(k);
             stb.clearAll();
 
         }
-	  /*
-	  for(int i=0;i <dataModels.size();i++)
-	  {
-		dataModels.get(i).clearColors();
-	  }
-	  */
-
 
     }
 
-    public static void fireAllTableDataChanged(String gameid) {
+    public static void fireAllTableDataChanged(int gameid) {
 
         for (int k = 0; k < tabpanes.size(); k++) {
 
-            SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+            SportsTabPane stb = tabpanes.get(k);
             stb.fireAllTableDataChanged(gameid);
 
         }
-
-	  /*
-	  for(int i=0; i< dataModels.size(); i++)
-	  {
-		LinesTableData ltd = (LinesTableData)dataModels.get(i);
-
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					ltd.checktofire(gameid);
-				}
-			});
-
-	  }
-	  */
     }
 
     public static void fireAllTableStructureChanged() {
@@ -768,18 +668,6 @@ public class AppController {
     public static void setLinesTableData(LinesTableData tab) {
         linestabledata = tab;
     }
-
-    /*
-    public static void setLinesTable(LinesTable2 tab)
-    {
-        linestable = tab;
-    }
-
-    public static LinesTable2 getLinesTable()
-    {
-        return linestable;
-    }
-    */
     public static String getLoginQueue() {
         return loginQueue;
     }
@@ -989,17 +877,16 @@ public class AppController {
         checkAndRunInEDT(() -> {
             for (int k = 0; k < tabpanes.size(); k++) {
 
-                SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
-                stb.removeGame("" + gameid);
+                SportsTabPane stb = tabpanes.get(k);
+                stb.removeGame(gameid);
 
             }
-            Game g = null;
-            if (games.get(gameid + "") != null) {
-                g = games.get(gameid + "");
-                gamesVec.remove(g);
+            Game g = games.getGame(gameid);
+            if (null != g) {
+                games.removeGame(g);
 
             }
-            games.remove(gameid + "");
+            games.removeGameId(gameid);
             for (int j = 0; j < bookiesVec.size(); j++) {
                 Bookie b = bookiesVec.get(j);
                 int bid = b.getBookie_id();
@@ -1051,11 +938,8 @@ public class AppController {
     public static void removeGames(String[] gameidarr) {
         checkAndRunInEDT(() -> {
             for (int k = 0; k < tabpanes.size(); k++) {
-
-                SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+                SportsTabPane stb = tabpanes.get(k);
                 stb.removeGames(gameidarr);
-
-
             }
             if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
                 return;
@@ -1063,15 +947,14 @@ public class AppController {
 
             for (int i = 0; i < gameidarr.length; i++) {
                 try {
-                    Game g = null;
                     String gameid = gameidarr[i];
-
-                    if (games.get(gameid) != null) {
-                        g = games.get(gameid);
-                        gamesVec.remove(g);
-
-                    }
-                    games.remove(gameid + "");
+                    games.removeGame(gameid);
+//                    Game g = games.getGame(gameid);
+//                    if (g != null) {
+//                        gamesVec.remove(g);
+//
+//                    }
+//                    games.remove(gameid);
                     for (int j = 0; j < bookiesVec.size(); j++) {
                         Bookie b = bookiesVec.get(j);
                         int bid = b.getBookie_id();
@@ -1109,7 +992,7 @@ public class AppController {
                         liveteamtotals.remove(bid + "-" + gameid);
 
                     }
-                    g = null;
+//                    g = null;
                 } catch (Exception ex) {
                     log(ex);
                 }
@@ -1118,10 +1001,10 @@ public class AppController {
     }
 
     public static String[] getAllGamesForThisDateAndLeagueId(String date, String leagueid) {
-        Iterator itr = gamesVec.iterator();
+        Iterator<Game> itr = games.iterator();
         Vector<String> gameidstodelete = new Vector<String>();
         while (itr.hasNext()) {
-            Game g = (Game) itr.next();
+            Game g = itr.next();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String gamedate = sdf.format(g.getGamedate());
             if (date.equals(gamedate)) // we have a match on date
@@ -1131,26 +1014,26 @@ public class AppController {
                     int lid2 = Integer.parseInt(leagueid);
                     if (lid == lid2) {
                         gameidstodelete.add(g.getGame_id() + "");
-                        System.out.println("will be deleting .." + g.getGame_id());
+                        log("will be deleting .." + g.getGame_id());
                     }
                 } else {
                     gameidstodelete.add(g.getGame_id() + "");
-                    System.out.println("will be deleting .." + g.getGame_id());
+                    log("will be deleting .." + g.getGame_id());
                 }
             }
         }
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
-
-    public static void rebuildModels() {
-
-        for (int k = 0; k < dataModels.size(); k++) {
-            LinesTableData ltd = (LinesTableData) dataModels.get(k);
-            ltd.rebuild();
-        }
-
-    }
+//
+//    public static void rebuildModels() {
+//
+//        for (int k = 0; k < dataModels.size(); k++) {
+//            LinesTableData ltd =  dataModels.get(k);
+//            ltd.rebuild();
+//        }
+//
+//    }
 
     public static void addGame(Game g) {
         addGame(g, true);
@@ -1158,42 +1041,34 @@ public class AppController {
     }
 
     public static void addGame(Game g, boolean repaint) {
-	/*
-	if(!gamesIdVec.contains(g.getGame_id()+""))
-	{
-		System.out.println("adding new gmid="+g.getGame_id());
-		gamesIdVec.add(g.getGame_id()+"");
-	}
-*/
         checkAndRunInEDT(() -> {
-            if (games.get(g.getGame_id() + "") == null) {
-                //System.out.println("adding new gmid="+g.getGame_id());
-                gamesVec.add(g);
-                games.put(g.getGame_id() + "", g);
-                for (int k = 0; k < tabpanes.size(); k++) {
-
-                    SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
-                    stb.addGame(g, repaint);
-
-                }
-            } else // just an update
-            {
-                games.put(g.getGame_id() + "", g);
+//            if (games.getGame(g.getGame_id()) == null) {
+//                gamesVec.add(g);
+//                games.put(g.getGame_id(), g);
+//                for (int k = 0; k < tabpanes.size(); k++) {
+//
+//                    SportsTabPane stb = tabpanes.get(k);
+//                    stb.addGame(g, repaint);
+//
+//                }
+//            } else // just an update
+//            {
+//               games.put(g.getGame_id(), g);
+//            }
+            games.updateOrAdd(g);
+            //TODO potential improvement to for loop: use a map to quickly find which LineTableData this game belong to instead of loop through tabpane and mainscreen -- 05/01/2021
+            for (int k = 0; k < tabpanes.size(); k++) {
+                SportsTabPane stb = tabpanes.get(k);
+                stb.addGame(g, repaint);
             }
-
         });
-
-
-        //owen here i need to put code to add this game to datamodel addGameId(string)
-        // the problem is i dont know which model to add it to...
-
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
         checkAndRunInEDT(() -> {
             for (int k = 0; k < tabpanes.size(); k++) {
 
-                SportsTabPane stb = (SportsTabPane) tabpanes.get(k);
+                SportsTabPane stb =tabpanes.get(k);
                 stb.moveGameToThisHeader(g, header);
 
             }
@@ -1209,7 +1084,7 @@ public class AppController {
     }
 
     public static Game getGame(int gid) {
-        return games.get(gid + "");
+        return games.getGame(gid);
     }
 
     public static Bookie getBookie(String bid) {
@@ -1220,11 +1095,7 @@ public class AppController {
         return sports.get(sid + "");
     }
 
-    public static Game getGame(String gid) {
-        return games.get(gid + "");
-    }
-
-    public static Hashtable getGames() {
+    public static Games getGames() {
         return games;
     }
 
@@ -1241,9 +1112,6 @@ public class AppController {
     }
 
     public static Vector getSportsVec() {
-        //System.out.println("BEFORE sportssvec size="+sportsVec.size());
-        //reorderBookiesVec();
-        //System.out.println("AFTER sportsvec size="+sportsVec.size());
         return sportsVec;
     }
 
@@ -1262,8 +1130,8 @@ public class AppController {
         return fixedCols;
     }
 
-    public static Vector getGamesVec() {
-        return gamesVec;
+    public static Games getGamesVec() {
+        return games;
     }
 
     public static void addSpreadline(Spreadline spread) {

@@ -11,6 +11,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
 
 import javax.sound.sampled.AudioInputStream;
@@ -19,7 +20,6 @@ import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -50,7 +50,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -60,6 +59,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -67,14 +67,9 @@ import static com.sia.client.config.Utils.showMessageDialog;
 
 class LineAlertOpeners implements ItemListener {
 
-
-    private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     public static String[] gameperiod = new String[]{"Full Game", "1st Half", "2nd Half", "All Halfs", " ", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Live", "All Periods"};
-    static String soundfile = null;
     static int idx;
     static JFrame jfrm;
-    boolean editing = false;
-    LineAlertNode lan = null;
     JLabel welcome = new JLabel("LINE ALERT");
     JideToggleButton upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
     JideToggleButton upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
@@ -85,13 +80,11 @@ class LineAlertOpeners implements ItemListener {
     JButton testpopup = new JButton("Test Popup");
     String sport = "";
     JCheckBox audiocheckbox;
-    JComboBox audioComboBox;
     JCheckBox popupcheckbox;
     JComboBox popupsecsComboBox;
     JPanel panel = new JPanel();
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
-    JComboBox popuplocation;
     JCheckBox spreadcheckbox = new JCheckBox("Spread");
     JCheckBox totalcheckbox = new JCheckBox("Total");
     JCheckBox moneylinecheckbox = new JCheckBox("Money Line");
@@ -109,13 +102,8 @@ class LineAlertOpeners implements ItemListener {
     JCheckBox allperiods = new JCheckBox("All Periods");
     JButton set = new JButton("Save");
     JTextField linealertname = new JTextField(20);
-
-    //JComboBox gameperiodComboBox;
-    String defaultsoundfile = "";
-    String defaultsoundfileplay = "";
     JButton usedefaultsound = new JButton("Use Default Sound");
     JButton usecustomsound = new JButton("Use Custom Sound");
-    String labeltext = "";
     JLabel soundlabel = new JLabel("DEFAULT");
     JPanel treePanel = new JPanel(new BorderLayout(2, 2));
     JPanel sportsbooktreePanel = new JPanel(new BorderLayout(2, 2));
@@ -123,24 +111,12 @@ class LineAlertOpeners implements ItemListener {
     String[] sportlist = new String[10];
     String[] secslist = new String[60];
     String[] minslist = new String[20];
-    //String[] centslist = new String[100];
-    //String[] ptslist = new String[15];
-    //String[] soccerptslist = new String[9];
-    //String[] numbookieslist = new String[10];
-    String[] gameperiodlist = new String[10];
-    int[] gameperiodintlist = new int[10];
-    //String[] percentagelist = new String[100];
-
     String[] audiolist = new String[8];
     JComboBox sportComboBox;
 
     JLabel linetype = new JLabel("LINE TYPE");
     JLabel notify = new JLabel("NOTIFY");
-    JFileChooser fc = new JFileChooser();
-    String prefs[];
     JList selectedList = new JList();
-    JList eventsList = new JList();
-    DefaultListModel eventsModel = new DefaultListModel();
     Box box1 = Box.createVerticalBox();
     Box box2 = Box.createVerticalBox();
     Box box3 = Box.createVerticalBox();
@@ -148,11 +124,9 @@ class LineAlertOpeners implements ItemListener {
     int popuplocationint = 0;
     Vector bookeis;
     Vector sports;
-    Hashtable games;
+    Games games;
     private Vector checkednodes2 = new Vector();
     private Vector checkednodes3 = new Vector();
-    private Vector checkedsports = new Vector();
-    private Vector checkednodes = new Vector();
     private CheckBoxTree _tree;
     private CheckBoxTree sportsbooktree;
     private Hashtable leaguenameidhash = new Hashtable();
@@ -162,31 +136,15 @@ class LineAlertOpeners implements ItemListener {
 
     //******************************************************************************
     LineAlertOpeners() {
-
-
-					/*String sportname=(String)sportComboBox.getSelectedItem();
-					for(idx=0;idx<com.sia.client.ui.AppController.LineOpenerAlertNodeList.size();idx++)
-					{
-						if(com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).SportName.equalsIgnoreCase(sportname))
-						{
-							break;
-						}
-					}*/
         linealertname.setDocument(new JTextFieldLimit(20));
         TextPrompt tp7 = new TextPrompt("Name Your Line Alert", linealertname);
         tp7.setForeground(Color.RED);
         tp7.setShow(TextPrompt.Show.FOCUS_LOST);
-        //tp7.changeAlpha(0.5f);
         tp7.changeStyle(Font.BOLD + Font.ITALIC);
 
         audiolist[0] = "select sound";
         audiolist[1] = "openers";
         audiolist[2] = "Custom Sounds";
-
-
-        //	gameperiodComboBox = new JComboBox(gameperiodlist);
-        //	gameperiodComboBox.setMaximumRowCount(gameperiodlist.length);
-
         for (int v = 1; v <= 60; v++) {
             secslist[v - 1] = v + "";
         }
@@ -1272,14 +1230,11 @@ class LineAlertOpeners implements ItemListener {
 
     public static void spreadOpenerAlert(int Gid, int bid, int per, String opener, double newvisitorspread, double newvisitorjuice, double newhomespread, double newhomejuice) {
 
-
-        //ArrayList loan=com.sia.client.ui.AppController.LineOpenerAlertNodeList;
-
         String visitorValue = LineAlertManager.shortenSpread(newvisitorspread, newvisitorjuice);
         String homeValue = LineAlertManager.shortenSpread(newhomespread, newhomejuice);
 
 
-        Game game = AppController.getGame(Gid + "");
+        Game game = AppController.getGame(Gid);
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
@@ -1289,9 +1244,6 @@ class LineAlertOpeners implements ItemListener {
         int lid = game.getLeague_id();
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);
-        //System.out.println("Alert Sportname:"+sportname);
-
-        //System.out.println("lid:"+lid);
 
         if (opener.equals("1")) {
             for (int i = 0; i < AppController.LineOpenerAlertNodeList.size(); i++) {
@@ -1413,7 +1365,7 @@ class LineAlertOpeners implements ItemListener {
         String underValue = LineAlertManager.shortenTotal(newunder, newunderjuice);
 
 
-        Game game = AppController.getGame(Gid + "");
+        Game game = AppController.getGame(Gid);
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
@@ -1423,7 +1375,6 @@ class LineAlertOpeners implements ItemListener {
         int lid = game.league_id;
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);
-        //System.out.println("Alert Sportname:"+sportname);
         if (opener.equals("1")) {
             for (int i = 0; i < AppController.LineOpenerAlertNodeList.size(); i++) {
                 Instant start = AppController.LineOpenerAlertNodeList.get(i).start;
@@ -1491,11 +1442,10 @@ class LineAlertOpeners implements ItemListener {
 
     public static void moneyOpenerAlert(int Gid, int bid, int per, String opener, double newvisitorjuice, double newhomejuice) {
 
-        //ArrayList loan=com.sia.client.ui.AppController.LineOpenerAlertNodeList;
         String visitorValue = LineAlertManager.mlfix(newvisitorjuice);
         String homeValue = LineAlertManager.mlfix(newhomejuice);
 
-        Game game = AppController.getGame(Gid + "");
+        Game game = AppController.getGame(Gid);
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
@@ -1506,7 +1456,6 @@ class LineAlertOpeners implements ItemListener {
 
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);
-        //System.out.println("Alert Sportname:"+sportname);
         if (opener.equals("1")) {
             for (int i = 0; i < AppController.LineOpenerAlertNodeList.size(); i++) {
                 Instant start = AppController.LineOpenerAlertNodeList.get(i).start;
@@ -1574,9 +1523,7 @@ class LineAlertOpeners implements ItemListener {
         String overValue = LineAlertManager.shortenTotal(newvisitorover, newvisitoroverjuice);
         String underValue = LineAlertManager.shortenTotal(newvisitorunder, newvisitorunderjuice);
 
-        //ArrayList loan=com.sia.client.ui.AppController.LineOpenerAlertNodeList;
-
-        Game game = AppController.getGame(Gid + "");
+        Game game = AppController.getGame(Gid);
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
@@ -1587,7 +1534,6 @@ class LineAlertOpeners implements ItemListener {
 
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);
-        //System.out.println("Alert Sportname:"+sportname);
         if (opener.equals("1")) {
 
             for (int i = 0; i < AppController.LineOpenerAlertNodeList.size(); i++) {
@@ -1602,23 +1548,20 @@ class LineAlertOpeners implements ItemListener {
                 double timeDiff = d / 1000 / 60;
                 double selectedwaitTime = AppController.LineOpenerAlertNodeList.get(i).renotifyvalue;
                 if (timeDiff >= selectedwaitTime) {
-                    ArrayList periods = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).periods;
-                    ArrayList bookeis = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).bookies;
-                    ArrayList leagues = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).leagues;
-                    boolean isAudioChecks = (boolean) AppController.LineOpenerAlertNodeList.get(i).isAudioChecks;
-                    boolean isShowpopChecks = (boolean) AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks;
-                    String audiovalue = (String) AppController.LineOpenerAlertNodeList.get(i).audiovalue;
-                    int popupsec = (int) AppController.LineOpenerAlertNodeList.get(i).popupsec;
-                    String sn = (String) AppController.LineOpenerAlertNodeList.get(i).SportName;
-                    boolean isteamtotalcheck = (boolean) AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck;
+                    List periods = AppController.LineOpenerAlertNodeList.get(i).periods;
+                    List bookeis = AppController.LineOpenerAlertNodeList.get(i).bookies;
+                    List leagues = AppController.LineOpenerAlertNodeList.get(i).leagues;
+                    boolean isAudioChecks = AppController.LineOpenerAlertNodeList.get(i).isAudioChecks;
+                    boolean isShowpopChecks = AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks;
+                    String sn = AppController.LineOpenerAlertNodeList.get(i).SportName;
+                    boolean isteamtotalcheck = AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck;
                     boolean isAllBookiesSelected = AppController.LineOpenerAlertNodeList.get(i).isAllBookiesSelected;
                     boolean isAllLeaguesSelected = AppController.LineOpenerAlertNodeList.get(i).isAllLeaguesSelected;
 
                     int popupsecs = AppController.LineOpenerAlertNodeList.get(i).showpopvalue;
                     int popuplocationint = AppController.LineOpenerAlertNodeList.get(i).popuplocationint;
 
-                    int sport_id = (int) AppController.LineOpenerAlertNodeList.get(i).sports_id;
-                    String soundfile = (String) AppController.LineOpenerAlertNodeList.get(i).soundfile;
+                    String soundfile = AppController.LineOpenerAlertNodeList.get(i).soundfile;
                     if (sportname.equalsIgnoreCase(sn)) {
 
                         if ((leagues.contains(lid) || isAllLeaguesSelected) && (bookeis.contains(bid) || isAllBookiesSelected) && periods.contains(per) && isteamtotalcheck) {
@@ -1653,12 +1596,9 @@ class LineAlertOpeners implements ItemListener {
 
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() != ItemEvent.SELECTED) {
-            //System.out.println("NOT SELECTED EXITING!");
             return;
         }
         if (e.getSource() == sportComboBox) {
-            // sportComboBox.getSelectedIndex()
-
 
             if (sportComboBox.getSelectedIndex() != 0) {
                 int i;
@@ -1687,11 +1627,6 @@ class LineAlertOpeners implements ItemListener {
                         return new Dimension(300, 300);
                     }
                 };
-                //	treePanel.removeAll();
-                //	treePanel.add(new JScrollPane(_tree));
-                //treePanel.revalidate();
-                //treePanel.revalidate();
-                //	treePanel.repaint();
                 _tree.setRootVisible(true);
                 _tree.getCheckBoxTreeSelectionModel().setDigIn(true);
                 _tree.getCheckBoxTreeSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
@@ -1717,11 +1652,6 @@ class LineAlertOpeners implements ItemListener {
                         return new Dimension(300, 300);
                     }
                 };
-                //	treePanel.removeAll();
-                //	treePanel.add(new JScrollPane(_tree));
-                //treePanel.revalidate();
-                //treePanel.revalidate();
-                //	treePanel.repaint();
                 sportsbooktree.setRootVisible(true);
                 sportsbooktree.getCheckBoxTreeSelectionModel().setDigIn(true);
                 sportsbooktree.getCheckBoxTreeSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);

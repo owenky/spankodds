@@ -469,7 +469,7 @@ public class ScoresConsumer implements MessageListener {
 
         }
         try {
-            AppController.fireAllTableDataChanged("" + gameid);
+            AppController.fireAllTableDataChanged(gameid);
         } catch (Exception ex) {
             log(ex);
         }

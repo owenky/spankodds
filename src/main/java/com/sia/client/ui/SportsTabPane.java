@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
@@ -20,6 +19,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -29,13 +29,6 @@ import static com.sia.client.config.Utils.log;
 public class SportsTabPane extends JTabbedPane implements Cloneable {
 
 
-    public JTable currenttable;
-
-
-    //public LinesTable2 currentscrollpane;
-//public LinesTable2 scrollpane;
-//public JTable table;	
-//public LinesTableData dataModel;	
     public String display = "default";
     public int period = 0;
     public boolean timesort = false;
@@ -47,10 +40,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public JLabel loadlabel = null;
     public SportsTabPane thispane;
     private int currentTabIndex = 0, previousTabIndex = 0;
-    //variables for dragging private boolean dragging = false;
     private Image tabImage = null;
     private Point currentMouseLocation = null;
-    private int draggedTabIndex = 0;
     private boolean dragging = false;
 
 //adjustcolumns after line update	
@@ -319,7 +310,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public boolean isTabNameAvailable(String name) {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             String title = getTitleAt(i);
             if (title.equalsIgnoreCase(name)) {
@@ -329,16 +319,14 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
         return true;
     }
-
+    //TODO, use reference to MainScreen instead of loop through Component, also  ms.addGame(g, repaint) might no tbe added to the MainScreen if it does not belogn to this MainScreen --05/01/2021
     public void addGame(Game g, boolean repaint)    // only gets called when adding new game into system
     {
-
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
 
-            if (c != null && c instanceof MainScreen) {
+            if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 ms.addGame(g, repaint);
             }
@@ -346,12 +334,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public void removeGame(String gameid) {
+    public void removeGame(int gameid) {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            if (c != null && c instanceof MainScreen) {
+            if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 ms.removeGame(gameid);
             }
@@ -360,7 +347,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void disableTabs() {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             setEnabledAt(i, false);
         }
@@ -368,7 +354,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void enableTabs() {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             setEnabledAt(i, true);
         }
@@ -376,7 +361,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void removeGames(String[] gameids) {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
             if (c != null && c instanceof MainScreen) {
@@ -389,7 +373,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public void moveGameToThisHeader(Game g, String header) {
 
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
             if (c != null && c instanceof MainScreen) {
@@ -430,7 +413,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
         // Are we dragging?
         if (dragging && currentMouseLocation != null && tabImage != null) {
-            // Draw the dragged tab
             g.drawImage(tabImage, currentMouseLocation.x, currentMouseLocation.y, this);
         }
     }
@@ -458,19 +440,19 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public Vector getCurrentDataModels() {
+    public List<LinesTableData> getCurrentDataModels() {
         MainScreen ms = (MainScreen) getSelectedComponent();
         return ms.getDataModels();
     }
 
-    public Vector getAllDataModels() {
+    public List<LinesTableData> getAllDataModels() {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
+        List<LinesTableData> v = new ArrayList<>();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            if (c != null && c instanceof MainScreen) {
+            if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                Vector ltds = ms.getDataModels();
+                List<LinesTableData> ltds = ms.getDataModels();
                 if (ltds != null) {
                     v.addAll(ltds);
                 }
@@ -493,7 +475,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public void fireAllTableDataChanged(String gameid) {
+    public void fireAllTableDataChanged(int gameid) {
 
         MainScreen ms = (MainScreen) getSelectedComponent();
         ms.checktofire(gameid);

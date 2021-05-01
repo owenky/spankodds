@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
 
 import javax.swing.BoxLayout;
@@ -25,10 +26,12 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -48,9 +51,8 @@ public class MainScreen extends JPanel {
     public String display = "default";
     public int period = 0;
     private Vector adjusters = new Vector();//
-    private Vector gamegroupheaders = new Vector();
+    private List<String> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
-    private Vector gamegroupLeagueID = new Vector();
     private Vector inprogressgames = new Vector();
     private Vector halftimegames = new Vector();
     private Vector finalgames = new Vector();
@@ -118,55 +120,55 @@ public class MainScreen extends JPanel {
         name = n;
     }
 
-    public void checktofire(String gameid) {
-        Vector v = getDataModels();
+    public void checktofire(int gameid) {
+        List<LinesTableData> v = getDataModels();
         for (int j = 0; j < v.size(); j++) {
-            ((LinesTableData) v.get(j)).checktofire(gameid);
+            v.get(j).checktofire(gameid);
         }
 
     }
 
-    public Vector getDataModels() {
+    public List<LinesTableData> getDataModels() {
         return datamodelsvec;
     }
 
     public void setClearTime(long clear) {
         cleartime = clear;
-        Vector v = getDataModels();
+        List<LinesTableData> v = getDataModels();
         for (int j = 0; j < v.size(); j++) {
-            ((LinesTableData) v.get(j)).clearColors();
+            v.get(j).clearColors();
         }
     }
 
     public void clearAll() {
-        Vector v = getDataModels();
+        List<LinesTableData> v = getDataModels();
 
         for (int j = 0; j < v.size(); j++) {
-            ((LinesTableData) v.get(j)).clearColors();
+            v.get(j).clearColors();
         }
     }
 
     public void makeDataModelsVisible(boolean b) {
-        Vector v = getDataModels();
+        List<LinesTableData> v = getDataModels();
         for (int j = 0; j < v.size(); j++) {
-            ((LinesTableData) v.get(j)).setInView(b);
+           v.get(j).setInView(b);
         }
     }
 
-    public void removeGame(String gameid) {
-        Vector v = getDataModels();
+    public void removeGame(int gameid) {
+        List<LinesTableData> v = getDataModels();
         for (int j = 0; j < v.size(); j++) {
-            ((LinesTableData) v.get(j)).removeGameId("" + gameid);
+            v.get(j).removeGameId(gameid);
         }
     }
 
     public void removeGames(String[] gameids) {
-        Vector v = getDataModels();
+        List<LinesTableData> v = getDataModels();
         for (int j = 0; j < v.size(); j++) {
             try {
-                ((LinesTableData) v.get(j)).removeGameIds(gameids);
+               v.get(j).removeGameIds(gameids);
             } catch (Exception ex) {
-                System.out.println("exception removing games in mainscreen " + ex);
+                log(ex);
             }
         }
     }
@@ -178,8 +180,9 @@ public class MainScreen extends JPanel {
             leagueid = g.getSubleague_id();
         }
         String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
+        //TODO gamegroupheaders should be part of LinesTableData -- 05/01/2021
         for (int i = 0; i < gamegroupheaders.size(); i++) {
-            String header = (String) gamegroupheaders.get(i);
+            String header = gamegroupheaders.get(i);
             if (header.equals(title)) {
                 LinesTableData thisltd = (LinesTableData) datamodelsvec.get(i);
                 thisltd.addGame(g, repaint);
@@ -193,7 +196,7 @@ public class MainScreen extends JPanel {
 
         for (int k = 0; k < datamodelsvec.size(); k++) {
             LinesTableData ltd = (LinesTableData) datamodelsvec.get(k);
-            thisgame = ltd.removeGameId("" + g.getGame_id());
+            thisgame = ltd.removeGameId(g.getGame_id());
             if (thisgame != null) {
                 break;
             }
@@ -244,14 +247,14 @@ public class MainScreen extends JPanel {
         Vector currentvec = new Vector();
 
 
-        Vector allgames = new Vector();
+        Games allgames = new Games();
 
 
         int maxlength;
         currentmaxlength = 0;
-        String prefs[];
+        String[] prefs;
 
-        Vector allgamesforpref = AppController.getGamesVec();
+        Games allgamesforpref = AppController.getGamesVec();
 
         if (name.equalsIgnoreCase("football")) {
             boolean all = false;
@@ -261,7 +264,7 @@ public class MainScreen extends JPanel {
             if (Boolean.parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             try {
                 if (prefs.length > 2) {
                     tmp = prefs[2].split(",");
@@ -278,12 +281,13 @@ public class MainScreen extends JPanel {
                 }
 
             } catch (Exception ex) {
+                log(ex);
             }
 
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -307,7 +311,7 @@ public class MainScreen extends JPanel {
                 this.timesort = true;
             }
 
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("basketball")) {
@@ -323,7 +327,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -360,7 +364,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -381,7 +385,7 @@ public class MainScreen extends JPanel {
             if (Boolean.parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("hockey")) {
@@ -397,7 +401,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -434,7 +438,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -471,7 +475,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -508,7 +512,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -545,7 +549,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = (Game) allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -573,7 +577,7 @@ public class MainScreen extends JPanel {
             if (Boolean.parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("tennis")) {
@@ -589,9 +593,8 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.get(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                //System.out.println("LID===="+LID);
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
                 c.setTime(new Date());
@@ -620,18 +623,18 @@ public class MainScreen extends JPanel {
 
         for (int k = 0; k < allgames.size(); k++) {
 
-            String gameid = "";
-            Game g = (Game) allgames.get(k);
+            int gameid=-1;
+            Game g = allgames.getByIndex(k);
 
 
             if (g == null) {
-                System.out.println("skipping gameid=" + gameid + "...cuz of null game");
+                log("skipping gameid=" + gameid + "...cuz of null game");
                 continue;
             } else {
-                gameid = "" + g.getGame_id();
+                gameid = g.getGame_id();
             }
             if (g.getGamedate() == null) {
-                System.out.println("skipping gameid=" + gameid + "...cuz of null game date");
+                log("skipping gameid=" + gameid + "...cuz of null game date");
                 continue;
             }
 
@@ -642,7 +645,7 @@ public class MainScreen extends JPanel {
 
             Sport s2;
             if (s == null) {
-                System.out.println("skipping " + leagueid + "...cuz of null sport");
+                log("skipping " + leagueid + "...cuz of null sport");
                 continue;
             }
             if (customheaders.size() > 0 || s.getSportname().equalsIgnoreCase(name) || (name.equalsIgnoreCase("Today") && gamedate.compareTo(todaysgames) <= 0)) {
@@ -869,7 +872,6 @@ public class MainScreen extends JPanel {
         }
         vecofgamegroups = gamegroupvec;
         gamegroupheaders = gamegroupheadervec;
-        gamegroupLeagueID = gamegroupLeagueIDvec;
         long ct = AppController.getClearAllTime();
         if (ct > cleartime) {
             cleartime = ct;
@@ -901,19 +903,18 @@ public class MainScreen extends JPanel {
         log("timer start");
     }
 
-    public Vector transformGamesVecToCustomGamesVec(Vector customheaders, Vector gamesvec) {
+    public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
 
         if (customheaders.size() == 0) {
             return gamesvec;
         }
-        Vector newgamesvec = new Vector();
+        Games newgamesvec = new Games();
         for (int i = 0; i < customheaders.size(); i++) {
 
             String header = (String) customheaders.elementAt(i);
             for (int k = 0; k < gamesvec.size(); k++) {
-                Game g = (Game) gamesvec.get(k);
+                Game g = gamesvec.getByIndex(k);
                 if (g == null) {
-                    //System.out.println("skipping gameid="+gameid+"...cuz of null game");
                     continue;
                 }
 
@@ -925,11 +926,7 @@ public class MainScreen extends JPanel {
                 Sport s = AppController.getSport("" + leagueid);
 
                 Sport s2;
-
-
-                //System.out.println(s.getSportname());
                 if (s == null) {
-                    //System.out.println("skipping "+leagueid+"...cuz of null sport");
                     continue;
                 }
                 if (leagueid == 9) // soccer need to look at subleagueid
@@ -942,7 +939,6 @@ public class MainScreen extends JPanel {
                     s2 = s;
                 }
                 if (s2 == null) {
-                    //System.out.println("skipping "+leagueid+"...cuz of null sport");
                     continue;
                 }
                 if (header.equals(s2.getLeaguename() + " " + sdf2.format(g.getGamedate())) || header.equals(leagueid + " " + sdf2.format(g.getGamedate()))) {
@@ -1024,6 +1020,7 @@ public class MainScreen extends JPanel {
         table0.setOpaque(true);
         table0.changeSelection(0, 0, false, false);
         table0.setAutoCreateColumnsFromModel(false);
+
         if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
             table0.setRowHeight(60);
         } else {
@@ -1261,7 +1258,8 @@ public class MainScreen extends JPanel {
         //TODO add mainGameTable instead of scrollPane to center
 //        add(scrollPane, BorderLayout.CENTER);
         mainGameTable.optimizeRowHeights();
-        add(mainGameTable, BorderLayout.CENTER);
+        JScrollPane mainTableScrollPane = makeMainTableScrollPane(mainGameTable);
+        add(mainTableScrollPane, BorderLayout.CENTER);
         //END OF TODO
         add(bar, BorderLayout.PAGE_END);
         AppController.addDataModels(getDataModels());
@@ -1377,6 +1375,11 @@ public class MainScreen extends JPanel {
     }
     private MainGameTable createMainGameTable() {
         MainGameTable mainGameTable = new MainGameTable();
+        mainGameTable.setName(name);
         return mainGameTable;
+    }
+    private JScrollPane makeMainTableScrollPane(JTable table) {
+        JScrollPane rtn = new JScrollPane(table);
+        return rtn;
     }
 }

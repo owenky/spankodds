@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
+import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
 
 import javax.swing.AbstractListModel;
@@ -49,13 +50,13 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
 public class CustomTab2 extends JPanel {
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
@@ -208,8 +209,8 @@ public class CustomTab2 extends JPanel {
         }
 
 
-        InvisibleNode currenttreenode = null;
-        Vector allgames = AppController.getGamesVec();
+        InvisibleNode currenttreenode;
+        Games allgames = AppController.getGamesVec();
         Vector allsports = AppController.getSportsVec();
         java.util.Date today = new java.util.Date();
 
@@ -219,35 +220,31 @@ public class CustomTab2 extends JPanel {
 
         try {
 
-            Collections.sort(allgames, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
-            //Collections.sort(allgames, new GameLeagueSorter());
-            //System.out.println("sorted by league");
-            Collections.sort(allgames, new GameDateSorter());
-            System.out.println("sorted by gm date");
-            //Collections.sort(allgames, new GameNumSorter());
-            System.out.println("sorted by gm num");
+            allgames.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
+            allgames.sort(new GameDateSorter());
+            log("sorted by gm date");
+            log("sorted by gm num");
 
         } catch (Exception ex) {
-            System.out.println("exception sorting " + ex);
-            ex.printStackTrace();
+            log(ex);
         }
         Game g = null;
         try {
 
             for (int k = 0; k < allgames.size(); k++) {
 
-                String gameid = "";
-                g = (Game) allgames.get(k);
+                int gameid = -1;
+                g = allgames.getByIndex(k);
 
 
                 if (g == null) {
-                    System.out.println("skipping gameid=" + gameid + "...cuz of null game");
+                    log("skipping gameid=" + gameid + "...cuz of null game");
                     continue;
                 } else {
-                    gameid = "" + g.getGame_id();
+                    gameid = g.getGame_id();
                 }
                 if (g.getGamedate() == null) {
-                    System.out.println("skipping gameid=" + gameid + "...cuz of null game date");
+                    log("skipping gameid=" + gameid + "...cuz of null game date");
                     continue;
                 }
 
@@ -255,13 +252,10 @@ public class CustomTab2 extends JPanel {
 
                 int leagueid = g.getLeague_id();
 
-
                 Sport s = AppController.getSport("" + leagueid);
 
                 Sport s2;
 
-
-                //System.out.println(s.getSportname());
                 if (s == null) {
                     System.out.println("skipping " + leagueid + "...cuz of null sport");
                     continue;
@@ -1004,22 +998,22 @@ public class CustomTab2 extends JPanel {
                 checkAndRunInEDT(() -> {
 
 
-                        Vector tabpanes = AppController.getTabPanes();
-                        System.out.println("tabpanes size= " + tabpanes.size());
-                        for (int i = 0; i < tabpanes.size(); i++) {
-                            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                            int numtabs = tp.getTabCount();
-                            System.out.println("numtabs= " + numtabs);
+                    Vector tabpanes = AppController.getTabPanes();
+                    System.out.println("tabpanes size= " + tabpanes.size());
+                    for (int i = 0; i < tabpanes.size(); i++) {
+                        SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                        int numtabs = tp.getTabCount();
+                        System.out.println("numtabs= " + numtabs);
 
-                            tp.removeTabAt(numtabs - 1);
-                            MainScreen ms = new MainScreen(tab, customvec);
-                            ms.setShowHeaders(includeheaders.isSelected());
-                            ms.setShowSeries(includeseries.isSelected());
-                            ms.setShowIngame(includeingame.isSelected());
-                            ms.setShowAdded(includeadded.isSelected());
-                            ms.setShowExtra(includeextra.isSelected());
-                            ms.setShowProps(includeprops.isSelected());
-                            tp.addTab(ms.getName(), null, ms, ms.getName());
+                        tp.removeTabAt(numtabs - 1);
+                        MainScreen ms = new MainScreen(tab, customvec);
+                        ms.setShowHeaders(includeheaders.isSelected());
+                        ms.setShowSeries(includeseries.isSelected());
+                        ms.setShowIngame(includeingame.isSelected());
+                        ms.setShowAdded(includeadded.isSelected());
+                        ms.setShowExtra(includeextra.isSelected());
+                        ms.setShowProps(includeprops.isSelected());
+                        tp.addTab(ms.getName(), null, ms, ms.getName());
 
 								/*
 								JPanel pnlTab = new JPanel(new GridBagLayout());
@@ -1044,37 +1038,37 @@ public class CustomTab2 extends JPanel {
 
 								*/
 
-                            tp.addTab("+", null, null, "+");
+                        tp.addTab("+", null, null, "+");
 
 
-                        }
+                    }
 
 
                 });
             } else {
                 checkAndRunInEDT(() -> {
 
-                        Vector tabpanes = AppController.getTabPanes();
-                        System.out.println("tabpanes size= " + tabpanes.size());
-                        for (int i = 0; i < tabpanes.size(); i++) {
-                            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                            int numtabs = tp.getTabCount();
-                            System.out.println("numtabs= " + numtabs);
+                    Vector tabpanes = AppController.getTabPanes();
+                    System.out.println("tabpanes size= " + tabpanes.size());
+                    for (int i = 0; i < tabpanes.size(); i++) {
+                        SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                        int numtabs = tp.getTabCount();
+                        System.out.println("numtabs= " + numtabs);
 
-                            MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
-                            oldms.makeDataModelsVisible(false);
-                            oldms.destroyMe();
+                        MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
+                        oldms.makeDataModelsVisible(false);
+                        oldms.destroyMe();
 
-                            MainScreen ms = new MainScreen(tab, customvec);
-                            ms.setShowHeaders(includeheaders.isSelected());
-                            ms.setShowSeries(includeseries.isSelected());
-                            ms.setShowIngame(includeingame.isSelected());
-                            ms.setShowAdded(includeadded.isSelected());
-                            ms.setShowExtra(includeextra.isSelected());
-                            ms.setShowProps(includeprops.isSelected());
-                            tp.setComponentAt(tabindex, ms);
-                            tp.refreshCurrentTab();
-                        }
+                        MainScreen ms = new MainScreen(tab, customvec);
+                        ms.setShowHeaders(includeheaders.isSelected());
+                        ms.setShowSeries(includeseries.isSelected());
+                        ms.setShowIngame(includeingame.isSelected());
+                        ms.setShowAdded(includeadded.isSelected());
+                        ms.setShowExtra(includeextra.isSelected());
+                        ms.setShowProps(includeprops.isSelected());
+                        tp.setComponentAt(tabindex, ms);
+                        tp.refreshCurrentTab();
+                    }
                 });
 
             }
