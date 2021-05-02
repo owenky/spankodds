@@ -5,6 +5,8 @@ import com.sia.client.ui.LineAlertManager;
 
 import java.sql.Timestamp;
 
+import static com.sia.client.config.Utils.log;
+
 
 public class Spreadline extends Line {
     static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, new Timestamp(1), 0);
@@ -189,6 +191,7 @@ public class Spreadline extends Line {
             }
         } catch (Exception ex) {
             this.whowasbet = "";
+            log(ex);
         }
 
         try {
@@ -196,7 +199,7 @@ public class Spreadline extends Line {
                 LineAlertManager.checkMove(this);
             }
         } catch (Exception ex) {
-            System.out.println("exception checking spread for linealert! " + ex);
+            log(ex);
         }
 
         BestLines.calculatebestspread(gameid, period);

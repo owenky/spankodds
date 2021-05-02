@@ -170,7 +170,6 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // repaint(Rectangle) should be ok
         test.repaint(test.getBounds());
         test.repaint(0, 0, 100, 100);
         test.repaint();

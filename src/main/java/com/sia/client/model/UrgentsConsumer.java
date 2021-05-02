@@ -48,7 +48,7 @@ public class UrgentsConsumer implements MessageListener {
             String changetype = mapMessage.getStringProperty("messageType");
 
         } catch (Exception e) {
-            log("exception urgent message consumer " + e);
+            log(e);
         }
     }
 

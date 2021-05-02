@@ -50,7 +50,6 @@ public class MainScreen extends JPanel {
     public boolean last = false;
     public String display = "default";
     public int period = 0;
-    private Vector adjusters = new Vector();//
     private List<String> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
     private Vector inprogressgames = new Vector();
@@ -74,6 +73,7 @@ public class MainScreen extends JPanel {
     public boolean showprops = true;
     public Vector customheaders = new Vector();
     private JScrollPane lastScrollPane;
+    private MainGameTable mainGameTable;
 
     public MainScreen(String name) {
         this.name = name;
@@ -1003,7 +1003,7 @@ public class MainScreen extends JPanel {
     }
     public void drawIt() {
 
-        MainGameTable mainGameTable = createMainGameTable();
+        mainGameTable = createMainGameTable();
         Vector newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -1082,8 +1082,7 @@ public class MainScreen extends JPanel {
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
         table0.addColumn(blankcol);
-        TableColumnAdjuster tca0 = new TableColumnAdjuster(table0);
-        adjusters.add(tca0);
+
         LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), table0, timesort, shortteam, opener, last);
         table0.setModel(dataModel0);
         JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
@@ -1096,8 +1095,6 @@ public class MainScreen extends JPanel {
 
         scrollPane0.setRowHeaderView(fixed0);
         scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
-        tca0.adjustColumns();
-
 
         scrollPane0.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scrollPane0.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
@@ -1175,9 +1172,6 @@ public class MainScreen extends JPanel {
             tablex.setModel(dataModel);
             datamodelsvec.add(dataModel);
             JScrollPane scrollPanex = new JScrollPane(tablex);
-            TableColumnAdjuster tcax = new TableColumnAdjuster(tablex);
-            adjusters.add(tcax);
-
 
             scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
             scrollPanex.getHorizontalScrollBar().setModel(scrollPane0.getHorizontalScrollBar().getModel());
@@ -1202,7 +1196,6 @@ public class MainScreen extends JPanel {
                 }
                 fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
                 scrollPanex.setRowHeaderView(fixedx);
-                tcax.adjustColumns();
 
             } else {
                 scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
@@ -1254,7 +1247,8 @@ public class MainScreen extends JPanel {
 
         removeAll();
         revalidate();
-        add(scrollPane0, BorderLayout.PAGE_START);
+        //TODO don't add scrollPane0
+//        add(scrollPane0, BorderLayout.PAGE_START);
         //TODO add mainGameTable instead of scrollPane to center
 //        add(scrollPane, BorderLayout.CENTER);
         mainGameTable.optimizeRowHeights();
@@ -1265,8 +1259,7 @@ public class MainScreen extends JPanel {
         AppController.addDataModels(getDataModels());
         log("Datamodels size is :" + AppController.getDataModels().size());
         //TODO disable following two lines
-        mainGameTable.adjustColumns(false);
-//        adjustcols(false);
+        adjustcols(true);
 //        firedatamodels();
         //END of TODO
 
@@ -1340,17 +1333,17 @@ public class MainScreen extends JPanel {
 
     public void adjustcols(boolean includeheader) {
         //TODO
-        log(new Exception("adjustcols called"));
+        log(new Exception("adjustcols called...."));
 
-        for (int i = 0; i < adjusters.size(); i++) {
-            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
-            col.adjustColumns(includeheader);
-        }
+//        for (int i = 0; i < adjusters.size(); i++) {
+//            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
+//            col.adjustColumns(includeheader);
+//        }
+        mainGameTable.adjustColumns(includeheader);
     }
 
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
-        adjusters.clear();
         datamodelsvec.clear();
         inprogressgames.clear();
         finalgames.clear();
@@ -1375,7 +1368,13 @@ public class MainScreen extends JPanel {
     }
     private MainGameTable createMainGameTable() {
         MainGameTable mainGameTable = new MainGameTable();
+        mainGameTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        mainGameTable.setIntercellSpacing(new Dimension(4,2));
+        mainGameTable.setPreferredScrollableViewportSize(mainGameTable.getPreferredSize());
         mainGameTable.setName(name);
+        JTableHeader tableHeader = mainGameTable.getTableHeader();
+        Font headerFont = new Font("Verdana", Font.BOLD, 11);
+        tableHeader.setFont(headerFont);
         return mainGameTable;
     }
     private JScrollPane makeMainTableScrollPane(JTable table) {

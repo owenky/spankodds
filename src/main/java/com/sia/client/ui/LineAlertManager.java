@@ -9,6 +9,8 @@ import com.sia.client.model.Spreadline;
 
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.log;
+
 public class LineAlertManager {
     public static void checkMove(Line line) {
         if (line == null) {
@@ -198,7 +200,7 @@ public class LineAlertManager {
                     }
                 }
             } catch (Exception ex) {
-                System.out.println("error iterating through lan " + ex);
+                log(ex);
             }
 
 

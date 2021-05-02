@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.sia.client.config.Utils.log;
+
 public class LineGames {
     private final List<Integer> gameIdList = new ArrayList<>();
     private static final Games games = AppController.getGames();
@@ -26,6 +28,10 @@ public class LineGames {
        return games.getGame(gameId);
     }
     public Game getByIndex(int index) {
+        //TODO remove debug check
+        if ( 0 > index || index > (gameIdList.size()-1)) {
+            log(new Exception("Index is out of bound: list size="+gameIdList.size()+", index="+index));
+        }
         return games.getGame(gameIdList.get(index));
     }
     public Game getGame(String gameId) {

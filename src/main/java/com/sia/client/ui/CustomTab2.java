@@ -365,9 +365,8 @@ public class CustomTab2 extends JPanel {
 
             }
         } catch (Exception ex) {
-            System.out.println("exception going through all games... " + ex);
-            System.out.println("game=" + g.getGame_id() + "...leagueid=" + g.getLeague_id() + "..subleagueid=" + g.getSubleague_id());
-            // System.out.println("sport="+s);
+            log("game=" + g.getGame_id() + "...leagueid=" + g.getLeague_id() + "..subleagueid=" + g.getSubleague_id());
+            log(ex);
         }
         for (int j = 0; j < gamegroupvec.size(); j++) {
             Vector thisvec = (Vector) gamegroupvec.elementAt(j);

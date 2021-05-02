@@ -303,7 +303,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void adjustcols(boolean includeheader) {
         MainScreen ms = (MainScreen) getSelectedComponent();
-        System.out.println("..adjusting cols");
+        log("..adjusting cols");
         ms.adjustcols(includeheader);
 
     }

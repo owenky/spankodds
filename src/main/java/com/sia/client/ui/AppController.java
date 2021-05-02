@@ -157,11 +157,9 @@ public class AppController {
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<Integer, String>();
     public static Vector<String> SportsTabPaneVector = new Vector<String>();
 
-    public static void initializeSportsTabPaneVectorFromUser()
-    {
+    public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
-        for(int i = 0; i < tabsindex.length; i++)
-        {
+        for (int i = 0; i < tabsindex.length; i++) {
             SpotsTabPaneVector.put(i, tabsindex[i]);
             // will be using this instead
             SportsTabPaneVector.add(tabsindex[i]);
@@ -169,106 +167,100 @@ public class AppController {
         }
     }
 
-    public static void initializeLineAlertVectorFromUser()
-    {
+    public static void initializeLineAlertVectorFromUser() {
         String[] linealerts = u.getLineAlerts().split("\\?");
-        for(int i = 0; i < linealerts.length; i++)
-        {
-         try {
-             String[] lanitems = linealerts[i].split("!");
-             String[] sportselected = lanitems[3].split(",");
-             String[] bookieselected = lanitems[4].split(",");
-             for(int k=0; k< sportselected.length;k++)
-             {
-                 System.out.println("sport"+k+"="+sportselected[k]);
-             }
-             Vector sportselectedvec = new Vector(Arrays.asList(sportselected));
-             Vector bookieselectedvec = new Vector(Arrays.asList(bookieselected));
-             int j = 5;
-             LineAlertNode lan2 = new LineAlertNode(
-                     lanitems[0],
-                     lanitems[1],
-                     Integer.parseInt(lanitems[2]),
-                     sportselectedvec,
-                     bookieselectedvec,
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     lanitems[j++],
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
+        for (int i = 0; i < linealerts.length; i++) {
+            try {
+                String[] lanitems = linealerts[i].split("!");
+                String[] sportselected = lanitems[3].split(",");
+                String[] bookieselected = lanitems[4].split(",");
+                for (int k = 0; k < sportselected.length; k++) {
+                    System.out.println("sport" + k + "=" + sportselected[k]);
+                }
+                Vector sportselectedvec = new Vector(Arrays.asList(sportselected));
+                Vector bookieselectedvec = new Vector(Arrays.asList(bookieselected));
+                int j = 5;
+                LineAlertNode lan2 = new LineAlertNode(
+                        lanitems[0],
+                        lanitems[1],
+                        Integer.parseInt(lanitems[2]),
+                        sportselectedvec,
+                        bookieselectedvec,
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        lanitems[j++],
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
 
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     lanitems[j++],
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        lanitems[j++],
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
 
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     lanitems[j++],
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        lanitems[j++],
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
 
 
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++]),
-                     Boolean.parseBoolean(lanitems[j++]),
-                     lanitems[j++],
-                     Boolean.parseBoolean(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Integer.parseInt(lanitems[j++]),
-                     Double.parseDouble(lanitems[j++])
-             );
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++]),
+                        Boolean.parseBoolean(lanitems[j++]),
+                        lanitems[j++],
+                        Boolean.parseBoolean(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Integer.parseInt(lanitems[j++]),
+                        Double.parseDouble(lanitems[j++])
+                );
 
-             linealertnodes.add(lan2);
-         }
-         catch(Exception ex)
-         {
-             System.out.println("exception loading in line alert="+linealerts[i]);
-             System.out.println(ex);
-         }
+                linealertnodes.add(lan2);
+            } catch (Exception ex) {
+                log("exception loading in line alert=" + linealerts[i]);
+                log(ex);
+            }
 
         }
     }
 
-    public static void initializSpotsTabPaneVector()
-    {
+    public static void initializSpotsTabPaneVector() {
     }
 
     public static Vector getMainTabVec() {
@@ -479,7 +471,7 @@ public class AppController {
 
     public static Vector getLineAlertNodes() {
         if (linealertnodes.size() != 0) {
-           // linealertnodes.add(0,new LineAlertNode("Please Select Line Alert"));
+            // linealertnodes.add(0,new LineAlertNode("Please Select Line Alert"));
         }
         return linealertnodes;
     }
@@ -490,7 +482,7 @@ public class AppController {
 
     public static void addDataModels(List<LinesTableData> v) {
         for (int i = 0; i < v.size(); i++) {
-            addDataModel( v.get(i));
+            addDataModel(v.get(i));
         }
 
     }
@@ -618,10 +610,8 @@ public class AppController {
 
     public static void refreshTabs3() {
         for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+            SportsTabPane tp = tabpanes.get(i);
             if (tp != null) {
-
-
                 try {
                     tp.refreshCurrentTab();
                 } catch (Exception ex) {
@@ -630,9 +620,9 @@ public class AppController {
             }
         }
     }
+
     public static void clearAll() {
         for (int k = 0; k < tabpanes.size(); k++) {
-
             SportsTabPane stb = tabpanes.get(k);
             stb.clearAll();
 
@@ -668,6 +658,7 @@ public class AppController {
     public static void setLinesTableData(LinesTableData tab) {
         linestabledata = tab;
     }
+
     public static String getLoginQueue() {
         return loginQueue;
     }
@@ -771,7 +762,7 @@ public class AppController {
         try {
             userPrefsProducer = new UserPrefsProducer();
         } catch (Exception e) {
-            System.out.println("error creating userprefs producer! " + e);
+            log(e);
         }
 
     }
@@ -1068,7 +1059,7 @@ public class AppController {
         checkAndRunInEDT(() -> {
             for (int k = 0; k < tabpanes.size(); k++) {
 
-                SportsTabPane stb =tabpanes.get(k);
+                SportsTabPane stb = tabpanes.get(k);
                 stb.moveGameToThisHeader(g, header);
 
             }

@@ -63,9 +63,13 @@ public class MainGameTable extends JTable {
     private TableColumnAdjuster getTableColumnAdjuster() {
         if ( null == tableColumnAdjuster) {
             tableColumnAdjuster = new TableColumnAdjuster(this);
-            this.getModel().addTableModelListener(e -> {
-                tableColumnAdjuster.adjustColumn(e.getColumn());
-            });
+            tableColumnAdjuster.setColumnHeaderIncluded(true);
+            //TODO add listener?
+//            this.getModel().addTableModelListener(e -> {
+//                if ( 0 <= e.getColumn() ) {
+//                    tableColumnAdjuster.adjustColumn(e.getColumn());
+//                }
+//            });
         }
         return tableColumnAdjuster;
     }

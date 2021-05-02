@@ -25,11 +25,8 @@ public class FireThread extends Thread {
             } catch (Exception ex) {
                 log(ex);
             }
-
-
-            //System.out.println("fired table!");
         } catch (Exception ex) {
-            System.out.println("exception firethread!");
+            log(ex);
         }
     }
 

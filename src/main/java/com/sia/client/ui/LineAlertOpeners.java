@@ -892,6 +892,7 @@ class LineAlertOpeners implements ItemListener {
                 playSound("openers.wav");
             } catch (Exception ex) {
                 showMessageDialog(null, "Error Playing File!");
+                log(ex);
             }
         });
 
@@ -1223,8 +1224,8 @@ class LineAlertOpeners implements ItemListener {
             clip.open(audioInputStream);
             clip.start();
         } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
             JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
+            log(ex);
         }
     }
 
@@ -1895,8 +1896,7 @@ class LineAlertOpeners implements ItemListener {
 
             return treeModel;
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
+            log(e);
         }
         return null;
 
@@ -1940,8 +1940,7 @@ class LineAlertOpeners implements ItemListener {
 
             return treeModel;
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
+            log(e);
         }
         return null;
     }
@@ -2001,8 +2000,7 @@ class LineAlertOpeners implements ItemListener {
 
 
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
+            log(e);
         }
 
 
@@ -2064,8 +2062,7 @@ class LineAlertOpeners implements ItemListener {
                 }
 
             } catch (Exception e) {
-                //noinspection CallToPrintStackTrace
-                e.printStackTrace();
+                log(e);
             }
 
         }

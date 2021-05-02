@@ -720,7 +720,6 @@ public class GameAlert {
 
             return treeModel;
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
             log(e);
         }
         return null;

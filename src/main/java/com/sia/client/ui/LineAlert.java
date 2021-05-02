@@ -59,6 +59,8 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.log;
+
 
 public class LineAlert implements ItemListener {
 
@@ -665,10 +667,12 @@ else if(alerttype.equalsIgnoreCase("Injury"))
         try {
             enablepopup.setSelected(Boolean.parseBoolean(prefs[0]));
         } catch (Exception ex) {
+            log(ex);
         }
         try {
             enablesound.setSelected(Boolean.parseBoolean(prefs[1]));
         } catch (Exception ex) {
+            log(ex);
         }
 
         int FPS_MIN = 5;
@@ -774,6 +778,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     //playSound(defaultsoundfileplay);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error Playing File!");
+                    log(ex);
                 }
             }
         });
@@ -1230,6 +1235,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     //playSound(defaultsoundfileplay);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error Playing File!");
+                    log(ex);
                 }
             }
         });
@@ -1241,6 +1247,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     //playSound(defaultsoundfileplay);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error Playing File!");
+                    log(ex);
                 }
             }
         });
@@ -1252,6 +1259,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     //playSound(defaultsoundfileplay);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error Playing File!");
+                    log(ex);
                 }
             }
         });
@@ -1263,6 +1271,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     //playSound(defaultsoundfileplay);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error Playing File!");
+                    log(ex);
                 }
             }
         });
@@ -2184,8 +2193,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
 
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
+            log(e);
         }
 
 
@@ -2240,20 +2248,16 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                 trees[z] = thistree;
 
                 if (z == 0) {
-                    //treePanel.add(new JScrollPane(thistree));
-                    //treePanel.add(new JScrollPane());
                     treePanel.add(new JLabel(""));
                 }
 
             } catch (Exception e) {
-                //noinspection CallToPrintStackTrace
-                e.printStackTrace();
+                log(e);
             }
 
         }
 
     }
-
     public void playSound(String file) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
@@ -2261,8 +2265,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             clip.open(audioInputStream);
             clip.start();
         } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
             JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
+            log(ex);
         }
     }
     public void itemStateChanged(ItemEvent e) {
@@ -2592,7 +2596,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
             } catch (Exception ex3) {
                 //noinspection CallToPrintStackTrace
-                ex3.printStackTrace();
+                log(ex3);
             }
 
 
@@ -2672,8 +2676,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                 }
 
             } catch (Exception ex4) {
-                //noinspection CallToPrintStackTrace
-                ex4.printStackTrace();
+                log(ex4);
             }
 
 
