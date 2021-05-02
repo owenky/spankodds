@@ -38,6 +38,10 @@ public class MainGameTableModel extends DefaultTableModel {
         }
         return rowCount;
     }
+    @Override
+    public int getColumnCount() {
+        return super.getColumnCount();
+    }
     public LtdSrhStruct getLinesTableData(int rowModelIndex) {
         int modelIndex=0;
         LinesTableData rtn = null;

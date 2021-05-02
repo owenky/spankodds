@@ -4,7 +4,13 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableCellRenderer;
+
+import static com.sia.client.config.Utils.log;
 
 public class MainGameTable extends JTable {
 
@@ -70,6 +76,35 @@ public class MainGameTable extends JTable {
 //                    tableColumnAdjuster.adjustColumn(e.getColumn());
 //                }
 //            });
+
+            //TODO debug code block
+            this.getColumnModel().addColumnModelListener( new TableColumnModelListener() {
+
+                @Override
+                public void columnAdded(final TableColumnModelEvent e) {
+
+                }
+
+                @Override
+                public void columnRemoved(final TableColumnModelEvent e) {
+                    log("columnRemoved....column size="+MainGameTable.this.getColumnCount());
+                }
+
+                @Override
+                public void columnMoved(final TableColumnModelEvent e) {
+
+                }
+
+                @Override
+                public void columnMarginChanged(final ChangeEvent e) {
+
+                }
+
+                @Override
+                public void columnSelectionChanged(final ListSelectionEvent e) {
+
+                }
+            });
         }
         return tableColumnAdjuster;
     }

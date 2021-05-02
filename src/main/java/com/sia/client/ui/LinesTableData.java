@@ -10,16 +10,12 @@ import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
 
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -109,9 +105,18 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
             }
         }
-        resetDataVector();
+        Vector<Vector<Object>> dataVector = populateDataVector();
+        setDataVector(dataVector, m_columns);
     }
     private void resetDataVector() {
+
+//        this.getDataVector().clear();
+//        this.getDataVector().addAll(populateDataVector());
+        Vector<Vector<Object>> dataVector = populateDataVector();
+        setDataVector(dataVector, m_columns);
+
+    }
+    private  Vector<Vector<Object>> populateDataVector(){
         if (timesort) {
             gamesVec.sort(new GameDateSorter().thenComparing(new GameTimeSorter()).thenComparing(new GameNumSorter()));
         } else {
@@ -136,7 +141,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
                 log("error calculating best all " + ex);
             }
         }
-        setDataVector(dataVector, m_columns);
+        return dataVector;
     }
     private Vector<Object> makeRowData(Game g) {
         Vector<Object> rowData = new Vector<>(LazyInitializer.bookiesVec.size());
@@ -330,26 +335,30 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
     public void timesort() {
         timesort = true;
-        setInitialData();
-        JViewport parent = (JViewport) thistable.getParent();
-        JScrollPane scrollpane = (JScrollPane) parent.getParent();
-        scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-        thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-        Container comp = scrollpane.getParent();
-        comp.revalidate();
+//        setInitialData();
+//        JViewport parent = (JViewport) thistable.getParent();
+//        JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//        scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//        thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//        Container comp = scrollpane.getParent();
+//        comp.revalidate();
+//        checkAndRunInEDT(() -> fireTableDataChanged());
+        resetDataVector(); //including sorting gamesVec
         checkAndRunInEDT(() -> fireTableDataChanged());
 
     }
 
     public void gmnumsort() {
         timesort = false;
-        setInitialData();
-        JViewport parent = (JViewport) thistable.getParent();
-        JScrollPane scrollpane = (JScrollPane) parent.getParent();
-        scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-        thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-        Container comp = scrollpane.getParent();
-        comp.revalidate();
+//        setInitialData();
+//        JViewport parent = (JViewport) thistable.getParent();
+//        JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//        scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//        thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//        Container comp = scrollpane.getParent();
+//        comp.revalidate();
+//        checkAndRunInEDT(() -> fireTableDataChanged());
+        resetDataVector(); //including sorting gamesVec
         checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
@@ -394,14 +403,16 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //        return null; // didn't find it
         Game g = gamesVec.removeGameId(gameidtoremove);
         if ( null != g) {
-            setInitialData();
-            JViewport parent = (JViewport) thistable.getParent();
-            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-            scrollpane.revalidate();
-            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-            Container comp = scrollpane.getParent();
-            comp.revalidate();
+//            setInitialData();
+//            JViewport parent = (JViewport) thistable.getParent();
+//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//            scrollpane.revalidate();
+//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//            Container comp = scrollpane.getParent();
+//            comp.revalidate();
+            resetDataVector(); //including sorting gamesVec
+            checkAndRunInEDT(() -> fireTableDataChanged());
         }
         return g;
     }
@@ -429,16 +440,18 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
                 }
             }
 
-            setInitialData();
-            JViewport parent = (JViewport) thistable.getParent();
-            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-
-            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-            scrollpane.revalidate();
-            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-            Container comp = scrollpane.getParent();
-            comp.revalidate();
-            AppController.enableTabs();
+//            setInitialData();
+//            JViewport parent = (JViewport) thistable.getParent();
+//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//
+//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//            scrollpane.revalidate();
+//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//            Container comp = scrollpane.getParent();
+//            comp.revalidate();
+//            AppController.enableTabs();
+            resetDataVector(); //including sorting gamesVec
+            checkAndRunInEDT(() -> fireTableDataChanged());
         }
     }
 
@@ -458,20 +471,22 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
                     iterator.remove();
                     removal = true;
                 } catch (Exception ex) {
-                    System.out.println("error removing from vector!");
+                    log("error removing from vector!");
                 }
             }
         }
         if (removal) {
-            setInitialData();
-            JViewport parent = (JViewport) thistable.getParent();
-            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-
-            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-            scrollpane.revalidate();
-            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-            Container comp = scrollpane.getParent();
-            comp.revalidate();
+//            setInitialData();
+//            JViewport parent = (JViewport) thistable.getParent();
+//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//
+//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//            scrollpane.revalidate();
+//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//            Container comp = scrollpane.getParent();
+//            comp.revalidate();
+            resetDataVector(); //including sorting gamesVec
+            checkAndRunInEDT(() -> fireTableDataChanged());
         }
         AppController.enableTabs();
     }
@@ -490,7 +505,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //                thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
 //                Container comp = scrollpane.getParent();
 //                comp.revalidate();
-                this.fireTableDataChanged();
+                checkAndRunInEDT(() -> fireTableDataChanged());
             }
         }
     }

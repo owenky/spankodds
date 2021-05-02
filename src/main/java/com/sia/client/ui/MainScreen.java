@@ -158,7 +158,11 @@ public class MainScreen extends JPanel {
     public void removeGame(int gameid) {
         List<LinesTableData> v = getDataModels();
         for (int j = 0; j < v.size(); j++) {
-            v.get(j).removeGameId(gameid);
+            //TODO add if logic
+            if ( null != v.get(j).removeGameId(gameid) ) {
+                //gameid is removed from a LinesTableData, don't need to continue because a gameid can only be in one LinesTableData
+                break;
+            }
         }
     }
 
@@ -899,8 +903,8 @@ public class MainScreen extends JPanel {
 
         //TODO disable firedatamodels
 //        timer.start();
+//        log("timer start");
         //END of debug TODO
-        log("timer start");
     }
 
     public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
@@ -1281,9 +1285,9 @@ public class MainScreen extends JPanel {
         });
         //TODO disable it for debug
 //        timer2.start();
+//        log("timer2 start");
+//        log("drawit end..." + new java.util.Date());
         //END of Debug TODO
-        log("timer2 start");
-        log("drawit end..." + new java.util.Date());
     }
 
     public void firedatamodels() {
@@ -1333,8 +1337,6 @@ public class MainScreen extends JPanel {
 
     public void adjustcols(boolean includeheader) {
         //TODO
-        log(new Exception("adjustcols called...."));
-
 //        for (int i = 0; i < adjusters.size(); i++) {
 //            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
 //            col.adjustColumns(includeheader);
@@ -1371,6 +1373,9 @@ public class MainScreen extends JPanel {
         mainGameTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setPreferredScrollableViewportSize(mainGameTable.getPreferredSize());
+        //since there is no setDateVector() is called for this table, columnIdentifiers of this table is blank
+        //MainGameTableModel.this.fireTableChanged(e) would wipe out this table if autoCreateColumnsFromModel is true
+        mainGameTable.setAutoCreateColumnsFromModel(false);
         mainGameTable.setName(name);
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
