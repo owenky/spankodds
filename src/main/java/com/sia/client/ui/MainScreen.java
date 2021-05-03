@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Games;
@@ -127,7 +128,7 @@ public class MainScreen extends JPanel {
             final LinesTableData ltd = v.get(j);
             status = ltd.checktofire(gameid);
             if ( status ) {
-                this.getMainGameTable().adjustColumnsOn(ltd,gameid);
+                Utils.checkAndRunInEDT(()->this.getMainGameTable().adjustColumnsOn(ltd,gameid));
                 break;
             }
         }

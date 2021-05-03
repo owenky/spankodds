@@ -1,7 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JTable;
@@ -149,8 +147,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
             int cellWidth = this.getCellDataWidth(rowModelIndex,colIndex);
             TableColumn tc = tcm.getColumn(colIndex);
             if ( cellWidth > tc.getPreferredWidth()) {
-                final int columnIndex = colIndex;
-                Utils.checkAndRunInEDT(()-> this.updateTableColumn(columnIndex,cellWidth));
+                this.updateTableColumn(colIndex,cellWidth);
 log("column "+colIndex+" got updated.");
             } else {
 log("column "+colIndex+" SKIPPPPPPPP updated.");
