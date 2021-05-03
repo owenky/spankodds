@@ -7,6 +7,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class MainGameTableModel extends DefaultTableModel {
 
@@ -14,10 +15,20 @@ public class MainGameTableModel extends DefaultTableModel {
     private final LinesTableDataListner linesTableDataListner = new LinesTableDataListner();
 
     public MainGameTableModel() {
+
     }
     public void addGameLine(LinesTableData gameLine) {
+        gameLine.setIndex(gameLines.size());
         gameLines.add(gameLine);
         removeAndAddTableModelListener(gameLine);
+    }
+    public int getRowModelIndex(LinesTableData ltd, int gameId) {
+        int gameIndex = ltd.getRowIndex(gameId);
+        int offset=0;
+        for(int i=0;i<ltd.getIndex();i++) {
+            offset+=gameLines.get(i).getRowCount();
+        }
+        return gameIndex+offset;
     }
     @Override
     public Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -65,6 +76,23 @@ public class MainGameTableModel extends DefaultTableModel {
             }
         }
         gameLine.addTableModelListener(linesTableDataListner);
+    }
+    @Override
+    public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
+        throw new IllegalStateException("Pending implementation");
+    }
+    @Override
+    public void setDataVector(Vector dataVector, Vector columnIndetifiers) {
+        if ( 0 == dataVector.size() && 0 == columnIndetifiers.size()) {
+            //necessary for default constructor
+            super.setDataVector(dataVector,columnIndetifiers);
+        } else {
+            throw new IllegalStateException("method not supported");
+        }
+    }
+    @Override
+    public void setDataVector(Object[][] dataVector, Object [] columnIndetifiers) {
+        throw new IllegalStateException("method not supported");
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct {

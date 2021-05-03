@@ -635,21 +635,23 @@ public class AppController {
         for (int k = 0; k < tabpanes.size(); k++) {
 
             SportsTabPane stb = tabpanes.get(k);
-            stb.fireAllTableDataChanged(gameid);
-
+            boolean status = stb.fireAllTableDataChanged(gameid);
+            if ( status ) {
+                break;
+            }
         }
     }
-
-    public static void fireAllTableStructureChanged() {
-        for (int i = 0; i < dataModels.size(); i++) {
-            LinesTableData ltd = dataModels.get(i);
-
-            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
-
-
-        }
-
-    }
+//
+//    public static void fireAllTableStructureChanged() {
+//        for (int i = 0; i < dataModels.size(); i++) {
+//            LinesTableData ltd = dataModels.get(i);
+//
+//            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
+//
+//
+//        }
+//
+//    }
 
     public static LinesTableData getLinesTableData() {
         return linestabledata;

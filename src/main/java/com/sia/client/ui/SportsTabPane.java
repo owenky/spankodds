@@ -475,10 +475,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public void fireAllTableDataChanged(int gameid) {
+    public boolean fireAllTableDataChanged(int gameid) {
 
         MainScreen ms = (MainScreen) getSelectedComponent();
-        ms.checktofire(gameid);
+        return ms.checktofire(gameid);
 
     }
 

@@ -10,8 +10,13 @@ import java.util.List;
 
 public class LineGames {
     private final List<Integer> gameIdList = new ArrayList<>();
-    private static final Games games = AppController.getGames();
-
+    private final Games gameCache;
+    public LineGames() {
+        this(AppController.getGames());
+    }
+    public LineGames(Games gameCache) {
+        this.gameCache = gameCache;
+    }
     public int getRowIndex(int gameId) {
         int index = -1;
         for(int i=0;i<gameIdList.size();i++) {
@@ -23,10 +28,10 @@ public class LineGames {
         return index;
     }
     public Game getGame(int gameId) {
-       return games.getGame(gameId);
+       return gameCache.getGame(gameId);
     }
     public Game getByIndex(int index) {
-        return games.getGame(gameIdList.get(index));
+        return gameCache.getGame(gameIdList.get(index));
     }
     public Game getGame(String gameId) {
         return getGame(Integer.parseInt(gameId));
@@ -51,8 +56,8 @@ public class LineGames {
     }
     public void sort(Comparator<? super Game> comparator) {
         Comparator<Integer> idComparator = (id1,id2)-> {
-            Game g1 = games.getGame(id1);
-            Game g2 = games.getGame(id2);
+            Game g1 = gameCache.getGame(id1);
+            Game g2 = gameCache.getGame(id2);
             return comparator.compare(g1,g2);
         };
         gameIdList.sort(idComparator);
@@ -75,7 +80,7 @@ public class LineGames {
             @Override
             public Game next() {
                 nextId = idIterator.next();
-                return games.getGame(nextId);
+                return gameCache.getGame(nextId);
             }
 
             @Override
@@ -89,7 +94,7 @@ public class LineGames {
     }
     public Game removeGameId(Integer gameId) {
         if ( gameIdList.remove(gameId) ) {
-            return games.getGame(gameId);
+            return gameCache.getGame(gameId);
         } else {
             return null;
         }

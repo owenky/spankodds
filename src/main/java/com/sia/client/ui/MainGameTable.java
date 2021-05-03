@@ -63,6 +63,10 @@ public class MainGameTable extends JTable {
     public void adjustColumns(boolean includeHeaders) {
         getTableColumnAdjuster().adjustColumns(includeHeaders);
     }
+    public void adjustColumnsOn(LinesTableData ltd, int gameId) {
+        int rowModelIndex = getModel().getRowModelIndex(ltd,gameId);
+        getTableColumnAdjuster().adjustColumnsOnRow(rowModelIndex);
+    }
     public void adjustColumn(int col) {
         getTableColumnAdjuster().adjustColumn(col);
     }
@@ -70,13 +74,6 @@ public class MainGameTable extends JTable {
         if ( null == tableColumnAdjuster) {
             tableColumnAdjuster = new TableColumnAdjuster(this);
             tableColumnAdjuster.setColumnHeaderIncluded(true);
-            //TODO add listener?
-//            this.getModel().addTableModelListener(e -> {
-//                if ( 0 <= e.getColumn() ) {
-//                    tableColumnAdjuster.adjustColumn(e.getColumn());
-//                }
-//            });
-
             //TODO debug code block
             this.getColumnModel().addColumnModelListener( new TableColumnModelListener() {
 
@@ -105,6 +102,7 @@ public class MainGameTable extends JTable {
 
                 }
             });
+            //END OF DEBUG TODO
         }
         return tableColumnAdjuster;
     }

@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JTable;
@@ -41,7 +43,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     private boolean isColumnDataIncluded;
     private boolean isOnlyAdjustLarger;
     private boolean isDynamicAdjustment;
-    private Map<TableColumn, Integer> columnSizes = new HashMap<TableColumn, Integer>();
+    private Map<TableColumn, Integer> columnSizes = new HashMap<>();
 
     /*
      *  Specify the table and use default spacing
@@ -141,7 +143,20 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         table.getInputMap().put(ks, key);
         table.getActionMap().put(key, action);
     }
-
+    public void adjustColumnsOnRow(int rowModelIndex) {
+        TableColumnModel tcm = table.getColumnModel();
+        for(int colIndex=0;colIndex<tcm.getColumnCount();colIndex++) {
+            int cellWidth = this.getCellDataWidth(rowModelIndex,colIndex);
+            TableColumn tc = tcm.getColumn(colIndex);
+            if ( cellWidth > tc.getPreferredWidth()) {
+                final int columnIndex = colIndex;
+                Utils.checkAndRunInEDT(()-> this.updateTableColumn(columnIndex,cellWidth));
+log("column "+colIndex+" got updated.");
+            } else {
+log("column "+colIndex+" SKIPPPPPPPP updated.");
+            }
+        }
+    }
     /*
      *  Adjust the widths of all the columns in the table
      */
@@ -151,9 +166,11 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         if (tcm == null) {
             log("tcm is null!");
         }
+ long begin=System.currentTimeMillis();
         for (int i = 0; i < tcm.getColumnCount(); i++) {
             adjustColumn(i);
         }
+ log("update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
     }
 
     /*

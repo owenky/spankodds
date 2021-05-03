@@ -120,12 +120,18 @@ public class MainScreen extends JPanel {
         name = n;
     }
 
-    public void checktofire(int gameid) {
+    public boolean checktofire(int gameid) {
         List<LinesTableData> v = getDataModels();
+        boolean status = false;
         for (int j = 0; j < v.size(); j++) {
-            v.get(j).checktofire(gameid);
+            final LinesTableData ltd = v.get(j);
+            status = ltd.checktofire(gameid);
+            if ( status ) {
+                this.getMainGameTable().adjustColumnsOn(ltd,gameid);
+                break;
+            }
         }
-
+        return status;
     }
 
     public List<LinesTableData> getDataModels() {
@@ -1343,7 +1349,9 @@ public class MainScreen extends JPanel {
 //        }
         mainGameTable.adjustColumns(includeheader);
     }
-
+    public MainGameTable getMainGameTable() {
+        return mainGameTable;
+    }
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
         datamodelsvec.clear();

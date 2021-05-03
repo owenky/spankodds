@@ -1,6 +1,9 @@
 package com.sia.client.ui;
 
 
+import com.sia.client.model.Bookie;
+import com.sia.client.model.Game;
+import com.sia.client.model.Games;
 import org.junit.Test;
 
 import javax.swing.table.TableColumn;
@@ -10,6 +13,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class MainGameTableTest {
 
+    private static Games gameCache = new Games();
     @Test
     public void testgetValueAt() {
         MainGameTable table = new MainGameTable();
@@ -28,23 +32,29 @@ public class MainGameTableTest {
         assertEquals(4000,table.getValueAt(11,0));
     }
     private LinesTableData makeGameRegion(int seed) {
-        LinesTableData gr = new LinesTableData();
-        Vector dataVector = new Vector();
-        Vector columnIdentifier = new Vector();
-        columnIdentifier.add("testColumn");
-        Vector row = new Vector();
-        row.add(seed);
-        dataVector.add(row);
 
-        row = new Vector();
-        row.add(seed*10);
-        dataVector.add(row);
+        Vector<Bookie> columns = new Vector<>();
+        columns.add(new Bookie(-1,"test","test","test","test"));
 
-        row = new Vector();
-        row.add(seed*100);
-        dataVector.add(row);
+        Vector<Game> games = new Vector<>();
+        Game g = new Game();
+        g.setGame_id(seed);
+        games.add(g);
 
-        gr.setDataVector(dataVector,columnIdentifier);
+        g = new Game();
+        g.setGame_id(seed*10);
+        games.add(g);
+
+        g = new Game();
+        g.setGame_id(seed*100);
+        games.add(g);
+
+        g = new Game();
+        g.setGame_id(seed*1000);
+        games.add(g);
+
+        gameCache.add(g);
+        LinesTableData gr = new LinesTableData(games,columns,gameCache);
         return gr;
     }
 }

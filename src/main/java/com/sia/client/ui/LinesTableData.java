@@ -19,7 +19,6 @@ import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -35,7 +34,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public String sport = "";
     protected SimpleDateFormat m_frm;
     protected Date m_date;
-    private final LineGames gamesVec = new LineGames();
+    private final LineGames gamesVec;
     boolean timesort = false;
     boolean shortteam = false;
     boolean inview = false;
@@ -44,34 +43,45 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     int lastbookieremoved = 0;
     long cleartime = 100;
     JTable thistable;
+    private int index;
 
-    public LinesTableData() {
-
+    public LinesTableData(Vector<Game> gameVec,Vector<Bookie> bookieVector,Games gameCache) {
+        m_frm = new SimpleDateFormat("MM/dd/yyyy");
+        this.gamesVec = new LineGames(gameCache);
+        this.gamesVec.addAll(gameVec);
+        setInitialData(bookieVector);
     }
-
-    public LinesTableData(long cleartime, Vector<Game> gamesVec) {
+    public LinesTableData(long cleartime, Vector<Game> gameVec) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
-        this.gamesVec.addAll(gamesVec);
-        setInitialData();
+        this.gamesVec = new LineGames();
+        this.gamesVec.addAll(gameVec);
+        setInitialData(LazyInitializer.bookiesVec);
     }
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gamesVec,JTable thetable, boolean timesort, boolean shortteam, boolean opener, boolean last) {
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec,JTable thetable, boolean timesort, boolean shortteam, boolean opener, boolean last) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
-        this.gamesVec.addAll(gamesVec);
+        this.gamesVec = new LineGames();
+        this.gamesVec.addAll(gameVec);
         this.timesort = timesort;
         this.shortteam = shortteam;
         this.display = display;
         this.period = period;
         thistable = thetable;
-        setInitialData();
+        setInitialData(LazyInitializer.bookiesVec);
         if (opener) {
             showOpener();
         } else if (last) {
             showPrior();
         }
     }
-    private void setInitialData() {
+    public void setIndex(int index) {
+        this.index = index;
+    }
+    public int getIndex() {
+        return index;
+    }
+    private void setInitialData(Vector<Bookie> bookieVec) {
         try {
             m_date = m_frm.parse("12/18/2004");
         } catch (java.text.ParseException ex) {
@@ -79,8 +89,8 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         }
         m_columns = new Vector<>();
 
-        for (int j = 0; j < LazyInitializer.bookiesVec.size(); j++) {
-            Bookie b = LazyInitializer.bookiesVec.get(j);
+        for (int j = 0; j < bookieVec.size(); j++) {
+            Bookie b = bookieVec.get(j);
             int bookieid = b.getBookie_id();
 
             if (bookieid == 990) {
@@ -105,18 +115,18 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
             }
         }
-        Vector<Vector<Object>> dataVector = populateDataVector();
+        Vector<Vector<Object>> dataVector = populateDataVector(bookieVec);
         setDataVector(dataVector, m_columns);
     }
     private void resetDataVector() {
 
 //        this.getDataVector().clear();
 //        this.getDataVector().addAll(populateDataVector());
-        Vector<Vector<Object>> dataVector = populateDataVector();
+        Vector<Vector<Object>> dataVector = populateDataVector(LazyInitializer.bookiesVec);
         setDataVector(dataVector, m_columns);
 
     }
-    private  Vector<Vector<Object>> populateDataVector(){
+    private  Vector<Vector<Object>> populateDataVector(Vector<Bookie> bookieVector){
         if (timesort) {
             gamesVec.sort(new GameDateSorter().thenComparing(new GameTimeSorter()).thenComparing(new GameNumSorter()));
         } else {
@@ -125,7 +135,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         Vector<Vector<Object>> dataVector = new Vector<>(gamesVec.size());
         for (int i = 0; i < gamesVec.size(); i++) {
             Game g = gamesVec.getByIndex(i);
-            Vector<Object> rowData = makeRowData(g);
+            Vector<Object> rowData = makeRowData(g,bookieVector);
             dataVector.add(rowData);
             try {
 
@@ -143,14 +153,14 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         }
         return dataVector;
     }
-    private Vector<Object> makeRowData(Game g) {
-        Vector<Object> rowData = new Vector<>(LazyInitializer.bookiesVec.size());
+    private Vector<Object> makeRowData(Game g,Vector<Bookie> bookieVector) {
+        Vector<Object> rowData = new Vector<>(bookieVector.size());
         int gameid = g.getGame_id();
 
         int leagueID = g.getLeague_id();
 
-        for (int j = 0; j < LazyInitializer.bookiesVec.size(); j++) {
-            Bookie b = LazyInitializer.bookiesVec.get(j);
+        for (int j = 0; j < bookieVector.size(); j++) {
+            Bookie b = bookieVector.get(j);
             Object value = "";
             try {
                 int bookieid = b.getBookie_id();
@@ -240,12 +250,14 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public void columnSelectionChanged(ListSelectionEvent e) {
         System.out.println("Column SelectionChanged!!!");
     }
-
-    public Bookie getBookie(int bookieid) {
-        return LazyInitializer.bookies.get("" + bookieid);
-
+//
+//    public Bookie getBookie(int bookieid) {
+//        return LazyInitializer.bookies.get("" + bookieid);
+//
+//    }
+    public int getRowIndex(int gameId) {
+        return gamesVec.getRowIndex(gameId);
     }
-
     public boolean isShowingPrior() {
         return showingPrior;
     }
@@ -362,16 +374,19 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         checkAndRunInEDT(() -> fireTableDataChanged());
     }
 
-    public void checktofire(int gameid) {
+    public boolean checktofire(int gameid) {
 
-        if (gamesVec.containsGameId(gameid)) {
+        boolean status = gamesVec.containsGameId(gameid);
+        if (status) {
             fire();
         }
-
+        return status;
     }
 
     public void fire() {
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        checkAndRunInEDT(() -> {
+            fireTableDataChanged();
+        });
     }
 
     public Game removeGameId(int gameidtoremove) {
@@ -509,10 +524,6 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
             }
         }
     }
-    public void rebuild() {
-        setInitialData();
-    }
-
     public String getTitle() {
         if (m_date == null) {
             return "Stock Quotes";
@@ -521,7 +532,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     }
 
     private static abstract class LazyInitializer {
-        private static final Hashtable<String, Bookie> bookies = AppController.getBookies();
+//        private static final Hashtable<String, Bookie> bookies = AppController.getBookies();
         private static final Vector<Bookie> bookiesVec = AppController.getBookiesVec();
     }
 }
