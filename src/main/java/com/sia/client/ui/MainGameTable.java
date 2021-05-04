@@ -63,9 +63,8 @@ public class MainGameTable extends JTable {
     public void adjustColumns(boolean includeHeaders) {
         getTableColumnAdjuster().adjustColumns(includeHeaders);
     }
-    public void adjustColumnsOn(LinesTableData ltd, int gameId) {
-        int rowModelIndex = getModel().getRowModelIndex(ltd,gameId);
-        getTableColumnAdjuster().adjustColumnsOnRow(rowModelIndex);
+    public void adjustColumnsOn(Integer ... gameIds) {
+        getTableColumnAdjuster().adjustColumnsOnRow(gameIds);
     }
     public void adjustColumn(int col) {
         getTableColumnAdjuster().adjustColumn(col);

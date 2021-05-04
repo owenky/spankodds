@@ -141,18 +141,25 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         table.getInputMap().put(ks, key);
         table.getActionMap().put(key, action);
     }
-    public void adjustColumnsOnRow(int rowModelIndex) {
+    private AdjustStatic adjustStatic = new AdjustStatic();
+    public void adjustColumnsOnRow(Integer ... rowModelIndice) {
+        adjustStatic.start(rowModelIndice.length);
         TableColumnModel tcm = table.getColumnModel();
         for(int colIndex=0;colIndex<tcm.getColumnCount();colIndex++) {
-            int cellWidth = this.getCellDataWidth(rowModelIndex,colIndex);
+            int maxCellWidth = 0;
+            for(int rowModelIndex:rowModelIndice) {
+                int cellWidth = this.getCellDataWidth(rowModelIndex, colIndex);
+                maxCellWidth = Math.max(maxCellWidth, cellWidth);
+            }
             TableColumn tc = tcm.getColumn(colIndex);
-            if ( cellWidth > tc.getPreferredWidth()) {
-                this.updateTableColumn(colIndex,cellWidth);
-log("column "+colIndex+" got updated.");
+            if ( maxCellWidth > tc.getPreferredWidth()) {
+                this.updateTableColumn(colIndex,maxCellWidth);
+                adjustStatic.addAdjustCount();
             } else {
-log("column "+colIndex+" SKIPPPPPPPP updated.");
+                adjustStatic.addSkipCount();
             }
         }
+        adjustStatic.finish();
     }
     /*
      *  Adjust the widths of all the columns in the table
@@ -421,7 +428,7 @@ log("column "+colIndex+" SKIPPPPPPPP updated.");
             }
         }
     }
-
+////////////////////////////////////////////////////////////////////////////////
     /*
      *  Toggle properties of the TableColumnAdjuster so the user can
      *  customize the functionality to their preferences
@@ -446,6 +453,43 @@ log("column "+colIndex+" SKIPPPPPPPP updated.");
                 setOnlyAdjustLarger(!isOnlyAdjustLarger);
                 return;
             }
+        }
+    }
+///////////////////////////////////////////////////////////////////////////////////
+    private static class AdjustStatic {
+        private int totalCount = 0;
+        private long lastTime=0;
+        private long begin = 0;
+        private int skipCount=0;
+        private int adjustCount=0;
+        private int rowCount;
+
+        public void start(int rowCount) {
+            totalCount++;
+            skipCount = 0;
+            adjustCount = 0;
+            this.rowCount = rowCount;
+            begin = System.currentTimeMillis();
+            if ( 0 ==lastTime ) {
+                lastTime = System.currentTimeMillis();
+            }
+        }
+        public void addSkipCount() {
+            skipCount++;
+        }
+        public void addAdjustCount() {
+            adjustCount++;
+        }
+        public void finish() {
+            long now = System.currentTimeMillis();
+            if ( adjustCount > 0) {
+                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
+                        + ", skipCount=" + skipCount + " ******ADJUST COUNT*******=" + adjustCount + ", TOTAL:" + totalCount);
+            } else {
+                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
+                        + " ALL SKIPPED, TOTAL:" + totalCount);
+            }
+            lastTime = System.currentTimeMillis();
         }
     }
 }
