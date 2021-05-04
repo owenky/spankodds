@@ -17,7 +17,7 @@ import static com.sia.client.config.Utils.log;
 
 public abstract class ColumnAdjustManager {
 
-    private static final long updatePeriodInSeconds = 3L;
+    private static final long updatePeriodInSeconds = 5L;
     private static final ArrayBlockingQueue<ColAdjustStruct> gameQueue = new  ArrayBlockingQueue<>(10000);
     private static final ScheduledExecutorService excutorService = Executors.newSingleThreadScheduledExecutor();
 

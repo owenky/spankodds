@@ -457,7 +457,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     }
 ///////////////////////////////////////////////////////////////////////////////////
     private static class AdjustStatic {
-        private int totalCount = 0;
+        private long totalCount = 0;
         private long lastTime=0;
         private long begin = 0;
         private int skipCount=0;
