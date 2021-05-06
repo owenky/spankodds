@@ -50,7 +50,7 @@ public class MainGameTable extends JTable {
         } else {
             setRowHeight(NormalRowHeight);
         }
-//        setTitleRowHeight();
+        setGameGroupHeaderRowHeight();
         GameLineTitleManager gameLineTitleManager = new GameLineTitleManager(this);
         gameLineTitleManager.installListeners();
     }
@@ -70,6 +70,15 @@ public class MainGameTable extends JTable {
     }
     public void adjustColumn(int col) {
         getTableColumnAdjuster().adjustColumn(col);
+    }
+    private void setGameGroupHeaderRowHeight() {
+        for(int rowViewIndex=0;rowViewIndex<getRowCount();rowViewIndex++) {
+            int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
+            int gameId = getModel().getGameId(rowModelIndex);
+            if ( SiaConst.BlankGameId == gameId) {
+                setRowHeight(rowViewIndex, SiaConst.GameGroupHeaderHeight);
+            }
+        }
     }
     private TableColumnAdjuster getTableColumnAdjuster() {
         if ( null == tableColumnAdjuster) {

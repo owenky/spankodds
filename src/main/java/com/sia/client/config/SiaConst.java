@@ -6,5 +6,5 @@ public abstract class SiaConst {
     public static final String ConfigPath = "/config/";
     public static final String SoccerStr = "Soccer";
     public static final Integer BlankGameId = Integer.MIN_VALUE;
-    public static final Integer TitleRowHeight = 10;
+    public static final Integer GameGroupHeaderHeight = 20;
 }

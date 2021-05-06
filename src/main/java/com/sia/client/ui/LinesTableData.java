@@ -262,6 +262,9 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //        return LazyInitializer.bookies.get("" + bookieid);
 //
 //    }
+    public int getGameId(int rowModelIndex) {
+        return gamesVec.getGameId(rowModelIndex);
+    }
     public int getRowIndex(int gameId) {
         return gamesVec.getRowIndex(gameId);
     }

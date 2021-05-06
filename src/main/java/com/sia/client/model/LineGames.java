@@ -30,6 +30,9 @@ public class LineGames {
         }
         return index;
     }
+    public int getGameId(int rowModelIndex) {
+        return gameIdList.get(rowModelIndex);
+    }
     public Game getGame(int gameId) {
        return gameCache.getGame(gameId);
     }

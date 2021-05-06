@@ -17,6 +17,12 @@ public class MainGameTableModel extends DefaultTableModel {
     public MainGameTableModel() {
 
     }
+    public int getGameId(int rowModelIndex) {
+        LtdSrhStruct ltdSrhStruct = getLinesTableData(rowModelIndex);
+        LinesTableData r = ltdSrhStruct.linesTableData;
+        int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
+        return r.getGameId(rowIndexInLinesTableData);
+    }
     public List<BlankGameStruct> getBlankGameIdIndex() {
         List<BlankGameStruct> idIndexList = new ArrayList<>();
         int blankGameIdIndex=0;
@@ -106,6 +112,7 @@ public class MainGameTableModel extends DefaultTableModel {
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct {
         public final LinesTableData linesTableData;
+        //index of the first row of this linesTableData in tableModel
         public final int offset;
         public LtdSrhStruct(LinesTableData linesTableData,int offset) {
             this.linesTableData = linesTableData;

@@ -31,7 +31,7 @@ public class GameLineTitleManager implements HierarchyListener, TableColumnModel
     private boolean isMainTableFirstShown = false;
     private final Map<String, JComponent> gameGroupHeaderComponents = new HashMap<>();
     private static final Color titleColor = new Color(0, 0, 128);
-    private static final Font titleFont = new Font("Arial",Font.PLAIN, 12);
+    private static final Font titleFont = new Font("Verdana", Font.BOLD, 11);
 
     public GameLineTitleManager(MainGameTable mainGameTable) {
         this.mainGameTable = mainGameTable;
@@ -122,8 +122,8 @@ public class GameLineTitleManager implements HierarchyListener, TableColumnModel
             BorderLayout bl = new BorderLayout();
             bl.setVgap(3);
             jPanel.setLayout(bl);
-            jPanel.setMaximumSize(new Dimension(0, SiaConst.TitleRowHeight));
-            jPanel.setPreferredSize(new Dimension(0, SiaConst.TitleRowHeight));
+            jPanel.setMaximumSize(new Dimension(0, SiaConst.GameGroupHeaderHeight));
+            jPanel.setPreferredSize(new Dimension(0, SiaConst.GameGroupHeaderHeight));
             JLabel titleLabel = new JLabel(gameGroupHeader);
             titleLabel.setOpaque(false);
             titleLabel.setFont(titleFont);
