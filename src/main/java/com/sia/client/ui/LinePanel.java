@@ -21,7 +21,6 @@ public class LinePanel extends JPanel {
     public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
     protected MainGameTable table;
     Color altcolor = new Color(204, 255, 229);
-    String name = "";
     Color openercolor = Color.LIGHT_GRAY;
     boolean testprint = false;
     MatteBorder bestvisitborder = new MatteBorder(1, 1, 1, 1, new Color(103, 52, 235));
@@ -65,7 +64,7 @@ public class LinePanel extends JPanel {
 
     public LinePanel(String name) {
         super(new GridLayout(4, 0));
-        this.name = name;
+        setName(name);
         top = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
         top.setHorizontalTextPosition(SwingConstants.RIGHT);
 
@@ -234,9 +233,8 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = (String) AppController.getBookieId(bookie);
+        String bookieid = AppController.getBookieId(bookie);
         Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
-        //System.out.println("bookie-color="+bookie+".."+colcolor);
 
         Color bgcolor = ld.getBackgroundColor();
         Color fgcolor = Color.BLACK;
@@ -294,7 +292,7 @@ public class LinePanel extends JPanel {
 
     }
 
-    public void setDraw(LineData ld, int row, int col) {
+    private void setDraw(LineData ld, int row, int col) {
 
         boolean blackorred = false;
         draw.setText(ld.getData());
@@ -362,7 +360,7 @@ public class LinePanel extends JPanel {
         }
     }
 
-    public void setTotal(LineData ld, int row, int col) {
+    private void setTotal(LineData ld, int row, int col) {
 
         boolean blackorred = false;
         total.setText(ld.getData());
@@ -490,7 +488,7 @@ public class LinePanel extends JPanel {
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
         String display = "";
-        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
+        if (isSoccer()) {
             try {
                 LinesTableData ltd = table.getLinesTableData(row);
                 display = ltd.getDisplayType();
@@ -527,7 +525,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes = stv.getCurrentBoxes();
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
-        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
+        if (isSoccer()) {
             LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
             setDraw(blank, row, col);
             setTotal(blank, row, col);
@@ -552,7 +550,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes = stv.getCurrentBoxes();
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
-        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
+        if (isSoccer()) {
             LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
             setDraw(blank, row, col);
             setTotal(blank, row, col);
@@ -616,12 +614,14 @@ public class LinePanel extends JPanel {
         LineData[] boxes = stv.getCurrentBoxes();
         setTop(boxes[0], row, col);
         setBottom(boxes[1], row, col);
-        if ((this.name).equalsIgnoreCase(SiaConst.SoccerStr)) {
+        if ( isSoccer()) {
             LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
             setDraw(blank, row, col);
             setTotal(blank, row, col);
         }
 
     }
-
+    private boolean isSoccer() {
+        return SiaConst.SoccerStr.equalsIgnoreCase(getName());
+    }
 }

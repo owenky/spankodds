@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameLineTitleManager implements HierarchyListener, TableColumnModelListener, ComponentListener {
+public class GameGropHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener {
 
     private final MainGameTable mainGameTable;
     private boolean isMainTableFirstShown = false;
@@ -33,7 +33,7 @@ public class GameLineTitleManager implements HierarchyListener, TableColumnModel
     private static final Color titleColor = new Color(0, 0, 128);
     private static final Font titleFont = new Font("Verdana", Font.BOLD, 11);
 
-    public GameLineTitleManager(MainGameTable mainGameTable) {
+    public GameGropHeaderManager(MainGameTable mainGameTable) {
         this.mainGameTable = mainGameTable;
     }
     public void installListeners() {
@@ -102,8 +102,9 @@ public class GameLineTitleManager implements HierarchyListener, TableColumnModel
         }
     }
     private void drawGameLineTitle(BlankGameStruct struct) {
-        Rectangle r1 = mainGameTable.getCellRect(struct.rowTableModelIndex, 0, true);
-        Rectangle r2 = mainGameTable.getCellRect(struct.rowTableModelIndex, mainGameTable.getColumnCount()-1, true);
+        int rowViewModelIndex = mainGameTable.convertRowIndexToView(struct.rowTableModelIndex);
+        Rectangle r1 = mainGameTable.getCellRect(rowViewModelIndex, 0, true);
+        Rectangle r2 = mainGameTable.getCellRect(rowViewModelIndex, mainGameTable.getColumnCount()-1, true);
         JComponent tableParent = (JComponent)mainGameTable.getParent();
 
         int x1 = 0;
@@ -112,7 +113,10 @@ public class GameLineTitleManager implements HierarchyListener, TableColumnModel
         int tableParentWidth = tableParent.getWidth();
         int width = Math.min(tableWidth, tableParentWidth);
         int height = (int)r2.getHeight();
+//log("row="+rowViewModelIndex+", row height="+mainGameTable.getRowHeight(rowViewModelIndex)+", height="+height);
         JComponent titleBar = getGameGroupHeaderComp(struct.linesTableData.getGameGroupHeader());
+
+        mainGameTable.setRowHeight(rowViewModelIndex,SiaConst.GameGroupHeaderHeight);
         titleBar.setBounds(x1, y1,width,height);
     }
     private JComponent getGameGroupHeaderComp(String gameGroupHeader) {

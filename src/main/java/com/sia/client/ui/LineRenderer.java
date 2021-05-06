@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import java.awt.Component;
+import java.awt.Dimension;
 
 import static com.sia.client.config.Utils.log;
 
@@ -17,6 +18,7 @@ public class LineRenderer extends LinePanel implements TableCellRenderer {
         BlankCell = new JLabel();
         BlankCell.setOpaque(false);
         BlankCell.setBorder(BorderFactory.createEmptyBorder());
+        BlankCell.setMaximumSize(new Dimension(0,SiaConst.GameGroupHeaderHeight));
     }
     public LineRenderer() {
     }
