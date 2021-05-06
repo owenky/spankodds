@@ -44,13 +44,15 @@ public class MainGameTable extends JTable {
     public LinesTableData getLinesTableData(int row) {
         return getModel().getLinesTableData(row).linesTableData;
     }
-    public void optimizeRowHeights() {
+    public void optimizeRowHeightsAndGameLineTitles() {
         if (isSoccer) {
             setRowHeight(SoccerRowHeight);
         } else {
             setRowHeight(NormalRowHeight);
         }
-
+//        setTitleRowHeight();
+        GameLineTitleManager gameLineTitleManager = new GameLineTitleManager(this);
+        gameLineTitleManager.installListeners();
     }
     public boolean isSoccer() {
         return isSoccer;

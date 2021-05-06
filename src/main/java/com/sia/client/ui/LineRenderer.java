@@ -1,5 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import java.awt.Component;
@@ -8,7 +12,12 @@ import static com.sia.client.config.Utils.log;
 
 public class LineRenderer extends LinePanel implements TableCellRenderer {
 
-
+    private static final JLabel BlankCell;
+    static {
+        BlankCell = new JLabel();
+        BlankCell.setOpaque(false);
+        BlankCell.setBorder(BorderFactory.createEmptyBorder());
+    }
     public LineRenderer() {
     }
 
@@ -27,6 +36,8 @@ public class LineRenderer extends LinePanel implements TableCellRenderer {
                 log("value is null" + row + ".." + column);
             }
             return null;
+        } else if (SiaConst.BlankGameId.equals(value)) {
+            return BlankCell;
         }
 
         this.table = (MainGameTable)table;

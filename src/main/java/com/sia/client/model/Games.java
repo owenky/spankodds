@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -10,20 +12,21 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.sia.client.config.Utils.log;
-
 public class Games   {
     private final List<Integer> gameIdList = new ArrayList<>();
     private final Map<Integer,Game> gamesIdMap = new ConcurrentHashMap<>();
+
+    public Games() {
+        gameIdList.add(SiaConst.BlankGameId);
+        Game blankGame = new Game();
+        blankGame.setGame_id(SiaConst.BlankGameId);
+        gamesIdMap.put(SiaConst.BlankGameId,blankGame);
+    }
 
     public Game getGame(int gameId) {
        return gamesIdMap.get(gameId);
     }
     public Game getByIndex(int index) {
-        //TODO remove debug check
-        if ( 0 > index || index > (gameIdList.size()-1)) {
-            log(new Exception("Index is out of bound: list size="+gameIdList.size()+", index="+index));
-        }
         return gamesIdMap.get(gameIdList.get(index));
     }
     public Game getGame(String gameId) {

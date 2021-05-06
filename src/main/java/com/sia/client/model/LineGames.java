@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
 
 import java.util.ArrayList;
@@ -11,11 +12,13 @@ import java.util.List;
 public class LineGames {
     private final List<Integer> gameIdList = new ArrayList<>();
     private final Games gameCache;
+
     public LineGames() {
         this(AppController.getGames());
     }
     public LineGames(Games gameCache) {
         this.gameCache = gameCache;
+        gameIdList.add(SiaConst.BlankGameId);
     }
     public int getRowIndex(int gameId) {
         int index = -1;
@@ -46,7 +49,7 @@ public class LineGames {
         games.forEach(this::addIfAbsent);
     }
     public void addIfAbsent(Game g) {
-        Integer gameId = g.getGame_id();
+        int gameId = g.getGame_id();
         if ( ! containsGameId(gameId)) {
             gameIdList.add(gameId);
         }
@@ -66,6 +69,9 @@ public class LineGames {
         return gameIdList.size();
     }
     public boolean isEmpty() {
+        if ( 1==gameIdList.size() && SiaConst.BlankGameId.equals(gameIdList.get(0))) {
+            return true;
+        }
         return gameIdList.isEmpty();
     }
     public Iterator<Game> iterator() {
@@ -90,6 +96,9 @@ public class LineGames {
         };
     }
     public Integer removeIndex(int index) {
+        if ( 0 == index) {
+            throw new IllegalArgumentException("Can't remove blank game id index :"+0);
+        }
         return gameIdList.remove(index);
     }
     public Game removeGameId(Integer gameId) {
@@ -105,6 +114,5 @@ public class LineGames {
     }
     public int indexOf(final Game g) {
         return gameIdList.indexOf(g.getGame_id());
-
     }
 }

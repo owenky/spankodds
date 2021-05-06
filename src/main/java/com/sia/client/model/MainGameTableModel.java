@@ -17,6 +17,15 @@ public class MainGameTableModel extends DefaultTableModel {
     public MainGameTableModel() {
 
     }
+    public List<BlankGameStruct> getBlankGameIdIndex() {
+        List<BlankGameStruct> idIndexList = new ArrayList<>();
+        int blankGameIdIndex=0;
+        for(LinesTableData ltd: gameLines) {
+            idIndexList.add(new BlankGameStruct(blankGameIdIndex,ltd));
+            blankGameIdIndex+=ltd.getRowCount();
+        }
+        return idIndexList;
+    }
     public void addGameLine(LinesTableData gameLine) {
         gameLine.setIndex(gameLines.size());
         gameLines.add(gameLine);
@@ -104,6 +113,14 @@ public class MainGameTableModel extends DefaultTableModel {
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
+    public static class BlankGameStruct {
+        public final int rowTableModelIndex;
+        public final LinesTableData linesTableData;
+        public BlankGameStruct(int rowTableModelIndex,LinesTableData linesTableData) {
+            this.rowTableModelIndex = rowTableModelIndex;
+            this.linesTableData = linesTableData;
+        }
+    }
     private class LinesTableDataListner implements TableModelListener {
 
         @Override

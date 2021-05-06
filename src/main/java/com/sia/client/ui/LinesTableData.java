@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.ColumnData;
@@ -44,6 +45,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     long cleartime = 100;
     JTable thistable;
     private int index;
+    private String gameGroupHeader;
 
     public LinesTableData(Vector<Game> gameVec,Vector<Bookie> bookieVector,Games gameCache) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
@@ -138,15 +140,16 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
             Vector<Object> rowData = makeRowData(g,bookieVector);
             dataVector.add(rowData);
             try {
-
-                BestLines.calculatebestall(g.getGame_id(), 0);
-                BestLines.calculatebestall(g.getGame_id(), 1);
-                BestLines.calculatebestall(g.getGame_id(), 2);
-                BestLines.calculatebestall(g.getGame_id(), 5);
-                BestLines.calculatebestall(g.getGame_id(), 6);
-                BestLines.calculatebestall(g.getGame_id(), 7);
-                BestLines.calculatebestall(g.getGame_id(), 8);
-                BestLines.calculatebestall(g.getGame_id(), 9);
+                if ( SiaConst.BlankGameId != g.getGame_id()) {
+                    BestLines.calculatebestall(g.getGame_id(), 0);
+                    BestLines.calculatebestall(g.getGame_id(), 1);
+                    BestLines.calculatebestall(g.getGame_id(), 2);
+                    BestLines.calculatebestall(g.getGame_id(), 5);
+                    BestLines.calculatebestall(g.getGame_id(), 6);
+                    BestLines.calculatebestall(g.getGame_id(), 7);
+                    BestLines.calculatebestall(g.getGame_id(), 8);
+                    BestLines.calculatebestall(g.getGame_id(), 9);
+                }
             } catch (Exception ex) {
                 log("error calculating best all " + ex);
             }
@@ -156,47 +159,51 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     private Vector<Object> makeRowData(Game g,Vector<Bookie> bookieVector) {
         Vector<Object> rowData = new Vector<>(bookieVector.size());
         int gameid = g.getGame_id();
-
-        int leagueID = g.getLeague_id();
-
         for (int j = 0; j < bookieVector.size(); j++) {
             Bookie b = bookieVector.get(j);
-            Object value = "";
-            try {
-                int bookieid = b.getBookie_id();
-                if (bookieid == 990) {
-                    value = new InfoView(gameid);
-                } else if (bookieid == 991) {
-                    value = new TimeView(gameid);
-                } else if (bookieid == 992) {
-                    if (leagueID == 9) {
-                        value = new SoccerGameNumberView(gameid);
-                    } else {
-                        value = new GameNumberView(gameid);
-                    }
-
-                } else if (bookieid == 993) {
-                    value = new TeamView(gameid, shortteam);
-                } else if (bookieid == 994) {
-                    if (leagueID == 9) {
-                        value = new SoccerChartView(gameid);
-                    } else {
-                        value = new ChartView(gameid);
-                    }
-                } else {
-                    if (leagueID == 9) {
-                        value = new SoccerSpreadTotalView(bookieid, gameid, cleartime, this);
-                    } else {
-                        value = new SpreadTotalView(bookieid, gameid, cleartime, this);
-                    }
-
-                }
-            } catch (Exception ex) {
-                log(ex);
+            Object value;
+            if ( SiaConst.BlankGameId == gameid) {
+                value = SiaConst.BlankGameId;
+            } else {
+                value = getCellValue(b,g);
             }
             rowData.add(value);
         }
         return rowData;
+    }
+    private Object getCellValue(Bookie b,Game g) {
+        int bookieid = b.getBookie_id();
+        int gameid = g.getGame_id();
+        int leagueID = g.getLeague_id();
+        Object value;
+        if (bookieid == 990) {
+            value = new InfoView(gameid);
+        } else if (bookieid == 991) {
+            value = new TimeView(gameid);
+        } else if (bookieid == 992) {
+            if (leagueID == 9) {
+                value = new SoccerGameNumberView(gameid);
+            } else {
+                value = new GameNumberView(gameid);
+            }
+
+        } else if (bookieid == 993) {
+            value = new TeamView(gameid, shortteam);
+        } else if (bookieid == 994) {
+            if (leagueID == 9) {
+                value = new SoccerChartView(gameid);
+            } else {
+                value = new ChartView(gameid);
+            }
+        } else {
+            if (leagueID == 9) {
+                value = new SoccerSpreadTotalView(bookieid, gameid, cleartime, this);
+            } else {
+                value = new SpreadTotalView(bookieid, gameid, cleartime, this);
+            }
+
+        }
+        return value;
     }
     public void showOpener() {
         showingOpener = true;
@@ -530,7 +537,12 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         }
         return "Stock Quotes at " + m_frm.format(m_date);
     }
-
+    public void setGameGroupHeader(String gameGroupHeader) {
+        this.gameGroupHeader = gameGroupHeader;
+    }
+    public String getGameGroupHeader() {
+        return this.gameGroupHeader;
+    }
     private static abstract class LazyInitializer {
 //        private static final Hashtable<String, Bookie> bookies = AppController.getBookies();
         private static final Vector<Bookie> bookiesVec = AppController.getBookiesVec();

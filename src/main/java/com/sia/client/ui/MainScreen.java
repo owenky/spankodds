@@ -1125,6 +1125,7 @@ public class MainScreen extends JPanel {
             }
 
 
+            String gameGroupHeader = gamegroupheaders.get(j);
             JLabel label = new JLabel("                                                                                                                                                      " +
                     gamegroupheaders.get(j) +
                     "                                                                                                                                                      " +
@@ -1146,7 +1147,7 @@ public class MainScreen extends JPanel {
                             "                                                                                                                                                      " +
                             "                                                                                                                                                      ");
 
-
+                    gameGroupHeader = nameWithoutSoccer;
                 } else {
                     showit = false;
                 }
@@ -1233,13 +1234,19 @@ public class MainScreen extends JPanel {
                     tablePanel.add(label);
                 }
             }
+
+            if ( ! isShowHeaders() || (isShowHeaders() && ! showit )) {
+                gameGroupHeader = "should not show";
+            }
+            dataModel.setGameGroupHeader(gameGroupHeader);
             if (newgamegroupvec.size() > 0) {
                 scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
             } else {
                 scrollPanex.setPreferredSize(new Dimension(1, 1));
             }
             //TODO add tablemodel to MainGameTable
-            mainGameTable.addGameLine((LinesTableData)tablex.getModel());
+            LinesTableData ltd = (LinesTableData)tablex.getModel();
+            mainGameTable.addGameLine(ltd);
            tablePanel.add(scrollPanex);
             scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
 
@@ -1261,11 +1268,11 @@ public class MainScreen extends JPanel {
 //        add(scrollPane0, BorderLayout.PAGE_START);
         //TODO add mainGameTable instead of scrollPane to center
 //        add(scrollPane, BorderLayout.CENTER);
-        mainGameTable.optimizeRowHeights();
         JScrollPane mainTableScrollPane = makeMainTableScrollPane(mainGameTable);
         add(mainTableScrollPane, BorderLayout.CENTER);
         //END OF TODO
         add(bar, BorderLayout.PAGE_END);
+        mainGameTable.optimizeRowHeightsAndGameLineTitles();
         AppController.addDataModels(getDataModels());
         log("Datamodels size is :" + AppController.getDataModels().size());
         //TODO disable following two lines
@@ -1390,7 +1397,7 @@ public class MainScreen extends JPanel {
         tableHeader.setFont(headerFont);
         return mainGameTable;
     }
-    private JScrollPane makeMainTableScrollPane(JTable table) {
+    private JScrollPane makeMainTableScrollPane(MainGameTable table) {
         JScrollPane rtn = new JScrollPane(table);
         return rtn;
     }
