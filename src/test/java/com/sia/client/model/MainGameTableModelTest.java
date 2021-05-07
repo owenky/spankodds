@@ -48,7 +48,8 @@ public class MainGameTableModelTest {
         games.add(g);
 
         gameCache.addAll(games);
-        LinesTableData gr = new LinesTableData(games,columns,gameCache);
+        LinesTableData gr = new LinesTableData(games,columns,gameCache,"game "+seed);
+
         return gr;
     }
 }
