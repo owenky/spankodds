@@ -11,7 +11,6 @@ import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
 
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -30,47 +29,42 @@ import static com.sia.client.config.Utils.log;
 public class LinesTableData extends DefaultTableModel implements TableColumnModelListener {
 
     public Vector<ColumnData> m_columns;
-    public String display = AppController.getDisplayType();
-    public int period = 0;
+    private String display;
+    private int period;
     public String sport = "";
-    protected SimpleDateFormat m_frm;
+    protected final SimpleDateFormat m_frm;
     protected Date m_date;
     private final LineGames gamesVec;
-    boolean timesort = false;
-    boolean shortteam = false;
+    private boolean timesort;
+    private final boolean shortteam;
     boolean inview = false;
     boolean showingOpener = false;
     boolean showingPrior = false;
     int lastbookieremoved = 0;
-    long cleartime = 100;
-    JTable thistable;
+    private long cleartime;
     private int index;
-    private String gameGroupHeader;
+    private final String gameGroupHeader;
 
-    public LinesTableData(Vector<Game> gameVec,Vector<Bookie> bookieVector,Games gameCache) {
-        m_frm = new SimpleDateFormat("MM/dd/yyyy");
-        this.gamesVec = new LineGames(gameCache);
-        this.gamesVec.addAll(gameVec);
-        setInitialData(bookieVector);
+    public LinesTableData(Vector<Game> gameVec,Vector<Bookie> bookieVector,Games gameCache,String gameGroupHeader) {
+        this(AppController.getDisplayType(),0,100L,gameVec,false,false,false,false,gameGroupHeader,gameCache,bookieVector);
     }
-    public LinesTableData(long cleartime, Vector<Game> gameVec) {
+    public LinesTableData(long cleartime, Vector<Game> gameVec,String gameGroupHeader) {
+        this(AppController.getDisplayType(),0,cleartime,gameVec,false,false,false,false,gameGroupHeader);
+    }
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec,boolean timesort, boolean shortteam, boolean opener, boolean last,String gameGroupHeader) {
+       this(display,period,cleartime,gameVec,timesort,shortteam,opener,last,gameGroupHeader,AppController.getGames(),LazyInitializer.bookiesVec);
+    }
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec,boolean timesort, boolean shortteam, boolean opener, boolean last,String gameGroupHeader,Games gameCache,Vector<Bookie> bookieVector) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
-        this.gamesVec = new LineGames();
-        this.gamesVec.addAll(gameVec);
-        setInitialData(LazyInitializer.bookiesVec);
-    }
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec,JTable thetable, boolean timesort, boolean shortteam, boolean opener, boolean last) {
-        m_frm = new SimpleDateFormat("MM/dd/yyyy");
-        this.cleartime = cleartime;
-        this.gamesVec = new LineGames();
+        this.gamesVec = new LineGames(gameCache, !SiaConst.GameGroupHeaderHideIndicator.equals(gameGroupHeader));
         this.gamesVec.addAll(gameVec);
         this.timesort = timesort;
         this.shortteam = shortteam;
         this.display = display;
         this.period = period;
-        thistable = thetable;
-        setInitialData(LazyInitializer.bookiesVec);
+        this.gameGroupHeader = gameGroupHeader;
+        setInitialData(bookieVector);
         if (opener) {
             showOpener();
         } else if (last) {
@@ -539,9 +533,6 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
             return "Stock Quotes";
         }
         return "Stock Quotes at " + m_frm.format(m_date);
-    }
-    public void setGameGroupHeader(String gameGroupHeader) {
-        this.gameGroupHeader = gameGroupHeader;
     }
     public String getGameGroupHeader() {
         return this.gameGroupHeader;
