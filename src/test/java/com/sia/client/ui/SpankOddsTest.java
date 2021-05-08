@@ -11,20 +11,24 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class SpankOddsTest {
 
+    private static final int [] barRowIndex = new int [] {1,3,5};
     public static void main(String [] argv) {
 
         JFrame jFrame = new JFrame();
@@ -38,24 +42,21 @@ public class SpankOddsTest {
                 return rtn;
             }
         };
-        HListener listener = new HListener(jtable);
-        jtable.addHierarchyListener(listener);
-        jtable.getColumnModel().addColumnModelListener(listener);
-
+        jtable.setRowHeight(60);
 
         jFrame.getContentPane().add(new JScrollPane(jtable));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        jtable.getParent().addComponentListener(listener);
+        installListeners(jtable);
 
-        int columnCount=100;
+        int columnCount=46;
         Vector<String> colIden = new Vector<>();
         for(int i=0;i<columnCount;i++) {
             colIden.add("col"+i);
         }
 
-        Vector<Vector<Integer>> dataVector = new Vector<>();
-        for(int i=1;i<100;i++) {
+        Vector<Vector<String>> dataVector = new Vector<>();
+        for(int i=0;i<100;i++) {
             dataVector.add(makeRow(i,columnCount));
         }
 
@@ -66,30 +67,31 @@ public class SpankOddsTest {
         jFrame.show();
 
     }
-    private static Vector<Integer> makeRow(int seed,int colCount) {
-        Vector<Integer> row = new Vector<>();
+    private static Vector<String> makeRow(int seed,int colCount) {
+        Vector<String> row = new Vector<>();
         for(int i=0;i<colCount;i++) {
-            row.add(seed+i);
+            row.add(""+seed+"_"+i);
         }
 
         return row;
     }
+    private static void installListeners(JTable mainGameTable) {
+        HListener listener = new HListener(mainGameTable);
+        mainGameTable.addHierarchyListener(listener);
+        mainGameTable.getColumnModel().addColumnModelListener(listener);
+        mainGameTable.getParent().addComponentListener(listener);
+        mainGameTable.getModel().addTableModelListener(listener);
+    }
  ////////////////////////////////////////////////////////////////////////////////
-   private static class HListener implements HierarchyListener, TableColumnModelListener, ComponentListener {
+   private static class HListener implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener {
 
         private final JTable mainGameTable;
         private boolean isMainTableFirstShown;
-        JPanel title = new JPanel();
+        private Map<Integer,JComponent> titleMap = new HashMap<>();
+
+
         public HListener(JTable mainGameTable) {
             this.mainGameTable = mainGameTable;
-
-            title.setBackground(Color.BLACK);
-            JLabel titleLabel = new JLabel("TEST");
-            titleLabel.setOpaque(false);
-            titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            titleLabel.setForeground(Color.WHITE);
-            title.add(BorderLayout.CENTER, titleLabel);
-            mainGameTable.add(title);
         }
          @Override
          public void hierarchyChanged(final HierarchyEvent e) {
@@ -102,18 +104,9 @@ public class SpankOddsTest {
              }
          }
          private void drawGameLineTitles() {
-             Rectangle r1 = mainGameTable.getCellRect(10, 0, true);
-             Rectangle r2 = mainGameTable.getCellRect(10, mainGameTable.getColumnCount()-1, true);
-             JComponent tableParent = (JComponent)mainGameTable.getParent();
-             int x1 = 0;
-             int y1 = (int)r1.getY();
-             int tableWidth = mainGameTable.getWidth();
-             int tableParentWidth = tableParent.getWidth();
-             int width = Math.min(tableWidth, tableParentWidth);
-
-             int height = (int)r2.getHeight();
-             title.setBounds(x1, y1,width,height);
-             System.out.println("x1="+x1+", y1="+y1+" width="+width+", height="+height);
+            for(int row:barRowIndex) {
+                GameGropHeaderManager.layOutGameGroupHeader(row, mainGameTable, getTitleComponent(row), 50);
+            }
          }
 
      @Override
@@ -160,6 +153,25 @@ public class SpankOddsTest {
      @Override
      public void componentHidden(final ComponentEvent e) {
 
+     }
+     @Override
+     public void tableChanged(final TableModelEvent e) {
+         if ( e.getType() == TableModelEvent.INSERT ||  e.getType() == TableModelEvent.DELETE) {
+             drawGameLineTitles();
+         }
+     }
+     private JComponent getTitleComponent(int rowIndex) {
+         return titleMap.computeIfAbsent(rowIndex,row-> {
+             JPanel title = new JPanel();
+             title.setBackground(Color.BLACK);
+             JLabel titleLabel = new JLabel("TEST"+rowIndex);
+             titleLabel.setOpaque(false);
+             titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+             titleLabel.setForeground(Color.WHITE);
+             title.add(BorderLayout.CENTER, titleLabel);
+             mainGameTable.add(title);
+             return title;
+         });
      }
  }
 }
