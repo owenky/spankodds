@@ -536,7 +536,7 @@ public class MainScreen extends JPanel {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -1133,8 +1133,8 @@ public class MainScreen extends JPanel {
             label.setOpaque(true);
             label.setBackground(new Color(0, 0, 128));
             label.setForeground(Color.WHITE);
-            for (int k = 0; k < newgamegroupvec.size(); k++) {
-                Game g = (Game) newgamegroupvec.get(k);
+            for (Object o : newgamegroupvec) {
+                Game g = (Game) o;
                 int leagueid = g.getLeague_id();
                 Sport s = AppController.getSport("" + leagueid);
                 LID = s.getParentleague_id();
@@ -1367,6 +1367,8 @@ public class MainScreen extends JPanel {
         mainGameTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setPreferredScrollableViewportSize(mainGameTable.getPreferredSize());
+
+        mainGameTable.removeLockedColumnIndex(AppController.getNumFixedCols());
         //since there is no setDateVector() is called for this table, columnIdentifiers of this table is blank
         //MainGameTableModel.this.fireTableChanged(e) would wipe out this table if autoCreateColumnsFromModel is true
         mainGameTable.setAutoCreateColumnsFromModel(false);
@@ -1378,6 +1380,22 @@ public class MainScreen extends JPanel {
     }
     private JScrollPane makeMainTableScrollPane(MainGameTable table) {
         JScrollPane rtn = new JScrollPane(table);
+//        //
+//        JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), table, false);
+//        fixedx.setColumnModel(fixed0.getColumnModel());
+//
+//        if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
+//            fixedx.setRowHeight(60);
+//            fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
+//        } else {
+//            fixedx.setRowHeight(30);
+//            fixedx.setDefaultRenderer(Object.class, new LineRenderer());
+//        }
+//
+//        fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
+//        rtn.setRowHeaderView(fixedx);
+//
+//        //
         return rtn;
     }
 }

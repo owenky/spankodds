@@ -4,7 +4,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -14,7 +13,6 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,28 +24,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.log;
+
 public class SpankOddsTest {
 
     private static final int [] barRowIndex = new int [] {1,3,5};
+    private static final Integer [] lockColumnIndex = new Integer[]{0,1,2};
     public static void main(String [] argv) {
 
         JFrame jFrame = new JFrame();
-        JTable jtable = new JTable() {
-            @Override
-            public TableCellRenderer getCellRenderer(int row, int col) {
-                TableCellRenderer rtn = super.getCellRenderer(row, col);
-                if ( row == 10) {
-                    ((JComponent)rtn).setOpaque(true);
-                }
-                return rtn;
-            }
-        };
+        ColumnLockableTable jtable = new ColumnLockableTable();
         jtable.setRowHeight(60);
 
-        jFrame.getContentPane().add(new JScrollPane(jtable));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        installListeners(jtable);
 
         int columnCount=46;
         Vector<String> colIden = new Vector<>();
@@ -61,8 +50,13 @@ public class SpankOddsTest {
         }
 
         ((DefaultTableModel)jtable.getModel()).setDataVector(dataVector, colIden);
+        jtable.removeLockedColumnIndex(lockColumnIndex);
+        JComponent tableContainer = TableUtils.configTableLockColumns(jtable,true);
+        installListeners(jtable);
+        jFrame.getContentPane().add(tableContainer);
 
-        jFrame.setSize(new Dimension(100,100));
+
+        jFrame.setSize(new Dimension(500,100));
         jFrame.pack();
         jFrame.show();
 
@@ -104,9 +98,10 @@ public class SpankOddsTest {
              }
          }
          private void drawGameLineTitles() {
-            for(int row:barRowIndex) {
-                GameGropHeaderManager.layOutGameGroupHeader(row, mainGameTable, getTitleComponent(row), 50);
-            }
+            log(" drawGameLineTitles() Disabled !!!!!!!! ");
+//            for(int row:barRowIndex) {
+//                GameGropHeaderManager.layOutGameGroupHeader(row, mainGameTable, getTitleComponent(row), 50);
+//            }
          }
 
      @Override

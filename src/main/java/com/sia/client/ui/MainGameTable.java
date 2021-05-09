@@ -3,16 +3,16 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.MainGameTableModel;
 
-import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 
 import static com.sia.client.config.Utils.log;
 
-public class MainGameTable extends JTable {
+public class MainGameTable extends ColumnLockableTable {
 
     private TableColumnAdjuster tableColumnAdjuster;
     private boolean isSoccer=false;
@@ -74,6 +74,9 @@ public class MainGameTable extends JTable {
     public void setName(String name) {
         super.setName(name);
         isSoccer = SiaConst.SoccerStr.equalsIgnoreCase(name);
+    }
+    public final void tableChangedBySuperClass(TableModelEvent e_) {
+        super.tableChanged(e_);
     }
     public void adjustColumns(boolean includeHeaders) {
         getTableColumnAdjuster().adjustColumns(includeHeaders);
