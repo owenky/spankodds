@@ -4,7 +4,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -24,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import static com.sia.client.config.Utils.log;
-
 public class SpankOddsTest {
 
     private static final int [] barRowIndex = new int [] {1,3,5};
@@ -33,7 +30,7 @@ public class SpankOddsTest {
     public static void main(String [] argv) {
 
         JFrame jFrame = new JFrame();
-        ColumnLockableTable jtable = new ColumnLockableTable();
+        ColumnLockableTable jtable = new ColumnLockableTable(true);
         jtable.setRowHeight(60);
 
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +48,7 @@ public class SpankOddsTest {
 
         ((DefaultTableModel)jtable.getModel()).setDataVector(dataVector, colIden);
         jtable.removeLockedColumnIndex(lockColumnIndex);
-        JComponent tableContainer = TableUtils.configTableLockColumns(jtable,true);
+        JComponent tableContainer = TableUtils.configTableLockColumns(jtable);
         installListeners(jtable);
         jFrame.getContentPane().add(tableContainer);
 
@@ -69,7 +66,7 @@ public class SpankOddsTest {
 
         return row;
     }
-    private static void installListeners(JTable mainGameTable) {
+    private static void installListeners(ColumnLockableTable mainGameTable) {
         HListener listener = new HListener(mainGameTable);
         mainGameTable.addHierarchyListener(listener);
         mainGameTable.getColumnModel().addColumnModelListener(listener);
@@ -79,12 +76,12 @@ public class SpankOddsTest {
  ////////////////////////////////////////////////////////////////////////////////
    private static class HListener implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener {
 
-        private final JTable mainGameTable;
+        private final ColumnLockableTable mainGameTable;
         private boolean isMainTableFirstShown;
         private Map<Integer,JComponent> titleMap = new HashMap<>();
 
 
-        public HListener(JTable mainGameTable) {
+        public HListener(ColumnLockableTable mainGameTable) {
             this.mainGameTable = mainGameTable;
         }
          @Override
@@ -98,10 +95,9 @@ public class SpankOddsTest {
              }
          }
          private void drawGameLineTitles() {
-            log(" drawGameLineTitles() Disabled !!!!!!!! ");
-//            for(int row:barRowIndex) {
-//                GameGropHeaderManager.layOutGameGroupHeader(row, mainGameTable, getTitleComponent(row), 50);
-//            }
+            for(int row:barRowIndex) {
+                GameGropHeaderManager.layOutGameGroupHeader(row, mainGameTable, getTitleComponent(row), 50);
+            }
          }
 
      @Override

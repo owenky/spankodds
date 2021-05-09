@@ -13,11 +13,19 @@ public class ColumnLockableTable extends JTable {
 
     private final List<TableColumn> allColumns = new ArrayList<>();
     private List<Integer> lockedColumnIndex = new ArrayList<>();
+    private RowHeaderTable rowHeaderTable;
+    private final boolean hasRowNumber;
 
-    public ColumnLockableTable() {
+    public ColumnLockableTable(boolean hasRowNumber) {
+        this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
     }
-
+    public RowHeaderTable getRowHeaderTable() {
+        if ( null == rowHeaderTable) {
+            rowHeaderTable = new RowHeaderTable(this,hasRowNumber);
+        }
+        return rowHeaderTable;
+    }
     public void removeLockedColumnIndex(int n) {
         Integer[] arr = new Integer[n];
         for (int i = 0; i < n; i++) {

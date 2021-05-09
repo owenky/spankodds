@@ -19,6 +19,7 @@ public class MainGameTable extends ColumnLockableTable {
 
 
     public MainGameTable() {
+        super(false);
     }
     //TODO: this override is for debug only
     @Override

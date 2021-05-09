@@ -7,7 +7,6 @@ import com.sia.client.model.MainGameTableModel.BlankGameStruct;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -137,11 +136,11 @@ public class GameGropHeaderManager implements HierarchyListener, TableColumnMode
 
             titleLabel.setForeground(Color.WHITE);
             jPanel.add(BorderLayout.CENTER, titleLabel);
-            mainGameTable.add(jPanel);
+            mainGameTable.getParent().add(jPanel);
             return jPanel;
         }));
     }
-    public static void layOutGameGroupHeader(int rowViewIndex, JTable table, JComponent header,int headerHeight) {
+    public static void layOutGameGroupHeader(int rowViewIndex, ColumnLockableTable table, JComponent header,int headerHeight) {
 
         Rectangle r1 = table.getCellRect(rowViewIndex, 0, true);
         JComponent tableParent = (JComponent)table.getParent();
@@ -152,6 +151,7 @@ public class GameGropHeaderManager implements HierarchyListener, TableColumnMode
         int tableParentWidth = tableParent.getWidth();
         int width = Math.min(tableWidth, tableParentWidth);
         table.setRowHeight(rowViewIndex,headerHeight);
+        table.getRowHeaderTable().setRowHeight(rowViewIndex,headerHeight);
         header.setBounds(x1, y1,width,headerHeight);
     }
 }
