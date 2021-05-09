@@ -457,9 +457,4 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             System.out.println("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
         }
     }
-
-    public List<LinesTableData> getCurrentDataModels() {
-        return stb.getCurrentDataModels();
-    }
-
 }

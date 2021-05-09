@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
+import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -440,7 +441,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public List<LinesTableData> getCurrentDataModels() {
+    public MainGameTableModel getCurrentDataModels() {
         MainScreen ms = (MainScreen) getSelectedComponent();
         return ms.getDataModels();
     }
@@ -452,10 +453,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                List<LinesTableData> ltds = ms.getDataModels();
-                if (ltds != null) {
-                    v.addAll(ltds);
-                }
+                MainGameTableModel model = ms.getDataModels();
+                model.copyTo(v);
             }
         }
         return v;

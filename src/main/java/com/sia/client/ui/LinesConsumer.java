@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -24,6 +25,8 @@ public class LinesConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
+    //TODO: need to fine tune GameMessageProcessor constructor parameters.
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -43,10 +46,12 @@ public class LinesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
+        gameMessageProcessor.addRunnable(()->processMessage((MapMessage)message));
+    }
+    private void processMessage(MapMessage message) {
         try {
 
-            mapMessage = (MapMessage) message;
-            //String sportname=mapMessage.getInt("sportid")+"";
+            mapMessage =  message;
             gameid = mapMessage.getInt("gameid");
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
@@ -59,15 +64,6 @@ public class LinesConsumer implements MessageListener {
             if ("1".equals(isopenerS)) {
                 isopener = true;
             }
-
-
-//			time deff claiclation
-
-
-            //	if(gameid >=951 && gameid <= 993 && bookieid == 17 && period==0 && !isopener)
-            //	{
-            //	System.out.println("received PINNY line change=\n"+mapMessage.toString());
-            //	}
 
             if ("LineChangeSpread".equals(changetype)) {
                 double newvisitorspread = 0;
@@ -167,7 +163,6 @@ public class LinesConsumer implements MessageListener {
                     //	System.out.println("***************************************totalOpenerAlert******************************");
                     AppController.addTotalline(tl);
                 }
-//{gameid=211013, newunderjuice=-115.0, newunder=2.5, newlongts=1590351272000, bookieid=49, newoverjuice=-115.0, isopener=1, newover=2.5}
 
             } else if ("LineChangeTeamTotal".equals(changetype)) {
                 double newvisitorover = 0;
@@ -242,12 +237,9 @@ public class LinesConsumer implements MessageListener {
                             newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, new java.sql.Timestamp(newlongts), period);
                     if (isopener) {
                         LineAlertOpeners.teamTotalOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice);
-                        //System.out.println("***************************************"+sportname+"******************************");
                     }
-                    //	System.out.println("***************************************teamTotalOpenerAlert******************************");
                     AppController.addTeamTotalline(ttl);
                 }
-//{gameid=211013, newunderjuice=-115.0, newunder=2.5, newlongts=1590351272000, bookieid=49, newoverjuice=-115.0, isopener=1, newover=2.5}
 
             } else if ("LineChangeMoney".equals(changetype)) {
                 double newvisitorjuice = 0;
@@ -322,7 +314,6 @@ public class LinesConsumer implements MessageListener {
         try {
             AppController.fireAllTableDataChanged(gameid);
         } catch (Exception ex) {
-            //	System.out.println("exception linesconsumer firetabledatachanged "+ex);
             log(ex);
         }
     }

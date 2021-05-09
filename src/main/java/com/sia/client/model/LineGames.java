@@ -1,7 +1,6 @@
 package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.ui.AppController;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,12 +12,12 @@ public class LineGames {
     private final List<Integer> gameIdList = new ArrayList<>();
     private final Games gameCache;
 
-    public LineGames() {
-        this(AppController.getGames());
-    }
-    public LineGames(Games gameCache) {
+
+    public LineGames(Games gameCache,boolean toAddBlankGameId) {
         this.gameCache = gameCache;
-        gameIdList.add(SiaConst.BlankGameId);
+        if ( toAddBlankGameId ) {
+            gameIdList.add(SiaConst.BlankGameId);
+        }
     }
     public int getRowIndex(int gameId) {
         int index = -1;

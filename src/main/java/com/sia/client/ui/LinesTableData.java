@@ -57,19 +57,22 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec,boolean timesort, boolean shortteam, boolean opener, boolean last,String gameGroupHeader,Games gameCache,Vector<Bookie> bookieVector) {
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
-        this.gamesVec = new LineGames(gameCache, !SiaConst.GameGroupHeaderHideIndicator.equals(gameGroupHeader));
+        this.gameGroupHeader = gameGroupHeader;
+        this.gamesVec = new LineGames(gameCache, null != gameGroupHeader);
         this.gamesVec.addAll(gameVec);
         this.timesort = timesort;
         this.shortteam = shortteam;
         this.display = display;
         this.period = period;
-        this.gameGroupHeader = gameGroupHeader;
         setInitialData(bookieVector);
         if (opener) {
             showOpener();
         } else if (last) {
             showPrior();
         }
+    }
+    public boolean hasHeader() {
+        return null != gameGroupHeader;
     }
     public void setIndex(int index) {
         this.index = index;
@@ -202,14 +205,13 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public void showOpener() {
         showingOpener = true;
         showingPrior = false;
-        checkAndRunInEDT(() -> fireTableDataChanged());
-
+        fire();
     }
 
     public void showPrior() {
         showingOpener = false;
         showingPrior = true;
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
     }
 
     public boolean isInView() {
@@ -273,7 +275,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public void showCurrent() {
         showingOpener = false;
         showingPrior = false;
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
     }
 
     public String getDisplayType() {
@@ -283,7 +285,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
     public void setDisplayType(String d) {
         display = d;
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
     }
 
     public int getPeriodType() {
@@ -293,7 +295,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
     public void setPeriodType(int d) {
         period = d;
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
     }
 
     public void clearColors() {
@@ -340,7 +342,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
             }
         }
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
 
     }
 
@@ -360,7 +362,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //        comp.revalidate();
 //        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
 
     }
 
@@ -375,7 +377,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //        comp.revalidate();
 //        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-        checkAndRunInEDT(() -> fireTableDataChanged());
+        fire();
     }
 
     public boolean checktofire(int gameid) {
@@ -388,9 +390,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     }
 
     public void fire() {
-        checkAndRunInEDT(() -> {
-            fireTableDataChanged();
-        });
+        checkAndRunInEDT(this::fireTableDataChanged);
     }
 
     public Game removeGameId(int gameidtoremove) {
@@ -431,7 +431,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //            Container comp = scrollpane.getParent();
 //            comp.revalidate();
             resetDataVector(); //including sorting gamesVec
-            checkAndRunInEDT(() -> fireTableDataChanged());
+            fire();
         }
         return g;
     }
@@ -470,7 +470,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //            comp.revalidate();
 //            AppController.enableTabs();
             resetDataVector(); //including sorting gamesVec
-            checkAndRunInEDT(() -> fireTableDataChanged());
+            fire();
         }
     }
 
@@ -505,7 +505,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //            Container comp = scrollpane.getParent();
 //            comp.revalidate();
             resetDataVector(); //including sorting gamesVec
-            checkAndRunInEDT(() -> fireTableDataChanged());
+            fire();
         }
         AppController.enableTabs();
     }
@@ -524,7 +524,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //                thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
 //                Container comp = scrollpane.getParent();
 //                comp.revalidate();
-                checkAndRunInEDT(() -> fireTableDataChanged());
+                fire();
             }
         }
     }

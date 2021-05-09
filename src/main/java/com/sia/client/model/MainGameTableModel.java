@@ -6,16 +6,128 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+
+import static com.sia.client.config.Utils.log;
 
 public class MainGameTableModel extends DefaultTableModel {
 
     private final List<LinesTableData> gameLines = new ArrayList<>();
     private final LinesTableDataListner linesTableDataListner = new LinesTableDataListner();
+    //TODO debug flag
+    private boolean headerInstalled = false;
+    public void setHeaderInstalled(boolean headerInstalled) {this.headerInstalled = headerInstalled;}
+    //END OF debug TODO
 
     public MainGameTableModel() {
 
+    }
+    public void clear() {
+        for(LinesTableData ltd:gameLines) {
+            removeTableModelListener(ltd);
+        }
+        gameLines.clear();
+        headerInstalled = false;
+    }
+    public void copyTo(Collection<LinesTableData> destCollection) {
+        destCollection.addAll(gameLines);
+    }
+    //refactored from MainScreen::moveGameToThisHeader(Game, String)
+    public void moveGameToThisHeader(Game g, String header) {
+        Game thisgame = null;
+
+        for (LinesTableData gameLine : gameLines) {
+            thisgame = gameLine.removeGameId(g.getGame_id());
+            if (thisgame != null) {
+                break;
+            }
+        }
+        // now lets see if i found it in either
+        if (thisgame != null) // i did find it
+        {
+            //TODO following block is replace by getLinesTableDataByHeader()?
+//            if (header.equalsIgnoreCase("In Progress")) {
+//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 4);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("Soccer In Progress")) {
+//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 3);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("FINAL")) {
+//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 2);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("Soccer FINAL")) {
+//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 1);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("Halftime")) {
+//                LinesTableData ltd = (LinesTableData) gameLines.get(0);
+//                ltd.addGame(thisgame, true);
+//
+//            } else if (header.equalsIgnoreCase("Soccer Halftime")) {
+//                LinesTableData ltd = (LinesTableData) gameLines.get(1);
+//                ltd.addGame(thisgame, true);
+//            }
+            LinesTableData ltd = getLinesTableDataByHeader(header);
+            ltd.addGame(g,true);
+        }
+    }
+    //refactored from MainScreen::addGame(Game, boolean)
+    public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint) {
+        LinesTableData ltd = getLinesTableDataByHeader(gameGroupHeader);
+        if ( null != ltd) {
+            ltd.addGame(game, paint);
+        }
+    }
+    public LinesTableData getLinesTableDataByHeader(String gameGroupHeader) {
+        LinesTableData rtn = null;
+        for (LinesTableData ltd : gameLines) {
+            if (gameGroupHeader.equals(ltd.getGameGroupHeader())) {
+                rtn = ltd;
+                break;
+            }
+        }
+        return rtn;
+    }
+    public void removeGames(String[] gameids) {
+        for (LinesTableData linesTableData : gameLines) {
+            try {
+                linesTableData.removeGameIds(gameids);
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+    }
+    //copied from MainScreen::removeGame(int)
+    public void removeGame(int gameid) {
+        for (LinesTableData linesTableData : gameLines) {
+            //TODO add if logic
+            if (null != linesTableData.removeGameId(gameid)) {
+                //gameid is removed from a LinesTableData, don't need to continue because a gameid can only be in one LinesTableData
+                break;
+            }
+        }
+    }
+    public void makeDataModelsVisible(boolean b) {
+        for (LinesTableData linesTableData : gameLines) {
+            linesTableData.setInView(b);
+        }
+    }
+    public void clearColors() {
+        for (LinesTableData linesTableData : gameLines) {
+            linesTableData.clearColors();
+        }
+    }
+    public LinesTableData checktofire(int gameId) {
+        LinesTableData rtn = null;
+        for (final LinesTableData ltd : gameLines) {
+            boolean status = ltd.checktofire(gameId);
+            if (status) {
+                rtn  = ltd;
+                break;
+            }
+        }
+        return rtn;
     }
     public int getGameId(int rowModelIndex) {
         LtdSrhStruct ltdSrhStruct = getLinesTableData(rowModelIndex);
@@ -25,10 +137,12 @@ public class MainGameTableModel extends DefaultTableModel {
     }
     public List<BlankGameStruct> getBlankGameIdIndex() {
         List<BlankGameStruct> idIndexList = new ArrayList<>();
-        int blankGameIdIndex=0;
+        int rowModeIndex=0;
         for(LinesTableData ltd: gameLines) {
-            idIndexList.add(new BlankGameStruct(blankGameIdIndex,ltd));
-            blankGameIdIndex+=ltd.getRowCount();
+            if ( ltd.hasHeader()) {
+                idIndexList.add(new BlankGameStruct(rowModeIndex, ltd));
+            }
+            rowModeIndex+=ltd.getRowCount();
         }
         return idIndexList;
     }
@@ -85,12 +199,15 @@ public class MainGameTableModel extends DefaultTableModel {
         return new LtdSrhStruct(rtn,modelIndex);
     }
     private void removeAndAddTableModelListener(LinesTableData gameLine) {
+        removeTableModelListener(gameLine);
+        gameLine.addTableModelListener(linesTableDataListner);
+    }
+    private void removeTableModelListener(LinesTableData gameLine) {
         for (TableModelListener l : gameLine.getTableModelListeners()) {
             if ( l instanceof LinesTableDataListner) {
                 gameLine.removeTableModelListener(l);
             }
         }
-        gameLine.addTableModelListener(linesTableDataListner);
     }
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
@@ -109,6 +226,10 @@ public class MainGameTableModel extends DefaultTableModel {
     public void setDataVector(Object[][] dataVector, Object [] columnIndetifiers) {
         throw new IllegalStateException("method not supported");
     }
+    @Override
+    public Vector getDataVector(){
+        throw new IllegalStateException("method not supported");
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct {
         public final LinesTableData linesTableData;
@@ -121,10 +242,10 @@ public class MainGameTableModel extends DefaultTableModel {
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
     public static class BlankGameStruct {
-        public final int rowTableModelIndex;
+        public final int tableRowModelIndex;
         public final LinesTableData linesTableData;
-        public BlankGameStruct(int rowTableModelIndex,LinesTableData linesTableData) {
-            this.rowTableModelIndex = rowTableModelIndex;
+        public BlankGameStruct(int tableRowModelIndex, LinesTableData linesTableData) {
+            this.tableRowModelIndex = tableRowModelIndex;
             this.linesTableData = linesTableData;
         }
     }
@@ -132,7 +253,12 @@ public class MainGameTableModel extends DefaultTableModel {
 
         @Override
         public void tableChanged(final TableModelEvent e) {
-            MainGameTableModel.this.fireTableChanged(e);
+            if ( headerInstalled) {
+                log("VIALATION:::: table changed event fired AFTER headerIntalled");
+//                MainGameTableModel.this.fireTableChanged(e);
+            } else {
+                MainGameTableModel.this.fireTableChanged(e);
+            }
         }
     }
 }

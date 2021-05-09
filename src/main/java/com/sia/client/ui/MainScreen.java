@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Games;
+import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 
 import javax.swing.BoxLayout;
@@ -39,7 +40,7 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class MainScreen extends JPanel {
-    public Vector datamodelsvec = new Vector();
+//    public Vector datamodelsvec = new Vector();
     public Timer timer;
     public int timer2count = 0;
     public int currentmaxlength = 0;
@@ -121,66 +122,41 @@ public class MainScreen extends JPanel {
     }
 
     public boolean checktofire(int gameid) {
-        List<LinesTableData> v = getDataModels();
-        boolean status = false;
-        for (int j = 0; j < v.size(); j++) {
-            final LinesTableData ltd = v.get(j);
-            status = ltd.checktofire(gameid);
-            if ( status ) {
-                ColumnAdjustManager.adjustColumn(this.getMainGameTable(),ltd,gameid);
-                break;
-            }
+        MainGameTableModel v = getDataModels();
+        LinesTableData ltd = v.checktofire(gameid);
+        boolean status = (null != ltd);
+        if (status) {
+            ColumnAdjustManager.adjustColumn(this.getMainGameTable(), ltd, gameid);
         }
+
         return status;
     }
 
-    public List<LinesTableData> getDataModels() {
-        return datamodelsvec;
+//    public List<LinesTableData> getDataModels() {
+//        return datamodelsvec;
+//    }
+    public MainGameTableModel getDataModels() {
+        return getMainGameTable().getModel();
     }
-
     public void setClearTime(long clear) {
         cleartime = clear;
-        List<LinesTableData> v = getDataModels();
-        for (int j = 0; j < v.size(); j++) {
-            v.get(j).clearColors();
-        }
+        getDataModels().clearColors();
     }
 
     public void clearAll() {
-        List<LinesTableData> v = getDataModels();
-
-        for (int j = 0; j < v.size(); j++) {
-            v.get(j).clearColors();
-        }
+        getDataModels().clearColors();
     }
 
     public void makeDataModelsVisible(boolean b) {
-        List<LinesTableData> v = getDataModels();
-        for (int j = 0; j < v.size(); j++) {
-           v.get(j).setInView(b);
-        }
+        getDataModels().makeDataModelsVisible(b);
     }
 
     public void removeGame(int gameid) {
-        List<LinesTableData> v = getDataModels();
-        for (int j = 0; j < v.size(); j++) {
-            //TODO add if logic
-            if ( null != v.get(j).removeGameId(gameid) ) {
-                //gameid is removed from a LinesTableData, don't need to continue because a gameid can only be in one LinesTableData
-                break;
-            }
-        }
+        getDataModels().removeGame(gameid);
     }
 
     public void removeGames(String[] gameids) {
-        List<LinesTableData> v = getDataModels();
-        for (int j = 0; j < v.size(); j++) {
-            try {
-               v.get(j).removeGameIds(gameids);
-            } catch (Exception ex) {
-                log(ex);
-            }
-        }
+        getDataModels().removeGames(gameids);
     }
 
     public void addGame(Game g, boolean repaint) // only gets called when adding new game into system
@@ -190,52 +166,53 @@ public class MainScreen extends JPanel {
             leagueid = g.getSubleague_id();
         }
         String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
-        //TODO gamegroupheaders should be part of LinesTableData -- 05/01/2021
-        for (int i = 0; i < gamegroupheaders.size(); i++) {
-            String header = gamegroupheaders.get(i);
-            if (header.equals(title)) {
-                LinesTableData thisltd = (LinesTableData) datamodelsvec.get(i);
-                thisltd.addGame(g, repaint);
-                break;
-            }
-        }
+        getMainGameTable().getModel().addGameToGameGroup(title,g,repaint);
+//        for (int i = 0; i < gamegroupheaders.size(); i++) {
+//            String header = gamegroupheaders.get(i);
+//            if (header.equals(title)) {
+//                LinesTableData thisltd = (LinesTableData) datamodelsvec.get(i);
+//                thisltd.addGame(g, repaint);
+//                break;
+//            }
+//        }
     }
 
     public void moveGameToThisHeader(Game g, String header) {
-        Game thisgame = null;
-
-        for (int k = 0; k < datamodelsvec.size(); k++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(k);
-            thisgame = ltd.removeGameId(g.getGame_id());
-            if (thisgame != null) {
-                break;
-            }
-        }
-        // now lets see if i found it in either
-        if (thisgame != null) // i did find it
-        {
-            if (header.equalsIgnoreCase("In Progress")) {
-                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 4);
-                ltd.addGame(thisgame, true);
-            } else if (header.equalsIgnoreCase("Soccer In Progress")) {
-                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 3);
-                ltd.addGame(thisgame, true);
-            } else if (header.equalsIgnoreCase("FINAL")) {
-                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 2);
-                ltd.addGame(thisgame, true);
-            } else if (header.equalsIgnoreCase("Soccer FINAL")) {
-                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 1);
-                ltd.addGame(thisgame, true);
-            } else if (header.equalsIgnoreCase("Halftime")) {
-                LinesTableData ltd = (LinesTableData) datamodelsvec.get(0);
-                ltd.addGame(thisgame, true);
-
-            } else if (header.equalsIgnoreCase("Soccer Halftime")) {
-                LinesTableData ltd = (LinesTableData) datamodelsvec.get(1);
-                ltd.addGame(thisgame, true);
-
-            }
-        }
+//        Game thisgame = null;
+//
+//        for (int k = 0; k < datamodelsvec.size(); k++) {
+//            LinesTableData ltd = (LinesTableData) datamodelsvec.get(k);
+//            thisgame = ltd.removeGameId(g.getGame_id());
+//            if (thisgame != null) {
+//                break;
+//            }
+//        }
+//        // now lets see if i found it in either
+//        if (thisgame != null) // i did find it
+//        {
+//            if (header.equalsIgnoreCase("In Progress")) {
+//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 4);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("Soccer In Progress")) {
+//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 3);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("FINAL")) {
+//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 2);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("Soccer FINAL")) {
+//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 1);
+//                ltd.addGame(thisgame, true);
+//            } else if (header.equalsIgnoreCase("Halftime")) {
+//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(0);
+//                ltd.addGame(thisgame, true);
+//
+//            } else if (header.equalsIgnoreCase("Soccer Halftime")) {
+//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(1);
+//                ltd.addGame(thisgame, true);
+//
+//            }
+//        }
+        mainGameTable.getModel().moveGameToThisHeader(g,header);
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
@@ -1013,7 +990,8 @@ public class MainScreen extends JPanel {
     }
     public void drawIt() {
 
-        mainGameTable = createMainGameTable();
+        mainGameTable = getMainGameTable();
+        mainGameTable.getModel().clear();
         Vector newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -1093,8 +1071,8 @@ public class MainScreen extends JPanel {
         blankcol.setPreferredWidth(30);
         table0.addColumn(blankcol);
 
-        LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), table0, timesort, shortteam, opener, last);
-        table0.setModel(dataModel0);
+//        LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), timesort, shortteam, opener, last);
+//        table0.setModel(dataModel0);
         JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
 
         fixed0.setPreferredScrollableViewportSize(fixed0.getPreferredSize());
@@ -1178,10 +1156,6 @@ public class MainScreen extends JPanel {
 
             tablex.changeSelection(0, 0, false, false);
             tablex.setAutoCreateColumnsFromModel(false);
-            LinesTableData dataModel = new LinesTableData(display, period, cleartime, newgamegroupvec, tablex, timesort, shortteam, opener, last);
-
-            tablex.setModel(dataModel);
-            datamodelsvec.add(dataModel);
             JScrollPane scrollPanex = new JScrollPane(tablex);
 
             scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -1229,25 +1203,28 @@ public class MainScreen extends JPanel {
 
             tablex.setTableHeader(null); // this has to be placed all the way down here!!!!
             //System.out.println("nnn");
+            boolean toShowHeader = false;
             if (isShowHeaders()) {
                 if (showit) {
                     tablePanel.add(label);
+                    toShowHeader = true;
                 }
             }
 
-            if ( ! isShowHeaders() || (isShowHeaders() && ! showit )) {
-                gameGroupHeader = "should not show";
-            }
-            dataModel.setGameGroupHeader(gameGroupHeader);
             if (newgamegroupvec.size() > 0) {
                 scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
             } else {
                 scrollPanex.setPreferredSize(new Dimension(1, 1));
             }
             //TODO add tablemodel to MainGameTable
-            LinesTableData ltd = (LinesTableData)tablex.getModel();
-            mainGameTable.addGameLine(ltd);
-           tablePanel.add(scrollPanex);
+            if ( ! toShowHeader ) {
+                gameGroupHeader = null;
+            }
+            LinesTableData dataModel = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader);
+//            datamodelsvec.add(dataModel);
+            mainGameTable.addGameLine(dataModel);
+
+            tablePanel.add(scrollPanex);
             scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
 
             oldgamegroupvec = newgamegroupvec;
@@ -1357,11 +1334,13 @@ public class MainScreen extends JPanel {
         mainGameTable.adjustColumns(includeheader);
     }
     public MainGameTable getMainGameTable() {
+        if ( null == mainGameTable ) {
+            mainGameTable = createMainGameTable();
+        }
         return mainGameTable;
     }
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
-        datamodelsvec.clear();
         inprogressgames.clear();
         finalgames.clear();
         halftimegames.clear();

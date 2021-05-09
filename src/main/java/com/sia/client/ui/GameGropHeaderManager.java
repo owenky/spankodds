@@ -7,11 +7,14 @@ import com.sia.client.model.MainGameTableModel.BlankGameStruct;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,7 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameGropHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener {
+import static com.sia.client.config.Utils.log;
+
+public class GameGropHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener {
 
     private final MainGameTable mainGameTable;
     private boolean isMainTableFirstShown = false;
@@ -40,6 +45,7 @@ public class GameGropHeaderManager implements HierarchyListener, TableColumnMode
         mainGameTable.addHierarchyListener(this);
         mainGameTable.getColumnModel().addColumnModelListener(this);
         mainGameTable.getParent().addComponentListener(this);
+        mainGameTable.getModel().addTableModelListener(this);
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
@@ -94,6 +100,12 @@ public class GameGropHeaderManager implements HierarchyListener, TableColumnMode
     public void componentHidden(final ComponentEvent e) {
 
     }
+    @Override
+    public void tableChanged(final TableModelEvent e) {
+        if ( e.getType() == TableModelEvent.INSERT ||  e.getType() == TableModelEvent.DELETE) {
+            drawGameLineTitles();
+        }
+    }
     private void drawGameLineTitles() {
         MainGameTableModel model = mainGameTable.getModel();
         List<BlankGameStruct> blankGameIndex = model.getBlankGameIdIndex();
@@ -102,22 +114,12 @@ public class GameGropHeaderManager implements HierarchyListener, TableColumnMode
         }
     }
     private void drawGameLineTitle(BlankGameStruct struct) {
-        int rowViewModelIndex = mainGameTable.convertRowIndexToView(struct.rowTableModelIndex);
-        Rectangle r1 = mainGameTable.getCellRect(rowViewModelIndex, 0, true);
-        Rectangle r2 = mainGameTable.getCellRect(rowViewModelIndex, mainGameTable.getColumnCount()-1, true);
-        JComponent tableParent = (JComponent)mainGameTable.getParent();
-
-        int x1 = 0;
-        int y1 = (int)r1.getY();
-        int tableWidth = mainGameTable.getWidth();
-        int tableParentWidth = tableParent.getWidth();
-        int width = Math.min(tableWidth, tableParentWidth);
-        int height = (int)r2.getHeight();
-//log("row="+rowViewModelIndex+", row height="+mainGameTable.getRowHeight(rowViewModelIndex)+", height="+height);
-        JComponent titleBar = getGameGroupHeaderComp(struct.linesTableData.getGameGroupHeader());
-
-        mainGameTable.setRowHeight(rowViewModelIndex,SiaConst.GameGroupHeaderHeight);
-        titleBar.setBounds(x1, y1,width,height);
+        int rowViewIndex = mainGameTable.convertRowIndexToView(struct.tableRowModelIndex);
+//TODO: debug
+        mainGameTable.getModel().setHeaderInstalled(true);
+        if ( rowViewIndex < 10) log("header at row view index:"+rowViewIndex+", header="+struct.linesTableData.getGameGroupHeader());
+//END OF debug TODO
+        layOutGameGroupHeader(rowViewIndex,mainGameTable,getGameGroupHeaderComp(struct.linesTableData.getGameGroupHeader()),SiaConst.GameGroupHeaderHeight);
     }
     private JComponent getGameGroupHeaderComp(String gameGroupHeader) {
         return gameGroupHeaderComponents.computeIfAbsent(gameGroupHeader,(gln-> {
@@ -138,5 +140,18 @@ public class GameGropHeaderManager implements HierarchyListener, TableColumnMode
             mainGameTable.add(jPanel);
             return jPanel;
         }));
+    }
+    public static void layOutGameGroupHeader(int rowViewIndex, JTable table, JComponent header,int headerHeight) {
+
+        Rectangle r1 = table.getCellRect(rowViewIndex, 0, true);
+        JComponent tableParent = (JComponent)table.getParent();
+
+        int x1 = 0;
+        int y1 = (int)r1.getY();
+        int tableWidth = table.getWidth();
+        int tableParentWidth = tableParent.getWidth();
+        int width = Math.min(tableWidth, tableParentWidth);
+        table.setRowHeight(rowViewIndex,headerHeight);
+        header.setBounds(x1, y1,width,headerHeight);
     }
 }

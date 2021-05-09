@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Sport;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -31,6 +32,7 @@ public class GamesConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     private TextMessage textMessage;
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
 
     public GamesConsumer(ActiveMQConnectionFactory factory, Connection connection, String gamesconsumerqueue) throws JMSException {
 
@@ -59,6 +61,10 @@ public class GamesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
+        Utils.ensureNotEdtThread();
+        gameMessageProcessor.addRunnable(()->processMessage(message));
+    }
+    private void processMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
             boolean repaint = true;

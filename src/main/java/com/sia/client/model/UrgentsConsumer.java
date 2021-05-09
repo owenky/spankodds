@@ -22,6 +22,7 @@ public class UrgentsConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
 
     public UrgentsConsumer(ActiveMQConnectionFactory factory, Connection connection, String urgentsconsumerqueue) throws JMSException {
 
@@ -39,9 +40,12 @@ public class UrgentsConsumer implements MessageListener {
             connection.close();
         }
     }
-
     @Override
     public void onMessage(Message message) {
+        Utils.ensureNotEdtThread();
+        gameMessageProcessor.addRunnable(()->processMessage(message));
+    }
+    public void processMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
             mapMessage = (MapMessage) message;

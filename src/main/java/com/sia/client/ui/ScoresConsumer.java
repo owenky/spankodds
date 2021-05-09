@@ -1,7 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Sport;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -31,6 +33,8 @@ public class ScoresConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
+    //TODO: need to fine tune GameMessageProcessor constructor parameters.
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
@@ -59,11 +63,14 @@ public class ScoresConsumer implements MessageListener {
             connection.close();
         }
     }
-
     public void onMessage(Message message) {
+        Utils.ensureNotEdtThread();
+        gameMessageProcessor.addRunnable(()->gameMessageProcessor((MapMessage)message));
+    }
+    private void gameMessageProcessor(MapMessage message) {
         try {
 
-            mapMessage = (MapMessage) message;
+            mapMessage = message;
 
             String changetype = mapMessage.getStringProperty("messageType");
 

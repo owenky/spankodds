@@ -54,7 +54,9 @@ public class MainGameTableTest {
         games.add(g);
 
         gameCache.add(g);
-        LinesTableData gr = new LinesTableData(games,columns,gameCache);
+
+
+        LinesTableData gr = new LinesTableData(games,columns,gameCache,"seed_"+seed);
         return gr;
     }
 }

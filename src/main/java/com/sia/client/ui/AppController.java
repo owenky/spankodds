@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Games;
+import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
@@ -25,7 +26,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -480,10 +480,11 @@ public class AppController {
         return dataModels;
     }
 
-    public static void addDataModels(List<LinesTableData> v) {
-        for (int i = 0; i < v.size(); i++) {
-            addDataModel(v.get(i));
-        }
+    public static void addDataModels(MainGameTableModel model) {
+//        for (LinesTableData linesTableData : v) {
+//            addDataModel(linesTableData);
+//        }
+        model.copyTo(dataModels);
 
     }
 
@@ -494,13 +495,8 @@ public class AppController {
 
     }
 
-    public static void removeDataModels(List<LinesTableData> v) {
-        if (v != null) {
-            for (int i = 0; i < v.size(); i++) {
-                removeDataModel(v.get(i));
-            }
-        }
-
+    public static void removeDataModels(MainGameTableModel model) {
+        model.clear();
     }
 
     public static void removeDataModel(LinesTableData ltd) {
@@ -622,8 +618,7 @@ public class AppController {
     }
 
     public static void clearAll() {
-        for (int k = 0; k < tabpanes.size(); k++) {
-            SportsTabPane stb = tabpanes.get(k);
+        for (SportsTabPane stb : tabpanes) {
             stb.clearAll();
 
         }
@@ -631,27 +626,14 @@ public class AppController {
     }
 
     public static void fireAllTableDataChanged(int gameid) {
+        for (SportsTabPane stb : tabpanes) {
 
-        for (int k = 0; k < tabpanes.size(); k++) {
-
-            SportsTabPane stb = tabpanes.get(k);
             boolean status = stb.fireAllTableDataChanged(gameid);
-            if ( status ) {
+            if (status) {
                 break;
             }
         }
     }
-//
-//    public static void fireAllTableStructureChanged() {
-//        for (int i = 0; i < dataModels.size(); i++) {
-//            LinesTableData ltd = dataModels.get(i);
-//
-//            checkAndRunInEDT(() -> ltd.fireTableStructureChanged());
-//
-//
-//        }
-//
-//    }
 
     public static LinesTableData getLinesTableData() {
         return linestabledata;

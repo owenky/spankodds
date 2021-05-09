@@ -14,13 +14,27 @@ import static com.sia.client.config.Utils.log;
 
 public class MainGameTable extends JTable {
 
-    private static final int SoccerRowHeight = 60;
-    private static final int NormalRowHeight = 30;
     private TableColumnAdjuster tableColumnAdjuster;
     private boolean isSoccer=false;
 
 
     public MainGameTable() {
+    }
+    //TODO: this override is for debug only
+    @Override
+    public void setRowHeight(int row,int height) {
+        if ( getRowHeight(row) == SiaConst.GameGroupHeaderHeight && height != SiaConst.GameGroupHeaderHeight ) {
+            new Exception("set RowHeight after header is set row="+row).printStackTrace();
+        }
+        super.setRowHeight(row,height);
+    }
+    //TODO: this override is for debug only
+    @Override
+    public void setRowHeight(int height) {
+        if ( getRowHeight(0) == SiaConst.GameGroupHeaderHeight && height != SiaConst.GameGroupHeaderHeight ) {
+            new Exception("set RowHeight after header is set height="+height).printStackTrace();
+        }
+        super.setRowHeight(height);
     }
     @Override
     public MainGameTableModel createDefaultDataModel() {
@@ -46,11 +60,10 @@ public class MainGameTable extends JTable {
     }
     public void optimizeRowHeightsAndGameLineTitles() {
         if (isSoccer) {
-            setRowHeight(SoccerRowHeight);
+            setRowHeight(SiaConst.SoccerRowheight);
         } else {
-            setRowHeight(NormalRowHeight);
+            setRowHeight(SiaConst.NormalRowheight);
         }
-//        setGameGroupHeaderRowHeight();
         GameGropHeaderManager gameGropHeaderManager = new GameGropHeaderManager(this);
         gameGropHeaderManager.installListeners();
     }
@@ -70,16 +83,6 @@ public class MainGameTable extends JTable {
     }
     public void adjustColumn(int col) {
         getTableColumnAdjuster().adjustColumn(col);
-    }
-    @Deprecated
-    protected void setGameGroupHeaderRowHeight() {
-        for(int rowViewIndex=0;rowViewIndex<getRowCount();rowViewIndex++) {
-            int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
-            int gameId = getModel().getGameId(rowModelIndex);
-            if ( SiaConst.BlankGameId == gameId) {
-                setRowHeight(rowViewIndex, SiaConst.GameGroupHeaderHeight);
-            }
-        }
     }
     private TableColumnAdjuster getTableColumnAdjuster() {
         if ( null == tableColumnAdjuster) {
