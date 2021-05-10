@@ -34,9 +34,9 @@ public class ColumnLockableTable extends JTable {
         }
         return rowHeaderTable;
     }
-    public void removeLockedColumnIndex(int n) {
-        Integer[] arr = new Integer[n];
-        for (int i = 0; i < n; i++) {
+    public void removeLockedColumnIndex(int lastIndex) {
+        Integer[] arr = new Integer[lastIndex+1];
+        for (int i = 0; i <= lastIndex; i++) {
             arr[i] = i;
         }
         removeLockedColumnIndex(arr);

@@ -8,6 +8,7 @@ import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -1245,8 +1246,8 @@ public class MainScreen extends JPanel {
 //        add(scrollPane0, BorderLayout.PAGE_START);
         //TODO add mainGameTable instead of scrollPane to center
 //        add(scrollPane, BorderLayout.CENTER);
-        JScrollPane mainTableScrollPane = makeMainTableScrollPane(mainGameTable);
-        add(mainTableScrollPane, BorderLayout.CENTER);
+        JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
+        add(mainTableContainer, BorderLayout.CENTER);
         //END OF TODO
         add(bar, BorderLayout.PAGE_END);
         mainGameTable.optimizeRowHeightsAndGameLineTitles();
@@ -1368,7 +1369,6 @@ public class MainScreen extends JPanel {
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setPreferredScrollableViewportSize(mainGameTable.getPreferredSize());
 
-        mainGameTable.removeLockedColumnIndex(AppController.getNumFixedCols());
         //since there is no setDateVector() is called for this table, columnIdentifiers of this table is blank
         //MainGameTableModel.this.fireTableChanged(e) would wipe out this table if autoCreateColumnsFromModel is true
         mainGameTable.setAutoCreateColumnsFromModel(false);
@@ -1378,8 +1378,8 @@ public class MainScreen extends JPanel {
         tableHeader.setFont(headerFont);
         return mainGameTable;
     }
-    private JScrollPane makeMainTableScrollPane(MainGameTable table) {
-        JScrollPane rtn = new JScrollPane(table);
+    private JComponent makeMainTableScrollPane(MainGameTable table) {
+//        JScrollPane rtn = new JScrollPane(table);
 //        //
 //        JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), table, false);
 //        fixedx.setColumnModel(fixed0.getColumnModel());
@@ -1396,6 +1396,6 @@ public class MainScreen extends JPanel {
 //        rtn.setRowHeaderView(fixedx);
 //
 //        //
-        return rtn;
+        return TableUtils.configTableLockColumns(table,AppController.getNumFixedCols());
     }
 }

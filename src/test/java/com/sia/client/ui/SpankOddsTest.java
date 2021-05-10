@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class SpankOddsTest {
 
     private static final Integer [] barRowIndex = new Integer [] {1,3,5};
-    private static final Integer [] lockColumnIndex = new Integer[]{0,1,2};
     public static void main(String [] argv) {
 
         JFrame jFrame = new JFrame();
@@ -40,8 +39,7 @@ public class SpankOddsTest {
         }
 
         ((DefaultTableModel)jtable.getModel()).setDataVector(dataVector, colIden);
-        jtable.removeLockedColumnIndex(lockColumnIndex);
-        JComponent tableContainer = TableUtils.configTableLockColumns(jtable);
+        JComponent tableContainer = TableUtils.configTableLockColumns(jtable,2);
         jFrame.getContentPane().add(tableContainer);
 
         tableRowHeaderManager.installListeners();

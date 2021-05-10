@@ -12,8 +12,9 @@ import java.awt.Color;
 
 public abstract class TableUtils {
 
-    public static JComponent configTableLockColumns(ColumnLockableTable mainTable) {
+    public static JComponent configTableLockColumns(ColumnLockableTable mainTable,int lockedColumnLastIndex) {
 
+        mainTable.removeLockedColumnIndex(lockedColumnLastIndex);
         mainTable.createUnlockedColumns();
         JScrollPane tableScrollPane = new JScrollPane(mainTable);
         mainTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF ); //necessary for horizontal scroll bar showing up.
