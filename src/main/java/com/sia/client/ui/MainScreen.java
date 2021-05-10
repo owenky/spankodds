@@ -1030,7 +1030,7 @@ public class MainScreen extends JPanel {
             }
             TableColumn column;
 
-            column = new TableColumn(k, 30, null, null);
+            column = new TableColumn(k, 30, new LineRenderer(), null);
 
             column.setHeaderValue(b.getShortname() + "");
             column.setIdentifier("" + b.getBookie_id());

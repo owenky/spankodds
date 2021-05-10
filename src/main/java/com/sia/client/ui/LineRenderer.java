@@ -42,7 +42,7 @@ public class LineRenderer extends LinePanel implements TableCellRenderer {
             return BlankCell;
         }
 
-        this.table = (MainGameTable)table;
+        this.table = table;
         if (value instanceof SpreadTotalView) {
             setLines((SpreadTotalView) value, row, column);
         } else if (value instanceof SoccerSpreadTotalView) {

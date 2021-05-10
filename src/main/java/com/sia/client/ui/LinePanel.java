@@ -3,11 +3,13 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
+import com.sia.client.model.LinesTableDataSupplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.MatteBorder;
@@ -19,7 +21,7 @@ import static com.sia.client.config.Utils.log;
 
 public class LinePanel extends JPanel {
     public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
-    protected MainGameTable table;
+    protected JTable table;
     Color altcolor = new Color(204, 255, 229);
     Color openercolor = Color.LIGHT_GRAY;
     boolean testprint = false;
@@ -111,7 +113,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes;
         try {
 
-            LinesTableData ltd = table.getLinesTableData(row);
+            LinesTableData ltd = ((LinesTableDataSupplier)table).getLinesTableData(row);
 
             stv.setDisplayType(ltd.getDisplayType());
             stv.setPeriodType(ltd.getPeriodType());
@@ -436,7 +438,7 @@ public class LinePanel extends JPanel {
         LineData[] boxes;
         try {
 
-            LinesTableData ltd = table.getLinesTableData(row);
+            LinesTableData ltd = ((LinesTableDataSupplier)table).getLinesTableData(row);
 
             stv.setDisplayType(ltd.getDisplayType());
             stv.setPeriodType(ltd.getPeriodType());
@@ -490,7 +492,7 @@ public class LinePanel extends JPanel {
         String display = "";
         if (isSoccer()) {
             try {
-                LinesTableData ltd = table.getLinesTableData(row);
+                LinesTableData ltd = ((LinesTableDataSupplier)table).getLinesTableData(row);
                 display = ltd.getDisplayType();
             } catch (Exception ex) {
                 log(ex);
@@ -538,7 +540,7 @@ public class LinePanel extends JPanel {
         bottom.setHorizontalAlignment(SwingConstants.CENTER);
 
         try {
-            LinesTableData ltd = table.getLinesTableData(row);
+            LinesTableData ltd = ((LinesTableDataSupplier)table).getLinesTableData(row);
 
             stv.setDisplayType(ltd.getDisplayType());
             stv.setPeriodType(ltd.getPeriodType());
@@ -565,7 +567,7 @@ public class LinePanel extends JPanel {
 
 
         try {
-            LinesTableData ltd = table.getLinesTableData(row);
+            LinesTableData ltd = ((LinesTableDataSupplier)table).getLinesTableData(row);
             stv.setDisplayType(ltd.getDisplayType());
             stv.setPeriodType(ltd.getPeriodType());
         } catch (Exception ex) {

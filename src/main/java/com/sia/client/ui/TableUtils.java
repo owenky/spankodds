@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -8,7 +7,6 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
-import java.awt.Color;
 
 public abstract class TableUtils {
 
@@ -30,7 +28,6 @@ public abstract class TableUtils {
         container.setLayout(new BorderLayout());
         container.add(tableScrollPane,BorderLayout.CENTER);
         container.add(tableScrollPane.getHorizontalScrollBar(),BorderLayout.SOUTH);
-        container.setBorder(BorderFactory.createLineBorder(Color.RED,3));
         mainTable.setCoordinateContainer(container);
         return container;
     }

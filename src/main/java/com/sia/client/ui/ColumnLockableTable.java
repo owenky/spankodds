@@ -22,17 +22,23 @@ public class ColumnLockableTable extends JTable {
         this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
     }
+    public boolean hasRowNumber() {
+        return hasRowNumber;
+    }
     public void setCoordinateContainer(JComponent coordinateContainer) {
         this.coordinateContainer = coordinateContainer;
     }
     public JComponent getCoordinateContainer() {
         return coordinateContainer;
     }
-    public RowHeaderTable getRowHeaderTable() {
+    public final RowHeaderTable getRowHeaderTable() {
         if ( null == rowHeaderTable) {
-            rowHeaderTable = new RowHeaderTable(this,hasRowNumber);
+            rowHeaderTable = createNewRowHeaderTable();
         }
         return rowHeaderTable;
+    }
+    protected RowHeaderTable createNewRowHeaderTable() {
+        return new RowHeaderTable(this,hasRowNumber);
     }
     public void removeLockedColumnIndex(int lastIndex) {
         Integer[] arr = new Integer[lastIndex+1];

@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.event.ChangeEvent;
@@ -12,7 +13,7 @@ import javax.swing.table.TableCellRenderer;
 
 import static com.sia.client.config.Utils.log;
 
-public class MainGameTable extends ColumnLockableTable {
+public class MainGameTable extends ColumnLockableTable implements LinesTableDataSupplier {
 
     private TableColumnAdjuster tableColumnAdjuster;
     private boolean isSoccer=false;
@@ -20,6 +21,10 @@ public class MainGameTable extends ColumnLockableTable {
 
     public MainGameTable() {
         super(false);
+    }
+    @Override
+    protected RowHeaderGameTable createNewRowHeaderTable() {
+        return new RowHeaderGameTable(this,hasRowNumber());
     }
     //TODO: this override is for debug only
     @Override
@@ -56,6 +61,7 @@ public class MainGameTable extends ColumnLockableTable {
     public void addGameLine(LinesTableData gameLine) {
         getModel().addGameLine(gameLine);
     }
+    @Override
     public LinesTableData getLinesTableData(int row) {
         return getModel().getLinesTableData(row).linesTableData;
     }
