@@ -23,8 +23,8 @@ public class SpankOddsTest {
         jtable.setRowHeight(60);
 
         TableRowHeaderManager tableRowHeaderManager = new TableRowHeaderManager(jtable,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont,SiaConst.GameGroupHeaderHeight+20);
-        List<ColumnHeaderStruct> columnHeaderStructList = Arrays.stream(barRowIndex).map(ind -> new ColumnHeaderStruct("TEST "+ind,ind)).collect(Collectors.toList());
-        tableRowHeaderManager.setColumnHeaderList(columnHeaderStructList);
+        final List<ColumnHeaderStruct> columnHeaderStructList = Arrays.stream(barRowIndex).map(ind -> new ColumnHeaderStruct("TEST "+ind,ind)).collect(Collectors.toList());
+        tableRowHeaderManager.setColumnHeaderList(()->columnHeaderStructList);
 
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

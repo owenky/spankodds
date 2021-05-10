@@ -21,6 +21,7 @@ import java.awt.event.HierarchyListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.log;
 
@@ -33,7 +34,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
     private final Font titleFont;
     private final int headerHeight;
     private boolean isMainTableFirstShown = false;
-    private List<ColumnHeaderStruct> rowHeaderList;
+    private Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr;
 
     public TableRowHeaderManager(ColumnLockableTable mainTable,Color titleColor,Font titleFont,int headerHeight) {
         this.mainTable = mainTable;
@@ -47,8 +48,8 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         mainTable.getParent().addComponentListener(this);
         mainTable.getModel().addTableModelListener(this);
     }
-    public void setColumnHeaderList(List<ColumnHeaderStruct> rowHeaderList) {
-        this.rowHeaderList = rowHeaderList;
+    public void setColumnHeaderList(Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr) {
+        this.rowHeaderListSppr = rowHeaderListSppr;
     }
     @Override
     public void columnSelectionChanged(final ListSelectionEvent e) {
@@ -107,6 +108,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         }
     }
     private void drawColumnHeaders() {
+        List<ColumnHeaderStruct> rowHeaderList = rowHeaderListSppr.get();
         if ( null != rowHeaderList) {
             for(ColumnHeaderStruct struct: rowHeaderList) {
                 drawColumnHeader(struct);

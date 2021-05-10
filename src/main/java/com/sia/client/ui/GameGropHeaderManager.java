@@ -33,7 +33,7 @@ public class GameGropHeaderManager{
     public void installListeners() {
         if ( null == tableRowHeaderManager) {
             tableRowHeaderManager = new TableRowHeaderManager(mainGameTable,titleColor,titleFont,headerHeight);
-            tableRowHeaderManager.setColumnHeaderList(getColumnHeaderList());
+            tableRowHeaderManager.setColumnHeaderList(this::getColumnHeaderList);
         }
         tableRowHeaderManager.installListeners();
     }
