@@ -38,7 +38,6 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
     private final int headerHeight;
     private boolean isMainTableFirstShown = false;
     private Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr;
-    private int lastValue = -1;
 
     public TableRowHeaderManager(ColumnLockableTable mainTable, Color titleColor, Font titleFont, int headerHeight) {
         this.mainTable = mainTable;
@@ -118,7 +117,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         int width = (int)header.getPreferredSize().getWidth();
         mainTable.setRowHeight(rowViewIndex, headerHeight);
         mainTable.getRowHeaderTable().setRowHeight(rowViewIndex, headerHeight);
-        header.setBounds(x1+diffByScroll*3, y1, width, headerHeight);
+        header.setBounds(x1+diffByScroll, y1, width, headerHeight);
 
     }
     @Override
@@ -179,16 +178,8 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         if (evt.getValueIsAdjusting()) {
             return;
         }
-        int type = evt.getAdjustmentType();
         int value = evt.getValue();
-        if (lastValue < 0) {
-            lastValue = value;
-            return;
-        }
-        int diff = value - lastValue;
-        lastValue = value;
-        System.out.println("value =" + evt.getValue() + " diff=" + diff);
-        drawColumnHeaders(diff);
+        drawColumnHeaders(value);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

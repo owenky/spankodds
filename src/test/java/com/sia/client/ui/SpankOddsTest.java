@@ -18,7 +18,7 @@ public class SpankOddsTest {
     public static void main(String [] argv) {
 
         JFrame jFrame = new JFrame();
-        ColumnLockableTable jtable = new ColumnLockableTable(true);
+        ColumnLockableTable jtable = new ColumnLockableTable(false);
         jtable.setRowHeight(60);
 
         TableRowHeaderManager tableRowHeaderManager = new TableRowHeaderManager(jtable,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont,SiaConst.GameGroupHeaderHeight);
