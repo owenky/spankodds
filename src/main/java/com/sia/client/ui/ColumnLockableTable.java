@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sun.javafx.collections.ImmutableObservableList;
 
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
@@ -15,10 +16,17 @@ public class ColumnLockableTable extends JTable {
     private List<Integer> lockedColumnIndex = new ArrayList<>();
     private RowHeaderTable rowHeaderTable;
     private final boolean hasRowNumber;
+    private JComponent coordinateContainer;
 
     public ColumnLockableTable(boolean hasRowNumber) {
         this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
+    }
+    public void setCoordinateContainer(JComponent coordinateContainer) {
+        this.coordinateContainer = coordinateContainer;
+    }
+    public JComponent getCoordinateContainer() {
+        return coordinateContainer;
     }
     public RowHeaderTable getRowHeaderTable() {
         if ( null == rowHeaderTable) {

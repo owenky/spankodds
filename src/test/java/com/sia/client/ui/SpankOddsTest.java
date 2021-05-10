@@ -1,10 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
+
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -12,15 +11,11 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 public class SpankOddsTest {
@@ -53,10 +48,9 @@ public class SpankOddsTest {
         jFrame.getContentPane().add(tableContainer);
 
 
-        jFrame.setSize(new Dimension(500,100));
+        jFrame.setSize(new Dimension(250,100));
         jFrame.pack();
         jFrame.show();
-
     }
     private static Vector<String> makeRow(int seed,int colCount) {
         Vector<String> row = new Vector<>();
@@ -76,19 +70,17 @@ public class SpankOddsTest {
  ////////////////////////////////////////////////////////////////////////////////
    private static class HListener implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener {
 
-        private final ColumnLockableTable mainGameTable;
+        private final ColumnLockableTable mainTable;
         private boolean isMainTableFirstShown;
-        private Map<Integer,JComponent> titleMap = new HashMap<>();
 
-
-        public HListener(ColumnLockableTable mainGameTable) {
-            this.mainGameTable = mainGameTable;
+        public HListener(ColumnLockableTable mainTable) {
+            this.mainTable = mainTable;
         }
          @Override
          public void hierarchyChanged(final HierarchyEvent e) {
              if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
                  Object source = e.getSource();
-                 if ( source == mainGameTable && ! isMainTableFirstShown && mainGameTable.isShowing()) {
+                 if ( source == mainTable && ! isMainTableFirstShown && mainTable.isShowing()) {
                      isMainTableFirstShown = true;
                      drawGameLineTitles();
                  }
@@ -96,7 +88,8 @@ public class SpankOddsTest {
          }
          private void drawGameLineTitles() {
             for(int row:barRowIndex) {
-                GameGropHeaderManager.layOutGameGroupHeader(row, mainGameTable, getTitleComponent(row), 50);
+                GameGropHeaderManager.layOutGameGroupHeader(row, mainTable,  GameGropHeaderManager
+                        .makeGameGroupHeaderComp(mainTable,"TEST"+row,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont), SiaConst.GameGroupHeaderHeight+20);
             }
          }
 
@@ -150,19 +143,6 @@ public class SpankOddsTest {
          if ( e.getType() == TableModelEvent.INSERT ||  e.getType() == TableModelEvent.DELETE) {
              drawGameLineTitles();
          }
-     }
-     private JComponent getTitleComponent(int rowIndex) {
-         return titleMap.computeIfAbsent(rowIndex,row-> {
-             JPanel title = new JPanel();
-             title.setBackground(Color.BLACK);
-             JLabel titleLabel = new JLabel("TEST"+rowIndex);
-             titleLabel.setOpaque(false);
-             titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-             titleLabel.setForeground(Color.WHITE);
-             title.add(BorderLayout.CENTER, titleLabel);
-             mainGameTable.add(title);
-             return title;
-         });
      }
  }
 }
