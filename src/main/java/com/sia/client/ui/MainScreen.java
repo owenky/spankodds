@@ -1365,13 +1365,7 @@ public class MainScreen extends JPanel {
     }
     private MainGameTable createMainGameTable() {
         MainGameTable mainGameTable = new MainGameTable();
-        mainGameTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
-        mainGameTable.setPreferredScrollableViewportSize(mainGameTable.getPreferredSize());
-
-        //since there is no setDateVector() is called for this table, columnIdentifiers of this table is blank
-        //MainGameTableModel.this.fireTableChanged(e) would wipe out this table if autoCreateColumnsFromModel is true
-        mainGameTable.setAutoCreateColumnsFromModel(false);
         mainGameTable.setName(name);
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);

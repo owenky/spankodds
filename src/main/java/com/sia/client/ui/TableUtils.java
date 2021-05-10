@@ -16,14 +16,16 @@ public abstract class TableUtils {
 
         mainTable.removeLockedColumnIndex(lockedColumnLastIndex);
         mainTable.createUnlockedColumns();
-        JScrollPane tableScrollPane = new JScrollPane(mainTable);
+//        mainTable.setPreferredScrollableViewportSize(mainTable.getPreferredSize());
+
         mainTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF ); //necessary for horizontal scroll bar showing up.
-        tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         RowHeaderTable rowHeaderTable = mainTable.getRowHeaderTable();
         rowHeaderTable.createDefaultColumnModel();
+
+        JScrollPane tableScrollPane = new JScrollPane(mainTable);
+        tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.setRowHeaderView(rowHeaderTable);
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());
-
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         container.add(tableScrollPane,BorderLayout.CENTER);
