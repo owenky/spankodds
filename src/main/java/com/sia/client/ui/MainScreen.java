@@ -12,11 +12,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -1003,23 +1001,23 @@ public class MainScreen extends JPanel {
 
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 
-        JTable table0 = new JTable();
-        table0.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table0.setPreferredScrollableViewportSize(table0.getPreferredSize());
-        table0.setOpaque(true);
-        table0.changeSelection(0, 0, false, false);
-        table0.setAutoCreateColumnsFromModel(false);
-
-        if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
-            table0.setRowHeight(60);
-        } else {
-            table0.setRowHeight(30);
-        }
-        JTableHeader tableHeader = table0.getTableHeader();
+//        JTable table0 = new JTable();
+//        table0.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//        table0.setPreferredScrollableViewportSize(table0.getPreferredSize());
+//        table0.setOpaque(true);
+//        table0.changeSelection(0, 0, false, false);
+//        table0.setAutoCreateColumnsFromModel(false);
+//
+//        if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
+//            table0.setRowHeight(60);
+//        } else {
+//            table0.setRowHeight(30);
+//        }
+//        JTableHeader tableHeader = table0.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
-        tableHeader.setFont(headerFont);
+//        tableHeader.setFont(headerFont);
 
-        JScrollPane scrollPane0 = new JScrollPane(table0);
+//        JScrollPane scrollPane0 = new JScrollPane(table0);
 
         Vector hiddencols = AppController.getHiddenCols();
         for (int k = 0; k < newBookiesVec.size(); k++) {
@@ -1059,7 +1057,7 @@ public class MainScreen extends JPanel {
                 column.setPreferredWidth(30);
             }
 
-            table0.addColumn(column);
+//            table0.addColumn(column);
             mainGameTable.addColumn(column);
         }
 
@@ -1070,24 +1068,24 @@ public class MainScreen extends JPanel {
 
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
-        table0.addColumn(blankcol);
+//        table0.addColumn(blankcol);
 
 //        LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), timesort, shortteam, opener, last);
 //        table0.setModel(dataModel0);
-        JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
+//        JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
 
-        fixed0.setPreferredScrollableViewportSize(fixed0.getPreferredSize());
+//        fixed0.setPreferredScrollableViewportSize(fixed0.getPreferredSize());
 
-        JTableHeader tableHeaderfixed = fixed0.getTableHeader();
+//        JTableHeader tableHeaderfixed = fixed0.getTableHeader();
         Font headerFontfixed = new Font("Verdana", Font.BOLD, 11);
-        tableHeaderfixed.setFont(headerFontfixed);
-
-        scrollPane0.setRowHeaderView(fixed0);
-        scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
-
-        scrollPane0.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane0.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
-        scrollPane0.removeMouseWheelListener(scrollPane0.getMouseWheelListeners()[0]);
+//        tableHeaderfixed.setFont(headerFontfixed);
+//
+//        scrollPane0.setRowHeaderView(fixed0);
+//        scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
+//
+//        scrollPane0.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//        scrollPane0.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+//        scrollPane0.removeMouseWheelListener(scrollPane0.getMouseWheelListeners()[0]);
 
 
         log("gamergroup headers start..." + new java.util.Date());
@@ -1141,68 +1139,68 @@ public class MainScreen extends JPanel {
                 LID = s.getParentleague_id();
 
             }
-            JTable tablex;
-            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-                tablex = new SoccerTableView();
-                tablex.setRowHeight(60);
-            } else {
-                tablex = new RegularTableView();
-                tablex.setRowHeight(30);
-            }
-            tablex.setName("table" + j);
-            tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            tablex.setColumnModel(table0.getColumnModel());
-            tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
-            tablex.setOpaque(true);
-
-            tablex.changeSelection(0, 0, false, false);
-            tablex.setAutoCreateColumnsFromModel(false);
-            JScrollPane scrollPanex = new JScrollPane(tablex);
-
-            scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            scrollPanex.getHorizontalScrollBar().setModel(scrollPane0.getHorizontalScrollBar().getModel());
+//            JTable tablex;
+//            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
+//                tablex = new SoccerTableView();
+//                tablex.setRowHeight(60);
+//            } else {
+//                tablex = new RegularTableView();
+//                tablex.setRowHeight(30);
+//            }
+//            tablex.setName("table" + j);
+//            tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//            tablex.setColumnModel(table0.getColumnModel());
+//            tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
+//            tablex.setOpaque(true);
+//
+//            tablex.changeSelection(0, 0, false, false);
+//            tablex.setAutoCreateColumnsFromModel(false);
+//            JScrollPane scrollPanex = new JScrollPane(tablex);
+//
+//            scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//            scrollPanex.getHorizontalScrollBar().setModel(scrollPane0.getHorizontalScrollBar().getModel());
             if (j == vecofgamegroups.size() - 1) // last group
             {
 
-                scrollPanex.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                lastScrollPane = scrollPanex;
+//                scrollPanex.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//                lastScrollPane = scrollPanex;
 
 
-                JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, true);
+//                JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, true);
                 //fixedx.setColumnAutoResizable(true);
-                fixedx.setColumnModel(fixed0.getColumnModel());
+//                fixedx.setColumnModel(fixed0.getColumnModel());
                 //fixedx.setDefaultRenderer(Object.class, new LineRenderer());
 
-                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-                    fixedx.setRowHeight(60);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
-                } else {
-                    fixedx.setRowHeight(30);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-                }
-                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-                scrollPanex.setRowHeaderView(fixedx);
+//                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
+//                    fixedx.setRowHeight(60);
+//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
+//                } else {
+//                    fixedx.setRowHeight(30);
+//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer());
+//                }
+//                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
+//                scrollPanex.setRowHeaderView(fixedx);
 
             } else {
-                scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
-
-                JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, false);
-                fixedx.setColumnModel(fixed0.getColumnModel());
-
-                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-                    fixedx.setRowHeight(60);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
-                } else {
-                    fixedx.setRowHeight(30);
-                    fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-                }
-
-                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-                scrollPanex.setRowHeaderView(fixedx);
+//                scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
+//
+//                JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, false);
+//                fixedx.setColumnModel(fixed0.getColumnModel());
+//
+//                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
+//                    fixedx.setRowHeight(60);
+//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
+//                } else {
+//                    fixedx.setRowHeight(30);
+//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer());
+//                }
+//
+//                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
+//                scrollPanex.setRowHeaderView(fixedx);
             }
 
 
-            tablex.setTableHeader(null); // this has to be placed all the way down here!!!!
+//            tablex.setTableHeader(null); // this has to be placed all the way down here!!!!
             //System.out.println("nnn");
             boolean toShowHeader = false;
             if (isShowHeaders()) {
@@ -1212,11 +1210,11 @@ public class MainScreen extends JPanel {
                 }
             }
 
-            if (newgamegroupvec.size() > 0) {
-                scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
-            } else {
-                scrollPanex.setPreferredSize(new Dimension(1, 1));
-            }
+//            if (newgamegroupvec.size() > 0) {
+//                scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
+//            } else {
+//                scrollPanex.setPreferredSize(new Dimension(1, 1));
+//            }
             //TODO add tablemodel to MainGameTable
             if ( ! toShowHeader ) {
                 gameGroupHeader = null;
@@ -1224,9 +1222,9 @@ public class MainScreen extends JPanel {
             LinesTableData dataModel = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader);
 //            datamodelsvec.add(dataModel);
             mainGameTable.addGameLine(dataModel);
-
-            tablePanel.add(scrollPanex);
-            scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
+//
+//            tablePanel.add(scrollPanex);
+//            scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
 
             oldgamegroupvec = newgamegroupvec;
         }
@@ -1237,7 +1235,7 @@ public class MainScreen extends JPanel {
         scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-        JScrollBar bar = lastScrollPane.getHorizontalScrollBar();
+//        JScrollBar bar = lastScrollPane.getHorizontalScrollBar();
 
 
         removeAll();
@@ -1249,7 +1247,7 @@ public class MainScreen extends JPanel {
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
         //END OF TODO
-        add(bar, BorderLayout.PAGE_END);
+//        add(bar, BorderLayout.PAGE_END);
         mainGameTable.optimizeRowHeightsAndGameLineTitles();
         AppController.addDataModels(getDataModels());
         log("Datamodels size is :" + AppController.getDataModels().size());

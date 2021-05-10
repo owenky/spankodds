@@ -20,7 +20,7 @@ public abstract class TableUtils {
         RowHeaderTable rowHeaderTable = mainTable.getRowHeaderTable();
         rowHeaderTable.createDefaultColumnModel();
 
-        JScrollPane tableScrollPane = new JScrollPane(mainTable);
+        JScrollPane tableScrollPane = mainTable.getTableScrollPane();
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.setRowHeaderView(rowHeaderTable);
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());
@@ -28,7 +28,6 @@ public abstract class TableUtils {
         container.setLayout(new BorderLayout());
         container.add(tableScrollPane,BorderLayout.CENTER);
         container.add(tableScrollPane.getHorizontalScrollBar(),BorderLayout.SOUTH);
-        mainTable.setCoordinateContainer(container);
         return container;
     }
     public static TableColumn cloneTableColumn(TableColumn sourceTc,int columnIndex) {

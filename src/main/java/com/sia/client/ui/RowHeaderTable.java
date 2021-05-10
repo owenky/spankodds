@@ -1,6 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
+
 import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -11,14 +14,18 @@ import java.util.List;
 
 public class RowHeaderTable extends JTable {
 
+	private static final String ColumnHeaderCellIden = SiaConst.GameGroupHeaderIden;
 	private final ColumnLockableTable mainTable;
+	private final Color headerBackground;
 	private boolean toFireChangesInMainTable = true;
 	private final boolean hasRowNumber;
+	private ColumnHeaderCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
 	public RowHeaderTable(ColumnLockableTable mainTable,boolean hasRowNumber) {
 		this.hasRowNumber = hasRowNumber;
 		this.mainTable = mainTable;
+		this.headerBackground = SiaConst.DefaultHeaderColor;
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
 		this.setModel(mainTable.getModel());
 		this.setAutoCreateColumnsFromModel(false);
@@ -27,6 +34,16 @@ public class RowHeaderTable extends JTable {
 	}
 	public ColumnLockableTable getMainTable(){
 		return mainTable;
+	}
+	@Override
+	public final TableCellRenderer getCellRenderer(int row, int column) {
+		if ( null == headerCellRenderer) {
+			headerCellRenderer = new ColumnHeaderCellRenderer(this::getUserCellRenderer,headerBackground,ColumnHeaderCellIden);
+		}
+		return headerCellRenderer;
+	}
+	protected TableCellRenderer getUserCellRenderer(int row, int column) {
+		return super.getCellRenderer(row, column);
 	}
 	@Override
 	public int getRowHeight() {
@@ -127,10 +144,14 @@ public class RowHeaderTable extends JTable {
 	public Object getValueAt(int row, int column) {
 		
 		Object rtn;
-		if ( column == 0 ){
-			return row;
-		}else{
-			rtn = super.getValueAt(row,column);
+		if ( hasRowNumber) {
+			if (column == 0) {
+				rtn = row+1;
+			} else {
+				rtn = super.getValueAt(row, column-1);
+			}
+		} else {
+			rtn = super.getValueAt(row, column);
 		}
 		return rtn;
 

@@ -51,7 +51,7 @@ public class MainGameTable extends ColumnLockableTable implements LinesTableData
         return (MainGameTableModel)super.getModel();
     }
     @Override
-    public TableCellRenderer getCellRenderer(int row, int column) {
+    protected TableCellRenderer getUserCellRenderer(int row, int column) {
         if (isSoccer) {
             return new LineRenderer(SiaConst.SoccerStr);
         } else {

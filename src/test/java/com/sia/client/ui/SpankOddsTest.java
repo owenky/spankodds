@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 
 public class SpankOddsTest {
 
-    private static final Integer [] barRowIndex = new Integer [] {1,3,5};
+    private static final Integer [] barRowIndex = new Integer [] {1,3,5,10};
     public static void main(String [] argv) {
 
         JFrame jFrame = new JFrame();
-        ColumnLockableTable jtable = new ColumnLockableTable(false);
+        ColumnLockableTable jtable = new ColumnLockableTable(true);
         jtable.setRowHeight(60);
 
-        TableRowHeaderManager tableRowHeaderManager = new TableRowHeaderManager(jtable,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont,SiaConst.GameGroupHeaderHeight+20);
+        TableRowHeaderManager tableRowHeaderManager = new TableRowHeaderManager(jtable,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont,SiaConst.GameGroupHeaderHeight);
         final List<ColumnHeaderStruct> columnHeaderStructList = Arrays.stream(barRowIndex).map(ind -> new ColumnHeaderStruct("TEST "+ind,ind)).collect(Collectors.toList());
         tableRowHeaderManager.setColumnHeaderList(()->columnHeaderStructList);
 
@@ -48,12 +48,26 @@ public class SpankOddsTest {
         jFrame.pack();
         jFrame.show();
     }
-    private static Vector<String> makeRow(int seed,int colCount) {
-        Vector<String> row = new Vector<>();
+    private static Vector<String> makeRow(int row,int colCount) {
+        Vector<String> rowData = new Vector<>();
         for(int i=0;i<colCount;i++) {
-            row.add(""+seed+"_"+i);
+            if ( isHeaderRow(row)) {
+                rowData.add(SiaConst.GameGroupHeaderIden);
+            } else {
+                rowData.add("" + row + "_" + i);
+            }
         }
 
-        return row;
+        return rowData;
+    }
+    private static boolean isHeaderRow(int row) {
+        boolean status = false;
+        for ( int barRow:barRowIndex) {
+            if ( barRow == row) {
+                status = true;
+                break;
+            }
+        }
+        return status;
     }
 }
