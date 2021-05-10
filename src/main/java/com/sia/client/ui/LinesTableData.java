@@ -160,7 +160,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
             Bookie b = bookieVector.get(j);
             Object value;
             if ( SiaConst.BlankGameId == gameid) {
-                value = SiaConst.BlankGameId;
+                value = SiaConst.GameGroupHeaderIden;
             } else {
                 value = getCellValue(b,g);
             }
