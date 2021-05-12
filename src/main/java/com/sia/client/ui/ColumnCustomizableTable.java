@@ -33,14 +33,6 @@ public abstract class ColumnCustomizableTable extends JTable {
         return columnHeaderProvider;
     }
     @Override
-    public int getRowHeight(int row ) {
-        if ( columnHeaderProvider.get().columnHeaderIndexSet.contains(row)) {
-            return columnHeaderProvider.get().columnHeaderHeight;
-        } else {
-            return super.getRowHeight(row);
-        }
-    }
-    @Override
     public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
         if ( null == headerCellRenderer) {
             TableCellRendererProvider tableCellRendererProvider = (row,col)-> {
