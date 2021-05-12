@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.GameTableTableColumnProvider;
 import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 
@@ -10,21 +11,31 @@ import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
-public class MainGameTable extends ColumnLockableTable implements LinesTableDataSupplier {
+public class MainGameTable extends ColumnCustomizableTable implements LinesTableDataSupplier {
 
     private TableColumnAdjuster tableColumnAdjuster;
     private boolean isSoccer=false;
+    private Set<Integer> columnHeaderRowViewIndex;
 
 
-    public MainGameTable() {
-        super(false);
+    public MainGameTable(GameTableTableColumnProvider columnHeaderProvider) {
+        super(false,columnHeaderProvider);
+        columnHeaderProvider.setMainGameTable(this);
     }
     @Override
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
+    }
+    public Set<Integer> getColumnHeaderRowViewIndex() {
+        if ( null == columnHeaderRowViewIndex) {
+            columnHeaderRowViewIndex = getModel().getBlankGameIdIndex().stream().map(struct -> struct.tableRowModelIndex).map(this::convertRowIndexToView).collect(Collectors.toSet());
+        }
+        return columnHeaderRowViewIndex;
     }
     //TODO: this override is for debug only
     @Override
@@ -51,7 +62,7 @@ public class MainGameTable extends ColumnLockableTable implements LinesTableData
         return (MainGameTableModel)super.getModel();
     }
     @Override
-    protected TableCellRenderer getUserCellRenderer(int row, int column) {
+    public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colViewIndex) {
         if (isSoccer) {
             return new LineRenderer(SiaConst.SoccerStr);
         } else {
@@ -82,8 +93,12 @@ public class MainGameTable extends ColumnLockableTable implements LinesTableData
         super.setName(name);
         isSoccer = SiaConst.SoccerStr.equalsIgnoreCase(name);
     }
-    public final void tableChangedBySuperClass(TableModelEvent e_) {
-        super.tableChanged(e_);
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        if ( e.getType() == TableModelEvent.DELETE || e.getType() == TableModelEvent.INSERT ) {
+            columnHeaderRowViewIndex = null;
+        }
+        super.tableChanged(e);
     }
     public void adjustColumns(boolean includeHeaders) {
         getTableColumnAdjuster().adjustColumns(includeHeaders);

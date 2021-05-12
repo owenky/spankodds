@@ -32,14 +32,14 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
 
     private static final Color DefaultHeaderColor = SiaConst.DefaultHeaderColor;
     private final Map<String, JComponent> columnHeaderComponentMap = new HashMap<>();
-    private final ColumnLockableTable mainTable;
+    private final ColumnCustomizableTable mainTable;
     private final Color titleColor;
     private final Font titleFont;
     private final int headerHeight;
     private boolean isMainTableFirstShown = false;
     private Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr;
 
-    public TableRowHeaderManager(ColumnLockableTable mainTable, Color titleColor, Font titleFont, int headerHeight) {
+    public TableRowHeaderManager(ColumnCustomizableTable mainTable, Color titleColor, Font titleFont, int headerHeight) {
         this.mainTable = mainTable;
         this.titleColor = titleColor;
         this.titleFont = titleFont;
@@ -90,7 +90,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, headerHeight, diffByScroll);
     }
 
-    public static JComponent makeColumnHeaderComp(ColumnLockableTable jtable, String gameGroupHeader, Color titleColor, Font titleFont) {
+    public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Color titleColor, Font titleFont) {
 
         JPanel jPanel = new JPanel();
         jPanel.setBackground(titleColor);
@@ -109,11 +109,10 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         return jPanel;
     }
 
-    public static void layOutColumnHeader(int rowViewIndex, ColumnLockableTable mainTable, JComponent header, int headerHeight, int diffByScroll) {
-        Rectangle r1 = mainTable.getCellRect(rowViewIndex, 0, true);
-
+    public static void layOutColumnHeader(int rowViewIndex, ColumnCustomizableTable mainTable, JComponent header, int headerHeight, int diffByScroll) {
+        Rectangle r1 = mainTable.getCellRect(rowViewIndex-1, 0, true);
         int x1 = 0;
-        int y1 = (int) r1.getY();
+        int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
         mainTable.setRowHeight(rowViewIndex, headerHeight);
         mainTable.getRowHeaderTable().setRowHeight(rowViewIndex, headerHeight);

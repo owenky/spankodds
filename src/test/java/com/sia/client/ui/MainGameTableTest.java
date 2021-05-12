@@ -16,7 +16,7 @@ public class MainGameTableTest {
     private static Games gameCache = new Games();
     @Test
     public void testgetValueAt() {
-        MainGameTable table = new MainGameTable();
+        MainGameTable table = new MainGameTable(null);
         table.addColumn(new TableColumn());
         table.addGameLine( makeGameRegion(10));
         table.addGameLine( makeGameRegion(20));

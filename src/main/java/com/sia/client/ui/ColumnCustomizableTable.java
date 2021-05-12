@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
+import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.TableCellRendererProvider;
 import com.sun.javafx.collections.ImmutableObservableList;
 
 import javax.swing.JScrollPane;
@@ -9,35 +10,46 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColumnLockableTable extends JTable {
+public abstract class ColumnCustomizableTable extends JTable {
 
-    private static final String ColumnHeaderCellIden = SiaConst.GameGroupHeaderIden;
+    private final ColumnHeaderProvider columnHeaderProvider;
     private final List<TableColumn> allColumns = new ArrayList<>();
     private List<Integer> lockedColumnIndex = new ArrayList<>();
     private RowHeaderTable rowHeaderTable;
     private final boolean hasRowNumber;
-    private final Color headerBackground;
     private JScrollPane tableScrollPane;
     private ColumnHeaderCellRenderer headerCellRenderer;
 
-    public ColumnLockableTable(boolean hasRowNumber) {
+    abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
+    public ColumnCustomizableTable(boolean hasRowNumber, ColumnHeaderProvider columnHeaderProvider) {
+        this.columnHeaderProvider = columnHeaderProvider;
         this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
-        this.headerBackground = SiaConst.DefaultHeaderColor;
+    }
+    public ColumnHeaderProvider getColumnHeaderProvider() {
+        return columnHeaderProvider;
     }
     @Override
-    public final TableCellRenderer getCellRenderer(int row, int column) {
+    public int getRowHeight(int row ) {
+        if ( columnHeaderProvider.get().columnHeaderIndexSet.contains(row)) {
+            return columnHeaderProvider.get().columnHeaderHeight;
+        } else {
+            return super.getRowHeight(row);
+        }
+    }
+    @Override
+    public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
         if ( null == headerCellRenderer) {
-            headerCellRenderer = new ColumnHeaderCellRenderer(this::getUserCellRenderer,headerBackground,ColumnHeaderCellIden);
+            TableCellRendererProvider tableCellRendererProvider = (row,col)-> {
+                int colDataModelIndex = ColumnCustomizableTable.this.convertColumnIndexToModel(col) + lockedColumnIndex.size();
+                return getUserCellRenderer(row,colDataModelIndex);
+            };
+            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, columnHeaderProvider);
         }
         return headerCellRenderer;
-    }
-    protected TableCellRenderer getUserCellRenderer(int row, int column) {
-        return super.getCellRenderer(row, column);
     }
     public JScrollPane getTableScrollPane() {
         if ( null == tableScrollPane) {
@@ -57,14 +69,19 @@ public class ColumnLockableTable extends JTable {
     protected RowHeaderTable createNewRowHeaderTable() {
         return new RowHeaderTable(this,hasRowNumber);
     }
-    public void removeLockedColumnIndex(int lastIndex) {
-        Integer[] arr = new Integer[lastIndex+1];
-        for (int i = 0; i <= lastIndex; i++) {
+
+    /**
+     * boundaryIndex is not included in locked column
+     * @param boundaryIndex
+     */
+    public void removeLockedColumnIndex(int boundaryIndex) {
+        Integer[] arr = new Integer[boundaryIndex];
+        for (int i = 0; i < boundaryIndex; i++) {
             arr[i] = i;
         }
         removeLockedColumnIndex(arr);
     }
-    public TableColumn getColumnFromModel(int colModelIndex) {
+    public TableColumn getColumnFromDataModel(int colModelIndex) {
         return allColumns.get(colModelIndex);
     }
     public void removeLockedColumnIndex(Integer... lockedColumnIndexArr) {
@@ -122,7 +139,7 @@ public class ColumnLockableTable extends JTable {
 
 
     @Override
-    public void createDefaultColumnsFromModel() {
+    public final void createDefaultColumnsFromModel() {
         //don't override this method.
         super.createDefaultColumnsFromModel();
     }

@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
+import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -14,36 +14,35 @@ import java.util.List;
 
 public class RowHeaderTable extends JTable {
 
-	private static final String ColumnHeaderCellIden = SiaConst.GameGroupHeaderIden;
-	private final ColumnLockableTable mainTable;
-	private final Color headerBackground;
+	private final ColumnCustomizableTable mainTable;
 	private boolean toFireChangesInMainTable = true;
 	private final boolean hasRowNumber;
 	private ColumnHeaderCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
-	public RowHeaderTable(ColumnLockableTable mainTable,boolean hasRowNumber) {
+	public RowHeaderTable(ColumnCustomizableTable mainTable, boolean hasRowNumber) {
 		this.hasRowNumber = hasRowNumber;
 		this.mainTable = mainTable;
-		this.headerBackground = SiaConst.DefaultHeaderColor;
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
 		this.setModel(mainTable.getModel());
 		this.setAutoCreateColumnsFromModel(false);
 //		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		this.setOpaque(false);
 	}
-	public ColumnLockableTable getMainTable(){
+	public ColumnCustomizableTable getMainTable(){
 		return mainTable;
 	}
 	@Override
-	public final TableCellRenderer getCellRenderer(int row, int column) {
+	public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
 		if ( null == headerCellRenderer) {
-			headerCellRenderer = new ColumnHeaderCellRenderer(this::getUserCellRenderer,headerBackground,ColumnHeaderCellIden);
+			TableCellRendererProvider tableCellRendererProvider = (rViewIndex,cViewIndex)-> {
+				int colModelIndex = RowHeaderTable.this.convertColumnIndexToModel(cViewIndex);
+				int colDataModelIndex = mainTable.getLockedColumns().get(colModelIndex);
+				return mainTable.getUserCellRenderer(rViewIndex,colDataModelIndex);
+			};
+			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getColumnHeaderProvider());
 		}
 		return headerCellRenderer;
-	}
-	protected TableCellRenderer getUserCellRenderer(int row, int column) {
-		return super.getCellRenderer(row, column);
 	}
 	@Override
 	public int getRowHeight() {
@@ -124,7 +123,7 @@ public class RowHeaderTable extends JTable {
 		List<Integer> lockColumns = mainTable.getLockedColumns();
 		if ( null != lockColumns) {
 			for (Integer tcIndex : lockColumns) {
-				cm.addColumn( mainTable.getColumnFromModel(tcIndex));
+				cm.addColumn( mainTable.getColumnFromDataModel(tcIndex));
 			}
 		}
 	}
@@ -197,16 +196,14 @@ public class RowHeaderTable extends JTable {
 //		return columnModelIndex;
 //
 //	}
-//	@Override
-//    public int convertRowIndexToModel(int index_) {
-//		int rtn_ = mainTable.convertRowIndexToModel(index_);
-//		return rtn_;
-//    }
-//	@Override
-//    public int convertRowIndexToView(int index_) {
-//		int rtn_ = mainTable.convertRowIndexToView(index_);
-//		return rtn_;
-//    }
+	@Override
+    public int convertRowIndexToModel(int index_) {
+		return mainTable.convertRowIndexToModel(index_);
+    }
+	@Override
+    public int convertRowIndexToView(int index_) {
+		return mainTable.convertRowIndexToView(index_);
+    }
 //	@Override
 //	public void setCursor(Cursor cursor) {
 //		/**

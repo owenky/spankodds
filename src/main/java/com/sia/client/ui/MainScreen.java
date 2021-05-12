@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameTableTableColumnProvider;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
@@ -1362,7 +1363,7 @@ public class MainScreen extends JPanel {
 
     }
     private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable();
+        MainGameTable mainGameTable = new MainGameTable(new GameTableTableColumnProvider());
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setName(name);
         JTableHeader tableHeader = mainGameTable.getTableHeader();

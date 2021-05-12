@@ -10,7 +10,7 @@ import java.awt.BorderLayout;
 
 public abstract class TableUtils {
 
-    public static JComponent configTableLockColumns(ColumnLockableTable mainTable,int lockedColumnLastIndex) {
+    public static JComponent configTableLockColumns(ColumnCustomizableTable mainTable, int lockedColumnLastIndex) {
 
         mainTable.removeLockedColumnIndex(lockedColumnLastIndex);
         mainTable.createUnlockedColumns();
