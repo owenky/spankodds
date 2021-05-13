@@ -5,14 +5,13 @@ import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableCellRenderer;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -21,9 +20,9 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
     private static final Color userRenderBorderColr = Color.GRAY;
     private static final int userRenderBorderThick = 1;
-    private static final Border userRenderBorderNormal = new MatteBorder(0, 0, userRenderBorderThick,userRenderBorderThick,userRenderBorderColr);
-    private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick,userRenderBorderThick,userRenderBorderColr);
-    private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick,1,userRenderBorderColr);
+    private static final Border userRenderBorderNormal = new MatteBorder(0, 0, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
+    private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
+    private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick, 1, userRenderBorderColr);
     private final ColumnHeaderProvider columnHeaderProvider;
     private final TableCellRendererProvider tableCellRendererProvider;
     private final MarginProvider marginProvider;
@@ -33,44 +32,101 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         this.columnHeaderProvider = columnHeaderProvider;
         this.marginProvider = marginProvider;
     }
+
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
         int rowModelIndex = table.convertRowIndexToModel(row);
-        if ( columnHeaderProvider.get().columnHeaderIndexSet.contains(rowModelIndex)) {
+        if (columnHeaderProvider.get().columnHeaderIndexSet.contains(rowModelIndex)) {
             JPanel render = new JPanel();
             render.setBackground(columnHeaderProvider.get().haderBackground);
             render.setBorder(BorderFactory.createEmptyBorder());
             return render;
         }
-        Component userComponent = tableCellRendererProvider.apply(row,column).getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-        return createJPanelWithPadding((JComponent)userComponent, table.getRowCount(),table.getColumnCount(),row,column);
+        Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        return createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
     }
-    private JPanel createJPanelWithPadding(JComponent userComponent,int rowCount, int colCount, int row, int col) {
+
+    //    private JPanel createJPanelWithPadding(JComponent userComponent,int rowCount, int colCount, int row, int col) {
+//        JPanel render = new JPanel();
+//        render.setLayout(new BoxLayout(render, BoxLayout.Y_AXIS));
+//
+//        JPanel bodyPanel = new JPanel();
+//        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.X_AXIS));
+//
+//        Dimension horizontalPadding = new Dimension((int)marginProvider.get().getWidth(),1);
+//        horizontalPadding = new Dimension(10,10);
+//        Component leftRigidArea = Box.createRigidArea(horizontalPadding);
+//        leftRigidArea.setBackground(Color.BLUE);
+//        bodyPanel.add(leftRigidArea);
+//        bodyPanel.add(userComponent);
+//        Component rightRigidArea = Box.createRigidArea(horizontalPadding);
+//        rightRigidArea.setBackground(Color.BLUE);
+//        bodyPanel.add(rightRigidArea);
+//        bodyPanel.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+//
+//        Dimension verticalPadding = new Dimension(1,(int)marginProvider.get().getHeight());
+//        render.add(Box.createRigidArea(verticalPadding));
+//        render.add(bodyPanel);
+//        render.add(Box.createRigidArea(verticalPadding));
+//        Border renderBorder;
+//        if ( 0 ==  col) {
+//            renderBorder = userRenderBorderFirstCol;
+//        } else if ( (colCount-1) == col) {
+//            renderBorder = userRenderBorderLastCol;
+//        } else {
+//            renderBorder = userRenderBorderNormal;
+//        }
+//        render.setBorder(renderBorder);
+//        return render;
+//    }
+    private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
+
         JPanel render = new JPanel();
-        render.setLayout(new BoxLayout(render, BoxLayout.Y_AXIS));
 
-        JPanel bodyPanel = new JPanel();
-        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.X_AXIS));
+        BorderLayout bl = new BorderLayout();
+        render.setLayout(bl);
 
-        Dimension horizontalPadding = new Dimension((int)marginProvider.get().getWidth(),1);
-        bodyPanel.add(Box.createRigidArea(horizontalPadding));
-        bodyPanel.add(userComponent);
-        bodyPanel.add(Box.createRigidArea(horizontalPadding));
+        JComponent topPadding = createVPaddingComponent(userComponent.getBackground());
+        JComponent bottomPadding = createVPaddingComponent(userComponent.getBackground());
+        JComponent leftPadding = createHPaddingComponent(userComponent.getBackground());
+        JComponent rightPadding = createHPaddingComponent(userComponent.getBackground());
 
-        Dimension verticalPadding = new Dimension(1,(int)marginProvider.get().getHeight());
-        render.add(Box.createRigidArea(verticalPadding));
-        bodyPanel.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-        render.add(bodyPanel);
-        render.add(Box.createRigidArea(verticalPadding));
+        render.add(topPadding,BorderLayout.NORTH);
+        render.add(bottomPadding,BorderLayout.SOUTH);
+        render.add(leftPadding,BorderLayout.WEST);
+        render.add(rightPadding,BorderLayout.EAST);
+        render.add(userComponent,BorderLayout.CENTER);
+
         Border renderBorder;
-        if ( 0 ==  col) {
+        if (0 == col) {
             renderBorder = userRenderBorderFirstCol;
-        } else if ( (colCount-1) == col) {
+        } else if ((colCount - 1) == col) {
             renderBorder = userRenderBorderLastCol;
         } else {
             renderBorder = userRenderBorderNormal;
         }
+        userComponent.setBorder(BorderFactory.createEmptyBorder());
         render.setBorder(renderBorder);
         return render;
+    }
+    private JComponent createHPaddingComponent(Color bck) {
+        JComponent padding = new JPanel();
+        Dimension size = new Dimension( (int)marginProvider.get().getWidth(),-1);
+        padding.setPreferredSize(size);
+        padding.setMaximumSize(size);
+        padding.setMinimumSize(size);
+        padding.setBackground(bck);
+        padding.setBorder(BorderFactory.createEmptyBorder());
+        return padding;
+    }
+    private JComponent createVPaddingComponent(Color bck) {
+        JComponent padding = new JPanel();
+        Dimension size = new Dimension(-1,(int)marginProvider.get().getHeight());
+        padding.setPreferredSize(size);
+        padding.setMaximumSize(size);
+        padding.setMinimumSize(size);
+        padding.setBackground(bck);
+        padding.setBorder(BorderFactory.createEmptyBorder());
+        return padding;
     }
 }
