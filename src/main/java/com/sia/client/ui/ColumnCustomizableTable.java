@@ -10,6 +10,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,41 @@ public abstract class ColumnCustomizableTable extends JTable {
     }
     public ColumnHeaderProvider getColumnHeaderProvider() {
         return columnHeaderProvider;
+    }
+    @Override
+    public void setRowHeight(int rowHeight) {
+        super.setRowHeight(rowHeight);
+        getRowHeaderTable().setRowHeight(rowHeight);
+    }
+    @Override
+    public void setIntercellSpacing(Dimension intercellSpacing) {
+        super.setIntercellSpacing(intercellSpacing);
+        getRowHeaderTable().setIntercellSpacing(intercellSpacing);
+    }
+    @Override
+    public void setRowHeight(int row,int rowHeight) {
+        super.setRowHeight(row,rowHeight);
+        getRowHeaderTable().setRowHeight(row,rowHeight);
+    }
+    @Override
+    public void setShowHorizontalLines(boolean showHorizontalLines) {
+        super.setShowHorizontalLines(showHorizontalLines);
+        getRowHeaderTable().setShowHorizontalLines(showHorizontalLines);
+    }
+    @Override
+    public void setGridColor(Color gridColor) {
+        super.setGridColor(gridColor);
+        getRowHeaderTable().setGridColor(gridColor);
+    }
+    @Override
+    public void setFont(Font font) {
+        super.setFont(font);
+        getRowHeaderTable().setFont(font);
+    }
+    @Override
+    public void setRowMargin(int rowMargin) {
+        super.setRowMargin(rowMargin);
+        getRowHeaderTable().setRowMargin(rowMargin);
     }
     @Override
     public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
@@ -55,6 +93,7 @@ public abstract class ColumnCustomizableTable extends JTable {
     public final RowHeaderTable getRowHeaderTable() {
         if ( null == rowHeaderTable) {
             rowHeaderTable = createNewRowHeaderTable();
+            rowHeaderTable.createDefaultColumnModel();
         }
         return rowHeaderTable;
     }

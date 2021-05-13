@@ -18,7 +18,7 @@ public abstract class TableUtils {
 
         mainTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF ); //necessary for horizontal scroll bar showing up.
         RowHeaderTable rowHeaderTable = mainTable.getRowHeaderTable();
-        rowHeaderTable.createDefaultColumnModel();
+        rowHeaderTable.createDefaultColumnsFromModel();
 
         JScrollPane tableScrollPane = mainTable.getTableScrollPane();
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

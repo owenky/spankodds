@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class SpankOddsTest {
 
-    private static final Integer [] barRowIndex = new Integer [] {1,3,5,10};
+    private static final Integer [] barRowIndex = new Integer [] {1,3,5,10,20,30,40,50,60,70,80,90};
     private static final int lastLockedColumnIndex = 3;
     private static final int totalRowCount = 100;
     private static final int totalColumnCount = 46;
@@ -36,6 +36,7 @@ public class SpankOddsTest {
             }
         };
         jtable.setRowHeight(60);
+        jtable.setIntercellSpacing(new Dimension(4,2));
 
         TableRowHeaderManager tableRowHeaderManager = new TableRowHeaderManager(jtable,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont,SiaConst.GameGroupHeaderHeight);
         final List<ColumnHeaderStruct> columnHeaderStructList = Arrays.stream(barRowIndex).map(ind -> new ColumnHeaderStruct("TEST "+ind,ind)).collect(Collectors.toList());

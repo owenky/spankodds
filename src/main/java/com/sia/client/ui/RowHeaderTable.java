@@ -7,9 +7,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.util.List;
 
 public class RowHeaderTable extends JTable {
@@ -44,42 +41,42 @@ public class RowHeaderTable extends JTable {
 		}
 		return headerCellRenderer;
 	}
-	@Override
-	public int getRowHeight() {
-		return mainTable.getRowHeight();
-	}
-	@Override
-	public int getRowHeight(int row_) {
-		return mainTable.getRowHeight(row_);
-	}
-	@Override
-	public boolean getShowHorizontalLines() {
-		return mainTable.getShowHorizontalLines();
-	}
-	@Override
-	public Dimension getIntercellSpacing() {
-		return mainTable.getIntercellSpacing();
-	}
-	@Override
-	public Color getGridColor() {
-		if ( null != mainTable) {
-			return mainTable.getGridColor();
-		} else {
-			return super.getGridColor();
-		}
-	}
-	@Override
-	public Font getFont() {
-		if ( null != mainTable) {
-			return mainTable.getFont();
-		} else {
-			return super.getFont();
-		}
-	}
-	@Override
-	public int getRowMargin() {
-		return mainTable.getRowMargin();
-	}
+//	@Override
+//	public int getRowHeight() {
+//		return mainTable.getRowHeight();
+//	}
+//	@Override
+//	public int getRowHeight(int row_) {
+//		return mainTable.getRowHeight(row_);
+//	}
+//	@Override
+//	public boolean getShowHorizontalLines() {
+//		return mainTable.getShowHorizontalLines();
+//	}
+//	@Override
+//	public Dimension getIntercellSpacing() {
+//		return mainTable.getIntercellSpacing();
+//	}
+//	@Override
+//	public Color getGridColor() {
+//		if ( null != mainTable) {
+//			return mainTable.getGridColor();
+//		} else {
+//			return super.getGridColor();
+//		}
+//	}
+//	@Override
+//	public Font getFont() {
+//		if ( null != mainTable) {
+//			return mainTable.getFont();
+//		} else {
+//			return super.getFont();
+//		}
+//	}
+//	@Override
+//	public int getRowMargin() {
+//		return mainTable.getRowMargin();
+//	}
 	@Override
 	public boolean getAutoCreateColumnsFromModel() {
 		return true;
