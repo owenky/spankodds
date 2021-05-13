@@ -45,40 +45,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         return createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
     }
-
-    //    private JPanel createJPanelWithPadding(JComponent userComponent,int rowCount, int colCount, int row, int col) {
-//        JPanel render = new JPanel();
-//        render.setLayout(new BoxLayout(render, BoxLayout.Y_AXIS));
-//
-//        JPanel bodyPanel = new JPanel();
-//        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.X_AXIS));
-//
-//        Dimension horizontalPadding = new Dimension((int)marginProvider.get().getWidth(),1);
-//        horizontalPadding = new Dimension(10,10);
-//        Component leftRigidArea = Box.createRigidArea(horizontalPadding);
-//        leftRigidArea.setBackground(Color.BLUE);
-//        bodyPanel.add(leftRigidArea);
-//        bodyPanel.add(userComponent);
-//        Component rightRigidArea = Box.createRigidArea(horizontalPadding);
-//        rightRigidArea.setBackground(Color.BLUE);
-//        bodyPanel.add(rightRigidArea);
-//        bodyPanel.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-//
-//        Dimension verticalPadding = new Dimension(1,(int)marginProvider.get().getHeight());
-//        render.add(Box.createRigidArea(verticalPadding));
-//        render.add(bodyPanel);
-//        render.add(Box.createRigidArea(verticalPadding));
-//        Border renderBorder;
-//        if ( 0 ==  col) {
-//            renderBorder = userRenderBorderFirstCol;
-//        } else if ( (colCount-1) == col) {
-//            renderBorder = userRenderBorderLastCol;
-//        } else {
-//            renderBorder = userRenderBorderNormal;
-//        }
-//        render.setBorder(renderBorder);
-//        return render;
-//    }
     private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
 
         JPanel render = new JPanel();
