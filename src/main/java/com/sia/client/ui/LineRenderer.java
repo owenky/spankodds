@@ -1,25 +1,13 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import java.awt.Component;
-import java.awt.Dimension;
 
 import static com.sia.client.config.Utils.log;
 
 public class LineRenderer extends LinePanel implements TableCellRenderer {
 
-    private static final JLabel BlankCell;
-    static {
-        BlankCell = new JLabel();
-        BlankCell.setOpaque(false);
-        BlankCell.setBorder(BorderFactory.createEmptyBorder());
-        BlankCell.setMaximumSize(new Dimension(0,SiaConst.GameGroupHeaderHeight));
-    }
     public LineRenderer() {
     }
 
@@ -38,8 +26,6 @@ public class LineRenderer extends LinePanel implements TableCellRenderer {
                 log("value is null" + row + ".." + column);
             }
             return null;
-        } else if (SiaConst.BlankGameId.equals(value)) {
-            return BlankCell;
         }
 
         this.table = table;

@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 import com.sun.javafx.collections.ImmutableObservableList;
 
@@ -25,12 +26,20 @@ public abstract class ColumnCustomizableTable extends JTable {
     private final boolean hasRowNumber;
     private JScrollPane tableScrollPane;
     private ColumnHeaderCellRenderer headerCellRenderer;
+    private int userDefinedRowMargin;
+    private MarginProvider marginProvider;
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnHeaderProvider columnHeaderProvider) {
         this.columnHeaderProvider = columnHeaderProvider;
         this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
+    }
+    public MarginProvider getMarginProvider() {
+        if ( null == marginProvider) {
+            marginProvider = ()->new Dimension(this.getUserDefinedRowMargin(),this.getUserDefinedColumnMargin());
+        }
+        return marginProvider;
     }
     public ColumnHeaderProvider getColumnHeaderProvider() {
         return columnHeaderProvider;
@@ -41,10 +50,11 @@ public abstract class ColumnCustomizableTable extends JTable {
         getRowHeaderTable().setRowHeight(rowHeight);
     }
     @Override
-    public void setIntercellSpacing(Dimension intercellSpacing) {
-        super.setIntercellSpacing(intercellSpacing);
-        getRowHeaderTable().setIntercellSpacing(intercellSpacing);
+    public void setRowMargin(int rowMargin) {
+        //table row margin should remain 0 for game group header drawing.
+        this.userDefinedRowMargin = rowMargin;
     }
+
     @Override
     public void setRowHeight(int row,int rowHeight) {
         super.setRowHeight(row,rowHeight);
@@ -66,18 +76,13 @@ public abstract class ColumnCustomizableTable extends JTable {
         getRowHeaderTable().setFont(font);
     }
     @Override
-    public void setRowMargin(int rowMargin) {
-        super.setRowMargin(rowMargin);
-        getRowHeaderTable().setRowMargin(rowMargin);
-    }
-    @Override
     public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
         if ( null == headerCellRenderer) {
             TableCellRendererProvider tableCellRendererProvider = (row,col)-> {
                 int colDataModelIndex = ColumnCustomizableTable.this.convertColumnIndexToModel(col) + lockedColumnIndex.size();
                 return getUserCellRenderer(row,colDataModelIndex);
             };
-            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, columnHeaderProvider);
+            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, columnHeaderProvider,getMarginProvider());
         }
         return headerCellRenderer;
     }
@@ -100,7 +105,12 @@ public abstract class ColumnCustomizableTable extends JTable {
     protected RowHeaderTable createNewRowHeaderTable() {
         return new RowHeaderTable(this,hasRowNumber);
     }
-
+    public int getUserDefinedRowMargin() {
+        return userDefinedRowMargin;
+    }
+    public int getUserDefinedColumnMargin() {
+        return this.getColumnModel().getUserDefinedColumnMargin();
+    }
     /**
      * boundaryIndex is not included in locked column
      * @param boundaryIndex
@@ -167,8 +177,14 @@ public abstract class ColumnCustomizableTable extends JTable {
 //
 //        }
     }
-
-
+    @Override
+    public CustomizableTableColumnModel getColumnModel() {
+        return (CustomizableTableColumnModel)super.getColumnModel();
+    }
+    @Override
+    public CustomizableTableColumnModel createDefaultColumnModel() {
+        return new CustomizableTableColumnModel();
+    }
     @Override
     public final void createDefaultColumnsFromModel() {
         //don't override this method.

@@ -36,7 +36,7 @@ public class SpankOddsTest {
             }
         };
         jtable.setRowHeight(60);
-        jtable.setIntercellSpacing(new Dimension(4,2));
+        jtable.setIntercellSpacing(new Dimension(8,2));
 
         TableRowHeaderManager tableRowHeaderManager = new TableRowHeaderManager(jtable,GameGropHeaderManager.DefaultTitleColor,GameGropHeaderManager.DefaultTitleFont,SiaConst.GameGroupHeaderHeight);
         final List<ColumnHeaderStruct> columnHeaderStructList = Arrays.stream(barRowIndex).map(ind -> new ColumnHeaderStruct("TEST "+ind,ind)).collect(Collectors.toList());

@@ -24,7 +24,6 @@ public class RowHeaderTable extends JTable {
 		this.setModel(mainTable.getModel());
 		this.setAutoCreateColumnsFromModel(false);
 //		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		this.setOpaque(false);
 	}
 	public ColumnCustomizableTable getMainTable(){
 		return mainTable;
@@ -37,9 +36,13 @@ public class RowHeaderTable extends JTable {
 				int colDataModelIndex = mainTable.getLockedColumns().get(colModelIndex);
 				return mainTable.getUserCellRenderer(rViewIndex,colDataModelIndex);
 			};
-			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getColumnHeaderProvider());
+			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getColumnHeaderProvider(),mainTable.getMarginProvider());
 		}
 		return headerCellRenderer;
+	}
+	@Override
+	public void setRowMargin(int rowMargin) {
+		//don't set row margin, use main table's row margin
 	}
 //	@Override
 //	public int getRowHeight() {

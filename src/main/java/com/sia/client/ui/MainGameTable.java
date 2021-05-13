@@ -37,22 +37,6 @@ public class MainGameTable extends ColumnCustomizableTable implements LinesTable
         }
         return columnHeaderRowViewIndex;
     }
-    //TODO: this override is for debug only
-    @Override
-    public void setRowHeight(int row,int height) {
-        if ( getRowHeight(row) == SiaConst.GameGroupHeaderHeight && height != SiaConst.GameGroupHeaderHeight ) {
-            new Exception("set RowHeight after header is set row="+row).printStackTrace();
-        }
-        super.setRowHeight(row,height);
-    }
-    //TODO: this override is for debug only
-    @Override
-    public void setRowHeight(int height) {
-        if ( getRowHeight(0) == SiaConst.GameGroupHeaderHeight && height != SiaConst.GameGroupHeaderHeight ) {
-            new Exception("set RowHeight after header is set height="+height).printStackTrace();
-        }
-        super.setRowHeight(height);
-    }
     @Override
     public MainGameTableModel createDefaultDataModel() {
         return new MainGameTableModel();
