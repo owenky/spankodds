@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
@@ -11,38 +12,54 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ColumnCustomizableTable extends JTable {
 
+    private static final AtomicInteger instanceCounter = new AtomicInteger(0);
+    private final int instanceIndex;
     private final ColumnHeaderProvider columnHeaderProvider;
     private final List<TableColumn> allColumns = new ArrayList<>();
     private List<Integer> lockedColumnIndex = new ArrayList<>();
     private RowHeaderTable rowHeaderTable;
     private final boolean hasRowNumber;
     private JScrollPane tableScrollPane;
+    private ColumnAdjusterManager columnAdjusterManager;
     private ColumnHeaderCellRenderer headerCellRenderer;
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
+    private boolean needToCreateColumnModel = true;
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
+    @Override
+    abstract public ColumnCustomizableDataModel createDefaultDataModel();
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnHeaderProvider columnHeaderProvider) {
         this.columnHeaderProvider = columnHeaderProvider;
         this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
+        instanceIndex = instanceCounter.addAndGet(1);
+        setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
     }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
-            marginProvider = ()->new Dimension(this.getUserDefinedRowMargin(),this.getUserDefinedColumnMargin());
+            marginProvider = ()-> new Dimension(getUserDefinedColumnMargin(),getUserDefinedRowMargin());
         }
         return marginProvider;
     }
     public ColumnHeaderProvider getColumnHeaderProvider() {
         return columnHeaderProvider;
+    }
+    public void adjustColumns(boolean includeHeaders) {
+        getColumnAdjusterManager().adjustColumns(includeHeaders);
+    }
+    public void adjustColumnsOnRows(Integer ... gameIds) {
+        getColumnAdjusterManager().adjustColumnsOnRows(gameIds);
     }
     @Override
     public void setRowHeight(int rowHeight) {
@@ -128,6 +145,7 @@ public abstract class ColumnCustomizableTable extends JTable {
     public void removeLockedColumnIndex(Integer... lockedColumnIndexArr) {
 
         lockedColumnIndex = new ImmutableObservableList<>(lockedColumnIndexArr);
+        needToCreateColumnModel = true;
     }
 
     public List<Integer> getLockedColumns() {
@@ -147,7 +165,7 @@ public abstract class ColumnCustomizableTable extends JTable {
                 cm.addColumn(tc);
             }
         }
-
+        needToCreateColumnModel = false;
 
     }
 
@@ -157,6 +175,7 @@ public abstract class ColumnCustomizableTable extends JTable {
         tc.setModelIndex(allColumns.size());
         //placed after super
         allColumns.add(tc);
+        needToCreateColumnModel = true;
     }
 
     @Override
@@ -186,8 +205,37 @@ public abstract class ColumnCustomizableTable extends JTable {
         return new CustomizableTableColumnModel();
     }
     @Override
+    public ColumnCustomizableDataModel getModel() {
+        return (ColumnCustomizableDataModel)super.getModel();
+    }
+    @Override
     public final void createDefaultColumnsFromModel() {
-        //don't override this method.
-        super.createDefaultColumnsFromModel();
+        //copied from super.createDefaultColumnsFromModel();
+        if ( ! needToCreateColumnModel) {
+            return;
+        }
+
+        TableModel m = getModel();
+        if (m != null) {
+            // Remove any current columns
+            TableColumnModel cm = getColumnModel();
+            while (cm.getColumnCount() > 0) {
+                cm.removeColumn(cm.getColumn(0));
+            }
+
+//            // Create new columns from the data model info
+//            for (int i = 0; i < m.getColumnCount(); i++) {
+//                TableColumn newColumn = new TableColumn(i) ;
+//                addColumn(newColumn);
+//            }
+            createUnlockedColumns();
+        }
+    }
+    private ColumnAdjusterManager getColumnAdjusterManager() {
+        if ( null == columnAdjusterManager) {
+            columnAdjusterManager = new ColumnAdjusterManager(this);
+            columnAdjusterManager.setColumnHeaderIncluded(true);
+        }
+        return columnAdjusterManager;
     }
 }

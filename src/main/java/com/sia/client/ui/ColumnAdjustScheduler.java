@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
-public abstract class ColumnAdjustManager {
+public abstract class ColumnAdjustScheduler {
 
     private static final long updatePeriodInSeconds = 5L;
     private static final ArrayBlockingQueue<ColAdjustStruct> gameQueue = new  ArrayBlockingQueue<>(10000);
     private static final ScheduledExecutorService excutorService = Executors.newSingleThreadScheduledExecutor();
 
     static {
-        excutorService.scheduleAtFixedRate(ColumnAdjustManager::executeGameBatch,0,updatePeriodInSeconds, TimeUnit.SECONDS);
+        excutorService.scheduleAtFixedRate(ColumnAdjustScheduler::executeGameBatch,0,updatePeriodInSeconds, TimeUnit.SECONDS);
     }
     public static void adjustColumn(MainGameTable mainGameTable,LinesTableData ltd,int gameid) {
         ColAdjustStruct colAdjustStr = new ColAdjustStruct(mainGameTable,ltd,gameid);
@@ -40,7 +40,7 @@ public abstract class ColumnAdjustManager {
             List<ColAdjustStruct> structs = map.get(mainTable);
             Set<Integer> gameIdSet = structs.stream().map(struct-> mainTable.getModel().getRowModelIndex(struct.ltd,struct.gameid)).collect(Collectors.toSet());
             Integer [] gameIdArr = gameIdSet.toArray(new Integer[0]);
-            Utils.checkAndRunInEDT( () ->mainTable.adjustColumnsOn(gameIdArr));
+            Utils.checkAndRunInEDT( () ->mainTable.adjustColumnsOnRows(gameIdArr));
         });
     }
     /////////////////////////////////////////////////////////////////////////////////////

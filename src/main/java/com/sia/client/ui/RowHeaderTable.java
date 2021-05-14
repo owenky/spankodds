@@ -8,12 +8,15 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RowHeaderTable extends JTable {
 
+	private static final AtomicInteger instanceCounter = new AtomicInteger(0);
 	private final ColumnCustomizableTable mainTable;
 	private boolean toFireChangesInMainTable = true;
 	private final boolean hasRowNumber;
+	private final int instanceIndex;
 	private ColumnHeaderCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
@@ -24,6 +27,8 @@ public class RowHeaderTable extends JTable {
 		this.setModel(mainTable.getModel());
 		this.setAutoCreateColumnsFromModel(false);
 //		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		instanceIndex = instanceCounter.addAndGet(1);
+		setName(RowHeaderTable.class.getSimpleName()+":"+instanceIndex);
 	}
 	public ColumnCustomizableTable getMainTable(){
 		return mainTable;
@@ -44,42 +49,6 @@ public class RowHeaderTable extends JTable {
 	public void setRowMargin(int rowMargin) {
 		//don't set row margin, use main table's row margin
 	}
-//	@Override
-//	public int getRowHeight() {
-//		return mainTable.getRowHeight();
-//	}
-//	@Override
-//	public int getRowHeight(int row_) {
-//		return mainTable.getRowHeight(row_);
-//	}
-//	@Override
-//	public boolean getShowHorizontalLines() {
-//		return mainTable.getShowHorizontalLines();
-//	}
-//	@Override
-//	public Dimension getIntercellSpacing() {
-//		return mainTable.getIntercellSpacing();
-//	}
-//	@Override
-//	public Color getGridColor() {
-//		if ( null != mainTable) {
-//			return mainTable.getGridColor();
-//		} else {
-//			return super.getGridColor();
-//		}
-//	}
-//	@Override
-//	public Font getFont() {
-//		if ( null != mainTable) {
-//			return mainTable.getFont();
-//		} else {
-//			return super.getFont();
-//		}
-//	}
-//	@Override
-//	public int getRowMargin() {
-//		return mainTable.getRowMargin();
-//	}
 	@Override
 	public boolean getAutoCreateColumnsFromModel() {
 		return true;
@@ -127,10 +96,6 @@ public class RowHeaderTable extends JTable {
 			}
 		}
 	}
-	public void setToFireChangesInMainTable(boolean b) {
-		toFireChangesInMainTable = b;
-	}
-
 	@Override
 	public boolean isCellEditable(int row, int col) {
 		return false;

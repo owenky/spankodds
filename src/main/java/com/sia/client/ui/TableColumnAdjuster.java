@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.MarginProvider;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JTable;
@@ -35,8 +37,8 @@ import static com.sia.client.config.Utils.log;
  *  of RESIZE_ALL_COLUMNS will work the best.
  */
 public class TableColumnAdjuster implements PropertyChangeListener, TableModelListener {
-    private JTable table;
-    private int spacing;
+    private final JTable table;
+    private final MarginProvider marginProvider;
     private boolean isColumnHeaderIncluded;
     private boolean isColumnDataIncluded;
     private boolean isOnlyAdjustLarger;
@@ -44,18 +46,11 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     private Map<TableColumn, Integer> columnSizes = new HashMap<>();
 
     /*
-     *  Specify the table and use default spacing
-     */
-    public TableColumnAdjuster(JTable table) {
-        this(table, 0);
-    }
-
-    /*
      *  Specify the table and spacing
      */
-    public TableColumnAdjuster(JTable table, int spacing) {
+    public TableColumnAdjuster(JTable table, MarginProvider marginProvider) {
         this.table = table;
-        this.spacing = spacing;
+        this.marginProvider = marginProvider;
         setColumnHeaderIncluded(false);
         //setColumnHeaderIncluded( true );
         setColumnDataIncluded(true);
@@ -161,6 +156,14 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         }
         adjustStatic.finish();
     }
+
+    /*
+     *  Adjust the widths of all the columns in the table
+     */
+    public void adjustColumns() {
+        adjustColumns(false);
+    }
+
     /*
      *  Adjust the widths of all the columns in the table
      */
@@ -174,13 +177,12 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         for (int i = 0; i < tcm.getColumnCount(); i++) {
             adjustColumn(i);
         }
- log("update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
+ log("TableColumnAdjuster::adjustColumns, update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
     }
-
     /*
      *  Adjust the width of the specified column in the table
      */
-    public void adjustColumn(final int column) {
+    private void adjustColumn(final int column) {
 //        log("TableColumnAdjuster::adjustColumn is called, column=" + column);
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
 
@@ -193,7 +195,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         int columnDataWidth = getColumnDataWidth(column);
 
         int preferredWidth = Math.max(columnHeaderWidth, columnDataWidth);
-
+log("col="+column+", columnHeaderWidth="+columnHeaderWidth+", columnDataWidth="+columnDataWidth);
         updateTableColumn(column, preferredWidth);
     }
 
@@ -222,7 +224,8 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         }
 
         Component c = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
-        int columnWidth = c.getPreferredSize().width+ (int)table.getIntercellSpacing().getWidth()*2;
+        int columnWidth = c.getPreferredSize().width+ (int) marginProvider.get().getWidth()*2;
+log("TableColumnAdjuster::getColumnHeaderWidth, columnWidth="+columnWidth+",  tableColumn.getPreferredWidth()="+ tableColumn.getPreferredWidth()+", table name="+ table.getName());
         return Math.max(columnWidth, tableColumn.getPreferredWidth());
         //return 45;
     }
@@ -261,9 +264,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         if (!tableColumn.getResizable()) {
             return;
         }
-
-        width += spacing;
-
         //  Don't shrink the column width
 
         if (isOnlyAdjustLarger) {
@@ -291,7 +291,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         if (c != null) {
             initial = c.getPreferredSize().width;
         }
-        int width = initial + table.getIntercellSpacing().width*2;
+        int width = initial + (int) marginProvider.get().getWidth()*2;
         return width;
 
     }
@@ -325,9 +325,9 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     //
 //  Implement the PropertyChangeListener
 //
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
-        //  When the TableModel changes we need to update the listeners
-        //  and column widths
+        //  When the TableModel changes we need to update the listeners and column widths
 
         if ("model".equals(e.getPropertyName())) {
             TableModel model = (TableModel) e.getOldValue();
@@ -338,21 +338,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
             adjustColumns();
         }
     }
-
-    /*
-     *  Adjust the widths of all the columns in the table
-     */
-    public void adjustColumns() {
-        TableColumnModel tcm = table.getColumnModel();
-        if (tcm == null) {
-            log("tcm is null!");
-        }
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            adjustColumn(i);
-        }
-
-    }
-
     //
 //  Implement the TableModelListener
 //

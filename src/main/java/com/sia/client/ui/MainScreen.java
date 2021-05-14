@@ -126,7 +126,7 @@ public class MainScreen extends JPanel {
         LinesTableData ltd = v.checktofire(gameid);
         boolean status = (null != ltd);
         if (status) {
-            ColumnAdjustManager.adjustColumn(this.getMainGameTable(), ltd, gameid);
+            ColumnAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);
         }
 
         return status;

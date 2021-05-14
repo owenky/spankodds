@@ -9,7 +9,7 @@ public class CustomizableTableColumnModel extends DefaultTableColumnModel {
     @Override
     public void setColumnMargin(int columnMargin) {
         //column margin should remain 0 for game group header drawing.
-        this.userDefinedColumnMargin = userDefinedColumnMargin;
+        this.userDefinedColumnMargin = columnMargin;
     }
     public int getUserDefinedColumnMargin() {
         return userDefinedColumnMargin;

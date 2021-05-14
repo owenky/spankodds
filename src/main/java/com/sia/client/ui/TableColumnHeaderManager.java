@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class TableRowHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
+public class TableColumnHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
     private static final Color DefaultHeaderColor = SiaConst.DefaultHeaderColor;
     private final Map<String, JComponent> columnHeaderComponentMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
     private boolean isMainTableFirstShown = false;
     private Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr;
 
-    public TableRowHeaderManager(ColumnCustomizableTable mainTable, Color titleColor, Font titleFont, int headerHeight) {
+    public TableColumnHeaderManager(ColumnCustomizableTable mainTable, Color titleColor, Font titleFont, int headerHeight) {
         this.mainTable = mainTable;
         this.titleColor = titleColor;
         this.titleFont = titleFont;
@@ -66,6 +66,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
             Object source = e.getSource();
             if (source == mainTable && !isMainTableFirstShown && mainTable.isShowing()) {
                 isMainTableFirstShown = true;
+                mainTable.adjustColumns(true);
                 drawColumnHeaders();
             }
         }
@@ -95,7 +96,7 @@ public class TableRowHeaderManager implements HierarchyListener, TableColumnMode
         JPanel jPanel = new JPanel();
         jPanel.setBackground(titleColor);
         BorderLayout bl = new BorderLayout();
-        bl.setVgap(1);
+//        bl.setVgap(1);
         jPanel.setLayout(bl);
         jPanel.setBackground(DefaultHeaderColor);
         JLabel titleLabel = new JLabel(gameGroupHeader);

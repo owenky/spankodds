@@ -4,15 +4,13 @@ import com.sia.client.ui.LinesTableData;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
 
-public class MainGameTableModel extends DefaultTableModel {
+public class MainGameTableModel extends ColumnCustomizableDataModel {
 
     private final List<LinesTableData> gameLines = new ArrayList<>();
     private final LinesTableDataListner linesTableDataListner = new LinesTableDataListner();
@@ -212,23 +210,6 @@ public class MainGameTableModel extends DefaultTableModel {
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         throw new IllegalStateException("Pending implementation");
-    }
-    @Override
-    public void setDataVector(Vector dataVector, Vector columnIndetifiers) {
-        if ( 0 == dataVector.size() && 0 == columnIndetifiers.size()) {
-            //necessary for default constructor
-            super.setDataVector(dataVector,columnIndetifiers);
-        } else {
-            throw new IllegalStateException("method not supported");
-        }
-    }
-    @Override
-    public void setDataVector(Object[][] dataVector, Object [] columnIndetifiers) {
-        throw new IllegalStateException("method not supported");
-    }
-    @Override
-    public Vector getDataVector(){
-        throw new IllegalStateException("method not supported");
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct {

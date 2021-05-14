@@ -3,7 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.MainGameTableModel.BlankGameStruct;
-import com.sia.client.ui.TableRowHeaderManager.ColumnHeaderStruct;
+import com.sia.client.ui.TableColumnHeaderManager.ColumnHeaderStruct;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,7 +15,7 @@ public class GameGropHeaderManager{
     public static final Color DefaultTitleColor = new Color(0, 0, 128);
     public static final Font DefaultTitleFont = new Font("Verdana", Font.BOLD, 11);
     private final MainGameTable mainGameTable;
-    private TableRowHeaderManager tableRowHeaderManager;
+    private TableColumnHeaderManager tableColumnHeaderManager;
     private final Color titleColor;
     private final Font titleFont;
     private final int headerHeight;
@@ -31,11 +31,11 @@ public class GameGropHeaderManager{
         this.headerHeight = headerHeight;
     }
     public void installListeners() {
-        if ( null == tableRowHeaderManager) {
-            tableRowHeaderManager = new TableRowHeaderManager(mainGameTable,titleColor,titleFont,headerHeight);
-            tableRowHeaderManager.setColumnHeaderList(this::getColumnHeaderList);
+        if ( null == tableColumnHeaderManager) {
+            tableColumnHeaderManager = new TableColumnHeaderManager(mainGameTable,titleColor,titleFont,headerHeight);
+            tableColumnHeaderManager.setColumnHeaderList(this::getColumnHeaderList);
         }
-        tableRowHeaderManager.installListeners();
+        tableColumnHeaderManager.installListeners();
     }
     private List<ColumnHeaderStruct> getColumnHeaderList() {
         MainGameTableModel model = mainGameTable.getModel();

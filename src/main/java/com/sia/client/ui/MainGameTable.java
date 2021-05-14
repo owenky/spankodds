@@ -5,20 +5,13 @@ import com.sia.client.model.GameTableTableColumnProvider;
 import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.sia.client.config.Utils.log;
-
 public class MainGameTable extends ColumnCustomizableTable implements LinesTableDataSupplier {
 
-    private TableColumnAdjuster tableColumnAdjuster;
     private boolean isSoccer=false;
     private Set<Integer> columnHeaderRowViewIndex;
 
@@ -83,50 +76,5 @@ public class MainGameTable extends ColumnCustomizableTable implements LinesTable
             columnHeaderRowViewIndex = null;
         }
         super.tableChanged(e);
-    }
-    public void adjustColumns(boolean includeHeaders) {
-        getTableColumnAdjuster().adjustColumns(includeHeaders);
-    }
-    public void adjustColumnsOn(Integer ... gameIds) {
-        getTableColumnAdjuster().adjustColumnsOnRow(gameIds);
-    }
-    public void adjustColumn(int col) {
-        getTableColumnAdjuster().adjustColumn(col);
-    }
-    private TableColumnAdjuster getTableColumnAdjuster() {
-        if ( null == tableColumnAdjuster) {
-            tableColumnAdjuster = new TableColumnAdjuster(this);
-            tableColumnAdjuster.setColumnHeaderIncluded(true);
-            //TODO debug code block
-            this.getColumnModel().addColumnModelListener( new TableColumnModelListener() {
-
-                @Override
-                public void columnAdded(final TableColumnModelEvent e) {
-
-                }
-
-                @Override
-                public void columnRemoved(final TableColumnModelEvent e) {
-                    log("columnRemoved....column size="+MainGameTable.this.getColumnCount());
-                }
-
-                @Override
-                public void columnMoved(final TableColumnModelEvent e) {
-
-                }
-
-                @Override
-                public void columnMarginChanged(final ChangeEvent e) {
-
-                }
-
-                @Override
-                public void columnSelectionChanged(final ListSelectionEvent e) {
-
-                }
-            });
-            //END OF DEBUG TODO
-        }
-        return tableColumnAdjuster;
     }
 }
