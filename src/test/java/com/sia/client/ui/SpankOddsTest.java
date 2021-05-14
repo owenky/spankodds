@@ -105,7 +105,6 @@ public class SpankOddsTest {
                     public Component getTableCellRendererComponent(JTable table, Object value,
                                                                    boolean isSelected, boolean hasFocus, int row, int column) {
                         JComponent rtn = (JComponent)super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row, column);
-                        rtn.setBackground(Color.RED);
                         return rtn;
                     }
                 };

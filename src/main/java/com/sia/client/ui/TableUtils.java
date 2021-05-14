@@ -10,9 +10,9 @@ import java.awt.BorderLayout;
 
 public abstract class TableUtils {
 
-    public static JComponent configTableLockColumns(ColumnCustomizableTable mainTable, int lockedColumnLastIndex) {
+    public static JComponent configTableLockColumns(ColumnCustomizableTable mainTable, int lockedColumnBoundaryIndex) {
 
-        mainTable.removeLockedColumnIndex(lockedColumnLastIndex);
+        mainTable.removeLockedColumnIndex(lockedColumnBoundaryIndex);
         mainTable.createUnlockedColumns();
 //        mainTable.setPreferredScrollableViewportSize(mainTable.getPreferredSize());
 
@@ -24,6 +24,7 @@ public abstract class TableUtils {
         JScrollPane tableScrollPane = mainTable.getTableScrollPane();
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.setRowHeaderView(rowHeaderTable);
+
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());

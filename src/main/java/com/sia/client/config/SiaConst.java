@@ -12,5 +12,5 @@ public abstract class SiaConst {
     public static final Integer NormalRowheight = 30;
     public static final Integer GameGroupHeaderHeight = 20;
     public static final String GameGroupHeaderIden = "@#GameGroupHeaderIden-+|";
-    public static final Color DefaultHeaderColor = Color.BLUE;
+    public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
 }

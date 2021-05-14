@@ -8,15 +8,12 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RowHeaderTable extends JTable {
 
-	private static final AtomicInteger instanceCounter = new AtomicInteger(0);
 	private final ColumnCustomizableTable mainTable;
 	private boolean toFireChangesInMainTable = true;
 	private final boolean hasRowNumber;
-	private final int instanceIndex;
 	private ColumnHeaderCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
@@ -26,9 +23,7 @@ public class RowHeaderTable extends JTable {
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
 		this.setModel(mainTable.getModel());
 		this.setAutoCreateColumnsFromModel(false);
-//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		instanceIndex = instanceCounter.addAndGet(1);
-		setName(RowHeaderTable.class.getSimpleName()+":"+instanceIndex);
+		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 	public ColumnCustomizableTable getMainTable(){
 		return mainTable;
@@ -169,6 +164,14 @@ public class RowHeaderTable extends JTable {
     public int convertRowIndexToView(int index_) {
 		return mainTable.convertRowIndexToView(index_);
     }
+	@Override
+	public String getName() {
+		return "RowHeaderTable of "+mainTable.getName();
+	}
+	@Override
+	public String toString() {
+		return getName();
+	}
 //	@Override
 //	public void setCursor(Cursor cursor) {
 //		/**

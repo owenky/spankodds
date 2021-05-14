@@ -166,28 +166,30 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
     /*
      *  Adjust the widths of all the columns in the table
+     *  return sum of preferred width of all columns
      */
-    public void adjustColumns(boolean includeheader) {
+    public int adjustColumns(boolean includeheader) {
         setColumnHeaderIncluded(includeheader);
         TableColumnModel tcm = table.getColumnModel();
         if (tcm == null) {
             log("tcm is null!");
         }
  long begin=System.currentTimeMillis();
+        int totalColPrefWidth = 0;
         for (int i = 0; i < tcm.getColumnCount(); i++) {
-            adjustColumn(i);
+            totalColPrefWidth += adjustColumn(i);
         }
  log("TableColumnAdjuster::adjustColumns, update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
+        return totalColPrefWidth;
     }
     /*
      *  Adjust the width of the specified column in the table
      */
-    private void adjustColumn(final int column) {
-//        log("TableColumnAdjuster::adjustColumn is called, column=" + column);
+    private int adjustColumn(final int column) {
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
 
         if (!tableColumn.getResizable()) {
-            return;
+            return tableColumn.getPreferredWidth();
         }
 
         int columnHeaderWidth = getColumnHeaderWidth(column);
@@ -195,8 +197,11 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
         int columnDataWidth = getColumnDataWidth(column);
 
         int preferredWidth = Math.max(columnHeaderWidth, columnDataWidth);
-log("col="+column+", columnHeaderWidth="+columnHeaderWidth+", columnDataWidth="+columnDataWidth);
         updateTableColumn(column, preferredWidth);
+        if ( table instanceof RowHeaderTable) {
+            log("TableColumnAdjuster::adjustColumn col=" + column + ", table prefWidth="+table.getPreferredSize().getWidth()+", col preWidth="+preferredWidth+", columnHeaderWidth=" + columnHeaderWidth + ", columnDataWidth=" + columnDataWidth);
+        }
+        return preferredWidth;
     }
 
     /*
@@ -225,7 +230,9 @@ log("col="+column+", columnHeaderWidth="+columnHeaderWidth+", columnDataWidth="+
 
         Component c = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
         int columnWidth = c.getPreferredSize().width+ (int) marginProvider.get().getWidth()*2;
-log("TableColumnAdjuster::getColumnHeaderWidth, columnWidth="+columnWidth+",  tableColumn.getPreferredWidth()="+ tableColumn.getPreferredWidth()+", table name="+ table.getName());
+if ( table instanceof RowHeaderTable) {
+    log("TableColumnAdjuster::getColumnHeaderWidth, col=" + column + ", columnWidth=" + columnWidth + ",  tableColumn.getPreferredWidth()=" + tableColumn.getPreferredWidth() + ", table name=" + table.getName());
+}
         return Math.max(columnWidth, tableColumn.getPreferredWidth());
         //return 45;
     }
