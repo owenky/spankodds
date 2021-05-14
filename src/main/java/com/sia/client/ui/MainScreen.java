@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameTableAdjustScheduler;
 import com.sia.client.model.GameTableTableColumnProvider;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
@@ -126,7 +127,7 @@ public class MainScreen extends JPanel {
         LinesTableData ltd = v.checktofire(gameid);
         boolean status = (null != ltd);
         if (status) {
-            ColumnAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);
+            GameTableAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);
         }
 
         return status;
