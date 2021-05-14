@@ -115,7 +115,7 @@ public abstract class ColumnCustomizableTable extends JTable {
     public final RowHeaderTable getRowHeaderTable() {
         if ( null == rowHeaderTable) {
             rowHeaderTable = createNewRowHeaderTable();
-            rowHeaderTable.createDefaultColumnModel();
+//            rowHeaderTable.createDefaultColumnModel();
         }
         return rowHeaderTable;
     }

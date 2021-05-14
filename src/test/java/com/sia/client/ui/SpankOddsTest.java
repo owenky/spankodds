@@ -10,11 +10,13 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,7 +96,7 @@ public class SpankOddsTest {
     }
     private static ColumnCustomizableTable createTestTable() {
         ColumnHeaderProvider columnHeaderProvider = createColumnHeaderProvider();
-        return new ColumnCustomizableTable(false, columnHeaderProvider) {
+        ColumnCustomizableTable rtn = new ColumnCustomizableTable(false, columnHeaderProvider) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -130,5 +132,9 @@ public class SpankOddsTest {
                 };
             }
         };
+        JTableHeader tableHeader = rtn.getTableHeader();
+        Font headerFont = new Font("Verdana", Font.BOLD, 11);
+        tableHeader.setFont(headerFont);
+        return rtn;
     }
 }

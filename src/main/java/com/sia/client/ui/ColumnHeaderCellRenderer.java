@@ -52,15 +52,16 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         BorderLayout bl = new BorderLayout();
         render.setLayout(bl);
 
-        JComponent topPadding = createVPaddingComponent(userComponent.getBackground());
-        JComponent bottomPadding = createVPaddingComponent(userComponent.getBackground());
-        JComponent leftPadding = createHPaddingComponent(userComponent.getBackground());
-        JComponent rightPadding = createHPaddingComponent(userComponent.getBackground());
+//        JComponent topPadding = createVPaddingComponent(userComponent.getBackground());
+//        JComponent bottomPadding = createVPaddingComponent(userComponent.getBackground());
+//        JComponent leftPadding = createHPaddingComponent(userComponent.getBackground());
+//        JComponent rightPadding = createHPaddingComponent(userComponent.getBackground());
+//
+//        render.add(topPadding,BorderLayout.NORTH);
+//        render.add(bottomPadding,BorderLayout.SOUTH);
+//        render.add(leftPadding,BorderLayout.WEST);
+//        render.add(rightPadding,BorderLayout.EAST);
 
-        render.add(topPadding,BorderLayout.NORTH);
-        render.add(bottomPadding,BorderLayout.SOUTH);
-        render.add(leftPadding,BorderLayout.WEST);
-        render.add(rightPadding,BorderLayout.EAST);
         render.add(userComponent,BorderLayout.CENTER);
 
         Border renderBorder;
