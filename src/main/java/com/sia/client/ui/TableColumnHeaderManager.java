@@ -24,8 +24,11 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class TableColumnHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
@@ -36,6 +39,7 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     private final Color titleColor;
     private final Font titleFont;
     private final int headerHeight;
+    private final Set<ColumnHeaderStruct> columnHeaderStructSet = new HashSet<>();
     private boolean isMainTableFirstShown = false;
     private Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr;
 
@@ -65,15 +69,21 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
             if (source == mainTable && !isMainTableFirstShown && mainTable.isShowing()) {
-                isMainTableFirstShown = true;
                 mainTable.adjustColumns(true);
                 drawColumnHeaders();
+                isMainTableFirstShown = true;
             }
         }
     }
 
     private void drawColumnHeaders() {
-        drawColumnHeaders(0);
+        List<ColumnHeaderStruct> newRowHeaderList = rowHeaderListSppr.get();
+        if ( shouldDrawColumnHeader(newRowHeaderList)) {
+            restoreColumnHeaderHeight(newRowHeaderList);
+            columnHeaderStructSet.clear();
+            columnHeaderStructSet.addAll(newRowHeaderList);
+            drawColumnHeaders(0);
+        }
     }
 
     private void drawColumnHeaders(int diffByScroll) {
@@ -84,21 +94,32 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
             }
         }
     }
-
+    private boolean shouldDrawColumnHeader(List<ColumnHeaderStruct> newRowHeaderList) {
+        boolean status = columnHeaderStructSet.containsAll(newRowHeaderList);
+        if ( status ) {
+            status = columnHeaderStructSet.size()==newRowHeaderList.size();
+        }
+        return ! status;
+    }
+    private void restoreColumnHeaderHeight(List<ColumnHeaderStruct> newRowHeaderList) {
+        for(ColumnHeaderStruct struct: newRowHeaderList) {
+            int rowViewIndex = mainTable.convertRowIndexToView(struct.headerModelIndex);
+            mainTable.setRowHeight(rowViewIndex, mainTable.getRowHeight());
+        }
+    }
     private void drawColumnHeader(ColumnHeaderStruct struct, int diffByScroll) {
         int rowViewIndex = mainTable.convertRowIndexToView(struct.headerModelIndex);
-        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(struct.headerString, header -> makeColumnHeaderComp(mainTable, header, titleColor, titleFont));
+        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(struct.headerString, header -> makeColumnHeaderComp(mainTable, header, titleFont));
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, headerHeight, diffByScroll);
     }
 
-    public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Color titleColor, Font titleFont) {
+    public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Font titleFont) {
 
         JPanel jPanel = new JPanel();
-        jPanel.setBackground(titleColor);
+        jPanel.setOpaque(false);
         BorderLayout bl = new BorderLayout();
 //        bl.setVgap(1);
         jPanel.setLayout(bl);
-        jPanel.setBackground(DefaultHeaderColor);
         JLabel titleLabel = new JLabel(gameGroupHeader);
         titleLabel.setFont(titleFont);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -116,7 +137,6 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
         mainTable.setRowHeight(rowViewIndex, headerHeight);
-        mainTable.getRowHeaderTable().setRowHeight(rowViewIndex, headerHeight);
         header.setBounds(x1+diffByScroll, y1, width, headerHeight);
 
     }
@@ -190,6 +210,22 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         public ColumnHeaderStruct(String headerString, int headerModelIndex) {
             this.headerString = headerString;
             this.headerModelIndex = headerModelIndex;
+        }
+        @Override
+        public int hashCode() {
+            return headerString.hashCode();
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            final ColumnHeaderStruct that = (ColumnHeaderStruct) o;
+            return headerModelIndex == that.headerModelIndex && Objects.equals(headerString, that.headerString);
         }
     }
 }
