@@ -131,13 +131,28 @@ public class SpankOddsTest {
     private static void autoUpdateTableData() {
         Timer updateTimer = new Timer(8000, (event) -> {
 //            testColumnAdjuster();
-            testColumnHeader();
+//            testColumnHeaderWithRowInserted();
+            testColumnHeaderWithRowDeleted();
         });
         updateTimer.setInitialDelay(3000);
         updateTimer.start();
     }
-
-    private static void testColumnHeader() {
+    private static void testColumnHeaderWithRowDeleted() {
+        int deletedRow = -1;
+        for ( int i=0;i<dataVector.size();i++) {
+            LabeledList row = dataVector.get(i);
+            if ( null == row.getHeader()) {
+                deletedRow = i;
+                break;
+            }
+        }
+        if ( deletedRow>=0) {
+            dataVector.remove(deletedRow);
+            TableModelEvent e = new TableModelEvent(theTestTable.getModel(), deletedRow, deletedRow, ALL_COLUMNS, TableModelEvent.DELETE);
+            theTestTable.getModel().fireTableChanged(e);
+        }
+    }
+    private static void testColumnHeaderWithRowInserted() {
         int insertedRow = 0;
         LabeledList newRow = makeRow(0, totalColumnCount,false);
         dataVector.add(insertedRow, newRow);
