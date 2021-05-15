@@ -24,9 +24,12 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 
 public class SpankOddsTest {
 
@@ -71,7 +74,7 @@ public class SpankOddsTest {
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.pack();
         jFrame.show();
-        autoUpdateTableData();
+//        autoUpdateTableData();
     }
 
     private static ColumnCustomizableTable createTestTable() {
@@ -102,9 +105,6 @@ public class SpankOddsTest {
                     @Override
                     public Object getValueAt(final int rowIndex, final int columnIndex) {
                         Object value = dataVector.get(rowIndex).get(columnIndex);
-                        if (rowIndex == 0 && (columnIndex == 0 || columnIndex == 5)) {
-                            System.out.println("rowIndex=" + rowIndex + ", columnIndex=" + columnIndex + ", value=" + value);
-                        }
                         return value;
                     }
 
@@ -113,12 +113,6 @@ public class SpankOddsTest {
 
                     }
                 };
-            }
-
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                super.tableChanged(e);
-                System.out.println("SpankOdds tableChanged() is call");
             }
         };
         JTableHeader tableHeader = rtn.getTableHeader();
@@ -130,49 +124,63 @@ public class SpankOddsTest {
     private static List<String> makeRow(int row, int colCount) {
         List<String> rowData = new ArrayList<>();
         for (int i = 0; i < colCount; i++) {
-            if (isHeaderRow(row)) {
-//                rowData.add(SiaConst.GameGroupHeaderIden);
-                rowData.add("" + row + "_" + i);
-            } else {
-                rowData.add("" + row + "_" + i);
-            }
+            rowData.add("" + row + "_" + i);
         }
 
         return rowData;
     }
 
     private static void autoUpdateTableData() {
-        Timer updateTimer = new Timer(2000, (event) -> {
+        Timer updateTimer = new Timer(8000, (event) -> {
             System.out.println("data updated " + new Date());
-            int col = 0;
-            String value = dataVector.get(updatedRow).get(col);
-            dataVector.get(updatedRow).set(col, value + "XX");
-
-            col = 5;
-            value = dataVector.get(updatedRow).get(col);
-            dataVector.get(updatedRow).set(col, value + "XX");
-
-            TableModelEvent te = new TableModelEvent(theTestTable.getModel(), updatedRow);
-            theTestTable.getModel().fireTableChanged(te);
-            COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(theTestTable,updatedRow));
+//            testColumnAdjuster();
+            testColumnHeader();
         });
+        updateTimer.setInitialDelay(1000);
         updateTimer.start();
 
     }
+    private static void testColumnHeader() {
+        int insertedRow = 0;
+        List<String> newRow = makeRow(0, totalColumnCount);
+        dataVector.add(insertedRow,newRow);
+        TableModelEvent e = new TableModelEvent(theTestTable.getModel(),insertedRow,insertedRow,ALL_COLUMNS,TableModelEvent.INSERT);
+        theTestTable.getModel().fireTableChanged(e);
+    }
+    private static void testColumnAdjuster() {
+        int col = 0;
+        String value = dataVector.get(updatedRow).get(col);
+        dataVector.get(updatedRow).set(col, value + "XX");
 
+        col = 5;
+        value = dataVector.get(updatedRow).get(col);
+        dataVector.get(updatedRow).set(col, value + "XX");
+
+        TableModelEvent te = new TableModelEvent(theTestTable.getModel(), updatedRow);
+        theTestTable.getModel().fireTableChanged(te);
+        COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(theTestTable,updatedRow));
+    }
     private static ColumnHeaderProvider createColumnHeaderProvider() {
         return () -> {
             Color haderBackground = SiaConst.DefaultHeaderColor;
             int columnHeaderHeight = SiaConst.GameGroupHeaderHeight;
-            Set<Integer> columnHeaderIndexSet = Arrays.stream(barRowIndex).collect(Collectors.toSet());
+            Set<Integer> columnHeaderIndexSet = new HashSet<>();
+            for(int index=0;index<dataVector.size();index++) {
+               List<String> rowData = dataVector.get(index);
+               if ( isHeaderRow(rowData)) {
+                   columnHeaderIndexSet.add(index);
+               }
+            }
             return new ColumnHeaderProperty(haderBackground, columnHeaderHeight, columnHeaderIndexSet);
         };
     }
 
-    private static boolean isHeaderRow(int row) {
+    private static boolean isHeaderRow(List<String> rowData) {
         boolean status = false;
+        String originalIndexStr = rowData.get(0).split("_")[0];
+        int originalIndex = Integer.parseInt(originalIndexStr);
         for (int barRow : barRowIndex) {
-            if (barRow == row) {
+            if (barRow == originalIndex) {
                 status = true;
                 break;
             }
