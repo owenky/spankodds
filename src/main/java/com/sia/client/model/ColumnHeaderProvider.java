@@ -3,7 +3,9 @@ package com.sia.client.model;
 import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 
 import java.awt.Color;
-import java.util.Set;
+import java.awt.Font;
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public interface ColumnHeaderProvider extends Supplier<ColumnHeaderProperty> {
@@ -11,14 +13,18 @@ public interface ColumnHeaderProvider extends Supplier<ColumnHeaderProperty> {
 
     ///////////////////////////////////////////////////////////////
     class ColumnHeaderProperty {
-        public final Color haderBackground;
+        public final Color headerBackground;
+        public final Color headerForeground;
+        public final Font headerFont;
         public final int columnHeaderHeight;
-        public final Set<Integer> columnHeaderIndexSet;
+        public final Map<Integer,Object> rowIndexToHeadValueMap;
 
-        public ColumnHeaderProperty(Color haderBackground,int columnHeaderHeight,Set<Integer> columnHeaderIndexSet) {
-            this.haderBackground = haderBackground;
+        public ColumnHeaderProperty(Color headerBackground, Color headerForeground, Font headerFont, int columnHeaderHeight, Map<Integer,Object> rowIndexToHeadValueMap) {
+            this.headerBackground = headerBackground;
+            this.headerForeground = headerForeground;
+            this.headerFont = headerFont;
             this.columnHeaderHeight = columnHeaderHeight;
-            this.columnHeaderIndexSet = columnHeaderIndexSet;
+            this.rowIndexToHeadValueMap = Collections.unmodifiableMap(rowIndexToHeadValueMap);
         }
     }
 }

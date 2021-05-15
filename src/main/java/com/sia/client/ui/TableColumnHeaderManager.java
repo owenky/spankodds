@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
+import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -24,93 +25,65 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Supplier;
 
 public class TableColumnHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
-    private static final Color DefaultHeaderColor = SiaConst.DefaultHeaderColor;
     private final Map<String, JComponent> columnHeaderComponentMap = new HashMap<>();
     private final ColumnCustomizableTable mainTable;
-    private final Color titleColor;
-    private final Font titleFont;
-    private final int headerHeight;
-    private final Set<ColumnHeaderStruct> columnHeaderStructSet = new HashSet<>();
     private boolean isMainTableFirstShown = false;
-    private Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr;
+    private boolean isAdjustingColumn = false;
+    private final ColumnHeaderProvider columnHeaderProvider;
+    private ColumnHeaderProperty columnHeaderProperty;
 
-    public TableColumnHeaderManager(ColumnCustomizableTable mainTable, Color titleColor, Font titleFont, int headerHeight) {
+    public TableColumnHeaderManager(ColumnCustomizableTable mainTable,ColumnHeaderProvider columnHeaderProvider) {
         this.mainTable = mainTable;
-        this.titleColor = titleColor;
-        this.titleFont = titleFont;
-        this.headerHeight = headerHeight;
-
+        this.columnHeaderProvider = columnHeaderProvider;
     }
 
     public void installListeners() {
         mainTable.addHierarchyListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
-        mainTable.getModel().addTableModelListener(this);
+//        mainTable.getModel().addTableModelListener(this);
+        mainTable.setTableChangedListener(this);
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
 
     }
-
-    public void setColumnHeaderList(Supplier<List<ColumnHeaderStruct>> rowHeaderListSppr) {
-        this.rowHeaderListSppr = rowHeaderListSppr;
-    }
-
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
             if (source == mainTable && !isMainTableFirstShown && mainTable.isShowing()) {
-                mainTable.adjustColumns(true);
+                columnHeaderProperty = columnHeaderProvider.get();
+                adjustComumns();
                 drawColumnHeaders();
                 isMainTableFirstShown = true;
             }
         }
     }
-
+    private void adjustComumns() {
+        isAdjustingColumn = true;
+        mainTable.adjustColumns(true);
+    }
     private void drawColumnHeaders() {
-        List<ColumnHeaderStruct> newRowHeaderList = rowHeaderListSppr.get();
-        if ( shouldDrawColumnHeader(newRowHeaderList)) {
-            restoreColumnHeaderHeight(newRowHeaderList);
-            columnHeaderStructSet.clear();
-            columnHeaderStructSet.addAll(newRowHeaderList);
-            drawColumnHeaders(0);
-        }
+        drawColumnHeaders(0);
     }
 
     private void drawColumnHeaders(int diffByScroll) {
-        List<ColumnHeaderStruct> rowHeaderList = rowHeaderListSppr.get();
-        if (null != rowHeaderList) {
-            for (ColumnHeaderStruct struct : rowHeaderList) {
-                drawColumnHeader(struct, diffByScroll);
-            }
+        if (null != columnHeaderProperty) {
+            columnHeaderProperty.rowIndexToHeadValueMap.forEach((key, value) -> drawColumnHeader(key, String.valueOf(value), diffByScroll));
         }
     }
-    private boolean shouldDrawColumnHeader(List<ColumnHeaderStruct> newRowHeaderList) {
-        boolean status = columnHeaderStructSet.containsAll(newRowHeaderList);
-        if ( status ) {
-            status = columnHeaderStructSet.size()==newRowHeaderList.size();
-        }
-        return ! status;
-    }
-    private void restoreColumnHeaderHeight(List<ColumnHeaderStruct> newRowHeaderList) {
-        for(ColumnHeaderStruct struct: newRowHeaderList) {
-            int rowViewIndex = mainTable.convertRowIndexToView(struct.headerModelIndex);
-            mainTable.setRowHeight(rowViewIndex, mainTable.getRowHeight());
+    private void restoreRowHeight() {
+        for(int i=0;i<mainTable.getRowCount();i++) {
+            mainTable.setRowHeight(i, mainTable.getRowHeight());
         }
     }
-    private void drawColumnHeader(ColumnHeaderStruct struct, int diffByScroll) {
-        int rowViewIndex = mainTable.convertRowIndexToView(struct.headerModelIndex);
-        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(struct.headerString, header -> makeColumnHeaderComp(mainTable, header, titleFont));
-        layOutColumnHeader(rowViewIndex, mainTable, headerComponent, headerHeight, diffByScroll);
+    private void drawColumnHeader(int rowModelIndex, String headerValue,int diffByScroll) {
+        int rowViewIndex = mainTable.convertRowIndexToView(rowModelIndex);
+        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(headerValue, header -> makeColumnHeaderComp(mainTable, header, columnHeaderProperty.headerFont));
+        layOutColumnHeader(rowViewIndex, mainTable, headerComponent, columnHeaderProperty.columnHeaderHeight, diffByScroll);
     }
 
     public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Font titleFont) {
@@ -157,7 +130,9 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
 
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
-        drawColumnHeaders();
+        if ( isMainTableFirstShown ) {
+            drawColumnHeaders();
+        }
     }
 
     @Override
@@ -167,7 +142,10 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
 
     @Override
     public void componentResized(final ComponentEvent e) {
-        drawColumnHeaders();
+        if ( isMainTableFirstShown && ! isAdjustingColumn ) {
+            drawColumnHeaders();
+        }
+        isAdjustingColumn = false;
     }
 
     @Override
@@ -188,44 +166,23 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     @Override
     public void tableChanged(final TableModelEvent e) {
         if (e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE) {
+            restoreRowHeight();
+            columnHeaderProperty = columnHeaderProvider.get();
             drawColumnHeaders();
         }
     }
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
-        Adjustable source = evt.getAdjustable();
-        if (evt.getValueIsAdjusting()) {
-            return;
-        }
-        int value = evt.getValue();
-        drawColumnHeaders(value);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static class ColumnHeaderStruct {
-        public final String headerString;
-        public final int headerModelIndex;
-
-        public ColumnHeaderStruct(String headerString, int headerModelIndex) {
-            this.headerString = headerString;
-            this.headerModelIndex = headerModelIndex;
-        }
-        @Override
-        public int hashCode() {
-            return headerString.hashCode();
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
+        if ( isMainTableFirstShown ) {
+            Adjustable source = evt.getAdjustable();
+            if (evt.getValueIsAdjusting()) {
+                return;
             }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
+            int value = evt.getValue();
+            if ( value != 0) {
+                drawColumnHeaders(value);
             }
-            final ColumnHeaderStruct that = (ColumnHeaderStruct) o;
-            return headerModelIndex == that.headerModelIndex && Objects.equals(headerString, that.headerString);
         }
     }
 }

@@ -9,6 +9,7 @@ import com.sun.javafx.collections.ImmutableObservableList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -35,6 +36,7 @@ public abstract class ColumnCustomizableTable extends JTable {
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
+    private TableModelListener tableChangedListener;
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     @Override
@@ -138,6 +140,9 @@ public abstract class ColumnCustomizableTable extends JTable {
         }
         removeLockedColumnIndex(arr);
     }
+    public void setTableChangedListener(TableModelListener tableChangedListener) {
+        this.tableChangedListener = tableChangedListener;
+    }
     public TableColumn getColumnFromDataModel(int colModelIndex) {
         return allColumns.get(colModelIndex);
     }
@@ -180,6 +185,9 @@ public abstract class ColumnCustomizableTable extends JTable {
     @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);
+        if ( null != tableChangedListener) {
+            tableChangedListener.tableChanged(e);
+        }
 //        if (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW && null != allColumns) {
 //            allColumns.clear();
 //            TableColumnModel tcm = this.getColumnModel();

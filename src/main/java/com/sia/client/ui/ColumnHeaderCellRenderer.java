@@ -38,9 +38,9 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
         int rowModelIndex = table.convertRowIndexToModel(row);
         ColumnHeaderProperty headerProp = columnHeaderProvider.get();
-        if (headerProp.columnHeaderIndexSet.contains(rowModelIndex)) {
+        if (headerProp.rowIndexToHeadValueMap.containsKey(rowModelIndex)) {
             JPanel render = new JPanel();
-            render.setBackground(headerProp.haderBackground);
+            render.setBackground(headerProp.headerBackground);
             render.setBorder(BorderFactory.createEmptyBorder());
             return render;
         }

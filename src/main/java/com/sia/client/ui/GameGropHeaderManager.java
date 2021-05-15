@@ -1,14 +1,9 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.MainGameTableModel;
-import com.sia.client.model.MainGameTableModel.BlankGameStruct;
-import com.sia.client.ui.TableColumnHeaderManager.ColumnHeaderStruct;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class GameGropHeaderManager{
 
@@ -32,14 +27,8 @@ public class GameGropHeaderManager{
     }
     public void installListeners() {
         if ( null == tableColumnHeaderManager) {
-            tableColumnHeaderManager = new TableColumnHeaderManager(mainGameTable,titleColor,titleFont,headerHeight);
-            tableColumnHeaderManager.setColumnHeaderList(this::getColumnHeaderList);
+            tableColumnHeaderManager = new TableColumnHeaderManager(mainGameTable,mainGameTable.getColumnHeaderProvider());
         }
         tableColumnHeaderManager.installListeners();
-    }
-    private List<ColumnHeaderStruct> getColumnHeaderList() {
-        MainGameTableModel model = mainGameTable.getModel();
-        List<BlankGameStruct> blankGameIndex = model.getBlankGameIdIndex();
-        return blankGameIndex.stream().map(struct-> new ColumnHeaderStruct(struct.linesTableData.getGameGroupHeader(),struct.tableRowModelIndex)).collect(Collectors.toList());
     }
 }

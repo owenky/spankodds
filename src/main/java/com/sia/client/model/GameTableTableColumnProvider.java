@@ -6,7 +6,6 @@ import com.sia.client.ui.MainGameTable;
 public class GameTableTableColumnProvider implements ColumnHeaderProvider {
 
     private MainGameTable mainGameTable;
-    private ColumnHeaderProperty columnHeaderProperty;
 
     public GameTableTableColumnProvider() {
     }
@@ -15,10 +14,9 @@ public class GameTableTableColumnProvider implements ColumnHeaderProvider {
     }
     @Override
     public ColumnHeaderProperty get() {
-        if ( null == columnHeaderProperty) {
-            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor,SiaConst.GameGroupHeaderHeight,
-                    mainGameTable.getColumnHeaderRowViewIndex());
-        }
+        ColumnHeaderProperty columnHeaderProperty;
+        columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor,SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight,
+                mainGameTable.getRowModelIndex2GameGroupHeaderMap());
         return columnHeaderProperty;
     }
 }

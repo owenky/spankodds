@@ -7,13 +7,14 @@ import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainGameTable extends ColumnCustomizableTable implements LinesTableDataSupplier {
 
     private boolean isSoccer=false;
-    private Set<Integer> columnHeaderRowViewIndex;
+    private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
 
 
     public MainGameTable(GameTableTableColumnProvider columnHeaderProvider) {
@@ -24,11 +25,13 @@ public class MainGameTable extends ColumnCustomizableTable implements LinesTable
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
     }
-    public Set<Integer> getColumnHeaderRowViewIndex() {
-        if ( null == columnHeaderRowViewIndex) {
-            columnHeaderRowViewIndex = getModel().getBlankGameIdIndex().stream().map(struct -> struct.tableRowModelIndex).map(this::convertRowIndexToView).collect(Collectors.toSet());
+    public Map<Integer,Object> getRowModelIndex2GameGroupHeaderMap() {
+        if ( null == rowModelIndex2GameGroupHeaderMap) {
+            Map<Integer,Object> map = getModel().getBlankGameIdIndex().stream().
+                    collect(HashMap::new, (m, struct)->m.put(struct.tableRowModelIndex,struct.linesTableData.getGameGroupHeader()), HashMap::putAll);
+            rowModelIndex2GameGroupHeaderMap = Collections.unmodifiableMap(map);
         }
-        return columnHeaderRowViewIndex;
+        return rowModelIndex2GameGroupHeaderMap;
     }
     @Override
     public MainGameTableModel createDefaultDataModel() {
@@ -73,7 +76,7 @@ public class MainGameTable extends ColumnCustomizableTable implements LinesTable
     @Override
     public void tableChanged(TableModelEvent e) {
         if ( e.getType() == TableModelEvent.DELETE || e.getType() == TableModelEvent.INSERT ) {
-            columnHeaderRowViewIndex = null;
+            rowModelIndex2GameGroupHeaderMap = null;
         }
         super.tableChanged(e);
     }
