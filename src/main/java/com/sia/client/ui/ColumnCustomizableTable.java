@@ -67,15 +67,14 @@ public abstract class ColumnCustomizableTable extends JTable {
         getRowHeaderTable().setRowHeight(rowHeight);
     }
     @Override
+    public void setRowHeight(int rowViewIndex,int rowHeight) {
+        super.setRowHeight(rowViewIndex,rowHeight);
+        getRowHeaderTable().setRowHeight(rowViewIndex,rowHeight);
+    }
+    @Override
     public void setRowMargin(int rowMargin) {
         //table row margin should remain 0 for game group header drawing.
         this.userDefinedRowMargin = rowMargin;
-    }
-
-    @Override
-    public void setRowHeight(int row,int rowHeight) {
-        super.setRowHeight(row,rowHeight);
-        getRowHeaderTable().setRowHeight(row,rowHeight);
     }
     @Override
     public void setShowHorizontalLines(boolean showHorizontalLines) {
