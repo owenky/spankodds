@@ -6,7 +6,6 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import java.util.List;
 
 public class RowHeaderTable extends JTable {
@@ -47,11 +46,6 @@ public class RowHeaderTable extends JTable {
 	@Override
 	public boolean getAutoCreateColumnsFromModel() {
 		return true;
-	}
-	@Override
-	public void setModel(TableModel dataModel) {
-		super.setModel(dataModel);
-		dataModel.removeTableModelListener(this);
 	}
 	@Override
 	public final void removeRowSelectionInterval(int index0, int index1){
