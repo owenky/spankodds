@@ -1252,8 +1252,8 @@ public class MainScreen extends JPanel {
 //        add(bar, BorderLayout.PAGE_END);
         mainGameTable.optimizeRowHeightsAndGameLineTitles();
         AppController.addDataModels(getDataModels());
-        log("Datamodels size is :" + AppController.getDataModels().size());
         //TODO disable following two lines
+log("Suspious adjustcols(true) call !!!!!!!! ");
         adjustcols(true);
 //        firedatamodels();
         //END of TODO
