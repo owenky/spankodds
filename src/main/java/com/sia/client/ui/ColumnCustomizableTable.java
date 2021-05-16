@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 import com.sun.javafx.collections.ImmutableObservableList;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ColumnCustomizableTable extends JTable {
+public abstract class ColumnCustomizableTable extends JTable implements ColumnHeaderDrawer {
 
     private static final AtomicInteger instanceCounter = new AtomicInteger(0);
     private final int instanceIndex;
@@ -33,6 +34,7 @@ public abstract class ColumnCustomizableTable extends JTable {
     private JScrollPane tableScrollPane;
     private ColumnAdjusterManager columnAdjusterManager;
     private ColumnHeaderCellRenderer headerCellRenderer;
+    private TableColumnHeaderManager tableColumnHeaderManager;
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
@@ -56,6 +58,12 @@ public abstract class ColumnCustomizableTable extends JTable {
     }
     public ColumnHeaderProvider getColumnHeaderProvider() {
         return columnHeaderProvider;
+    }
+    public TableColumnHeaderManager getTableColumnHeaderManager() {
+        if ( null == tableColumnHeaderManager) {
+            tableColumnHeaderManager = new TableColumnHeaderManager(this);
+        }
+        return tableColumnHeaderManager;
     }
     public void adjustColumns(boolean includeHeaders) {
         getColumnAdjusterManager().adjustColumns(includeHeaders);
@@ -237,6 +245,14 @@ public abstract class ColumnCustomizableTable extends JTable {
 //            }
             createUnlockedColumns();
         }
+    }
+    @Override
+    public boolean isColumnHeaderDrawn(Object columnHeaderValue) {
+        return getTableColumnHeaderManager().isColumnHeaderDrawn(columnHeaderValue);
+    }
+    @Override
+    public void drawColumnHeaderOnViewIndex(ColumnHeaderProperty columnHeaderProperty, int rowViewIndex, Object columnHeaderValue){
+        getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(columnHeaderProperty,rowViewIndex,columnHeaderValue);
     }
     private ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {

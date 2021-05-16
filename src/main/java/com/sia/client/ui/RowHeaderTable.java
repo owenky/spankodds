@@ -166,11 +166,4 @@ public class RowHeaderTable extends JTable {
 	public String toString() {
 		return getName();
 	}
-//	@Override
-//	public void setCursor(Cursor cursor) {
-//		/**
-//		 * 对RowHeaderTable直接设置cursor，会导致mainTable的表头（行号、操作列等）消失 -- XFZ@2014-08-17
-//		 */
-//		mainTable.setCursor(cursor);
-//	}
 }

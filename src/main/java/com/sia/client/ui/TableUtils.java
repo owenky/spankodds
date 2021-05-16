@@ -30,6 +30,8 @@ public abstract class TableUtils {
         container.setLayout(new BorderLayout());
         container.add(tableScrollPane,BorderLayout.CENTER);
         container.add(tableScrollPane.getHorizontalScrollBar(),BorderLayout.SOUTH);
+
+        mainTable.getTableColumnHeaderManager().installListeners();
         return container;
     }
     public static TableColumn cloneTableColumn(TableColumn sourceTc,int columnIndex) {

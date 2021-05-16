@@ -62,8 +62,6 @@ public class MainGameTable extends ColumnCustomizableTable implements LinesTable
         } else {
             setRowHeight(SiaConst.NormalRowheight);
         }
-        GameGropHeaderManager gameGropHeaderManager = new GameGropHeaderManager(this);
-        gameGropHeaderManager.installListeners();
     }
     public boolean isSoccer() {
         return isSoccer;

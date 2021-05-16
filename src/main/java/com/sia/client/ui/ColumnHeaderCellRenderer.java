@@ -38,10 +38,22 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
         int rowModelIndex = table.convertRowIndexToModel(row);
         ColumnHeaderProperty headerProp = columnHeaderProvider.get();
-        if (headerProp.rowIndexToHeadValueMap.containsKey(rowModelIndex)) {
+        Object headValue = headerProp.rowIndexToHeadValueMap.get(rowModelIndex);
+        if ( null != headValue) {
             JPanel render = new JPanel();
             render.setBackground(headerProp.headerBackground);
             render.setBorder(BorderFactory.createEmptyBorder());
+            //TODO
+            if ( table instanceof ColumnHeaderDrawer) {
+                ColumnHeaderDrawer columnHeaderDrawer = (ColumnHeaderDrawer)table;
+                if ( ! columnHeaderDrawer.isColumnHeaderDrawn(headValue)) {
+                    columnHeaderDrawer.drawColumnHeaderOnViewIndex(headerProp,row,headValue);
+                    //slow down table rendering
+//                    table.setRowHeight(row,headerProp.columnHeaderHeight);
+                }
+            }
+
+            //END OF slow TODO
             return render;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

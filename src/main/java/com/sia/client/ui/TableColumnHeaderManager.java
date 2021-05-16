@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 
 import javax.swing.JComponent;
@@ -13,7 +12,6 @@ import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -25,7 +23,9 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class TableColumnHeaderManager implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
@@ -33,12 +33,12 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     private final ColumnCustomizableTable mainTable;
     private boolean isMainTableFirstShown = false;
     private boolean isAdjustingColumn = false;
-    private final ColumnHeaderProvider columnHeaderProvider;
+    private final Set<Object> drawnHeaderValues = new HashSet<>();
     private ColumnHeaderProperty columnHeaderProperty;
+    private int horizontalScrollBarAdjustmentValue;
 
-    public TableColumnHeaderManager(ColumnCustomizableTable mainTable,ColumnHeaderProvider columnHeaderProvider) {
+    public TableColumnHeaderManager(ColumnCustomizableTable mainTable) {
         this.mainTable = mainTable;
-        this.columnHeaderProvider = columnHeaderProvider;
     }
 
     public void installListeners() {
@@ -49,45 +49,65 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         mainTable.setTableChangedListener(this);
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
     }
+    public boolean isColumnHeaderDrawn(Object columnHeaderValue) {
+        return drawnHeaderValues.contains(columnHeaderValue);
+    }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
             if (source == mainTable && !isMainTableFirstShown && mainTable.isShowing()) {
-                columnHeaderProperty = columnHeaderProvider.get();
                 adjustComumns();
-                drawColumnHeaders();
+                invokeDrawColumnHeaders();
                 isMainTableFirstShown = true;
             }
         }
+    }
+    private ColumnHeaderProperty getColumnHeaderProperty() {
+        if ( null == columnHeaderProperty) {
+            //don't use mainTable.getColumnHeaderProvider().get() to obtain columnHeaderProperty because each time this call minght return different rowIndexToHeadValueMap
+            columnHeaderProperty = mainTable.getColumnHeaderProvider().get();
+        }
+        return columnHeaderProperty;
     }
     private void adjustComumns() {
         isAdjustingColumn = true;
         mainTable.adjustColumns(true);
     }
-    private void drawColumnHeaders() {
-        drawColumnHeaders(0);
+    private void invokeDrawColumnHeaders() {
+//        drawColumnHeaders(0);
+        drawnHeaderValues.clear();
+        mainTable.repaint();
     }
 
-    private void drawColumnHeaders(int diffByScroll) {
-        if (null != columnHeaderProperty) {
-            columnHeaderProperty.rowIndexToHeadValueMap.forEach((key, value) -> drawColumnHeaderOnModelIndex(key, String.valueOf(value), diffByScroll));
+//    private void drawColumnHeaders(int diffByScroll) {
+//        if (null != columnHeaderProperty) {
+//            columnHeaderProperty.rowIndexToHeadValueMap.forEach((key, value) -> drawColumnHeaderOnModelIndex(key, String.valueOf(value), diffByScroll));
+//        }
+//    }
+    private void configRowHeight() {
+        Map<Integer,Object> map = getColumnHeaderProperty().rowIndexToHeadValueMap;
+        for(int rowViewIndex=0;rowViewIndex<mainTable.getRowCount();rowViewIndex++) {
+            int rowModelIndex = mainTable.convertRowIndexToModel(rowViewIndex);
+            int rowHeight;
+            if ( null == map.get(rowModelIndex)) {
+                rowHeight = mainTable.getRowHeight();
+            } else {
+                rowHeight = getColumnHeaderProperty().columnHeaderHeight;
+            }
+            mainTable.setRowHeight(rowViewIndex, rowHeight);
         }
     }
-    private void restoreRowHeight() {
-        for(int i=0;i<mainTable.getRowCount();i++) {
-            mainTable.setRowHeight(i, mainTable.getRowHeight());
-        }
+//    private void drawColumnHeaderOnModelIndex(int rowModelIndex, String headerValue, int diffByScroll) {
+//        int rowViewIndex = mainTable.convertRowIndexToView(rowModelIndex);
+//        drawColumnHeaderOnViewIndex(rowViewIndex,headerValue,diffByScroll);
+//    }
+    public void drawColumnHeaderOnViewIndex(ColumnHeaderProperty columnHeaderProperty, int rowViewIndex, Object headerValue) {
+        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(String.valueOf(headerValue), header -> makeColumnHeaderComp(mainTable, header,columnHeaderProperty.headerForeground, columnHeaderProperty.headerFont));
+        layOutColumnHeader(rowViewIndex, mainTable, headerComponent, columnHeaderProperty.columnHeaderHeight, horizontalScrollBarAdjustmentValue);
+        drawnHeaderValues.add(headerValue);
     }
-    private void drawColumnHeaderOnModelIndex(int rowModelIndex, String headerValue, int diffByScroll) {
-        int rowViewIndex = mainTable.convertRowIndexToView(rowModelIndex);
-        drawColumnHeaderOnViewIndex(rowViewIndex,headerValue,diffByScroll);
-    }
-    public void drawColumnHeaderOnViewIndex(int rowViewIndex,String headerValue,int diffByScroll) {
-        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(headerValue, header -> makeColumnHeaderComp(mainTable, header,columnHeaderProperty.headerForeground, columnHeaderProperty.headerFont));
-        layOutColumnHeader(rowViewIndex, mainTable, headerComponent, columnHeaderProperty.columnHeaderHeight, diffByScroll);
-    }
-    public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
+    private static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
         JPanel jPanel = new JPanel();
         jPanel.setOpaque(false);
         BorderLayout bl = new BorderLayout();
@@ -104,7 +124,7 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         return jPanel;
     }
 
-    public static void layOutColumnHeader(int rowViewIndex, ColumnCustomizableTable mainTable, JComponent header, int headerHeight, int diffByScroll) {
+    private static void layOutColumnHeader(int rowViewIndex, ColumnCustomizableTable mainTable, JComponent header, int headerHeight, int diffByScroll) {
         Rectangle r1 = mainTable.getCellRect(rowViewIndex-1, 0, true);
         int x1 = 0;
         int y1 = (int) (r1.getY() + r1.getHeight());
@@ -115,23 +135,23 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     }
     @Override
     public void columnAdded(final TableColumnModelEvent e) {
-        drawColumnHeaders();
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void columnRemoved(final TableColumnModelEvent e) {
-        drawColumnHeaders();
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void columnMoved(final TableColumnModelEvent e) {
-        drawColumnHeaders();
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
         if ( isMainTableFirstShown ) {
-            drawColumnHeaders();
+            invokeDrawColumnHeaders();
         }
     }
 
@@ -143,46 +163,48 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     @Override
     public void componentResized(final ComponentEvent e) {
         if ( isMainTableFirstShown && ! isAdjustingColumn ) {
-            drawColumnHeaders();
+            drawnHeaderValues.clear();
         }
         isAdjustingColumn = false;
     }
 
     @Override
     public void componentMoved(final ComponentEvent e) {
-
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void componentShown(final ComponentEvent e) {
-        drawColumnHeaders();
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void componentHidden(final ComponentEvent e) {
-        drawColumnHeaders();
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void tableChanged(final TableModelEvent e) {
         if (e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE) {
-            restoreRowHeight();
-            columnHeaderProperty = columnHeaderProvider.get();
-            drawColumnHeaders();
+            columnHeaderProperty = mainTable.getColumnHeaderProvider().get();
+            configRowHeight();
+            invokeDrawColumnHeaders();
         }
     }
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
         if ( isMainTableFirstShown ) {
-            Adjustable source = evt.getAdjustable();
             if (evt.getValueIsAdjusting()) {
                 return;
             }
-            int value = evt.getValue();
-            if ( value != 0) {
-                drawColumnHeaders(value);
+            int newValue = evt.getValue();
+            if ( newValue ==horizontalScrollBarAdjustmentValue ) {
+                return;
             }
+            horizontalScrollBarAdjustmentValue = evt.getValue();
+            invokeDrawColumnHeaders();
+
         }
     }
 }

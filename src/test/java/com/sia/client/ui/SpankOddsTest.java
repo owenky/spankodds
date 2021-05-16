@@ -55,9 +55,6 @@ public class SpankOddsTest {
         tabbedPane.addTab("Second", testMainTableProps.tableContainer);
         jFrame.getContentPane().add(tabbedPane);
 
-        blankTableProps.tableColumnHeaderManager.installListeners();
-        testMainTableProps.tableColumnHeaderManager.installListeners();
-
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.pack();
         jFrame.show();
@@ -66,6 +63,8 @@ public class SpankOddsTest {
     private static TableProperties createTestTable(int rowCount, int columnCount,int boundaryIndex) {
 
         TableProperties rtn = new TableProperties() ;
+        rtn.rowCount = rowCount;
+        rtn.columnCount = columnCount;
         rtn.dataVector = new ArrayList<>();
         ColumnHeaderProvider columnHeaderProvider = createColumnHeaderProvider(rtn.dataVector);
         rtn.table = new ColumnCustomizableTable(false, columnHeaderProvider) {
@@ -108,8 +107,7 @@ public class SpankOddsTest {
         rtn.table.setRowHeight(60);
         rtn.table.setIntercellSpacing(new Dimension(2, 2));
         buildModels(rtn.table, rtn.dataVector,rowCount,columnCount);
-
-        rtn.tableColumnHeaderManager = new TableColumnHeaderManager(rtn.table, createColumnHeaderProvider(rtn.dataVector));
+        
         rtn.tableContainer = TableUtils.configTableLockColumns(rtn.table, boundaryIndex);
         return rtn;
     }
@@ -138,8 +136,8 @@ public class SpankOddsTest {
     private static void autoUpdateTableData(TableProperties tblProp) {
         Timer updateTimer = new Timer(8000, (event) -> {
 //            testColumnAdjuster();
-//            testColumnHeaderWithRowInserted();
-            testColumnHeaderWithRowDeleted(tblProp.table,tblProp.dataVector);
+            testColumnHeaderWithRowInserted(tblProp.table,tblProp.dataVector,tblProp.columnCount);
+//            testColumnHeaderWithRowDeleted(tblProp.table,tblProp.dataVector);
         });
         updateTimer.setInitialDelay(3000);
         updateTimer.start();
@@ -160,8 +158,8 @@ public class SpankOddsTest {
         }
     }
     private static void testColumnHeaderWithRowInserted(ColumnCustomizableTable table,List<LabeledList> dataVector,int columnCount) {
-        int insertedRow = 0;
-        LabeledList newRow = makeRow(0, columnCount,false);
+        int insertedRow = 2;
+        LabeledList newRow = makeRow(insertedRow, columnCount,false);
         dataVector.add(insertedRow, newRow);
         TableModelEvent e = new TableModelEvent(table.getModel(), insertedRow, insertedRow, ALL_COLUMNS, TableModelEvent.INSERT);
         table.getModel().fireTableChanged(e);
@@ -237,9 +235,11 @@ public class SpankOddsTest {
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     private static class TableProperties {
+        public TableColumnHeaderManager tableColumnHeaderManager;
         ColumnCustomizableTable table;
-        TableColumnHeaderManager tableColumnHeaderManager;
         JComponent tableContainer;
         List<LabeledList> dataVector;
+        int rowCount;
+        int columnCount;
     }
 }
