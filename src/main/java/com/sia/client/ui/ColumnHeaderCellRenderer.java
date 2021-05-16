@@ -43,7 +43,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
             JPanel render = new JPanel();
             render.setBackground(headerProp.headerBackground);
             render.setBorder(BorderFactory.createEmptyBorder());
-            //TODO
             if ( table instanceof ColumnHeaderDrawer) {
                 ColumnHeaderDrawer columnHeaderDrawer = (ColumnHeaderDrawer)table;
                 if ( ! columnHeaderDrawer.isColumnHeaderDrawn(headValue)) {
@@ -52,8 +51,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 //                    table.setRowHeight(row,headerProp.columnHeaderHeight);
                 }
             }
-
-            //END OF slow TODO
             return render;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
