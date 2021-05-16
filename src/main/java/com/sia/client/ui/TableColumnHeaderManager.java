@@ -58,6 +58,7 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
             Object source = e.getSource();
             if (source == mainTable && !isMainTableFirstShown && mainTable.isShowing()) {
                 adjustComumns();
+                configRowHeight();
                 invokeDrawColumnHeaders();
                 isMainTableFirstShown = true;
             }
