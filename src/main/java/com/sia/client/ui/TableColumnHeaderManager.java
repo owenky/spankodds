@@ -48,7 +48,6 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
 //        mainTable.getModel().addTableModelListener(this);
         mainTable.setTableChangedListener(this);
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
-
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
@@ -72,7 +71,7 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
 
     private void drawColumnHeaders(int diffByScroll) {
         if (null != columnHeaderProperty) {
-            columnHeaderProperty.rowIndexToHeadValueMap.forEach((key, value) -> drawColumnHeader(key, String.valueOf(value), diffByScroll));
+            columnHeaderProperty.rowIndexToHeadValueMap.forEach((key, value) -> drawColumnHeaderOnModelIndex(key, String.valueOf(value), diffByScroll));
         }
     }
     private void restoreRowHeight() {
@@ -80,14 +79,15 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
             mainTable.setRowHeight(i, mainTable.getRowHeight());
         }
     }
-    private void drawColumnHeader(int rowModelIndex, String headerValue,int diffByScroll) {
+    private void drawColumnHeaderOnModelIndex(int rowModelIndex, String headerValue, int diffByScroll) {
         int rowViewIndex = mainTable.convertRowIndexToView(rowModelIndex);
-        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(headerValue, header -> makeColumnHeaderComp(mainTable, header, columnHeaderProperty.headerFont));
+        drawColumnHeaderOnViewIndex(rowViewIndex,headerValue,diffByScroll);
+    }
+    public void drawColumnHeaderOnViewIndex(int rowViewIndex,String headerValue,int diffByScroll) {
+        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(headerValue, header -> makeColumnHeaderComp(mainTable, header,columnHeaderProperty.headerForeground, columnHeaderProperty.headerFont));
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, columnHeaderProperty.columnHeaderHeight, diffByScroll);
     }
-
-    public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Font titleFont) {
-
+    public static JComponent makeColumnHeaderComp(ColumnCustomizableTable jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
         JPanel jPanel = new JPanel();
         jPanel.setOpaque(false);
         BorderLayout bl = new BorderLayout();
@@ -97,7 +97,7 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         titleLabel.setFont(titleFont);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(headerForeGround);
         jPanel.add(BorderLayout.CENTER, titleLabel);
         jtable.add(jPanel);
 
