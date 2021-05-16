@@ -9,6 +9,7 @@ import com.sia.client.model.TableModelRowData;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.event.TableModelEvent;
@@ -33,49 +34,41 @@ public class SpankOddsTest {
 
     private static final Integer[] barRowIndex = new Integer[]{1, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90};
     private static final Set<Integer> barRowSet = new HashSet<>(Arrays.asList(barRowIndex));
-    private static final int lastLockedColumnIndex = 3;
-    private static final int totalRowCount = 100;
-    private static final int totalColumnCount = 46;
-    private static final List<LabeledList> dataVector = new ArrayList<>();
+    private static final int testMainTableLastLockedColumnIndex = 3;
+    private static final int testMainTableModelRowCount = 100;
+    private static final int testMainTableModelColumnCount = 46;
     private static final ColumnAdjustScheduler COLUMN_ADJUST_SCHEDULER = new ColumnAdjustScheduler();
-    private static ColumnCustomizableTable theTestTable;
     private static int updatedRow = 0;
 
     public static void main(String[] argv) {
 
         JFrame jFrame = new JFrame();
-        theTestTable = createTestTable();
-        theTestTable.setRowHeight(60);
-        theTestTable.setIntercellSpacing(new Dimension(2, 2));
-
-        TableColumnHeaderManager tableColumnHeaderManager = new TableColumnHeaderManager(theTestTable, createColumnHeaderProvider());
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        int columnCount = totalColumnCount;
-        for (int i = 0; i < columnCount; i++) {
-            TableColumn column = new TableColumn(i, 30);
-            column.setHeaderValue("col" + i);
-            theTestTable.addColumn(column);
-        }
+        TableProperties testMainTableProps = createTestTable(testMainTableModelRowCount,testMainTableModelColumnCount,testMainTableLastLockedColumnIndex);
+        TableProperties blankTableProps = createTestTable(0,0,0);
 
-        for (int i = 0; i < totalRowCount; i++) {
-            dataVector.add(makeRow(i, columnCount,true));
-        }
 
-        JComponent tableContainer = TableUtils.configTableLockColumns(theTestTable, lastLockedColumnIndex);
-        jFrame.getContentPane().add(tableContainer);
 
-        tableColumnHeaderManager.installListeners();
+        JTabbedPane tabbedPane = new JTabbedPane();
+//        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
+        tabbedPane.addTab("Second", testMainTableProps.tableContainer);
+        jFrame.getContentPane().add(tabbedPane);
+
+        blankTableProps.tableColumnHeaderManager.installListeners();
+        testMainTableProps.tableColumnHeaderManager.installListeners();
 
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.pack();
         jFrame.show();
-        autoUpdateTableData();
+//        autoUpdateTableData(testMainTableProps);
     }
+    private static TableProperties createTestTable(int rowCount, int columnCount,int boundaryIndex) {
 
-    private static ColumnCustomizableTable createTestTable() {
-        ColumnHeaderProvider columnHeaderProvider = createColumnHeaderProvider();
-        ColumnCustomizableTable rtn = new ColumnCustomizableTable(false, columnHeaderProvider) {
+        TableProperties rtn = new TableProperties() ;
+        rtn.dataVector = new ArrayList<>();
+        ColumnHeaderProvider columnHeaderProvider = createColumnHeaderProvider(rtn.dataVector);
+        rtn.table = new ColumnCustomizableTable(false, columnHeaderProvider) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -83,8 +76,7 @@ public class SpankOddsTest {
                     @Override
                     public Component getTableCellRendererComponent(JTable table, Object value,
                                                                    boolean isSelected, boolean hasFocus, int row, int column) {
-                        JComponent rtn = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                        return rtn;
+                        return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                     }
                 };
             }
@@ -95,13 +87,12 @@ public class SpankOddsTest {
 
                     @Override
                     public int getRowCount() {
-                        return dataVector.size();
+                        return rtn.dataVector.size();
                     }
 
                     @Override
                     public Object getValueAt(final int rowIndex, final int columnIndex) {
-                        Object value = dataVector.get(rowIndex).get(columnIndex);
-                        return value;
+                        return rtn.dataVector.get(rowIndex).get(columnIndex);
                     }
 
                     @Override
@@ -111,12 +102,28 @@ public class SpankOddsTest {
                 };
             }
         };
-        JTableHeader tableHeader = rtn.getTableHeader();
+        JTableHeader tableHeader = rtn.table.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
+        rtn.table.setRowHeight(60);
+        rtn.table.setIntercellSpacing(new Dimension(2, 2));
+        buildModels(rtn.table, rtn.dataVector,rowCount,columnCount);
+
+        rtn.tableColumnHeaderManager = new TableColumnHeaderManager(rtn.table, createColumnHeaderProvider(rtn.dataVector));
+        rtn.tableContainer = TableUtils.configTableLockColumns(rtn.table, boundaryIndex);
         return rtn;
     }
+    private static void buildModels(ColumnCustomizableTable table,List<LabeledList> dataVector,int rowCount, int columnCount) {
+        for (int i = 0; i < columnCount; i++) {
+            TableColumn column = new TableColumn(i, 30);
+            column.setHeaderValue("col" + i);
+            table.addColumn(column);
+        }
 
+        for (int i = 0; i < rowCount; i++) {
+            dataVector.add(makeRow(i, columnCount,true));
+        }
+    }
     private static LabeledList makeRow(int row, int colCount,boolean toSetHeader) {
         LabeledList rowData = new LabeledList();
         for (int i = 0; i < colCount; i++) {
@@ -128,16 +135,16 @@ public class SpankOddsTest {
         return rowData;
     }
 
-    private static void autoUpdateTableData() {
+    private static void autoUpdateTableData(TableProperties tblProp) {
         Timer updateTimer = new Timer(8000, (event) -> {
 //            testColumnAdjuster();
 //            testColumnHeaderWithRowInserted();
-            testColumnHeaderWithRowDeleted();
+            testColumnHeaderWithRowDeleted(tblProp.table,tblProp.dataVector);
         });
         updateTimer.setInitialDelay(3000);
         updateTimer.start();
     }
-    private static void testColumnHeaderWithRowDeleted() {
+    private static void testColumnHeaderWithRowDeleted(ColumnCustomizableTable table,List<LabeledList> dataVector) {
         int deletedRow = -1;
         for ( int i=0;i<dataVector.size();i++) {
             LabeledList row = dataVector.get(i);
@@ -148,19 +155,19 @@ public class SpankOddsTest {
         }
         if ( deletedRow>=0) {
             dataVector.remove(deletedRow);
-            TableModelEvent e = new TableModelEvent(theTestTable.getModel(), deletedRow, deletedRow, ALL_COLUMNS, TableModelEvent.DELETE);
-            theTestTable.getModel().fireTableChanged(e);
+            TableModelEvent e = new TableModelEvent(table.getModel(), deletedRow, deletedRow, ALL_COLUMNS, TableModelEvent.DELETE);
+            table.getModel().fireTableChanged(e);
         }
     }
-    private static void testColumnHeaderWithRowInserted() {
+    private static void testColumnHeaderWithRowInserted(ColumnCustomizableTable table,List<LabeledList> dataVector,int columnCount) {
         int insertedRow = 0;
-        LabeledList newRow = makeRow(0, totalColumnCount,false);
+        LabeledList newRow = makeRow(0, columnCount,false);
         dataVector.add(insertedRow, newRow);
-        TableModelEvent e = new TableModelEvent(theTestTable.getModel(), insertedRow, insertedRow, ALL_COLUMNS, TableModelEvent.INSERT);
-        theTestTable.getModel().fireTableChanged(e);
+        TableModelEvent e = new TableModelEvent(table.getModel(), insertedRow, insertedRow, ALL_COLUMNS, TableModelEvent.INSERT);
+        table.getModel().fireTableChanged(e);
     }
 
-    private static void testColumnAdjuster() {
+    private static void testColumnAdjuster(ColumnCustomizableTable table,List<LabeledList> dataVector) {
         int col = 0;
         String value = dataVector.get(updatedRow).get(col);
         dataVector.get(updatedRow).set(col, value + "XX");
@@ -169,12 +176,12 @@ public class SpankOddsTest {
         value = dataVector.get(updatedRow).get(col);
         dataVector.get(updatedRow).set(col, value + "XX");
 
-        TableModelEvent te = new TableModelEvent(theTestTable.getModel(), updatedRow);
-        theTestTable.getModel().fireTableChanged(te);
-        COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(theTestTable, updatedRow));
+        TableModelEvent te = new TableModelEvent(table.getModel(), updatedRow);
+        table.getModel().fireTableChanged(te);
+        COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(table, updatedRow));
     }
 
-    private static ColumnHeaderProvider createColumnHeaderProvider() {
+    private static ColumnHeaderProvider createColumnHeaderProvider(List<LabeledList> dataVector) {
         return () -> {
             int columnHeaderHeight = SiaConst.GameGroupHeaderHeight;
             Map<Integer, Object> columnHeaderIndexMap = new HashMap<>();
@@ -227,5 +234,12 @@ public class SpankOddsTest {
         public String getHeader() {
             return this.header;
         }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    private static class TableProperties {
+        ColumnCustomizableTable table;
+        TableColumnHeaderManager tableColumnHeaderManager;
+        JComponent tableContainer;
+        List<LabeledList> dataVector;
     }
 }
