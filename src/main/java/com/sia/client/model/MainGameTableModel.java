@@ -33,7 +33,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel {
         destCollection.addAll(gameLines);
     }
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
-    public void moveGameToThisHeader(Game g, String header) {
+    public boolean moveGameToThisHeader(Game g, String header) {
         Game thisgame = null;
 
         for (LinesTableData gameLine : gameLines) {
@@ -43,7 +43,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel {
             }
         }
         // now lets see if i found it in either
-        if (thisgame != null) // i did find it
+        if ( null != thisgame ) // i did find it
         {
             LinesTableData ltd = null;
             if (header.equalsIgnoreCase("In Progress")) {
@@ -66,6 +66,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel {
                 log( new Exception("can't find LinesTableData for header:"+header));
             }
         }
+        return null != thisgame;
     }
     //refactored from MainScreen::addGame(Game, boolean)
     public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint) {

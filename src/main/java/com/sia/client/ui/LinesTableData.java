@@ -310,7 +310,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
                     try {
                         stv.clearColors(cleartime);
                     } catch (Exception ex) {
-                        System.out.println("clear exception row=" + i + "..col=" + j + ".." + ex);
+                        log("clear exception row=" + i + "..col=" + j + ".." + ex);
                     }
                 }
                 if (obj instanceof SoccerSpreadTotalView) {
@@ -336,7 +336,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
                         stv.clearColors();
                         //System.out.println("iam chart");
                     } catch (Exception ex) {
-                        System.out.println("clear exception row=" + i + "..col=" + j + ".." + ex);
+                        log("clear exception row=" + i + "..col=" + j + ".." + ex);
                     }
                 }
 
@@ -384,9 +384,9 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
         boolean status = gamesVec.containsGameId(gameid);
         if (status) {
-            log("Disable fire()...............................");
-            //TODO debug purpose
-//            fire();
+            //TODO suspicous fire() call
+            log("In LinesTableData, suspicous fire()");
+            fire();
         }
         return status;
     }

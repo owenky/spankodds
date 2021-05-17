@@ -178,7 +178,7 @@ public class MainScreen extends JPanel {
 //        }
     }
 
-    public void moveGameToThisHeader(Game g, String header) {
+    public boolean moveGameToThisHeader(Game g, String header) {
 //        Game thisgame = null;
 //
 //        for (int k = 0; k < datamodelsvec.size(); k++) {
@@ -213,7 +213,7 @@ public class MainScreen extends JPanel {
 //
 //            }
 //        }
-        mainGameTable.getModel().moveGameToThisHeader(g,header);
+        return mainGameTable.getModel().moveGameToThisHeader(g,header);
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
@@ -1253,10 +1253,11 @@ public class MainScreen extends JPanel {
         mainGameTable.optimizeRowHeightsAndGameLineTitles();
         AppController.addDataModels(getDataModels());
         //TODO disable following two lines
-log("Suspious adjustcols(true) call !!!!!!!! ");
-        adjustcols(true);
+log("disable Suspious adjustcols(true) call !!!!!!!! ");
+//        adjustcols(true);
+        // end of disable TODO
 //        firedatamodels();
-        //END of TODO
+        //END of commenting out firedatamodels() TODO
 
         Timer timer2 = new Timer(500, new ActionListener() { //Change parameters to your needs.
             public void actionPerformed(ActionEvent e) {

@@ -53,13 +53,11 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
- System.out.println("sourc:"+e.getSource().getClass().getSimpleName()+" table: "+mainTable.getName()+", e.getChangeFlags()="+e.getChangeFlags()+", HierarchyEvent.SHOWING_CHANGED="+HierarchyEvent.SHOWING_CHANGED+
-         ", (e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED)="+(e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED)+", isMainTableFirstShown="+isMainTableFirstShown+", mainTable.isShowing()="+mainTable.isShowing())       ;
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
             if (source == mainTable && !isMainTableFirstShown && mainTable.isShowing()) {
-                adjustComumns();
                 configRowHeight();
+                adjustComumns();
                 invokeDrawColumnHeaders();
                 isMainTableFirstShown = true;
             }
@@ -174,6 +172,9 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
             mainTable.getColumnHeaderProvider().resetColumnHeaderProperty();
             configRowHeight();
             invokeDrawColumnHeaders();
+        } else if ( e.getType() == TableModelEvent.UPDATE && e.getLastRow() == Integer.MAX_VALUE) {
+            //when update for lastrow=Integer.MAX_VALUE, all row heights are rest to table row height,
+            configRowHeight();
         }
     }
 
