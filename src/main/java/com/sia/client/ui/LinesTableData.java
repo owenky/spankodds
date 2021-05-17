@@ -384,7 +384,9 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 
         boolean status = gamesVec.containsGameId(gameid);
         if (status) {
-            fire();
+            log("Disable fire()...............................");
+            //TODO debug purpose
+//            fire();
         }
         return status;
     }

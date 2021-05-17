@@ -77,8 +77,8 @@ public abstract class ColumnCustomizableTable extends JTable implements ColumnHe
     }
     @Override
     public void setRowHeight(int rowViewIndex,int rowHeight) {
-        super.setRowHeight(rowViewIndex,rowHeight);
         getRowHeaderTable().setRowHeight(rowViewIndex,rowHeight);
+        super.setRowHeight(rowViewIndex,rowHeight);
     }
     @Override
     public void setRowMargin(int rowMargin) {

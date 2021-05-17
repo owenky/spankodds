@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class SpankOddsTest {
 
-    private static final Integer[] barRowIndex = new Integer[]{1, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90};
+    private static final Integer[] barRowIndex = new Integer[] {1, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90};
     private static final Set<Integer> barRowSet = new HashSet<>(Arrays.asList(barRowIndex));
     private static final int testMainTableLastLockedColumnIndex = 3;
     private static final int testMainTableModelRowCount = 100;

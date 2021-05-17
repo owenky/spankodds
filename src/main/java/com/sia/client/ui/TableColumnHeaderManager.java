@@ -70,16 +70,9 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         mainTable.adjustColumns(true);
     }
     private void invokeDrawColumnHeaders() {
-//        drawColumnHeaders(0);
         drawnHeaderValues.clear();
         mainTable.repaint();
     }
-
-//    private void drawColumnHeaders(int diffByScroll) {
-//        if (null != columnHeaderProperty) {
-//            columnHeaderProperty.rowIndexToHeadValueMap.forEach((key, value) -> drawColumnHeaderOnModelIndex(key, String.valueOf(value), diffByScroll));
-//        }
-//    }
     private void configRowHeight() {
         ColumnHeaderProvider columnHeaderProvider = mainTable.getColumnHeaderProvider();
         for(int rowViewIndex=0;rowViewIndex<mainTable.getRowCount();rowViewIndex++) {
@@ -93,10 +86,6 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
             mainTable.setRowHeight(rowViewIndex, rowHeight);
         }
     }
-//    private void drawColumnHeaderOnModelIndex(int rowModelIndex, String headerValue, int diffByScroll) {
-//        int rowViewIndex = mainTable.convertRowIndexToView(rowModelIndex);
-//        drawColumnHeaderOnViewIndex(rowViewIndex,headerValue,diffByScroll);
-//    }
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
         ColumnHeaderProvider columnHeaderProvider = mainTable.getColumnHeaderProvider();
         JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(String.valueOf(headerValue), header -> makeColumnHeaderComp(mainTable, header,columnHeaderProvider.getHeaderForeground()
@@ -108,7 +97,6 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
         JPanel jPanel = new JPanel();
         jPanel.setOpaque(false);
         BorderLayout bl = new BorderLayout();
-//        bl.setVgap(1);
         jPanel.setLayout(bl);
         JLabel titleLabel = new JLabel(gameGroupHeader);
         titleLabel.setFont(titleFont);
@@ -192,13 +180,9 @@ public class TableColumnHeaderManager implements HierarchyListener, TableColumnM
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
         if ( isMainTableFirstShown ) {
-            if (evt.getValueIsAdjusting()) {
-                return;
-            }
-            int newValue = evt.getValue();
-            if ( newValue ==horizontalScrollBarAdjustmentValue ) {
-                return;
-            }
+//            if (evt.getValueIsAdjusting()) {
+//               return;
+//            }
             horizontalScrollBarAdjustmentValue = evt.getValue();
             invokeDrawColumnHeaders();
 
