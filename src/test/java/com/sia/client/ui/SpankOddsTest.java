@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,10 +35,11 @@ public class SpankOddsTest {
         tabbedPane.addTab("Second", testMainTableProps.tableContainer);
         jFrame.getContentPane().add(tabbedPane);
 
-        jFrame.setSize(new Dimension(1500, 800));
+        jFrame.setPreferredSize(new Dimension(1500, 800));
+        jFrame.setLocation(new Point(250,100));
         jFrame.pack();
-        jFrame.show();
-        autoUpdateTableData(testMainTableProps);
+        jFrame.setVisible(true);
+//        autoUpdateTableData(testMainTableProps);
     }
     private static void autoUpdateTableData(TableProperties tblProp) {
         Timer updateTimer = new Timer(8000, (event) -> {
