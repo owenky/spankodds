@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProvider;
-import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 import com.sun.javafx.collections.ImmutableObservableList;
@@ -251,8 +250,8 @@ public abstract class ColumnCustomizableTable extends JTable implements ColumnHe
         return getTableColumnHeaderManager().isColumnHeaderDrawn(columnHeaderValue);
     }
     @Override
-    public void drawColumnHeaderOnViewIndex(ColumnHeaderProperty columnHeaderProperty, int rowViewIndex, Object columnHeaderValue){
-        getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(columnHeaderProperty,rowViewIndex,columnHeaderValue);
+    public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
+        getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
     }
     private ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {

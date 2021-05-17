@@ -1,32 +1,38 @@
 package com.sia.client.model;
 
-import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
-
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
 
-public interface ColumnHeaderProvider extends Supplier<ColumnHeaderProperty> {
+public abstract class ColumnHeaderProvider {
 
+    private ColumnHeaderProperty columnHeaderProperty = null;
 
-    ///////////////////////////////////////////////////////////////
-    class ColumnHeaderProperty {
-        public final Color headerBackground;
-        public final Color headerForeground;
-        public final Font headerFont;
-        public final int columnHeaderHeight;
-        public final Map<Integer,Object> rowIndexToHeadValueMap;
+    abstract protected ColumnHeaderProperty provide();
 
-        public ColumnHeaderProperty(Color headerBackground, Color headerForeground, Font headerFont, int columnHeaderHeight,Map<Integer,Object> rowIndexToHeadValueMap) {
-            this.headerBackground = headerBackground;
-            this.headerForeground = headerForeground;
-            this.headerFont = headerFont;
-            this.columnHeaderHeight = columnHeaderHeight;
-            Map<Integer, Object> clonedMap = new HashMap<>(rowIndexToHeadValueMap);
-            this.rowIndexToHeadValueMap = Collections.unmodifiableMap(clonedMap);
+    public Color getHeaderBackground() {
+        return getColumnHeaderProperty().getHeaderBackground();
+    }
+    public Color getHeaderForeground() {
+        return getColumnHeaderProperty().getHeaderForeground();
+    }
+
+    public Font getHeaderFont() {
+        return getColumnHeaderProperty().getHeaderFont();
+    }
+
+    public int getColumnHeaderHeight() {
+        return getColumnHeaderProperty().getColumnHeaderHeight();
+    }
+    public Object getColumnHeaderAt(int rowModelIndex) {
+        return getColumnHeaderProperty().getColumnHeaderAt(rowModelIndex);
+    }
+    public synchronized void resetColumnHeaderProperty() {
+        columnHeaderProperty = null;
+    }
+    private synchronized ColumnHeaderProperty getColumnHeaderProperty() {
+        if ( null == columnHeaderProperty) {
+            columnHeaderProperty = provide();
         }
+        return columnHeaderProperty;
     }
 }

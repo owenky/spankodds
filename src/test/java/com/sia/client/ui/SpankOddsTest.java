@@ -27,10 +27,10 @@ public class SpankOddsTest {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         TableProperties testMainTableProps = TableProperties.of(testMainTableModelRowCount,testMainTableModelColumnCount,testMainTableLastLockedColumnIndex,barRowSet);
-        TableProperties blankTableProps = TableProperties.of(0,0,0,barRowSet);
+        TableProperties blankTableProps = TableProperties.of(testMainTableModelRowCount,testMainTableModelColumnCount,1,barRowSet);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-//        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
+        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
         tabbedPane.addTab("Second", testMainTableProps.tableContainer);
         jFrame.getContentPane().add(tabbedPane);
 

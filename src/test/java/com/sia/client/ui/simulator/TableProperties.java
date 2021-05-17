@@ -2,8 +2,8 @@ package com.sia.client.ui.simulator;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.ColumnHeaderProvider;
-import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 import com.sia.client.ui.ColumnCustomizableTable;
 import com.sia.client.ui.TableColumnHeaderManager;
 import com.sia.client.ui.TableUtils;
@@ -88,16 +88,20 @@ public class TableProperties {
         }
     }
     private static ColumnHeaderProvider createColumnHeaderProvider(List<LabeledList> dataVector) {
-        return () -> {
-            int columnHeaderHeight = SiaConst.GameGroupHeaderHeight;
-            Map<Integer, Object> columnHeaderIndexMap = new HashMap<>();
-            for (int index = 0; index < dataVector.size(); index++) {
-                LabeledList rowData = dataVector.get(index);
-                if (isHeaderRow(rowData)) {
-                    columnHeaderIndexMap.put(index, rowData.getHeader());
+        return new ColumnHeaderProvider() {
+
+            @Override
+            protected ColumnHeaderProperty provide() {
+                int columnHeaderHeight = SiaConst.GameGroupHeaderHeight;
+                Map<Integer, Object> columnHeaderIndexMap = new HashMap<>();
+                for (int index = 0; index < dataVector.size(); index++) {
+                    LabeledList rowData = dataVector.get(index);
+                    if (isHeaderRow(rowData)) {
+                        columnHeaderIndexMap.put(index, rowData.getHeader());
+                    }
                 }
+                return new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor,SiaConst.DefaultHeaderFont,columnHeaderHeight, columnHeaderIndexMap);
             }
-            return new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor,SiaConst.DefaultHeaderFont,columnHeaderHeight, columnHeaderIndexMap);
         };
     }
     private static boolean isHeaderRow(LabeledList rowData) {

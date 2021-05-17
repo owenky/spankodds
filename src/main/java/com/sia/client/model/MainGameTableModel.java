@@ -45,29 +45,26 @@ public class MainGameTableModel extends ColumnCustomizableDataModel {
         // now lets see if i found it in either
         if (thisgame != null) // i did find it
         {
-            //TODO following block is replace by getLinesTableDataByHeader()?
-//            if (header.equalsIgnoreCase("In Progress")) {
-//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 4);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("Soccer In Progress")) {
-//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 3);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("FINAL")) {
-//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 2);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("Soccer FINAL")) {
-//                LinesTableData ltd = (LinesTableData) gameLines.get(gameLines.size() - 1);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("Halftime")) {
-//                LinesTableData ltd = (LinesTableData) gameLines.get(0);
-//                ltd.addGame(thisgame, true);
-//
-//            } else if (header.equalsIgnoreCase("Soccer Halftime")) {
-//                LinesTableData ltd = (LinesTableData) gameLines.get(1);
-//                ltd.addGame(thisgame, true);
-//            }
-            LinesTableData ltd = getLinesTableDataByHeader(header);
-            ltd.addGame(g,true);
+            LinesTableData ltd = null;
+            if (header.equalsIgnoreCase("In Progress")) {
+                ltd = gameLines.get(gameLines.size() - 4);
+            } else if (header.equalsIgnoreCase("Soccer In Progress")) {
+                ltd = gameLines.get(gameLines.size() - 3);
+            } else if (header.equalsIgnoreCase("FINAL")) {
+                ltd = gameLines.get(gameLines.size() - 2);
+            } else if (header.equalsIgnoreCase("Soccer FINAL")) {
+                ltd = gameLines.get(gameLines.size() - 1);
+            } else if (header.equalsIgnoreCase("Halftime")) {
+                ltd = gameLines.get(0);
+            } else if (header.equalsIgnoreCase("Soccer Halftime")) {
+                ltd = gameLines.get(1);
+            }
+
+            if ( null != ltd) {
+                ltd.addGame(thisgame, true);
+            } else {
+                log( new Exception("can't find LinesTableData for header:"+header));
+            }
         }
     }
     //refactored from MainScreen::addGame(Game, boolean)

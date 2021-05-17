@@ -1,7 +1,6 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.ColumnHeaderProvider;
-import com.sia.client.model.ColumnHeaderProvider.ColumnHeaderProperty;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 
@@ -37,16 +36,15 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
         int rowModelIndex = table.convertRowIndexToModel(row);
-        ColumnHeaderProperty headerProp = columnHeaderProvider.get();
-        Object headValue = headerProp.rowIndexToHeadValueMap.get(rowModelIndex);
+        Object headValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
         if ( null != headValue) {
             JPanel render = new JPanel();
-            render.setBackground(headerProp.headerBackground);
+            render.setBackground(columnHeaderProvider.getHeaderBackground());
             render.setBorder(BorderFactory.createEmptyBorder());
             if ( table instanceof ColumnHeaderDrawer) {
                 ColumnHeaderDrawer columnHeaderDrawer = (ColumnHeaderDrawer)table;
                 if ( ! columnHeaderDrawer.isColumnHeaderDrawn(headValue)) {
-                    columnHeaderDrawer.drawColumnHeaderOnViewIndex(headerProp,row,headValue);
+                    columnHeaderDrawer.drawColumnHeaderOnViewIndex(row,headValue);
                     //slow down table rendering
 //                    table.setRowHeight(row,headerProp.columnHeaderHeight);
                 }
