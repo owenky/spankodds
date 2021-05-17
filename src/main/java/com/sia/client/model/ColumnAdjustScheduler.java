@@ -19,21 +19,21 @@ import static com.sia.client.config.Utils.log;
 
 public class ColumnAdjustScheduler {
 
-    private static final long DefaultUpdatePeriodInSeconds = 5L;
+    private static final long DefaultUpdatePeriodInMilliSeconds = 3000L;
     private final ArrayBlockingQueue<TableModelRowData> rowDataQueue = new  ArrayBlockingQueue<>(10000);
     private final ScheduledExecutorService excutorService = Executors.newSingleThreadScheduledExecutor();
-    private long updatePeriodInSeconds;
+    private long updatePeriodInMilliSeconds;
     private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
     public ColumnAdjustScheduler() {
-        updatePeriodInSeconds =  DefaultUpdatePeriodInSeconds;
+        updatePeriodInMilliSeconds = DefaultUpdatePeriodInMilliSeconds;
     }
-    public void setUpdatePeriodInSeconds(long updatePeriodInSeconds){
-        this.updatePeriodInSeconds = updatePeriodInSeconds;
+    public void setUpdatePeriodInMilliSeconds(long updatePeriodInMilliSeconds){
+        this.updatePeriodInMilliSeconds = updatePeriodInMilliSeconds;
     }
     public void addRowData(TableModelRowData rowData) {
         if ( isStarted.compareAndSet(false,true)) {
-            excutorService.scheduleAtFixedRate(this::executeGameBatch,0,updatePeriodInSeconds, TimeUnit.SECONDS);
+            excutorService.scheduleAtFixedRate(this::executeGameBatch,0, updatePeriodInMilliSeconds, TimeUnit.MICROSECONDS);
         }
         try {
             rowDataQueue.put(rowData);
