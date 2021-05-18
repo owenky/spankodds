@@ -32,7 +32,7 @@ public class TableProperties {
         rtn.columnCount = columnCount;
         rtn.dataVector = new ArrayList<>();
         ColumnHeaderProvider columnHeaderProvider = createColumnHeaderProvider(rtn.dataVector);
-        rtn.table = new ColumnCustomizableTable(false, columnHeaderProvider) {
+        rtn.table = new ColumnCustomizableTable<TestGame>(false, columnHeaderProvider) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -46,24 +46,8 @@ public class TableProperties {
             }
 
             @Override
-            public ColumnCustomizableDataModel createDefaultDataModel() {
-                return new ColumnCustomizableDataModel() {
-
-                    @Override
-                    public int getRowCount() {
-                        return rtn.dataVector.size();
-                    }
-
-                    @Override
-                    public Object getValueAt(final int rowIndex, final int columnIndex) {
-                        return rtn.dataVector.get(rowIndex).get(columnIndex);
-                    }
-
-                    @Override
-                    public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
-
-                    }
-                };
+            public ColumnCustomizableDataModel<TestGame> createDefaultDataModel() {
+                return new TestDataModel();
             }
         };
         JTableHeader tableHeader = rtn.table.getTableHeader();
@@ -76,7 +60,7 @@ public class TableProperties {
         rtn.tableContainer = TableUtils.configTableLockColumns(rtn.table, boundaryIndex);
         return rtn;
     }
-    private static void buildModels(ColumnCustomizableTable table,List<LabeledList> dataVector,int rowCount, int columnCount,Set<Integer> barRowSet) {
+    private static void buildModels(ColumnCustomizableTable<TestGame> table,List<LabeledList> dataVector,int rowCount, int columnCount,Set<Integer> barRowSet) {
         for (int i = 0; i < columnCount; i++) {
             TableColumn column = new TableColumn(i, 30);
             column.setHeaderValue("col" + i);
@@ -108,7 +92,7 @@ public class TableProperties {
         return  null !=rowData.getHeader();
     }
     public TableColumnHeaderManager tableColumnHeaderManager;
-    public ColumnCustomizableTable table;
+    public ColumnCustomizableTable<TestGame> table;
     public JComponent tableContainer;
     public List<LabeledList> dataVector;
     public int rowCount;

@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.JTable;
@@ -8,15 +9,15 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.List;
 
-public class RowHeaderTable extends JTable {
+public class RowHeaderTable<V extends KeyedObject> extends JTable {
 
-	private final ColumnCustomizableTable mainTable;
+	private final ColumnCustomizableTable<V> mainTable;
 	private boolean toFireChangesInMainTable = true;
 	private final boolean hasRowNumber;
 	private ColumnHeaderCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
-	public RowHeaderTable(ColumnCustomizableTable mainTable, boolean hasRowNumber) {
+	public RowHeaderTable(ColumnCustomizableTable<V> mainTable, boolean hasRowNumber) {
 		this.hasRowNumber = hasRowNumber;
 		this.mainTable = mainTable;
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
@@ -24,7 +25,7 @@ public class RowHeaderTable extends JTable {
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
-	public ColumnCustomizableTable getMainTable(){
+	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
 	}
 	@Override

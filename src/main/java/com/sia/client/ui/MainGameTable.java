@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.Game;
 import com.sia.client.model.GameTableTableColumnProvider;
 import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
@@ -11,7 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainGameTable extends ColumnCustomizableTable implements LinesTableDataSupplier {
+public class MainGameTable extends ColumnCustomizableTable<Game> implements LinesTableDataSupplier {
 
     private boolean isSoccer=false;
     private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
@@ -54,7 +55,7 @@ public class MainGameTable extends ColumnCustomizableTable implements LinesTable
     }
     @Override
     public LinesTableData getLinesTableData(int row) {
-        return getModel().getLinesTableData(row).linesTableData;
+        return (LinesTableData)getModel().getLinesTableData(row).linesTableData;
     }
     public void optimizeRowHeightsAndGameLineTitles() {
         if (isSoccer) {

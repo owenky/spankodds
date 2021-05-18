@@ -9,12 +9,12 @@ import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
+import com.sia.client.model.TableSection;
 
 import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
-public class LinesTableData extends DefaultTableModel implements TableColumnModelListener {
+public class LinesTableData extends DefaultTableModel implements TableSection<Game> {
 
     public Vector<ColumnData> m_columns;
     private String display;
@@ -43,6 +43,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     int lastbookieremoved = 0;
     private long cleartime;
     private int index;
+    private int rowHeight;
     private final String gameGroupHeader;
 
     public LinesTableData(Vector<Game> gameVec,Vector<Bookie> bookieVector,Games gameCache,String gameGroupHeader) {
@@ -71,14 +72,77 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
             showPrior();
         }
     }
-    public boolean hasHeader() {
-        return null != gameGroupHeader;
-    }
+    @Override
     public void setIndex(int index) {
         this.index = index;
     }
+    @Override
     public int getIndex() {
         return index;
+    }
+    @Override
+    public Integer getRowKey(final int rowModelIndex) {
+        return gamesVec.getGameId(rowModelIndex);
+    }
+    @Override
+    public Game removeGameId(Integer gameidtoremove) {
+
+//        for (int i = 0; i < gamesVec.size(); i++) {
+//            Game g = gamesVec.getByIndex(i);
+//            int gameid = g.getGame_id();
+//            if (gameid == gameidtoremove) {
+//                try {
+//                    gamesVec.remove(i);
+//                } catch (Exception ex) {
+//                    log("error removing from vector!");
+//                }
+//
+//                setInitialData();
+//                JViewport parent = (JViewport) thistable.getParent();
+//                JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//                //	System.out.println("games size after remove "+gamesVec.size());
+//                scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//                scrollpane.revalidate();
+//                thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//                //System.out.println("removerow d");
+//                Container comp = scrollpane.getParent();
+//                comp.revalidate();
+//
+//                return g;
+//            }
+//        }
+//        return null; // didn't find it
+        Game g = gamesVec.removeGameId(gameidtoremove);
+//        if ( null != g) {
+//            setInitialData();
+//            JViewport parent = (JViewport) thistable.getParent();
+//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
+//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
+//            scrollpane.revalidate();
+//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
+//            Container comp = scrollpane.getParent();
+//            comp.revalidate();
+//            resetDataVector(); //including sorting gamesVec
+//            fire();
+//        }
+        return g;
+    }
+
+    @Override
+    public int getRowIndex(final Integer rowKey) {
+        return gamesVec.getRowIndex(rowKey);
+    }
+
+    @Override
+    public int getRowHeight() {
+        return rowHeight;
+    }
+    public void setRowHeight(int rowHeight){
+        this.rowHeight = rowHeight;
+    }
+    @Override
+    public Object getHeaderValue() {
+        return null;
     }
     private void setInitialData(Vector<Bookie> bookieVec) {
         try {
@@ -88,8 +152,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         }
         m_columns = new Vector<>();
 
-        for (int j = 0; j < bookieVec.size(); j++) {
-            Bookie b = bookieVec.get(j);
+        for (Bookie b : bookieVec) {
             int bookieid = b.getBookie_id();
 
             if (bookieid == 990) {
@@ -117,7 +180,8 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         Vector<Vector<Object>> dataVector = populateDataVector(bookieVec);
         setDataVector(dataVector, m_columns);
     }
-    private void resetDataVector() {
+    @Override
+    public void resetDataVector() {
 
 //        this.getDataVector().clear();
 //        this.getDataVector().addAll(populateDataVector());
@@ -156,13 +220,12 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     private Vector<Object> makeRowData(Game g,Vector<Bookie> bookieVector) {
         Vector<Object> rowData = new Vector<>(bookieVector.size());
         int gameid = g.getGame_id();
-        for (int j = 0; j < bookieVector.size(); j++) {
-            Bookie b = bookieVector.get(j);
+        for (Bookie b : bookieVector) {
             Object value;
-            if ( SiaConst.BlankGameId == gameid) {
+            if (SiaConst.BlankGameId == gameid) {
                 value = SiaConst.GameGroupHeaderIden;
             } else {
-                value = getCellValue(b,g);
+                value = getCellValue(b, g);
             }
             rowData.add(value);
         }
@@ -258,12 +321,6 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
 //        return LazyInitializer.bookies.get("" + bookieid);
 //
 //    }
-    public int getGameId(int rowModelIndex) {
-        return gamesVec.getGameId(rowModelIndex);
-    }
-    public int getRowIndex(int gameId) {
-        return gamesVec.getRowIndex(gameId);
-    }
     public boolean isShowingPrior() {
         return showingPrior;
     }
@@ -379,8 +436,8 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         resetDataVector(); //including sorting gamesVec
         fire();
     }
-
-    public boolean checktofire(int gameid) {
+    @Override
+    public boolean checktofire(Integer gameid) {
 
         boolean status = gamesVec.containsGameId(gameid);
         if (status) {
@@ -394,50 +451,6 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
     public void fire() {
         checkAndRunInEDT(this::fireTableDataChanged);
     }
-
-    public Game removeGameId(int gameidtoremove) {
-
-//        for (int i = 0; i < gamesVec.size(); i++) {
-//            Game g = gamesVec.getByIndex(i);
-//            int gameid = g.getGame_id();
-//            if (gameid == gameidtoremove) {
-//                try {
-//                    gamesVec.remove(i);
-//                } catch (Exception ex) {
-//                    log("error removing from vector!");
-//                }
-//
-//                setInitialData();
-//                JViewport parent = (JViewport) thistable.getParent();
-//                JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//                //	System.out.println("games size after remove "+gamesVec.size());
-//                scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//                scrollpane.revalidate();
-//                thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//                //System.out.println("removerow d");
-//                Container comp = scrollpane.getParent();
-//                comp.revalidate();
-//
-//                return g;
-//            }
-//        }
-//        return null; // didn't find it
-        Game g = gamesVec.removeGameId(gameidtoremove);
-        if ( null != g) {
-//            setInitialData();
-//            JViewport parent = (JViewport) thistable.getParent();
-//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//            scrollpane.revalidate();
-//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//            Container comp = scrollpane.getParent();
-//            comp.revalidate();
-            resetDataVector(); //including sorting gamesVec
-            fire();
-        }
-        return g;
-    }
-
     public void removeGameIds(String[] gameidstoremove) {
         if (gameidstoremove.length == 1 && gameidstoremove[0].equals("-1")) {
             removeYesterdaysGames();
@@ -511,7 +524,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         }
         AppController.enableTabs();
     }
-
+    @Override
     public void addGame(Game g, boolean repaint) {
        Games games = AppController.getGames();
         if (games.contains(g)) {
@@ -536,6 +549,7 @@ public class LinesTableData extends DefaultTableModel implements TableColumnMode
         }
         return "Stock Quotes at " + m_frm.format(m_date);
     }
+    @Override
     public String getGameGroupHeader() {
         return this.gameGroupHeader;
     }

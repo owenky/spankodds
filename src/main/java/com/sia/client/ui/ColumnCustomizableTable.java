@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 import com.sun.javafx.collections.ImmutableObservableList;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ColumnCustomizableTable extends JTable implements ColumnHeaderDrawer {
+public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnHeaderDrawer {
 
     private static final AtomicInteger instanceCounter = new AtomicInteger(0);
     private final int instanceIndex;
@@ -41,7 +42,7 @@ public abstract class ColumnCustomizableTable extends JTable implements ColumnHe
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     @Override
-    abstract public ColumnCustomizableDataModel createDefaultDataModel();
+    abstract public ColumnCustomizableDataModel<V> createDefaultDataModel();
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnHeaderProvider columnHeaderProvider) {
         this.columnHeaderProvider = columnHeaderProvider;
         this.hasRowNumber = hasRowNumber;
