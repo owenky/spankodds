@@ -177,7 +177,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
-        if ( isMainTableFirstShown ) {
+        if ( isMainTableFirstShown && evt.getSource() == mainTable.getTableScrollPane().getHorizontalScrollBar()) {
 //            if (evt.getValueIsAdjusting()) {
 //               return;
 //            }

@@ -80,7 +80,11 @@ public abstract class TableSection<V extends KeyedObject> {
     }
     public Object getValueAt(final int rowModelIndex, final int colModelIndex) {
 //        return delegator.getValueAt(rowModelIndex,colModelIndex);
-        return getRowDataMap().get(rowModelIndex).get(colModelIndex);
+        List<Object> rowData = getRowDataMap().get(rowModelIndex);
+        if ( null == rowData) {
+            log(new Exception("rowData is null: rowModelIndex="+rowModelIndex));
+        }
+        return rowData.get(colModelIndex);
     }
     public int getRowCount() {
         return gamesVec.size();
