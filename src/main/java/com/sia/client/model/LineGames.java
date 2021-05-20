@@ -8,12 +8,12 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class LineGames {
+public class LineGames<V extends KeyedObject> {
     private final List<Integer> gameIdList = new ArrayList<>();
-    private final Games gameCache;
+    private final KeyedObjectCollection<V> gameCache;
 
 
-    public LineGames(Games gameCache,boolean toAddBlankGameId) {
+    public LineGames(KeyedObjectCollection<V> gameCache,boolean toAddBlankGameId) {
         this.gameCache = gameCache;
         if ( toAddBlankGameId ) {
             gameIdList.add(SiaConst.BlankGameId);
@@ -32,13 +32,13 @@ public class LineGames {
     public int getGameId(int rowModelIndex) {
         return gameIdList.get(rowModelIndex);
     }
-    public Game getGame(int gameId) {
+    public V getGame(int gameId) {
        return gameCache.getGame(gameId);
     }
-    public Game getByIndex(int index) {
+    public V getByIndex(int index) {
         return gameCache.getGame(gameIdList.get(index));
     }
-    public Game getGame(String gameId) {
+    public V getGame(String gameId) {
         return getGame(Integer.parseInt(gameId));
     }
     public boolean removeGame(Integer gameId) {
@@ -47,10 +47,10 @@ public class LineGames {
     public boolean removeGame(String gameId) {
         return removeGame(Integer.parseInt(gameId));
     }
-    public void addAll(Collection<Game> games) {
+    public void addAll(Collection<? extends V> games) {
         games.forEach(this::addIfAbsent);
     }
-    public void addIfAbsent(Game g) {
+    public void addIfAbsent(V g) {
         int gameId = g.getGame_id();
         if ( ! containsGameId(gameId)) {
             gameIdList.add(gameId);
@@ -59,10 +59,10 @@ public class LineGames {
     public boolean containsGameId(int gameId) {
         return gameIdList.contains(gameId);
     }
-    public void sort(Comparator<? super Game> comparator) {
+    public void sort(Comparator<? super V> comparator) {
         Comparator<Integer> idComparator = (id1,id2)-> {
-            Game g1 = gameCache.getGame(id1);
-            Game g2 = gameCache.getGame(id2);
+            V g1 = gameCache.getGame(id1);
+            V g2 = gameCache.getGame(id2);
             return comparator.compare(g1,g2);
         };
         gameIdList.sort(idComparator);
@@ -76,9 +76,9 @@ public class LineGames {
         }
         return gameIdList.isEmpty();
     }
-    public Iterator<Game> iterator() {
+    public Iterator<V> iterator() {
         Iterator<Integer> idIterator = gameIdList.iterator();
-        return new Iterator<Game>() {
+        return new Iterator<V>() {
             private Integer nextId;
             @Override
             public boolean hasNext() {
@@ -86,7 +86,7 @@ public class LineGames {
             }
 
             @Override
-            public Game next() {
+            public V next() {
                 nextId = idIterator.next();
                 return gameCache.getGame(nextId);
             }
@@ -103,7 +103,7 @@ public class LineGames {
         }
         return gameIdList.remove(index);
     }
-    public Game removeGameId(Integer gameId) {
+    public V removeGameId(Integer gameId) {
         if ( gameIdList.remove(gameId) ) {
             return gameCache.getGame(gameId);
         } else {

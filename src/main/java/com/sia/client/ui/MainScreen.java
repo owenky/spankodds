@@ -4,7 +4,6 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameTableAdjustScheduler;
-import com.sia.client.model.GameTableTableColumnProvider;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
@@ -76,6 +75,7 @@ public class MainScreen extends JPanel {
     public Vector customheaders = new Vector();
     private JScrollPane lastScrollPane;
     private MainGameTable mainGameTable;
+    private final Vector<TableColumn> allColumns = new Vector<>();
 
     public MainScreen(String name) {
         this.name = name;
@@ -1022,6 +1022,7 @@ public class MainScreen extends JPanel {
 //        JScrollPane scrollPane0 = new JScrollPane(table0);
 
         Vector hiddencols = AppController.getHiddenCols();
+        allColumns.clear();
         for (int k = 0; k < newBookiesVec.size(); k++) {
             Bookie b = (Bookie) newBookiesVec.get(k);
 
@@ -1060,7 +1061,8 @@ public class MainScreen extends JPanel {
             }
 
 //            table0.addColumn(column);
-            mainGameTable.addColumn(column);
+//            mainGameTable.addColumn(column);
+            allColumns.add(column);
         }
 
         // here i'm adding a blank column
@@ -1365,7 +1367,7 @@ log("disable Suspious adjustcols(true) call !!!!!!!! ");
 
     }
     private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable(new GameTableTableColumnProvider());
+        MainGameTable mainGameTable = new MainGameTable(allColumns);
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setName(name);
         JTableHeader tableHeader = mainGameTable.getTableHeader();

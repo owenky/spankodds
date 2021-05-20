@@ -7,6 +7,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.util.List;
 
 public class RowHeaderTable<V extends KeyedObject> extends JTable {
@@ -21,12 +22,15 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 		this.hasRowNumber = hasRowNumber;
 		this.mainTable = mainTable;
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
-		this.setModel(mainTable.getModel());
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
+	}
+	@Override
+	public TableModel getModel() {
+		return mainTable.getModel();
 	}
 	@Override
 	public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {

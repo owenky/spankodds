@@ -359,7 +359,7 @@ public class TableColumnManager
             Vector dm = AppController.getDataModels();
             for (int i = 0; i < dm.size(); i++) {
 
-                ((LinesTableData) dm.get(i)).fireTableDataChanged();
+                ((LinesTableData) dm.get(i)).fire();
             }
         }
 		/*

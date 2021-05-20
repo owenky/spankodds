@@ -1,11 +1,14 @@
 package com.sia.client.ui.simulator;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.model.TableSection;
+
+import javax.swing.table.TableColumn;
+import java.util.Vector;
 
 public class TestDataModel extends ColumnCustomizableDataModel<TestGame> {
-    @Override
-    protected TableSection<TestGame> findTableSectionByHeaderValue(final String headerValue) {
-        return null;
+
+    public TestDataModel( Vector<TableColumn> allColumns) {
+        super(allColumns);
     }
+
 }

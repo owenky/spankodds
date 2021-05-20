@@ -6,6 +6,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 
 public abstract class TableUtils {
@@ -13,6 +14,7 @@ public abstract class TableUtils {
     public static JComponent configTableLockColumns(ColumnCustomizableTable mainTable, int lockedColumnBoundaryIndex) {
 
         mainTable.removeLockedColumnIndex(lockedColumnBoundaryIndex);
+        TableModel tm = mainTable.getModel();
         mainTable.createUnlockedColumns();
 //        mainTable.setPreferredScrollableViewportSize(mainTable.getPreferredSize());
 

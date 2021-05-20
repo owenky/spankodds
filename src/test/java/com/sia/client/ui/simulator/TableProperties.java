@@ -1,11 +1,7 @@
 package com.sia.client.ui.simulator;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.model.ColumnHeaderProperty;
-import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.ui.ColumnCustomizableTable;
-import com.sia.client.ui.TableColumnHeaderManager;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.JComponent;
@@ -17,22 +13,15 @@ import javax.swing.table.TableColumn;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Vector;
 
 public class TableProperties {
 
-    public static TableProperties of(int rowCount, int columnCount, int boundaryIndex, Set<Integer> barRowSet) {
+    public static TableProperties of(int sectionCount, int sectionRowCount, int columnCount, int boundaryIndex) {
 
         TableProperties rtn = new TableProperties() ;
-        rtn.rowCount = rowCount;
-        rtn.columnCount = columnCount;
-        rtn.dataVector = new ArrayList<>();
-        ColumnHeaderProvider columnHeaderProvider = createColumnHeaderProvider(rtn.dataVector);
-        rtn.table = new ColumnCustomizableTable<TestGame>(false, columnHeaderProvider) {
+        rtn.testGameCache = new TestGameCache();
+        rtn.table = new ColumnCustomizableTable<TestGame>(false,makeColumns(columnCount)) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -46,8 +35,8 @@ public class TableProperties {
             }
 
             @Override
-            public ColumnCustomizableDataModel<TestGame> createDefaultDataModel() {
-                return new TestDataModel();
+            public ColumnCustomizableDataModel<TestGame> createModel(Vector<TableColumn> allColumns) {
+                return new TestDataModel(allColumns);
             }
         };
         JTableHeader tableHeader = rtn.table.getTableHeader();
@@ -55,46 +44,28 @@ public class TableProperties {
         tableHeader.setFont(headerFont);
         rtn.table.setRowHeight(60);
         rtn.table.setIntercellSpacing(new Dimension(2, 2));
-        buildModels(rtn.table, rtn.dataVector,rowCount,columnCount,barRowSet);
+        buildModels(rtn, sectionCount,sectionRowCount,columnCount);
 
         rtn.tableContainer = TableUtils.configTableLockColumns(rtn.table, boundaryIndex);
         return rtn;
     }
-    private static void buildModels(ColumnCustomizableTable<TestGame> table,List<LabeledList> dataVector,int rowCount, int columnCount,Set<Integer> barRowSet) {
-        for (int i = 0; i < columnCount; i++) {
-            TableColumn column = new TableColumn(i, 30);
-            column.setHeaderValue("col" + i);
-            table.addColumn(column);
-        }
-
-        for (int i = 0; i < rowCount; i++) {
-            dataVector.add(EventGenerator.makeRow(i, columnCount,barRowSet));
+    private static void buildModels(TableProperties tblProp,int sectionCount, int sectionRowCount, int columnCount) {
+        for(int secIndex=0;secIndex<sectionCount;secIndex++) {
+            TestTableSection testTableSection = TestTableSection.createTestTableSection(tblProp.testGameCache,secIndex,sectionRowCount,columnCount);
+            tblProp.table.getModel().addGameLine(testTableSection);
         }
     }
-    private static ColumnHeaderProvider createColumnHeaderProvider(List<LabeledList> dataVector) {
-        return new ColumnHeaderProvider() {
+    private static Vector<TableColumn> makeColumns(int columnCount) {
 
-            @Override
-            protected ColumnHeaderProperty provide() {
-                int columnHeaderHeight = SiaConst.GameGroupHeaderHeight;
-                Map<Integer, Object> columnHeaderIndexMap = new HashMap<>();
-                for (int index = 0; index < dataVector.size(); index++) {
-                    LabeledList rowData = dataVector.get(index);
-                    if (isHeaderRow(rowData)) {
-                        columnHeaderIndexMap.put(index, rowData.getHeader());
-                    }
-                }
-                return new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor,SiaConst.DefaultHeaderFont,columnHeaderHeight, columnHeaderIndexMap);
-            }
-        };
+        Vector<TableColumn> rtn = new Vector<>();
+        for(int i=0;i<columnCount;i++) {
+            TableColumn column = new TableColumn();
+            column.setHeaderValue("col_"+i);
+            rtn.add(column);
+        }
+        return rtn;
     }
-    private static boolean isHeaderRow(LabeledList rowData) {
-        return  null !=rowData.getHeader();
-    }
-    public TableColumnHeaderManager tableColumnHeaderManager;
+    public TestGameCache testGameCache;
     public ColumnCustomizableTable<TestGame> table;
     public JComponent tableContainer;
-    public List<LabeledList> dataVector;
-    public int rowCount;
-    public int columnCount;
 }

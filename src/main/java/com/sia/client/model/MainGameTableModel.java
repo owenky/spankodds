@@ -2,8 +2,10 @@ package com.sia.client.model;
 
 import com.sia.client.ui.LinesTableData;
 
+import javax.swing.table.TableColumn;
 import java.util.Collection;
 import java.util.List;
+import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
 
@@ -11,8 +13,8 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
 //    private final List<LinesTableData> gameLines = new ArrayList<>();
 
-    public MainGameTableModel() {
-
+    public MainGameTableModel(Vector<TableColumn> allColumns) {
+        super(allColumns);
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -27,21 +29,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         if ( null != ltd) {
             ltd.addGame(game, paint);
         }
-    }
-    @Override
-    public LinesTableData findTableSectionByHeaderValue(String gameGroupHeader) {
-        LinesTableData rtn = null;
-        List<TableSection<Game>> gameLines = getTableSections();
-        for (TableSection<Game> ltd : gameLines) {
-            if (gameGroupHeader.equals(ltd.getGameGroupHeader())) {
-                rtn = (LinesTableData)ltd;
-                break;
-            }
-        }
-        if ( null == rtn) {
-            rtn = findStageSectionByHeaderValue(gameGroupHeader);
-        }
-        return rtn;
     }
     public void removeGames(String[] gameids) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -65,22 +52,17 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             ((LinesTableData)linesTableData).clearColors();
         }
     }
-    public LinesTableData checktofire(int gameId) {
-        List<TableSection<Game>> gameLines = getTableSections();
-        LinesTableData rtn = null;
-        for (final TableSection<Game> ltd : gameLines) {
-            boolean status = ltd.checktofire(gameId);
-            if (status) {
-                rtn  = (LinesTableData)ltd;
-                break;
-            }
-        }
-        return rtn;
-    }
     public int getGameId(int rowModelIndex) {
        return getRowKey(rowModelIndex);
     }
-
+    @Override
+    public LinesTableData findTableSectionByHeaderValue(String gameGroupHeader) {
+        LinesTableData rtn = (LinesTableData)super.findTableSectionByHeaderValue(gameGroupHeader);
+        if ( null == rtn) {
+            rtn = findStageSectionByHeaderValue(gameGroupHeader);
+        }
+        return rtn;
+    }
     private LinesTableData findStageSectionByHeaderValue(String header) {
         TableSection<Game> ltd;
         List<TableSection<Game>> gameLines = getTableSections();

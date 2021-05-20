@@ -9,26 +9,21 @@ import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class SpankOddsTest {
 
-    private static final Integer[] barRowIndex = new Integer[] {1, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90};
-    private static final Set<Integer> barRowSet = new HashSet<>(Arrays.asList(barRowIndex));
     private static final int testMainTableLastLockedColumnIndex = 3;
-    private static final int testMainTableModelRowCount = 100;
+    private static final int secCount = 20;
+    private static final int rowCount = 5;
     private static final int testMainTableModelColumnCount = 46;
-    private static int updatedRow = 0;
 
     public static void main(String[] argv) {
 
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TableProperties testMainTableProps = TableProperties.of(testMainTableModelRowCount,testMainTableModelColumnCount,testMainTableLastLockedColumnIndex,barRowSet);
-        TableProperties blankTableProps = TableProperties.of(testMainTableModelRowCount,testMainTableModelColumnCount,1,barRowSet);
+        TableProperties testMainTableProps = TableProperties.of(secCount,rowCount,testMainTableModelColumnCount,testMainTableLastLockedColumnIndex);
+        TableProperties blankTableProps = TableProperties.of(secCount,rowCount,testMainTableModelColumnCount,1);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Blank", blankTableProps.tableContainer);

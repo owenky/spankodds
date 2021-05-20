@@ -20,7 +20,7 @@ public class FireThread extends Thread {
 
             try {
                 if (ltd != null) {
-                    checkAndRunInEDT(() -> ltd.fireTableDataChanged());
+                    checkAndRunInEDT(() -> ltd.fire());
                 }
             } catch (Exception ex) {
                 log(ex);

@@ -1,26 +1,33 @@
 package com.sia.client.model;
 
 
+import com.sia.client.ui.LinesTableData;
+
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.sia.client.config.Utils.log;
 
-public abstract class ColumnCustomizableDataModel<V extends KeyedObject> implements TableModel {
+public class ColumnCustomizableDataModel<V extends KeyedObject> implements TableModel {
 
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
+    private final List<TableColumn> allColumns;
     private final LinesTableDataListner linesTableDataListner = new LinesTableDataListner();
     //TODO debug flag
     private boolean headerInstalled = false;
     public void setHeaderInstalled(boolean headerInstalled) {this.headerInstalled = headerInstalled;}
     //END OF debug TODO
 
-    abstract protected TableSection<V> findTableSectionByHeaderValue(String headerValue);
+    public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
+        this.allColumns = allColumns;
+        validateAndFixColumnModelIndex(allColumns);
+    }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
@@ -68,12 +75,26 @@ public abstract class ColumnCustomizableDataModel<V extends KeyedObject> impleme
     public void removeTableModelListener(final TableModelListener l) {
         delegator.removeTableModelListener(l);
     }
-    public void fireTableChanged(TableModelEvent e) {
-        delegator.fireTableChanged(e);
-    }
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         throw new IllegalStateException("Pending implementation");
+    }
+    public void fireTableChanged(TableModelEvent e) {
+        delegator.fireTableChanged(e);
+    }
+    public TableSection<V> findTableSectionByHeaderValue(String gameGroupHeader) {
+        TableSection<V> rtn = null;
+        List<TableSection<V>> gameLines = getTableSections();
+        for (TableSection<V> ltd : gameLines) {
+            if (gameGroupHeader.equals(ltd.getGameGroupHeader())) {
+                rtn = ltd;
+                break;
+            }
+        }
+        return rtn;
+    }
+    public List<TableColumn> getAllColumns() {
+        return this.allColumns;
     }
     public Integer getRowKey(int rowModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
@@ -112,6 +133,18 @@ public abstract class ColumnCustomizableDataModel<V extends KeyedObject> impleme
             fireTableChanged(new TableModelEvent(this));
         }
         return null != thisgame;
+    }
+    public LinesTableData checktofire(int gameId) {
+        List<TableSection<V>> gameLines = getTableSections();
+        LinesTableData rtn = null;
+        for (final TableSection<V> ltd : gameLines) {
+            boolean status = ltd.checktofire(gameId);
+            if (status) {
+                rtn  = (LinesTableData)ltd;
+                break;
+            }
+        }
+        return rtn;
     }
     protected List<TableSection<V>> getTableSections() {
         return tableSections;
@@ -154,6 +187,17 @@ public abstract class ColumnCustomizableDataModel<V extends KeyedObject> impleme
         tableSections.add(gameLine);
         removeAndAddTableModelListener(gameLine);
     }
+    public void addGameLine(int index,TableSection<V> gameLine) {
+        tableSections.add(index,gameLine);
+        removeAndAddTableModelListener(gameLine);
+        resetSectionIndex();
+    }
+    private void resetSectionIndex() {
+        for(int i=0;i<tableSections.size();i++) {
+            TableSection<V> section = tableSections.get(i);
+            section.setIndex(i);
+        }
+    }
     public LtdSrhStruct<V> getLinesTableData(int rowModelIndex) {
         int modelIndex=0;
         TableSection<V> rtn = null;
@@ -170,6 +214,9 @@ public abstract class ColumnCustomizableDataModel<V extends KeyedObject> impleme
         }
         return new LtdSrhStruct<>(rtn,modelIndex);
     }
+    public TableSection<V> getLinesTableDataWithSecionIndex(int sectionIndex) {
+       return tableSections.get(sectionIndex);
+    }
     private void removeAndAddTableModelListener(TableSection<V> gameLine) {
         removeTableModelListener(gameLine);
         gameLine.addTableModelListener(linesTableDataListner);
@@ -180,6 +227,26 @@ public abstract class ColumnCustomizableDataModel<V extends KeyedObject> impleme
                 gameLine.removeTableModelListener(l);
             }
         }
+    }
+    private static void validateAndFixColumnModelIndex(List<TableColumn> allColumns) {
+        if ( ! validateColumnIndex(allColumns)) {
+            for( int i=0;i<allColumns.size();i++) {
+                allColumns.get(i).setModelIndex(i);
+            }
+        }
+    }
+    private static boolean validateColumnIndex(List<TableColumn> allColumns) {
+        int modelIndex0Count=0;
+        boolean status = true;
+        for(TableColumn tc: allColumns) {
+            if ( 0 == tc.getModelIndex()) {
+                if ( ++modelIndex0Count > 1) {
+                    status = false;
+                    break;
+                }
+            }
+        }
+        return status;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct<V extends KeyedObject> {

@@ -1,9 +1,9 @@
 package com.sia.client.ui.simulator;
 
-import javax.swing.event.TableModelEvent;
-import java.util.Set;
+import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.TableSection;
 
-import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
+import java.util.Set;
 
 public class NewDataRowCreator implements EventGenerator{
 
@@ -13,10 +13,10 @@ public class NewDataRowCreator implements EventGenerator{
     }
     @Override
     public void generatEvent(final TableProperties tblProp) {
-        int insertedRow = 2;
-        LabeledList newRow = EventGenerator.makeRow(insertedRow, tblProp.columnCount,barRowSet);
-        tblProp.dataVector.add(insertedRow, newRow);
-        TableModelEvent e = new TableModelEvent(tblProp.table.getModel(), insertedRow, insertedRow, ALL_COLUMNS, TableModelEvent.INSERT);
-        tblProp.table.getModel().fireTableChanged(e);
+        int insertedSectionIndex = 2;
+        ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
+        TableSection<TestGame> section = model.getLinesTableDataWithSecionIndex(insertedSectionIndex);
+        TestGame testGame = tblProp.testGameCache.makeTestGame(insertedSectionIndex*100+section.getRowCount());
+        section.addGame(testGame,true);
     }
 }
