@@ -54,6 +54,7 @@ public class TableProperties {
             TestTableSection testTableSection = TestTableSection.createTestTableSection(tblProp.testGameCache,secIndex,sectionRowCount,columnCount);
             tblProp.table.getModel().addGameLine(testTableSection);
         }
+        tblProp.table.getModel().buildIndexMappingCache();
     }
     private static Vector<TableColumn> makeColumns(int columnCount) {
 

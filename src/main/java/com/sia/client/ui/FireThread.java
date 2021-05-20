@@ -20,7 +20,8 @@ public class FireThread extends Thread {
 
             try {
                 if (ltd != null) {
-                    checkAndRunInEDT(() -> ltd.fire());
+                    System.out.println("Suspecious fire() call in fireThread::run");
+                    checkAndRunInEDT(() -> ltd.fire(null));
                 }
             } catch (Exception ex) {
                 log(ex);

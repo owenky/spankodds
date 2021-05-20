@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
 /**
  * The TableColumnManager can be used to manage TableColumns. It will give the
@@ -353,14 +354,15 @@ public class TableColumnManager
 
         //Color color=JColorChooser.showDialog(null,"Select a color",com.sia.client.ui.AppController.bookiecolors.get(""+headerValue));
         if (color != null) {
-            System.out.println("color chosen was " + color);
-            String bookieid = (String) AppController.getBookieId(headerValue.toString());
+            log("color chosen was " + color);
+            String bookieid = AppController.getBookieId(headerValue.toString());
             AppController.getBookieColors().put(bookieid, color);
             Vector dm = AppController.getDataModels();
-            for (int i = 0; i < dm.size(); i++) {
-
-                ((LinesTableData) dm.get(i)).fire();
-            }
+//            for (int i = 0; i < dm.size(); i++) {
+//
+//                ((LinesTableData) dm.get(i)).fire();
+//            }
+            ((LinesTableData)dm.get(0)).fire(null);
         }
 		/*
 		JPopupMenu popup = new SelectPopupMenu();

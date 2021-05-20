@@ -1232,7 +1232,7 @@ public class MainScreen extends JPanel {
 
             oldgamegroupvec = newgamegroupvec;
         }
-
+        mainGameTable.getModel().buildIndexMappingCache();
         log("gamergroup headers end..." + new java.util.Date());
         log("hidden end..." + new java.util.Date());
         JScrollPane scrollPane = new JScrollPane(tablePanel);

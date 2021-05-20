@@ -9,7 +9,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.sia.client.config.Utils.log;
 
@@ -18,7 +20,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final List<TableColumn> allColumns;
-    private final LinesTableDataListner linesTableDataListner = new LinesTableDataListner();
+    private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     //TODO debug flag
     private boolean headerInstalled = false;
     public void setHeaderInstalled(boolean headerInstalled) {this.headerInstalled = headerInstalled;}
@@ -88,6 +90,10 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         throw new IllegalStateException("Pending implementation");
     }
     public void fireTableChanged(TableModelEvent e) {
+        if (e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE ) {
+            ltdSrhStructCache.clear();
+            buildIndexMappingCache();
+        }
         delegator.fireTableChanged(e);
     }
     public TableSection<V> findTableSectionByHeaderValue(String gameGroupHeader) {
@@ -111,9 +117,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         return section.getRowKey(rowIndexInLinesTableData);
     }
     public void clear() {
-        for(TableSection<V> ltd:tableSections) {
-            removeTableModelListener(ltd);
-        }
         tableSections.clear();
         headerInstalled = false;
     }
@@ -191,13 +194,13 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         return idIndexList;
     }
     public void addGameLine(TableSection<V> gameLine) {
+        gameLine.setContainingTableModel(this);
         gameLine.setIndex(tableSections.size());
         tableSections.add(gameLine);
-        removeAndAddTableModelListener(gameLine);
     }
     public void addGameLine(int index,TableSection<V> gameLine) {
+        gameLine.setContainingTableModel(this);
         tableSections.add(index,gameLine);
-        removeAndAddTableModelListener(gameLine);
         resetSectionIndex();
     }
     private void resetSectionIndex() {
@@ -206,35 +209,31 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             section.setIndex(i);
         }
     }
+    public void buildIndexMappingCache() {
+        for (int i=0;i<getRowCount();i++) {
+            getLinesTableData(i);
+        }
+    }
     public LtdSrhStruct<V> getLinesTableData(int rowModelIndex) {
-        int modelIndex=0;
-        TableSection<V> rtn = null;
-        for(TableSection<V> sec: tableSections) {
-            if ( (modelIndex+sec.getRowCount()) <= rowModelIndex) {
-                modelIndex += sec.getRowCount();
-            } else {
-                rtn = sec;
-                break;
+
+        return ltdSrhStructCache.computeIfAbsent(rowModelIndex,(index)-> {
+            int modelIndex=0;
+            TableSection<V> rtn = null;
+            for(TableSection<V> sec: tableSections) {
+                if ( (modelIndex+sec.getRowCount()) <= index) {
+                    modelIndex += sec.getRowCount();
+                } else {
+                    rtn = sec;
+                    break;
+                }
             }
-        }
-        if ( null == rtn) {
-            throw new IllegalStateException("rowModeIndex:"+rowModelIndex+" is out of bound");
-        }
-        return new LtdSrhStruct<>(rtn,modelIndex);
+
+            return new LtdSrhStruct<>(rtn,modelIndex);
+        });
+
     }
     public TableSection<V> getLinesTableDataWithSecionIndex(int sectionIndex) {
        return tableSections.get(sectionIndex);
-    }
-    private void removeAndAddTableModelListener(TableSection<V> gameLine) {
-        removeTableModelListener(gameLine);
-        gameLine.addTableModelListener(linesTableDataListner);
-    }
-    private void removeTableModelListener(TableSection<V> gameLine) {
-        for (TableModelListener l : gameLine.getTableModelListeners()) {
-            if ( l.getClass().equals(LinesTableDataListner.class) ) {
-                gameLine.removeTableModelListener(l);
-            }
-        }
     }
     private static void validateAndFixColumnModelIndex(List<TableColumn> allColumns) {
         if ( ! validateColumnIndex(allColumns)) {
@@ -273,19 +272,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         public BlankGameStruct(int tableRowModelIndex, TableSection<V> linesTableData) {
             this.tableRowModelIndex = tableRowModelIndex;
             this.linesTableData = linesTableData;
-        }
-    }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-    public class LinesTableDataListner implements TableModelListener {
-
-        @Override
-        public void tableChanged(final TableModelEvent e) {
-            if ( headerInstalled) {
-                log("VIALATION:::: table changed event fired AFTER headerIntalled");
-//                MainGameTableModel.this.fireTableChanged(e);
-            } else {
-                ColumnCustomizableDataModel.this.fireTableChanged(e);
-            }
         }
     }
 }

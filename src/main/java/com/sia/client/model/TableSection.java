@@ -1,7 +1,6 @@
 package com.sia.client.model;
 
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.TableModelEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,14 +11,13 @@ import static com.sia.client.config.Utils.log;
 
 public abstract class TableSection<V extends KeyedObject> {
 
-    private final DefaultTableModel delegator = new DefaultTableModel(); //used for listener purpose, it does not store data anymore
+    private ColumnCustomizableDataModel containingTableModel;
     private final LineGames<V> gamesVec;
     private Map<Integer,List<Object>> rowDataMap = null;
     private int rowHeight;
     private int index;
     private String gameGroupHeader;
 
-//    abstract protected Vector<ColumnData> getColumnData();
     abstract protected void prepareLineGamesForTableModel(LineGames<V> gamesVec);
     abstract protected List<Object> makeRowData(V game);
 
@@ -39,6 +37,9 @@ public abstract class TableSection<V extends KeyedObject> {
     public TableSection(KeyedObjectCollection<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
         gamesVec = new LineGames<>(gameCache,toAddBlankGameId);
         gamesVec.addAll(gameVec);
+    }
+    public void setContainingTableModel(ColumnCustomizableDataModel containingTableModel) {
+        this.containingTableModel = containingTableModel;
     }
     private Map<Integer,List<Object>> getRowDataMap() {
         if ( rowDataMap == null) {
@@ -86,15 +87,6 @@ public abstract class TableSection<V extends KeyedObject> {
     }
     public int getRowIndex(final Integer rowKey) {
         return gamesVec.getRowIndex(rowKey);
-    }
-    public TableModelListener[] getTableModelListeners() {
-        return delegator.getTableModelListeners();
-    }
-    public void addTableModelListener(final TableModelListener l) {
-        delegator.addTableModelListener(l);
-    }
-    public void removeTableModelListener(final TableModelListener l) {
-        delegator.removeTableModelListener(l);
     }
     public V removeGameId(Integer gameidtoremove) {
 
@@ -152,12 +144,24 @@ public abstract class TableSection<V extends KeyedObject> {
 //                thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
 //                Container comp = scrollpane.getParent();
 //                comp.revalidate();
-                fire();
+                int insertedRowModelIndex= containingTableModel.getRowModelIndex(this,g.getGame_id());
+                TableModelEvent e = new TableModelEvent(containingTableModel,insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
+                fire(e);
             }
         }
     }
-    public void fire() {
-        checkAndRunInEDT(()->delegator.fireTableDataChanged());
+    public void fire(TableModelEvent e) {
+        if ( null != containingTableModel) {
+            checkAndRunInEDT(() -> {
+                TableModelEvent evt;
+                if (null == e) {
+                    evt = new TableModelEvent(containingTableModel);
+                } else {
+                    evt = e;
+                }
+                containingTableModel.fireTableChanged(evt);
+            });
+        }
     }
     public void resetDataVector() {
 
@@ -176,7 +180,9 @@ public abstract class TableSection<V extends KeyedObject> {
         if (status) {
             //TODO suspicous fire() call
             log("In LinesTableData, suspicous fire()");
-            fire();
+            int insertedRowModelIndex= containingTableModel.getRowModelIndex(this,gameid);
+            TableModelEvent e = new TableModelEvent(containingTableModel,insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
+            fire(e);
         }
         return status;
     }

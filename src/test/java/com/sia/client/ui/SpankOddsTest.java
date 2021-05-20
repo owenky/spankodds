@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.ui.simulator.EventGenerator;
-import com.sia.client.ui.simulator.NewHeaderCreator;
+import com.sia.client.ui.simulator.NewGameCreator;
 import com.sia.client.ui.simulator.TableProperties;
 
 import javax.swing.JFrame;
@@ -26,7 +26,7 @@ public class SpankOddsTest {
         TableProperties blankTableProps = TableProperties.of(secCount,rowCount,testMainTableModelColumnCount,1);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
+//        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
         tabbedPane.addTab("Second", testMainTableProps.tableContainer);
         jFrame.getContentPane().add(tabbedPane);
 
@@ -34,16 +34,16 @@ public class SpankOddsTest {
         jFrame.setLocation(new Point(250,100));
         jFrame.pack();
         jFrame.setVisible(true);
-//        autoUpdateTableData(testMainTableProps);
+        autoUpdateTableData(testMainTableProps);
     }
     private static void autoUpdateTableData(TableProperties tblProp) {
         Timer updateTimer = new Timer(8000, (event) -> {
 
             EventGenerator eventGenerator;
-//            eventGenerator = new NewDataRowCreator(barRowSet);
+            eventGenerator = new NewGameCreator();
 //            eventGenerator = new ColumnWidthAdjuster(updatedRow);
 //            eventGenerator = new DataRowDeletor();
-            eventGenerator = new NewHeaderCreator();
+//            eventGenerator = new NewHeaderCreator();
             eventGenerator.generatEvent(tblProp);
         });
         updateTimer.setInitialDelay(3000);

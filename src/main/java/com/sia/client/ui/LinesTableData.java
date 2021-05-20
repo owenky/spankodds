@@ -63,13 +63,15 @@ public class LinesTableData extends TableSection<Game> {
     public void showOpener() {
         showingOpener = true;
         showingPrior = false;
-        fire();
+        log("suspecious fire() call in showOpener() ");
+        fire(null);
     }
 
     public void showPrior() {
         showingOpener = false;
         showingPrior = true;
-        fire();
+        log("suspecious fire call in showPrior()");
+        fire(null);
     }
 
     public LinesTableData(long cleartime, Vector<Game> gameVec, String gameGroupHeader) {
@@ -222,7 +224,8 @@ public class LinesTableData extends TableSection<Game> {
     public void showCurrent() {
         showingOpener = false;
         showingPrior = false;
-        fire();
+        log("suspecious fire() call in showCurrent()");
+        fire(null);
     }
 
     public String getDisplayType() {
@@ -232,7 +235,8 @@ public class LinesTableData extends TableSection<Game> {
 
     public void setDisplayType(String d) {
         display = d;
-        fire();
+        log("suspecious fire() call in setDisplayType()");
+        fire(null);
     }
 
     public int getPeriodType() {
@@ -242,7 +246,8 @@ public class LinesTableData extends TableSection<Game> {
 
     public void setPeriodType(int d) {
         period = d;
-        fire();
+        log("suspecious fire() call in setPeriodType");
+        fire(null);
     }
 
     public void clearColors() {
@@ -289,7 +294,7 @@ public class LinesTableData extends TableSection<Game> {
 
             }
         }
-        fire();
+        fire(null);
 
     }
 
@@ -304,7 +309,7 @@ public class LinesTableData extends TableSection<Game> {
 //        comp.revalidate();
 //        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-        fire();
+        fire(null);
 
     }
 
@@ -319,7 +324,7 @@ public class LinesTableData extends TableSection<Game> {
 //        comp.revalidate();
 //        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-        fire();
+        fire(null);
     }
 
     public void removeGameIds(String[] gameidstoremove) {
@@ -356,7 +361,7 @@ public class LinesTableData extends TableSection<Game> {
 //            comp.revalidate();
 //            AppController.enableTabs();
             resetDataVector(); //including sorting gamesVec
-            fire();
+            fire(null);
         }
     }
 
@@ -391,7 +396,7 @@ public class LinesTableData extends TableSection<Game> {
 //            Container comp = scrollpane.getParent();
 //            comp.revalidate();
             resetDataVector(); //including sorting gamesVec
-            fire();
+            fire(null);
         }
         AppController.enableTabs();
     }
