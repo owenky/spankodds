@@ -36,11 +36,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public final int getRowCount() {
-
-        if (null==tableSections)  {
-            //first call to this method is from DefaultTableModel constructor before gameLines is instantialized.
-            return 0;
-        }
         int rowCount=0;
         for(TableSection<V> sec: tableSections) {
             rowCount += sec.getRowCount();
@@ -49,22 +44,35 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public int getColumnCount() {
-        return delegator.getColumnCount();
+//        return delegator.getColumnCount();
+        return allColumns.size();
     }
 
     @Override
     public String getColumnName(final int columnIndex) {
-        return delegator.getColumnName(columnIndex);
+//        return delegator.getColumnName(columnIndex);
+        Object columnName =  allColumns.get(columnIndex).getHeaderValue();
+        if ( null == columnName) {
+            columnName = allColumns.get(columnIndex).getIdentifier();
+        }
+        if ( null == columnName) {
+            columnName = "";
+        } else {
+            columnName = columnName.toString();
+        }
+        return (String)columnName;
     }
 
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
-        return delegator.getColumnClass(columnIndex);
+//        return delegator.getColumnClass(columnIndex);
+        throw new IllegalArgumentException("Method not supported");
     }
 
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        return delegator.isCellEditable(rowIndex,columnIndex);
+//        return delegator.isCellEditable(rowIndex,columnIndex);
+        return false;
     }
     @Override
     public void addTableModelListener(final TableModelListener l) {
