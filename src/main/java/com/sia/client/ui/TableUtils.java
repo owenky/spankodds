@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
@@ -35,6 +36,11 @@ public abstract class TableUtils {
 
         mainTable.getTableColumnHeaderManager().installListeners();
         return container;
+    }
+    public static boolean toRebuildCache(TableModelEvent e) {
+        //when update for lastrow=Integer.MAX_VALUE, all row heights are rest to table row height,
+        return e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE
+                || (e.getType() == TableModelEvent.UPDATE && e.getLastRow() == Integer.MAX_VALUE);
     }
     public static TableColumn cloneTableColumn(TableColumn sourceTc,int columnIndex) {
 

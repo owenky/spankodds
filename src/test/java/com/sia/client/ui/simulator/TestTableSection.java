@@ -4,10 +4,12 @@ import com.sia.client.model.LineGames;
 import com.sia.client.model.TableSection;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TestTableSection extends TableSection<TestGame> {
 
+    public static final String TestGroupGameHeaderPrefix = "TEST GAME ";
     private final int columnCount;
 
     public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount,int columnCount) {
@@ -18,7 +20,7 @@ public class TestTableSection extends TableSection<TestGame> {
             gameVec.add(tg);
         }
         TestTableSection testTableSection = new TestTableSection(testGameCache,true,gameVec,columnCount);
-        testTableSection.setGameGroupHeader("TEST GAME "+idSeed);
+        testTableSection.setGameGroupHeader(TestGroupGameHeaderPrefix+idSeed);
         return testTableSection;
     }
     public TestTableSection(TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec,int columnCount) {
@@ -27,7 +29,7 @@ public class TestTableSection extends TableSection<TestGame> {
     }
     @Override
     protected void prepareLineGamesForTableModel(final LineGames<TestGame> gamesVec) {
-
+        gamesVec.sort(Comparator.comparingInt(TestGame::getGame_id));
     }
 
     @Override

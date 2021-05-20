@@ -1,7 +1,6 @@
 package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.ui.ColumnCustomizableTable;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -9,12 +8,12 @@ import java.awt.Font;
 public class ColumnHeaderProvider<V extends KeyedObject> {
 
     private ColumnHeaderProperty columnHeaderProperty = null;
-    private ColumnCustomizableTable<V> mainTable;
+    private ColumnCustomizableDataModel<V> tableModel;
 
     public ColumnHeaderProvider() {
     }
-    public void setMainTable(ColumnCustomizableTable<V> mainTable) {
-        this.mainTable = mainTable;
+    public void setTableModel(ColumnCustomizableDataModel<V> mainTable) {
+        this.tableModel = mainTable;
     }
     public Color getHeaderBackground() {
         return getColumnHeaderProperty().getHeaderBackground();
@@ -30,11 +29,11 @@ public class ColumnHeaderProvider<V extends KeyedObject> {
     public int getColumnHeaderHeight() {
         return getColumnHeaderProperty().getColumnHeaderHeight();
     }
+    public synchronized void resetColumnHeaderProperty() {
+        columnHeaderProperty = provide();
+    }
     public Object getColumnHeaderAt(int rowModelIndex) {
         return getColumnHeaderProperty().getColumnHeaderAt(rowModelIndex);
-    }
-    public synchronized void resetColumnHeaderProperty() {
-        columnHeaderProperty = null;
     }
     private synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
@@ -45,7 +44,7 @@ public class ColumnHeaderProvider<V extends KeyedObject> {
     private ColumnHeaderProperty provide() {
         ColumnHeaderProperty columnHeaderProperty;
         columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor,SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight,
-                mainTable.getRowModelIndex2GameGroupHeaderMap());
+                tableModel.getRowModelIndex2GameGroupHeaderMap());
         return columnHeaderProperty;
     }
 }

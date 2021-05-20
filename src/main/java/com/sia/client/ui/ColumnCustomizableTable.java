@@ -1,7 +1,6 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
@@ -20,10 +19,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -31,7 +27,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 
     private static final AtomicInteger instanceCounter = new AtomicInteger(0);
     private final int instanceIndex;
-    private ColumnHeaderProvider<V> columnHeaderProvider;
     private List<Integer> lockedColumnIndex = new ArrayList<>();
     private RowHeaderTable<V> rowHeaderTable;
     private final boolean hasRowNumber;
@@ -43,7 +38,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
     private TableModelListener tableChangedListener;
-    private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     abstract public ColumnCustomizableDataModel<V> createModel(Vector<TableColumn> allColumns);
@@ -54,27 +48,13 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
         this.setModel(createModel(allColumns));
     }
-    public final Map<Integer,Object> getRowModelIndex2GameGroupHeaderMap() {
-        if ( null == rowModelIndex2GameGroupHeaderMap) {
-            Map<Integer,Object> map = getModel().getBlankGameIdIndex().stream().
-                    collect(HashMap::new, (m, struct)->m.put(struct.tableRowModelIndex,struct.linesTableData.getGameGroupHeader()), HashMap::putAll);
-            rowModelIndex2GameGroupHeaderMap = Collections.unmodifiableMap(map);
-        }
-        return rowModelIndex2GameGroupHeaderMap;
-    }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
             marginProvider = ()-> new Dimension(getUserDefinedColumnMargin(),getUserDefinedRowMargin());
         }
         return marginProvider;
     }
-    public ColumnHeaderProvider<V> getColumnHeaderProvider() {
-        if ( null == columnHeaderProvider) {
-            columnHeaderProvider = new ColumnHeaderProvider<>();
-            columnHeaderProvider.setMainTable(this);
-        }
-        return columnHeaderProvider;
-    }
+
     public TableColumnHeaderManager getTableColumnHeaderManager() {
         if ( null == tableColumnHeaderManager) {
             tableColumnHeaderManager = new TableColumnHeaderManager(this);
@@ -124,7 +104,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 int colDataModelIndex = ColumnCustomizableTable.this.convertColumnIndexToModel(col) + lockedColumnIndex.size();
                 return getUserCellRenderer(row,colDataModelIndex);
             };
-            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getColumnHeaderProvider(),getMarginProvider());
+            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProvider(),getMarginProvider());
         }
         return headerCellRenderer;
     }
@@ -215,9 +195,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        if ( e.getType() == TableModelEvent.DELETE || e.getType() == TableModelEvent.INSERT ) {
-            rowModelIndex2GameGroupHeaderMap = null;
-        }
         super.tableChanged(e);
         if ( null != tableChangedListener) {
             tableChangedListener.tableChanged(e);

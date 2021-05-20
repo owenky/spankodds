@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 
 import com.sia.client.ui.LinesTableData;
+import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -9,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,8 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final List<TableColumn> allColumns;
+    private final ColumnHeaderProvider<V> columnHeaderProvider;
+    private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     //TODO debug flag
     private boolean headerInstalled = false;
@@ -29,6 +33,8 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
         this.allColumns = allColumns;
         validateAndFixColumnModelIndex(allColumns);
+        columnHeaderProvider = new ColumnHeaderProvider<>();
+        columnHeaderProvider.setTableModel(this);
     }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -90,8 +96,10 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         throw new IllegalStateException("Pending implementation");
     }
     public void fireTableChanged(TableModelEvent e) {
-        if (e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE ) {
-            ltdSrhStructCache.clear();
+        //TODO: need to  buildIndexMappingCache for update? ( scenario: game data changed.)
+        if (TableUtils.toRebuildCache(e) ) {
+            rowModelIndex2GameGroupHeaderMap = null;
+            columnHeaderProvider.resetColumnHeaderProperty();
             buildIndexMappingCache();
         }
         delegator.fireTableChanged(e);
@@ -120,10 +128,21 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         tableSections.clear();
         headerInstalled = false;
     }
+    public ColumnHeaderProvider<V> getColumnHeaderProvider() {
+        return columnHeaderProvider;
+    }
+    public final Map<Integer,Object> getRowModelIndex2GameGroupHeaderMap() {
+        if ( null == rowModelIndex2GameGroupHeaderMap) {
+            Map<Integer,Object> map = getBlankGameIdIndex().stream().
+                    collect(HashMap::new, (m, struct)->m.put(struct.tableRowModelIndex,struct.linesTableData.getGameGroupHeader()), HashMap::putAll);
+            rowModelIndex2GameGroupHeaderMap = Collections.unmodifiableMap(map);
+        }
+        return rowModelIndex2GameGroupHeaderMap;
+    }
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
     public boolean moveGameToThisHeader(V g, String header) {
         V thisgame = null;
-
+log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         for (TableSection<V> gameLine : tableSections) {
             thisgame = gameLine.removeGameId(g.getGame_id(),false);
             if (thisgame != null) {
@@ -141,8 +160,8 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             } else {
                 log( new Exception("can't find LinesTableData for header:"+header));
             }
-            TableModelEvent evt = new TableModelEvent(this, 0, Integer.MAX_VALUE, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
-            fireTableChanged(evt);
+            this.buildIndexMappingCache();
+            fireTableChanged(new TableModelEvent(this));
         }
         return null != thisgame;
     }
@@ -214,6 +233,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         }
     }
     public void buildIndexMappingCache() {
+        ltdSrhStructCache.clear();
         for (int i=0;i<getRowCount();i++) {
             getLinesTableData(i);
         }
@@ -224,6 +244,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             int modelIndex=0;
             TableSection<V> rtn = null;
             for(TableSection<V> sec: tableSections) {
+                sec.resetDataVector();
                 if ( (modelIndex+sec.getRowCount()) <= index) {
                     modelIndex += sec.getRowCount();
                 } else {

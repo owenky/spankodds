@@ -13,7 +13,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
     private ColumnCustomizableDataModel containingTableModel;
     private final LineGames<V> gamesVec;
-    private Map<Integer,List<Object>> rowDataMap = null;
+    private final Map<Integer,List<Object>> rowDataMap = new HashMap<>();
     private int rowHeight;
     private int index;
     private String gameGroupHeader;
@@ -42,8 +42,8 @@ public abstract class TableSection<V extends KeyedObject> {
         this.containingTableModel = containingTableModel;
     }
     private Map<Integer,List<Object>> getRowDataMap() {
-        if ( rowDataMap == null) {
-            rowDataMap = new HashMap<>();
+        if ( rowDataMap.size() != gamesVec.size()) {
+            rowDataMap.clear();
             for(int i=0;i<gamesVec.size();i++) {
                 rowDataMap.put(i,makeRowData(gamesVec.getByIndex(i)));
             }
@@ -183,7 +183,8 @@ public abstract class TableSection<V extends KeyedObject> {
 //        delegator.setDataVector(dataVector, columnTitles);
 
         prepareLineGamesForTableModel(gamesVec);
-        rowDataMap = null;
+        rowDataMap.clear();
+        getRowDataMap();
     }
     public boolean checktofire(Integer gameid) {
 
