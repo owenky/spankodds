@@ -88,7 +88,7 @@ public abstract class TableSection<V extends KeyedObject> {
     public int getRowIndex(final Integer rowKey) {
         return gamesVec.getRowIndex(rowKey);
     }
-    public V removeGameId(Integer gameidtoremove) {
+    public V removeGameId(Integer gameidtoremove,boolean repaint) {
 
 //        for (int i = 0; i < gamesVec.size(); i++) {
 //            Game g = gamesVec.getByIndex(i);
@@ -115,7 +115,9 @@ public abstract class TableSection<V extends KeyedObject> {
 //            }
 //        }
 //        return null; // didn't find it
-        V g = gamesVec.removeGameId(gameidtoremove);
+        int gameModelIndex= containingTableModel.getRowModelIndex(this,gameidtoremove);
+        V g;
+        if ( gameModelIndex >=0) {
 //        if ( null != g) {
 //            setInitialData();
 //            JViewport parent = (JViewport) thistable.getParent();
@@ -128,6 +130,15 @@ public abstract class TableSection<V extends KeyedObject> {
 //            resetDataVector(); //including sorting gamesVec
 //            fire();
 //        }
+            g = gamesVec.removeGame(gameidtoremove);
+            resetDataVector();
+            if (repaint) {
+                TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+                fire(e);
+            }
+        } else {
+            g = null;
+        }
         return g;
     }
     public void addGame(V g, boolean repaint) {

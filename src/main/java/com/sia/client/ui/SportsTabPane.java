@@ -335,13 +335,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public void removeGame(int gameid) {
+    public void removeGame(int gameid,boolean repaint) {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
             if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                ms.removeGame(gameid);
+                if ( null != ms.removeGame(gameid,repaint) ) {
+                    break;
+                }
             }
         }
     }

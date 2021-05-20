@@ -152,8 +152,8 @@ public class MainScreen extends JPanel {
         getDataModels().makeDataModelsVisible(b);
     }
 
-    public void removeGame(int gameid) {
-        getDataModels().removeGame(gameid);
+    public Game removeGame(int gameid,boolean repaint) {
+        return getDataModels().removeGame(gameid,repaint);
     }
 
     public void removeGames(String[] gameids) {

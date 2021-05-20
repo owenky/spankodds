@@ -41,10 +41,16 @@ public class LineGames<V extends KeyedObject> {
     public V getGame(String gameId) {
         return getGame(Integer.parseInt(gameId));
     }
-    public boolean removeGame(Integer gameId) {
-        return gameIdList.remove(gameId);
+    public V removeGame(Integer gameId) {
+        V game;
+        if ( gameIdList.remove(gameId) ) {
+            game = gameCache.getGame(gameId);
+        } else {
+            game = null;
+        }
+        return game;
     }
-    public boolean removeGame(String gameId) {
+    public V removeGame(String gameId) {
         return removeGame(Integer.parseInt(gameId));
     }
     public void addAll(Collection<? extends V> games) {

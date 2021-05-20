@@ -848,12 +848,12 @@ public class AppController {
         sportsVec.add(s);
     }
 
-    public static void removeGame(int gameid) {
+    public static void removeGame(int gameid,boolean repaint) {
         checkAndRunInEDT(() -> {
             for (int k = 0; k < tabpanes.size(); k++) {
 
                 SportsTabPane stb = tabpanes.get(k);
-                stb.removeGame(gameid);
+                stb.removeGame(gameid,repaint);
 
             }
             Game g = games.getGame(gameid);

@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.ui.simulator.EventGenerator;
-import com.sia.client.ui.simulator.NewGameCreator;
+import com.sia.client.ui.simulator.GameDeletor;
 import com.sia.client.ui.simulator.TableProperties;
 
 import javax.swing.JFrame;
@@ -40,9 +40,9 @@ public class SpankOddsTest {
         Timer updateTimer = new Timer(8000, (event) -> {
 
             EventGenerator eventGenerator;
-            eventGenerator = new NewGameCreator();
+//            eventGenerator = new NewGameCreator();
 //            eventGenerator = new ColumnWidthAdjuster(updatedRow);
-//            eventGenerator = new DataRowDeletor();
+            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
             eventGenerator.generatEvent(tblProp);
         });

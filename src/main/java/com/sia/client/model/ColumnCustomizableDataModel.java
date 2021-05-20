@@ -125,7 +125,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         V thisgame = null;
 
         for (TableSection<V> gameLine : tableSections) {
-            thisgame = gameLine.removeGameId(g.getGame_id());
+            thisgame = gameLine.removeGameId(g.getGame_id(),false);
             if (thisgame != null) {
                 break;
             }
@@ -137,11 +137,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
 
 
             if ( null != ltd) {
-                ltd.addGame(thisgame, true);
+                ltd.addGame(thisgame, false);
             } else {
                 log( new Exception("can't find LinesTableData for header:"+header));
             }
-            fireTableChanged(new TableModelEvent(this));
+            TableModelEvent evt = new TableModelEvent(this, 0, Integer.MAX_VALUE, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
+            fireTableChanged(evt);
         }
         return null != thisgame;
     }
@@ -161,14 +162,13 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         return tableSections;
     }
     //copied from MainScreen::removeGame(int)
-    public V removeGame(Integer rowKey) {
+    public V removeGame(Integer rowKey,boolean repaint) {
         V rowData = null;
         for (TableSection<V> sec : tableSections) {
             //TODO add if logic
-            rowData = sec.removeGameId(rowKey);
+            rowData = sec.removeGameId(rowKey,repaint);
             if (null != rowData) {
                 //gameid is removed from a LinesTableData, don't need to continue because a gameid can only be in one LinesTableData
-                sec.resetDataVector();
                 break;
             }
         }
@@ -176,11 +176,15 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     public int getRowModelIndex(TableSection<V> ltd, Integer key) {
         int gameIndex = ltd.getRowIndex(key);
-        int offset=0;
-        for(int i=0;i<ltd.getIndex();i++) {
-            offset+=tableSections.get(i).getRowCount();
+        if ( gameIndex >=0) {
+            int offset = 0;
+            for (int i = 0; i < ltd.getIndex(); i++) {
+                offset += tableSections.get(i).getRowCount();
+            }
+            return gameIndex + offset;
+        } else {
+            return -1;
         }
-        return gameIndex+offset;
     }
     public List<BlankGameStruct<V>> getBlankGameIdIndex() {
         List<BlankGameStruct<V>> idIndexList = new ArrayList<>();
