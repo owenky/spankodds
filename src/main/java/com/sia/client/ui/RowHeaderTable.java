@@ -15,6 +15,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 	private final ColumnCustomizableTable<V> mainTable;
 	private boolean toFireChangesInMainTable = true;
 	private final boolean hasRowNumber;
+	private boolean isModelSet = false;
 	private ColumnHeaderCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
@@ -30,7 +31,11 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 	}
 	@Override
 	public TableModel getModel() {
-		return mainTable.getModel();
+		if ( ! isModelSet ) {
+			setModel(mainTable.getModel());
+			isModelSet = true;
+		}
+		return super.getModel();
 	}
 	@Override
 	public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {

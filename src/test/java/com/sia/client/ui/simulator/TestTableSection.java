@@ -10,22 +10,20 @@ import java.util.List;
 public class TestTableSection extends TableSection<TestGame> {
 
     public static final String TestGroupGameHeaderPrefix = "TEST GAME ";
-    private final int columnCount;
 
-    public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount,int columnCount) {
+    public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount) {
 
         List<TestGame> gameVec = new ArrayList<>();
         for(int rowIndex=0;rowIndex<rowCount;rowIndex++) {
             TestGame tg = testGameCache.makeTestGame(idSeed*100+rowIndex);
             gameVec.add(tg);
         }
-        TestTableSection testTableSection = new TestTableSection(testGameCache,true,gameVec,columnCount);
+        TestTableSection testTableSection = new TestTableSection(testGameCache,true,gameVec);
         testTableSection.setGameGroupHeader(TestGroupGameHeaderPrefix+idSeed);
         return testTableSection;
     }
-    public TestTableSection(TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec,int columnCount) {
+    public TestTableSection(TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
         super(gameCache, toAddBlankGameId, gameVec);
-        this.columnCount = columnCount;
     }
     @Override
     protected void prepareLineGamesForTableModel(final LineGames<TestGame> gamesVec) {
@@ -34,11 +32,7 @@ public class TestTableSection extends TableSection<TestGame> {
 
     @Override
     protected List<Object> makeRowData(final TestGame game) {
-        List<Object> rtn = new ArrayList<>();
-        for(int i=0; i< columnCount; i++) {
-            rtn.add(""+game.getGame_id()+"_"+i);
-        }
-        return rtn;
+       return game.getRowData();
     }
 
 

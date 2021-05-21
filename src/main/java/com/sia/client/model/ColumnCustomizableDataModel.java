@@ -1,7 +1,6 @@
 package com.sia.client.model;
 
 
-import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
@@ -165,13 +164,13 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         }
         return null != thisgame;
     }
-    public LinesTableData checktofire(int gameId) {
+    public TableSection<V> checktofire(int gameId) {
         List<TableSection<V>> gameLines = getTableSections();
-        LinesTableData rtn = null;
+        TableSection<V> rtn = null;
         for (final TableSection<V> ltd : gameLines) {
             boolean status = ltd.checktofire(gameId);
             if (status) {
-                rtn  = (LinesTableData)ltd;
+                rtn  = ltd;
                 break;
             }
         }

@@ -192,7 +192,10 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 //        needToCreateColumnModel = true;
         throw new IllegalArgumentException("This method not supported.");
     }
-
+    @Override
+    public Object getValueAt(int row,int col) {
+        return super.getValueAt(row,col);
+    }
     @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);

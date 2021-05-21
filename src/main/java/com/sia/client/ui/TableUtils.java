@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.KeyedObject;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -7,20 +9,18 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 
 public abstract class TableUtils {
 
-    public static JComponent configTableLockColumns(ColumnCustomizableTable mainTable, int lockedColumnBoundaryIndex) {
+    public static <V extends KeyedObject> JComponent configTableLockColumns(ColumnCustomizableTable<V> mainTable, int lockedColumnBoundaryIndex) {
 
         mainTable.removeLockedColumnIndex(lockedColumnBoundaryIndex);
-        TableModel tm = mainTable.getModel();
         mainTable.createUnlockedColumns();
 //        mainTable.setPreferredScrollableViewportSize(mainTable.getPreferredSize());
 
         mainTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF ); //necessary for horizontal scroll bar showing up.
-        RowHeaderTable rowHeaderTable = mainTable.getRowHeaderTable();
+        RowHeaderTable<V> rowHeaderTable = mainTable.getRowHeaderTable();
         rowHeaderTable.createDefaultColumnsFromModel();
         rowHeaderTable.getTableHeader().setFont(mainTable.getTableHeader().getFont());
 
@@ -40,7 +40,8 @@ public abstract class TableUtils {
     public static boolean toRebuildCache(TableModelEvent e) {
         //when update for lastrow=Integer.MAX_VALUE, all row heights are rest to table row height,
         return e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE
-                || (e.getType() == TableModelEvent.UPDATE && e.getLastRow() == Integer.MAX_VALUE);
+                || (e.getType() == TableModelEvent.UPDATE && e.getLastRow() == Integer.MAX_VALUE)
+                ;
     }
     public static TableColumn cloneTableColumn(TableColumn sourceTc,int columnIndex) {
 

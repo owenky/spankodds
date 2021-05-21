@@ -1,8 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.ui.simulator.CheckToFire;
 import com.sia.client.ui.simulator.EventGenerator;
-import com.sia.client.ui.simulator.GameMover;
 import com.sia.client.ui.simulator.TableProperties;
+import com.sia.client.ui.simulator.TestGameCache;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -15,15 +16,14 @@ public class SpankOddsTest {
     private static final int testMainTableLastLockedColumnIndex = 3;
     private static final int secCount = 20;
     private static final int rowCount = 5;
-    private static final int testMainTableModelColumnCount = 46;
 
     public static void main(String[] argv) {
 
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TableProperties testMainTableProps = TableProperties.of(secCount,rowCount,testMainTableModelColumnCount,testMainTableLastLockedColumnIndex);
-        TableProperties blankTableProps = TableProperties.of(secCount,rowCount,testMainTableModelColumnCount,1);
+        TableProperties testMainTableProps = TableProperties.of(secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount);
+        TableProperties blankTableProps = TableProperties.of(secCount,rowCount,1,TestGameCache.colCount);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 //        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
@@ -44,7 +44,8 @@ public class SpankOddsTest {
 //            eventGenerator = new ColumnWidthAdjuster(updatedRow);
 //            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
-            eventGenerator = new GameMover();
+//            eventGenerator = new GameMover();
+            eventGenerator = new CheckToFire();
             eventGenerator.generatEvent(tblProp);
         });
         updateTimer.setInitialDelay(3000);

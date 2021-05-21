@@ -1,10 +1,10 @@
 package com.sia.client.model;
 
 import javax.swing.event.TableModelEvent;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -13,7 +13,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
     private ColumnCustomizableDataModel containingTableModel;
     private final LineGames<V> gamesVec;
-    private final Map<Integer,List<Object>> rowDataMap = new HashMap<>();
+    private final Map<Integer,List<Object>> rowDataMap = new ConcurrentHashMap<>();
     private int rowHeight;
     private int index;
     private String gameGroupHeader;
@@ -79,11 +79,13 @@ public abstract class TableSection<V extends KeyedObject> {
         return getRowDataMap().get(0).size();
     }
     public Object getValueAt(final int rowModelIndex, final int colModelIndex) {
-//        return delegator.getValueAt(rowModelIndex,colModelIndex);
+
         List<Object> rowData = getRowDataMap().get(rowModelIndex);
         if ( null == rowData) {
             log(new Exception("rowData is null: rowModelIndex="+rowModelIndex));
         }
+//TODO: debug:
+if ( rowModelIndex==3 && colModelIndex==0 && index==0) System.out.println("In TableSection, value at 3,0 = "+rowData.get(colModelIndex))   ;
         return rowData.get(colModelIndex);
     }
     public int getRowCount() {
@@ -190,13 +192,18 @@ public abstract class TableSection<V extends KeyedObject> {
         rowDataMap.clear();
         getRowDataMap();
     }
-    public boolean checktofire(Integer gameid) {
+    public boolean checktofire(Integer gameId) {
 
-        boolean status =gamesVec.containsGameId(gameid);
+        int rowModelIndex= gamesVec.getRowIndex(gameId);
+        V game = gamesVec.getGame(gameId);
+        List<Object> rowData = makeRowData(game);
+System.out.println("List<Object> at 0="+rowData.get(0));
+        rowDataMap.put(rowModelIndex,rowData);
+        boolean status = rowModelIndex>=0;
         if (status) {
             //TODO suspicous fire() call
-            log("In LinesTableData, suspicous fire()");
-            int insertedRowModelIndex= containingTableModel.getRowModelIndex(this,gameid);
+            log("In TableSection, suspicous fire()");
+            int insertedRowModelIndex= containingTableModel.getRowModelIndex(this,gameId);
             TableModelEvent e = new TableModelEvent(containingTableModel,insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
             fire(e);
         }

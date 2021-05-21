@@ -73,7 +73,6 @@ public class MainScreen extends JPanel {
     public boolean showextra = true;
     public boolean showprops = true;
     public Vector customheaders = new Vector();
-    private JScrollPane lastScrollPane;
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
 
@@ -124,7 +123,7 @@ public class MainScreen extends JPanel {
 
     public boolean checktofire(int gameid) {
         MainGameTableModel v = getDataModels();
-        LinesTableData ltd = v.checktofire(gameid);
+        LinesTableData ltd = (LinesTableData)v.checktofire(gameid);
         boolean status = (null != ltd);
         if (status) {
             GameTableAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);
@@ -993,7 +992,7 @@ public class MainScreen extends JPanel {
 
         mainGameTable = getMainGameTable();
         mainGameTable.getModel().clear();
-        Vector newBookiesVec = AppController.getBookiesVec();
+        Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
 
@@ -1098,7 +1097,6 @@ public class MainScreen extends JPanel {
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             boolean showit = true;
             Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-            int LID = 0;
 
             if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
             {
@@ -1140,7 +1138,6 @@ public class MainScreen extends JPanel {
                 Game g = (Game) o;
                 int leagueid = g.getLeague_id();
                 Sport s = AppController.getSport("" + leagueid);
-                LID = s.getParentleague_id();
 
             }
 //            JTable tablex;

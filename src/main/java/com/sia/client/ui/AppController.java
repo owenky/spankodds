@@ -381,7 +381,7 @@ public class AppController {
 
     }
 
-    public static Vector getBookiesVec() {
+    public static Vector<Bookie> getBookiesVec() {
         //System.out.println("BEFORE bookiesvec size="+bookiesVec.size());
         reorderBookiesVec();
         //System.out.println("AFTER bookiesvec size="+bookiesVec.size());

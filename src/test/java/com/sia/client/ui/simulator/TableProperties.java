@@ -17,11 +17,11 @@ import java.util.Vector;
 
 public class TableProperties {
 
-    public static TableProperties of(int sectionCount, int sectionRowCount, int columnCount, int boundaryIndex) {
+    public static TableProperties of(int sectionCount, int sectionRowCount,int boundaryIndex,int colCount) {
 
         TableProperties rtn = new TableProperties() ;
         rtn.testGameCache = new TestGameCache();
-        rtn.table = new ColumnCustomizableTable<TestGame>(false,makeColumns(columnCount)) {
+        rtn.table = new ColumnCustomizableTable<TestGame>(false,makeColumns(colCount)) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -44,14 +44,14 @@ public class TableProperties {
         tableHeader.setFont(headerFont);
         rtn.table.setRowHeight(60);
         rtn.table.setIntercellSpacing(new Dimension(2, 2));
-        buildModels(rtn, sectionCount,sectionRowCount,columnCount);
+        buildModels(rtn, sectionCount,sectionRowCount);
 
         rtn.tableContainer = TableUtils.configTableLockColumns(rtn.table, boundaryIndex);
         return rtn;
     }
-    private static void buildModels(TableProperties tblProp,int sectionCount, int sectionRowCount, int columnCount) {
+    private static void buildModels(TableProperties tblProp,int sectionCount, int sectionRowCount) {
         for(int secIndex=0;secIndex<sectionCount;secIndex++) {
-            TestTableSection testTableSection = TestTableSection.createTestTableSection(tblProp.testGameCache,secIndex,sectionRowCount,columnCount);
+            TestTableSection testTableSection = TestTableSection.createTestTableSection(tblProp.testGameCache,secIndex,sectionRowCount);
             tblProp.table.getModel().addGameLine(testTableSection);
         }
         tblProp.table.getModel().buildIndexMappingCache();

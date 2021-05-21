@@ -13,7 +13,7 @@ public class NewHeaderCreator implements EventGenerator{
     @Override
     public void generatEvent(TableProperties tblProp) {
         ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
-        TestTableSection section = new TestTableSection(tblProp.testGameCache,true, new ArrayList<>(),model.getColumnCount());
+        TestTableSection section = new TestTableSection(tblProp.testGameCache,true, new ArrayList<>());
         section.setGameGroupHeader("NEW GAME GROUP "+counter.addAndGet(1));
         int insertedRow = 0;
 

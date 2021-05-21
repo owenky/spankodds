@@ -26,12 +26,12 @@ import static com.sia.client.config.Utils.log;
 
 public class SpankOdds {
 
-    private static final String version="20210422001";
-    SportsTabPane stb;
-    TopView tv;
-    SportsMenuBar smb;
-    OddsFrame of;
-    JPanel mainpanel;
+    private static final String version = "20210422001";
+    private SportsTabPane stb;
+    private TopView tv;
+    private SportsMenuBar smb;
+    private OddsFrame of;
+    private JPanel mainpanel;
     private JFrame frame;
     private String userName;
     private int failedAttemptsCount = 0;
@@ -41,30 +41,6 @@ public class SpankOdds {
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
         log("CHANGE04242021 ");
-	/*	try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-    /*  java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SpankOdds().showLoginDialog();
-            }
-        });*/
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
 
@@ -74,17 +50,15 @@ public class SpankOdds {
     private void showLoginDialog() {
 
         RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
-        frame = new JFrame("Spank Odds )"+version+")");
+        frame = new JFrame("Spank Odds )" + version + ")");
         String spankoddsicon = "spanky.jpg";
 
         try {
             URL imgResource = Utils.getMediaResource(spankoddsicon);
             Image spankyimage = ImageIO.read(imgResource);
             frame.setIconImage(spankyimage);
-        }
-        catch(Exception ex)
-        {
-            System.out.println("exception loading image!! "+ex);
+        } catch (Exception ex) {
+            log("exception loading image!! " + ex);
         }
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
@@ -141,7 +115,7 @@ public class SpankOdds {
                 System.out.println(new java.util.Date());
                 boolean loggedin = client.isloggedin();
                 if (loggedin) {
-                    frame.setTitle(name+" Logged In");
+                    frame.setTitle(name + " Logged In");
                     createGui();
 
 
@@ -153,8 +127,8 @@ public class SpankOdds {
 
         loginService.addLoginListener(loginListener);
         loginPane.setLoginService(loginService);
-        loginPane.addPropertyChangeListener(evt-> {
-            if ( "status".equals(evt.getPropertyName()) && JXLoginPane.Status.CANCELLED.equals(evt.getNewValue())) {
+        loginPane.addPropertyChangeListener(evt -> {
+            if ("status".equals(evt.getPropertyName()) && JXLoginPane.Status.CANCELLED.equals(evt.getNewValue())) {
                 System.exit(0);
             }
         });
@@ -197,8 +171,8 @@ public class SpankOdds {
 
                         frame.setVisible(true);
 
-                    } catch( Exception e) {
-                        JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n"+e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);
+                    } catch (Exception e) {
+                        JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);
                         System.exit(-1);
                     }
 
