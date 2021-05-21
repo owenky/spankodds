@@ -26,6 +26,7 @@ public abstract class TableUtils {
 
         JScrollPane tableScrollPane = mainTable.getTableScrollPane();
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tableScrollPane.getVerticalScrollBar().setUnitIncrement(29);
         tableScrollPane.setRowHeaderView(rowHeaderTable);
 
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());

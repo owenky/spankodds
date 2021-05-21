@@ -1047,15 +1047,14 @@ public class CustomTab2 extends JPanel {
             } else {
                 checkAndRunInEDT(() -> {
 
-                    Vector tabpanes = AppController.getTabPanes();
-                    System.out.println("tabpanes size= " + tabpanes.size());
+                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
+                    log("tabpanes size= " + tabpanes.size());
                     for (int i = 0; i < tabpanes.size(); i++) {
-                        SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                        SportsTabPane tp = tabpanes.get(i);
                         int numtabs = tp.getTabCount();
-                        System.out.println("numtabs= " + numtabs);
+                        log("numtabs= " + numtabs);
 
                         MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
-                        oldms.makeDataModelsVisible(false);
                         oldms.destroyMe();
 
                         MainScreen ms = new MainScreen(tab, customvec);

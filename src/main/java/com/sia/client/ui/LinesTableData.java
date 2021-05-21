@@ -28,7 +28,6 @@ public class LinesTableData extends TableSection<Game> {
     public Vector<ColumnData> m_columns;
     public String sport = "";
     protected Date m_date;
-    boolean inview = false;
     boolean showingOpener = false;
     boolean showingPrior = false;
     private String display;
@@ -200,15 +199,6 @@ public class LinesTableData extends TableSection<Game> {
         }
         return value;
     }
-
-    public boolean isInView() {
-        return inview;
-    }
-
-    public void setInView(boolean b) {
-        inview = b;
-    }
-
     public long getClearTime() {
         return cleartime;
     }

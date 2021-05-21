@@ -452,12 +452,11 @@ public class SportCustomTab {
                 }
 
                 jfrm.dispose();
-                Vector tabpanes = AppController.getTabPanes();
-                System.out.println("Total Tab panes............." + tabpanes);
+                Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
+                log("Total Tab panes............." + tabpanes);
                 for (int i = 0; i < tabpanes.size(); i++) {
                     SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                     MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
-                    oldms.makeDataModelsVisible(false);
                     oldms.destroyMe();
                     MainScreen ms = new MainScreen(alerttype);
                     ms.setShowHeaders(includeheaders.isSelected());

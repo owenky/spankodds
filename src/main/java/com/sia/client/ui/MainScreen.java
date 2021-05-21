@@ -10,7 +10,6 @@ import com.sia.client.model.Sport;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -100,19 +99,6 @@ public class MainScreen extends JPanel {
 
 
     }
-
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("MainScreen");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 300));
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-    public void setCustomHeaders(Vector v) {
-        customheaders = v;
-    }
-
     public String getName() {
         return name;
     }
@@ -131,10 +117,6 @@ public class MainScreen extends JPanel {
 
         return status;
     }
-
-//    public List<LinesTableData> getDataModels() {
-//        return datamodelsvec;
-//    }
     public MainGameTableModel getDataModels() {
         return getMainGameTable().getModel();
     }
@@ -145,10 +127,6 @@ public class MainScreen extends JPanel {
 
     public void clearAll() {
         getDataModels().clearColors();
-    }
-
-    public void makeDataModelsVisible(boolean b) {
-        getDataModels().makeDataModelsVisible(b);
     }
 
     public Game removeGame(int gameid,boolean repaint) {
@@ -864,7 +842,7 @@ public class MainScreen extends JPanel {
             cleartime = ct;
         }
 
-        System.out.println("about to draw...teammaxlength=" + currentmaxlength);
+        log("about to draw...teammaxlength=" + currentmaxlength);
 
 
         checkAndRunInEDT(() -> {
@@ -1229,7 +1207,8 @@ public class MainScreen extends JPanel {
 
             oldgamegroupvec = newgamegroupvec;
         }
-        mainGameTable.getModel().buildIndexMappingCache();
+        MainGameTableModel model = mainGameTable.getModel();
+        model.buildIndexMappingCache();
         log("gamergroup headers end..." + new java.util.Date());
         log("hidden end..." + new java.util.Date());
         JScrollPane scrollPane = new JScrollPane(tablePanel);

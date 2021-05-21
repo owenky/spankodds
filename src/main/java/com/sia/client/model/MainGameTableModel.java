@@ -40,12 +40,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             }
         }
     }
-    public void makeDataModelsVisible(boolean b) {
-        List<TableSection<Game>> gameLines = getTableSections();
-        for (TableSection<Game> linesTableData : gameLines) {
-            ((LinesTableData)linesTableData).setInView(b);
-        }
-    }
     public void clearColors() {
         List<TableSection<Game>> gameLines = getTableSections();
         for (TableSection<Game> linesTableData : gameLines) {

@@ -233,8 +233,13 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
     }
     public void buildIndexMappingCache() {
         ltdSrhStructCache.clear();
-        for (int i=0;i<getRowCount();i++) {
-            getLinesTableData(i);
+        int modelIndex = 0;
+        for(TableSection<V> sec: tableSections) {
+            sec.resetDataVector();
+            for(int i=0;i<sec.getRowCount();i++) {
+                int offset = modelIndex-i;
+                ltdSrhStructCache.put(modelIndex++,new LtdSrhStruct<>(sec,offset));
+            }
         }
     }
     public LtdSrhStruct<V> getLinesTableData(int rowModelIndex) {

@@ -516,7 +516,7 @@ public class AppController {
         return tabpanes.get(0);
     }
 
-    public static Vector getTabPanes() {
+    public static Vector<SportsTabPane> getTabPanes() {
 
         return tabpanes;
     }

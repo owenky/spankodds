@@ -173,15 +173,6 @@ public class SpreadTotalView {
             if (tsnow.getTime() - sl.getCurrentts().getTime() <= 30000 && clearts.getTime() < sl.getCurrentts().getTime()) {
                 //System.out.println("MAKING IT RED!!!");
                 spreadcolor = Color.RED;
-                //firechange();
-
-                //new FireThread(ltd).start();
-                if (ltd.isInView()) {
-                    //owen took out cuz maionscreen refreshes every sec
-                    //FireThreadManager.fire("S"+id,ltd);
-                }
-
-
             }
             //else if(priorspreadcolor != Color.WHITE)
             else if (clearts.getTime() < sl.getCurrentts().getTime()) {
@@ -207,17 +198,8 @@ public class SpreadTotalView {
             under = tl.getCurrentunder();
             underjuice = tl.getCurrentunderjuice();
             whowasbettotal = tl.getWhowasbet();
-            //System.out.println(bid+".."+gid+".."+whowasbettotal);
             if (tsnow.getTime() - tl.getCurrentts().getTime() <= 30000 && clearts.getTime() < tl.getCurrentts().getTime()) {
-                //System.out.println("MAKING IT RED!!!");
                 totalcolor = Color.RED;
-                //firechange();
-                //new FireThread(ltd).start();
-                if (ltd.isInView()) {
-                    //owen took out cuz maionscreen refreshes every sec
-                    //FireThreadManager.fire("T"+id,ltd);
-                }
-
             }
             //else if(priortotalcolor != Color.WHITE)
             else if (clearts.getTime() < tl.getCurrentts().getTime()) {
@@ -243,18 +225,8 @@ public class SpreadTotalView {
             long diff = tsnow.getTime() - ml.getCurrentts().getTime();
             whowasbetmoney = ml.getWhowasbet();
 
-            //System.out.println(bid+".."+gid+".."+"ts diff="+diff);
             if (tsnow.getTime() - ml.getCurrentts().getTime() <= 30000 && clearts.getTime() < ml.getCurrentts().getTime()) {
-                //System.out.println("MAKING IT RED!!!");
                 moneycolor = Color.RED;
-                //firechange();
-                //new FireThread(ltd).start();
-                if (ltd.isInView()) {
-                    //owen took out cuz maionscreen refreshes every sec
-                    //FireThreadManager.fire("M"+id,ltd);
-                }
-
-
             }
             //else if(priormoneycolor != Color.WHITE)
             else if (clearts.getTime() < ml.getCurrentts().getTime()) {
@@ -275,29 +247,11 @@ public class SpreadTotalView {
 
         try {
             visitover = ttl.getCurrentvisitover();
-            visitoverjuice = ttl.getCurrentvisitoverjuice();
-            visitunder = ttl.getCurrentvisitunder();
-            visitunderjuice = ttl.getCurrentvisitunderjuice();
             homeover = ttl.getCurrenthomeover();
-            homeoverjuice = ttl.getCurrenthomeoverjuice();
-            homeunder = ttl.getCurrenthomeunder();
-            homeunderjuice = ttl.getCurrenthomeunderjuice();
-
-
             whowasbetteamtotal = ttl.getWhowasbet();
-            //System.out.println(bid+".."+gid+".."+whowasbettotal);
             if (tsnow.getTime() - ttl.getCurrentts().getTime() <= 30000 && clearts.getTime() < ttl.getCurrentts().getTime()) {
-                //System.out.println("MAKING IT RED!!!");
                 teamtotalcolor = Color.RED;
-                //firechange();
-                //new FireThread(ltd).start();
-                if (ltd.isInView()) {
-                    //owen took out cuz maionscreen refreshes every sec
-                    // FireThreadManager.fire("TT"+id,ltd);
-                }
-
             }
-            //else if(priortotalcolor != Color.WHITE)
             else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
                 teamtotalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec

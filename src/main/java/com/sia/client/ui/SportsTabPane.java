@@ -198,8 +198,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 } else {
 
                     MainScreen oldms = (MainScreen) getComponentAt(previousTabIndex);
-                    oldms.makeDataModelsVisible(false);
-
                     oldms.destroyMe();
 
                     MainScreen newms = (MainScreen) getComponentAt(currentTabIndex);
@@ -210,8 +208,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                     //{
                     log("changelistener create!");
                     newms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
-                    newms.makeDataModelsVisible(true);
-
                     System.out.println(" timesort is:" + timesort + "...now=" + new java.util.Date());
                     //newms.adjustcols(false);
                     //newms.firedatamodels();
@@ -428,9 +424,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         thisms.repaint();
         AppController.removeDataModels(thisms.getDataModels());
         thisms.destroyMe();
-        System.out.println("refreshing currenttab!");
+        log("refreshing currenttab!");
         thisms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
-        thisms.makeDataModelsVisible(true);
         AppController.addDataModels(thisms.getDataModels());
         thisms.adjustcols(false);
         thisms.firedatamodels();
@@ -444,12 +439,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         thisms.destroyMe();
 
     }
-
-    public MainGameTableModel getCurrentDataModels() {
-        MainScreen ms = (MainScreen) getSelectedComponent();
-        return ms.getDataModels();
-    }
-
     public List<LinesTableData> getAllDataModels() {
         int totalTabs = getTabCount();
         List<LinesTableData> v = new ArrayList<>();
