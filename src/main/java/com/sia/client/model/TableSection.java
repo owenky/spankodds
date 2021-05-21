@@ -190,19 +190,22 @@ public abstract class TableSection<V extends KeyedObject> {
         rowDataMap.clear();
         getRowDataMap();
     }
-    public boolean checktofire(Integer gameId) {
+    public boolean checktofire(Integer gameId,boolean repaint) {
 
-        int rowModelIndex= gamesVec.getRowIndex(gameId);
-        V game = gamesVec.getGame(gameId);
-        List<Object> rowData = makeRowData(game);
-        rowDataMap.put(rowModelIndex,rowData);
-        boolean status = rowModelIndex>=0;
+        int rowIndex= gamesVec.getRowIndex(gameId);
+        boolean status = rowIndex>=0;
         if (status) {
-            //TODO suspicous fire() call
-            log("In TableSection, suspicous fire()");
-            int insertedRowModelIndex= containingTableModel.getRowModelIndex(this,gameId);
-            TableModelEvent e = new TableModelEvent(containingTableModel,insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
-            fire(e);
+            V game = gamesVec.getGame(gameId);
+            List<Object> rowData = makeRowData(game);
+            rowDataMap.put(rowIndex,rowData);
+System.out.println("checktofire, gamId="+gameId+", repaint="+repaint);
+            if ( repaint ) {
+                //TODO suspicous fire() call
+                log("In TableSection, suspicous fire()");
+                int rowModelIndex = containingTableModel.getRowModelIndex(this, gameId);
+                TableModelEvent e = new TableModelEvent(containingTableModel, rowModelIndex, rowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
+                fire(e);
+            }
         }
         return status;
     }

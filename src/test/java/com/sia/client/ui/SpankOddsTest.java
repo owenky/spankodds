@@ -14,6 +14,7 @@ import java.awt.Point;
 public class SpankOddsTest {
 
     private static final int testMainTableLastLockedColumnIndex = 3;
+    private static final TestGameCache testGameCache = new TestGameCache();
     private static final int secCount = 20;
     private static final int rowCount = 5;
 
@@ -22,31 +23,33 @@ public class SpankOddsTest {
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TableProperties testMainTableProps = TableProperties.of(secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount);
-        TableProperties blankTableProps = TableProperties.of(secCount,rowCount,1,TestGameCache.colCount);
+        TableProperties [] tbleProps  = new TableProperties[2];
+        tbleProps[0] = TableProperties.of(testGameCache,secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
+        tbleProps[1] = TableProperties.of(testGameCache,secCount,rowCount,1,TestGameCache.colCount,1);
+
 
         JTabbedPane tabbedPane = new JTabbedPane();
-//        tabbedPane.addTab("Blank", blankTableProps.tableContainer);
-        tabbedPane.addTab("Second", testMainTableProps.tableContainer);
+        for(TableProperties tblProp:tbleProps) {
+            tabbedPane.addTab(tblProp.table.getName(), tblProp.tableContainer);
+        }
         jFrame.getContentPane().add(tabbedPane);
 
         jFrame.setPreferredSize(new Dimension(1500, 800));
         jFrame.setLocation(new Point(250,100));
         jFrame.pack();
         jFrame.setVisible(true);
-        autoUpdateTableData(testMainTableProps);
+        autoUpdateTableData(tbleProps);
     }
-    private static void autoUpdateTableData(TableProperties tblProp) {
-        Timer updateTimer = new Timer(8000, (event) -> {
-
-            EventGenerator eventGenerator;
+    private static void autoUpdateTableData(TableProperties [] tblProps) {
+        final EventGenerator eventGenerator;
 //            eventGenerator = new NewGameCreator();
 //            eventGenerator = new ColumnWidthAdjuster(updatedRow);
 //            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
 //            eventGenerator = new GameMover();
-            eventGenerator = new CheckToFire();
-            eventGenerator.generatEvent(tblProp);
+        eventGenerator = new CheckToFire();
+        Timer updateTimer = new Timer(8000, (event) -> {
+            eventGenerator.generatEvent(tblProps);
         });
         updateTimer.setInitialDelay(3000);
         updateTimer.start();

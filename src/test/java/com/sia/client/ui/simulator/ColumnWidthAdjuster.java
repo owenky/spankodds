@@ -14,8 +14,9 @@ public class ColumnWidthAdjuster implements EventGenerator{
         this.updatedRow = updatedRow;
     }
     @Override
-    public void generatEvent(final TableProperties tblProp) {
+    public void generatEvent(final TableProperties [] tblProps) {
 
+        TableProperties tblProp = tblProps[0];
         int firstDataRow=0;
         while ( BlankGameId.equals(tblProp.table.getModel().getRowKey(firstDataRow))) {
             firstDataRow++;

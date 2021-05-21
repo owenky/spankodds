@@ -11,7 +11,8 @@ import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 public class NewHeaderCreator implements EventGenerator{
     private static final AtomicInteger counter = new AtomicInteger(0);
     @Override
-    public void generatEvent(TableProperties tblProp) {
+    public void generatEvent(TableProperties [] tblProps) {
+        TableProperties tblProp = tblProps[0];
         ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
         TestTableSection section = new TestTableSection(tblProp.testGameCache,true, new ArrayList<>());
         section.setGameGroupHeader("NEW GAME GROUP "+counter.addAndGet(1));

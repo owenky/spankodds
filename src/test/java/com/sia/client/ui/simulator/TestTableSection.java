@@ -11,11 +11,11 @@ public class TestTableSection extends TableSection<TestGame> {
 
     public static final String TestGroupGameHeaderPrefix = "TEST GAME ";
 
-    public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount) {
+    public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount,int tableIndex) {
 
         List<TestGame> gameVec = new ArrayList<>();
         for(int rowIndex=0;rowIndex<rowCount;rowIndex++) {
-            TestGame tg = testGameCache.makeTestGame(idSeed*100+rowIndex);
+            TestGame tg = testGameCache.makeTestGame(1000*tableIndex+idSeed*100+rowIndex);
             gameVec.add(tg);
         }
         TestTableSection testTableSection = new TestTableSection(testGameCache,true,gameVec);

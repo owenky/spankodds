@@ -123,7 +123,7 @@ public class MainScreen extends JPanel {
 
     public boolean checktofire(int gameid) {
         MainGameTableModel v = getDataModels();
-        LinesTableData ltd = (LinesTableData)v.checktofire(gameid);
+        LinesTableData ltd = (LinesTableData)v.checktofire(gameid,mainGameTable.isShowing());
         boolean status = (null != ltd);
         if (status) {
             GameTableAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);

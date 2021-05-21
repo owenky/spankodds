@@ -164,11 +164,11 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         }
         return null != thisgame;
     }
-    public TableSection<V> checktofire(int gameId) {
+    public TableSection<V> checktofire(int gameId,boolean repaint) {
         List<TableSection<V>> gameLines = getTableSections();
         TableSection<V> rtn = null;
         for (final TableSection<V> ltd : gameLines) {
-            boolean status = ltd.checktofire(gameId);
+            boolean status = ltd.checktofire(gameId,repaint);
             if (status) {
                 rtn  = ltd;
                 break;

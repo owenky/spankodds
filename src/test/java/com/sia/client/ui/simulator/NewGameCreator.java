@@ -8,7 +8,8 @@ public class NewGameCreator implements EventGenerator{
     public NewGameCreator() {
     }
     @Override
-    public void generatEvent(final TableProperties tblProp) {
+    public void generatEvent(final TableProperties [] tblProps) {
+        TableProperties tblProp = tblProps[0];
         int insertedSectionIndex = 1;
         ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
         TableSection<TestGame> section = model.getLinesTableDataWithSecionIndex(insertedSectionIndex);
