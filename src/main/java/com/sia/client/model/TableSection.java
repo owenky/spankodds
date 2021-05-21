@@ -84,8 +84,6 @@ public abstract class TableSection<V extends KeyedObject> {
         if ( null == rowData) {
             log(new Exception("rowData is null: rowModelIndex="+rowModelIndex));
         }
-//TODO: debug:
-if ( rowModelIndex==3 && colModelIndex==0 && index==0) System.out.println("In TableSection, value at 3,0 = "+rowData.get(colModelIndex))   ;
         return rowData.get(colModelIndex);
     }
     public int getRowCount() {
@@ -197,7 +195,6 @@ if ( rowModelIndex==3 && colModelIndex==0 && index==0) System.out.println("In Ta
         int rowModelIndex= gamesVec.getRowIndex(gameId);
         V game = gamesVec.getGame(gameId);
         List<Object> rowData = makeRowData(game);
-System.out.println("List<Object> at 0="+rowData.get(0));
         rowDataMap.put(rowModelIndex,rowData);
         boolean status = rowModelIndex>=0;
         if (status) {
