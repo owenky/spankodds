@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.simulator.CheckToFire;
+import com.sia.client.ui.simulator.ColumnWidthAdjuster;
 import com.sia.client.ui.simulator.EventGenerator;
 import com.sia.client.ui.simulator.TableProperties;
 import com.sia.client.ui.simulator.TestGameCache;
@@ -43,11 +43,11 @@ public class SpankOddsTest {
     private static void autoUpdateTableData(TableProperties [] tblProps) {
         final EventGenerator eventGenerator;
 //            eventGenerator = new NewGameCreator();
-//            eventGenerator = new ColumnWidthAdjuster(updatedRow);
+            eventGenerator = new ColumnWidthAdjuster();
 //            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
 //            eventGenerator = new GameMover();
-        eventGenerator = new CheckToFire();
+//        eventGenerator = new CheckToFire();
         Timer updateTimer = new Timer(8000, (event) -> {
             eventGenerator.generatEvent(tblProps);
         });

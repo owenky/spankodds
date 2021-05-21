@@ -297,14 +297,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         });
 
     }
-
-    public void adjustcols(boolean includeheader) {
-        MainScreen ms = (MainScreen) getSelectedComponent();
-        log("..adjusting cols");
-        ms.adjustcols(includeheader);
-
-    }
-
     public boolean isTabNameAvailable(String name) {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
@@ -427,7 +419,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         log("refreshing currenttab!");
         thisms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
         AppController.addDataModels(thisms.getDataModels());
-        thisms.adjustcols(false);
+//        thisms.adjustcols(false);
         thisms.firedatamodels();
 
     }

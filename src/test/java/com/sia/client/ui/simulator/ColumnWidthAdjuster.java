@@ -1,37 +1,32 @@
 package com.sia.client.ui.simulator;
 
-import com.sia.client.model.ColumnAdjustScheduler;
-
 import javax.swing.event.TableModelEvent;
-
-import static com.sia.client.config.SiaConst.BlankGameId;
+import java.util.List;
 
 public class ColumnWidthAdjuster implements EventGenerator{
 
-    private static final ColumnAdjustScheduler COLUMN_ADJUST_SCHEDULER = new ColumnAdjustScheduler();
-    private final int updatedRow;
-    public ColumnWidthAdjuster(int updatedRow) {
-        this.updatedRow = updatedRow;
+//    private static final ColumnAdjustScheduler COLUMN_ADJUST_SCHEDULER = new ColumnAdjustScheduler();
+    private final int tesgGameId1 = 2;
+    private final int testGameid2 = 103;
+    public ColumnWidthAdjuster() {
     }
     @Override
     public void generatEvent(final TableProperties [] tblProps) {
 
         TableProperties tblProp = tblProps[0];
-        int firstDataRow=0;
-        while ( BlankGameId.equals(tblProp.table.getModel().getRowKey(firstDataRow))) {
-            firstDataRow++;
-        }
+        updateTestGame(tblProp.testGameCache.getGame(tesgGameId1));
+        updateTestGame(tblProp.testGameCache.getGame(testGameid2));
 
-        int col = 0;
-        Object value = tblProp.table.getModel().getValueAt(firstDataRow,col);
-        tblProp.table.getModel().setValueAt(value+"X",firstDataRow,col);
+        tblProp.table.getModel().fireTableChanged(new TableModelEvent(tblProp.table.getModel()));
+//        COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(tblProp.table, updatedRow));
+    }
+    private void updateTestGame(TestGame game) {
 
-        col = 5;
-        value = tblProp.table.getModel().getValueAt(firstDataRow,col);
-        tblProp.table.getModel().setValueAt(value+"X",firstDataRow,col);
-
-        TableModelEvent te = new TableModelEvent(tblProp.table.getModel(), updatedRow);
-        tblProp.table.getModel().fireTableChanged(te);
-        COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(tblProp.table, updatedRow));
+        updateRowData(game.getRowData(),1);
+        updateRowData(game.getRowData(),40);
+    }
+    private void updateRowData(List<Object> rowData, int col) {
+        Object oldValue = rowData.get(col);
+        rowData.set(col,oldValue+"X");
     }
 }

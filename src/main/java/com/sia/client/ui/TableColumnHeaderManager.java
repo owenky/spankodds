@@ -48,6 +48,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 //        mainTable.getModel().addTableModelListener(this);
         mainTable.setTableChangedListener(this);
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
+        mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
     }
     public boolean isColumnHeaderDrawn(Object columnHeaderValue) {
         return drawnHeaderValues.contains(columnHeaderValue);
@@ -177,12 +178,15 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
-        if ( isMainTableFirstShown && evt.getSource() == mainTable.getTableScrollPane().getHorizontalScrollBar()) {
-//            if (evt.getValueIsAdjusting()) {
-//               return;
-//            }
-            horizontalScrollBarAdjustmentValue = evt.getValue();
-            invokeDrawColumnHeaders();
+        if ( isMainTableFirstShown ) {
+            if ( ! evt.getValueIsAdjusting()) {
+                adjustComumns();
+            }
+
+            if ( evt.getSource() == mainTable.getTableScrollPane().getHorizontalScrollBar()) {
+                horizontalScrollBarAdjustmentValue = evt.getValue();
+                invokeDrawColumnHeaders();
+            }
 
         }
     }

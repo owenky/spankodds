@@ -1230,34 +1230,6 @@ public class MainScreen extends JPanel {
 //        add(bar, BorderLayout.PAGE_END);
         mainGameTable.optimizeRowHeightsAndGameLineTitles();
         AppController.addDataModels(getDataModels());
-        //TODO disable following two lines
-log("disable Suspious adjustcols(true) call !!!!!!!! ");
-//        adjustcols(true);
-        // end of disable TODO
-//        firedatamodels();
-        //END of commenting out firedatamodels() TODO
-
-        Timer timer2 = new Timer(500, new ActionListener() { //Change parameters to your needs.
-            public void actionPerformed(ActionEvent e) {
-                try {
-
-                    adjustcols(false);
-                    timer2count++;
-                    if (timer2count > 12) {
-                        timer2count = 0;
-                        ((Timer) e.getSource()).stop();
-                    }
-                } catch (Exception ex) {
-                    log("exception firing data models " + ex);
-                }
-
-            }
-        });
-        //TODO disable it for debug
-//        timer2.start();
-//        log("timer2 start");
-//        log("drawit end..." + new java.util.Date());
-        //END of Debug TODO
     }
 
     public void firedatamodels() {
@@ -1306,11 +1278,6 @@ log("disable Suspious adjustcols(true) call !!!!!!!! ");
     }
 
     public void adjustcols(boolean includeheader) {
-        //TODO
-//        for (int i = 0; i < adjusters.size(); i++) {
-//            TableColumnAdjuster col = (TableColumnAdjuster) adjusters.get(i);
-//            col.adjustColumns(includeheader);
-//        }
         mainGameTable.adjustColumns(includeheader);
     }
     public MainGameTable getMainGameTable() {

@@ -13,6 +13,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -43,6 +45,10 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     private boolean isColumnDataIncluded;
     private boolean isOnlyAdjustLarger;
     private boolean isDynamicAdjustment;
+    private int firstRow;
+    private int lastRow;
+    private int firstCol;
+    private int lastCol;
     private Map<TableColumn, Integer> columnSizes = new HashMap<>();
 
     /*
@@ -169,14 +175,30 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      *  return sum of preferred width of all columns
      */
     public int adjustColumns(boolean includeheader) {
+        Rectangle visibleRect = table.getVisibleRect();
+        int x = (int)visibleRect.getX();
+        int width = (int)visibleRect.getWidth();
+        int y = (int)visibleRect.getY();
+        int height = (int)visibleRect.getHeight();
+        Point p0 = new Point(x,y);
+        Point p1 = new Point(x+width,y+height);
+        firstRow = table.rowAtPoint(p0);
+        lastRow = table.rowAtPoint(p1);
+//        firstCol = table.columnAtPoint(p0);
+//        lastCol = table.columnAtPoint(p1);
+
+        firstCol= table.getColumnModel().getColumnIndexAtX(x);
+        lastCol = table.getColumnModel().getColumnIndexAtX(x+width);
+System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastRow+", col="+firstCol +"-"+lastCol+", x="+x+", y="+y+", width="+width+", height="+height+", table="+table.getName());
+
         setColumnHeaderIncluded(includeheader);
         TableColumnModel tcm = table.getColumnModel();
         if (tcm == null) {
-            log("tcm is null!");
+            throw new IllegalArgumentException("tcm is null!");
         }
  long begin=System.currentTimeMillis();
         int totalColPrefWidth = 0;
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
+        for (int i = firstCol; i <= lastCol; i++) {
             totalColPrefWidth += adjustColumn(i);
         }
  log("TableColumnAdjuster::adjustColumns, update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
@@ -249,7 +271,7 @@ if ( table instanceof RowHeaderTable) {
         int preferredWidth = 0;
         int maxWidth = table.getColumnModel().getColumn(column).getMaxWidth();
 
-        for (int row = 0; row < table.getRowCount(); row++) {
+        for (int row = firstRow; row <= lastRow; row++) {
             preferredWidth = Math.max(preferredWidth, getCellDataWidth(row, column));
 
             //  We've exceeded the maximum width, no need to check other rows
