@@ -28,8 +28,8 @@ public abstract class TableUtils {
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.getVerticalScrollBar().setUnitIncrement(29);
         tableScrollPane.setRowHeaderView(rowHeaderTable);
-
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());
+
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
         container.add(tableScrollPane,BorderLayout.CENTER);
