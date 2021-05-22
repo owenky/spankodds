@@ -88,6 +88,11 @@ public abstract class Utils {
             log(new Exception("Worker Thread Vialation: This action should not happen in EDT"));
         }
     }
+    public static void ensureEdtThread() {
+        if ( ! SwingUtilities.isEventDispatchThread()) {
+            log(new Exception(" This action SHOULD happen in EDT"));
+        }
+    }
     public static void ensureBackgroundExecution(Runnable r) {
         if ( SwingUtilities.isEventDispatchThread()) {
             executorService.submit(r);

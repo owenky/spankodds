@@ -48,7 +48,7 @@ public class SpankOddsTest {
 //            eventGenerator = new NewHeaderCreator();
 //            eventGenerator = new GameMover();
 //        eventGenerator = new CheckToFire();
-        Timer updateTimer = new Timer(8000, (event) -> {
+        Timer updateTimer = new Timer(3000, (event) -> {
             eventGenerator.generatEvent(tblProps);
         });
         updateTimer.setInitialDelay(3000);

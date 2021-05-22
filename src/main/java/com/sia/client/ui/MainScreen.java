@@ -43,7 +43,6 @@ public class MainScreen extends JPanel {
     public Timer timer;
     public int timer2count = 0;
     public int currentmaxlength = 0;
-    public String name;
     public boolean timesort = false;
     public boolean shortteam = false;
     public boolean opener = false;
@@ -76,18 +75,17 @@ public class MainScreen extends JPanel {
     private final Vector<TableColumn> allColumns = new Vector<>();
 
     public MainScreen(String name) {
-        this.name = name;
         cleartime = new java.util.Date().getTime();
+        setName(name);
     }
 
     public MainScreen(String name, Vector customheaders) {
-        this.name = name;
+        this(name);
         this.customheaders = customheaders;
-        cleartime = new java.util.Date().getTime();
     }
 
     public MainScreen(String name, Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
-        this.name = name;
+        this(name);
         this.customheaders = customheaders;
         this.showheaders = showheaders;
         this.showseries = showseries;
@@ -95,18 +93,7 @@ public class MainScreen extends JPanel {
         this.showadded = showadded;
         this.showextra = showextra;
         this.showprops = showprops;
-        cleartime = new java.util.Date().getTime();
-
-
     }
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String n) {
-        name = n;
-    }
-
     public boolean checktofire(int gameid) {
         MainGameTableModel v = getDataModels();
         LinesTableData ltd = (LinesTableData)v.checktofire(gameid,mainGameTable.isShowing());
@@ -190,6 +177,11 @@ public class MainScreen extends JPanel {
 //
 //            }
 //        }
+        if ( null == mainGameTable) {
+            throw new IllegalStateException("mainGameTable is null: screen:"+this.getName());
+        } else if ( null == mainGameTable.getModel() ) {
+            throw new IllegalStateException("model of mainGameTable is null: screen:"+this.getName());
+        }
         return mainGameTable.getModel().moveGameToThisHeader(g,header);
     }
 
@@ -220,7 +212,7 @@ public class MainScreen extends JPanel {
         String[] prefs;
 
         Games allgamesforpref = AppController.getGamesVec();
-
+        String name = getName();
         if (name.equalsIgnoreCase("football")) {
             boolean all = false;
             String footballpref = AppController.getUser().getFootballPref();
@@ -1091,6 +1083,7 @@ public class MainScreen extends JPanel {
                     "                                                                                                                                                      ");
 
 
+            String name = getName();
             if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr)) {
 
                 if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
@@ -1312,7 +1305,7 @@ public class MainScreen extends JPanel {
     private MainGameTable createMainGameTable() {
         MainGameTable mainGameTable = new MainGameTable(allColumns);
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
-        mainGameTable.setName(name);
+        mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);

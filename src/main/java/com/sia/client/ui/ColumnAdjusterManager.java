@@ -2,8 +2,6 @@ package com.sia.client.ui;
 
 import javax.swing.JComponent;
 
-import static com.sia.client.config.Utils.log;
-
 public class ColumnAdjusterManager {
 
     private final ColumnCustomizableTable<?> mainTable;
@@ -19,8 +17,7 @@ public class ColumnAdjusterManager {
     }
     public void adjustColumns(boolean includeHeaders) {
         getMainTableColumnAdjuster().adjustColumns(includeHeaders);
-        int prefWidthOfCols = getRowHeaderTableColumnAdjuster().adjustColumns(includeHeaders);
-log("in ColumnAdjusterManager, prefWidthOfCols="+prefWidthOfCols+", old prefwidth="+mainTable.getRowHeaderTable().getPreferredSize().getWidth());
+        getRowHeaderTableColumnAdjuster().adjustColumns(includeHeaders);
         JComponent rowHeaderTable = mainTable.getRowHeaderTable();
         rowHeaderTable.getParent().setPreferredSize(rowHeaderTable.getPreferredSize());
     }

@@ -105,6 +105,17 @@ public class RowHeaderColumnModel extends DefaultTableColumnModel {
      */
 	@Override
     public int getColumnIndexAtX(int x) {
-		return super.getColumnIndexAtX(x);
+	    //modified from DefaultTableColumnModel::getColumnIndexAtX
+		if (x < 0) {
+			return -1;
+		}
+		int cc = getColumnCount();
+		for(int column = 0; column < cc; column++) {
+			x = x - getColumn(column).getWidth();
+			if (x <= 0) {
+				return column;
+			}
+		}
+		return -1;
     }
 }
