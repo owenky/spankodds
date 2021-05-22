@@ -28,13 +28,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TableColumnHeaderManager<V extends KeyedObject> implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
     private final Map<String, JComponent> columnHeaderComponentMap = new HashMap<>();
     private final ColumnCustomizableTable<V> mainTable;
-    private final AtomicBoolean isMainTableFirstShown = new AtomicBoolean(false);
+//    private final AtomicBoolean isMainTableShown = new AtomicBoolean(false);
     private boolean isAdjustingColumn = false;
     private final Set<Object> drawnHeaderValues = new HashSet<>();
     private int horizontalScrollBarAdjustmentValue;
@@ -57,14 +56,17 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
+        String tableName = mainTable.getName();
+        boolean showing = mainTable.isShowing();
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
-            if (source == mainTable && !isMainTableFirstShown.get() && mainTable.isShowing()) {
+//            if (source == mainTable && !isMainTableShown.get() && mainTable.isShowing()) {
+            if (source == mainTable && mainTable.isShowing()) {
                 Utils.checkAndRunInEDT(() -> {
                     configRowHeight();
                     adjustComumns();
                     invokeDrawColumnHeaders();
-                    isMainTableFirstShown.set(true);
+//                    isMainTableShown.set(true);
                 });
             }
         }
@@ -142,7 +144,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
-        if ( isMainTableFirstShown.get() ) {
+//        if ( isMainTableShown.get() ) {
+          if ( mainTable.isShowing()) {
             invokeDrawColumnHeaders();
         }
     }
@@ -154,7 +157,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void componentResized(final ComponentEvent e) {
-        if ( isMainTableFirstShown.get() && ! isAdjustingColumn ) {
+//        if ( isMainTableShown.get() && ! isAdjustingColumn ) {
+        if ( mainTable.isShowing() && ! isAdjustingColumn ) {
             drawnHeaderValues.clear();
         }
         isAdjustingColumn = false;
@@ -188,7 +192,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
-        if ( isMainTableFirstShown.get() ) {
+//        if ( isMainTableShown.get() ) {
+        if ( mainTable.isShowing()) {
             if ( ! evt.getValueIsAdjusting()) {
                 adjustComumns();
             }
