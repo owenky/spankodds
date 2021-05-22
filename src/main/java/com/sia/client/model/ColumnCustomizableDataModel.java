@@ -216,17 +216,15 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         return idIndexList;
     }
     public void addGameLine(TableSection<V> gameLine) {
-        gameLine.setContainingTableModel(this);
-        gameLine.setIndex(tableSections.size());
-        tableSections.add(gameLine);
+        addGameLine(tableSections.size(),gameLine);
     }
     public void addGameLine(int index,TableSection<V> gameLine) {
         gameLine.setContainingTableModel(this);
         tableSections.add(index,gameLine);
-        resetSectionIndex();
+        resetSectionIndex(index);
     }
-    private void resetSectionIndex() {
-        for(int i=0;i<tableSections.size();i++) {
+    private void resetSectionIndex(int startIndex) {
+        for(int i=startIndex;i<tableSections.size();i++) {
             TableSection<V> section = tableSections.get(i);
             section.setIndex(i);
         }

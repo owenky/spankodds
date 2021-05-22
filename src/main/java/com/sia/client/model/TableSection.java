@@ -14,7 +14,7 @@ public abstract class TableSection<V extends KeyedObject> {
     private ColumnCustomizableDataModel containingTableModel;
     private final LineGames<V> gamesVec;
     private final Map<Integer,List<Object>> rowDataMap = new ConcurrentHashMap<>();
-    private int rowHeight;
+    private int rowHeight=0;
     private int index;
     private String gameGroupHeader;
 
