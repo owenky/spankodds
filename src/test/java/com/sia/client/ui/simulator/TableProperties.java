@@ -62,7 +62,7 @@ public class TableProperties {
         Vector<TableColumn> rtn = new Vector<>();
         for(int i=0;i<columnCount;i++) {
             TableColumn column = new TableColumn();
-            column.setHeaderValue("col_"+i);
+            column.setHeaderValue("COLUMN_"+i);
             rtn.add(column);
         }
         return rtn;

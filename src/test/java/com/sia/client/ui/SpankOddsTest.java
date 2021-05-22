@@ -23,9 +23,10 @@ public class SpankOddsTest {
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TableProperties [] tbleProps  = new TableProperties[2];
+        TableProperties [] tbleProps  = new TableProperties[3];
         tbleProps[0] = TableProperties.of(testGameCache,secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
         tbleProps[1] = TableProperties.of(testGameCache,secCount,rowCount,1,TestGameCache.colCount,1);
+        tbleProps[2] = TableProperties.of(testGameCache,0,0,1,TestGameCache.colCount,2);
 
 
         JTabbedPane tabbedPane = new JTabbedPane();

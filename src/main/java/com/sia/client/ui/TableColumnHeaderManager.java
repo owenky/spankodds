@@ -178,9 +178,11 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void tableChanged(final TableModelEvent e) {
         if (TableUtils.toRebuildCache(e) ) {
-            adjustComumns();
-            configRowHeight();
-            invokeDrawColumnHeaders();
+            if (mainTable.isShowing()) {
+                adjustComumns();
+                configRowHeight();
+                invokeDrawColumnHeaders();
+            }
         }
     }
 

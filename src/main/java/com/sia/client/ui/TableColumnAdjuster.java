@@ -181,8 +181,15 @@ public class TableColumnAdjuster  {
 //        firstCol = table.columnAtPoint(p0);
 //        lastCol = table.columnAtPoint(p1);
 
-        firstCol= nonNegative(table.getColumnModel().getColumnIndexAtX(x));
-        lastCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x+width));
+        if ( 0 == lastRow) {
+            //table has no data, adjust all columns based on column headers
+            firstCol = 0;
+            lastCol = table.getColumnCount()-1;
+
+        } else {
+            firstCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x));
+            lastCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x + width));
+        }
 
 System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastRow+", col="+firstCol +"-"+lastCol+", x="+x+", y="+y+", width="+width+", height="+height+", table="+table.getName());
 
@@ -292,8 +299,8 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
 
         columnSizes.put(tableColumn, tableColumn.getWidth());
         if (table.getTableHeader() != null) {
-            //TODO suspicious call, see description of this method
-            table.getTableHeader().setResizingColumn(tableColumn);
+        //TODO    log("disable suspecious table.getTableHeader().setResizingColumn call --05/22/2021");
+//            table.getTableHeader().setResizingColumn(tableColumn);
         }
         //tableColumn.setWidth(width); // owen took this out and made it preferredwidth instead!
         tableColumn.setMinWidth(width);
