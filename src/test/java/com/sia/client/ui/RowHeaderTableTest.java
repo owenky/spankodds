@@ -14,8 +14,8 @@ import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
-public class RowHeaderTable extends JFrame {
-    public RowHeaderTable() {
+public class RowHeaderTableTest extends JFrame {
+    public RowHeaderTableTest() {
         super("Row Header Test");
         setSize(300, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -96,7 +96,7 @@ public class RowHeaderTable extends JFrame {
     }
 
     public static void main(String args[]) {
-        RowHeaderTable rht = new RowHeaderTable();
+        RowHeaderTableTest rht = new RowHeaderTableTest();
         rht.setVisible(true);
     }
 }
