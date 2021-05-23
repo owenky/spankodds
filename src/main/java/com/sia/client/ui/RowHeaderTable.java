@@ -4,6 +4,7 @@ import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -25,6 +26,9 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
+	public void optimizeSize() {
+		getParent().setPreferredSize(getPreferredSize());
 	}
 	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
@@ -175,5 +179,13 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 	@Override
 	public String toString() {
 		return getName();
+	}
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		super.tableChanged(e);
+		if ( (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) &&  null != mainTable  ) {
+			//super method discard row model, need to re-config row height
+			mainTable.configRowHeight();
+		}
 	}
 }
