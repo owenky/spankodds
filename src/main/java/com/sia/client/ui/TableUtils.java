@@ -30,7 +30,7 @@ public abstract class TableUtils {
         tableScrollPane.setRowHeaderView(rowHeaderTable);
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());
 
-        JPanel container = new JPanel();
+        TableScrollPaneContaine container = new TableScrollPaneContaine(mainTable);
         container.setLayout(new BorderLayout());
         container.add(tableScrollPane,BorderLayout.CENTER);
         container.add(tableScrollPane.getHorizontalScrollBar(),BorderLayout.SOUTH);
@@ -58,5 +58,23 @@ public abstract class TableUtils {
         rtn.setPreferredWidth(sourceTc.getPreferredWidth());
         rtn.setResizable(sourceTc.getResizable());
         return rtn;
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static class  TableScrollPaneContaine extends JPanel {
+
+        private final ColumnCustomizableTable<?> mainTable;
+        private boolean firstShown = false;
+        public TableScrollPaneContaine(ColumnCustomizableTable<?> mainTable) {
+            this.mainTable = mainTable;
+        }
+        @Override
+        public void setVisible(boolean visible) {
+            if ( visible && ! firstShown) {
+                mainTable.configRowHeight();
+                mainTable.getRowHeaderTable().optimizeSize();
+                firstShown = true;
+            }
+            super.setVisible(visible);
+        }
     }
 }
