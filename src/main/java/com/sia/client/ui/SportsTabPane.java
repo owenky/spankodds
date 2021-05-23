@@ -57,20 +57,14 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             loadlabel.setOpaque(true);
             //loadgif = new ImageIcon(ImageIO.read(getClass().getResource("loader2.gif")));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log(ex);
         }
 
-        System.out.println("initializing tabs");
         AppController.addTabPane(this);
-
-        System.out.println("initializing tabs2");
-
-        System.out.println("initializing tabs3");
-
         addListeners();
 
         List<String> maintabs = AppController.getMainTabVec();
-        System.out.println(maintabs);
+        log(String.valueOf(maintabs));
         for (int i = 0; i < maintabs.size(); i++) {
             String title = maintabs.get(i);
             String img = "";
@@ -113,7 +107,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             boolean showextra = true;
             boolean showprops = true;
             String msstring = (String) customtabs.elementAt(i);
-            System.out.println("customtab=" + msstring);
+            log("customtab=" + msstring);
             String[] items = msstring.split("\\*");
             Vector customheaders = new Vector();
             for (int j = 0; j < items.length; j++) {
@@ -149,25 +143,13 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             MainScreen msnew = new MainScreen(name, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
             addTab(name, null, msnew, name);
         }
-        //addTab(null,null,null,null);
-				/*	JButton plus=new JButton("+");
-					plus.addActionListener(new ActionListener() { 
-							public void actionPerformed(ActionEvent e) { 
-							new CustomTab2();
-							
-							}
-					});
-					Color clr = new Color(237, 237, 235);
-					plus.setBackground(clr);
-					JPanel p=new JPanel();
-					p.add(plus);*/
         addTab("+", null, null, "+");
 
         //plus.setPreferredSize(new Dimension(30, 20));
         //setTabComponentAt(getTabCount() - 1, p);
         //setSelectedIndex(getTabCount() - 1);
 
-        System.out.println("initializing tabs9");
+        log("initializing tabs9");
         //com.sia.client.ui.AppController.doneloadinginitial();
 
 
@@ -183,11 +165,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 previousTabIndex = currentTabIndex;
                 currentTabIndex = thispane.getSelectedIndex();
 
-                System.out.print(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
-                System.out.print(" Previous tab is:" + previousTabIndex);
+                log(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
+                log(" Previous tab is:" + previousTabIndex);
                 if (thispane.getTabCount() > 1 && currentTabIndex == thispane.getTabCount() - 1) {
                     checkAndRunInEDT(() -> {
-                        System.out.println(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
+                        log(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
                         new CustomTab2();
 
                     });
@@ -297,6 +279,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         });
 
     }
+
     public boolean isTabNameAvailable(String name) {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
@@ -308,6 +291,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
         return true;
     }
+
     //TODO, use reference to MainScreen instead of loop through Component, also  ms.addGame(g, repaint) might no tbe added to the MainScreen if it does not belogn to this MainScreen --05/01/2021
     public void addGame(Game g, boolean repaint)    // only gets called when adding new game into system
     {
@@ -315,7 +299,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
 
-            if ( c instanceof MainScreen) {
+            if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 ms.addGame(g, repaint);
             }
@@ -323,13 +307,13 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     }
 
-    public void removeGame(int gameid,boolean repaint) {
+    public void removeGame(int gameid, boolean repaint) {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            if ( c instanceof MainScreen) {
+            if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                if ( null != ms.removeGame(gameid,repaint) ) {
+                if (null != ms.removeGame(gameid, repaint)) {
                     break;
                 }
             }
@@ -354,7 +338,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            if ( c instanceof MainScreen) {
+            if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 ms.removeGames(gameids);
             }
@@ -366,9 +350,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            if ( c instanceof MainScreen) {
+            if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                if ( ms.moveGameToThisHeader(g, header) ) {
+                if (ms.moveGameToThisHeader(g, header)) {
                     break;
                 }
             }
@@ -431,12 +415,13 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         thisms.destroyMe();
 
     }
+
     public List<LinesTableData> getAllDataModels() {
         int totalTabs = getTabCount();
         List<LinesTableData> v = new ArrayList<>();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            if ( c instanceof MainScreen) {
+            if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 MainGameTableModel model = ms.getDataModels();
                 model.copyTo(v);
