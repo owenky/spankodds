@@ -6,6 +6,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
@@ -18,16 +19,22 @@ public abstract class TableUtils {
         mainTable.removeLockedColumnIndex(lockedColumnBoundaryIndex);
         mainTable.createUnlockedColumns();
 //        mainTable.setPreferredScrollableViewportSize(mainTable.getPreferredSize());
-
         mainTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF ); //necessary for horizontal scroll bar showing up.
+
+
         RowHeaderTable<V> rowHeaderTable = mainTable.getRowHeaderTable();
         rowHeaderTable.createDefaultColumnsFromModel();
         rowHeaderTable.getTableHeader().setFont(mainTable.getTableHeader().getFont());
+        // Put rowHeaderTable in a viewport that we can control.
+        JViewport jv = new JViewport();
+        jv.setView(rowHeaderTable);
+        jv.setPreferredSize(rowHeaderTable.getMaximumSize());
+
 
         JScrollPane tableScrollPane = mainTable.getTableScrollPane();
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.getVerticalScrollBar().setUnitIncrement(29);
-        tableScrollPane.setRowHeaderView(rowHeaderTable);
+        tableScrollPane.setRowHeader(jv);
         tableScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,rowHeaderTable.getTableHeader());
 
         TableScrollPaneContaine container = new TableScrollPaneContaine(mainTable);

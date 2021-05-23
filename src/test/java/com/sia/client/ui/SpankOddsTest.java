@@ -15,7 +15,7 @@ public class SpankOddsTest {
 
     private static final int testMainTableLastLockedColumnIndex = 3;
     private static final TestGameCache testGameCache = new TestGameCache();
-    private static final int secCount = 20;
+    private static final int secCount = 100;
     private static final int rowCount = 5;
 
     public static void main(String[] argv) {
@@ -35,9 +35,8 @@ public class SpankOddsTest {
         }
         jFrame.getContentPane().add(tabbedPane);
 
-        jFrame.setPreferredSize(new Dimension(1500, 800));
+        jFrame.setSize(new Dimension(1500, 800));
         jFrame.setLocation(new Point(250,100));
-        jFrame.pack();
         jFrame.setVisible(true);
         autoUpdateTableData(tbleProps);
     }
