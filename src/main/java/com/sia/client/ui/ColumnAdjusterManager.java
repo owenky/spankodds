@@ -1,7 +1,5 @@
 package com.sia.client.ui;
 
-import javax.swing.JComponent;
-
 public class ColumnAdjusterManager {
 
     private final ColumnCustomizableTable<?> mainTable;
@@ -18,8 +16,8 @@ public class ColumnAdjusterManager {
     public void adjustColumns(boolean includeHeaders) {
         getMainTableColumnAdjuster().adjustColumns(includeHeaders);
         getRowHeaderTableColumnAdjuster().adjustColumns(includeHeaders);
-        JComponent rowHeaderTable = mainTable.getRowHeaderTable();
-        rowHeaderTable.getParent().setPreferredSize(rowHeaderTable.getPreferredSize());
+        RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
+        rowHeaderTable.optimizeSize();
     }
     public void adjustColumnsOnRows(Integer ... gameIds) {
         getMainTableColumnAdjuster().adjustColumnsOnRow(gameIds);
