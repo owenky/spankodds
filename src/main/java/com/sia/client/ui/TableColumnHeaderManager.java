@@ -56,8 +56,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
-        String tableName = mainTable.getName();
-        boolean showing = mainTable.isShowing();
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
 //            if (source == mainTable && !isMainTableShown.get() && mainTable.isShowing()) {
@@ -83,17 +81,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.repaint();
     }
     private void configRowHeight() {
-        ColumnHeaderProvider<V> columnHeaderProvider = mainTable.getModel().getColumnHeaderProvider();
-        for(int rowViewIndex=0;rowViewIndex<mainTable.getRowCount();rowViewIndex++) {
-            int rowModelIndex = mainTable.convertRowIndexToModel(rowViewIndex);
-            int rowHeight;
-            if ( null == columnHeaderProvider.getColumnHeaderAt(rowModelIndex)) {
-                rowHeight = mainTable.getRowHeight();
-            } else {
-                rowHeight = columnHeaderProvider.getColumnHeaderHeight();
-            }
-            mainTable.setRowHeight(rowViewIndex, rowHeight);
-        }
+       mainTable.configRowHeight();
     }
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
         ColumnHeaderProvider<V> columnHeaderProvider = mainTable.getModel().getColumnHeaderProvider();
