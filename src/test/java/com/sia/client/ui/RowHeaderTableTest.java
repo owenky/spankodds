@@ -15,16 +15,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 public class RowHeaderTableTest extends JFrame {
+    private static final int colCount = 47;
+    private static final int rowCount = 1000;
     public RowHeaderTableTest() {
         super("Row Header Test");
-        setSize(300, 200);
+        setSize(1500, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         TableModel tm = new AbstractTableModel() {
-            String data[] = {"", "a", "b", "c", "d", "e"};
-            String headers[] = {"Row #", "Column 1", "Column 2", "Column 3", "Column 4", "Column 5"};
+            String data[] = createDataPrefix(colCount);
+            String headers[] = createColumnTitles(colCount);
 
             public int getRowCount() {
-                return 1000;
+                return rowCount;
             }
 
             public int getColumnCount() {
@@ -94,7 +96,22 @@ public class RowHeaderTableTest extends JFrame {
         jsp.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, headerColumn.getTableHeader());
         getContentPane().add(jsp, BorderLayout.CENTER);
     }
-
+    private static String [] createColumnTitles(int colCount) {
+        String [] columns = new String [colCount];
+        for(int i=1;i<colCount;i++) {
+            columns[i]="Column "+i;
+        }
+        columns[0] = "Row #";
+        return columns;
+    }
+    private static String [] createDataPrefix(int colCount) {
+        String [] dataPrefix = new String [colCount];
+        for(int i=1;i<colCount;i++) {
+            dataPrefix[i]="col"+i;
+        }
+        dataPrefix[0] = "";
+        return dataPrefix;
+    }
     public static void main(String args[]) {
         RowHeaderTableTest rht = new RowHeaderTableTest();
         rht.setVisible(true);
