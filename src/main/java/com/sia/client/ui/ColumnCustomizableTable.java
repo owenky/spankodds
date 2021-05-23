@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
@@ -33,7 +34,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private JScrollPane tableScrollPane;
     private ColumnAdjusterManager columnAdjusterManager;
     private ColumnHeaderCellRenderer headerCellRenderer;
-    private TableColumnHeaderManager tableColumnHeaderManager;
+    private TableColumnHeaderManager<V> tableColumnHeaderManager;
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
@@ -54,10 +55,23 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return marginProvider;
     }
-
-    public TableColumnHeaderManager getTableColumnHeaderManager() {
+    public void configRowHeight() {
+        ColumnHeaderProvider<V> columnHeaderProvider = getModel().getColumnHeaderProvider();
+        int rowCount = getRowCount();
+        for(int rowViewIndex=0;rowViewIndex<rowCount;rowViewIndex++) {
+            int rowModelIndex = convertRowIndexToModel(rowViewIndex);
+            int rowHeight;
+            if ( null == columnHeaderProvider.getColumnHeaderAt(rowModelIndex)) {
+                rowHeight = getRowHeight();
+            } else {
+                rowHeight = columnHeaderProvider.getColumnHeaderHeight();
+            }
+            setRowHeight(rowViewIndex, rowHeight);
+        }
+    }
+    public TableColumnHeaderManager<V> getTableColumnHeaderManager() {
         if ( null == tableColumnHeaderManager) {
-            tableColumnHeaderManager = new TableColumnHeaderManager(this);
+            tableColumnHeaderManager = new TableColumnHeaderManager<>(this);
         }
         return tableColumnHeaderManager;
     }
@@ -199,6 +213,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);
+        //to prevent this method called from constructor.super, need condition null != rowHeaderTable
+        if (( e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW ) && null != rowHeaderTable ) {
+            //super method discard row model, need to re-config row height
+            configRowHeight();
+        }
         if ( null != tableChangedListener) {
             tableChangedListener.tableChanged(e);
         }
