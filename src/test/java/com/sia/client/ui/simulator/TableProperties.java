@@ -21,7 +21,8 @@ public class TableProperties {
 
         TableProperties rtn = new TableProperties() ;
         rtn.testGameCache = testGameCache;
-        rtn.table = new ColumnCustomizableTable<TestGame>(false,makeColumns(colCount)) {
+        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(makeColumns(colCount));
+        rtn.table = new ColumnCustomizableTable<TestGame>(false,tm) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -32,11 +33,6 @@ public class TableProperties {
                         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                     }
                 };
-            }
-
-            @Override
-            public ColumnCustomizableDataModel<TestGame> createModel(Vector<TableColumn> allColumns) {
-                return new TestDataModel(allColumns);
             }
         };
         JTableHeader tableHeader = rtn.table.getTableHeader();
