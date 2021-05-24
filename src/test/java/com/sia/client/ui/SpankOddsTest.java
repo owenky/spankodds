@@ -8,6 +8,7 @@ import com.sia.client.ui.simulator.TestGameCache;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 
@@ -23,17 +24,16 @@ public class SpankOddsTest {
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TableProperties [] tbleProps  = new TableProperties[3];
-        tbleProps[0] = TableProperties.of(testGameCache,secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
-        tbleProps[1] = TableProperties.of(testGameCache,secCount,rowCount,1,TestGameCache.colCount,1);
-        tbleProps[2] = TableProperties.of(testGameCache,0,0,1,TestGameCache.colCount,2);
-
+        TableProperties tbleProps0 = TableProperties.of(testGameCache,secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
+        TableProperties tbleProps1 = TableProperties.of(testGameCache,secCount,rowCount,1,TestGameCache.colCount,1);
+        TableProperties tbleProps2 = TableProperties.of(testGameCache,0,0,1,TestGameCache.colCount,2);
+        TableProperties [] tbleProps  = new TableProperties [] {tbleProps0};
 
         JTabbedPane tabbedPane = new JTabbedPane();
         for(TableProperties tblProp:tbleProps) {
             tabbedPane.addTab(tblProp.table.getName(), tblProp.tableContainer);
         }
-        jFrame.getContentPane().add(tabbedPane);
+        jFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.setLocation(new Point(250,100));
