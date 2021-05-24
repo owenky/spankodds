@@ -24,6 +24,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,9 +38,11 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private boolean isAdjustingColumn = false;
     private final Set<Object> drawnHeaderValues = new HashSet<>();
     private int horizontalScrollBarAdjustmentValue;
+    private final PropertyChangeListener rowHeightConfigListener;
 
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
+        rowHeightConfigListener = (e)-> mainTable.configRowHeight();
     }
 
     public void installListeners() {
@@ -50,6 +53,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.setTableChangedListener(this);
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
         mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
+        //after sorting, rowModel is set to null, need to re-configure row height
+        mainTable.addPropertyChangeListener("rowSorter", rowHeightConfigListener);
     }
     public boolean isColumnHeaderDrawn(Object columnHeaderValue) {
         return drawnHeaderValues.contains(columnHeaderValue);
