@@ -47,8 +47,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
                 ColumnHeaderDrawer columnHeaderDrawer = (ColumnHeaderDrawer)table;
                 if ( ! columnHeaderDrawer.isColumnHeaderDrawn(headValue)) {
                     columnHeaderDrawer.drawColumnHeaderOnViewIndex(row,headValue);
-                    //slow down table rendering
-//                    table.setRowHeight(row,headerProp.columnHeaderHeight);
                 }
             }
             return headerCellRender;
