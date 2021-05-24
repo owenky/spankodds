@@ -1,29 +1,25 @@
-package com.sia.client.ui;
-
-import com.sia.client.config.SiaConst;
+package com.sia.client.ui.example;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 
 public class RowHeaderTableTest extends JFrame {
-    private static final int colCount = 47;
-    private static final int rowCount = 1000;
-    private static final int headerRowHeight = 20;
-    private static final TestTableCellRenderer TABLE_CELL_RENDERER = new TestTableCellRenderer();
+    public static final int colCount = 47;
+    public static final int rowCount = 1000;
+    public static final int headerRowHeight = 20;
 
     public RowHeaderTableTest() {
         super("Row Header Test");
@@ -79,19 +75,9 @@ public class RowHeaderTableTest extends JFrame {
                 // Drop the rest of the columns; this is the header column only.
             }
         };
-        JTable jt = new JTable(tm, cm) {
-            @Override
-            public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
-                return TABLE_CELL_RENDERER;
-            }
-        };
+        JTable jt = new TestMainTable(tm, cm);
         // Set up the header column and hook it up to everything.
-        JTable headerColumn = new JTable(tm, rowHeaderModel) {
-            @Override
-            public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
-                return TABLE_CELL_RENDERER;
-            }
-        };
+        JTable headerColumn = new TestRHTable(tm, rowHeaderModel);
         jt.createDefaultColumnsFromModel();
         headerColumn.createDefaultColumnsFromModel();
         // Make sure that selections between the main table and the header stay in sync     // (by sharing the same model).
@@ -111,10 +97,20 @@ public class RowHeaderTableTest extends JFrame {
         // pane keeps them in sync.
         configureRowHeight(jt);
         configureRowHeight(headerColumn);
+
+
         JScrollPane jsp = new JScrollPane(jt);
         jsp.setRowHeader(jv);
         jsp.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, headerColumn.getTableHeader());
-        getContentPane().add(jsp, BorderLayout.CENTER);
+
+        JPanel mainContainer = new JPanel();
+        mainContainer.setLayout(new BorderLayout());
+        mainContainer.add(jsp,BorderLayout.CENTER);
+        mainContainer.add(jsp.getHorizontalScrollBar(),BorderLayout.SOUTH);
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.add("Pane 1",mainContainer);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
     }
 
     private static String[] createDataPrefix(int colCount) {
@@ -148,22 +144,5 @@ public class RowHeaderTableTest extends JFrame {
     public static void main(String args[]) {
         RowHeaderTableTest rht = new RowHeaderTableTest();
         rht.setVisible(true);
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    private static class TestTableCellRenderer extends DefaultTableCellRenderer {
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
-
-            Component rtn = super.getTableCellRendererComponent(table,value, isSelected, hasFocus,row, column);
-            if (table.getRowHeight(row) == headerRowHeight) {
-                rtn.setBackground(SiaConst.DefaultHeaderColor);
-            } else {
-                rtn.setBackground(Color.lightGray);
-            }
-            return rtn;
-        }
     }
 }
