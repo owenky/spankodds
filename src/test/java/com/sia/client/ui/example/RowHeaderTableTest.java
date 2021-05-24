@@ -8,9 +8,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
@@ -25,56 +22,13 @@ public class RowHeaderTableTest extends JFrame {
         super("Row Header Test");
         setSize(1500, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        TableModel tm = new AbstractTableModel() {
-            String data[] = createDataPrefix(colCount);
-            String headers[] = createColumnTitles(colCount);
-
-            public int getRowCount() {
-                return rowCount;
-            }
-
-            public int getColumnCount() {
-                return data.length;
-            }
-
-            // Synthesize some entries using the data values and the row number.
-            public Object getValueAt(int row, int col) {
-                return data[col] + row;
-            }
-
-            public String getColumnName(int col) {
-                return headers[col];
-            }
-        };
+        TableModel tm = new TestMainTableModel();
         // Create a column model for the main table. This model ignores the first
         // column added and sets a minimum width of 150 pixels for all others.
-        TableColumnModel cm = new DefaultTableColumnModel() {
-            boolean first = true;
-
-            public void addColumn(TableColumn tc) {
-                // Drop the first column, which will be the row header.
-                if (first) {
-                    first = false;
-                    return;
-                }
-                tc.setMinWidth(150);  // Just for looks, really...
-                super.addColumn(tc);
-            }
-        };
+        TableColumnModel cm = new TestMainTableColumnModel();
         // Create a column model that will serve as our row header table. This model
         // picks a maximum width and stores only the first column.
-        TableColumnModel rowHeaderModel = new DefaultTableColumnModel() {
-            boolean first = true;
-
-            public void addColumn(TableColumn tc) {
-                if (first) {
-                    tc.setMaxWidth(tc.getPreferredWidth());
-                    super.addColumn(tc);
-                    first = false;
-                }
-                // Drop the rest of the columns; this is the header column only.
-            }
-        };
+        TableColumnModel rowHeaderModel = new TestRowHeaderColumnModel();
         JTable jt = new TestMainTable(tm, cm);
         // Set up the header column and hook it up to everything.
         JTable headerColumn = new TestRHTable(tm, rowHeaderModel);
@@ -112,25 +66,6 @@ public class RowHeaderTableTest extends JFrame {
         tabbedPane.add("Pane 1",mainContainer);
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
     }
-
-    private static String[] createDataPrefix(int colCount) {
-        String[] dataPrefix = new String[colCount];
-        for (int i = 1; i < colCount; i++) {
-            dataPrefix[i] = "col" + i;
-        }
-        dataPrefix[0] = "";
-        return dataPrefix;
-    }
-
-    private static String[] createColumnTitles(int colCount) {
-        String[] columns = new String[colCount];
-        for (int i = 1; i < colCount; i++) {
-            columns[i] = "Column " + i;
-        }
-        columns[0] = "Row #";
-        return columns;
-    }
-
     private static void configureRowHeight(JTable table) {
         for (int i = 0; i < rowCount; i++) {
             if (i % 5 == 0) {
