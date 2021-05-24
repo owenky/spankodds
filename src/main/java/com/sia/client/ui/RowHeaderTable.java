@@ -1,16 +1,14 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.KeyedObject;
+import com.sia.client.model.TableCellRendererProvider;
 
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import java.awt.Component;
 import java.util.List;
 
 public class RowHeaderTable<V extends KeyedObject> extends JTable {
@@ -45,23 +43,12 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 	@Override
 	public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
 		if ( null == headerCellRenderer) {
-//			TableCellRendererProvider tableCellRendererProvider = (rViewIndex, cViewIndex)-> {
-//				int colModelIndex = RowHeaderTable.this.convertColumnIndexToModel(cViewIndex);
-//				int colDataModelIndex = mainTable.getLockedColumns().get(colModelIndex);
-//				return mainTable.getUserCellRenderer(rViewIndex,colDataModelIndex);
-//			};
-//			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getModel().getColumnHeaderProvider(),mainTable.getMarginProvider());
-			headerCellRenderer = new TableCellRenderer() {
-
-				@Override
-				public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
-					JPanel rtn = new JPanel();
-					if ( table.getRowHeight(row)==20){
-						rtn.setBackground(SiaConst.DefaultHeaderColor);
-					}
-					return rtn;
-				}
+			TableCellRendererProvider tableCellRendererProvider = (rViewIndex, cViewIndex)-> {
+				int colModelIndex = RowHeaderTable.this.convertColumnIndexToModel(cViewIndex);
+				int colDataModelIndex = mainTable.getLockedColumns().get(colModelIndex);
+				return mainTable.getUserCellRenderer(rViewIndex,colDataModelIndex);
 			};
+			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getModel().getColumnHeaderProvider(),mainTable.getMarginProvider());
 		}
 		return headerCellRenderer;
 	}

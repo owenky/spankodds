@@ -38,7 +38,7 @@ public class SpankOddsTest {
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.setLocation(new Point(250,100));
         jFrame.setVisible(true);
-        autoUpdateTableData(tbleProps);
+//        autoUpdateTableData(tbleProps);
     }
     private static void autoUpdateTableData(TableProperties [] tblProps) {
         final EventGenerator eventGenerator;

@@ -6,6 +6,7 @@ import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.Border;
@@ -23,14 +24,18 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private static final Border userRenderBorderNormal = new MatteBorder(0, 0, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick, 1, userRenderBorderColr);
-    private final ColumnHeaderProvider columnHeaderProvider;
+    private final ColumnHeaderProvider<?> columnHeaderProvider;
     private final TableCellRendererProvider tableCellRendererProvider;
     private final MarginProvider marginProvider;
+    private final JLabel headerCellRender = new JLabel();
 
-    public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProvider columnHeaderProvider, MarginProvider marginProvider) {
+    public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProvider<?> columnHeaderProvider, MarginProvider marginProvider) {
         this.tableCellRendererProvider = tableCellRendererProvider;
         this.columnHeaderProvider = columnHeaderProvider;
         this.marginProvider = marginProvider;
+        this.headerCellRender.setOpaque(true);
+        this.headerCellRender.setBackground(columnHeaderProvider.getHeaderBackground());
+        this.headerCellRender.setBorder(BorderFactory.createEmptyBorder());
     }
 
     @Override
@@ -38,9 +43,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         int rowModelIndex = table.convertRowIndexToModel(row);
         Object headValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
         if ( null != headValue) {
-            JPanel render = new JPanel();
-            render.setBackground(columnHeaderProvider.getHeaderBackground());
-            render.setBorder(BorderFactory.createEmptyBorder());
             if ( table instanceof ColumnHeaderDrawer) {
                 ColumnHeaderDrawer columnHeaderDrawer = (ColumnHeaderDrawer)table;
                 if ( ! columnHeaderDrawer.isColumnHeaderDrawn(headValue)) {
@@ -49,7 +51,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 //                    table.setRowHeight(row,headerProp.columnHeaderHeight);
                 }
             }
-            return render;
+            return headerCellRender;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         return createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
