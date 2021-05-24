@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.simulator.ColumnWidthAdjuster;
 import com.sia.client.ui.simulator.EventGenerator;
+import com.sia.client.ui.simulator.NewGameCreator;
 import com.sia.client.ui.simulator.TableProperties;
 import com.sia.client.ui.simulator.TestGameCache;
 
@@ -27,7 +27,7 @@ public class SpankOddsTest {
         TableProperties tbleProps0 = TableProperties.of(testGameCache,secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
         TableProperties tbleProps1 = TableProperties.of(testGameCache,secCount,rowCount,1,TestGameCache.colCount,1);
         TableProperties tbleProps2 = TableProperties.of(testGameCache,0,0,1,TestGameCache.colCount,2);
-        TableProperties [] tbleProps  = new TableProperties [] {tbleProps0};
+        TableProperties [] tbleProps  = new TableProperties [] {tbleProps0,tbleProps1,tbleProps2};
 
         JTabbedPane tabbedPane = new JTabbedPane();
         for(TableProperties tblProp:tbleProps) {
@@ -38,12 +38,12 @@ public class SpankOddsTest {
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.setLocation(new Point(250,100));
         jFrame.setVisible(true);
-//        autoUpdateTableData(tbleProps);
+        autoUpdateTableData(tbleProps);
     }
     private static void autoUpdateTableData(TableProperties [] tblProps) {
         final EventGenerator eventGenerator;
-//            eventGenerator = new NewGameCreator();
-            eventGenerator = new ColumnWidthAdjuster();
+            eventGenerator = new NewGameCreator();
+//            eventGenerator = new ColumnWidthAdjuster();
 //            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
 //            eventGenerator = new GameMover();
