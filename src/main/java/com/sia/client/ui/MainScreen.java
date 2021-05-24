@@ -1303,7 +1303,7 @@ public class MainScreen extends JPanel {
 
     }
     private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable(allColumns);
+        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(allColumns));
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
