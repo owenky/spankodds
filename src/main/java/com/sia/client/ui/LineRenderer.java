@@ -52,23 +52,6 @@ public class LineRenderer extends LinePanel implements TableCellRenderer {
         } else if (value instanceof HeaderView) {
             setHeader((HeaderView) value, row, column);
         }
-//        this.setBackground(getBackgroundColor());
         return this;
     }
-//    private Color getBackgroundColor() {
-//        Color bg=null;
-//        Component [] children = getComponents();
-//        for(Component c: children) {
-//            Color cBg = c.getBackground();
-//            if (! cBg.equals(Color.RED) && ! cBg.equals(Color.BLACK)) {
-//                bg = cBg;
-//                break;
-//            }
-//        }
-//
-//        if ( null == bg) {
-//            bg = children[0].getBackground();
-//        }
-//        return bg;
-//    }
 }
