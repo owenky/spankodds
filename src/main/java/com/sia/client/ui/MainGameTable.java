@@ -6,23 +6,19 @@ import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import java.util.Vector;
 
 public class MainGameTable extends ColumnCustomizableTable<Game> implements LinesTableDataSupplier {
 
     private boolean isSoccer=false;
+    private final LineRenderer soccerLineRenderer = new LineRenderer(SiaConst.SoccerStr);
+    private final LineRenderer lineRenderer = new LineRenderer();
 
-    public MainGameTable(Vector<TableColumn> allColumns) {
-        super(false,allColumns);
+    public MainGameTable(MainGameTableModel tm) {
+        super(false,tm);
     }
     @Override
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
-    }
-    @Override
-    public MainGameTableModel createModel(Vector<TableColumn> allColumns) {
-        return new MainGameTableModel(allColumns);
     }
     @Override
     public MainGameTableModel getModel() {
@@ -31,9 +27,9 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     @Override
     public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colViewIndex) {
         if (isSoccer) {
-            return new LineRenderer(SiaConst.SoccerStr);
+            return soccerLineRenderer;
         } else {
-            return new LineRenderer();
+            return lineRenderer;
         }
     }
     @Override
