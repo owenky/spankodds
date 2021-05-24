@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnHeaderDrawer {
@@ -41,13 +40,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private TableModelListener tableChangedListener;
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
-    abstract public ColumnCustomizableDataModel<V> createModel(Vector<TableColumn> allColumns);
-    public ColumnCustomizableTable(boolean hasRowNumber, Vector<TableColumn> allColumns) {
+    public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
+        super(tm,new CustomizableTableColumnModel());
         this.hasRowNumber = hasRowNumber;
         this.setAutoCreateColumnsFromModel(true);
         instanceIndex = instanceCounter.addAndGet(1);
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
-        this.setModel(createModel(allColumns));
     }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
@@ -85,6 +83,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void setRowHeight(int rowHeight) {
         super.setRowHeight(rowHeight);
         getRowHeaderTable().setRowHeight(rowHeight);
+        //jtable::setRowHeight() set rowModel to null, need to config row height after this call.
+        configRowHeight();
     }
     @Override
     public void setRowHeight(int rowViewIndex,int rowHeight) {
@@ -214,35 +214,19 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);
         //to prevent this method called from constructor.super, need condition null != rowHeaderTable
-        if (( e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW ) && null != rowHeaderTable ) {
-            //super method discard row model, need to re-config row height
-            configRowHeight();
+        if ( isShowing()) {
+            if ((e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW  ) && null != rowHeaderTable) {
+                //super method discard row model, need to re-config row height
+                configRowHeight();
+            }
+            if (null != tableChangedListener) {
+                tableChangedListener.tableChanged(e);
+            }
         }
-        if ( null != tableChangedListener) {
-            tableChangedListener.tableChanged(e);
-        }
-//        if (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW && null != allColumns) {
-//            allColumns.clear();
-//            TableColumnModel tcm = this.getColumnModel();
-//            if (0 == tcm.getColumnCount()) {
-//                createDefaultColumnsFromModel();
-//                tcm = this.getColumnModel();
-//            }
-//            for (int i = 0; i < tcm.getColumnCount(); i++) {
-//                TableColumn tc = tcm.getColumn(i);
-//                tc.setModelIndex(allColumns.size());
-//                allColumns.add(tc);
-//            }
-//
-//        }
     }
     @Override
     public CustomizableTableColumnModel getColumnModel() {
         return (CustomizableTableColumnModel)super.getColumnModel();
-    }
-    @Override
-    public CustomizableTableColumnModel createDefaultColumnModel() {
-        return new CustomizableTableColumnModel();
     }
     @Override
     public ColumnCustomizableDataModel<V> getModel() {
