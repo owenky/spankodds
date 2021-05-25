@@ -78,7 +78,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private void adjustComumns() {
         Utils.ensureEdtThread();
         if ( ! isAdjustingColumn ) {
-            mainTable.adjustColumns(true);
+            mainTable.adjustColumns();
             isAdjustingColumn = false;
         }
     }
