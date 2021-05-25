@@ -47,6 +47,10 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         instanceIndex = instanceCounter.addAndGet(1);
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
     }
+    public void clear() {
+        this.getColumnAdjusterManager().clear();
+        getModel().clear();
+    }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
             marginProvider = ()-> new Dimension(getUserDefinedColumnMargin(),getUserDefinedRowMargin());
@@ -73,8 +77,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return tableColumnHeaderManager;
     }
-    public void adjustColumns(boolean includeHeaders) {
-        getColumnAdjusterManager().adjustColumns(includeHeaders);
+    public void adjustColumns() {
+        getColumnAdjusterManager().adjustColumns();
     }
     public void adjustColumnsOnRows(Integer ... gameIds) {
         getColumnAdjusterManager().adjustColumnsOnRows(gameIds);
@@ -246,12 +250,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             while (cm.getColumnCount() > 0) {
                 cm.removeColumn(cm.getColumn(0));
             }
-
-//            // Create new columns from the data model info
-//            for (int i = 0; i < m.getColumnCount(); i++) {
-//                TableColumn newColumn = new TableColumn(i) ;
-//                addColumn(newColumn);
-//            }
             createUnlockedColumns();
         }
     }
@@ -266,7 +264,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {
             columnAdjusterManager = new ColumnAdjusterManager(this);
-            columnAdjusterManager.setColumnHeaderIncluded(true);
         }
         return columnAdjusterManager;
     }
