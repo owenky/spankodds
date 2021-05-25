@@ -37,7 +37,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 //    private final AtomicBoolean isMainTableShown = new AtomicBoolean(false);
     private boolean isAdjustingColumn = false;
     private final Set<Object> drawnHeaderValues = new HashSet<>();
-    private int horizontalScrollBarAdjustmentValue;
+    private int horizontalScrollBarAdjustmentValue=Integer.MIN_VALUE;
     private final PropertyChangeListener rowHeightConfigListener;
 
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
@@ -47,6 +47,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     public void installListeners() {
         mainTable.addHierarchyListener(this);
+        mainTable.addComponentListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
 //        mainTable.getModel().addTableModelListener(this);
@@ -153,6 +154,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 //        if ( isMainTableShown.get() && ! isAdjustingColumn ) {
         if ( mainTable.isShowing() && ! isAdjustingColumn ) {
             drawnHeaderValues.clear();
+            adjustComumns();
         }
         isAdjustingColumn = false;
     }
@@ -164,12 +166,12 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void componentShown(final ComponentEvent e) {
-        invokeDrawColumnHeaders();
+//        invokeDrawColumnHeaders();
     }
 
     @Override
     public void componentHidden(final ComponentEvent e) {
-        invokeDrawColumnHeaders();
+//        invokeDrawColumnHeaders();
     }
 
     @Override
@@ -186,8 +188,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
 //        if ( isMainTableShown.get() ) {
-        if ( mainTable.isShowing()) {
-            if ( ! evt.getValueIsAdjusting()) {
+        if ( mainTable.isShowing() ) {
+            if ( ! evt.getValueIsAdjusting() && Integer.MIN_VALUE != horizontalScrollBarAdjustmentValue) {
                 adjustComumns();
             }
 
