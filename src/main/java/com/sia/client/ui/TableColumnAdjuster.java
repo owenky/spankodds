@@ -43,6 +43,10 @@ public class TableColumnAdjuster  {
     private int lastRow;
     private int firstCol;
     private int lastCol;
+    private int old_firstRow = Integer.MIN_VALUE;
+    private int old_lastRow = Integer.MIN_VALUE;
+    private int old_firstCol = Integer.MIN_VALUE;
+    private int old_lastCol = Integer.MIN_VALUE;
     private Map<TableColumn, Integer> columnSizes = new HashMap<>();
 
     /*
@@ -167,7 +171,7 @@ public class TableColumnAdjuster  {
      *  Adjust the widths of all the columns in the table
      *  return sum of preferred width of all columns
      */
-    public int adjustColumns(boolean includeheader) {
+    public void adjustColumns(boolean includeheader) {
         Rectangle visibleRect = table.getVisibleRect();
         int x = (int)visibleRect.getX();
         int width = (int)visibleRect.getWidth();
@@ -180,16 +184,13 @@ public class TableColumnAdjuster  {
         lastRow = nonNegative(table.rowAtPoint(p1));
 //        firstCol = table.columnAtPoint(p0);
 //        lastCol = table.columnAtPoint(p1);
+        firstCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x));
+        lastCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x + width));
 
-        if ( 0 == lastRow) {
-            //table has no data, adjust all columns based on column headers
-            firstCol = 0;
-            lastCol = table.getColumnCount()-1;
-
-        } else {
-            firstCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x));
-            lastCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x + width));
+        if ( ! isRegionChanged()) {
+            return;
         }
+
 
 System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastRow+", col="+firstCol +"-"+lastCol+", x="+x+", y="+y+", width="+width+", height="+height+", table="+table.getName());
 
@@ -199,12 +200,20 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
             throw new IllegalArgumentException("tcm is null!");
         }
  long begin=System.currentTimeMillis();
-        int totalColPrefWidth = 0;
         for (int i = firstCol; i <= lastCol; i++) {
-            totalColPrefWidth += adjustColumn(i);
+            adjustColumn(i);
         }
  log("TableColumnAdjuster::adjustColumns, update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
-        return totalColPrefWidth;
+    }
+    private boolean isRegionChanged() {
+        boolean isChanged = ( firstRow != old_firstRow || lastRow != old_lastRow || firstCol != old_firstCol || lastCol != old_lastCol);
+        if ( isChanged) {
+            old_firstRow = firstRow;
+            old_lastRow = lastRow;
+            old_firstCol = firstCol;
+            old_lastCol = lastCol;
+        }
+        return isChanged;
     }
     private static int nonNegative(int number) {
         return Math.max(0, number);
