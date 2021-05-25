@@ -25,7 +25,7 @@ public class TestGame implements KeyedObject {
         this.gameId = gameId;
         rowData = new ArrayList<>(colCount);
         for(int i = 0;i<colCount;i++) {
-            rowData.add(gameId+"_"+i);
+            rowData.add(gameId + "_" + i);
         }
     }
     public List<Object> getRowData() {
