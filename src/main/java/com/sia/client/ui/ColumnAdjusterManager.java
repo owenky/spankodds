@@ -9,13 +9,12 @@ public class ColumnAdjusterManager {
     public ColumnAdjusterManager(ColumnCustomizableTable<?> mainTable) {
         this.mainTable = mainTable;
     }
-    public void setColumnHeaderIncluded(boolean toInclude) {
-        getMainTableColumnAdjuster().setColumnHeaderIncluded(toInclude);
-        getRowHeaderTableColumnAdjuster().setColumnHeaderIncluded(toInclude);
+    public void clear() {
+        this.getMainTableColumnAdjuster().clear();
     }
-    public void adjustColumns(boolean includeHeaders) {
-        getMainTableColumnAdjuster().adjustColumns(includeHeaders);
-        getRowHeaderTableColumnAdjuster().adjustColumns(includeHeaders);
+    public void adjustColumns() {
+        getMainTableColumnAdjuster().adjustColumns();
+        getRowHeaderTableColumnAdjuster().adjustColumns();
         RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
         rowHeaderTable.optimizeSize();
     }
