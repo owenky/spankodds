@@ -35,19 +35,18 @@ import static com.sia.client.config.Utils.log;
 public class TableColumnAdjuster  {
     private final JTable table;
     private final MarginProvider marginProvider;
-    private boolean isColumnHeaderIncluded;
-    private boolean isColumnDataIncluded;
     private boolean isOnlyAdjustLarger;
     private boolean isDynamicAdjustment;
     private int firstRow;
     private int lastRow;
     private int firstCol;
     private int lastCol;
-    private int old_firstRow = Integer.MIN_VALUE;
-    private int old_lastRow = Integer.MIN_VALUE;
-    private int old_firstCol = Integer.MIN_VALUE;
-    private int old_lastCol = Integer.MIN_VALUE;
+    private int old_firstRow;
+    private int old_lastRow;
+    private int old_firstCol;
+    private int old_lastCol;
     private Map<TableColumn, Integer> columnSizes = new HashMap<>();
+    private Map<TableColumn, Integer> headerSizes = new HashMap<>();
 
     /*
      *  Specify the table and spacing
@@ -55,28 +54,17 @@ public class TableColumnAdjuster  {
     public TableColumnAdjuster(JTable table, MarginProvider marginProvider) {
         this.table = table;
         this.marginProvider = marginProvider;
-        setColumnHeaderIncluded(false);
-        //setColumnHeaderIncluded( true );
-        setColumnDataIncluded(true);
         setOnlyAdjustLarger(true);
         setDynamicAdjustment(true);
         installActions();
+        clear();
     }
-
-    /*
-     *	Indicates whether to include the header in the width calculation
-     */
-    public void setColumnHeaderIncluded(boolean isColumnHeaderIncluded) {
-        this.isColumnHeaderIncluded = isColumnHeaderIncluded;
+    public void clear() {
+        old_firstRow = Integer.MIN_VALUE;
+        old_lastRow = Integer.MIN_VALUE;
+        old_firstCol = Integer.MIN_VALUE;
+        old_lastCol = Integer.MIN_VALUE;
     }
-
-    /*
-     *	Indicates whether to include the model data in the width calculation
-     */
-    private void setColumnDataIncluded(boolean isColumnDataIncluded) {
-        this.isColumnDataIncluded = isColumnDataIncluded;
-    }
-
     /*
      *	Indicates whether columns can only be increased in size
      */
@@ -164,14 +152,6 @@ public class TableColumnAdjuster  {
      *  Adjust the widths of all the columns in the table
      */
     public void adjustColumns() {
-        adjustColumns(false);
-    }
-
-    /*
-     *  Adjust the widths of all the columns in the table
-     *  return sum of preferred width of all columns
-     */
-    public void adjustColumns(boolean includeheader) {
         Rectangle visibleRect = table.getVisibleRect();
         int x = (int)visibleRect.getX();
         int width = (int)visibleRect.getWidth();
@@ -185,7 +165,14 @@ public class TableColumnAdjuster  {
 //        firstCol = table.columnAtPoint(p0);
 //        lastCol = table.columnAtPoint(p1);
         firstCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x));
-        lastCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x + width));
+        lastCol = table.getColumnModel().getColumnIndexAtX(x + width);
+        if ( lastCol < 0 ) {
+            lastCol = table.getColumnCount()-1;
+        }
+        if ( 0 == firstRow && 0 == lastRow ) {
+            firstCol=0;
+            lastCol = table.getColumnCount()-1;
+        }
 
         if ( ! isRegionChanged()) {
             return;
@@ -194,7 +181,6 @@ public class TableColumnAdjuster  {
 
 System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastRow+", col="+firstCol +"-"+lastCol+", x="+x+", y="+y+", width="+width+", height="+height+", table="+table.getName());
 
-        setColumnHeaderIncluded(includeheader);
         TableColumnModel tcm = table.getColumnModel();
         if (tcm == null) {
             throw new IllegalArgumentException("tcm is null!");
@@ -241,30 +227,26 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
      *  Calculated the width based on the column name
      */
     private int getColumnHeaderWidth(int column) {
-        //TODO no need for this check because we use big table, header is not table0 any more.
-//        if (!isColumnHeaderIncluded) {
-//            return 0;
-//        }
-
-
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
-        Object value = tableColumn.getHeaderValue();
-        if (value == null) {
-            return 0;
-        }
-        TableCellRenderer renderer = tableColumn.getHeaderRenderer();
-
-        if (renderer == null) {
-            if (table.getTableHeader() == null) {
+        int headerWidth = headerSizes.computeIfAbsent(tableColumn,tc->{
+            Object value = tc.getHeaderValue();
+            if (value == null) {
                 return 0;
             }
-            renderer = table.getTableHeader().getDefaultRenderer();
-        }
+            TableCellRenderer renderer = tc.getHeaderRenderer();
 
-        Component c = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
-        int columnWidth = c.getPreferredSize().width+ (int) marginProvider.get().getWidth()*2;
-        return Math.max(columnWidth, tableColumn.getPreferredWidth());
-        //return 45;
+            if (renderer == null) {
+                if (table.getTableHeader() == null) {
+                    return 0;
+                }
+                renderer = table.getTableHeader().getDefaultRenderer();
+            }
+
+            Component c = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
+            int columnWidth = c.getPreferredSize().width+ (int) marginProvider.get().getWidth()*2;
+            return Math.max(columnWidth, tc.getPreferredWidth());
+        });
+        return headerWidth;
     }
 
     /*
@@ -272,7 +254,7 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
      *  given column.
      */
     private int getColumnDataWidth(int column) {
-        if (!isColumnDataIncluded || 0 == table.getRowCount()) {
+        if (  0 == table.getRowCount()) {
             return 0;
         }
 
