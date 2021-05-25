@@ -961,7 +961,7 @@ public class MainScreen extends JPanel {
     public void drawIt() {
 
         mainGameTable = getMainGameTable();
-        mainGameTable.getModel().clear();
+        mainGameTable.clear();
         Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -1270,10 +1270,10 @@ public class MainScreen extends JPanel {
         showheaders = b;
     }
 
-    public void adjustcols(boolean includeheader) {
-        mainGameTable.adjustColumns(includeheader);
+    public void adjustcols() {
+        mainGameTable.adjustColumns();
     }
-    public MainGameTable getMainGameTable() {
+    private MainGameTable getMainGameTable() {
         if ( null == mainGameTable ) {
             mainGameTable = createMainGameTable();
         }
