@@ -296,7 +296,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 //com.sia.client.ui.AppController.getLinesTableData().clearColors();
 
                 MainScreen ms = (MainScreen) stb.getSelectedComponent();
-                ms.adjustcols(true);
+                ms.adjustcols();
                 //getDataModel().clearColors();
 
             }
