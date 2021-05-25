@@ -16,6 +16,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 
 import static com.sia.client.config.Utils.log;
 
@@ -37,47 +38,25 @@ public class LinePanel extends JPanel {
     private final JLabel total;
 
     public LinePanel() {
-        super(new GridLayout(2, 0));
-        top = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        top.setHorizontalTextPosition(SwingConstants.RIGHT);
-        bottom = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        bottom.setHorizontalTextPosition(SwingConstants.RIGHT);
-        draw = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        draw.setHorizontalTextPosition(SwingConstants.RIGHT);
-        total = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        total.setHorizontalTextPosition(SwingConstants.RIGHT);
-        Font myfont = new Font("Arial", Font.PLAIN, 12);
-        top.setFont(myfont);
-        bottom.setFont(myfont);
-        draw.setFont(myfont);
-        total.setFont(myfont);
-        top.setOpaque(true);
-        bottom.setOpaque(true);
-        draw.setOpaque(true);
-        total.setOpaque(true);
-        this.setOpaque(true);
+        this(new GridLayout(2, 0),SwingConstants.RIGHT);
         add(top);
         add(bottom);
-
-
-        ToolTipManager.sharedInstance().setInitialDelay(5000);
-        ToolTipManager.sharedInstance().setDismissDelay(60000);
     }
 
     public LinePanel(String name) {
-        super(new GridLayout(4, 0));
+        this(new GridLayout(4, 0),SwingConstants.RIGHT);
         setName(name);
+        add(top);
+        add(bottom);
+        add(draw);
+        add(total);
+    }
+    protected LinePanel(LayoutManager layoutManager,int textAlignment) {
+        super(layoutManager);
         top = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        top.setHorizontalTextPosition(SwingConstants.RIGHT);
-
         bottom = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        bottom.setHorizontalTextPosition(SwingConstants.RIGHT);
-
         draw = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        draw.setHorizontalTextPosition(SwingConstants.RIGHT);
-
         total = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        total.setHorizontalTextPosition(SwingConstants.RIGHT);
 
         Font myfont = new Font("Arial", Font.PLAIN, 12);
         top.setFont(myfont);
@@ -89,18 +68,18 @@ public class LinePanel extends JPanel {
         bottom.setOpaque(true);
         draw.setOpaque(true);
         total.setOpaque(true);
+
+        top.setHorizontalTextPosition(textAlignment);
+        bottom.setHorizontalTextPosition(textAlignment);
+        draw.setHorizontalTextPosition(textAlignment);
+        total.setHorizontalTextPosition(textAlignment);
+
         this.setOpaque(true);
-        add(top);
-        add(bottom);
-
-        add(draw);
-        add(total);
-
 
         ToolTipManager.sharedInstance().setInitialDelay(5000);
         ToolTipManager.sharedInstance().setDismissDelay(60000);
-    }
 
+    }
     public void setSoccerLines(SoccerSpreadTotalView stv, int row, int col) {
 
         top.setIconTextGap(1);
