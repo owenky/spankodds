@@ -29,29 +29,32 @@ public class ColumnAdjustPreparer {
 
         Point p0 = new Point(x, y);
         Point p1 = new Point(x + width, y + height);
-        int firstRow = nonNegative(table.rowAtPoint(p0));
-        int lastRow = nonNegative(table.rowAtPoint(p1));
-//        firstCol = table.columnAtPoint(p0);
-//        lastCol = table.columnAtPoint(p1);
-        int firstCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x));
+        int firstRow = table.rowAtPoint(p0);
+        int lastRow = table.rowAtPoint(p1);
+        int firstCol = table.getColumnModel().getColumnIndexAtX(x);
         int lastCol = table.getColumnModel().getColumnIndexAtX(x + width);
-        if (lastCol < 0) {
-            lastCol = table.getColumnCount() - 1;
-        }
-        if (0 == firstRow && 0 == lastRow) {
-            firstCol = 0;
-            lastCol = table.getColumnCount() - 1;
-        }
 
         return calNewRegions(firstRow,lastRow,firstCol,lastCol);
     }
     private List<AdjustRegion> calNewRegions(int firstRow,int lastRow, int firstCol, int lastCol) {
         List<AdjustRegion> rtn = new ArrayList<>();
-        if ( max_calculate_row < 0) {
+
+        if ( 0 > max_calculate_row  ) {
+          firstCol = 0;
+          lastCol = table.getColumnCount()-1;
+          firstRow = 0;
+          if ( lastRow < 0) {
+              lastRow = 0;
+          }
+        }
+
+        if ( lastCol < 0) {
+            lastCol = table.getColumnCount()-1;
+        }
+
+        if ( 0>  max_calculate_row ) {
             AdjustRegion region = new AdjustRegion(firstRow,lastRow,firstCol,lastCol);
             rtn.add(region);
-            max_calculate_row = lastRow;
-            max_calculate_col = lastCol;
         } else if (lastCol > max_calculate_col ){
             int regionLastRow = Math.max(lastRow,max_calculate_row);
             AdjustRegion region1 = new AdjustRegion(firstRow,regionLastRow,max_calculate_col,lastCol);
@@ -69,9 +72,6 @@ public class ColumnAdjustPreparer {
         }
 
         return rtn;
-    }
-    private static int nonNegative(int number) {
-        return Math.max(0, number);
     }
 ///////////////////////////////////////////////////////////////////////////////
     public static class AdjustRegion {
