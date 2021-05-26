@@ -253,7 +253,7 @@ log("TableColumnAdjuster::adjustColumns, update "+adjustRegion+" took " + (Syste
      *  given column.
      */
     private int getColumnDataWidth(int column) {
-        if (0 == table.getRowCount()) {
+        if (0 == table.getRowCount() || 0 > lastRow || 0 > firstRow) {
             return 0;
         }
 
