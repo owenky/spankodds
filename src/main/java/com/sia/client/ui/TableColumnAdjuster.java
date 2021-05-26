@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.MarginProvider;
+import com.sia.client.ui.ColumnAdjustPreparer.AdjustRegion;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -10,8 +11,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.Component;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,21 +31,20 @@ import static com.sia.client.config.Utils.log;
  *  or more of the other columns must decrease. Because of this the resize mode
  *  of RESIZE_ALL_COLUMNS will work the best.
  */
-public class TableColumnAdjuster  {
+public class TableColumnAdjuster {
     private final JTable table;
     private final MarginProvider marginProvider;
+    private final Map<TableColumn, Integer> columnSizes = new HashMap<>();
+    private final Map<TableColumn, Integer> headerSizes = new HashMap<>();
     private boolean isOnlyAdjustLarger;
     private boolean isDynamicAdjustment;
     private int firstRow;
     private int lastRow;
     private int firstCol;
     private int lastCol;
-    private int old_firstRow;
-    private int old_lastRow;
-    private int old_firstCol;
-    private int old_lastCol;
-    private Map<TableColumn, Integer> columnSizes = new HashMap<>();
-    private Map<TableColumn, Integer> headerSizes = new HashMap<>();
+
+
+    private AdjustStatic adjustStatic = new AdjustStatic();
 
     /*
      *  Specify the table and spacing
@@ -60,10 +58,8 @@ public class TableColumnAdjuster  {
         clear();
     }
     public void clear() {
-        old_firstRow = Integer.MIN_VALUE;
-        old_lastRow = Integer.MIN_VALUE;
-        old_firstCol = Integer.MIN_VALUE;
-        old_lastCol = Integer.MIN_VALUE;
+        columnSizes.clear();
+        headerSizes.clear();
     }
     /*
      *	Indicates whether columns can only be increased in size
@@ -106,6 +102,9 @@ public class TableColumnAdjuster  {
         installToggleAction(true, false, "toggleDynamic", "control MULTIPLY");
         installToggleAction(false, true, "toggleLarger", "control DIVIDE");
     }
+
+
+
     /*
      *  Update the input and action maps with a new ColumnAction
      */
@@ -127,19 +126,19 @@ public class TableColumnAdjuster  {
         table.getInputMap().put(ks, key);
         table.getActionMap().put(key, action);
     }
-    private AdjustStatic adjustStatic = new AdjustStatic();
-    public void adjustColumnsOnRow(Integer ... rowModelIndice) {
+
+    public void adjustColumnsOnRow(Integer... rowModelIndice) {
         adjustStatic.start(rowModelIndice.length);
         TableColumnModel tcm = table.getColumnModel();
-        for(int colIndex=0;colIndex<tcm.getColumnCount();colIndex++) {
+        for (int colIndex = 0; colIndex < tcm.getColumnCount(); colIndex++) {
             int maxCellWidth = 0;
-            for(int rowModelIndex:rowModelIndice) {
+            for (int rowModelIndex : rowModelIndice) {
                 int cellWidth = this.getCellDataWidth(rowModelIndex, colIndex);
                 maxCellWidth = Math.max(maxCellWidth, cellWidth);
             }
             TableColumn tc = tcm.getColumn(colIndex);
-            if ( maxCellWidth > tc.getPreferredWidth()) {
-                this.updateTableColumn(colIndex,maxCellWidth);
+            if (maxCellWidth > tc.getPreferredWidth()) {
+                this.updateTableColumn(colIndex, maxCellWidth);
                 adjustStatic.addAdjustCount();
             } else {
                 adjustStatic.addSkipCount();
@@ -149,60 +148,61 @@ public class TableColumnAdjuster  {
     }
 
     /*
-     *  Adjust the widths of all the columns in the table
+     *  Get the preferred width for the specified cell
      */
-    public void adjustColumns() {
-        Rectangle visibleRect = table.getVisibleRect();
-        int x = (int)visibleRect.getX();
-        int width = (int)visibleRect.getWidth();
-        int y = (int)visibleRect.getY();
-        int height = (int)visibleRect.getHeight();
+    private int getCellDataWidth(int row, int column) {
 
-        Point p0 = new Point(x,y);
-        Point p1 = new Point(x+width,y+height);
-        firstRow = nonNegative(table.rowAtPoint(p0));
-        lastRow = nonNegative(table.rowAtPoint(p1));
-//        firstCol = table.columnAtPoint(p0);
-//        lastCol = table.columnAtPoint(p1);
-        firstCol = nonNegative(table.getColumnModel().getColumnIndexAtX(x));
-        lastCol = table.getColumnModel().getColumnIndexAtX(x + width);
-        if ( lastCol < 0 ) {
-            lastCol = table.getColumnCount()-1;
+        TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+        Component c = table.prepareRenderer(cellRenderer, row, column);
+        int initial = 0;
+        if (c != null) {
+            initial = c.getPreferredSize().width;
         }
-        if ( 0 == firstRow && 0 == lastRow ) {
-            firstCol=0;
-            lastCol = table.getColumnCount()-1;
-        }
+        int width = initial + (int) marginProvider.get().getWidth() * 2;
+        return width;
 
-        if ( ! isRegionChanged()) {
+    }
+
+    /*
+     *  Update the TableColumn with the newly calculated width
+     */
+    private void updateTableColumn(int column, int width) {
+        final TableColumn tableColumn = table.getColumnModel().getColumn(column);
+
+        if (!tableColumn.getResizable()) {
             return;
         }
+        //  Don't shrink the column width
 
-
-System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastRow+", col="+firstCol +"-"+lastCol+", x="+x+", y="+y+", width="+width+", height="+height+", table="+table.getName());
-
-        TableColumnModel tcm = table.getColumnModel();
-        if (tcm == null) {
-            throw new IllegalArgumentException("tcm is null!");
+        if (isOnlyAdjustLarger) {
+            width = Math.max(width, tableColumn.getPreferredWidth());
         }
- long begin=System.currentTimeMillis();
+
+        columnSizes.put(tableColumn, tableColumn.getWidth());
+        if (table.getTableHeader() != null) {
+            //TODO    log("disable suspecious table.getTableHeader().setResizingColumn call --05/22/2021");
+//            table.getTableHeader().setResizingColumn(tableColumn);
+        }
+        //tableColumn.setWidth(width); // owen took this out and made it preferredwidth instead!
+        tableColumn.setMinWidth(width);
+        tableColumn.setPreferredWidth(width);
+    }
+
+    /*
+     *  Adjust the widths of all the columns in the table
+     */
+    public void adjustColumns(AdjustRegion adjustRegion) {
+
+        firstRow = adjustRegion.firstRow;
+        lastRow = adjustRegion.lastRow;
+        firstCol = adjustRegion.firstColumn;
+        lastCol = adjustRegion.lastColumn;
+
+long begin = System.currentTimeMillis();
         for (int i = firstCol; i <= lastCol; i++) {
             adjustColumn(i);
         }
- log("TableColumnAdjuster::adjustColumns, update "+tcm.getColumnCount()+" columns took "+(System.currentTimeMillis()-begin));
-    }
-    private boolean isRegionChanged() {
-        boolean isChanged = ( firstRow != old_firstRow || lastRow != old_lastRow || firstCol != old_firstCol || lastCol != old_lastCol);
-        if ( isChanged) {
-            old_firstRow = firstRow;
-            old_lastRow = lastRow;
-            old_firstCol = firstCol;
-            old_lastCol = lastCol;
-        }
-        return isChanged;
-    }
-    private static int nonNegative(int number) {
-        return Math.max(0, number);
+log("TableColumnAdjuster::adjustColumns, update "+adjustRegion+" took " + (System.currentTimeMillis() - begin)+", table name="+table.getName());
     }
     /*
      *  Adjust the width of the specified column in the table
@@ -228,7 +228,7 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
      */
     private int getColumnHeaderWidth(int column) {
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
-        int headerWidth = headerSizes.computeIfAbsent(tableColumn,tc->{
+        return headerSizes.computeIfAbsent(tableColumn, tc -> {
             Object value = tc.getHeaderValue();
             if (value == null) {
                 return 0;
@@ -243,10 +243,9 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
             }
 
             Component c = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
-            int columnWidth = c.getPreferredSize().width+ (int) marginProvider.get().getWidth()*2;
+            int columnWidth = c.getPreferredSize().width + (int) marginProvider.get().getWidth() * 2;
             return Math.max(columnWidth, tc.getPreferredWidth());
         });
-        return headerWidth;
     }
 
     /*
@@ -254,7 +253,7 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
      *  given column.
      */
     private int getColumnDataWidth(int column) {
-        if (  0 == table.getRowCount()) {
+        if (0 == table.getRowCount()) {
             return 0;
         }
 
@@ -271,47 +270,6 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
         }
         return preferredWidth;
         //return 45;
-    }
-
-    /*
-     *  Update the TableColumn with the newly calculated width
-     */
-    private void updateTableColumn(int column, int width) {
-        final TableColumn tableColumn = table.getColumnModel().getColumn(column);
-
-        if (!tableColumn.getResizable()) {
-            return;
-        }
-        //  Don't shrink the column width
-
-        if (isOnlyAdjustLarger) {
-            width = Math.max(width, tableColumn.getPreferredWidth());
-        }
-
-        columnSizes.put(tableColumn, tableColumn.getWidth());
-        if (table.getTableHeader() != null) {
-        //TODO    log("disable suspecious table.getTableHeader().setResizingColumn call --05/22/2021");
-//            table.getTableHeader().setResizingColumn(tableColumn);
-        }
-        //tableColumn.setWidth(width); // owen took this out and made it preferredwidth instead!
-        tableColumn.setMinWidth(width);
-        tableColumn.setPreferredWidth(width);
-    }
-
-    /*
-     *  Get the preferred width for the specified cell
-     */
-    private int getCellDataWidth(int row, int column) {
-
-        TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
-        Component c = table.prepareRenderer(cellRenderer, row, column);
-        int initial = 0;
-        if (c != null) {
-            initial = c.getPreferredSize().width;
-        }
-        int width = initial + (int) marginProvider.get().getWidth()*2;
-        return width;
-
     }
 
     /*
@@ -339,6 +297,47 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
             tableColumn.setWidth(width.intValue());
         }
     }
+    ///////////////////////////////////////////////////////////////////////////////////
+    private static class AdjustStatic {
+        private long totalCount = 0;
+        private long lastTime = 0;
+        private long begin = 0;
+        private int skipCount = 0;
+        private int adjustCount = 0;
+        private int rowCount;
+
+        public void start(int rowCount) {
+            totalCount++;
+            skipCount = 0;
+            adjustCount = 0;
+            this.rowCount = rowCount;
+            begin = System.currentTimeMillis();
+            if (0 == lastTime) {
+                lastTime = System.currentTimeMillis();
+            }
+        }
+
+        public void addSkipCount() {
+            skipCount++;
+        }
+
+        public void addAdjustCount() {
+            adjustCount++;
+        }
+
+        public void finish() {
+            long now = System.currentTimeMillis();
+            if (adjustCount > 0) {
+                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
+                        + ", skipCount=" + skipCount + " ******ADJUST COUNT*******=" + adjustCount + ", TOTAL:" + totalCount);
+            } else {
+                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
+                        + " ALL SKIPPED, TOTAL:" + totalCount);
+            }
+            lastTime = System.currentTimeMillis();
+        }
+    }
+
     /*
      *  Action to adjust or restore the width of a single column or all columns
      */
@@ -355,6 +354,8 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
         public void actionPerformed(ActionEvent e) {
             //  Handle selected column(s) width change actions
 
+            firstRow = 0;
+            lastRow = table.getRowCount()-1;
             if (isSelectedColumn) {
                 int[] columns = table.getSelectedColumns();
 
@@ -367,14 +368,17 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
                 }
             } else {
                 if (isAdjust) {
-                    adjustColumns();
+                    for(int col=0;col<table.getColumnCount()-1;col++) {
+                        adjustColumn(col);
+                    }
                 } else {
                     restoreColumns();
                 }
             }
         }
     }
-////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////
     /*
      *  Toggle properties of the TableColumnAdjuster so the user can
      *  customize the functionality to their preferences
@@ -399,43 +403,6 @@ System.out.println("TableColumnAdjuster::adjustColumns: row="+firstRow+"-"+lastR
                 setOnlyAdjustLarger(!isOnlyAdjustLarger);
                 return;
             }
-        }
-    }
-///////////////////////////////////////////////////////////////////////////////////
-    private static class AdjustStatic {
-        private long totalCount = 0;
-        private long lastTime=0;
-        private long begin = 0;
-        private int skipCount=0;
-        private int adjustCount=0;
-        private int rowCount;
-
-        public void start(int rowCount) {
-            totalCount++;
-            skipCount = 0;
-            adjustCount = 0;
-            this.rowCount = rowCount;
-            begin = System.currentTimeMillis();
-            if ( 0 ==lastTime ) {
-                lastTime = System.currentTimeMillis();
-            }
-        }
-        public void addSkipCount() {
-            skipCount++;
-        }
-        public void addAdjustCount() {
-            adjustCount++;
-        }
-        public void finish() {
-            long now = System.currentTimeMillis();
-            if ( adjustCount > 0) {
-                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
-                        + ", skipCount=" + skipCount + " ******ADJUST COUNT*******=" + adjustCount + ", TOTAL:" + totalCount);
-            } else {
-                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
-                        + " ALL SKIPPED, TOTAL:" + totalCount);
-            }
-            lastTime = System.currentTimeMillis();
         }
     }
 }
