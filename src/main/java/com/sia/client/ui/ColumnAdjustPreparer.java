@@ -56,6 +56,14 @@ public class ColumnAdjustPreparer {
             min_calculate_row = firstRow;
             max_calculate_col = lastCol;
             min_calculate_col = firstCol;
+        } else if ( lastRow < min_calculate_row) {
+            AdjustRegion region = new AdjustRegion(firstRow,min_calculate_row,Math.min(firstCol,min_calculate_col),Math.max(lastCol,max_calculate_col));
+            rtn.add(region);
+            min_calculate_row = firstRow;
+        } else if ( firstRow > max_calculate_row) {
+            AdjustRegion region = new AdjustRegion(max_calculate_row,lastRow,Math.min(firstCol,min_calculate_col),Math.max(lastCol,max_calculate_col));
+            rtn.add(region);
+            max_calculate_row = lastRow;
         } else {
             AdjustRegion region = new AdjustRegion(firstRow,min_calculate_row,firstCol,lastCol);
             rtn.add(region);
@@ -76,8 +84,6 @@ public class ColumnAdjustPreparer {
                 min_calculate_col = Math.min(min_calculate_col,firstCol);
             }
         }
-        max_calculate_row = Math.max(max_calculate_row,lastRow);
-        max_calculate_col = Math.max(max_calculate_col,lastCol);
         return rtn;
     }
 ///////////////////////////////////////////////////////////////////////////////
