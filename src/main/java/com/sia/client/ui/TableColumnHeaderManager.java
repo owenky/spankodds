@@ -68,6 +68,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             if (source == mainTable && mainTable.isShowing()) {
                 Utils.checkAndRunInEDT(() -> {
                     configRowHeight();
+                    mainTable.validate();
                     adjustComumns();
                     invokeDrawColumnHeaders();
 //                    isMainTableShown.set(true);
