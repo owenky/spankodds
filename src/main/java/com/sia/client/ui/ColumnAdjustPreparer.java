@@ -75,11 +75,11 @@ public class ColumnAdjustPreparer {
             rtn.add(region);
 
             rtn.removeIf(r-> r.lastRow < r.firstRow || r.lastColumn < r.firstColumn);
-            if ( firstCol ==min_calculate_col && lastCol == max_calculate_col) {
+            if ( firstCol >= min_calculate_col && lastCol <= max_calculate_col) {
                 max_calculate_row = Math.max(max_calculate_row,lastRow);
                 min_calculate_row = Math.min(min_calculate_row,firstRow);
             }
-            if ( firstRow == min_calculate_row && lastRow == max_calculate_row) {
+            if ( firstRow >= min_calculate_row && lastRow <= max_calculate_row) {
                 max_calculate_col = Math.max(max_calculate_col,lastCol);
                 min_calculate_col = Math.min(min_calculate_col,firstCol);
             }
