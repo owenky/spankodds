@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
+
 import javax.swing.event.TableModelEvent;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +23,11 @@ public abstract class TableSection<V extends KeyedObject> {
     abstract protected void prepareLineGamesForTableModel(LineGames<V> gamesVec);
     abstract protected List<Object> makeRowData(V game);
 
+    public TableSection(KeyedObjectCollection<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
+        gamesVec = new LineGames<>(gameCache,toAddBlankGameId);
+        gamesVec.addAll(gameVec);
+        rowHeight = SiaConst.NormalRowheight;
+    }
     public void setIndex(int index) {
         this.index = index;
     }
@@ -32,11 +39,6 @@ public abstract class TableSection<V extends KeyedObject> {
     }
     public void setRowHeight(int rowHeight){
         this.rowHeight = rowHeight;
-    }
-
-    public TableSection(KeyedObjectCollection<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
-        gamesVec = new LineGames<>(gameCache,toAddBlankGameId);
-        gamesVec.addAll(gameVec);
     }
     public void setContainingTableModel(ColumnCustomizableDataModel containingTableModel) {
         this.containingTableModel = containingTableModel;
