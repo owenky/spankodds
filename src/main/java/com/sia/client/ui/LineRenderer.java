@@ -21,12 +21,14 @@ public class LineRenderer implements TableCellRenderer {
     private final LinePanel soccerChartPanel;
     private final LinePanel infoPanel;
     private final LinePanel headerPanel;
+    private final String name;
 
     public LineRenderer() {
         this(null);
     }
 
     public LineRenderer(String name) {
+        this.name = name;
         teamLinePanel = createTeamLinePanel(name);
         spreadTotalPanel = createSpreadTotalPanel(name);
         gameNumbersPanel = createGameNumbersPanel(name);
@@ -166,7 +168,8 @@ public class LineRenderer implements TableCellRenderer {
             headerPanel.setHeader(table,(HeaderView) value, row, column);
             rtn = headerPanel;
         } else {
-            throw new IllegalStateException("Illegal value:"+value);
+            log(new IllegalStateException("Illegal value:"+value));
+            rtn = createTeamLinePanel(name);
         }
         return rtn;
     }
