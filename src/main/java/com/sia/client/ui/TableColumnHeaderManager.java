@@ -68,10 +68,10 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 //            if (source == mainTable && !isMainTableShown.get() && mainTable.isShowing()) {
             if (source == mainTable && mainTable.isShowing()) {
                 Utils.checkAndRunInEDT(() -> {
-                    configRowHeight();
-                    mainTable.validate();
+                    configHeaderRow();
+//                    mainTable.validate();
                     adjustComumns();
-                    invokeDrawColumnHeaders();
+//                    invokeDrawColumnHeaders();
 //                    isMainTableShown.set(true);
                 });
             }
@@ -88,7 +88,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         drawnHeaderValues.clear();
         mainTable.repaint();
     }
-    private void configRowHeight() {
+    private void configHeaderRow() {
        mainTable.configHeaderRow();
     }
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
@@ -153,12 +153,12 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void componentResized(final ComponentEvent e) {
-//        if ( isMainTableShown.get() && ! isAdjustingColumn ) {
-        if ( mainTable.isShowing() && ! isAdjustingColumn ) {
-            drawnHeaderValues.clear();
-            adjustComumns();
-        }
-        isAdjustingColumn = false;
+//        if ( mainTable.isShowing() && ! isAdjustingColumn ) {
+//            drawnHeaderValues.clear();
+//            adjustComumns();
+//        }
+//        isAdjustingColumn = false;
+        //don't call adjustColumns() in componentResized(). because adjustColumns() will invoke componentResized in return. 05/27/2021
     }
 
     @Override
@@ -179,9 +179,10 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void tableChanged(final TableModelEvent e) {
         if (TableUtils.toRebuildCache(e) ) {
+            mainTable.getColumnAdjusterManager().clear();
             if (mainTable.isShowing()) {
                 adjustComumns();
-                configRowHeight();
+                configHeaderRow();
                 invokeDrawColumnHeaders();
             }
         }
