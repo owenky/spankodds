@@ -17,6 +17,7 @@ import javax.swing.event.TableModelListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -42,7 +43,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
-        rowHeightConfigListener = (e)-> mainTable.configRowHeight();
+        rowHeightConfigListener = (e)-> mainTable.configHeaderRow();
     }
 
     public void installListeners() {
@@ -88,7 +89,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.repaint();
     }
     private void configRowHeight() {
-       mainTable.configRowHeight();
+       mainTable.configHeaderRow();
     }
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
         ColumnHeaderProvider<V> columnHeaderProvider = mainTable.getModel().getColumnHeaderProvider();
@@ -196,9 +197,23 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
             if ( evt.getSource() == mainTable.getTableScrollPane().getHorizontalScrollBar()) {
                 horizontalScrollBarAdjustmentValue = evt.getValue();
-                invokeDrawColumnHeaders();
+//                invokeDrawColumnHeaders();
             }
-
+            drawHeaderinVisibleRegion();
         }
+    }
+    private void drawHeaderinVisibleRegion() {
+        Rectangle visibleRect = mainTable.getVisibleRect();
+        int x = (int) visibleRect.getX();
+        int width = (int) visibleRect.getWidth();
+        int y = (int) visibleRect.getY();
+        int height = (int) visibleRect.getHeight();
+
+        Point p0 = new Point(x, y);
+        Point p1 = new Point(x + width, y + height);
+        int firstRow = mainTable.rowAtPoint(p0);
+        int lastRow = mainTable.rowAtPoint(p1);
+
+        mainTable.configHeaderRow(firstRow,lastRow,false);
     }
 }
