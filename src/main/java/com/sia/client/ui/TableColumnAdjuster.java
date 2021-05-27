@@ -198,11 +198,11 @@ public class TableColumnAdjuster {
         firstCol = adjustRegion.firstColumn;
         lastCol = adjustRegion.lastColumn;
 
-long begin = System.currentTimeMillis();
+//long begin = System.currentTimeMillis();
         for (int i = firstCol; i <= lastCol; i++) {
             adjustColumn(i);
         }
-log("TableColumnAdjuster::adjustColumns, update "+adjustRegion+" took " + (System.currentTimeMillis() - begin)+", table name="+table.getName());
+//log("TableColumnAdjuster::adjustColumns, update "+adjustRegion+" took " + (System.currentTimeMillis() - begin)+", table name="+table.getName());
     }
     /*
      *  Adjust the width of the specified column in the table
