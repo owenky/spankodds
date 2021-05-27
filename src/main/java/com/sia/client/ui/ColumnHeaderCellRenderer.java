@@ -43,12 +43,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         int rowModelIndex = table.convertRowIndexToModel(row);
         Object headValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
         if ( null != headValue) {
-            if ( table instanceof ColumnHeaderDrawer) {
-                ColumnHeaderDrawer columnHeaderDrawer = (ColumnHeaderDrawer)table;
-                if ( ! columnHeaderDrawer.isColumnHeaderDrawn(headValue)) {
-                    columnHeaderDrawer.drawColumnHeaderOnViewIndex(row,headValue);
-                }
-            }
             return headerCellRender;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
