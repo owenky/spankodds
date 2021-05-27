@@ -63,10 +63,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         for(int rowViewIndex=0;rowViewIndex<rowCount;rowViewIndex++) {
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
-            if ( null == columnHeaderProvider.getColumnHeaderAt(rowModelIndex)) {
+            Object headerValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
+            if ( null == headerValue) {
                 rowHeight = getRowHeight();
             } else {
                 rowHeight = columnHeaderProvider.getColumnHeaderHeight();
+                drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
             }
             setRowHeight(rowViewIndex, rowHeight);
         }
