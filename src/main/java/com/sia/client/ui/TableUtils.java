@@ -77,7 +77,7 @@ public abstract class TableUtils {
         @Override
         public void setVisible(boolean visible) {
             if ( visible && ! firstShown) {
-                mainTable.configRowHeight();
+                mainTable.configHeaderRow();
                 mainTable.getRowHeaderTable().optimizeSize();
                 firstShown = true;
             }
