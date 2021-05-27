@@ -306,7 +306,7 @@ public class AppController {
 
     public static boolean isLineAlertNameAvailable(String name) {
         for (int i = 0; i < linealertnodes.size(); i++) {
-            String lanname = ((LineAlertNode) linealertnodes.elementAt(i)).getName();
+            String lanname = (linealertnodes.elementAt(i)).getName();
             if (lanname.equalsIgnoreCase(name)) {
                 return false;
             }
@@ -848,59 +848,57 @@ public class AppController {
         sportsVec.add(s);
     }
 
-    public static void removeGame(int gameid,boolean repaint) {
-        checkAndRunInEDT(() -> {
-            for (int k = 0; k < tabpanes.size(); k++) {
+    public static void removeGame(int gameid, boolean repaint) {
+        for (int k = 0; k < tabpanes.size(); k++) {
 
-                SportsTabPane stb = tabpanes.get(k);
-                stb.removeGame(gameid,repaint);
+            SportsTabPane stb = tabpanes.get(k);
+            stb.removeGame(gameid, repaint);
 
-            }
-            Game g = games.getGame(gameid);
-            if (null != g) {
-                games.removeGame(g);
+        }
+        Game g = games.getGame(gameid);
+        if (null != g) {
+            games.removeGame(g);
 
-            }
-            games.removeGameId(gameid);
-            for (int j = 0; j < bookiesVec.size(); j++) {
-                Bookie b = bookiesVec.get(j);
-                int bid = b.getBookie_id();
-                spreads.remove(bid + "-" + gameid);
-                totals.remove(bid + "-" + gameid);
-                moneylines.remove(bid + "-" + gameid);
-                teamtotals.remove(bid + "-" + gameid);
-                h1spreads.remove(bid + "-" + gameid);
-                h1totals.remove(bid + "-" + gameid);
-                h1moneylines.remove(bid + "-" + gameid);
-                h1teamtotals.remove(bid + "-" + gameid);
-                h2spreads.remove(bid + "-" + gameid);
-                h2totals.remove(bid + "-" + gameid);
-                h2moneylines.remove(bid + "-" + gameid);
-                h2teamtotals.remove(bid + "-" + gameid);
-                q1spreads.remove(bid + "-" + gameid);
-                q1totals.remove(bid + "-" + gameid);
-                q1moneylines.remove(bid + "-" + gameid);
-                q1teamtotals.remove(bid + "-" + gameid);
-                q2spreads.remove(bid + "-" + gameid);
-                q2totals.remove(bid + "-" + gameid);
-                q2moneylines.remove(bid + "-" + gameid);
-                q2teamtotals.remove(bid + "-" + gameid);
-                q3spreads.remove(bid + "-" + gameid);
-                q3totals.remove(bid + "-" + gameid);
-                q3moneylines.remove(bid + "-" + gameid);
-                q3teamtotals.remove(bid + "-" + gameid);
-                q4spreads.remove(bid + "-" + gameid);
-                q4totals.remove(bid + "-" + gameid);
-                q4moneylines.remove(bid + "-" + gameid);
-                q4teamtotals.remove(bid + "-" + gameid);
-                livespreads.remove(bid + "-" + gameid);
-                livetotals.remove(bid + "-" + gameid);
-                livemoneylines.remove(bid + "-" + gameid);
-                liveteamtotals.remove(bid + "-" + gameid);
+        }
+        games.removeGameId(gameid);
+        for (int j = 0; j < bookiesVec.size(); j++) {
+            Bookie b = bookiesVec.get(j);
+            int bid = b.getBookie_id();
+            spreads.remove(bid + "-" + gameid);
+            totals.remove(bid + "-" + gameid);
+            moneylines.remove(bid + "-" + gameid);
+            teamtotals.remove(bid + "-" + gameid);
+            h1spreads.remove(bid + "-" + gameid);
+            h1totals.remove(bid + "-" + gameid);
+            h1moneylines.remove(bid + "-" + gameid);
+            h1teamtotals.remove(bid + "-" + gameid);
+            h2spreads.remove(bid + "-" + gameid);
+            h2totals.remove(bid + "-" + gameid);
+            h2moneylines.remove(bid + "-" + gameid);
+            h2teamtotals.remove(bid + "-" + gameid);
+            q1spreads.remove(bid + "-" + gameid);
+            q1totals.remove(bid + "-" + gameid);
+            q1moneylines.remove(bid + "-" + gameid);
+            q1teamtotals.remove(bid + "-" + gameid);
+            q2spreads.remove(bid + "-" + gameid);
+            q2totals.remove(bid + "-" + gameid);
+            q2moneylines.remove(bid + "-" + gameid);
+            q2teamtotals.remove(bid + "-" + gameid);
+            q3spreads.remove(bid + "-" + gameid);
+            q3totals.remove(bid + "-" + gameid);
+            q3moneylines.remove(bid + "-" + gameid);
+            q3teamtotals.remove(bid + "-" + gameid);
+            q4spreads.remove(bid + "-" + gameid);
+            q4totals.remove(bid + "-" + gameid);
+            q4moneylines.remove(bid + "-" + gameid);
+            q4teamtotals.remove(bid + "-" + gameid);
+            livespreads.remove(bid + "-" + gameid);
+            livetotals.remove(bid + "-" + gameid);
+            livemoneylines.remove(bid + "-" + gameid);
+            liveteamtotals.remove(bid + "-" + gameid);
 
-            }
-            g = null;
-        });
+        }
+        g = null;
     }
 
     public static void removeGameDate(String date, String leagueid) {
@@ -911,68 +909,66 @@ public class AppController {
     }
 
     public static void removeGames(String[] gameidarr) {
-        checkAndRunInEDT(() -> {
-            for (int k = 0; k < tabpanes.size(); k++) {
-                SportsTabPane stb = tabpanes.get(k);
-                stb.removeGames(gameidarr);
-            }
-            if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
-                return;
-            }
+        for (int k = 0; k < tabpanes.size(); k++) {
+            SportsTabPane stb = tabpanes.get(k);
+            stb.removeGames(gameidarr);
+        }
+        if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
+            return;
+        }
 
-            for (int i = 0; i < gameidarr.length; i++) {
-                try {
-                    String gameid = gameidarr[i];
-                    games.removeGame(gameid);
+        for (int i = 0; i < gameidarr.length; i++) {
+            try {
+                String gameid = gameidarr[i];
+                games.removeGame(gameid);
 //                    Game g = games.getGame(gameid);
 //                    if (g != null) {
 //                        gamesVec.remove(g);
 //
 //                    }
 //                    games.remove(gameid);
-                    for (int j = 0; j < bookiesVec.size(); j++) {
-                        Bookie b = bookiesVec.get(j);
-                        int bid = b.getBookie_id();
-                        spreads.remove(bid + "-" + gameid);
-                        totals.remove(bid + "-" + gameid);
-                        moneylines.remove(bid + "-" + gameid);
-                        teamtotals.remove(bid + "-" + gameid);
-                        h1spreads.remove(bid + "-" + gameid);
-                        h1totals.remove(bid + "-" + gameid);
-                        h1moneylines.remove(bid + "-" + gameid);
-                        h1teamtotals.remove(bid + "-" + gameid);
-                        h2spreads.remove(bid + "-" + gameid);
-                        h2totals.remove(bid + "-" + gameid);
-                        h2moneylines.remove(bid + "-" + gameid);
-                        h2teamtotals.remove(bid + "-" + gameid);
-                        q1spreads.remove(bid + "-" + gameid);
-                        q1totals.remove(bid + "-" + gameid);
-                        q1moneylines.remove(bid + "-" + gameid);
-                        q1teamtotals.remove(bid + "-" + gameid);
-                        q2spreads.remove(bid + "-" + gameid);
-                        q2totals.remove(bid + "-" + gameid);
-                        q2moneylines.remove(bid + "-" + gameid);
-                        q2teamtotals.remove(bid + "-" + gameid);
-                        q3spreads.remove(bid + "-" + gameid);
-                        q3totals.remove(bid + "-" + gameid);
-                        q3moneylines.remove(bid + "-" + gameid);
-                        q3teamtotals.remove(bid + "-" + gameid);
-                        q4spreads.remove(bid + "-" + gameid);
-                        q4totals.remove(bid + "-" + gameid);
-                        q4moneylines.remove(bid + "-" + gameid);
-                        q4teamtotals.remove(bid + "-" + gameid);
-                        livespreads.remove(bid + "-" + gameid);
-                        livetotals.remove(bid + "-" + gameid);
-                        livemoneylines.remove(bid + "-" + gameid);
-                        liveteamtotals.remove(bid + "-" + gameid);
+                for (int j = 0; j < bookiesVec.size(); j++) {
+                    Bookie b = bookiesVec.get(j);
+                    int bid = b.getBookie_id();
+                    spreads.remove(bid + "-" + gameid);
+                    totals.remove(bid + "-" + gameid);
+                    moneylines.remove(bid + "-" + gameid);
+                    teamtotals.remove(bid + "-" + gameid);
+                    h1spreads.remove(bid + "-" + gameid);
+                    h1totals.remove(bid + "-" + gameid);
+                    h1moneylines.remove(bid + "-" + gameid);
+                    h1teamtotals.remove(bid + "-" + gameid);
+                    h2spreads.remove(bid + "-" + gameid);
+                    h2totals.remove(bid + "-" + gameid);
+                    h2moneylines.remove(bid + "-" + gameid);
+                    h2teamtotals.remove(bid + "-" + gameid);
+                    q1spreads.remove(bid + "-" + gameid);
+                    q1totals.remove(bid + "-" + gameid);
+                    q1moneylines.remove(bid + "-" + gameid);
+                    q1teamtotals.remove(bid + "-" + gameid);
+                    q2spreads.remove(bid + "-" + gameid);
+                    q2totals.remove(bid + "-" + gameid);
+                    q2moneylines.remove(bid + "-" + gameid);
+                    q2teamtotals.remove(bid + "-" + gameid);
+                    q3spreads.remove(bid + "-" + gameid);
+                    q3totals.remove(bid + "-" + gameid);
+                    q3moneylines.remove(bid + "-" + gameid);
+                    q3teamtotals.remove(bid + "-" + gameid);
+                    q4spreads.remove(bid + "-" + gameid);
+                    q4totals.remove(bid + "-" + gameid);
+                    q4moneylines.remove(bid + "-" + gameid);
+                    q4teamtotals.remove(bid + "-" + gameid);
+                    livespreads.remove(bid + "-" + gameid);
+                    livetotals.remove(bid + "-" + gameid);
+                    livemoneylines.remove(bid + "-" + gameid);
+                    liveteamtotals.remove(bid + "-" + gameid);
 
-                    }
-//                    g = null;
-                } catch (Exception ex) {
-                    log(ex);
                 }
+//                    g = null;
+            } catch (Exception ex) {
+                log(ex);
             }
-        });
+        }
     }
 
     public static String[] getAllGamesForThisDateAndLeagueId(String date, String leagueid) {
@@ -1016,38 +1012,23 @@ public class AppController {
     }
 
     public static void addGame(Game g, boolean repaint) {
-        checkAndRunInEDT(() -> {
-//            if (games.getGame(g.getGame_id()) == null) {
-//                gamesVec.add(g);
-//                games.put(g.getGame_id(), g);
-//                for (int k = 0; k < tabpanes.size(); k++) {
-//
-//                    SportsTabPane stb = tabpanes.get(k);
-//                    stb.addGame(g, repaint);
-//
-//                }
-//            } else // just an update
-//            {
-//               games.put(g.getGame_id(), g);
-//            }
-            games.updateOrAdd(g);
-            //TODO potential improvement to for loop: use a map to quickly find which LineTableData this game belong to instead of loop through tabpane and mainscreen -- 05/01/2021
-            for (int k = 0; k < tabpanes.size(); k++) {
-                SportsTabPane stb = tabpanes.get(k);
-                stb.addGame(g, repaint);
-            }
-        });
+
+        games.updateOrAdd(g);
+        //TODO potential improvement to for loop: use a map to quickly find which LineTableData this game belong to instead of loop through tabpane and mainscreen -- 05/01/2021
+        for (int k = 0; k < tabpanes.size(); k++) {
+            SportsTabPane stb = tabpanes.get(k);
+            stb.addGame(g, repaint);
+        }
+
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
-        checkAndRunInEDT(() -> {
-            for (int k = 0; k < tabpanes.size(); k++) {
+        for (int k = 0; k < tabpanes.size(); k++) {
 
-                SportsTabPane stb = tabpanes.get(k);
-                stb.moveGameToThisHeader(g, header);
+            SportsTabPane stb = tabpanes.get(k);
+            stb.moveGameToThisHeader(g, header);
 
-            }
-        });
+        }
     }
 
     public static Bookie getBookie(int bid) {

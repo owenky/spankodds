@@ -321,8 +321,9 @@ public class LinesTableData extends TableSection<Game> {
         if (gameidstoremove.length == 1 && gameidstoremove[0].equals("-1")) {
             removeYesterdaysGames();
         } else {
-
-            AppController.disableTabs();
+                //TODO unnecessary call?
+            log("WARNING: In LinesTableData, skip AppController.disableTabs();");
+//            AppController.disableTabs();
 
             List<String> list = Arrays.asList(gameidstoremove);
             Vector<String> gameidstoremovevec = new Vector<>(list);
@@ -360,7 +361,9 @@ public class LinesTableData extends TableSection<Game> {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String d1 = sdf.format(today);
         boolean removal = false;
-        AppController.disableTabs();
+        //TODO unnecessary call?
+log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disableTabs();");
+//        AppController.disableTabs();
         for (Iterator<Game> iterator = getGamesIterator(); iterator.hasNext(); ) {
 
             Game g = iterator.next();
