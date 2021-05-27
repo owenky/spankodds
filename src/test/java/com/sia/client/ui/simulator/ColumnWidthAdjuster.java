@@ -26,7 +26,11 @@ public class ColumnWidthAdjuster implements EventGenerator{
         updateRowData(game.getRowData(),40);
     }
     private void updateRowData(List<Object> rowData, int col) {
-        Object oldValue = rowData.get(col);
-        rowData.set(col,oldValue+"X");
+        String oldValue = String.valueOf(rowData.get(col));
+        if ( oldValue.length() < 15) {
+            rowData.set(col, oldValue + "X");
+        } else {
+            System.out.println("Stop adding X.....");
+        }
     }
 }
