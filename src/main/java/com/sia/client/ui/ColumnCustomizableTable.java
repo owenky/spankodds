@@ -67,7 +67,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             int rowHeight;
             Object headerValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
             if ( null == headerValue) {
-                rowHeight = getRowHeight();
+//                rowHeight = getRowHeight();
+                rowHeight = getModel().getLinesTableData(rowModelIndex).linesTableData.getRowHeight();
             } else {
                 rowHeight = columnHeaderProvider.getColumnHeaderHeight();
                 drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
