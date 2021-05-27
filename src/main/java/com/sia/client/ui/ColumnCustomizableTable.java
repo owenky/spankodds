@@ -57,10 +57,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return marginProvider;
     }
-    public void configRowHeight() {
+    public void configHeaderRow() {
+        configHeaderRow(0,getRowCount()-1,true);
+    }
+    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
         ColumnHeaderProvider<V> columnHeaderProvider = getModel().getColumnHeaderProvider();
-        int rowCount = getRowCount();
-        for(int rowViewIndex=0;rowViewIndex<rowCount;rowViewIndex++) {
+        for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
             Object headerValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
@@ -70,7 +72,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 rowHeight = columnHeaderProvider.getColumnHeaderHeight();
                 drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
             }
-            setRowHeight(rowViewIndex, rowHeight);
+            if ( toSetRowHeight) {
+                setRowHeight(rowViewIndex, rowHeight);
+            }
         }
     }
     public TableColumnHeaderManager<V> getTableColumnHeaderManager() {
@@ -90,7 +94,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         super.setRowHeight(rowHeight);
         getRowHeaderTable().setRowHeight(rowHeight);
         //jtable::setRowHeight() set rowModel to null, need to config row height after this call.
-        configRowHeight();
+        configHeaderRow();
     }
     @Override
     public void setRowHeight(int rowViewIndex,int rowHeight) {
@@ -223,7 +227,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         if ( isShowing()) {
             if ((e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW  ) && null != rowHeaderTable) {
                 //super method discard row model, need to re-config row height
-                configRowHeight();
+                configHeaderRow();
             }
             if (null != tableChangedListener) {
                 tableChangedListener.tableChanged(e);
