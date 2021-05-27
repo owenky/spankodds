@@ -184,7 +184,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 		super.tableChanged(e);
 		if ( (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) &&  null != mainTable  ) {
 			//super method discard row model, need to re-config row height
-			mainTable.configRowHeight();
+			mainTable.configHeaderRow();
 		}
 	}
 }
