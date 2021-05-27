@@ -57,6 +57,9 @@ public class LinesTableData extends TableSection<Game> {
         } else if (last) {
             showPrior();
         }
+        String headerInLowerCase = null==gameGroupHeader?"":gameGroupHeader.toLowerCase();
+        int rowHeight = headerInLowerCase.contains("football") || headerInLowerCase.contains(SiaConst.SoccerStr.toLowerCase()) ?SiaConst.SoccerRowheight:SiaConst.NormalRowheight;
+        setRowHeight(rowHeight);
     }
 
     public void showOpener() {
