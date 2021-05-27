@@ -96,7 +96,7 @@ public class MainScreen extends JPanel {
     }
     public boolean checktofire(int gameid) {
         MainGameTableModel v = getDataModels();
-        LinesTableData ltd = (LinesTableData)v.checktofire(gameid,mainGameTable.isShowing());
+        LinesTableData ltd = (LinesTableData)v.checktofire(gameid,getMainGameTable().isShowing());
         boolean status = (null != ltd);
         if (status) {
             GameTableAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);
@@ -177,12 +177,12 @@ public class MainScreen extends JPanel {
 //
 //            }
 //        }
-        if ( null == mainGameTable) {
-            throw new IllegalStateException("mainGameTable is null: screen:"+this.getName());
-        } else if ( null == mainGameTable.getModel() ) {
-            throw new IllegalStateException("model of mainGameTable is null: screen:"+this.getName());
-        }
-        return mainGameTable.getModel().moveGameToThisHeader(g,header);
+//        if ( null == mainGameTable) {
+//            throw new IllegalStateException("mainGameTable is null: screen:"+this.getName());
+//        } else if ( null == mainGameTable.getModel() ) {
+//            throw new IllegalStateException("model of mainGameTable is null: screen:"+this.getName());
+//        }
+        return getMainGameTable().getModel().moveGameToThisHeader(g,header);
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
@@ -1271,7 +1271,7 @@ public class MainScreen extends JPanel {
     }
 
     public void adjustcols() {
-        mainGameTable.adjustColumns();
+        getMainGameTable().adjustColumns();
     }
     private MainGameTable getMainGameTable() {
         if ( null == mainGameTable ) {
