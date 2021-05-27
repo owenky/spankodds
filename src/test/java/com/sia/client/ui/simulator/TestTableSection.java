@@ -1,5 +1,6 @@
 package com.sia.client.ui.simulator;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.LineGames;
 import com.sia.client.model.TableSection;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public class TestTableSection extends TableSection<TestGame> {
 
     public static final String TestGroupGameHeaderPrefix = "TEST GAME ";
+    private static int instanceCount = 0;
 
     public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount,int tableIndex) {
 
@@ -20,6 +22,8 @@ public class TestTableSection extends TableSection<TestGame> {
         }
         TestTableSection testTableSection = new TestTableSection(testGameCache,true,gameVec);
         testTableSection.setGameGroupHeader(TestGroupGameHeaderPrefix+idSeed);
+        int sectionRowHeight = 0 == (instanceCount++)%2? SiaConst.NormalRowheight:SiaConst.SoccerRowheight;
+        testTableSection.setRowHeight(sectionRowHeight);
         return testTableSection;
     }
     public TestTableSection(TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
