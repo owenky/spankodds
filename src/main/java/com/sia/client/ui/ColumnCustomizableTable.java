@@ -267,7 +267,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
         getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
     }
-    private ColumnAdjusterManager getColumnAdjusterManager() {
+    public ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {
             columnAdjusterManager = new ColumnAdjusterManager(this);
         }
