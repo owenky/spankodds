@@ -4,7 +4,7 @@ import com.sia.client.model.ColumnCustomizableDataModel;
 
 public class GameMover implements EventGenerator{
     private static int pointer=0;
-    private static final int movedGameId = 2;
+    public static final int movedGameId = 2;
     @Override
     public void generatEvent(final TableProperties [] tblProps) {
 
