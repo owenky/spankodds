@@ -2,6 +2,7 @@ package com.sia.client.ui.simulator;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.ui.ColumnCustomizableTable;
+import com.sia.client.ui.RowHeaderTable;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.JComponent;
@@ -10,6 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -30,7 +32,20 @@ public class TableProperties {
                     @Override
                     public Component getTableCellRendererComponent(JTable table, Object value,
                                                                    boolean isSelected, boolean hasFocus, int row, int column) {
-                        return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                        ColumnCustomizableTable<?> mainTable;
+                        if ( table instanceof RowHeaderTable) {
+                            mainTable = ((RowHeaderTable<?>)table).getMainTable();
+                        } else {
+                            mainTable = (ColumnCustomizableTable<?>)table;
+                        }
+                        int gameId = mainTable.getModel().getRowKey(rowViewIndex);
+                        Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                        if ( gameId == GameMover.movedGameId) {
+                            renderer.setBackground(Color.gray);
+                        } else {
+                            renderer.setBackground(Color.white);
+                        }
+                        return renderer;
                     }
                 };
             }
