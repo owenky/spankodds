@@ -15,7 +15,6 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 
 public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
@@ -55,16 +54,6 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         BorderLayout bl = new BorderLayout();
         render.setLayout(bl);
 
-//        JComponent topPadding = createVPaddingComponent(userComponent.getBackground());
-//        JComponent bottomPadding = createVPaddingComponent(userComponent.getBackground());
-//        JComponent leftPadding = createHPaddingComponent(userComponent.getBackground());
-//        JComponent rightPadding = createHPaddingComponent(userComponent.getBackground());
-//
-//        render.add(topPadding,BorderLayout.NORTH);
-//        render.add(bottomPadding,BorderLayout.SOUTH);
-//        render.add(leftPadding,BorderLayout.WEST);
-//        render.add(rightPadding,BorderLayout.EAST);
-
         render.add(userComponent,BorderLayout.CENTER);
 
         Border renderBorder;
@@ -78,25 +67,5 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         userComponent.setBorder(BorderFactory.createEmptyBorder());
         render.setBorder(renderBorder);
         return render;
-    }
-    private JComponent createHPaddingComponent(Color bck) {
-        JComponent padding = new JPanel();
-        Dimension size = new Dimension( (int)marginProvider.get().getWidth(),-1);
-        padding.setPreferredSize(size);
-        padding.setMaximumSize(size);
-        padding.setMinimumSize(size);
-        padding.setBackground(bck);
-        padding.setBorder(BorderFactory.createEmptyBorder());
-        return padding;
-    }
-    private JComponent createVPaddingComponent(Color bck) {
-        JComponent padding = new JPanel();
-        Dimension size = new Dimension(-1,(int)marginProvider.get().getHeight());
-        padding.setPreferredSize(size);
-        padding.setMaximumSize(size);
-        padding.setMinimumSize(size);
-        padding.setBackground(bck);
-        padding.setBorder(BorderFactory.createEmptyBorder());
-        return padding;
     }
 }

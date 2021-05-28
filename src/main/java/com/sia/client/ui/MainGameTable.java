@@ -9,7 +9,6 @@ import javax.swing.table.TableCellRenderer;
 
 public class MainGameTable extends ColumnCustomizableTable<Game> implements LinesTableDataSupplier {
 
-    private boolean isSoccer=false;
     private final LineRenderer soccerLineRenderer = new LineRenderer(SiaConst.SoccerStr);
     private final LineRenderer lineRenderer = new LineRenderer();
 
@@ -26,7 +25,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     }
     @Override
     public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colViewIndex) {
-        if (isSoccer) {
+        if (isSoccer(rowViewIndex)) {
             return soccerLineRenderer;
         } else {
             return lineRenderer;
@@ -36,21 +35,13 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     public LinesTableData getLinesTableData(int row) {
         return (LinesTableData)super.getLinesTableData(row);
     }
-//    public void optimizeRowHeightsAndGameLineTitles() {
-//        int rowHeight;
-//        if (isSoccer) {
-//            rowHeight = SiaConst.SoccerRowheight;
-//        } else {
-//            rowHeight = SiaConst.NormalRowheight;
-//        }
-//        getModel().setTableSectionRowHeight(rowHeight);
-//    }
-    public boolean isSoccer() {
-        return isSoccer;
-    }
     @Override
     public void setName(String name) {
         super.setName(name);
-        isSoccer = SiaConst.SoccerStr.equalsIgnoreCase(name);
+    }
+    private boolean isSoccer(int rowViewIndex) {
+        int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
+        Game g  = getModel().getGame(rowModelIndex);
+        return SiaConst.SoccerLeagueId == g.getLeague_id();
     }
 }

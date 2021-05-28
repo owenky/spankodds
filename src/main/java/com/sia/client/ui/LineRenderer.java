@@ -1,6 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
+
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
@@ -22,6 +26,7 @@ public class LineRenderer implements TableCellRenderer {
     private final LinePanel infoPanel;
     private final LinePanel headerPanel;
     private final String name;
+    private final JComponent headerCellRenderComp;
 
     public LineRenderer() {
         this(null);
@@ -39,6 +44,7 @@ public class LineRenderer implements TableCellRenderer {
         soccerChartPanel = createSoccerChartPanel(name);
         infoPanel = createInfoPanel(name);
         headerPanel = createHeaderPanel(name);
+        headerCellRenderComp = createHeaderCellRenderComp();
     }
     private LinePanel createSoccerLinePanel(String name) {
         LinePanel lp = new LinePanel(name);
@@ -52,6 +58,13 @@ public class LineRenderer implements TableCellRenderer {
         lp.total.setHorizontalAlignment(SwingConstants.RIGHT);
 
         return lp;
+    }
+    private JComponent createHeaderCellRenderComp() {
+        JLabel rtn = new JLabel();
+        rtn.setOpaque(true);
+        rtn.setBackground(SiaConst.DefaultHeaderColor);
+        rtn.setBorder(BorderFactory.createEmptyBorder());
+        return rtn;
     }
     private LinePanel createHeaderPanel(String name) {
         LinePanel lp = new LinePanel(name);
@@ -136,7 +149,7 @@ public class LineRenderer implements TableCellRenderer {
             }
             return null;
         }
-        LinePanel rtn;
+        JComponent rtn;
         if (value instanceof SpreadTotalView) {
             spreadTotalPanel.setLines(table,(SpreadTotalView) value, row, column);
             rtn = spreadTotalPanel;
@@ -167,7 +180,9 @@ public class LineRenderer implements TableCellRenderer {
         } else if (value instanceof HeaderView) {
             headerPanel.setHeader(table,(HeaderView) value, row, column);
             rtn = headerPanel;
-        } else {
+        } else if (SiaConst.GameGroupHeaderIden.equals(value)) {
+            rtn = headerCellRenderComp;
+        }  else {
             log(new IllegalStateException("Illegal value:"+value));
             rtn = createTeamLinePanel(name);
         }

@@ -124,21 +124,19 @@ public class MainScreen extends JPanel {
         getDataModels().removeGames(gameids);
     }
 
-    public boolean addGame(Game g, boolean repaint) { // only gets called when adding new game into system
+    public void addGame(Game g, boolean repaint) { // only gets called when adding new game into system
         if ( null != mainGameTable) {
             int leagueid = g.getLeague_id();
             if (leagueid == SiaConst.SoccerLeagueId) {
                 leagueid = g.getSubleague_id();
             }
             String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
-            return getMainGameTable().getModel().addGameToGameGroup(title, g, repaint);
-        } else {
-            return false;
+            getMainGameTable().getModel().addGameToGameGroup(title, g, repaint);
         }
     }
 
-    public boolean moveGameToThisHeader(Game g, String header) {
-        return getMainGameTable().getModel().moveGameToThisHeader(g,header);
+    public void moveGameToThisHeader(Game g, String header) {
+        getMainGameTable().getModel().moveGameToThisHeader(g,header);
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {

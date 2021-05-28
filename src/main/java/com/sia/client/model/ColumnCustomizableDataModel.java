@@ -126,6 +126,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
         return section.getRowKey(rowIndexInLinesTableData);
     }
+    public V getGame(int rowModelIndex) {
+        LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
+        TableSection<V> section = ltdSrhStruct.linesTableData;
+        int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
+        return section.getGame(rowIndexInLinesTableData);
+    }
     public void clear() {
         tableSections.clear();
         headerInstalled = false;
@@ -142,7 +148,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         return rowModelIndex2GameGroupHeaderMap;
     }
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
-    public boolean moveGameToThisHeader(V g, String header) {
+    public void moveGameToThisHeader(V g, String header) {
         V thisgame = null;
 log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         for (TableSection<V> gameLine : tableSections) {
@@ -165,7 +171,6 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
             this.buildIndexMappingCache();
             fireTableChanged(new TableModelEvent(this));
         }
-        return null != thisgame;
     }
     public TableSection<V> checktofire(int gameId,boolean repaint) {
         List<TableSection<V>> gameLines = getTableSections();

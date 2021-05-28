@@ -24,13 +24,10 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     }
     //refactored from MainScreen::addGame(Game, boolean)
-    public boolean addGameToGameGroup(String gameGroupHeader,Game game,boolean paint) {
+    public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint) {
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
         if ( null != ltd) {
             ltd.addGame(game, paint);
-            return true;
-        } else {
-            return false;
         }
 
     }

@@ -181,22 +181,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
                     MainScreen oldms = (MainScreen) getComponentAt(previousTabIndex);
                     oldms.destroyMe();
-
                     MainScreen newms = (MainScreen) getComponentAt(currentTabIndex);
-
-                    //SwingUtilities.invokeLater(new Runnable()
-                    //{
-                    //public void run()
-                    //{
                     log("changelistener create!");
                     newms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
-                    System.out.println(" timesort is:" + timesort + "...now=" + new java.util.Date());
-                    //newms.adjustcols(false);
-                    //newms.firedatamodels();
-
-
-                    //}
-                    //});
+                    log(" timesort is:" + timesort + "...now=" + new java.util.Date());
                 }
 
             }
@@ -291,18 +279,16 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
         return true;
     }
-
-    //TODO, use reference to MainScreen instead of loop through Component, also  ms.addGame(g, repaint) might no tbe added to the MainScreen if it does not belogn to this MainScreen --05/01/2021
-    public void addGame(Game g, boolean repaint)    // only gets called when adding new game into system
-    {
+    // only gets called when adding new game into system
+    public void addGame(Game g, boolean repaint)   {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
 
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-//                ms.addGame(g, repaint);
-                if ( ms.addGame(g, ms.isShowing()) ) {
+                if ( ms.isShowing()) {
+                    Utils.checkAndRunInEDT(()-> ms.addGame(g, ms.isShowing()));
                     break;
                 }
             }
@@ -316,8 +302,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-//                if (null != ms.removeGame(gameid,repaint)) {
-                if (null != ms.removeGame(gameid, ms.isShowing())) {
+                if ( ms.isShowing()) {
+                    Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, ms.isShowing()));
                     break;
                 }
             }
@@ -344,7 +330,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                ms.removeGames(gameids);
+                if ( ms.isShowing()) {
+                    Utils.checkAndRunInEDT(()-> ms.removeGames(gameids));
+                    break;
+                }
             }
         }
     }
@@ -357,9 +346,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 if ( c.isShowing() ) {
-                    Utils.checkAndRunInEDT(()->{
-                        ms.moveGameToThisHeader(g, header);
-                    });
+                    Utils.checkAndRunInEDT(()-> ms.moveGameToThisHeader(g, header));
                     break;
                 }
             }

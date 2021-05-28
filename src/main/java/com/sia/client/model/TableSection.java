@@ -13,7 +13,7 @@ import static com.sia.client.config.Utils.log;
 
 public abstract class TableSection<V extends KeyedObject> {
 
-    private ColumnCustomizableDataModel containingTableModel;
+    private ColumnCustomizableDataModel<V> containingTableModel;
     private final LineGames<V> gamesVec;
     private final Map<Integer,List<Object>> rowDataMap = new ConcurrentHashMap<>();
     private int rowHeight;
@@ -40,7 +40,7 @@ public abstract class TableSection<V extends KeyedObject> {
     public void setRowHeight(int rowHeight){
         this.rowHeight = rowHeight;
     }
-    public void setContainingTableModel(ColumnCustomizableDataModel containingTableModel) {
+    public void setContainingTableModel(ColumnCustomizableDataModel<V> containingTableModel) {
         this.containingTableModel = containingTableModel;
     }
     private Map<Integer,List<Object>> getRowDataMap() {
@@ -66,6 +66,10 @@ public abstract class TableSection<V extends KeyedObject> {
     }
     public Integer getRowKey(final int rowModelIndex) {
         return gamesVec.getGameId(rowModelIndex);
+    }
+    public V getGame(final int rowModelIndex) {
+        int gameId =gamesVec.getGameId(rowModelIndex);
+        return gamesVec.getGame(gameId);
     }
     public boolean isCellEditable(int nRow, int nCol) {
         return false;
