@@ -24,19 +24,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final ColumnHeaderProvider<V> columnHeaderProvider;
     private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
-    //TODO debug flag
-    private boolean headerInstalled = false;
-    public void setHeaderInstalled(boolean headerInstalled) {this.headerInstalled = headerInstalled;}
-    //END OF debug TODO
 
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
         this.allColumns = allColumns;
         validateAndFixColumnModelIndex(allColumns);
         columnHeaderProvider = new ColumnHeaderProvider<>();
         columnHeaderProvider.setTableModel(this);
-    }
-    public void setTableSectionRowHeight(int rowHeight) {
-        tableSections.forEach(ts->ts.setRowHeight(rowHeight));
     }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -54,7 +47,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public int getColumnCount() {
-//        return delegator.getColumnCount();
         return allColumns.size();
     }
 
@@ -75,13 +67,11 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
 
     @Override
     public Class<?> getColumnClass(final int columnIndex) {
-//        return delegator.getColumnClass(columnIndex);
         throw new IllegalArgumentException("Method not supported");
     }
 
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-//        return delegator.isCellEditable(rowIndex,columnIndex);
         return false;
     }
     @Override
@@ -134,7 +124,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     public void clear() {
         tableSections.clear();
-        headerInstalled = false;
+        rowModelIndex2GameGroupHeaderMap = null;
     }
     public ColumnHeaderProvider<V> getColumnHeaderProvider() {
         return columnHeaderProvider;
