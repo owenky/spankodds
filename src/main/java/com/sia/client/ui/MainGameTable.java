@@ -46,9 +46,11 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     @Override
     public void configHeaderRow() {
         super.configHeaderRow();
-        rowToSoccerStatusMap.clear();
-        for(int rowViewIndex=0;rowViewIndex<getRowCount();rowViewIndex++) {
-            rowToSoccerStatusMap.put(rowViewIndex,isSoccer(rowViewIndex));
+        if ( null != rowToSoccerStatusMap) {
+            rowToSoccerStatusMap.clear();
+            for (int rowViewIndex = 0; rowViewIndex < getRowCount(); rowViewIndex++) {
+                rowToSoccerStatusMap.put(rowViewIndex, isSoccer(rowViewIndex));
+            }
         }
     }
     private boolean isSoccer(int rowViewIndex) {
