@@ -6,11 +6,14 @@ import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.table.TableCellRenderer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainGameTable extends ColumnCustomizableTable<Game> implements LinesTableDataSupplier {
 
     private final LineRenderer soccerLineRenderer = new LineRenderer(SiaConst.SoccerStr);
     private final LineRenderer lineRenderer = new LineRenderer();
+    private final Map<Integer, Boolean> rowToSoccerStatusMap = new HashMap<>();
 
     public MainGameTable(MainGameTableModel tm) {
         super(false,tm);
@@ -25,7 +28,8 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     }
     @Override
     public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colViewIndex) {
-        if (isSoccer(rowViewIndex)) {
+        Boolean isSoccer = rowToSoccerStatusMap.get(rowViewIndex);
+        if ( null != isSoccer && isSoccer) {
             return soccerLineRenderer;
         } else {
             return lineRenderer;
@@ -38,6 +42,14 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     @Override
     public void setName(String name) {
         super.setName(name);
+    }
+    @Override
+    public void configHeaderRow() {
+        super.configHeaderRow();
+        rowToSoccerStatusMap.clear();
+        for(int rowViewIndex=0;rowViewIndex<getRowCount();rowViewIndex++) {
+            rowToSoccerStatusMap.put(rowViewIndex,isSoccer(rowViewIndex));
+        }
     }
     private boolean isSoccer(int rowViewIndex) {
         int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
