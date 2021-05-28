@@ -36,13 +36,15 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     public LinesTableData getLinesTableData(int row) {
         return (LinesTableData)super.getLinesTableData(row);
     }
-    public void optimizeRowHeightsAndGameLineTitles() {
-        if (isSoccer) {
-            setRowHeight(SiaConst.SoccerRowheight);
-        } else {
-            setRowHeight(SiaConst.NormalRowheight);
-        }
-    }
+//    public void optimizeRowHeightsAndGameLineTitles() {
+//        int rowHeight;
+//        if (isSoccer) {
+//            rowHeight = SiaConst.SoccerRowheight;
+//        } else {
+//            rowHeight = SiaConst.NormalRowheight;
+//        }
+//        getModel().setTableSectionRowHeight(rowHeight);
+//    }
     public boolean isSoccer() {
         return isSoccer;
     }

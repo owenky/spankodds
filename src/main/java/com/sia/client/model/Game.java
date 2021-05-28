@@ -2,7 +2,7 @@ package com.sia.client.model;
 
 public class Game implements KeyedObject {
 
-    public int league_id;
+    private int league_id;
     int game_id;
     int visitorgamenumber;
     int homegamenumber;
@@ -59,20 +59,9 @@ public class Game implements KeyedObject {
     java.sql.Timestamp gamestatusts;
     java.sql.Timestamp scorets;
 
-
-    Bookie bestvisitorspread;
-    Bookie besthomespread;
-    Bookie bestover;
-    Bookie bestunder;
-    Bookie bestvisitormoney;
-    Bookie besthomemoney;
-    Bookie bestdrawmoney;
-
     public Game() {
-
         status = "";
         timeremaining = "";
-
     }
 
 
@@ -115,7 +104,6 @@ public class Game implements KeyedObject {
         this.hometeam = hometeam;
         this.shortvisitorteam = shortvisitorteam;
         this.shorthometeam = shorthometeam;
-        this.league_id = league_id;
         this.currentvisitorscore = currentvisitorscore;
         this.currenthomescore = currenthomescore;
         this.finalvisitorscore = finalvisitorscore;
@@ -157,8 +145,7 @@ public class Game implements KeyedObject {
         this.tvstations = tvstations;
         this.gamestatusts = gamestatusts;
         this.scorets = scorets;
-
-
+        this.league_id = league_id;
     }
 
 
@@ -175,8 +162,6 @@ public class Game implements KeyedObject {
         this.homescoresupplemental = homescoresupplemental;
 
     }
-
-
     public java.sql.Timestamp getGamestatusts() {
         return gamestatusts;
     }

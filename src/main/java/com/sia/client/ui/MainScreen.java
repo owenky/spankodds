@@ -124,64 +124,20 @@ public class MainScreen extends JPanel {
         getDataModels().removeGames(gameids);
     }
 
-    public void addGame(Game g, boolean repaint) // only gets called when adding new game into system
-    {
-        int leagueid = g.getLeague_id();
-        if (leagueid == 9) {
-            leagueid = g.getSubleague_id();
+    public boolean addGame(Game g, boolean repaint) { // only gets called when adding new game into system
+        if ( null != mainGameTable) {
+            int leagueid = g.getLeague_id();
+            if (leagueid == SiaConst.SoccerLeagueId) {
+                leagueid = g.getSubleague_id();
+            }
+            String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
+            return getMainGameTable().getModel().addGameToGameGroup(title, g, repaint);
+        } else {
+            return false;
         }
-        String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
-        getMainGameTable().getModel().addGameToGameGroup(title,g,repaint);
-//        for (int i = 0; i < gamegroupheaders.size(); i++) {
-//            String header = gamegroupheaders.get(i);
-//            if (header.equals(title)) {
-//                LinesTableData thisltd = (LinesTableData) datamodelsvec.get(i);
-//                thisltd.addGame(g, repaint);
-//                break;
-//            }
-//        }
     }
 
     public boolean moveGameToThisHeader(Game g, String header) {
-//        Game thisgame = null;
-//
-//        for (int k = 0; k < datamodelsvec.size(); k++) {
-//            LinesTableData ltd = (LinesTableData) datamodelsvec.get(k);
-//            thisgame = ltd.removeGameId(g.getGame_id());
-//            if (thisgame != null) {
-//                break;
-//            }
-//        }
-//        // now lets see if i found it in either
-//        if (thisgame != null) // i did find it
-//        {
-//            if (header.equalsIgnoreCase("In Progress")) {
-//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 4);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("Soccer In Progress")) {
-//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 3);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("FINAL")) {
-//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 2);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("Soccer FINAL")) {
-//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(datamodelsvec.size() - 1);
-//                ltd.addGame(thisgame, true);
-//            } else if (header.equalsIgnoreCase("Halftime")) {
-//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(0);
-//                ltd.addGame(thisgame, true);
-//
-//            } else if (header.equalsIgnoreCase("Soccer Halftime")) {
-//                LinesTableData ltd = (LinesTableData) datamodelsvec.get(1);
-//                ltd.addGame(thisgame, true);
-//
-//            }
-//        }
-//        if ( null == mainGameTable) {
-//            throw new IllegalStateException("mainGameTable is null: screen:"+this.getName());
-//        } else if ( null == mainGameTable.getModel() ) {
-//            throw new IllegalStateException("model of mainGameTable is null: screen:"+this.getName());
-//        }
         return getMainGameTable().getModel().moveGameToThisHeader(g,header);
     }
 
@@ -598,7 +554,7 @@ public class MainScreen extends JPanel {
             String gamedate = sdf.format(g.getGamedate());
             String todaysgames = sdf.format(today);
             int leagueid = g.getLeague_id();
-            Sport s = AppController.getSport("" + leagueid);
+            Sport s = AppController.getSport(leagueid);
 
             Sport s2;
             if (s == null) {
@@ -619,11 +575,10 @@ public class MainScreen extends JPanel {
                     currentmaxlength = maxlength;
                 }
 
-                if (leagueid == 9) // soccer need to look at subleagueid
+                if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-
-                    s2 = AppController.getSport("" + leagueid);
+                    s2 = AppController.getSport(leagueid);
 
                 } else {
                     s2 = s;
@@ -658,8 +613,6 @@ public class MainScreen extends JPanel {
                     }
                 }
 
-                int leagueidtemp = g.getLeague_id();
-                Sport stemp = AppController.getSport("" + leagueid);
                 int id = s.getParentleague_id();
 
                 if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
@@ -668,7 +621,7 @@ public class MainScreen extends JPanel {
                 ) {
 
 
-                    if (id == 9) {
+                    if (id == SiaConst.SoccerLeagueId) {
                         finalgamessoccer.add(g);
                     } else {
                         finalgames.add(g);
@@ -676,14 +629,14 @@ public class MainScreen extends JPanel {
 
                 } else if (!g.getStatus().equalsIgnoreCase("NULL") && !g.getStatus().equals("")) {
                     if (g.getStatus().equalsIgnoreCase("Time")) {
-                        if (id == 9) {
+                        if (id == SiaConst.SoccerLeagueId) {
                             halftimegamessoccer.add(g);
                         } else {
                             halftimegames.add(g);
                         }
 
                     } else {
-                        if (id == 9) {
+                        if (id == SiaConst.SoccerLeagueId) {
                             inprogressgamessoccer.add(g);
                         } else {
                             inprogressgames.add(g);
@@ -692,7 +645,7 @@ public class MainScreen extends JPanel {
 
                     }
                 } else if (g.isSeriesprice()) {
-                    if (id == 9) {
+                    if (id == SiaConst.SoccerLeagueId) {
                         seriesgamessoccer.add(g);
                     } else {
                         seriesgames.add(g);
@@ -700,7 +653,7 @@ public class MainScreen extends JPanel {
 
 
                 } else if ((g.isIngame() || description.indexOf("In-Game") != -1)) {
-                    if (id == 9) {
+                    if (id == SiaConst.SoccerLeagueId) {
                         ingamegamessoccer.add(g);
                     } else {
                         ingamegames.add(g);
@@ -820,11 +773,11 @@ public class MainScreen extends JPanel {
 
         if (halftimegamessoccer.size() > 0) {
             gamegroupheadervec.insertElementAt("Soccer Halftime", 1);
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.insertElementAt(halftimegamessoccer, 1);
         } else {
             gamegroupheadervec.insertElementAt("Soccer Halftime", 1);
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.insertElementAt(new Vector(), 1);
         }
         vecofgamegroups = gamegroupvec;
@@ -880,18 +833,16 @@ public class MainScreen extends JPanel {
                 }
 
                 int leagueid = g.getLeague_id();
-                Sport s = AppController.getSport("" + leagueid);
+                Sport s = AppController.getSport(leagueid);
 
                 Sport s2;
                 if (s == null) {
                     continue;
                 }
-                if (leagueid == 9) // soccer need to look at subleagueid
+                if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-
-                    s2 = AppController.getSport("" + leagueid);
-
+                    s2 = AppController.getSport(leagueid);
                 } else {
                     s2 = s;
                 }
@@ -972,28 +923,10 @@ public class MainScreen extends JPanel {
 
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 
-//        JTable table0 = new JTable();
-//        table0.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//        table0.setPreferredScrollableViewportSize(table0.getPreferredSize());
-//        table0.setOpaque(true);
-//        table0.changeSelection(0, 0, false, false);
-//        table0.setAutoCreateColumnsFromModel(false);
-//
-//        if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
-//            table0.setRowHeight(60);
-//        } else {
-//            table0.setRowHeight(30);
-//        }
-//        JTableHeader tableHeader = table0.getTableHeader();
-        Font headerFont = new Font("Verdana", Font.BOLD, 11);
-//        tableHeader.setFont(headerFont);
-
-//        JScrollPane scrollPane0 = new JScrollPane(table0);
-
         Vector hiddencols = AppController.getHiddenCols();
         allColumns.clear();
         for (int k = 0; k < newBookiesVec.size(); k++) {
-            Bookie b = (Bookie) newBookiesVec.get(k);
+            Bookie b = newBookiesVec.get(k);
 
             if (hiddencols.contains(b)) {
                 continue;
@@ -1028,9 +961,6 @@ public class MainScreen extends JPanel {
                 column.setMinWidth(10);
                 column.setPreferredWidth(30);
             }
-
-//            table0.addColumn(column);
-//            mainGameTable.addColumn(column);
             allColumns.add(column);
         }
 
@@ -1041,25 +971,6 @@ public class MainScreen extends JPanel {
 
         blankcol.setMaxWidth(30);
         blankcol.setPreferredWidth(30);
-//        table0.addColumn(blankcol);
-
-//        LinesTableData dataModel0 = new LinesTableData(display, period, 0, new Vector(), timesort, shortteam, opener, last);
-//        table0.setModel(dataModel0);
-//        JTable fixed0 = makeFixedRowHeader(AppController.getNumFixedCols(), table0, false);
-
-//        fixed0.setPreferredScrollableViewportSize(fixed0.getPreferredSize());
-
-//        JTableHeader tableHeaderfixed = fixed0.getTableHeader();
-        Font headerFontfixed = new Font("Verdana", Font.BOLD, 11);
-//        tableHeaderfixed.setFont(headerFontfixed);
-//
-//        scrollPane0.setRowHeaderView(fixed0);
-//        scrollPane0.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixed0.getTableHeader());
-//
-//        scrollPane0.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//        scrollPane0.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
-//        scrollPane0.removeMouseWheelListener(scrollPane0.getMouseWheelListeners()[0]);
-
 
         log("gamergroup headers start..." + new java.util.Date());
 
@@ -1067,7 +978,6 @@ public class MainScreen extends JPanel {
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             boolean showit = true;
             Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-
             if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
             {
                 showit = false;
@@ -1084,10 +994,10 @@ public class MainScreen extends JPanel {
 
 
             String name = getName();
-            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr)) {
+            if ((gamegroupheaders.get(j)).contains(SiaConst.SoccerStr)) {
 
                 if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
-                    String orginal = gamegroupheaders.get(j) + "";
+                    String orginal = gamegroupheaders.get(j);
                     String nameWithoutSoccer = orginal.replace(SiaConst.SoccerStr, "");
                     label.setText("                                                                                                                                                      " +
 
@@ -1105,32 +1015,6 @@ public class MainScreen extends JPanel {
             label.setOpaque(true);
             label.setBackground(new Color(0, 0, 128));
             label.setForeground(Color.WHITE);
-            for (Object o : newgamegroupvec) {
-                Game g = (Game) o;
-                int leagueid = g.getLeague_id();
-                Sport s = AppController.getSport("" + leagueid);
-
-            }
-//            JTable tablex;
-//            if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-//                tablex = new SoccerTableView();
-//                tablex.setRowHeight(60);
-//            } else {
-//                tablex = new RegularTableView();
-//                tablex.setRowHeight(30);
-//            }
-//            tablex.setName("table" + j);
-//            tablex.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//            tablex.setColumnModel(table0.getColumnModel());
-//            tablex.setPreferredScrollableViewportSize(tablex.getPreferredSize());
-//            tablex.setOpaque(true);
-//
-//            tablex.changeSelection(0, 0, false, false);
-//            tablex.setAutoCreateColumnsFromModel(false);
-//            JScrollPane scrollPanex = new JScrollPane(tablex);
-//
-//            scrollPanex.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//            scrollPanex.getHorizontalScrollBar().setModel(scrollPane0.getHorizontalScrollBar().getModel());
             if (j == vecofgamegroups.size() - 1) // last group
             {
 
@@ -1170,10 +1054,6 @@ public class MainScreen extends JPanel {
 //                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
 //                scrollPanex.setRowHeaderView(fixedx);
             }
-
-
-//            tablex.setTableHeader(null); // this has to be placed all the way down here!!!!
-            //System.out.println("nnn");
             boolean toShowHeader = false;
             if (isShowHeaders()) {
                 if (showit) {
@@ -1181,23 +1061,14 @@ public class MainScreen extends JPanel {
                     toShowHeader = true;
                 }
             }
-
-//            if (newgamegroupvec.size() > 0) {
-//                scrollPanex.setPreferredSize(new Dimension(700, tablex.getRowHeight() * newgamegroupvec.size()));
-//            } else {
-//                scrollPanex.setPreferredSize(new Dimension(1, 1));
-//            }
             //TODO add tablemodel to MainGameTable
             if ( ! toShowHeader ) {
                 gameGroupHeader = null;
             }
-            LinesTableData dataModel = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader);
-//            datamodelsvec.add(dataModel);
-            mainGameTable.addGameLine(dataModel);
-//
-//            tablePanel.add(scrollPanex);
-//            scrollPanex.removeMouseWheelListener(scrollPanex.getMouseWheelListeners()[0]);
-
+            LinesTableData tableSection = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader);
+            int tableSectionRowHeight = calTableSectionRowHeight(newgamegroupvec);
+            tableSection.setRowHeight(tableSectionRowHeight);
+            mainGameTable.addGameLine(tableSection);
             oldgamegroupvec = newgamegroupvec;
         }
         MainGameTableModel model = mainGameTable.getModel();
@@ -1205,11 +1076,9 @@ public class MainScreen extends JPanel {
         log("gamergroup headers end..." + new java.util.Date());
         log("hidden end..." + new java.util.Date());
         JScrollPane scrollPane = new JScrollPane(tablePanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
+//        scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-//        JScrollBar bar = lastScrollPane.getHorizontalScrollBar();
-
 
         removeAll();
         revalidate();
@@ -1221,7 +1090,8 @@ public class MainScreen extends JPanel {
         add(mainTableContainer, BorderLayout.CENTER);
         //END OF TODO
 //        add(bar, BorderLayout.PAGE_END);
-        mainGameTable.optimizeRowHeightsAndGameLineTitles();
+//        mainGameTable.optimizeRowHeightsAndGameLineTitles();
+        mainGameTable.configHeaderRow();
         AppController.addDataModels(getDataModels());
     }
 
@@ -1312,23 +1182,18 @@ public class MainScreen extends JPanel {
         return mainGameTable;
     }
     private JComponent makeMainTableScrollPane(MainGameTable table) {
-//        JScrollPane rtn = new JScrollPane(table);
-//        //
-//        JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), table, false);
-//        fixedx.setColumnModel(fixed0.getColumnModel());
-//
-//        if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-//            fixedx.setRowHeight(60);
-//            fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
-//        } else {
-//            fixedx.setRowHeight(30);
-//            fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-//        }
-//
-//        fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-//        rtn.setRowHeaderView(fixedx);
-//
-//        //
         return TableUtils.configTableLockColumns(table,AppController.getNumFixedCols());
+    }
+    private static int calTableSectionRowHeight(List<Game> games) {
+        int tableSectionRowHeight = SiaConst.NormalRowheight;
+        if ( null != games) {
+            for(Game g: games) {
+                if ( null != g && SiaConst.SoccerLeagueId == g.getLeague_id()) {
+                    tableSectionRowHeight = SiaConst.SoccerRowheight;
+                }
+                break;
+            }
+        }
+        return tableSectionRowHeight;
     }
 }

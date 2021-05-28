@@ -252,12 +252,12 @@ public class CustomTab2 extends JPanel {
 
                 int leagueid = g.getLeague_id();
 
-                Sport s = AppController.getSport("" + leagueid);
+                Sport s = AppController.getSport(leagueid);
 
                 Sport s2;
 
                 if (s == null) {
-                    System.out.println("skipping " + leagueid + "...cuz of null sport");
+                    log("skipping " + leagueid + "...cuz of null sport");
                     continue;
                 }
 
@@ -280,24 +280,22 @@ public class CustomTab2 extends JPanel {
                 } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
                     currenttreenode = tennis;
                 } else {
-                    System.out.println("should never enter gameid=" + g.getGame_id());
+                    log("should never enter gameid=" + g.getGame_id());
                     currenttreenode = football;
 
                 }
 
 
-                if (leagueid == 9) // soccer need to look at subleagueid
+                if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-
-                    s2 = AppController.getSport("" + leagueid);
-
+                    s2 = AppController.getSport(leagueid);
                 } else {
                     s2 = s;
                 }
 
                 if (s2 == null) {
-                    System.out.println("skipping " + leagueid + "...cuz of null sport2");
+                    log("skipping " + leagueid + "...cuz of null sport2");
                     continue;
                 }
                 String description = g.getDescription();

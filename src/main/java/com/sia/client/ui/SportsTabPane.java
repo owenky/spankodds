@@ -111,7 +111,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             String[] items = msstring.split("\\*");
             Vector customheaders = new Vector();
             for (int j = 0; j < items.length; j++) {
-                System.out.println(j + " item=" + items[j]);
+                log(j + " item=" + items[j]);
                 if (j == 0) {
                     String[] headers = items[j].split("\\|");
                     for (int k = 0; k < headers.length; k++) {
@@ -120,7 +120,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                             continue;
                         } else {
                             customheaders.add(header);
-                            System.out.println("adding header=" + header);
+                            log("adding header=" + header);
                         }
                     }
                 } else if (j == 1) {
@@ -301,7 +301,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                ms.addGame(g, repaint);
+//                ms.addGame(g, repaint);
+                if ( ms.addGame(g, ms.isShowing()) ) {
+                    break;
+                }
             }
         }
 
@@ -313,7 +316,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                if (null != ms.removeGame(gameid, repaint)) {
+//                if (null != ms.removeGame(gameid,repaint)) {
+                if (null != ms.removeGame(gameid, ms.isShowing())) {
                     break;
                 }
             }
@@ -352,7 +356,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                if (ms.moveGameToThisHeader(g, header)) {
+                if ( c.isShowing() ) {
+                    Utils.checkAndRunInEDT(()->{
+                        ms.moveGameToThisHeader(g, header);
+                    });
                     break;
                 }
             }

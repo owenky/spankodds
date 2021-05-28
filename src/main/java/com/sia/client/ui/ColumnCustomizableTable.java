@@ -1,6 +1,8 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.ColumnCustomizableDataModel.LtdSrhStruct;
 import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MarginProvider;
@@ -68,7 +70,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             Object headerValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
             if ( null == headerValue) {
 //                rowHeight = getRowHeight();
-                rowHeight = getModel().getLinesTableData(rowModelIndex).linesTableData.getRowHeight();
+                LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
+                if ( null != section && null != section.linesTableData) {
+                    rowHeight = section.linesTableData.getRowHeight();
+                } else {
+                    rowHeight = SiaConst.NormalRowheight;
+                }
             } else {
                 rowHeight = columnHeaderProvider.getColumnHeaderHeight();
                 drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
@@ -101,6 +108,10 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void setRowHeight(int rowViewIndex,int rowHeight) {
         getRowHeaderTable().setRowHeight(rowViewIndex,rowHeight);
         super.setRowHeight(rowViewIndex,rowHeight);
+    }
+    @Override
+    public int getRowHeight() {
+        return super.getRowHeight();
     }
     @Override
     public void setRowMargin(int rowMargin) {

@@ -1373,7 +1373,7 @@ class LineAlertOpeners implements ItemListener {
         String visitorTeam = game.getVisitorteam();
         Bookie bk = AppController.getBookie(bid + "");
         String bookiename = bk.getName();
-        int lid = game.league_id;
+        int lid = game.getLeague_id();
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);
         if (opener.equals("1")) {
@@ -1453,7 +1453,7 @@ class LineAlertOpeners implements ItemListener {
         String visitorTeam = game.getVisitorteam();
         Bookie bk = AppController.getBookie(bid + "");
         String bookiename = bk.getName();
-        int lid = game.league_id;
+        int lid = game.getLeague_id();
 
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);
@@ -1531,7 +1531,7 @@ class LineAlertOpeners implements ItemListener {
         String visitorTeam = game.getVisitorteam();
         Bookie bk = AppController.getBookie(bid + "");
         String bookiename = bk.getName();
-        int lid = game.league_id;
+        int lid = game.getLeague_id();
 
         String sportname = getSportName(lid);
         String leaguename = getLeagueName(lid);

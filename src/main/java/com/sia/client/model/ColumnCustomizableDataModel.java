@@ -35,6 +35,9 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         columnHeaderProvider = new ColumnHeaderProvider<>();
         columnHeaderProvider.setTableModel(this);
     }
+    public void setTableSectionRowHeight(int rowHeight) {
+        tableSections.forEach(ts->ts.setRowHeight(rowHeight));
+    }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);

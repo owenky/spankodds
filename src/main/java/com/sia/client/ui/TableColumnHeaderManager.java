@@ -119,7 +119,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         int x1 = 0;
         int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
-        mainTable.setRowHeight(rowViewIndex, headerHeight);
+        //TODO need to verify
+//        mainTable.setRowHeight(rowViewIndex, headerHeight);
         header.setBounds(x1+diffByScroll, y1, width, headerHeight);
 
     }

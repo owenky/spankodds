@@ -24,8 +24,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -49,7 +51,7 @@ public class AppController {
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
-    public static Hashtable<String, Sport> sports = new Hashtable();
+    public static Map<Integer, Sport> sports = new HashMap<>();
     public static Games games = new Games();
 
     public static Vector<Bookie> openerbookiesVec = new Vector();
@@ -844,7 +846,7 @@ public class AppController {
 
     public static void addSport(Sport s) {
 
-        sports.put(s.getLeague_id() + "", s);
+        sports.put(s.getLeague_id(), s);
         sportsVec.add(s);
     }
 
@@ -1035,8 +1037,8 @@ public class AppController {
         return bookies.get(bid + "");
     }
 
-    public static Sport getSport(int sid) {
-        return sports.get(sid + "");
+    public static Sport getSport(int leagueId) {
+        return sports.get(leagueId);
     }
 
     public static Game getGame(int gid) {
@@ -1047,10 +1049,6 @@ public class AppController {
         return bookies.get(bid + "");
     }
 
-    public static Sport getSport(String sid) {
-        return sports.get(sid + "");
-    }
-
     public static Games getGames() {
         return games;
     }
@@ -1059,9 +1057,9 @@ public class AppController {
         return bookies;
     }
 
-    public static Hashtable getSports() {
-        return sports;
-    }
+//    public static Hashtable getSports() {
+//        return sports;
+//    }
 
     public static Hashtable getBookieColors() {
         return bookiecolors;

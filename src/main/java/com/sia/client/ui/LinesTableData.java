@@ -3,7 +3,6 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Bookie;
-import com.sia.client.model.ColumnData;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
@@ -25,7 +24,7 @@ public class LinesTableData extends TableSection<Game> {
 
     protected final SimpleDateFormat m_frm;
     private final boolean shortteam;
-    public Vector<ColumnData> m_columns;
+//    public Vector<ColumnData> m_columns;
     public String sport = "";
     protected Date m_date;
     boolean showingOpener = false;
@@ -36,9 +35,16 @@ public class LinesTableData extends TableSection<Game> {
     private final Vector<Bookie> bookieVector;
     private long cleartime;
 
-    public LinesTableData(Vector<Game> gameVec, Vector<Bookie> bookieVector, Games gameCache, String gameGroupHeader) {
-        this(AppController.getDisplayType(), 0, 100L, gameVec, false, false, false, false, gameGroupHeader, gameCache, bookieVector);
+//    public LinesTableData(long cleartime, Vector<Game> gameVec, String gameGroupHeader) {
+//        this(AppController.getDisplayType(), 0, cleartime, gameVec, false, false, false, false, gameGroupHeader);
+//    }
+
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader) {
+        this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), LazyInitializer.bookiesVec);
     }
+//    public LinesTableData(Vector<Game> gameVec, Vector<Bookie> bookieVector, Games gameCache, String gameGroupHeader) {
+//        this(AppController.getDisplayType(), 0, 100L, gameVec, false, false, false, false, gameGroupHeader, gameCache, bookieVector);
+//    }
 
     public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, Vector<Bookie> bookieVector) {
         super(gameCache, null != gameGroupHeader, gameVec);
@@ -50,16 +56,11 @@ public class LinesTableData extends TableSection<Game> {
         this.display = display;
         this.period = period;
         this.bookieVector = bookieVector;
-//        setInitialData();
-//        resetDataVector();
         if (opener) {
             showOpener();
         } else if (last) {
             showPrior();
         }
-        String headerInLowerCase = null==gameGroupHeader?"":gameGroupHeader.toLowerCase();
-        int rowHeight = headerInLowerCase.contains("football") || headerInLowerCase.contains(SiaConst.SoccerStr.toLowerCase()) ?SiaConst.SoccerRowheight:SiaConst.NormalRowheight;
-        setRowHeight(rowHeight);
     }
 
     public void showOpener() {
@@ -75,15 +76,6 @@ public class LinesTableData extends TableSection<Game> {
         log("suspecious fire call in showPrior()");
         fire(null);
     }
-
-    public LinesTableData(long cleartime, Vector<Game> gameVec, String gameGroupHeader) {
-        this(AppController.getDisplayType(), 0, cleartime, gameVec, false, false, false, false, gameGroupHeader);
-    }
-
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader) {
-        this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), LazyInitializer.bookiesVec);
-    }
-
 //    @Override
 //    public Vector<ColumnData> getColumnData() {
 //        if (null == m_columns) {
@@ -122,7 +114,10 @@ public class LinesTableData extends TableSection<Game> {
 //        }
 //        return m_columns;
 //    }
-
+    @Override
+    public void addGame(Game g, boolean repaint) {
+       super.addGame(g,repaint);
+    }
     @Override
     protected void prepareLineGamesForTableModel(LineGames<Game> gamesVec) {
         if (timesort) {
