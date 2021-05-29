@@ -2,8 +2,9 @@ package com.sia.client.model;
 
 import com.sia.client.ui.ColumnCustomizableTable;
 
-public interface AbstratScreen<T extends KeyedObject> {
+public interface AbstractScreen<T extends KeyedObject> {
 
+    void destroyMe();
     ColumnCustomizableTable<T> getColumnCustomizableTable();
     default void checktofire(int gameid) {
         ColumnCustomizableTable<T> table = getColumnCustomizableTable();
