@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.AbstratScreen;
+import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Games;
@@ -38,7 +38,7 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
-public class MainScreen extends JPanel implements AbstratScreen<Game> {
+public class MainScreen extends JPanel implements AbstractScreen<Game> {
 //    public Vector datamodelsvec = new Vector();
     public Timer timer;
     public int timer2count = 0;
@@ -1138,6 +1138,7 @@ public class MainScreen extends JPanel implements AbstratScreen<Game> {
         }
         return mainGameTable;
     }
+    @Override
     public void destroyMe() {
         AppController.removeDataModels(getDataModels());
         inprogressgames.clear();
