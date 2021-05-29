@@ -1,23 +1,21 @@
 package com.sia.client.model;
 
 import com.sia.client.ui.ColumnCustomizableTable;
-import com.sia.client.ui.LinesTableData;
-import com.sia.client.ui.MainGameTable;
 
 public abstract class GameTableAdjustScheduler {
 
     private static final ColumnAdjustScheduler columnAdjustScheduler = new ColumnAdjustScheduler();
 
-    public static void adjustColumn(MainGameTable mainGameTable, LinesTableData ltd, int gameid) {
-        ColAdjustStruct colAdjustStr = new ColAdjustStruct(mainGameTable,ltd,gameid);
+    public static <T extends KeyedObject> void adjustColumn(ColumnCustomizableTable<T> mainGameTable, TableSection<T> ltd, int gameid) {
+        ColAdjustStruct<T> colAdjustStr = new ColAdjustStruct<>(mainGameTable,ltd,gameid);
         columnAdjustScheduler.addRowData(colAdjustStr);
     }
     /////////////////////////////////////////////////////////////////////////////////////
-    private static class ColAdjustStruct implements TableModelRowData {
-        private final MainGameTable mainGameTable;
-        private final LinesTableData ltd;
+    private static class ColAdjustStruct<T extends KeyedObject> implements TableModelRowData {
+        private final ColumnCustomizableTable<T> mainGameTable;
+        private final TableSection<T> ltd;
         private final int gameid;
-        private ColAdjustStruct(MainGameTable mainGameTable, LinesTableData ltd, int gameid) {
+        private ColAdjustStruct(ColumnCustomizableTable<T> mainGameTable, TableSection<T> ltd, int gameid) {
             this.mainGameTable = mainGameTable;
             this.ltd = ltd;
             this.gameid = gameid;
@@ -29,7 +27,7 @@ public abstract class GameTableAdjustScheduler {
         }
 
         @Override
-        public ColumnCustomizableTable getTable() {
+        public ColumnCustomizableTable<?> getTable() {
             return mainGameTable;
         }
     }
