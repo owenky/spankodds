@@ -1,25 +1,33 @@
 package com.sia.client.ui.simulator;
 
+import com.sia.client.ui.SpankOddsTest;
+
 import java.util.List;
 
 public class CheckToFileTest implements EventGenerator{
-    private static int pointer=0;
-    public static final int movedGameId = 2;
+
+    public static final int [] gameIds = {1,3,5,7,9,11,101,103,105,107,109,111,113};
     @Override
     public void generatEvent(final TableProperties [] tblProps) {
 
-//        TableProperties tblProp = tblProps[0];
-//        updateTestGame(tblProp.testGameCache.getGame(tesgGameId1));
-//        updateTestGame(tblProp.testGameCache.getGame(testGameid2));
-//
-//        tblProp.table.getModel().fireTableChanged(new TableModelEvent(tblProp.table.getModel()));
+        updateTestGame(tblProps);
     }
-    private void updateTestGame(TestGame game) {
+    private void updateTestGame(TableProperties [] tblProps) {
+        for(int gameId: gameIds) {
+            TestGame tg = SpankOddsTest.testGameCache.getGame(gameId);
+            if ( null != tg) {
+                updateRowData(tg.getRowData(),1);
+            }
+            for(TableProperties tp: tblProps) {
+                MainScreenTest mst = tp.getMainScreen();
+                if ( mst.isShowing()) {
+                    mst.checktofire(gameId);
+                }
+            }
 
-        updateRowData(game.getRowData(),1);
-        updateRowData(game.getRowData(),40);
+        }
     }
-    private void updateRowData(List<Object> rowData, int col) {
+    private static void updateRowData(List<Object> rowData, int col) {
         String oldValue = String.valueOf(rowData.get(col));
         if ( oldValue.length() < 15) {
             rowData.set(col, oldValue + "X");
