@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.ui.simulator.ColumnWidthAdjuster;
 import com.sia.client.ui.simulator.EventGenerator;
-import com.sia.client.ui.simulator.GameMover;
 import com.sia.client.ui.simulator.TableProperties;
 import com.sia.client.ui.simulator.TestGameCache;
 
@@ -24,30 +24,32 @@ public class SpankOddsTest {
         JFrame jFrame = new JFrame();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TableProperties tbleProps0 = TableProperties.of(testGameCache,secCount,rowCount,testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
-        TableProperties tbleProps1 = TableProperties.of(testGameCache,secCount,rowCount,1,TestGameCache.colCount,1);
-        TableProperties tbleProps2 = TableProperties.of(testGameCache,0,0,1,TestGameCache.colCount,2);
-        TableProperties [] tbleProps  = new TableProperties [] {tbleProps0,tbleProps1,tbleProps2};
+        TableProperties tbleProps0 = TableProperties.of(testGameCache, secCount, rowCount, testMainTableLastLockedColumnIndex, TestGameCache.colCount, 0);
+        TableProperties tbleProps1 = TableProperties.of(testGameCache, secCount, rowCount, 1, TestGameCache.colCount, 1);
+        TableProperties tbleProps2 = TableProperties.of(testGameCache, 0, 0, 1, TestGameCache.colCount, 2);
+        TableProperties[] tbleProps = new TableProperties[]{tbleProps0, tbleProps1, tbleProps2};
 
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        for(TableProperties tblProp:tbleProps) {
-            tabbedPane.addTab(tblProp.table.getName(), tblProp.tableContainer);
+        for (TableProperties tblProp : tbleProps) {
+            tabbedPane.addTab(tblProp.table.getName(), tblProp.getMainScreen());
         }
         jFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         jFrame.setSize(new Dimension(1500, 800));
-        jFrame.setLocation(new Point(250,100));
+        jFrame.setLocation(new Point(250, 100));
         jFrame.setVisible(true);
         autoUpdateTableData(tbleProps);
     }
-    private static void autoUpdateTableData(TableProperties [] tblProps) {
+
+    private static void autoUpdateTableData(TableProperties[] tblProps) {
         final EventGenerator eventGenerator;
 //            eventGenerator = new NewGameCreator();
-//            eventGenerator = new ColumnWidthAdjuster();
+            eventGenerator = new ColumnWidthAdjuster();
 //            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
-            eventGenerator = new GameMover();
+//            eventGenerator = new GameMover();
+//        eventGenerator = new CheckToFileTest();
 //        eventGenerator = new CheckToFire();
         Timer updateTimer = new Timer(3000, (event) -> {
             eventGenerator.generatEvent(tblProps);
@@ -55,8 +57,6 @@ public class SpankOddsTest {
         updateTimer.setInitialDelay(3000);
         updateTimer.start();
     }
-
-
 
 
 }
