@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnHeaderDrawer {
+public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable {
 
     private static final AtomicInteger instanceCounter = new AtomicInteger(0);
     private final int instanceIndex;
@@ -271,11 +271,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             createUnlockedColumns();
         }
     }
-    @Override
-    public boolean isColumnHeaderDrawn(Object columnHeaderValue) {
-        return getTableColumnHeaderManager().isColumnHeaderDrawn(columnHeaderValue);
-    }
-    @Override
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
         getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
     }
