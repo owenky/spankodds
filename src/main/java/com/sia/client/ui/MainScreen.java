@@ -1,9 +1,9 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.AbstratScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameTableAdjustScheduler;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
@@ -38,7 +38,7 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
-public class MainScreen extends JPanel {
+public class MainScreen extends JPanel implements AbstratScreen<Game> {
 //    public Vector datamodelsvec = new Vector();
     public Timer timer;
     public int timer2count = 0;
@@ -94,18 +94,8 @@ public class MainScreen extends JPanel {
         this.showextra = showextra;
         this.showprops = showprops;
     }
-    public boolean checktofire(int gameid) {
-        MainGameTableModel v = getDataModels();
-        LinesTableData ltd = (LinesTableData)v.checktofire(gameid,getMainGameTable().isShowing());
-        boolean status = (null != ltd);
-        if (status) {
-            GameTableAdjustScheduler.adjustColumn(this.getMainGameTable(), ltd, gameid);
-        }
-
-        return status;
-    }
     public MainGameTableModel getDataModels() {
-        return getMainGameTable().getModel();
+        return getColumnCustomizableTable().getModel();
     }
     public void setClearTime(long clear) {
         cleartime = clear;
@@ -131,12 +121,12 @@ public class MainScreen extends JPanel {
                 leagueid = g.getSubleague_id();
             }
             String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
-            getMainGameTable().getModel().addGameToGameGroup(title, g, repaint);
+            getColumnCustomizableTable().getModel().addGameToGameGroup(title, g, repaint);
         }
     }
 
     public void moveGameToThisHeader(Game g, String header) {
-        getMainGameTable().getModel().moveGameToThisHeader(g,header);
+        getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
@@ -909,7 +899,7 @@ public class MainScreen extends JPanel {
     }
     public void drawIt() {
 
-        mainGameTable = getMainGameTable();
+        mainGameTable = getColumnCustomizableTable();
         mainGameTable.clear();
         Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
@@ -1139,9 +1129,10 @@ public class MainScreen extends JPanel {
     }
 
     public void adjustcols() {
-        getMainGameTable().adjustColumns();
+        getColumnCustomizableTable().adjustColumns();
     }
-    private MainGameTable getMainGameTable() {
+    @Override
+    public MainGameTable getColumnCustomizableTable() {
         if ( null == mainGameTable ) {
             mainGameTable = createMainGameTable();
         }
@@ -1160,15 +1151,12 @@ public class MainScreen extends JPanel {
         halftimegamessoccer.clear();
         seriesgamessoccer.clear();
         ingamegamessoccer.clear();
-
-
         removeAll();
 
         if (timer != null) {
             timer.stop();
         }
         log("destroyed mainscreen!!!!");
-
     }
     private MainGameTable createMainGameTable() {
         MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(allColumns));
