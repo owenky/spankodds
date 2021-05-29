@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -22,7 +23,11 @@ public class TableProperties {
     public static TableProperties of(TestGameCache testGameCache,int sectionCount, int sectionRowCount,int boundaryIndex,int colCount, int tableIndex) {
 
         TableProperties rtn = new TableProperties() ;
+        rtn.sectionCount = sectionCount;
+        rtn.sectionRowCount = sectionRowCount;
+        rtn.tableIndex = tableIndex;
         rtn.testGameCache = testGameCache;
+        rtn.boundaryIndex = boundaryIndex;
         ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(makeColumns(colCount));
         rtn.table = new ColumnCustomizableTable<TestGame>(false,tm) {
 
@@ -56,17 +61,9 @@ public class TableProperties {
         rtn.table.setRowHeight(60);
         rtn.table.setIntercellSpacing(new Dimension(2, 2));
         rtn.table.setName("Table "+tableIndex);
-        buildModels(rtn, sectionCount,sectionRowCount,tableIndex);
-
-        rtn.tableContainer = TableUtils.configTableLockColumns(rtn.table, boundaryIndex);
+        rtn.mainScreen = new MainScreenTest(rtn);
+        rtn.rebuild();
         return rtn;
-    }
-    private static void buildModels(TableProperties tblProp,int sectionCount, int sectionRowCount, int tableIndex) {
-        for(int secIndex=0;secIndex<sectionCount;secIndex++) {
-            TestTableSection testTableSection = TestTableSection.createTestTableSection(tblProp.testGameCache,secIndex,sectionRowCount,tableIndex);
-            tblProp.table.getModel().addGameLine(testTableSection);
-        }
-        tblProp.table.getModel().buildIndexMappingCache();
     }
     private static Vector<TableColumn> makeColumns(int columnCount) {
 
@@ -78,7 +75,28 @@ public class TableProperties {
         }
         return rtn;
     }
+    public void rebuild() {
+        buildModels(sectionCount,sectionRowCount,tableIndex);
+        JComponent tableContainer = TableUtils.configTableLockColumns(table, boundaryIndex);
+        mainScreen.removeAll();
+        mainScreen.setLayout(new BorderLayout());
+        mainScreen.add(tableContainer,BorderLayout.CENTER);
+    }
+    public MainScreenTest getMainScreen() {
+        return mainScreen;
+    }
+    private void buildModels(int sectionCount, int sectionRowCount, int tableIndex) {
+        for(int secIndex=0;secIndex<sectionCount;secIndex++) {
+            TestTableSection testTableSection = TestTableSection.createTestTableSection(testGameCache,secIndex,sectionRowCount,tableIndex);
+            table.getModel().addGameLine(testTableSection);
+        }
+        table.getModel().buildIndexMappingCache();
+    }
+    private MainScreenTest mainScreen;
+    private int sectionCount;
+    private int sectionRowCount;
+    private int tableIndex;
+    private int boundaryIndex;
     public TestGameCache testGameCache;
     public ColumnCustomizableTable<TestGame> table;
-    public JComponent tableContainer;
 }
