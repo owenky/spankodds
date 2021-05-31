@@ -42,9 +42,7 @@ public class TableColumnAdjuster {
     private int lastRow;
     private int firstCol;
     private int lastCol;
-
-
-    private AdjustStatic adjustStatic = new AdjustStatic();
+    private final AdjustStatic adjustStatic = new AdjustStatic();
 
     /*
      *  Specify the table and spacing
@@ -60,6 +58,10 @@ public class TableColumnAdjuster {
     public void clear() {
         columnSizes.clear();
         headerSizes.clear();
+        firstRow = 0;
+        lastRow = 0;
+        firstCol = 0;
+        lastCol = 0;
     }
     /*
      *	Indicates whether columns can only be increased in size
@@ -294,7 +296,7 @@ public class TableColumnAdjuster {
             if (table.getTableHeader() != null) {
                 table.getTableHeader().setResizingColumn(tableColumn);
             }
-            tableColumn.setWidth(width.intValue());
+            tableColumn.setWidth(width);
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////
@@ -331,8 +333,8 @@ public class TableColumnAdjuster {
                 log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
                         + ", skipCount=" + skipCount + " ******ADJUST COUNT*******=" + adjustCount + ", TOTAL:" + totalCount);
             } else {
-                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
-                        + " ALL SKIPPED, TOTAL:" + totalCount);
+//                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
+//                        + " ALL SKIPPED, TOTAL:" + totalCount);
             }
             lastTime = System.currentTimeMillis();
         }
@@ -401,7 +403,6 @@ public class TableColumnAdjuster {
 
             if (isToggleLarger) {
                 setOnlyAdjustLarger(!isOnlyAdjustLarger);
-                return;
             }
         }
     }

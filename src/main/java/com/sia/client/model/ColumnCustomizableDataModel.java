@@ -122,10 +122,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
         return section.getGame(rowIndexInLinesTableData);
     }
-    public void clear() {
-        tableSections.clear();
-        rowModelIndex2GameGroupHeaderMap = null;
-    }
     public ColumnHeaderProvider<V> getColumnHeaderProvider() {
         return columnHeaderProvider;
     }
@@ -190,8 +186,8 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         }
         return rowData;
     }
-    public int getRowModelIndex(TableSection<V> ltd, Integer key) {
-        int gameIndex = ltd.getRowIndex(key);
+    public int getRowModelIndex(TableSection<V> ltd, Integer gameId) {
+        int gameIndex = ltd.getRowIndex(gameId);
         if ( gameIndex >=0) {
             int offset = 0;
             for (int i = 0; i < ltd.getIndex(); i++) {

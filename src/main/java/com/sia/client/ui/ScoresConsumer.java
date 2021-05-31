@@ -3,7 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameMessageProcessor;
+import com.sia.client.model.MessageConsumingScheduler;
 import com.sia.client.model.Sport;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -19,6 +19,12 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
@@ -34,7 +40,7 @@ public class ScoresConsumer implements MessageListener {
     private transient Session session;
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
+    private final MessageConsumingScheduler<ScoreMessageWrapper> scoreMessageProcessor;
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
@@ -45,6 +51,7 @@ public class ScoresConsumer implements MessageListener {
         Destination destination = session.createTopic(scoresconsumerqueue + "?consumer.retroactive=true");
         MessageConsumer messageConsumer = session.createConsumer(destination);
         messageConsumer.setMessageListener(this);
+        scoreMessageProcessor = createScoreMessageProcessor();
         connection.start();
     }
 
@@ -65,19 +72,17 @@ public class ScoresConsumer implements MessageListener {
     }
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
-        gameMessageProcessor.addRunnable(()->gameMessageProcessor((MapMessage)message));
+        scoreMessageProcessor.addMessage(new ScoreMessageWrapper((MapMessage)message));
+//        gameMessageProcessor((MapMessage)message);
     }
-    private void gameMessageProcessor(MapMessage message) {
+    private void gameMessageProcessor(ScoreMessageWrapper wrapper) {
         try {
 
-            mapMessage = message;
+            mapMessage = wrapper.mapMessage;
+            gameid = wrapper.gameId;
+            if ( 0 < gameid) {
 
-            String changetype = mapMessage.getStringProperty("messageType");
-
-
-            if (changetype.equals("ScoreChange")) {
-                gameid = mapMessage.getInt("eventnumber");
-
+log("In ScoresConsumer::gameMessageProcessor, gameid="+gameid);
 
                 String period = "";
                 String timer = "";
@@ -475,11 +480,13 @@ public class ScoresConsumer implements MessageListener {
             log(e);
 
         }
-        try {
-            AppController.fireAllTableDataChanged(gameid);
-        } catch (Exception ex) {
-            log(ex);
-        }
+
+        //moved to createScoreMessageProcessor() -- 05/31/2021
+//        try {
+//            AppController.fireAllTableDataChanged(gameid);
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
     }
 
     public void playSound(String file) {
@@ -493,6 +500,59 @@ public class ScoresConsumer implements MessageListener {
             log(ex);
         }
     }
+    private MessageConsumingScheduler<ScoreMessageWrapper> createScoreMessageProcessor() {
+        Consumer<List<ScoreMessageWrapper>> messageConsumer = (buffer)-> {
+            Set<ScoreMessageWrapper> distinctSet = new HashSet<>(buffer);
+            distinctSet.forEach(this::gameMessageProcessor);
+            log("ScoresConsumer batch process: queue size="+buffer.size()+", distinctSet size="+distinctSet.size());
+            Set<Integer> gameIds = distinctSet.stream().map(wrapper->wrapper.gameId).collect(Collectors.toSet());
+            AppController.fireAllTableDataChanged(gameIds);
+        };
+        MessageConsumingScheduler<ScoreMessageWrapper> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
+        scoreMessageProcessor.setInitialDelay(2*1000L);
+        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
+        return scoreMessageProcessor;
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static class ScoreMessageWrapper {
 
+        public final int gameId;
+        public final MapMessage mapMessage;
+
+        public ScoreMessageWrapper(MapMessage mapMessage) {
+            this.mapMessage = mapMessage;
+            gameId = getGameId(mapMessage);
+        }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ScoreMessageWrapper that = (ScoreMessageWrapper) o;
+        return gameId == that.gameId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameId);
+    }
+
+    private int getGameId(MapMessage mapMessage) {
+            int gameId = -1;
+            try {
+                String changetype = mapMessage.getStringProperty("messageType");
+                if (changetype.equals("ScoreChange")) {
+                    gameId = mapMessage.getInt("eventnumber");
+                }
+            } catch (JMSException e) {
+                log(e);
+            }
+            return gameId;
+        }
+    }
 
 }

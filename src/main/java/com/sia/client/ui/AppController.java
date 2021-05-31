@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -483,31 +484,9 @@ public class AppController {
     }
 
     public static void addDataModels(MainGameTableModel model) {
-//        for (LinesTableData linesTableData : v) {
-//            addDataModel(linesTableData);
-//        }
         model.copyTo(dataModels);
 
     }
-
-    public static void addDataModel(LinesTableData ltd) {
-        if (!dataModels.contains(ltd)) {
-            dataModels.add(ltd);
-        }
-
-    }
-
-    public static void removeDataModels(MainGameTableModel model) {
-        model.clear();
-    }
-
-    public static void removeDataModel(LinesTableData ltd) {
-        if (ltd != null) {
-            dataModels.remove(ltd);
-        }
-
-    }
-
     public static void addTabPane(SportsTabPane stb) {
         tabpanes.add(stb);
 
@@ -627,13 +606,9 @@ public class AppController {
 
     }
 
-    public static void fireAllTableDataChanged(int gameid) {
+    public static void fireAllTableDataChanged(Collection<Integer> gameIds) {
         for (SportsTabPane stb : tabpanes) {
-
-            boolean status = stb.fireAllTableDataChanged(gameid);
-            if (status) {
-                break;
-            }
+            stb.fireAllTableDataChanged(gameIds);
         }
     }
 

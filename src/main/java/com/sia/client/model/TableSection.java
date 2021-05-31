@@ -185,17 +185,11 @@ public abstract class TableSection<V extends KeyedObject> {
         }
     }
     public void resetDataVector() {
-
-//        this.getDataVector().clear();
-//        this.getDataVector().addAll(populateDataVector());
-        //commented out 05/19/2021
-//        Vector<Vector<Object>> dataVector = populateDataVector();
-//        delegator.setDataVector(dataVector, columnTitles);
-
         prepareLineGamesForTableModel(gamesVec);
         rowDataMap.clear();
         getRowDataMap();
     }
+
     public boolean checktofire(Integer gameId,boolean repaint) {
 
         int rowIndex= gamesVec.getRowIndex(gameId);
@@ -204,14 +198,11 @@ public abstract class TableSection<V extends KeyedObject> {
             V game = gamesVec.getGame(gameId);
             List<Object> rowData = makeRowData(game);
             rowDataMap.put(rowIndex,rowData);
-System.out.println("checktofire, gamId="+gameId+", repaint="+repaint);
-            if ( repaint ) {
-                //TODO suspicous fire() call
-                log("In TableSection, suspicous fire()");
-                int rowModelIndex = containingTableModel.getRowModelIndex(this, gameId);
-                TableModelEvent e = new TableModelEvent(containingTableModel, rowModelIndex, rowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
-                fire(e);
-            }
+//            if ( repaint ) {
+//                int rowModelIndex = containingTableModel.getRowModelIndex(this, gameId);
+//                TableModelEvent e = new TableModelEvent(containingTableModel, rowModelIndex, rowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
+//                fire(e);
+//            }
         }
         return status;
     }

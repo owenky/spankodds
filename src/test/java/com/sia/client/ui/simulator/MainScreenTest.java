@@ -9,7 +9,7 @@ public class MainScreenTest extends JPanel implements AbstractScreen<TestGame> {
 
     private final TableProperties tblProp;
     public MainScreenTest(TableProperties tblProp) {
-        setName("Main screen of table "+tblProp.table.getName());
+        setName("Main screen of table "+tblProp.getName());
         this.tblProp = tblProp;
     }
     @Override
@@ -17,7 +17,6 @@ public class MainScreenTest extends JPanel implements AbstractScreen<TestGame> {
 
     }
     public void createMe() {
-        tblProp.table.clear();
         tblProp.rebuild();
     }
     @Override

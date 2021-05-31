@@ -2,11 +2,12 @@ package com.sia.client.ui.simulator;
 
 import com.sia.client.ui.SpankOddsTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CheckToFileTest implements EventGenerator{
 
-    public static final int [] gameIds = {1,3,5,7,9,11,101,103,105,107,109,111,113};
+    public static final Integer [] gameIds = {1,3,5,7,9,11,101,103,105,107,109,111,113};
     @Override
     public void generatEvent(final TableProperties [] tblProps) {
 
@@ -15,16 +16,16 @@ public class CheckToFileTest implements EventGenerator{
     private void updateTestGame(TableProperties [] tblProps) {
         for(int gameId: gameIds) {
             TestGame tg = SpankOddsTest.testGameCache.getGame(gameId);
-            if ( null != tg) {
-                updateRowData(tg.getRowData(),1);
+            if (null != tg) {
+                updateRowData(tg.getRowData(), 1);
             }
-            for(TableProperties tp: tblProps) {
-                MainScreenTest mst = tp.getMainScreen();
-                if ( mst.isShowing()) {
-                    mst.checktofire(gameId);
-                }
-            }
+        }
 
+        for(TableProperties tp: tblProps) {
+            MainScreenTest mst = tp.getMainScreen();
+            if ( mst.isShowing()) {
+                mst.checktofire(Arrays.asList(gameIds));
+            }
         }
     }
     private static void updateRowData(List<Object> rowData, int col) {

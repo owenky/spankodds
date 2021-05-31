@@ -32,7 +32,7 @@ public class GamesConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     private TextMessage textMessage;
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("GamesConsumer",2000L,1500L);
 
     public GamesConsumer(ActiveMQConnectionFactory factory, Connection connection, String gamesconsumerqueue) throws JMSException {
 
@@ -62,7 +62,8 @@ public class GamesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
-        gameMessageProcessor.addRunnable(()->processMessage(message));
+//        gameMessageProcessor.addRunnable(()->processMessage(message));
+        processMessage(message);
     }
     private void processMessage(Message message) {
         Utils.ensureNotEdtThread();

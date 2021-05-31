@@ -27,17 +27,13 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class TableColumnHeaderManager<V extends KeyedObject> implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
     private final Map<String, JComponent> columnHeaderComponentMap = new HashMap<>();
     private final ColumnCustomizableTable<V> mainTable;
-//    private final AtomicBoolean isMainTableShown = new AtomicBoolean(false);
     private boolean isAdjustingColumn = false;
-    private final Set<Object> drawnHeaderValues = new HashSet<>();
     private int horizontalScrollBarAdjustmentValue=Integer.MIN_VALUE;
     private final PropertyChangeListener rowHeightConfigListener;
 
@@ -51,28 +47,20 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.addComponentListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
-//        mainTable.getModel().addTableModelListener(this);
         mainTable.setTableChangedListener(this);
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
         mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
         //after sorting, rowModel is set to null, need to re-configure row height
         mainTable.addPropertyChangeListener("rowSorter", rowHeightConfigListener);
     }
-    public boolean isColumnHeaderDrawn(Object columnHeaderValue) {
-        return drawnHeaderValues.contains(columnHeaderValue);
-    }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
-//            if (source == mainTable && !isMainTableShown.get() && mainTable.isShowing()) {
             if (source == mainTable && mainTable.isShowing()) {
                 Utils.checkAndRunInEDT(() -> {
                     configHeaderRow();
-//                    mainTable.validate();
                     adjustComumns();
-//                    invokeDrawColumnHeaders();
-//                    isMainTableShown.set(true);
                 });
             }
         }
@@ -85,7 +73,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         }
     }
     private void invokeDrawColumnHeaders() {
-        drawnHeaderValues.clear();
         mainTable.repaint();
     }
     private void configHeaderRow() {
@@ -96,7 +83,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(String.valueOf(headerValue), header -> makeColumnHeaderComp(mainTable, header,columnHeaderProvider.getHeaderForeground()
                 , columnHeaderProvider.getHeaderFont()));
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, columnHeaderProvider.getColumnHeaderHeight(), horizontalScrollBarAdjustmentValue);
-        drawnHeaderValues.add(headerValue);
     }
     private static <V extends KeyedObject> JComponent makeColumnHeaderComp(ColumnCustomizableTable<V> jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
         JPanel jPanel = new JPanel();
@@ -119,8 +105,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         int x1 = 0;
         int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
-        //TODO need to verify
-//        mainTable.setRowHeight(rowViewIndex, headerHeight);
         header.setBounds(x1+diffByScroll, y1, width, headerHeight);
 
     }

@@ -21,6 +21,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -392,7 +393,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         MainScreen thisms = (MainScreen) getComponentAt(currentTabIndex);
         thisms.revalidate();
         thisms.repaint();
-        AppController.removeDataModels(thisms.getDataModels());
+        thisms.clearTable();
         thisms.destroyMe();
         log("refreshing currenttab!");
         thisms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
@@ -405,7 +406,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void cleanup() {
         MainScreen thisms = (MainScreen) getComponentAt(currentTabIndex);
-        AppController.removeDataModels(thisms.getDataModels());
         thisms.destroyMe();
 
     }
@@ -426,23 +426,23 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void clearAll() {
         int totalTabs = getTabCount();
-        Vector v = new Vector();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
             //System.out.println("i="+i+".."+c);
-            if (c != null && c instanceof MainScreen) {
+            if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                ms.clearAll();
+                if ( ms.isShowing()) {
+                    ms.clearColors();
+                }
             }
         }
 
     }
 
-    public boolean fireAllTableDataChanged(int gameid) {
+    public void fireAllTableDataChanged(Collection<Integer> gameIds) {
 
         MainScreen ms = (MainScreen) getSelectedComponent();
-        return ms.checktofire(gameid);
-
+        ms.checktofire(gameIds);
     }
 
     public void refreshTabs() {

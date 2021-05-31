@@ -102,10 +102,13 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getDataModels().clearColors();
     }
 
-    public void clearAll() {
+    public void clearColors() {
         getDataModels().clearColors();
     }
 
+    public void clearTable() {
+        mainGameTable = createMainGameTable();
+    }
     public Game removeGame(int gameid,boolean repaint) {
         return getDataModels().removeGame(gameid,repaint);
     }
@@ -899,8 +902,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     public void drawIt() {
 
+        mainGameTable = null;
         mainGameTable = getColumnCustomizableTable();
-        mainGameTable.clear();
         Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -1140,7 +1143,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     @Override
     public void destroyMe() {
-        AppController.removeDataModels(getDataModels());
+        mainGameTable = null;
         inprogressgames.clear();
         finalgames.clear();
         halftimegames.clear();

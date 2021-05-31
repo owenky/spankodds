@@ -26,7 +26,7 @@ public class LinesConsumer implements MessageListener {
     private transient Session session;
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(20,5);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LinesConsumer",2000L,1500L);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -46,7 +46,7 @@ public class LinesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
-        gameMessageProcessor.addRunnable(()->processMessage((MapMessage)message));
+        processMessage((MapMessage)message);
     }
     private void processMessage(MapMessage message) {
         try {
@@ -311,11 +311,8 @@ public class LinesConsumer implements MessageListener {
             log(e);
 
         }
-        try {
-            AppController.fireAllTableDataChanged(gameid);
-        } catch (Exception ex) {
-            log(ex);
-        }
+
+        gameMessageProcessor.addGameId(gameid);
     }
 
 }

@@ -1,14 +1,13 @@
 package com.sia.client.ui.simulator;
 
-import com.sia.client.model.ColumnCustomizableDataModel;
-
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //test ColumnCustomizableDataModel::checktofire performance
 public class CheckToFire implements EventGenerator{
 
-    final int [] testGameIds = {2,103,1002,1103};
+    final Integer [] testGameIds = {2,103,1002,1103};
     final AtomicBoolean secondPaneSet = new AtomicBoolean(false);
     final AtomicBoolean started = new AtomicBoolean(false);
 
@@ -27,19 +26,21 @@ public class CheckToFire implements EventGenerator{
             while (count++ < 60000) {
                 for(int gameId:testGameIds ) {
                     for (TableProperties tblProp : tblProps) {
-                        final ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
-
-                        boolean isShowing = tblProp.table.isShowing();
-                        System.out.println("table " + tblProp.table.getName() + " isDisplayable=" + isShowing);
                         if ( gameId > 1000) {
                             if ( secondPaneSet.compareAndSet(false,true)) {
-                                checkToFile(model, tblProp,gameId,isShowing, count);
+                                modifyTGames(tblProp,gameId, count);
                             } else {
                                 continue;
                             }
                         } else {
-                            checkToFile(model, tblProp, gameId, isShowing, count);
+                            modifyTGames(tblProp, gameId, count);
                         }
+                    }
+                }
+
+                for (TableProperties tblProp : tblProps) {
+                    if ( tblProp.getMainScreen().isShowing()) {
+                        tblProp.getMainScreen().checktofire(Arrays.asList(testGameIds));
                     }
                 }
             }
@@ -48,8 +49,7 @@ public class CheckToFire implements EventGenerator{
 
         thread.start();
     }
-    private void checkToFile(ColumnCustomizableDataModel<TestGame> model,TableProperties tblProp,int gameId,boolean repaint,int count) {
-        model.checktofire(gameId,repaint);
+    private void modifyTGames(TableProperties tblProp,int gameId,int count) {
         try {
             TestGame game = tblProp.testGameCache.getGame(gameId);
             List<Object> rowData = game.getRowData();

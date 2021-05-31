@@ -19,6 +19,7 @@ public class ColumnAdjusterManager {
     }
     public void clear() {
         this.getMainTableColumnAdjuster().clear();
+        this.getRowHeaderTableColumnAdjuster().clear();
         mainTablePreparer.clear();
         rowHeaderTablePreparer.clear();
     }

@@ -20,16 +20,33 @@ import java.util.Vector;
 
 public class TableProperties {
 
-    public static TableProperties of(TestGameCache testGameCache,int sectionCount, int sectionRowCount,int boundaryIndex,int colCount, int tableIndex) {
+    public static TableProperties of(String name,TestGameCache testGameCache,int sectionCount, int sectionRowCount,int boundaryIndex,int colCount, int tableIndex) {
 
         TableProperties rtn = new TableProperties() ;
+        rtn.name = name;
         rtn.sectionCount = sectionCount;
         rtn.sectionRowCount = sectionRowCount;
         rtn.tableIndex = tableIndex;
         rtn.testGameCache = testGameCache;
         rtn.boundaryIndex = boundaryIndex;
+        rtn.colCount = colCount;
+        rtn.mainScreen = new MainScreenTest(rtn);
+        rtn.rebuild();
+        return rtn;
+    }
+    private static Vector<TableColumn> makeColumns(int columnCount) {
+
+        Vector<TableColumn> rtn = new Vector<>();
+        for(int i=0;i<columnCount;i++) {
+            TableColumn column = new TableColumn();
+            column.setHeaderValue("COLUMN_"+i);
+            rtn.add(column);
+        }
+        return rtn;
+    }
+    public void rebuild() {
         ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(makeColumns(colCount));
-        rtn.table = new ColumnCustomizableTable<TestGame>(false,tm) {
+        table = new ColumnCustomizableTable<TestGame>(false,tm) {
 
             @Override
             public TableCellRenderer getUserCellRenderer(final int rowViewIndex, final int colViewIndex) {
@@ -55,27 +72,12 @@ public class TableProperties {
                 };
             }
         };
-        JTableHeader tableHeader = rtn.table.getTableHeader();
+        JTableHeader tableHeader = table.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
-        rtn.table.setRowHeight(60);
-        rtn.table.setIntercellSpacing(new Dimension(2, 2));
-        rtn.table.setName("Table "+tableIndex);
-        rtn.mainScreen = new MainScreenTest(rtn);
-        rtn.rebuild();
-        return rtn;
-    }
-    private static Vector<TableColumn> makeColumns(int columnCount) {
-
-        Vector<TableColumn> rtn = new Vector<>();
-        for(int i=0;i<columnCount;i++) {
-            TableColumn column = new TableColumn();
-            column.setHeaderValue("COLUMN_"+i);
-            rtn.add(column);
-        }
-        return rtn;
-    }
-    public void rebuild() {
+        table.setRowHeight(60);
+        table.setIntercellSpacing(new Dimension(2, 2));
+        table.setName("Table "+tableIndex);
         buildModels(sectionCount,sectionRowCount,tableIndex);
         JComponent tableContainer = TableUtils.configTableLockColumns(table, boundaryIndex);
         mainScreen.removeAll();
@@ -84,6 +86,9 @@ public class TableProperties {
     }
     public MainScreenTest getMainScreen() {
         return mainScreen;
+    }
+    public String getName() {
+        return this.name;
     }
     private void buildModels(int sectionCount, int sectionRowCount, int tableIndex) {
         for(int secIndex=0;secIndex<sectionCount;secIndex++) {
@@ -97,6 +102,8 @@ public class TableProperties {
     private int sectionRowCount;
     private int tableIndex;
     private int boundaryIndex;
+    private int colCount;
+    private String name;
     public TestGameCache testGameCache;
     public ColumnCustomizableTable<TestGame> table;
 }

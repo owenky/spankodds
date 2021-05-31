@@ -49,10 +49,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         instanceIndex = instanceCounter.addAndGet(1);
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
     }
-    public void clear() {
-        this.getColumnAdjusterManager().clear();
-        getModel().clear();
-    }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
             marginProvider = ()-> new Dimension(getUserDefinedColumnMargin(),getUserDefinedRowMargin());
