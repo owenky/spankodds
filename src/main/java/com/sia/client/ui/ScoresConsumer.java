@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.MessageConsumingScheduler;
@@ -21,10 +20,8 @@ import javax.sound.sampled.Clip;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
@@ -35,12 +32,11 @@ public class ScoresConsumer implements MessageListener {
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
 
     private static ActiveMQConnectionFactory factory;
-    int gameid = 0;
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final MessageConsumingScheduler<ScoreMessageWrapper> scoreMessageProcessor;
+    private final MessageConsumingScheduler<Integer> scoreMessageProcessor;
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
@@ -71,18 +67,16 @@ public class ScoresConsumer implements MessageListener {
         }
     }
     public void onMessage(Message message) {
-        Utils.ensureNotEdtThread();
-        scoreMessageProcessor.addMessage(new ScoreMessageWrapper((MapMessage)message));
-//        gameMessageProcessor((MapMessage)message);
-    }
-    private void gameMessageProcessor(ScoreMessageWrapper wrapper) {
         try {
 
-            mapMessage = wrapper.mapMessage;
-            gameid = wrapper.gameId;
-            if ( 0 < gameid) {
+            mapMessage = (MapMessage) message;
 
-log("In ScoresConsumer::gameMessageProcessor, gameid="+gameid);
+            String changetype = mapMessage.getStringProperty("messageType");
+
+
+            if (changetype.equals("ScoreChange")) {
+                int gameid = mapMessage.getInt("eventnumber");
+
 
                 String period = "";
                 String timer = "";
@@ -468,22 +462,18 @@ log("In ScoresConsumer::gameMessageProcessor, gameid="+gameid);
                             new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
                     AppController.addGame(g);
                 }
-
+                scoreMessageProcessor.addMessage(gameid);
             }
 
             //AppController.fireAllTableDataChanged();
-
-
         } catch (Exception e) {
             log("exception scores consumer " + e);
             log(mapMessage.toString());
             log(e);
 
         }
-
-        //moved to createScoreMessageProcessor() -- 05/31/2021
 //        try {
-//            AppController.fireAllTableDataChanged(gameid);
+//            AppController.fireAllTableDataChanged("" + gameid);
 //        } catch (Exception ex) {
 //            log(ex);
 //        }
@@ -500,59 +490,15 @@ log("In ScoresConsumer::gameMessageProcessor, gameid="+gameid);
             log(ex);
         }
     }
-    private MessageConsumingScheduler<ScoreMessageWrapper> createScoreMessageProcessor() {
-        Consumer<List<ScoreMessageWrapper>> messageConsumer = (buffer)-> {
-            Set<ScoreMessageWrapper> distinctSet = new HashSet<>(buffer);
-            distinctSet.forEach(this::gameMessageProcessor);
-            log("ScoresConsumer batch process: queue size="+buffer.size()+", distinctSet size="+distinctSet.size());
-            Set<Integer> gameIds = distinctSet.stream().map(wrapper->wrapper.gameId).collect(Collectors.toSet());
-            AppController.fireAllTableDataChanged(gameIds);
+    private MessageConsumingScheduler<Integer> createScoreMessageProcessor() {
+        Consumer<List<Integer>> messageConsumer = (buffer)-> {
+            Set<Integer> distinctSet = new HashSet<>(buffer);
+log("ScoresConsumer batch process: queue size="+buffer.size()+", distinctSet size="+distinctSet.size());
+            AppController.fireAllTableDataChanged(distinctSet);
         };
-        MessageConsumingScheduler<ScoreMessageWrapper> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
+        MessageConsumingScheduler<Integer> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
         scoreMessageProcessor.setInitialDelay(2*1000L);
         scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
         return scoreMessageProcessor;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static class ScoreMessageWrapper {
-
-        public final int gameId;
-        public final MapMessage mapMessage;
-
-        public ScoreMessageWrapper(MapMessage mapMessage) {
-            this.mapMessage = mapMessage;
-            gameId = getGameId(mapMessage);
-        }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final ScoreMessageWrapper that = (ScoreMessageWrapper) o;
-        return gameId == that.gameId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(gameId);
-    }
-
-    private int getGameId(MapMessage mapMessage) {
-            int gameId = -1;
-            try {
-                String changetype = mapMessage.getStringProperty("messageType");
-                if (changetype.equals("ScoreChange")) {
-                    gameId = mapMessage.getInt("eventnumber");
-                }
-            } catch (JMSException e) {
-                log(e);
-            }
-            return gameId;
-        }
-    }
-
 }

@@ -62,7 +62,6 @@ public class GamesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
-//        gameMessageProcessor.addRunnable(()->processMessage(message));
         processMessage(message);
     }
     private void processMessage(Message message) {
