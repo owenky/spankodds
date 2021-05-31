@@ -1089,16 +1089,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         removeAll();
         revalidate();
-        //TODO don't add scrollPane0
-//        add(scrollPane0, BorderLayout.PAGE_START);
-        //TODO add mainGameTable instead of scrollPane to center
-//        add(scrollPane, BorderLayout.CENTER);
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
-        //END OF TODO
-//        add(bar, BorderLayout.PAGE_END);
-//        mainGameTable.optimizeRowHeightsAndGameLineTitles();
-        mainGameTable.configHeaderRow();
+//        mainGameTable.configHeaderRow();
         AppController.addDataModels(getDataModels());
     }
 
