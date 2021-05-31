@@ -44,14 +44,16 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         //after sorting, rowModel is set to null, need to re-configure row height
         mainTable.addPropertyChangeListener("rowSorter", rowHeightConfigListener);
     }
+    private static boolean isFirstCalled = true;
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
-            if (source == mainTable && mainTable.isShowing()) {
+            if (source == mainTable && mainTable.isShowing() && isFirstCalled) {
                 Utils.checkAndRunInEDT(() -> {
                     configHeaderRow();
                     adjustComumns();
+                    isFirstCalled = false;
                 });
             }
         }
