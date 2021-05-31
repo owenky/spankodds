@@ -256,12 +256,10 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action clearaction = new AbstractAction("Clear") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("clear button pressed");
+                log("clear button pressed");
                 //com.sia.client.ui.AppController.getLinesTableData().clearColors();
                 MainScreen ms = (MainScreen) stb.getSelectedComponent();
                 ms.setClearTime(new java.util.Date().getTime());
-
-
             }
         };
         clearaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));
@@ -276,13 +274,12 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action clearallaction = new AbstractAction("Clear All") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("clear all button pressedAAA");
-                //com.sia.client.ui.AppController.getLinesTableData().clearColors();
+                log("clear all button pressedAAA");
                 long ct = (new java.util.Date()).getTime();
                 MainScreen ms = (MainScreen) stb.getSelectedComponent();
                 ms.setClearTime(ct);
                 AppController.setClearAllTime(ct);
-                AppController.clearAll();
+//                AppController.clearAll();
                 FireThreadManager.emptyIt();
 
 
@@ -407,7 +404,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         //owen this one we will have to repaint somehow
         shrinkTeamBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("shrinkTeamBut button pressed");
+                log("shrinkTeamBut button pressed");
                 if (shrinkTeamBut.getText().equals("Short Team")) {
                     stb.setShort(true);
                     shrinkTeamBut.setText("Long Team");

@@ -23,7 +23,7 @@ public abstract class TableSection<V extends KeyedObject> {
     abstract protected void prepareLineGamesForTableModel(LineGames<V> gamesVec);
     abstract protected List<Object> makeRowData(V game);
 
-    public TableSection(KeyedObjectCollection<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
+    public TableSection(KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
         gamesVec = new LineGames<>(gameCache,toAddBlankGameId);
         gamesVec.addAll(gameVec);
         rowHeight = SiaConst.NormalRowheight;

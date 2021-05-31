@@ -426,19 +426,19 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         return v;
     }
 
-    public void clearAll() {
-        int totalTabs = getTabCount();
-        for (int i = 0; i < totalTabs; i++) {
-            Component c = getComponentAt(i);
-            if ( c instanceof MainScreen) {
-                MainScreen ms = (MainScreen) c;
-                if ( ms.isShowing()) {
-                    ms.clearColors();
-                }
-            }
-        }
-
-    }
+//    public void clearAll() {
+//        int totalTabs = getTabCount();
+//        for (int i = 0; i < totalTabs; i++) {
+//            Component c = getComponentAt(i);
+//            if ( c instanceof MainScreen) {
+//                MainScreen ms = (MainScreen) c;
+//                if ( ms.isShowing()) {
+//                    ms.clearColors();
+//                }
+//            }
+//        }
+//
+//    }
 
     public void fireAllTableDataChanged(Collection<Integer> gameIds) {
 

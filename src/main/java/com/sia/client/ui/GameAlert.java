@@ -118,7 +118,9 @@ public class GameAlert {
         }
         defaultsoundfileplay = defaultsoundfile;
         prefs = userpref.split("\\|");
-
+        for (int j = 0; j < prefs.length; j++) {
+            log(j + "=" + prefs[j]);
+        }
         try {
             popupsecs = Integer.parseInt(prefs[2]);
         } catch (Exception ex) {
@@ -140,20 +142,26 @@ public class GameAlert {
 
             }
         } catch (Exception ex) {
-            log(ex);
+            log("PREFS4..."+ex);
         }
 
 
-        String checkedsportsarr[] = prefs[5].split(",");
-        for (int i = 0; i < checkedsportsarr.length; i++) {
-            try {
-                checkedsports.add("" + checkedsportsarr[i]);
-            } catch (Exception ex) {
-                log(ex);
+        try {
+            if (!prefs[5].equals("")) {
+                String checkedsportsarr[] = prefs[5].split(",");
+                for (int i = 0; i < checkedsportsarr.length; i++) {
+                    try {
+                        checkedsports.add("" + checkedsportsarr[i]);
+                    } catch (Exception ex) {
+                        log(ex);
+                    }
+                }
+            } else {
+                log("PREFS SPORT IS BLANK!!");
             }
         }
-        for (int j = 0; j < prefs.length; j++) {
-            log(j + "=" + prefs[j]);
+        catch(Exception ex) {
+            log(ex);
         }
 
 

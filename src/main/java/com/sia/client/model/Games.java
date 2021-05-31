@@ -1,6 +1,6 @@
 package com.sia.client.model;
 
-public class Games extends KeyedObjectCollection<Game> {
+public class Games extends KeyedObjectList<Game> {
 
     @Override
     protected Game createInstance() {

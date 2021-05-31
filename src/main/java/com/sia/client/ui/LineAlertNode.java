@@ -610,8 +610,7 @@ public class LineAlertNode {
                 return shouldIAlertSpreadline(line);
             } else if (isspreadptsmove) {
                 if (Math.abs(line.getCurrentvisitspread() - line.getPriorvisitspread()) >= spreadptsmove
-                        || Math.abs(line.getCurrentvisitjuice() - line.getPriorvisitjuice()) >= spreadjuicemove) {
-
+                        || juicemovedenough(line.getCurrentvisitjuice(), line.getPriorvisitjuice(), spreadjuicemove)) {
                     return shouldIAlertSpreadline(line);
                 } else {
                     return false;
@@ -630,7 +629,7 @@ public class LineAlertNode {
 
 
         } catch (Exception ex) {
-			log(ex);
+            log(ex);
         }
         return false;
     }
@@ -641,8 +640,7 @@ public class LineAlertNode {
                 return shouldIAlertTotalline(line);
             } else if (istotalptsmove) {
                 if (Math.abs(line.getCurrentover() - line.getPriorover()) >= totalptsmove
-                        || Math.abs(line.getCurrentoverjuice() - line.getPrioroverjuice()) >= totaljuicemove) {
-
+                        || juicemovedenough(line.getCurrentoverjuice(), line.getPrioroverjuice(), totaljuicemove)) {
 
                     return shouldIAlertTotalline(line);
 
@@ -663,7 +661,7 @@ public class LineAlertNode {
 
 
         } catch (Exception ex) {
-			log(ex);
+            log(ex);
         }
         return false;
     }
@@ -674,7 +672,7 @@ public class LineAlertNode {
                 return shouldIAlertMoneyline(line);
             } else if (ismoneylinejuicemove) {
 
-                if (Math.abs(line.getCurrentvisitjuice() - line.getPriorvisitjuice()) >= moneylinejuicemove) {
+                if (juicemovedenough(line.getCurrentvisitjuice(), line.getPriorvisitjuice(), moneylinejuicemove)) {
                     return shouldIAlertMoneyline(line);
                 } else {
                     return false;
@@ -694,7 +692,7 @@ public class LineAlertNode {
 
 
         } catch (Exception ex) {
-			log(ex);
+            log(ex);
         }
         return false;
     }
@@ -704,8 +702,11 @@ public class LineAlertNode {
             if (isteamtotalmoveatall) {
                 return shouldIAlertTeamTotalline(line);
             } else if (isteamtotalptsmove) {
+
                 if (Math.abs(line.getCurrentvisitover() - line.getPriorvisitover()) >= teamtotalptsmove
-                        || Math.abs(line.getCurrentvisitoverjuice() - line.getPriorvisitoverjuice()) >= teamtotaljuicemove) {
+                        ||
+                        juicemovedenough(line.getCurrentvisitoverjuice(), line.getPriorvisitoverjuice(), teamtotaljuicemove)) {
+
                     return shouldIAlertTeamTotalline(line);
                 } else {
                     return false;
@@ -724,7 +725,7 @@ public class LineAlertNode {
 
 
         } catch (Exception ex) {
-			log(ex);
+            log(ex);
         }
         return false;
     }
@@ -801,6 +802,31 @@ public class LineAlertNode {
             System.out.println("HOW DID I GET HERE SHOULDIALERTSPREADLINE!!!!!");
             return false;
         }
+    }
+
+    private boolean juicemovedenough(double j1, double j2, int juicemove) {
+        if (j1 > 0 && j2 < 0) {
+            if ((j1 - 100.00) + (-100.00 - j2) >= juicemove) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } else if (j1 < 0 && j2 > 0) {
+            if ((j2 - 100.00) + (-100.00 - j1) >= juicemove) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (Math.abs(j1 - j2) >= juicemove) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
     }
 
     public boolean shouldIAlertTotalline(Totalline line) {
@@ -995,5 +1021,4 @@ public class LineAlertNode {
     public String getName() {
         return name;
     }
-
 }

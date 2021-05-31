@@ -10,10 +10,10 @@ import java.util.List;
 
 public class LineGames<V extends KeyedObject> {
     private final List<Integer> gameIdList = new ArrayList<>();
-    private final KeyedObjectCollection<V> gameCache;
+    private final KeyedObjectList<V> gameCache;
 
 
-    public LineGames(KeyedObjectCollection<V> gameCache,boolean toAddBlankGameId) {
+    public LineGames(KeyedObjectList<V> gameCache, boolean toAddBlankGameId) {
         this.gameCache = gameCache;
         if ( toAddBlankGameId ) {
             gameIdList.add(SiaConst.BlankGameId);

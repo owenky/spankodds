@@ -12,21 +12,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class KeyedObjectCollection<V extends KeyedObject> {
+public abstract class KeyedObjectList<V extends KeyedObject> {
     private final List<Integer> gameIdList = new ArrayList<>();
     private final Map<Integer,V> gamesIdMap = new ConcurrentHashMap<>();
     private final Class<V> classType;
 
     abstract protected V createInstance();
 
-    public KeyedObjectCollection() {
+    public KeyedObjectList() {
         gameIdList.add(SiaConst.BlankGameId);
         V blankGame = createInstance();
         blankGame.setGame_id(SiaConst.BlankGameId);
         gamesIdMap.put(SiaConst.BlankGameId,blankGame);
         classType = (Class<V>)createInstance().getClass();
     }
-
     public V getGame(int gameId) {
        return gamesIdMap.get(gameId);
     }

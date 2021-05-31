@@ -282,7 +282,7 @@ public class LinesTableData extends TableSection<Game> {
 
             }
         }
-        fire(null);
+//        fire(null);
 
     }
 

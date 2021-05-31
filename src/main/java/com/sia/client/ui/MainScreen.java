@@ -4,6 +4,8 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameDateSorter;
+import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
@@ -159,6 +161,20 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         String[] prefs;
 
         Games allgamesforpref = AppController.getGamesVec();
+
+        // added sorting code 5/6/2021
+        try {
+            allgamesforpref.sort( new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
+            allgamesforpref.sort(new GameDateSorter());
+//            Collections.sort(allgamesforpref, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
+//            Collections.sort(allgamesforpref, new GameDateSorter());
+
+        }
+        catch (Exception ex) {
+            System.out.println("exception sorting " + ex);
+            ex.printStackTrace();
+        }
+
         String name = getName();
         if (name.equalsIgnoreCase("football")) {
             boolean all = false;

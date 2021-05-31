@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 import com.sia.client.ui.LinesTableData;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +47,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         for (TableSection<Game> linesTableData : gameLines) {
             ((LinesTableData)linesTableData).clearColors();
         }
+        fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
     }
     public int getGameId(int rowModelIndex) {
        return getRowKey(rowModelIndex);
