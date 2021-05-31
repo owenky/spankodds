@@ -28,6 +28,9 @@ public abstract class TableSection<V extends KeyedObject> {
         gamesVec.addAll(gameVec);
         rowHeight = SiaConst.NormalRowheight;
     }
+    public ColumnCustomizableDataModel<V> getContainingTableModel() {
+        return containingTableModel;
+    }
     public void setIndex(int index) {
         this.index = index;
     }

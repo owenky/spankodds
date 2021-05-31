@@ -417,8 +417,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                MainGameTableModel model = ms.getDataModels();
-                model.copyTo(v);
+                if ( c.isShowing()) {
+                    MainGameTableModel model = ms.getDataModels();
+                    model.copyTo(v);
+                }
             }
         }
         return v;
@@ -428,7 +430,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         int totalTabs = getTabCount();
         for (int i = 0; i < totalTabs; i++) {
             Component c = getComponentAt(i);
-            //System.out.println("i="+i+".."+c);
             if ( c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 if ( ms.isShowing()) {

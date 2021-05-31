@@ -66,15 +66,15 @@ public class LinesTableData extends TableSection<Game> {
     public void showOpener() {
         showingOpener = true;
         showingPrior = false;
-        log("suspecious fire() call in showOpener() ");
-        fire(null);
+//        log("suspecious fire() call in showOpener() ");
+//        fire(null);
     }
 
     public void showPrior() {
         showingOpener = false;
         showingPrior = true;
-        log("suspecious fire call in showPrior()");
-        fire(null);
+//        log("suspecious fire call in showPrior()");
+//        fire(null);
     }
 //    @Override
 //    public Vector<ColumnData> getColumnData() {
@@ -212,8 +212,8 @@ public class LinesTableData extends TableSection<Game> {
     public void showCurrent() {
         showingOpener = false;
         showingPrior = false;
-        log("suspecious fire() call in showCurrent()");
-        fire(null);
+//        log("suspecious fire() call in showCurrent()");
+//        fire(null);
     }
 
     public String getDisplayType() {
@@ -297,7 +297,7 @@ public class LinesTableData extends TableSection<Game> {
 //        comp.revalidate();
 //        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-        fire(null);
+//        fire(null);
 
     }
 
@@ -312,7 +312,7 @@ public class LinesTableData extends TableSection<Game> {
 //        comp.revalidate();
 //        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-        fire(null);
+//        fire(null);
     }
 
     public void removeGameIds(String[] gameidstoremove) {
