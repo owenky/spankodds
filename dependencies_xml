@@ -98,6 +98,7 @@
              <groupId>jide</groupId>
              <artifactId>components</artifactId>
              <version>3.7.11</version>
+        </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>dashboard</artifactId>
@@ -118,7 +119,6 @@
              <artifactId>dialogs</artifactId>
              <version>3.7.11</version>
          </dependency>
-        <dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>diff</artifactId>
