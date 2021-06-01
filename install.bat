@@ -20,7 +20,7 @@ call mvn install:install-file -Dfile=jide-dialogs.jar -DgroupId=jide  -Dartifact
 call mvn install:install-file -Dfile=jide-diff.jar -DgroupId=jide  -DartifactId=diff -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-dock.jar -DgroupId=jide  -DartifactId=dock -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-editor.jar -DgroupId=jide  -DartifactId=editor -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
-call mvn install:install-file -Dfile=jide-grantt.jar -DgroupId=jide  -DartifactId=grantt -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
+call mvn install:install-file -Dfile=jide-gantt.jar -DgroupId=jide  -DartifactId=gantt -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-grids.jar -DgroupId=jide  -DartifactId=grids -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-pivot.jar -DgroupId=jide  -DartifactId=pivot -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=jide-plaf.jar -DgroupId=jide  -DartifactId=plaf -Dversion=3.7.11 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
