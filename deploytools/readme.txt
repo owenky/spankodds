@@ -4,7 +4,7 @@
 
 2) to generate lib.jar.pack.gz, run
    libs.bat
-   sia-libs-1.0.0.jar.pack will be generated in target folder of libs folder, rename it to lib.jar.pack.gz
+   sia-libs-1.0.0.jar.pack will be generated in target folder of libs folder, rename it to libs.jar.pack.gz
 
 3) to generate spankodds.pack.gz, run
    upd.bat
