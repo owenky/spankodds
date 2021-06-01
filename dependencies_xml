@@ -136,7 +136,7 @@
          </dependency>
         <dependency>
              <groupId>jide</groupId>
-             <artifactId>grantt</artifactId>
+             <artifactId>gantt</artifactId>
              <version>3.7.11</version>
          </dependency>
         <dependency>
