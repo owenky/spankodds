@@ -174,6 +174,9 @@ public abstract class TableSection<V extends KeyedObject> {
             }
         }
     }
+    public int size() {
+        return gamesVec.size();
+    }
     public void fire(TableModelEvent e) {
         if ( null != containingTableModel) {
             checkAndRunInEDT(() -> {

@@ -62,7 +62,6 @@ public class LinesTableData extends TableSection<Game> {
             showPrior();
         }
     }
-
     public void showOpener() {
         showingOpener = true;
         showingPrior = false;
@@ -116,7 +115,16 @@ public class LinesTableData extends TableSection<Game> {
 //    }
     @Override
     public void addGame(Game g, boolean repaint) {
-       super.addGame(g,repaint);
+        setHowHeighIfAbsent(g);
+        super.addGame(g,repaint);
+    }
+    private void setHowHeighIfAbsent(Game g) {
+        if ( 0 == size()) {
+            List<Game> games = new ArrayList<>();
+            games.add(g);
+            int rowHeight = TableUtils.calTableSectionRowHeight(games);
+            setRowHeight(rowHeight);
+        }
     }
     @Override
     protected void prepareLineGamesForTableModel(LineGames<Game> gamesVec) {

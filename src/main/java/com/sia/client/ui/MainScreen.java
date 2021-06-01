@@ -1073,7 +1073,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 gameGroupHeader = null;
             }
             LinesTableData tableSection = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader);
-            int tableSectionRowHeight = calTableSectionRowHeight(newgamegroupvec);
+            int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
             tableSection.setRowHeight(tableSectionRowHeight);
             mainGameTable.addGameLine(tableSection);
             oldgamegroupvec = newgamegroupvec;
@@ -1183,16 +1183,5 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private JComponent makeMainTableScrollPane(MainGameTable table) {
         return TableUtils.configTableLockColumns(table,AppController.getNumFixedCols());
     }
-    private static int calTableSectionRowHeight(List<Game> games) {
-        int tableSectionRowHeight = SiaConst.NormalRowheight;
-        if ( null != games) {
-            for(Game g: games) {
-                if ( null != g && SiaConst.SoccerLeagueId == g.getLeague_id()) {
-                    tableSectionRowHeight = SiaConst.SoccerRowheight;
-                }
-                break;
-            }
-        }
-        return tableSectionRowHeight;
-    }
+
 }

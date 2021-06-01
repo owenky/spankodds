@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
+import com.sia.client.model.Game;
 import com.sia.client.model.KeyedObject;
 
 import javax.swing.JComponent;
@@ -11,6 +13,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
+import java.util.List;
 
 public abstract class TableUtils {
 
@@ -65,6 +68,21 @@ public abstract class TableUtils {
         rtn.setPreferredWidth(sourceTc.getPreferredWidth());
         rtn.setResizable(sourceTc.getResizable());
         return rtn;
+    }
+    public static int calTableSectionRowHeight(List<Game> games) {
+        int tableSectionRowHeight = SiaConst.NormalRowheight;
+        if ( null != games) {
+            for(Game g: games) {
+                if ( null == g) {
+                    continue;
+                }
+                if (SiaConst.SoccerLeagueId == g.getLeague_id()) {
+                    tableSectionRowHeight = SiaConst.SoccerRowheight;
+                }
+                break;
+            }
+        }
+        return tableSectionRowHeight;
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static class  TableScrollPaneContaine extends JPanel {

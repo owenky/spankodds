@@ -37,6 +37,8 @@ public class SpankOdds {
     private int failedAttemptsCount = 0;
 
     public static void main(String[] args) {
+        com.jidesoft.utils.Lm.verifyLicense("Spank Odds", "Spank Odds",
+                "gJGsTI2f4lYzPcskZ7OHWXN7iPvWAbO2");
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
