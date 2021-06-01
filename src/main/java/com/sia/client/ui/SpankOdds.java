@@ -26,7 +26,7 @@ import static com.sia.client.config.Utils.log;
 
 public class SpankOdds {
 
-    private static final String version = "20210422001";
+    private static final String version = "20210601001";
     private SportsTabPane stb;
     private TopView tv;
     private SportsMenuBar smb;
