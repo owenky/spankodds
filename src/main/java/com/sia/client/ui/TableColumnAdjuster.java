@@ -186,7 +186,7 @@ public class TableColumnAdjuster {
 //            table.getTableHeader().setResizingColumn(tableColumn);
         }
         //tableColumn.setWidth(width); // owen took this out and made it preferredwidth instead!
-        tableColumn.setMinWidth(width);
+//        tableColumn.setMinWidth(width); //set min width to width disable manually dragging column narrower -- 06/01/2021
         tableColumn.setPreferredWidth(width);
     }
 
