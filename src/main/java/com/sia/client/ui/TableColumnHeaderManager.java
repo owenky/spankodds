@@ -90,7 +90,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
-//        if ( isMainTableShown.get() ) {
           if ( mainTable.isShowing()) {
             invokeDrawColumnHeaders();
         }
@@ -103,11 +102,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void componentResized(final ComponentEvent e) {
-//        if ( mainTable.isShowing() && ! isAdjustingColumn ) {
-//            drawnHeaderValues.clear();
-//            adjustComumns();
-//        }
-//        isAdjustingColumn = false;
         //don't call adjustColumns() in componentResized(). because adjustColumns() will invoke componentResized in return. 05/27/2021
     }
 
@@ -118,12 +112,10 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void componentShown(final ComponentEvent e) {
-//        invokeDrawColumnHeaders();
     }
 
     @Override
     public void componentHidden(final ComponentEvent e) {
-//        invokeDrawColumnHeaders();
     }
 
     @Override

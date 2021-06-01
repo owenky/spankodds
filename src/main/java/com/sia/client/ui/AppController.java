@@ -596,14 +596,14 @@ public class AppController {
             }
         }
     }
-//
-//    public static void clearAll() {
-//        for (SportsTabPane stb : tabpanes) {
-//            stb.clearAll();
-//
-//        }
-//
-//    }
+
+    public static void clearAll() {
+        for (SportsTabPane stb : tabpanes) {
+            stb.clearAll();
+
+        }
+
+    }
 
     public static void fireAllTableDataChanged(Collection<Integer> gameIds) {
         for (SportsTabPane stb : tabpanes) {

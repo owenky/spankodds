@@ -417,28 +417,25 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Component c = getComponentAt(i);
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
-                if ( c.isShowing()) {
-                    MainGameTableModel model = ms.getDataModels();
-                    model.copyTo(v);
-                }
+                MainGameTableModel model = ms.getDataModels();
+                model.copyTo(v);
             }
         }
         return v;
     }
 
-//    public void clearAll() {
-//        int totalTabs = getTabCount();
-//        for (int i = 0; i < totalTabs; i++) {
-//            Component c = getComponentAt(i);
-//            if ( c instanceof MainScreen) {
-//                MainScreen ms = (MainScreen) c;
-//                if ( ms.isShowing()) {
-//                    ms.clearColors();
-//                }
-//            }
-//        }
-//
-//    }
+    public void clearAll() {
+        int totalTabs = getTabCount();
+        for (int i = 0; i < totalTabs; i++) {
+            Component c = getComponentAt(i);
+            if ( c instanceof MainScreen) {
+                MainScreen ms = (MainScreen) c;
+                //it modifies values, not display. It is necessary to clear hidden main screen. -- 06/01/2021
+                ms.clearColors();
+            }
+        }
+
+    }
 
     public void fireAllTableDataChanged(Collection<Integer> gameIds) {
 

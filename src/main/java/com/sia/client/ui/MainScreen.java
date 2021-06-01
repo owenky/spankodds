@@ -15,12 +15,10 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.Timer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -1105,33 +1103,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
          */
     }
-
-    public JTable makeFixedRowHeader(int fixedColumns, JTable main, boolean deletefrommain) {
-
-        JTable fixed = new JTable();
-        fixed.setAutoCreateColumnsFromModel(false);
-        fixed.setModel(main.getModel());
-        fixed.setSelectionModel(main.getSelectionModel());
-        fixed.setFocusable(false);
-
-
-        for (int i = 0; i < fixedColumns; i++) {
-            TableColumnModel columnModel = main.getColumnModel();
-            if (deletefrommain) {
-                TableColumn column = columnModel.getColumn(0);
-                columnModel.removeColumn(column);
-                fixed.getColumnModel().addColumn(column);
-            } else {
-                TableColumn column = columnModel.getColumn(i);
-                fixed.getColumnModel().addColumn(column);
-
-            }
-
-        }
-
-        return fixed;
-    }
-
     public boolean isShowHeaders() {
         return showheaders;
     }
