@@ -13,12 +13,14 @@ public class GameMessageProcessor {
 
     private final MessageConsumingScheduler<Integer> gameIdConsumingScheculer;
     private final String name;
+    private final boolean toDebug;
 
     public GameMessageProcessor(String name,long initialDelayInMilliSeconds, long periodInMilliSeconcs) {
         this.name = name;
         gameIdConsumingScheculer = new MessageConsumingScheduler<>(createConsumer());
         gameIdConsumingScheculer.setInitialDelay(initialDelayInMilliSeconds);
         gameIdConsumingScheculer.setUpdatePeriodInMilliSeconds(periodInMilliSeconcs);
+        this.toDebug = (0>periodInMilliSeconcs);
     }
     public void addGameId(int gameId) {
         gameIdConsumingScheculer.addMessage(gameId);
@@ -32,12 +34,13 @@ public class GameMessageProcessor {
         return (buffer) -> {
             Set<Integer> distinctSet = new HashSet<>(buffer);
 //TODO debug statements
-long now = System.currentTimeMillis();
-long diff = now-lastUpdate;
-lastUpdate = now;
+if ( toDebug) {
+    long now = System.currentTimeMillis();
+    long diff = now - lastUpdate;
+    lastUpdate = now;
+    log("queue size="+buffer.size()+", distinct size="+distinctSet.size()+", since last update: "+diff+" milliseconds. scheduler name="+name);
+}
 //END of debug TODO
-            log("queue size="+buffer.size()+", distinct size="+distinctSet.size()+", since last update: "+diff+" milliseconds. scheduler name="+name);
-            //
 
             //            check but don't file , instead, fire in batch'
             AppController.fireAllTableDataChanged(distinctSet);
