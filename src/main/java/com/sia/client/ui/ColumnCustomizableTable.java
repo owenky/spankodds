@@ -87,6 +87,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return tableColumnHeaderManager;
     }
+    public void adjustColumn(int column) {
+        getColumnAdjusterManager().getMainTableColumnAdjuster().adjustColumn(column);
+    }
     public void adjustColumns() {
         getColumnAdjusterManager().adjustColumns();
     }

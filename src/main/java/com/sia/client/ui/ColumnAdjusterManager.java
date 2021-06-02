@@ -43,7 +43,7 @@ public class ColumnAdjusterManager {
         getMainTableColumnAdjuster().adjustColumnsOnRow(gameIds);
         getRowHeaderTableColumnAdjuster().adjustColumnsOnRow(gameIds);
     }
-    private TableColumnAdjuster getMainTableColumnAdjuster() {
+    public TableColumnAdjuster getMainTableColumnAdjuster() {
         if ( null == mainTableColumnAdjuster) {
             mainTableColumnAdjuster = new TableColumnAdjuster(mainTable,mainTable.getMarginProvider());
         }

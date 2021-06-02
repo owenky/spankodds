@@ -9,6 +9,7 @@ import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -17,6 +18,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 
 public class TableColumnHeaderManager<V extends KeyedObject> implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
@@ -43,6 +46,11 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
         //after sorting, rowModel is set to null, need to re-configure row height
         mainTable.addPropertyChangeListener("rowSorter", rowHeightConfigListener);
+        //detect column dragging
+        mainTable.getTableHeader().addMouseListener( new MouseAdapter() {
+            public void mouseReleased(MouseEvent arg0) {
+               adjustColumnOnColumnDraging(arg0.getPoint());
+            }});
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
@@ -90,19 +98,20 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
-          if ( mainTable.isShowing()) {
-            invokeDrawColumnHeaders();
-        }
+        invokeDrawColumnHeaders();
     }
 
     @Override
     public void columnSelectionChanged(final ListSelectionEvent e) {
 
     }
-
+    private int widthAfterResizedDetected;
+    private int widthBeforeResized;
     @Override
     public void componentResized(final ComponentEvent e) {
         //don't call adjustColumns() in componentResized(). because adjustColumns() will invoke componentResized in return. 05/27/2021
+        widthBeforeResized = widthAfterResizedDetected;
+        widthAfterResizedDetected = mainTable.getWidth();
     }
 
     @Override
@@ -160,5 +169,14 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             lastRow = mainTable.getRowCount()-1;
         }
         mainTable.configHeaderRow(firstRow,lastRow,false);
+    }
+    private void adjustColumnOnColumnDraging(Point mouseLocation){
+        if (  widthBeforeResized > widthAfterResizedDetected) {
+            //narrow width
+            int column = mainTable.columnAtPoint(mouseLocation);
+            TableColumn tc = mainTable.getColumnModel().getColumn(column);
+            tc.setPreferredWidth(0);
+            mainTable.adjustColumn(column);
+        }
     }
 }

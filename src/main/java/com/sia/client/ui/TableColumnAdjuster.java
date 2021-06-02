@@ -209,7 +209,7 @@ public class TableColumnAdjuster {
     /*
      *  Adjust the width of the specified column in the table
      */
-    private int adjustColumn(final int column) {
+    public int adjustColumn(final int column) {
         TableColumn tableColumn = table.getColumnModel().getColumn(column);
 
         if (!tableColumn.getResizable()) {

@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.ui.simulator.CheckToFileTest;
+import com.sia.client.ui.simulator.ColumnWidthAdjuster;
 import com.sia.client.ui.simulator.EventGenerator;
 import com.sia.client.ui.simulator.SportsTabPaneTest;
 import com.sia.client.ui.simulator.TableProperties;
@@ -40,18 +40,18 @@ public class SpankOddsTest {
         jFrame.setSize(new Dimension(1500, 800));
         jFrame.setLocation(new Point(250, 100));
         jFrame.setVisible(true);
-        autoUpdateTableData(tbleProps);
+//        autoUpdateTableData(tbleProps);
     }
 
     private static void autoUpdateTableData(TableProperties[] tblProps) {
         final EventGenerator eventGenerator;
 //            eventGenerator = new NewGameCreator();
-//            eventGenerator = new ColumnWidthAdjuster();
+            eventGenerator = new ColumnWidthAdjuster();
 //            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
 //            eventGenerator = new GameMover();
 //        eventGenerator = new CheckToFileTest();
-        eventGenerator = new CheckToFileTest();
+//        eventGenerator = new CheckToFileTest();
         Timer updateTimer = new Timer(3000, (event) -> {
             eventGenerator.generatEvent(tblProps);
         });
