@@ -20,7 +20,7 @@ public class GameMessageProcessor {
         gameIdConsumingScheculer = new MessageConsumingScheduler<>(createConsumer());
         gameIdConsumingScheculer.setInitialDelay(initialDelayInMilliSeconds);
         gameIdConsumingScheculer.setUpdatePeriodInMilliSeconds(periodInMilliSeconcs);
-        this.toDebug = (0>periodInMilliSeconcs);
+        this.toDebug = (0<periodInMilliSeconcs);
     }
     public void addGameId(int gameId) {
         gameIdConsumingScheculer.addMessage(gameId);
