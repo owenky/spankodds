@@ -255,12 +255,17 @@ public class TableColumnAdjuster {
      *  given column.
      */
     private int getColumnDataWidth(int column) {
-        if (0 == table.getRowCount() || 0 > lastRow || 0 > firstRow) {
-            return 0;
+        TableColumn tc = table.getColumnModel().getColumn(column);
+        if ( firstRow < 0) {
+            firstRow = 0;
+        }
+        if ( lastRow < 0) {
+            lastRow = table.getRowCount()-1;
         }
 
-        int preferredWidth = 0;
-        int maxWidth = table.getColumnModel().getColumn(column).getMaxWidth();
+
+        int preferredWidth = tc.getPreferredWidth();
+        int maxWidth = tc.getMaxWidth();
 
         for (int row = firstRow; row <= lastRow; row++) {
             preferredWidth = Math.max(preferredWidth, getCellDataWidth(row, column));
