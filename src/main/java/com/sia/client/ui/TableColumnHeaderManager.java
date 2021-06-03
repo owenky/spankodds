@@ -175,8 +175,17 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             //narrow width
             int column = mainTable.columnAtPoint(mouseLocation);
             TableColumn tc = mainTable.getColumnModel().getColumn(column);
+//            System.out.println("doing narrowing on column...."+tc.getHeaderValue()+", column index="+column);
             tc.setPreferredWidth(0);
             mainTable.adjustColumn(column);
+            //sometimes users drag on column but mainTable.columnAtPoint(mouseLocation) returns right next column, to be safe, adjust both of them.
+            column --;
+            if ( 0 <= column) {
+                TableColumn tc2 = mainTable.getColumnModel().getColumn(column);
+                tc2.setPreferredWidth(0);
+                mainTable.adjustColumn(column);
+            }
+
         }
     }
 }
