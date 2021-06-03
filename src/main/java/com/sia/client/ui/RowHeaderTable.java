@@ -133,6 +133,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	@Override
 	public void adjustColumn(int column) {
 		mainTable.adjustRowHeaderColumn(column);
+		optimizeSize();
 	}
 	@Override
 	public JTable table() {
