@@ -143,7 +143,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 //			List<JTableColumn> lockedColumns = mainTable.getLockColumns();
 //			columnViewIndex = lockedColumns.indexOf(aColumnIden);
 //			if ( columnViewIndex >=0 ){
-//				columnViewIndex = columnViewIndex + 1; // 第一列是行号，主表锁住的列从第二列开始
+//				columnViewIndex = columnViewIndex + 1;
 //			}
 //		}
 //
