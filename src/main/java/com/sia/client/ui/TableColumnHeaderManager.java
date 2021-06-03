@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
 
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -21,6 +22,8 @@ import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TableColumnHeaderManager<V extends KeyedObject> implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
@@ -29,6 +32,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private int horizontalScrollBarAdjustmentValue=Integer.MIN_VALUE;
     private final PropertyChangeListener rowHeightConfigListener;
     private final ColumnHeaderDrawer<V> columnHeaderDrawer;
+    private final Map<ColumnAdjuster, ResizingProperties> tableResizingProp = new HashMap<>();
 
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
@@ -39,6 +43,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     public void installListeners() {
         mainTable.addHierarchyListener(this);
         mainTable.addComponentListener(this);
+        mainTable.getRowHeaderTable().addComponentListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
         mainTable.setTableChangedListener(this);
@@ -49,8 +54,14 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         //detect column dragging
         mainTable.getTableHeader().addMouseListener( new MouseAdapter() {
             public void mouseReleased(MouseEvent arg0) {
-               adjustColumnOnColumnDraging(arg0.getPoint());
-            }});
+                adjustColumnOnColumnDraging(mainTable,arg0.getPoint());
+
+        }});
+        mainTable.getRowHeaderTable().getTableHeader().addMouseListener( new MouseAdapter() {
+            public void mouseReleased(MouseEvent arg0) {
+                adjustColumnOnColumnDraging(mainTable.getRowHeaderTable(),arg0.getPoint());
+
+        }});
     }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
@@ -105,13 +116,16 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     public void columnSelectionChanged(final ListSelectionEvent e) {
 
     }
-    private int widthAfterResizedDetected;
-    private int widthBeforeResized;
     @Override
     public void componentResized(final ComponentEvent e) {
         //don't call adjustColumns() in componentResized(). because adjustColumns() will invoke componentResized in return. 05/27/2021
-        widthBeforeResized = widthAfterResizedDetected;
-        widthAfterResizedDetected = mainTable.getWidth();
+        Object source = e.getSource();
+        if ( source instanceof ColumnAdjuster) {
+            ColumnAdjuster columnAdjuster = (ColumnAdjuster)source;
+            ResizingProperties resizingProperties = tableResizingProp.computeIfAbsent(columnAdjuster,(k)->new ResizingProperties());
+            resizingProperties.widthBeforeResized = resizingProperties.width;
+            resizingProperties.width = columnAdjuster.table().getWidth();
+        }
     }
 
     @Override
@@ -170,22 +184,29 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         }
         mainTable.configHeaderRow(firstRow,lastRow,false);
     }
-    private void adjustColumnOnColumnDraging(Point mouseLocation){
-        if (  widthBeforeResized > widthAfterResizedDetected) {
+    private void adjustColumnOnColumnDraging(ColumnAdjuster columnAdjuster,Point mouseLocation){
+        ResizingProperties resizingProperties = tableResizingProp.get(columnAdjuster);
+        if (  null != resizingProperties && resizingProperties.widthBeforeResized > resizingProperties.width) {
+            JTable table = columnAdjuster.table();
             //narrow width
-            int column = mainTable.columnAtPoint(mouseLocation);
-            TableColumn tc = mainTable.getColumnModel().getColumn(column);
-//            System.out.println("doing narrowing on column...."+tc.getHeaderValue()+", column index="+column);
+            int column = table.columnAtPoint(mouseLocation);
+            TableColumn tc = table.getColumnModel().getColumn(column);
+
             tc.setPreferredWidth(0);
-            mainTable.adjustColumn(column);
+            columnAdjuster.adjustColumn(column);
             //sometimes users drag on column but mainTable.columnAtPoint(mouseLocation) returns right next column, to be safe, adjust both of them.
             column --;
             if ( 0 <= column) {
-                TableColumn tc2 = mainTable.getColumnModel().getColumn(column);
+                TableColumn tc2 = table.getColumnModel().getColumn(column);
                 tc2.setPreferredWidth(0);
-                mainTable.adjustColumn(column);
+                columnAdjuster.adjustColumn(column);
             }
 
         }
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static class ResizingProperties {
+        private int widthBeforeResized;
+        private int width;
     }
 }

@@ -31,7 +31,7 @@ public abstract class TableUtils {
         // Put rowHeaderTable in a viewport that we can control.
         JViewport jv = new JViewport();
         jv.setView(rowHeaderTable);
-        jv.setPreferredSize(rowHeaderTable.getMaximumSize());
+//        jv.setPreferredSize(rowHeaderTable.getMaximumSize());
 
 
         JScrollPane tableScrollPane = mainTable.getTableScrollPane();

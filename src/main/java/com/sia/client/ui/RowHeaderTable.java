@@ -11,7 +11,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.util.List;
 
-public class RowHeaderTable<V extends KeyedObject> extends JTable {
+public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
 
 	private final ColumnCustomizableTable<V> mainTable;
 	private final boolean hasRowNumber;
@@ -129,6 +129,14 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable {
 		} else {
 			return mainTable.getRowCount();
 		}
+	}
+	@Override
+	public void adjustColumn(int column) {
+		mainTable.adjustRowHeaderColumn(column);
+	}
+	@Override
+	public JTable table() {
+		return this;
 	}
 //
 //	@Override

@@ -49,7 +49,7 @@ public class ColumnAdjusterManager {
         }
         return mainTableColumnAdjuster;
     }
-    private TableColumnAdjuster getRowHeaderTableColumnAdjuster() {
+    public TableColumnAdjuster getRowHeaderTableColumnAdjuster() {
         if ( null == rowHeaderTableColumnAdjuster) {
             rowHeaderTableColumnAdjuster = new TableColumnAdjuster(mainTable.getRowHeaderTable(),mainTable.getMarginProvider());
         }

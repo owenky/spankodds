@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable {
+public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
 
     private static final AtomicInteger instanceCounter = new AtomicInteger(0);
     private final int instanceIndex;
@@ -87,8 +87,16 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return tableColumnHeaderManager;
     }
+    @Override
+    public JTable table() {
+        return this;
+    }
+    @Override
     public void adjustColumn(int column) {
         getColumnAdjusterManager().getMainTableColumnAdjuster().adjustColumn(column);
+    }
+    public void adjustRowHeaderColumn(int column) {
+        getColumnAdjusterManager().getRowHeaderTableColumnAdjuster().adjustColumn(column);
     }
     public void adjustColumns() {
         getColumnAdjusterManager().adjustColumns();
