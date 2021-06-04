@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 
 import java.util.HashSet;
@@ -43,7 +44,10 @@ if ( toDebug) {
 //END of debug TODO
 
             //            check but don't file , instead, fire in batch'
-            AppController.fireAllTableDataChanged(distinctSet);
+            Utils.checkAndRunInEDT(()->{
+                AppController.fireAllTableDataChanged(distinctSet);
+            });
+
         };
     }
 }

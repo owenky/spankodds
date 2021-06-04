@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.MessageConsumingScheduler;
@@ -493,8 +494,13 @@ public class ScoresConsumer implements MessageListener {
     private MessageConsumingScheduler<Integer> createScoreMessageProcessor() {
         Consumer<List<Integer>> messageConsumer = (buffer)-> {
             Set<Integer> distinctSet = new HashSet<>(buffer);
-log("ScoresConsumer batch process: queue size="+buffer.size()+", distinctSet size="+distinctSet.size());
-            AppController.fireAllTableDataChanged(distinctSet);
+if ( buffer.size() > 1) {
+    log("ScoresConsumer batch process: queue size=" + buffer.size() + ", distinctSet size=" + distinctSet.size());
+}
+            Utils.checkAndRunInEDT(()->{
+                AppController.fireAllTableDataChanged(distinctSet);
+            });
+
         };
         MessageConsumingScheduler<Integer> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
         scoreMessageProcessor.setInitialDelay(2*1000L);
