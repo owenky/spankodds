@@ -498,7 +498,8 @@ log("ScoresConsumer batch process: queue size="+buffer.size()+", distinctSet siz
         };
         MessageConsumingScheduler<Integer> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
         scoreMessageProcessor.setInitialDelay(2*1000L);
-        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
+//        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
+        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(-1500L);
         return scoreMessageProcessor;
     }
 }
