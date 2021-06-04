@@ -33,15 +33,8 @@ public interface AbstractScreen<T extends KeyedObject> {
                 model.fireTableChanged(e);
             });
         }
-//        TableSection<T> ltd = model.checktofire(gameid,table.isShowing());
-//        boolean status = (null != ltd);
-//        if (status) {
-//            GameTableAdjustScheduler.adjustColumn(table, ltd, gameid);
-//        }
-//        if ( repaint ) {
-//            int rowModelIndex = containingTableModel.getRowModelIndex(this, gameId);
-//            TableModelEvent e = new TableModelEvent(containingTableModel, rowModelIndex, rowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
-//            fire(e);
-//        }
+    }
+    default void removeGames(String[] gameids) {
+        getColumnCustomizableTable().getModel().removeGames(gameids);
     }
 }

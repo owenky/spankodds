@@ -8,9 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import static com.sia.client.config.Utils.log;
-import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
-
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
 //    private final List<LinesTableData> gameLines = new ArrayList<>();
@@ -32,21 +29,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             ltd.addGame(game, paint);
         }
 
-    }
-    public void removeGames(String[] gameidstr) {
-        Integer [] gameIds = new Integer[gameidstr.length];
-        for(int i=0;i<gameidstr.length;i++) {
-            gameIds[i] = Integer.parseInt(gameidstr[i]);
-        }
-        List<TableSection<Game>> gameLines = getTableSections();
-        for (TableSection<Game> linesTableData : gameLines) {
-            try {
-                ((LinesTableData)linesTableData).removeGameIds(gameIds);
-            } catch (Exception ex) {
-                log(ex);
-            }
-        }
-        this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void clearColors() {
         List<TableSection<Game>> gameLines = getTableSections();

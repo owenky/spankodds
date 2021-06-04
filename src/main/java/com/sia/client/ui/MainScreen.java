@@ -112,11 +112,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public Game removeGame(int gameid,boolean repaint) {
         return getDataModels().removeGame(gameid,repaint);
     }
-
-    public void removeGames(String[] gameids) {
-        getDataModels().removeGames(gameids);
-    }
-
     public void addGame(Game g, boolean repaint) { // only gets called when adding new game into system
         if ( null != mainGameTable) {
             int leagueid = g.getLeague_id();

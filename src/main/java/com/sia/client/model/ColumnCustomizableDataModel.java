@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.sia.client.config.Utils.log;
+import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 
 public class ColumnCustomizableDataModel<V extends KeyedObject> implements TableModel {
 
@@ -86,6 +87,21 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         throw new IllegalStateException("Pending implementation");
+    }
+    public void removeGames(String[] gameidstr) {
+        Integer [] gameIds = new Integer[gameidstr.length];
+        for(int i=0;i<gameidstr.length;i++) {
+            gameIds[i] = Integer.parseInt(gameidstr[i]);
+        }
+        List<TableSection<V>> gameLines = getTableSections();
+        for (TableSection<V> linesTableData : gameLines) {
+            try {
+                linesTableData.removeGameIds(gameIds);
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+        this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void fireTableChanged(TableModelEvent e) {
         //TODO: need to  buildIndexMappingCache for update? ( scenario: game data changed.)

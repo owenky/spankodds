@@ -321,46 +321,12 @@ public class LinesTableData extends TableSection<Game> {
         resetDataVector(); //including sorting gamesVec
 //        fire(null);
     }
-
+    @Override
     public void removeGameIds(Integer[] gameidstoremove) {
         if (gameidstoremove.length == 1 && gameidstoremove[0].equals(-1)) {
             removeYesterdaysGames();
         } else {
-                //TODO unnecessary call?
-            log("WARNING: In LinesTableData, skip AppController.disableTabs();");
-//            AppController.disableTabs();
-
-            for(Integer gameId: gameidstoremove) {
-                removeGameId(gameId,false);
-            }
-//            List<String> list = Arrays.asList(gameidstoremove);
-//            Vector<String> gameidstoremovevec = new Vector<>(list);
-//            for (Iterator<Game> iterator = getGamesIterator(); iterator.hasNext(); ) {
-//
-//                Game g = iterator.next();
-//                String gameid = "" + g.getGame_id();
-//
-//                if (gameidstoremovevec.contains(gameid)) {
-//                    try {
-//                        iterator.remove();
-//                    } catch (Exception ex) {
-//                        log(ex);
-//                    }
-//                }
-//            }
-
-//            setInitialData();
-//            JViewport parent = (JViewport) thistable.getParent();
-//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//
-//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//            scrollpane.revalidate();
-//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//            Container comp = scrollpane.getParent();
-//            comp.revalidate();
-//            AppController.enableTabs();
-            resetDataVector(); //including sorting gamesVec
-//            fire(null);
+             super.removeGameIds(gameidstoremove);
         }
     }
 
