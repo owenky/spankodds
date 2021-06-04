@@ -144,8 +144,8 @@ public abstract class TableSection<V extends KeyedObject> {
 //            fire();
 //        }
             g = gamesVec.removeGame(gameidtoremove);
-            resetDataVector();
             if (repaint) {
+                resetDataVector();
                 TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
                 fire(e);
             }

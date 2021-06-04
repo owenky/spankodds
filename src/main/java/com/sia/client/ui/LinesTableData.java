@@ -12,7 +12,6 @@ import com.sia.client.model.TableSection;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -323,29 +322,32 @@ public class LinesTableData extends TableSection<Game> {
 //        fire(null);
     }
 
-    public void removeGameIds(String[] gameidstoremove) {
-        if (gameidstoremove.length == 1 && gameidstoremove[0].equals("-1")) {
+    public void removeGameIds(Integer[] gameidstoremove) {
+        if (gameidstoremove.length == 1 && gameidstoremove[0].equals(-1)) {
             removeYesterdaysGames();
         } else {
                 //TODO unnecessary call?
             log("WARNING: In LinesTableData, skip AppController.disableTabs();");
 //            AppController.disableTabs();
 
-            List<String> list = Arrays.asList(gameidstoremove);
-            Vector<String> gameidstoremovevec = new Vector<>(list);
-            for (Iterator<Game> iterator = getGamesIterator(); iterator.hasNext(); ) {
-
-                Game g = iterator.next();
-                String gameid = "" + g.getGame_id();
-
-                if (gameidstoremovevec.contains(gameid)) {
-                    try {
-                        iterator.remove();
-                    } catch (Exception ex) {
-                        log(ex);
-                    }
-                }
+            for(Integer gameId: gameidstoremove) {
+                removeGameId(gameId,false);
             }
+//            List<String> list = Arrays.asList(gameidstoremove);
+//            Vector<String> gameidstoremovevec = new Vector<>(list);
+//            for (Iterator<Game> iterator = getGamesIterator(); iterator.hasNext(); ) {
+//
+//                Game g = iterator.next();
+//                String gameid = "" + g.getGame_id();
+//
+//                if (gameidstoremovevec.contains(gameid)) {
+//                    try {
+//                        iterator.remove();
+//                    } catch (Exception ex) {
+//                        log(ex);
+//                    }
+//                }
+//            }
 
 //            setInitialData();
 //            JViewport parent = (JViewport) thistable.getParent();
@@ -358,7 +360,7 @@ public class LinesTableData extends TableSection<Game> {
 //            comp.revalidate();
 //            AppController.enableTabs();
             resetDataVector(); //including sorting gamesVec
-            fire(null);
+//            fire(null);
         }
     }
 
