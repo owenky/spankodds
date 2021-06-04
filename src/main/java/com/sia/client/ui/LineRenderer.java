@@ -107,6 +107,8 @@ public class LineRenderer implements TableCellRenderer {
         LinePanel lp = new LinePanel(name);
         lp.top.setHorizontalAlignment(SwingConstants.CENTER);
         lp.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        lp.draw.setHorizontalAlignment(SwingConstants.CENTER);
+        lp.total.setHorizontalAlignment(SwingConstants.CENTER);
         return lp;
     }
     private LinePanel createGameNumbersPanel(String name) {
