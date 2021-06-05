@@ -45,6 +45,9 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
     }
 
     private static <V extends KeyedObject> void layOutColumnHeader(int rowViewIndex, ColumnCustomizableTable<V> mainTable, JComponent header, int headerHeight, int diffByScroll) {
+        if ( 0 > diffByScroll ) {
+            diffByScroll = 0;
+        }
         Rectangle r1 = mainTable.getCellRect(rowViewIndex-1, 0, true);
         int x1 = 5; //keep leading space from last locked column
         int y1 = (int) (r1.getY() + r1.getHeight());
