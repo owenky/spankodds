@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
@@ -151,14 +152,16 @@ public class ScoresConsumer implements MessageListener {
                             Sport s = AppController.getSport(g.getLeague_id());
 
                             int id = s.getParentleague_id();
-                            if (id == 9) {
-                                AppController.moveGameToThisHeader(g, "Soccer FINAL");
+                            if (id == SiaConst.SoccerLeagueId) {
+                                //looks like "Soccer FINAL" is wrong, should be "FINAL" for soccer -- 06/05/2021
+//                                AppController.moveGameToThisHeader(g, "Soccer FINAL");
+                                AppController.moveGameToThisHeader(g, "FINAL");
                             } else {
                                 AppController.moveGameToThisHeader(g, "FINAL");
                             }
                             refreshtabs = true;
                             String finalprefs = AppController.getUser().getFinalAlert();
-                            System.out.println("game " + gameid + "..just went final");
+                            log("game " + gameid + "..just went final");
                             String finalarr[] = finalprefs.split("\\|");
                             boolean popup = false;
                             boolean sound = false;

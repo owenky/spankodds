@@ -116,7 +116,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         TableSection<V> rtn = null;
         List<TableSection<V>> gameLines = getTableSections();
         for (TableSection<V> ltd : gameLines) {
-            if (gameGroupHeader.equals(ltd.getGameGroupHeader())) {
+            if (gameGroupHeader.equalsIgnoreCase(ltd.getGameGroupHeader())) {
                 rtn = ltd;
                 break;
             }
