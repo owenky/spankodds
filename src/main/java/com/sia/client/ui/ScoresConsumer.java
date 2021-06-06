@@ -249,8 +249,10 @@ public class ScoresConsumer implements MessageListener {
                             Sport s = AppController.getSport(g.getLeague_id());
                             log("game " + gameid + "..just started");
                             int id = s.getParentleague_id();
-                            if (id == 9) {
-                                AppController.moveGameToThisHeader(g, "Soccer In Progress");
+                            if (id == SiaConst.SoccerLeagueId) {
+                                //for soccer, In Progress header is NOT Soccer In Progress, it is In Progress -- 06/05/2021
+//                                AppController.moveGameToThisHeader(g, "Soccer In Progress");
+                                AppController.moveGameToThisHeader(g, "In Progress");
                             } else {
                                 AppController.moveGameToThisHeader(g, "In Progress");
                             }
@@ -346,8 +348,10 @@ public class ScoresConsumer implements MessageListener {
                             refreshtabs = true;
                             Sport s = AppController.getSport(g.getLeague_id());
                             int id = s.getParentleague_id();
-                            if (id == 9) {
-                                AppController.moveGameToThisHeader(g, "Soccer Halftime");
+                            if (id == SiaConst.SoccerLeagueId) {
+//                                AppController.moveGameToThisHeader(g, "Soccer Halftime");
+                                AppController.moveGameToThisHeader(g, "Halftime");
+
                             } else {
                                 AppController.moveGameToThisHeader(g, "Halftime");
                             }
