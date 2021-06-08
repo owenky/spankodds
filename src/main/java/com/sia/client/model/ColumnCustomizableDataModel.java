@@ -152,10 +152,11 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
     public void moveGameToThisHeader(V g, String header) {
         V thisgame = null;
-log("DEBUG: move game "+g.getGame_id()+" to section "+header);
+        TableSection<V> group = null;
         for (TableSection<V> gameLine : tableSections) {
             thisgame = gameLine.removeGameId(g.getGame_id(),false);
             if (thisgame != null) {
+                group = gameLine;
                 break;
             }
         }
@@ -164,6 +165,7 @@ log("DEBUG: move game "+g.getGame_id()+" to section "+header);
         {
             TableSection<V> ltd = findTableSectionByHeaderValue(header);
 
+log("DEBUG: moving game "+g.getGame_id()+"from header "+group.getGameGroupHeader()+" to section "+header);
 
             if ( null != ltd) {
                 ltd.addGame(thisgame, false);
