@@ -34,21 +34,6 @@ public class UrgentsConsumer implements MessageListener {
         MessageConsumer messageConsumer = session.createConsumer(destination);
         messageConsumer.setMessageListener(this);
         connection.start();
-
-Thread tester = new Thread(()-> {
-    try {
-        int count=0;
-        String msg = "XXXXXXXXXXXXXXXXXXXXXXX";
-        while ( count++ < 20) {
-            Thread.sleep(3000L);
-            addMessageToAlertVector(msg);
-//            msg = msg+"_______________";
-        }
-    } catch(Exception e) {
-        log(e);
-    }
-});
-tester.start();
     }
 
     public void close() throws JMSException {
