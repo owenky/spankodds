@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.AlertVector;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Games;
@@ -38,9 +39,7 @@ import static com.sia.client.config.Utils.log;
 public class AppController {
 
 
-    public static Vector alertsVector = new Vector();
-
-
+    public final static AlertVector alertsVector = new AlertVector();
     public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
     public static Vector<String> customTabsVec = new Vector();
@@ -1245,69 +1244,6 @@ public class AppController {
         }
     }
 
-
-/*
-public static Spreadline getSpreadline(Bookie b,Game g)
-{
-	return spreads.get(b.getBookie_id()+"-"+g.getGame_id());
-}
-
-public static Totalline getTotalline(Bookie b,Game g)
-{
-	return totals.get(b.getBookie_id()+"-"+g.getGame_id());
-}
-public static Moneyline getMoneyline(Bookie b,Game g)
-{
-	return moneylines.get(b.getBookie_id()+"-"+g.getGame_id());
-}
-
-
-public static TeamTotalline getTeamTotalline(Bookie b,Game g)
-{
-	return teamtotals.get(b.getBookie_id()+"-"+g.getGame_id());
-}
-
-
-
-public static Spreadline getSpreadline(int b,Game g)
-{
-	return spreads.get(b+"-"+g.getGame_id());
-}
-
-public static Totalline getTotalline(int b,Game g)
-{
-	return totals.get(b+"-"+g.getGame_id());
-}
-public static Moneyline getMoneyline(int b,Game g)
-{
-	return moneylines.get(b+"-"+g.getGame_id());
-}
-public static TeamTotalline getTeamTotalline(int b,Game g)
-{
-	return teamtotals.get(b+"-"+g.getGame_id());
-}
-
-public static Spreadline getSpreadline(Bookie b,int g)
-{
-	return spreads.get(b.getBookie_id()+"-"+g);
-}
-
-public static Totalline getTotalline(Bookie b,int g)
-{
-	return totals.get(b.getBookie_id()+"-"+g);
-}
-public static Moneyline getMoneyline(Bookie b,int g)
-{
-	return moneylines.get(b.getBookie_id()+"-"+g);
-}
-public static TeamTotalline getTeamTotalline(Bookie b,int g)
-{
-	return teamtotals.get(b.getBookie_id()+"-"+g);
-}
-
-
-*/
-
     public static String getCurrentHoursMinutes() {
         Calendar calendar = Calendar.getInstance();
 
@@ -1318,21 +1254,8 @@ public static TeamTotalline getTeamTotalline(Bookie b,int g)
         return "" + hours + "hr," + minutes + "min";
 
     }
-
-    public LinesConsumer getLinesConsumer() {
-        return linesConsumer;
-    }
-
-    public GamesConsumer getGamesConsumer() {
-        return gamesConsumer;
-    }
-
-    public ScoresConsumer getScoresConsumer() {
-        return scoresConsumer;
-    }
-
-    public UrgentsConsumer getUrgentsConsumer() {
-        return urgentsConsumer;
+    public static void addAlert(String hrmin,String mesg) {
+        alertsVector.addAlert(hrmin,mesg);
     }
 
 }

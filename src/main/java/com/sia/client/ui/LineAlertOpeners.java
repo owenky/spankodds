@@ -1288,8 +1288,10 @@ class LineAlertOpeners implements ItemListener {
                                 String hrmin = AppController.getCurrentHoursMinutes();
                                 String teaminfo = game.getShortvisitorteam() + "@" + game.getShorthometeam();
 
-                                String popalertname = "Alert at:" + hrmin + "Spread Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
-                                AppController.alertsVector.addElement(popalertname);
+//                                String popalertname = "Alert at:" + hrmin + "Spread Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+//                                AppController.alertsVector.addElement(popalertname);
+                                String mesg = "Spread Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+                                AppController.addAlert(hrmin,mesg);
 
                                 //System.out.println(com.sia.client.ui.AppController.alertsVector.size());
 
@@ -1418,8 +1420,10 @@ class LineAlertOpeners implements ItemListener {
                                 String hrmin = AppController.getCurrentHoursMinutes();
                                 String teaminfo = game.getShortvisitorteam() + "@" + game.getShorthometeam();
 
-                                String popalertname = "Alert at:" + hrmin + "Total Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
-                                AppController.alertsVector.addElement(popalertname);
+//                                String popalertname = "Alert at:" + hrmin + "Total Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+//                                AppController.alertsVector.addElement(popalertname);
+                                String mesg = "Total Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+                                AppController.addAlert(hrmin,mesg);
 
 
                                 new UrgentMessage("<HTML><H1>Openers " + sn + "</H1><FONT COLOR=BLUE>" +
@@ -1497,8 +1501,10 @@ class LineAlertOpeners implements ItemListener {
                                 String hrmin = AppController.getCurrentHoursMinutes();
                                 String teaminfo = game.getShortvisitorteam() + "@" + game.getShorthometeam();
 
-                                String popalertname = "Alert at:" + hrmin + "Money Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
-                                AppController.alertsVector.addElement(popalertname);
+//                                String popalertname = "Alert at:" + hrmin + "Money Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+//                                AppController.alertsVector.addElement(popalertname);
+                                String mesg = "Money Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+                                AppController.addAlert(hrmin,mesg);
 
                                 new UrgentMessage("<HTML><H1>Openers " + sn + "</H1><FONT COLOR=BLUE>" +
                                         leaguename + "<BR><TABLE cellspacing=5 cellpadding=5>" +
@@ -1573,8 +1579,10 @@ class LineAlertOpeners implements ItemListener {
                                 String hrmin = AppController.getCurrentHoursMinutes();
                                 String teaminfo = game.getShortvisitorteam() + "@" + game.getShorthometeam();
 
-                                String popalertname = "Alert at:" + hrmin + "TeamTotal Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
-                                AppController.alertsVector.addElement(popalertname);
+//                                String popalertname = "Alert at:" + hrmin + "TeamTotal Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+//                                AppController.alertsVector.addElement(popalertname);
+                                String mesg = "TeamTotal Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
+                                AppController.addAlert(hrmin,mesg);
 
                                 new UrgentMessage("<HTML><H1>Openers " + sn + "</H1><FONT COLOR=BLUE>" +
                                         leaguename + "<BR><TABLE cellspacing=5 cellpadding=5>" +

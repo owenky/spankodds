@@ -75,8 +75,10 @@ public class LineAlertManager {
                             String hrmin = AppController.getCurrentHoursMinutes();
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
-                            String popalertname = "Alert at:" + hrmin + "Spreadline Move Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.alertsVector.addElement(popalertname);
+//                            String popalertname = "Alert at:" + hrmin + "Spreadline Move Alert:" + lan.getName() + "," + teaminfo;
+//                            AppController.alertsVector.addElement(popalertname);
+                            String mesg = "Spreadline Move Alert:" + lan.getName() + "," + teaminfo;
+                            AppController.addAlert(hrmin,mesg);
 
                             new UrgentMessage(html, lan.spreadpopupsecs * 1000, lan.spreadpopuplocation, AppController.getMainTabPane());
 
@@ -115,8 +117,10 @@ public class LineAlertManager {
                             String hrmin = AppController.getCurrentHoursMinutes();
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
-                            String popalertname = "Alert at:" + hrmin + "\nTotalline Move Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.alertsVector.addElement(popalertname);
+//                            String popalertname = "Alert at:" + hrmin + "\nTotalline Move Alert:" + lan.getName() + "," + teaminfo;
+//                            AppController.alertsVector.addElement(popalertname);
+                            String mesg = "Totalline Move Alert:" + lan.getName() + "," + teaminfo;
+                            AppController.addAlert(hrmin,mesg);
 
                             new UrgentMessage(html, lan.totalpopupsecs * 1000, lan.totalpopuplocation, AppController.getMainTabPane());
                         }
@@ -153,8 +157,10 @@ public class LineAlertManager {
                             String hrmin = AppController.getCurrentHoursMinutes();
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
-                            String popalertname = "Alert at:" + hrmin + "\nTeamTotalline Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.alertsVector.addElement(popalertname);
+//                            String popalertname = "Alert at:" + hrmin + "\nTeamTotalline Alert:" + lan.getName() + "," + teaminfo;
+//                            AppController.alertsVector.addElement(popalertname);
+                            String mesg = "TeamTotalline Alert:" + lan.getName() + "," + teaminfo;
+                            AppController.addAlert(hrmin,mesg);
 
                             new UrgentMessage(html, lan.teamtotalpopupsecs * 1000, lan.teamtotalpopuplocation, AppController.getMainTabPane());
                         }
@@ -191,8 +197,10 @@ public class LineAlertManager {
                             String hrmin = AppController.getCurrentHoursMinutes();
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
-                            String popalertname = "Alert at:" + hrmin + "\nMoneyline Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.alertsVector.addElement(popalertname);
+//                            String popalertname = "Alert at:" + hrmin + "\nMoneyline Alert:" + lan.getName() + "," + teaminfo;
+//                            AppController.alertsVector.addElement(popalertname);
+                            String mesg = "Moneyline Alert:" + lan.getName() + "," + teaminfo;
+                            AppController.addAlert(hrmin,mesg);
 
 
                             new UrgentMessage(html, lan.moneylinepopupsecs * 1000, lan.moneylinepopuplocation, AppController.getMainTabPane());

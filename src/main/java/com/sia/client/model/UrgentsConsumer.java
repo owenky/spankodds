@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.Utils;
+import com.sia.client.ui.AppController;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -33,6 +34,21 @@ public class UrgentsConsumer implements MessageListener {
         MessageConsumer messageConsumer = session.createConsumer(destination);
         messageConsumer.setMessageListener(this);
         connection.start();
+
+Thread tester = new Thread(()-> {
+    try {
+        int count=0;
+        String msg = "XXXXXXXXXXXXXXXXXXXXXXX";
+        while ( count++ < 20) {
+            Thread.sleep(3000L);
+            addMessageToAlertVector(msg);
+//            msg = msg+"_______________";
+        }
+    } catch(Exception e) {
+        log(e);
+    }
+});
+tester.start();
     }
 
     public void close() throws JMSException {
@@ -43,17 +59,25 @@ public class UrgentsConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
-        processMessage(message);
-    }
-    public void processMessage(Message message) {
-        Utils.ensureNotEdtThread();
         try {
             mapMessage = (MapMessage) message;
-            String changetype = mapMessage.getStringProperty("messageType");
+            String changeType = mapMessage.getStringProperty("messageType");
+            log("changeType:"+changeType+", message="+message);
+            String mesg = String.valueOf(message);
+            addMessageToAlertVector(mesg);
 
         } catch (Exception e) {
             log(e);
         }
     }
+    private void addMessageToAlertVector(String str) {
+        Utils.ensureNotEdtThread();
+        try {
+            String hrmin = AppController.getCurrentHoursMinutes();
+            AppController.addAlert(hrmin,str);
 
+        } catch (Exception e) {
+            log(e);
+        }
+    }
 }

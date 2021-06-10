@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
+import com.sia.client.model.AlertStruct;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -14,8 +15,6 @@ import javax.swing.event.TableModelEvent;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -36,12 +35,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     JButton alertBut;
     JButton adjustcolsBut;
     JButton chartBut;
-
-    //buttoms not visible
-    JButton firsthalfBut;
-
-
-    JComboBox alertsCombo;
+    JComboBox<AlertStruct> alertsCombo;
     JComboBox cb;
     JComboBox periodcb;
     String[] display = new String[9];
@@ -53,7 +47,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
     public TopView(SportsTabPane stb) {
 
-        //super(1);
         super(new FlowLayout(FlowLayout.LEFT));
 
         this.stb = stb;
@@ -123,22 +116,24 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
             }
         });
-        alertsCombo = new JComboBox();
+        alertsCombo = new JComboBox<>();
 
-        alertsCombo.addFocusListener(new FocusAdapter() {
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                alertsCombo.removeAllItems();
-                alertsCombo.addItem("RECENT ALERTS LIST             ");
-                for (int i = (AppController.alertsVector.size()); i > 0; i--) {
-                    alertsCombo.addItem((String) AppController.alertsVector.get(i - 1));
-                }
-                System.out.println("inside" + AppController.alertsVector.size());
-
-
-            }
-        });
+//        alertsCombo.addFocusListener(new FocusAdapter() {
+//
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                alertsCombo.removeAllItems();
+//                alertsCombo.addItem("RECENT ALERTS LIST             ");
+//                for (int i = (AppController.alertsVector.size()); i > 0; i--) {
+//                    alertsCombo.addItem(AppController.alertsVector.get(i - 1));
+//                }
+//                log("inside" + AppController.alertsVector.size());
+//
+//
+//            }
+//        });
+        alertsCombo.addItem(new AlertStruct("","RECENT ALERTS LIST             "));
+        AppController.alertsVector.bind(alertsCombo);
 
 
         // this.getChildren().addAll(cb,clearBut,clearAllBut,lastBut,openerBut,addBookieBut,remBookieBut,newWindowBut,alertBut);
@@ -323,9 +318,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                         v.get(j).showPrior();
                     }
                 }
-                if ( 0 <v.size() ) {
+                if (0 < v.size()) {
                     ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
-                    tm.fireTableChanged(new TableModelEvent(tm,0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+                    tm.fireTableChanged(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
                 }
 
             }
@@ -357,9 +352,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                         v.get(j).showOpener();
                     }
                 }
-                if ( 0 <v.size() ) {
+                if (0 < v.size()) {
                     ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
-                    tm.fireTableChanged(new TableModelEvent(tm,0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+                    tm.fireTableChanged(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
                 }
             }
         };

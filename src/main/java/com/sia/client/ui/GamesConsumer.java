@@ -183,8 +183,10 @@ public class GamesConsumer implements MessageListener {
                     String hrmin = AppController.getCurrentHoursMinutes();
                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
-                    String popalertname = "Alert at:" + hrmin + "\nPitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
-                    AppController.alertsVector.addElement(popalertname);
+//                    String popalertname = "Alert at:" + hrmin + "\nPitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+//                    AppController.alertsVector.addElement(popalertname);
+                    String mesg = "Pitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                    AppController.addAlert(hrmin,mesg);
 
                     new UrgentMessage("<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
                             s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
@@ -269,8 +271,10 @@ public class GamesConsumer implements MessageListener {
                             String hrmin = AppController.getCurrentHoursMinutes();
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
-                            String popalertname = "Alert at:" + hrmin + "\nTime Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + g.getGametime();
-                            AppController.alertsVector.addElement(popalertname);
+//                            String popalertname = "Alert at:" + hrmin + "\nTime Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + g.getGametime();
+//                            AppController.alertsVector.addElement(popalertname);
+                            String mesg = "Time Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + g.getGametime();
+                            AppController.addAlert(hrmin,mesg);
 
                             new UrgentMessage("<HTML><H1>Time Change</H1><FONT COLOR=BLUE>" +
                                     s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
