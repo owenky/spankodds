@@ -277,7 +277,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
@@ -288,7 +288,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if ((set.contains(LID + "") || all) && gmDate.before(x)) {
                     allgames.add(tempGame);
                 }
-
             }
         } else if (name.equalsIgnoreCase("hockey")) {
             boolean all = false;
@@ -700,7 +699,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         if (seriesgamessoccer.size() > 0 && isShowSeries()) {
             gamegroupheadervec.add("Soccer Series Prices");
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(seriesgamessoccer);
         }
 
@@ -713,7 +712,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         if (ingamegamessoccer.size() > 0 && isShowIngame()) {
             gamegroupheadervec.add("Soccer  In Game Prices");
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(ingamegamessoccer);
         }
 
@@ -730,11 +729,11 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         if (inprogressgamessoccer.size() > 0) {
             gamegroupheadervec.add("Soccer In Progress");
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(inprogressgamessoccer);
         } else {
             gamegroupheadervec.add("Soccer In Progress");
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
@@ -752,11 +751,11 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         if (finalgamessoccer.size() > 0) {
             gamegroupheadervec.add("Soccer FINAL");
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(finalgamessoccer);
         } else {
             gamegroupheadervec.add("Soccer FINAL");
-            gamegroupLeagueIDvec.add(9);
+            gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
