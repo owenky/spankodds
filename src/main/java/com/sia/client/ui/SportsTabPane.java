@@ -290,7 +290,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 MainScreen ms = (MainScreen) c;
                 if ( ms.isShowing()) {
                     Utils.checkAndRunInEDT(()-> ms.addGame(g, ms.isShowing()));
-                    break;
+                    //there might be more than one screen is showing ( multiple windows)
+//                    break;
                 }
             }
         }
