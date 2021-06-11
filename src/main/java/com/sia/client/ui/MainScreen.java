@@ -254,6 +254,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
             }
         } else if (name.equalsIgnoreCase("baseball")) {
+
             boolean all = false;
             String baseballpref = AppController.getUser().getBaseballPref();
             prefs = baseballpref.split("\\|");
@@ -289,6 +290,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     allgames.add(tempGame);
                 }
             }
+            log("size of all ames="+allgames.size());
         } else if (name.equalsIgnoreCase("hockey")) {
             boolean all = false;
             String hockeypref = AppController.getUser().getHockeyPref();
@@ -387,7 +389,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
                 Date gmDate = tempGame.getGamedate();
                 Calendar c = Calendar.getInstance();
