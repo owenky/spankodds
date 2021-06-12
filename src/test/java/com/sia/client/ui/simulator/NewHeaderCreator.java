@@ -14,8 +14,7 @@ public class NewHeaderCreator implements EventGenerator{
     public void generatEvent(TableProperties [] tblProps) {
         TableProperties tblProp = tblProps[0];
         ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
-        TestTableSection section = new TestTableSection(tblProp.testGameCache,true, new ArrayList<>());
-        section.setGameGroupHeader("NEW GAME GROUP "+counter.addAndGet(1));
+        TestTableSection section = new TestTableSection("NEW GAME GROUP "+counter.addAndGet(1),tblProp.testGameCache,true, new ArrayList<>());
         int insertedRow = 0;
 
         model.addGameLine(1,section);
