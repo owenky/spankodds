@@ -57,6 +57,6 @@ public class MainGameTableModelTest {
         games.add(gameCache.makeTestGame(seed+3));
 
         gameCache.addAll(games);
-        return new TestTableSection(gameCache, true, games);
+        return new TestTableSection("",gameCache, true, games);
     }
 }
