@@ -4,9 +4,11 @@ import com.sia.client.model.ColumnHeaderProvider;
 import com.sia.client.model.KeyedObject;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -48,11 +50,24 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
         if ( 0 > diffByScroll ) {
             diffByScroll = 0;
         }
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(mainTable);
         Rectangle r1 = mainTable.getCellRect(rowViewIndex-1, 0, true);
-        int x1 = 5; //keep leading space from last locked column
+//        int x1 = 5; //keep leading space from last locked column
+        int x1 = (int)topFrame.getSize().getWidth()/2 - mainTable.getRowHeaderTable().getWidth();
+System.out.println("window half width = "+(int)topFrame.getSize().getWidth()/2+", row header width="+ mainTable.getRowHeaderTable().getWidth()+", x1=================="+x1);
+        if ( x1 < 0) {
+            x1 = (int)topFrame.getSize().getWidth()/2;
+            mainTable.remove(header);
+            mainTable.getRowHeaderTable().add(header);
+        } else {
+            mainTable.getRowHeaderTable().remove(header);
+            mainTable.add(header);
+        }
         int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
         header.setBounds(x1+diffByScroll, y1, width, headerHeight);
-
     }
+//    private static int getStringWidth(Font font, String text) {
+//
+//    }
 }
