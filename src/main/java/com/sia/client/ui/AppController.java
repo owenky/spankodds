@@ -988,11 +988,13 @@ public class AppController {
 
     public static void addGame(Game g, boolean repaint) {
 
-        games.updateOrAdd(g);
+        boolean isAdd = games.updateOrAdd(g);
         //TODO potential improvement to for loop: use a map to quickly find which LineTableData this game belong to instead of loop through tabpane and mainscreen -- 05/01/2021
-        for (int k = 0; k < tabpanes.size(); k++) {
-            SportsTabPane stb = tabpanes.get(k);
-            stb.addGame(g, repaint);
+        if ( isAdd) {
+            for (int k = 0; k < tabpanes.size(); k++) {
+                SportsTabPane stb = tabpanes.get(k);
+                stb.addGame(g, repaint);
+            }
         }
 
     }
