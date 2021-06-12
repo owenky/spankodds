@@ -3,7 +3,9 @@ package com.sia.client.ui;
 import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
 
+import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -152,7 +154,6 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             }
         }
     }
-
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
         if ( mainTable.isShowing() ) {
@@ -162,10 +163,24 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
             if ( evt.getSource() == mainTable.getTableScrollPane().getHorizontalScrollBar()) {
                 horizontalScrollBarAdjustmentValue = evt.getValue();
-                drawHeaderinVisibleRegion();
+                if ( topWindowResized()) {
+                    mainTable.configHeaderRow();
+                } else {
+                    drawHeaderinVisibleRegion();
+                }
             }
 
         }
+    }
+    private int oldWindowWidth=-1;
+    private boolean topWindowResized() {
+        boolean resized = false;
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(mainTable);
+        if ( oldWindowWidth > 0) {
+           resized = oldWindowWidth != topFrame.getWidth();
+        }
+        oldWindowWidth = topFrame.getWidth();
+        return resized;
     }
     private void drawHeaderinVisibleRegion() {
         Rectangle visibleRect = mainTable.getVisibleRect();
