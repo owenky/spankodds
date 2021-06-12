@@ -18,6 +18,5 @@ public class GameMover implements EventGenerator{
         }
         TestGame game = tblProp.testGameCache.getGame(movedGameId);
         model.moveGameToThisHeader(game,targetHeader);
-        System.out.println("table visibilities: "+tblProps[0].table.isShowing()+","+tblProps[1].table.isShowing()+","+tblProps[2].table.isShowing());
     }
 }
