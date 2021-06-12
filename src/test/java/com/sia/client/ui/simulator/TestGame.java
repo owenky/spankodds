@@ -28,6 +28,10 @@ public class TestGame implements KeyedObject {
             rowData.add(gameId + "_" + i);
         }
     }
+    @Override
+    public String getTeams() {
+        return "N/A ";
+    }
     public List<Object> getRowData() {
         return rowData;
     }
