@@ -53,25 +53,39 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
         if ( 0 > diffByScroll ) {
             diffByScroll = 0;
         }
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(mainTable);
         Rectangle r1 = mainTable.getCellRect(rowViewIndex-1, 0, true);
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(mainTable);
         int stringWidth = getStringWidth(header,titleFont,headerStr);
 //        int x1 = 5; //keep leading space from last locked column
-        int x1 = (int)topFrame.getSize().getWidth()/2 - mainTable.getRowHeaderTable().getWidth();
+        int totalWidth = Math.min((int)topFrame.getSize().getWidth(),mainTable.getWidth()+mainTable.getRowHeaderTable().getWidth());
+        int rowHeaderWidth = 0==mainTable.getRowHeaderTable().getWidth()? (int)mainTable.getRowHeaderTable().getPreferredSize().getWidth():mainTable.getRowHeaderTable().getWidth();
+        int x1 = totalWidth/2 - rowHeaderWidth;
         x1 = x1 - stringWidth/2;
         int x2;
+        boolean isInMainTable;
         if ( x1 < 0) {
-            x2 = (mainTable.getWidth() - stringWidth)/2;
-            if ( 0 < x2 ) {
-                x2 = (mainTable.getRowHeaderTable().getWidth() - stringWidth) / 2;
+            x2 = (totalWidth - rowHeaderWidth - stringWidth)/2;
+            if ( 0 > x2 ) {
+                x2 = (rowHeaderWidth - stringWidth) / 2;
+                isInMainTable = false;
+            } else {
+                x2=5;
+                isInMainTable = true;
             }
-            mainTable.remove(header);
-            mainTable.getRowHeaderTable().add(header);
+
         } else {
             x2 = x1;
+            isInMainTable = true;
+        }
+
+        if ( isInMainTable ) {
             mainTable.getRowHeaderTable().remove(header);
             mainTable.add(header);
+        } else {
+            mainTable.remove(header);
+            mainTable.getRowHeaderTable().add(header);
         }
+
         int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
         header.setBounds(x2+diffByScroll, y1, width, headerHeight);
