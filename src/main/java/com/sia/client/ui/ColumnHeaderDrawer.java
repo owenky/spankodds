@@ -61,7 +61,10 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
         x1 = x1 - stringWidth/2;
         int x2;
         if ( x1 < 0) {
-            x2 = (mainTable.getRowHeaderTable().getWidth() - stringWidth)/2;
+            x2 = (mainTable.getWidth() - stringWidth)/2;
+            if ( 0 < x2 ) {
+                x2 = (mainTable.getRowHeaderTable().getWidth() - stringWidth) / 2;
+            }
             mainTable.remove(header);
             mainTable.getRowHeaderTable().add(header);
         } else {
