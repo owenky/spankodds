@@ -18,9 +18,10 @@ public abstract class TableSection<V extends KeyedObject> {
     private ColumnCustomizableDataModel<V> containingTableModel;
     private int rowHeight;
     private int index;
-    private String gameGroupHeader;
+    private final String gameGroupHeader;
 
-    public TableSection(KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
+    public TableSection(String gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
+        this.gameGroupHeader = gameGroupHeader;
         gamesVec = new LineGames<>(gameCache, toAddBlankGameId);
         gamesVec.addAll(gameVec);
         rowHeight = SiaConst.NormalRowheight;
@@ -61,11 +62,6 @@ public abstract class TableSection<V extends KeyedObject> {
     public String getGameGroupHeader() {
         return this.gameGroupHeader;
     }
-
-    public void setGameGroupHeader(String gameGroupHeader) {
-        this.gameGroupHeader = gameGroupHeader;
-    }
-
     public Integer getRowKey(final int rowModelIndex) {
         return gamesVec.getGameId(rowModelIndex);
     }
@@ -73,10 +69,6 @@ public abstract class TableSection<V extends KeyedObject> {
     public V getGame(final int rowModelIndex) {
         int gameId = gamesVec.getGameId(rowModelIndex);
         return gamesVec.getGame(gameId);
-    }
-
-    public boolean isCellEditable(int nRow, int nCol) {
-        return false;
     }
 
     /**
@@ -120,52 +112,15 @@ public abstract class TableSection<V extends KeyedObject> {
 
     public V removeGameId(Integer gameidtoremove, boolean repaint) {
 
-//        for (int i = 0; i < gamesVec.size(); i++) {
-//            Game g = gamesVec.getByIndex(i);
-//            int gameid = g.getGame_id();
-//            if (gameid == gameidtoremove) {
-//                try {
-//                    gamesVec.remove(i);
-//                } catch (Exception ex) {
-//                    log("error removing from vector!");
-//                }
-//
-//                setInitialData();
-//                JViewport parent = (JViewport) thistable.getParent();
-//                JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//                //	System.out.println("games size after remove "+gamesVec.size());
-//                scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//                scrollpane.revalidate();
-//                thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//                //System.out.println("removerow d");
-//                Container comp = scrollpane.getParent();
-//                comp.revalidate();
-//
-//                return g;
-//            }
-//        }
-//        return null; // didn't find it
         int gameModelIndex = containingTableModel.getRowModelIndex(this, gameidtoremove);
         V g;
         if (gameModelIndex >= 0) {
-//        if ( null != g) {
-//            setInitialData();
-//            JViewport parent = (JViewport) thistable.getParent();
-//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//            scrollpane.revalidate();
-//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//            Container comp = scrollpane.getParent();
-//            comp.revalidate();
-//            resetDataVector(); //including sorting gamesVec
-//            fire();
-//        }
             g = gamesVec.removeGame(gameidtoremove);
             if (repaint) {
-                resetDataVector();
-                TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-                fire(e);
-            }
+            resetDataVector();
+            TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+            fire(e);
+        }
         } else {
             g = null;
         }
