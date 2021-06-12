@@ -610,5 +610,8 @@ public class Game implements KeyedObject {
         this.gametime = gametime;
     }
 
-
+    @Override
+    public String getTeams() {
+        return getVisitorteam()+"/"+this.getHometeam()+" ";
+    }
 }
