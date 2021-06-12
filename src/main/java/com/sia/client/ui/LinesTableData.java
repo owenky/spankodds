@@ -23,7 +23,6 @@ public class LinesTableData extends TableSection<Game> {
 
     protected final SimpleDateFormat m_frm;
     private final boolean shortteam;
-//    public Vector<ColumnData> m_columns;
     public String sport = "";
     protected Date m_date;
     boolean showingOpener = false;
@@ -34,22 +33,13 @@ public class LinesTableData extends TableSection<Game> {
     private final Vector<Bookie> bookieVector;
     private long cleartime;
 
-//    public LinesTableData(long cleartime, Vector<Game> gameVec, String gameGroupHeader) {
-//        this(AppController.getDisplayType(), 0, cleartime, gameVec, false, false, false, false, gameGroupHeader);
-//    }
-
     public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader) {
         this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), LazyInitializer.bookiesVec);
     }
-//    public LinesTableData(Vector<Game> gameVec, Vector<Bookie> bookieVector, Games gameCache, String gameGroupHeader) {
-//        this(AppController.getDisplayType(), 0, 100L, gameVec, false, false, false, false, gameGroupHeader, gameCache, bookieVector);
-//    }
-
     public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, Vector<Bookie> bookieVector) {
-        super(gameCache, null != gameGroupHeader, gameVec);
+        super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
-        setGameGroupHeader(gameGroupHeader);
         this.timesort = timesort;
         this.shortteam = shortteam;
         this.display = display;
@@ -64,54 +54,12 @@ public class LinesTableData extends TableSection<Game> {
     public void showOpener() {
         showingOpener = true;
         showingPrior = false;
-//        log("suspecious fire() call in showOpener() ");
-//        fire(null);
     }
 
     public void showPrior() {
         showingOpener = false;
         showingPrior = true;
-//        log("suspecious fire call in showPrior()");
-//        fire(null);
     }
-//    @Override
-//    public Vector<ColumnData> getColumnData() {
-//        if (null == m_columns) {
-//            try {
-//                m_date = m_frm.parse("12/18/2004");
-//            } catch (java.text.ParseException ex) {
-//                m_date = null;
-//            }
-//            m_columns = new Vector<>();
-//
-//            for (Bookie b : bookieVector) {
-//                int bookieid = b.getBookie_id();
-//
-//                if (bookieid == 990) {
-//
-//                    m_columns.add(new ColumnData(bookieid, "Details", 30, JLabel.RIGHT));
-//
-//                } else if (bookieid == 991) {
-//                    m_columns.add(new ColumnData(bookieid, "Time", 40, JLabel.RIGHT));
-//
-//                } else if (bookieid == 992) {
-//                    m_columns.add(new ColumnData(bookieid, "Gm#", 40, JLabel.LEFT));
-//
-//                } else if (bookieid == 993) {
-//                    m_columns.add(new ColumnData(bookieid, "Team", 100, JLabel.LEFT));
-//
-//                } else if (bookieid == 994) {
-//                    m_columns.add(new ColumnData(bookieid, "Chart", 80, JLabel.CENTER));
-//
-//                } else // 81 is precise for 225.5o-07 icon border thickness of 2
-//                {
-//                    m_columns.add(new ColumnData(bookieid, b.toString(), 50, JLabel.RIGHT));
-//
-//                }
-//            }
-//        }
-//        return m_columns;
-//    }
     @Override
     public void addGame(Game g, boolean repaint) {
         setHowHeighIfAbsent(g);
@@ -219,8 +167,6 @@ public class LinesTableData extends TableSection<Game> {
     public void showCurrent() {
         showingOpener = false;
         showingPrior = false;
-//        log("suspecious fire() call in showCurrent()");
-//        fire(null);
     }
 
     public String getDisplayType() {
@@ -295,31 +241,13 @@ public class LinesTableData extends TableSection<Game> {
 
     public void timesort() {
         timesort = true;
-//        setInitialData();
-//        JViewport parent = (JViewport) thistable.getParent();
-//        JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//        scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//        thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//        Container comp = scrollpane.getParent();
-//        comp.revalidate();
-//        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-//        fire(null);
 
     }
 
     public void gmnumsort() {
         timesort = false;
-//        setInitialData();
-//        JViewport parent = (JViewport) thistable.getParent();
-//        JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//        scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//        thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//        Container comp = scrollpane.getParent();
-//        comp.revalidate();
-//        checkAndRunInEDT(() -> fireTableDataChanged());
         resetDataVector(); //including sorting gamesVec
-//        fire(null);
     }
     @Override
     public void removeGameIds(Integer[] gameidstoremove) {
@@ -353,15 +281,6 @@ log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disab
             }
         }
         if (removal) {
-//            setInitialData();
-//            JViewport parent = (JViewport) thistable.getParent();
-//            JScrollPane scrollpane = (JScrollPane) parent.getParent();
-//
-//            scrollpane.setPreferredSize(new Dimension(700, thistable.getRowHeight() * gamesVec.size()));
-//            scrollpane.revalidate();
-//            thistable.setPreferredScrollableViewportSize(thistable.getPreferredSize());
-//            Container comp = scrollpane.getParent();
-//            comp.revalidate();
             resetDataVector(); //including sorting gamesVec
             fire(null);
         }
@@ -377,7 +296,6 @@ log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disab
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static abstract class LazyInitializer {
-        //        private static final Hashtable<String, Bookie> bookies = AppController.getBookies();
         private static final Vector<Bookie> bookiesVec = AppController.getBookiesVec();
     }
 }
