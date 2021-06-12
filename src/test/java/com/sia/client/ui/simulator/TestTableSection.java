@@ -20,14 +20,13 @@ public class TestTableSection extends TableSection<TestGame> {
             TestGame tg = testGameCache.makeTestGame(1000*tableIndex+idSeed*100+rowIndex);
             gameVec.add(tg);
         }
-        TestTableSection testTableSection = new TestTableSection(testGameCache,true,gameVec);
-        testTableSection.setGameGroupHeader(TestGroupGameHeaderPrefix+idSeed);
+        TestTableSection testTableSection = new TestTableSection(TestGroupGameHeaderPrefix+idSeed,testGameCache,true,gameVec);
         int sectionRowHeight = 0 == (instanceCount++)%2? SiaConst.NormalRowheight:SiaConst.SoccerRowheight;
         testTableSection.setRowHeight(sectionRowHeight);
         return testTableSection;
     }
-    public TestTableSection(TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
-        super(gameCache, toAddBlankGameId, gameVec);
+    public TestTableSection(String groupHeader,TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
+        super(groupHeader,gameCache, toAddBlankGameId, gameVec);
     }
     @Override
     protected void prepareLineGamesForTableModel(final LineGames<TestGame> gamesVec) {
