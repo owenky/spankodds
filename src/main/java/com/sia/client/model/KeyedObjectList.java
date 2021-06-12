@@ -13,44 +13,53 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class KeyedObjectList<V extends KeyedObject> {
-    private final List<Integer> gameIdList = new ArrayList<>();
-    private final Map<Integer,V> gamesIdMap = new ConcurrentHashMap<>();
+    private final List<Integer> gamesVec = new ArrayList<>();
+    //used to be Hashtable<String, Game> games = new Hashtable() -- 06/11/2021
+    private final Map<Integer,V> idToGameMap = new ConcurrentHashMap<>();
     private final Class<V> classType;
 
     abstract protected V createInstance();
 
     public KeyedObjectList() {
-        gameIdList.add(SiaConst.BlankGameId);
+        gamesVec.add(SiaConst.BlankGameId);
         V blankGame = createInstance();
         blankGame.setGame_id(SiaConst.BlankGameId);
-        gamesIdMap.put(SiaConst.BlankGameId,blankGame);
+        idToGameMap.put(SiaConst.BlankGameId,blankGame);
         classType = (Class<V>)createInstance().getClass();
     }
     public V getGame(int gameId) {
-       return gamesIdMap.get(gameId);
+       return idToGameMap.get(gameId);
     }
     public V getByIndex(int index) {
-        return gamesIdMap.get(gameIdList.get(index));
+        return idToGameMap.get(gamesVec.get(index));
     }
     public V getGame(String gameId) {
         return getGame(Integer.parseInt(gameId));
     }
     public V removeGame(Integer gameId) {
-        gameIdList.remove(gameId);
-        return gamesIdMap.remove(gameId);
+        gamesVec.remove(gameId);
+        return idToGameMap.remove(gameId);
     }
     public V removeGame(String gameId) {
         return removeGame(Integer.parseInt(gameId));
     }
-    public void updateOrAdd(V g) {
+    /*
+        return true if it is add
+     */
+    public boolean updateOrAdd(V g) {
+        boolean isAdd;
         int gameId = g.getGame_id();
-        if ( ! gamesIdMap.containsKey(gameId)) {
-            gameIdList.add(gameId);
+        if ( ! idToGameMap.containsKey(gameId)) {
+            gamesVec.add(gameId);
+            isAdd = true;
+        } else {
+            isAdd = false;
         }
-        gamesIdMap.put(gameId,g);
+        idToGameMap.put(gameId,g);
+        return isAdd;
     }
     public boolean containsGameId(int gameId) {
-        return gamesIdMap.containsKey(gameId);
+        return idToGameMap.containsKey(gameId);
     }
     public boolean addAll(final Collection<? extends V> games) {
         for(V g: games) {
@@ -60,24 +69,24 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
     }
     public void sort(Comparator<? super V> comparator) {
         Comparator<Integer> idComparator = (id1,id2)-> {
-            V g1 = gamesIdMap.get(id1);
-            V g2 = gamesIdMap.get(id2);
+            V g1 = idToGameMap.get(id1);
+            V g2 = idToGameMap.get(id2);
             return comparator.compare(g1,g2);
         };
-        gameIdList.sort(idComparator);
+        gamesVec.sort(idComparator);
     }
     public int size() {
-        return gameIdList.size();
+        return gamesVec.size();
     }
     public boolean isEmpty() {
-        return gameIdList.isEmpty();
+        return gamesVec.isEmpty();
     }
     public boolean contains(final Game g) {
-        return gamesIdMap.containsKey(g.getGame_id());
+        return idToGameMap.containsKey(g.getGame_id());
 
     }
     public Iterator<V> iterator() {
-        Iterator<Integer> idIterator = gameIdList.iterator();
+        Iterator<Integer> idIterator = gamesVec.iterator();
         return new Iterator<V>() {
             private Integer nextId;
             @Override
@@ -88,13 +97,13 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
             @Override
             public V next() {
                 nextId = idIterator.next();
-                return gamesIdMap.get(nextId);
+                return idToGameMap.get(nextId);
             }
 
             @Override
             public void remove() {
                 idIterator.remove();
-                gamesIdMap.remove(nextId);
+                idToGameMap.remove(nextId);
             }
 
             @Override
@@ -104,27 +113,27 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
         };
     }
     public Object[] toArray() {
-        return gameIdList.stream().map(gamesIdMap::get).toArray();
+        return gamesVec.stream().map(idToGameMap::get).toArray();
     }
     public <T> T[] toArray(final T[] a) {
-        return gameIdList.stream().map(gamesIdMap::get).collect(Collectors.toList()).toArray(a);
+        return gamesVec.stream().map(idToGameMap::get).collect(Collectors.toList()).toArray(a);
     }
     public boolean add(final V game) {
-        gamesIdMap.put(game.getGame_id(),game);
-        return gameIdList.add(game.getGame_id());
+        idToGameMap.put(game.getGame_id(),game);
+        return gamesVec.add(game.getGame_id());
     }
     public V removeIndex(int index) {
-        Integer gameId = gameIdList.remove(index);
-        return gamesIdMap.remove(gameId);
+        Integer gameId = gamesVec.remove(index);
+        return idToGameMap.remove(gameId);
     }
     public V removeGameId(Integer gameId) {
-        gameIdList.remove(gameId);
-        return gamesIdMap.remove(gameId);
+        gamesVec.remove(gameId);
+        return idToGameMap.remove(gameId);
     }
     public boolean removeGame(final V o) {
-        V g  = gamesIdMap.remove(o.getGame_id());
+        V g  = idToGameMap.remove(o.getGame_id());
         if ( null != g) {
-            return gameIdList.remove(new Integer(o.getGame_id()));
+            return gamesVec.remove(new Integer(o.getGame_id()));
         } else {
             return false;
         }
@@ -135,11 +144,11 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
         for (Object obj: games) {
             if ( obj instanceof Game) {
                 Integer gameId = ((Game)obj).getGame_id();
-                if ( ! gameIdList.contains(gameId) ){
+                if ( ! gamesVec.contains(gameId) ){
                     status = false;
                     break;
                 }
-                if ( ! gamesIdMap.containsKey(gameId) ){
+                if ( ! this.idToGameMap.containsKey(gameId) ){
                     status = false;
                     break;
                 }
@@ -153,18 +162,18 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
     public boolean addAll(final int index, final Collection<? extends V> games) {
         List<Integer> gameIds = new ArrayList<>();
         for(V g:games) {
-            gamesIdMap.put(g.getGame_id(),g);
+            this.idToGameMap.put(g.getGame_id(),g);
             gameIds.add(g.getGame_id());
         }
-        return gameIdList.addAll(index,gameIds);
+        return gamesVec.addAll(index,gameIds);
     }
     public boolean removeAll(final Collection<?> games) {
         boolean status = true;
         for(Object o: games) {
             if ( o instanceof Game) {
                 Integer gameId = ((Game)o).getGame_id();
-                gameIdList.remove(gameId);
-                gamesIdMap.remove(gameId);
+                gamesVec.remove(gameId);
+                this.idToGameMap.remove(gameId);
             } else {
                 status = false;
             }
@@ -184,8 +193,8 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
         return status;
     }
     public void clear() {
-        gameIdList.clear();
-        gamesIdMap.clear();
+        gamesVec.clear();
+        idToGameMap.clear();
     }
 //
 //    @Override
@@ -194,28 +203,28 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
 //        return gamesIdMap.get(gameId);
 //    }
     public V set(final int index, final V game) {
-        Integer oldGameId = gameIdList.set(index,game.getGame_id());
-        gamesIdMap.put(game.getGame_id(),game);
-        return gamesIdMap.remove(oldGameId);
+        Integer oldGameId = gamesVec.set(index,game.getGame_id());
+        idToGameMap.put(game.getGame_id(),game);
+        return idToGameMap.remove(oldGameId);
     }
     public void add(final int index, final V game) {
-        gameIdList.add(index,game.getGame_id());
-        gamesIdMap.put(game.getGame_id(),game);
+        gamesVec.add(index,game.getGame_id());
+        idToGameMap.put(game.getGame_id(),game);
     }
 //    public Game remove(final int index) {
 //        Integer gameId = gameIdList.remove(index);
 //        return gamesIdMap.remove(gameId);
 //    }
     public int indexOf(final Game g) {
-        return gameIdList.indexOf(g.getGame_id());
+        return gamesVec.indexOf(g.getGame_id());
 
     }
     public int lastIndexOf(final Game o) {
-        return gameIdList.lastIndexOf(o.getGame_id());
+        return gamesVec.lastIndexOf(o.getGame_id());
 
     }
     public List<V> subList(final int fromIndex, final int toIndex) {
-        List<Integer> gameIds = gameIdList.subList(fromIndex,toIndex);
-        return gameIds.stream().map(gamesIdMap::get).collect(Collectors.toList());
+        List<Integer> gameIds = gamesVec.subList(fromIndex,toIndex);
+        return gameIds.stream().map(idToGameMap::get).collect(Collectors.toList());
     }
 }
