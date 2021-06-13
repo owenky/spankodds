@@ -51,15 +51,23 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     private LinesTableData findStageSectionByHeaderValue(String header) {
         TableSection<Game> ltd;
         List<TableSection<Game>> gameLines = getTableSections();
-        if (header.equalsIgnoreCase("In Progress")) {
-            ltd = gameLines.get(gameLines.size() - 4);
-        } else if (header.equalsIgnoreCase("Soccer In Progress")) {
-            ltd = gameLines.get(gameLines.size() - 3);
-        } else if (header.equalsIgnoreCase("FINAL")) {
-            ltd = gameLines.get(gameLines.size() - 2);
-        } else if (header.equalsIgnoreCase("Soccer FINAL")) {
-            ltd = gameLines.get(gameLines.size() - 1);
-        } else if (header.equalsIgnoreCase("Halftime")) {
+//        if (header.equalsIgnoreCase("In Progress")) {
+//            ltd = gameLines.get(gameLines.size() - 4);
+//        } else if (header.equalsIgnoreCase("Soccer In Progress")) {
+//            ltd = gameLines.get(gameLines.size() - 3);
+//        } else if (header.equalsIgnoreCase("FINAL")) {
+//            ltd = gameLines.get(gameLines.size() - 2);
+//        } else if (header.equalsIgnoreCase("Soccer FINAL")) {
+//            ltd = gameLines.get(gameLines.size() - 1);
+//        } else if (header.equalsIgnoreCase("Halftime")) {
+//            ltd = gameLines.get(0);
+//        } else if (header.equalsIgnoreCase("Soccer Halftime")) {
+//            ltd = gameLines.get(1);
+//        } else {
+//            ltd = null;
+//        }
+        //the above is no longer correct -- 06/12/2021
+        if (header.equalsIgnoreCase("Halftime")) {
             ltd = gameLines.get(0);
         } else if (header.equalsIgnoreCase("Soccer Halftime")) {
             ltd = gameLines.get(1);
