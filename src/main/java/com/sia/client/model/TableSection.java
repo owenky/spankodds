@@ -21,7 +21,7 @@ public abstract class TableSection<V extends KeyedObject> {
     private final String gameGroupHeader;
 
     public TableSection(String gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
-        this.gameGroupHeader = gameGroupHeader;
+        this.gameGroupHeader = null== gameGroupHeader?null:gameGroupHeader.trim();
         gamesVec = new LineGames<>(gameCache, toAddBlankGameId);
         gamesVec.addAll(gameVec);
         rowHeight = SiaConst.NormalRowheight;
