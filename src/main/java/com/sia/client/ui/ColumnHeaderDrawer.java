@@ -57,8 +57,9 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(mainTable);
         int stringWidth = getStringWidth(header,titleFont,headerStr);
 //        int x1 = 5; //keep leading space from last locked column
-        int totalWidth = Math.min((int)topFrame.getSize().getWidth(),mainTable.getWidth()+mainTable.getRowHeaderTable().getWidth());
+        int mainTableWidth = 0 == mainTable.getWidth()? (int)mainTable.getPreferredSize().getWidth():mainTable.getWidth();
         int rowHeaderWidth = 0==mainTable.getRowHeaderTable().getWidth()? (int)mainTable.getRowHeaderTable().getPreferredSize().getWidth():mainTable.getRowHeaderTable().getWidth();
+        int totalWidth = Math.min((int)topFrame.getSize().getWidth(),mainTableWidth+rowHeaderWidth);
         int x1 = totalWidth/2 - rowHeaderWidth;
         x1 = x1 - stringWidth/2;
         int x2;
