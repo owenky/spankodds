@@ -17,8 +17,11 @@ public class SportsTabPaneTest extends JTabbedPane {
             currentTabIndex = getSelectedIndex();
             MainScreenTest oldms = (MainScreenTest) getComponentAt(previousTabIndex);
             oldms.destroyMe();
-            MainScreenTest newms = (MainScreenTest) getComponentAt(currentTabIndex);
-            newms.createMe();
+            Object pane =  getComponentAt(currentTabIndex);
+            if ( pane instanceof MainScreenTest) {
+                MainScreenTest newms = (MainScreenTest)pane;
+                newms.createMe();
+            }
         });
     }
 }
