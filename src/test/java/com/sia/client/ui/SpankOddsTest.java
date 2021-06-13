@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.ui.simulator.EventGenerator;
-import com.sia.client.ui.simulator.GameDeletor;
+import com.sia.client.ui.simulator.GameMover;
 import com.sia.client.ui.simulator.SportsTabPaneTest;
 import com.sia.client.ui.simulator.TableProperties;
 import com.sia.client.ui.simulator.TestGameCache;
@@ -47,9 +47,9 @@ public class SpankOddsTest {
         final EventGenerator eventGenerator;
 //            eventGenerator = new NewGameCreator();
 //            eventGenerator = new ColumnWidthAdjuster();
-            eventGenerator = new GameDeletor();
+//            eventGenerator = new GameDeletor();
 //            eventGenerator = new NewHeaderCreator();
-//            eventGenerator = new GameMover();
+            eventGenerator = new GameMover();
 //        eventGenerator = new CheckToFileTest();
 //        eventGenerator = new CheckToFileTest();
         Timer updateTimer = new Timer(3000, (event) -> {

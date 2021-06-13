@@ -449,8 +449,11 @@ public class ScoresConsumer implements MessageListener {
                             refreshtabs = true;
                             Sport s = AppController.getSport(g.getLeague_id());
                             int id = s.getParentleague_id();
-                            if (id == 9) {
-                                AppController.moveGameToThisHeader(g, "Soccer In Progress");
+                            if (id == SiaConst.SoccerLeagueId) {
+//                                AppController.moveGameToThisHeader(g, "Soccer In Progress");
+                                //should be In Progress 06/12/2021
+                                AppController.moveGameToThisHeader(g, "In Progress");
+
                             } else {
                                 AppController.moveGameToThisHeader(g, "In Progress");
                             }
