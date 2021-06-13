@@ -165,14 +165,13 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         {
             TableSection<V> ltd = findTableSectionByHeaderValue(header);
 
-log("DEBUG: moving game "+g.getGame_id()+"from header "+group.getGameGroupHeader()+" to section "+header);
+log("DEBUG: moving game id:"+g.getGame_id()+", teams:"+g.getTeams()+" from secion "+group.getGameGroupHeader()+" to specified header "+header);
 
             if ( null != ltd) {
                 ltd.addGame(thisgame, false);
             } else {
                 log( new Exception("can't find LinesTableData for header:"+header));
             }
-            this.buildIndexMappingCache();
             fireTableChanged(new TableModelEvent(this));
         }
     }
