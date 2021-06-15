@@ -23,7 +23,7 @@ import java.awt.Graphics;
 public class UrgentMesgHistBox extends TableComboBox {
 
     private final DefaultTableModel tableModel;
-    private final static AlertStruct promptSecection = new AlertStruct("", "RECENT ALERTS LIST");
+    private final static AlertStruct promptSecection = new AlertStruct("", "RECENT ALERTS");
     private final static int mesgColumnIndex = 0;
     private final static int mesgColWidth = 400;
     private final static int timeColWidth = 60;
@@ -39,18 +39,29 @@ public class UrgentMesgHistBox extends TableComboBox {
         configEditor();
         setBorder(BorderFactory.createEmptyBorder());
         insertItemAt(promptSecection.convert(),0);
-        setSelectedIndex(0);
+        super.setSelectedItem(promptSecection.getMesg());
+        testData();
+    }
+    private void testData() {
+        pushItem(new AlertStruct("20:19","<html>Message1<br>A long line A long line A long line A long line A long line A long line A long line A long line A long line A long line<br>short line2<br>short line3<br>short line 4</html>"));
+        pushItem(new AlertStruct("21:19","<html>Message 2<br>short line1</html>"));
+    }
+    public void pushItem(AlertStruct item) {
+        insertItemAt(item.convert(),1);
     }
     public void insertItemAt(Object [] rowData,int rowModelIndex) {
         tableModel.insertRow(rowModelIndex, rowData);
     }
     @Override
     public void setSelectedIndex(int index) {
+        //don't change selection ( editor should show prompt only)
         super.setSelectedIndex(0);
     }
     @Override
     public void setSelectedItem(Object item) {
+       //don't change selection ( editor should show prompt only)
         super.setSelectedItem(promptSecection.getMesg());
+
     }
     @Override
     protected JTable createTable(TableModel tm) {
@@ -59,10 +70,7 @@ public class UrgentMesgHistBox extends TableComboBox {
     private void configEditor() {
         setEditable(false);
         EditorComponent editorComp = (EditorComponent)_editor.getEditorComponent();
-//        editorComp.setBorder(BorderFactory.createEmptyBorder());
-        editorComp.setText(promptSecection.getMesg());
-//        editorComp.setEditable(false);
-//        editorComp.setOpaque(false);
+        editorComp.setOpaque(true);
     }
     //////////////////////////////////////////////////////////////////////////////////////////
     private static class popUpTable extends JTable {
