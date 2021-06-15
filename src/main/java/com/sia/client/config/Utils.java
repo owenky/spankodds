@@ -33,7 +33,7 @@ public abstract class Utils {
         }
         return url;
     }
-    public static void log(Exception e) {
+    public static void log(Throwable e) {
         e.printStackTrace();
     }
     public static void log(String mesg) {
