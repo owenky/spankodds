@@ -30,11 +30,10 @@ public class UrgentMesgHistBox extends TableComboBox {
     private final static int tableWidthPadding = 5;
     private final static int tableHeightPadding = 5;
 
-    public UrgentMesgHistBox() {
-        tableModel = new DefaultTableModel();
+    public UrgentMesgHistBox(DefaultTableModel tm) {
+        super(tm,AlertStruct.class,TableComboBox.DROPDOWN);
+        tableModel = tm;
         setTableModel(tableModel);
-        setPopupType(TableComboBox.DROPDOWN );
-        this.setType(AlertStruct.class);
         tableModel.setColumnCount(promptSecection.convert().length);
         configEditor();
         setBorder(BorderFactory.createEmptyBorder());
@@ -43,8 +42,8 @@ public class UrgentMesgHistBox extends TableComboBox {
         testData();
     }
     private void testData() {
-        pushItem(new AlertStruct("20:19","<html>Message1<br>A long line A long line A long line A long line A long line A long line A long line A long line A long line A long line<br>short line2<br>short line3<br>short line 4</html>"));
-        pushItem(new AlertStruct("21:19","<html>Message 2<br>short line1</html>"));
+        pushItem(new AlertStruct("20:19","<html>DEMO Message1<br>A long line A long line A long line A long line A long line A long line A long line A long line A long line A long line<br>short line2<br>short line3<br>LAST short line 4</html>"));
+        pushItem(new AlertStruct("21:19","<html>DEMO Message 2<br>short line1</html>"));
     }
     public void pushItem(AlertStruct item) {
         insertItemAt(item.convert(),1);
@@ -69,8 +68,8 @@ public class UrgentMesgHistBox extends TableComboBox {
     }
     private void configEditor() {
         setEditable(false);
-        EditorComponent editorComp = (EditorComponent)_editor.getEditorComponent();
-        editorComp.setOpaque(true);
+//        EditorComponent editorComp = (EditorComponent)_editor.getEditorComponent();
+//        editorComp.setOpaque(false);
     }
     //////////////////////////////////////////////////////////////////////////////////////////
     private static class popUpTable extends JTable {
