@@ -4,13 +4,14 @@ import com.sia.client.model.AlertStruct;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.table.DefaultTableModel;
 import java.awt.Component;
 
 public class UrgentMesgHistComp implements MutableItemContainer<AlertStruct> {
 
     private final UrgentMesgHistBox histBox;
     public UrgentMesgHistComp() {
-        histBox = new UrgentMesgHistBox();
+        histBox = new UrgentMesgHistBox(new DefaultTableModel());
     }
     @Override
     public void addItem(final AlertStruct item) {
