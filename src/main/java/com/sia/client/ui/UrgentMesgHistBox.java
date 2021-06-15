@@ -143,17 +143,20 @@ public class UrgentMesgHistBox extends TableComboBox {
     private static class MessageCellRenderer implements TableCellRenderer {
 
         private final JEditorPane editorPane;
+        private final JScrollPane scrollPane;
         public MessageCellRenderer() {
             HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
             editorPane = new JEditorPane();
             editorPane.setEditorKit(htmlEditorKit);
             editorPane.setEditable(false);
-            editorPane.setAutoscrolls(false);
+            editorPane.setAutoscrolls(true);
+            scrollPane = new JScrollPane(editorPane);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         }
         @Override
         public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
             editorPane.setText((String)value);
-            return editorPane;
+            return scrollPane;
         }
     }
     private static class TimeCellRenderer implements TableCellRenderer {
