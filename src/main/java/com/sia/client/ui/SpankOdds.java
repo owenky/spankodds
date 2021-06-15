@@ -92,7 +92,7 @@ public class SpankOdds {
             public boolean authenticate(String name, char[] password, String server) throws Exception {
 
 
-                System.out.println(new java.util.Date());
+                log("data:"+new java.util.Date());
                 try {
                     //Platform.runLater(new Runnable() { @Override public void run() {lbllogin.setText("Processing...");}});
 
@@ -112,15 +112,14 @@ public class SpankOdds {
                     }
 
                 }
-                System.out.println("out of the while loop " + client.loginresultback);
-                System.out.println("result " + client.isloggedin());
-                System.out.println(new java.util.Date());
+                log("out of the while loop " + client.loginresultback);
+                log("result " + client.isloggedin());
+                log("date:"+new java.util.Date());
                 boolean loggedin = client.isloggedin();
                 if (loggedin) {
-                    frame.setTitle(name + " Logged In");
-                    createGui();
-
-
+//                    frame.setTitle(name + " Logged In");
+//                    createGui();
+                    userName = name;
                 }
                 return loggedin;
 
@@ -153,6 +152,8 @@ public class SpankOdds {
         checkAndRunInEDT(
                 () -> {
                     try {
+                        frame.setTitle(userName + " Logged In");
+                        createGui();
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         frame.addWindowListener(new WindowAdapter() {
                             @Override
@@ -163,6 +164,7 @@ public class SpankOdds {
 
                             }
                         });
+                        tv.initComponents();
                         frame.setLayout(new BorderLayout(1, 1));
                         frame.getContentPane().add(tv, BorderLayout.PAGE_START);
                         frame.getContentPane().add(stb, BorderLayout.CENTER);
@@ -196,20 +198,4 @@ public class SpankOdds {
             smb = new SportsMenuBar(stb, tv);
         });
     }
-
-    private void createAndShowGui() {
-        System.out.println("creating and showing gui");
-        createGui();
-        showGui();
-		/*
-
-
-
-            }
-        });
-		*/
-
-    }
-
-
 }
