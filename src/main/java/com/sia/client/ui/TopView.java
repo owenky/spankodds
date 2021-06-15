@@ -3,7 +3,6 @@ package com.sia.client.ui;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
-import com.sia.client.ui.UrgentMesgHistComp.JComboBoxWrapper;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -43,14 +42,13 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     String[] display2 = new String[9];
     int[] perioddisplay = new int[8];
     String[] perioddisplay2 = new String[8];
-    SportsTabPane stb;
-
+    private final SportsTabPane stb;
 
     public TopView(SportsTabPane stb) {
-
         super(new FlowLayout(FlowLayout.LEFT));
-
         this.stb = stb;
+    }
+    public void initComponents() {
         display[0] = "default";
         display[1] = "spreadtotal";
         display[2] = "totalmoney";
@@ -117,7 +115,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
             }
         });
-        alertsComp = new JComboBoxWrapper();
+
+        alertsComp = new UrgentMesgHistComp();
 
 //        alertsCombo.addFocusListener(new FocusAdapter() {
 //
@@ -447,7 +446,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             //owen took out getting period and siaplay from ltd
             //	com.sia.client.ui.ChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
             //	SoccerChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
-            System.out.println("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
+            log("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
         }
     }
 }
