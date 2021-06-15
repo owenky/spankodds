@@ -174,6 +174,7 @@ public class SpankOdds {
                         frame.setVisible(true);
 
                     } catch (Exception e) {
+                        log(e);
                         JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);
                         System.exit(-1);
                     }
