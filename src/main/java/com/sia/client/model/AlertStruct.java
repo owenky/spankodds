@@ -21,4 +21,10 @@ public class AlertStruct {
     public String toString() {
         return time+" "+mesg;
     }
+    public Object [] convert() {
+        Object [] rowData = new Object [2];
+        rowData[0] = getMesg();
+        rowData[1] = getTime();
+        return rowData;
+    }
 }

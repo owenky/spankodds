@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
-import com.sia.client.model.AlertStruct;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -35,7 +34,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     JButton alertBut;
     JButton adjustcolsBut;
     JButton chartBut;
-    JComboBox<AlertStruct> alertsCombo;
+    private UrgentMesgHistComp alertsComp;
     JComboBox cb;
     JComboBox periodcb;
     String[] display = new String[9];
@@ -116,7 +115,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
             }
         });
-        alertsCombo = new JComboBox<>();
+        alertsComp = new UrgentMesgHistComp();
 
 //        alertsCombo.addFocusListener(new FocusAdapter() {
 //
@@ -132,8 +131,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 //
 //            }
 //        });
-        alertsCombo.addItem(new AlertStruct("","RECENT ALERTS LIST             "));
-        AppController.alertsVector.bind(alertsCombo);
+        AppController.alertsVector.bind(alertsComp);
 
 
         // this.getChildren().addAll(cb,clearBut,clearAllBut,lastBut,openerBut,addBookieBut,remBookieBut,newWindowBut,alertBut);
@@ -149,8 +147,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             add(shrinkTeamBut);
             add(adjustcolsBut);
             add(chartBut);
-
-            add(alertsCombo);
+            add(alertsComp.getComponent());
 
         });
 

@@ -5,6 +5,7 @@ import com.sia.client.ui.simulator.GameMover;
 import com.sia.client.ui.simulator.SportsTabPaneTest;
 import com.sia.client.ui.simulator.TableProperties;
 import com.sia.client.ui.simulator.TestGameCache;
+import com.sia.client.ui.simulator.UrgentMessageComponent;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -35,6 +36,7 @@ public class SpankOddsTest {
         for (TableProperties tblProp : tbleProps) {
             tabbedPane.addTab(tblProp.table.getName(), tblProp.getMainScreen());
         }
+        tabbedPane.addTab("UrgentMessageBox",new UrgentMessageComponent());
         jFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         jFrame.setSize(new Dimension(1500, 800));
