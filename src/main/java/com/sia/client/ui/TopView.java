@@ -1,7 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.AlertStruct;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
+import com.sia.client.ui.UrgentMesgHistComp.JComboBoxWrapper;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -34,7 +36,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     JButton alertBut;
     JButton adjustcolsBut;
     JButton chartBut;
-    private UrgentMesgHistComp alertsComp;
+    private MutableItemContainer<AlertStruct> alertsComp;
     JComboBox cb;
     JComboBox periodcb;
     String[] display = new String[9];
@@ -115,7 +117,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
             }
         });
-        alertsComp = new UrgentMesgHistComp();
+        alertsComp = new JComboBoxWrapper();
 
 //        alertsCombo.addFocusListener(new FocusAdapter() {
 //

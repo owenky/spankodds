@@ -139,13 +139,14 @@ public class ScoresConsumer implements MessageListener {
 
                 //scorets =scorets +1000*60*60*3;
                 //gamestatuslong =gamestatuslong +1000*60*60*3;
+log("debug: step1");
 
                 Game g = AppController.getGame(gameid);
                 boolean refreshtabs = false;
                 if (g != null) {
-
+log("debug: step1, g != null");
                     //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
-                    if (status.equalsIgnoreCase("Final") || status.equalsIgnoreCase("Win")) {
+                    if ("Final".equalsIgnoreCase(status) || "Win".equalsIgnoreCase(status)) {
                         if (!g.getStatus().equals(status)) // just became final
                         {
 
@@ -196,6 +197,7 @@ public class ScoresConsumer implements MessageListener {
                             } catch (Exception ex) {
                                 log(ex);
                             }
+ log("debug: step1, before try");
                             try {
                                 sports = finalarr[5].split(",");
                                 for (int j = 0; j < sports.length; j++) {
@@ -211,6 +213,7 @@ public class ScoresConsumer implements MessageListener {
                             }
 
                             if (goodsport) {
+log("debug: step2");
                                 if (popup) {
                                     String hrmin = AppController.getCurrentHoursMinutes();
                                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
@@ -318,6 +321,7 @@ public class ScoresConsumer implements MessageListener {
 //                                    String popalertname = "Alert at:" + hrmin + "\nSTARTED :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 //                                    AppController.alertsVector.addElement(popalertname);
                                     String mesg = "TARTED :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+log("debug: step3");
                                     AppController.addAlert(hrmin,mesg);
 
                                     new UrgentMessage("<HTML><H1>STARTED</H1><FONT COLOR=BLUE>" +
@@ -415,6 +419,7 @@ public class ScoresConsumer implements MessageListener {
 //                                    String popalertname = "Alert at:" + hrmin + "\nHALFTIME :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 //                                    AppController.alertsVector.addElement(popalertname);
                                     String mesg = "HALFTIME :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+log("debug: step4");
                                     AppController.addAlert(hrmin,mesg);
 
 
