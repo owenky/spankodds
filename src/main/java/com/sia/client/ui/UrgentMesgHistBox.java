@@ -159,6 +159,7 @@ public class UrgentMesgHistBox extends TableComboBox {
             editorPane.setAutoscrolls(true);
             scrollPane = new JScrollPane(editorPane);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
         }
         @Override
         public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
