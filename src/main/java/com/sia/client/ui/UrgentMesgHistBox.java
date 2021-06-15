@@ -29,6 +29,7 @@ public class UrgentMesgHistBox extends TableComboBox {
     private final static int timeColWidth = 60;
     private final static int tableWidthPadding = 5;
     private final static int tableHeightPadding = 5;
+    private final static int mesgTableMaxHeight = 500;
 
     public UrgentMesgHistBox(DefaultTableModel tm) {
         super(tm,AlertStruct.class,TableComboBox.DROPDOWN);
@@ -130,7 +131,8 @@ public class UrgentMesgHistBox extends TableComboBox {
                 }
             }
             if ( null != scrollPane) {
-                Dimension containerPrefDim = new Dimension(mesgColWidth + timeColWidth + tableWidthPadding, tablePrefHeight + getHeaderHeight()+tableHeightPadding);
+                int topContainerPrefHeight = Math.min(mesgTableMaxHeight,tablePrefHeight + getHeaderHeight()+tableHeightPadding);
+                Dimension containerPrefDim = new Dimension(mesgColWidth + timeColWidth + tableWidthPadding,topContainerPrefHeight );
                 Container topContainer = scrollPane.getParent().getParent();
                 topContainer.setPreferredSize(containerPrefDim);
             }
