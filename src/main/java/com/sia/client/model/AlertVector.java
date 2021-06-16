@@ -16,7 +16,7 @@ public class AlertVector {
     public void addAlert(String hrmin,String mesg) {
         AlertStruct alertStruct = new AlertStruct(hrmin,mesg);
         synchronized ( alertList) {
-            alertList.add(1,alertStruct);
+            alertList.add(0,alertStruct);
             if ( null != boundComboBox) {
                 Utils.checkAndRunInEDT(()-> boundComboBox.insertItemAt(alertStruct,1));
             }

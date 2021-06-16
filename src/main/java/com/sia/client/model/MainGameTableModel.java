@@ -72,8 +72,27 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         } else if (header.equalsIgnoreCase("Soccer Halftime")) {
             ltd = gameLines.get(1);
         } else {
-            ltd = null;
+            ltd = createStageSection(header);
         }
         return (LinesTableData)ltd;
+    }
+    private LinesTableData createStageSection(String header) {
+
+        List<TableSection<Game>> sections = getTableSections();
+        if ( null == header || null == sections || 0 == sections.size()) {
+            return null;
+        }
+
+        header = header.toLowerCase();
+        LinesTableData rtn;
+        if ( header.contains("final") || header.contains("in progress") ) {
+            LinesTableData section0 = (LinesTableData)sections.get(0);
+            rtn = new LinesTableData(section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<Game>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
+                    , section0.getLast(),header);
+            sections.add(rtn);
+        } else {
+            rtn = null;
+        }
+        return rtn;
     }
 }

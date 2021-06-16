@@ -32,6 +32,8 @@ public class LinesTableData extends TableSection<Game> {
     private boolean timesort;
     private final Vector<Bookie> bookieVector;
     private long cleartime;
+    private boolean last;
+    private boolean opener;
 
     public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader) {
         this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), LazyInitializer.bookiesVec);
@@ -45,6 +47,8 @@ public class LinesTableData extends TableSection<Game> {
         this.display = display;
         this.period = period;
         this.bookieVector = bookieVector;
+        this.last = last;
+        this.opener = opener;
         if (opener) {
             showOpener();
         } else if (last) {
@@ -293,7 +297,18 @@ log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disab
         }
         return "Stock Quotes at " + m_frm.format(m_date);
     }
-
+    public boolean getTimesort() {
+        return timesort;
+    }
+    public boolean getShortteam() {
+        return shortteam;
+    }
+    public boolean getOpener() {
+        return opener;
+    }
+    public boolean getLast() {
+        return last;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static abstract class LazyInitializer {
         private static final Vector<Bookie> bookiesVec = AppController.getBookiesVec();
