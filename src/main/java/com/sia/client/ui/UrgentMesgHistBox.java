@@ -15,6 +15,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.html.HTMLEditorKit;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -26,10 +27,13 @@ public class UrgentMesgHistBox extends TableComboBox {
     private final static AlertStruct promptSecection = new AlertStruct("", "RECENT ALERTS");
     private final static int mesgColumnIndex = 0;
     private final static int mesgColWidth = 400;
-    private final static int timeColWidth = 60;
+    private final static int timeColWidth = 80;
     private final static int tableWidthPadding = 5;
     private final static int tableHeightPadding = 5;
     private final static int mesgTableMaxHeight = 500;
+    private final static Color tblAltColor1 = new Color(250,250,250);
+    private final static Color tblAltColor2 = new Color(245,245,245);
+
 
     public UrgentMesgHistBox(DefaultTableModel tm) {
         super(tm,AlertStruct.class,TableComboBox.DROPDOWN);
@@ -43,8 +47,8 @@ public class UrgentMesgHistBox extends TableComboBox {
         testData();
     }
     private void testData() {
-        pushItem(new AlertStruct("20:19","<html>DEMO Message1<br>A long line A long line A long line A long line A long line A long line A long line A long line A long line A long line<br>short line2<br>short line3<br>LAST short line 4</html>"));
-        pushItem(new AlertStruct("21:19","<html>DEMO Message 2<br>short line1</html>"));
+        pushItem(new AlertStruct("20hr 19min","<html>DEMO Message1<br>A long line A long line A long line A long line A long line A long line A long line A long line A long line A long line<br>short line2<br>short line3<br>LAST short line 4</html>"));
+        pushItem(new AlertStruct("21hr 19min","<html>DEMO Message 2<br>short line1</html>"));
     }
     public void pushItem(AlertStruct item) {
         insertItemAt(item.convert(),1);
@@ -71,6 +75,13 @@ public class UrgentMesgHistBox extends TableComboBox {
         setEditable(false);
 //        EditorComponent editorComp = (EditorComponent)_editor.getEditorComponent();
 //        editorComp.setOpaque(false);
+    }
+    private static Color getBackgroundColor(int rowViewIndex) {
+        if ( 0 == rowViewIndex%2 ) {
+            return tblAltColor1;
+        } else {
+            return tblAltColor2;
+        }
     }
     //////////////////////////////////////////////////////////////////////////////////////////
     private static class popUpTable extends JTable {
@@ -166,6 +177,7 @@ public class UrgentMesgHistBox extends TableComboBox {
         @Override
         public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
             editorPane.setText((String)value);
+            editorPane.setBackground(getBackgroundColor(row));
             return scrollPane;
         }
     }
@@ -175,10 +187,12 @@ public class UrgentMesgHistBox extends TableComboBox {
         public TimeCellRenderer() {
             timeLabel = new JLabel();
             timeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            timeLabel.setOpaque(true);
         }
         @Override
         public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
             timeLabel.setText((String)value);
+            timeLabel.setBackground(getBackgroundColor(row));
             return timeLabel;
         }
     }
