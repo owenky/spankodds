@@ -147,7 +147,7 @@ public class LinesTableData extends TableSection<Game> {
                 value = new ChartView(gameid);
             }
         } else {
-            if (leagueID == 9) {
+            if (leagueID == SiaConst.SoccerLeagueId) {
                 value = new SoccerSpreadTotalView(bookieid, gameid, cleartime, this);
             } else {
                 value = new SpreadTotalView(bookieid, gameid, cleartime, this);
