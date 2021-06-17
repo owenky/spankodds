@@ -936,8 +936,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
             column = new TableColumn(k, 30, new LineRenderer(), null);
 
-            column.setHeaderValue(b.getShortname() + "");
-            column.setIdentifier("" + b.getBookie_id());
+            column.setHeaderValue(b.getShortname());
+            column.setIdentifier(b.getBookie_id());
             if (b.getBookie_id() == 990) {
                 column.setPreferredWidth(60);
             } else if (b.getBookie_id() == 994) {
@@ -1066,7 +1066,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             if ( ! toShowHeader ) {
                 gameGroupHeader = null;
             }
-            LinesTableData tableSection = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader);
+            LinesTableData tableSection = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader,allColumns);
             int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
             tableSection.setRowHeight(tableSectionRowHeight);
             mainGameTable.addGameLine(tableSection);

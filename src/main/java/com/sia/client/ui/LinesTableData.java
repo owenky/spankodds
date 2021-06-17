@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.BestLines;
-import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
@@ -10,6 +9,7 @@ import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
 import com.sia.client.model.TableSection;
 
+import javax.swing.table.TableColumn;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,15 +30,15 @@ public class LinesTableData extends TableSection<Game> {
     private String display;
     private int period;
     private boolean timesort;
-    private final Vector<Bookie> bookieVector;
+    private final List<TableColumn> columns;
     private long cleartime;
     private boolean last;
     private boolean opener;
 
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader) {
-        this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), LazyInitializer.bookiesVec);
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader,List<TableColumn> columns) {
+        this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), columns);
     }
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, Vector<Bookie> bookieVector) {
+    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, List<TableColumn> columns) {
         super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
@@ -46,7 +46,7 @@ public class LinesTableData extends TableSection<Game> {
         this.shortteam = shortteam;
         this.display = display;
         this.period = period;
-        this.bookieVector = bookieVector;
+        this.columns = columns;
         this.last = last;
         this.opener = opener;
         if (opener) {
@@ -108,26 +108,29 @@ public class LinesTableData extends TableSection<Game> {
     }
 
     private List<Object> makeGameRowData(Game g) {
-        List<Object> rowData = new ArrayList<>(bookieVector.size());
+        List<Object> rowData = new ArrayList<>(columns.size());
         int gameid = g.getGame_id();
-        for (Bookie b : bookieVector) {
+        for (TableColumn tc : columns) {
             Object value;
             if (SiaConst.BlankGameId == gameid) {
                 value = SiaConst.GameGroupHeaderIden;
             } else {
-                value = getCellValue(b, g);
+                value = getCellValue(tc, g);
             }
             rowData.add(value);
         }
         return rowData;
     }
 
-    private Object getCellValue(Bookie b, Game g) {
-        int bookieid = b.getBookie_id();
+    private Object getCellValue(TableColumn tc, Game g) {
+        Integer bookieid = (Integer)tc.getIdentifier();
+        if ( null == bookieid) {
+            throw new IllegalArgumentException("bookie id not defined for column headerValue:"+tc.getHeaderValue()+", index="+tc.getModelIndex());
+        }
         int gameid = g.getGame_id();
         int leagueID = g.getLeague_id();
         Object value;
-        if (bookieid == 990) {
+        if ( 900 == bookieid) {
             value = new InfoView(gameid);
         } else if (bookieid == 991) {
             value = new TimeView(gameid);
@@ -308,9 +311,5 @@ log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disab
     }
     public boolean getLast() {
         return last;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static abstract class LazyInitializer {
-        private static final Vector<Bookie> bookiesVec = AppController.getBookiesVec();
     }
 }

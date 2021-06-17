@@ -88,7 +88,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         if ( header.contains("final") || header.contains("in progress") ) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
             rtn = new LinesTableData(section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<Game>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
-                    , section0.getLast(),header);
+                    , section0.getLast(),header,getAllColumns());
             sections.add(rtn);
         } else {
             rtn = null;
