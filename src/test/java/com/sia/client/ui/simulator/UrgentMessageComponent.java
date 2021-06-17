@@ -5,8 +5,10 @@ import com.sia.client.ui.UrgentMesgHistComp;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class UrgentMessageComponent extends JPanel {
 
@@ -21,11 +23,16 @@ public class UrgentMessageComponent extends JPanel {
         this.add(toolBar,BorderLayout.NORTH);
         UrgentMesgHistComp histBox = new UrgentMesgHistComp();
         JComponent jcomp = histBox.getComponent();
-//        jcomp.setPreferredSize(new Dimension(200,50));
         toolBar.add(jcomp);
-//        jcomp.setPreferredSize(dim);
-//        jcomp.setMaximumSize(dim);
-        histBox.addItem(new AlertStruct("20:19","<html>this is line 1this is line this is line this is line this is line this is line this is line this is line this is line this is line <br>line2<br>line3<br>line4</html>"));
-        histBox.addItem(new AlertStruct("21:19","<html>Row2<br>RowLine2</html>"));
+//        histBox.addItem(new AlertStruct("20:19","<html>this is line 1this is line this is line this is line this is line this is line this is line this is line this is line this is line <br>line2<br>line3<br>line4</html>"));
+//        histBox.addItem(new AlertStruct("21:19","<html>Row2<br>RowLine2</html>"));
+        AtomicInteger counter = new AtomicInteger(0);
+        Timer timer = new Timer(3000, (e)-> {
+
+            if ( counter.addAndGet(1) <  10) {
+                histBox.addItem(new AlertStruct("21:19",counter.get()+":This is test Row test Row Test ROW"));
+            }
+        });
+        timer.start();
     }
 }

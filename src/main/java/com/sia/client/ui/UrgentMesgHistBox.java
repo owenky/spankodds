@@ -32,7 +32,7 @@ public class UrgentMesgHistBox extends TableComboBox {
     private final static int tableHeightPadding = 5;
     private final static int mesgTableMaxHeight = 500;
     private final static Color tblAltColor1 = new Color(250,250,250);
-    private final static Color tblAltColor2 = new Color(245,245,245);
+    private final static Color tblAltColor2 = new Color(240,240,240);
 
 
     public UrgentMesgHistBox(DefaultTableModel tm) {
@@ -44,7 +44,7 @@ public class UrgentMesgHistBox extends TableComboBox {
         setBorder(BorderFactory.createEmptyBorder());
         insertItemAt(promptSecection.convert(),0);
         super.setSelectedItem(promptSecection.getMesg());
-        testData();
+//        testData();
     }
     private void testData() {
         pushItem(new AlertStruct("20hr 19min","<html>DEMO Message1<br>A long line A long line A long line A long line A long line A long line A long line A long line A long line A long line<br>short line2<br>short line3<br>LAST short line 4</html>"));
@@ -55,17 +55,21 @@ public class UrgentMesgHistBox extends TableComboBox {
     }
     public void insertItemAt(Object [] rowData,int rowModelIndex) {
         tableModel.insertRow(rowModelIndex, rowData);
+        setSelectedIndex(rowModelIndex);
     }
     @Override
     public void setSelectedIndex(int index) {
         //don't change selection ( editor should show prompt only)
-        super.setSelectedIndex(0);
+        super.setSelectedIndex(getMostRecentMsgIndex());
     }
     @Override
     public void setSelectedItem(Object item) {
-       //don't change selection ( editor should show prompt only)
-        super.setSelectedItem(promptSecection.getMesg());
+       //always shows most recent message.
+        super.setSelectedItem(tableModel.getValueAt(getMostRecentMsgIndex(),mesgColumnIndex));
 
+    }
+    private int getMostRecentMsgIndex() {
+        return tableModel.getRowCount()>1?1:0;
     }
     @Override
     protected JTable createTable(TableModel tm) {
