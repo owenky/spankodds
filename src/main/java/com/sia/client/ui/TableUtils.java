@@ -12,6 +12,7 @@ import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.BorderLayout;
 import java.util.List;
 
@@ -83,6 +84,26 @@ public abstract class TableUtils {
             }
         }
         return tableSectionRowHeight;
+    }
+    public static <V extends KeyedObject> void saveTableColumnPreference(ColumnCustomizableTable<V> table) {
+
+        String showncols = concatBookieId(table);
+        String fixedcols = concatBookieId(table.getRowHeaderTable());
+        AppController.getUser().setBookieColumnPrefs(showncols);
+        AppController.getUser().setFixedColumnPrefs(fixedcols);
+    }
+    private static String concatBookieId(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<columnModel.getColumnCount();i++) {
+            TableColumn tc = columnModel.getColumn(i);
+            Object bookieId = tc.getIdentifier();
+            sb.append(bookieId);
+            if ( i < columnModel.getColumnCount()-1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static class  TableScrollPaneContaine extends JPanel {

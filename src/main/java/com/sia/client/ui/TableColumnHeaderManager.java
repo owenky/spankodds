@@ -46,6 +46,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.addHierarchyListener(this);
         mainTable.addComponentListener(this);
         mainTable.getRowHeaderTable().addComponentListener(this);
+        mainTable.getRowHeaderTable().getColumnModel().addColumnModelListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
         mainTable.setTableChangedListener(this);
@@ -106,7 +107,10 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     @Override
     public void columnMoved(final TableColumnModelEvent e) {
-        invokeDrawColumnHeaders();
+        if ( e.getFromIndex() != e.getToIndex()) {
+            invokeDrawColumnHeaders();
+            TableUtils.saveTableColumnPreference(mainTable);
+        }
     }
 
     @Override
