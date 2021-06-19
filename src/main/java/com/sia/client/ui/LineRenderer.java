@@ -78,7 +78,6 @@ public class LineRenderer implements TableCellRenderer {
         lp.top.setHorizontalAlignment(SwingConstants.LEFT);
         lp.top.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
         lp.bottom.setHorizontalAlignment(SwingConstants.LEFT);
-
         return lp;
     }
     private LinePanel createSoccerChartPanel(String name) {

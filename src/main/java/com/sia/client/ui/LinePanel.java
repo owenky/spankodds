@@ -5,7 +5,11 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.LinesTableDataSupplier;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -13,6 +17,8 @@ import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -27,12 +33,19 @@ public class LinePanel extends JPanel {
     private static final MatteBorder bestallborder = new MatteBorder(1, 1, 1, 1, new Color(222, 235, 52));
     private static final Color altcolor = new Color(204, 255, 229);
     private static final Color openercolor = Color.LIGHT_GRAY;
+    private final static int leftPaddingSpace = 3;
+    private final static int rightPaddingSpace = 3;
     public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
     boolean testprint = false;
     final JLabel top;
     final JLabel bottom;
     final JLabel draw;
     final JLabel total;
+    private final JComponent topPanel;
+    private final JComponent bottomPanel;
+    private final JComponent drawPanel;
+    private final JComponent totalPanel;
+
 
     public LinePanel() {
         this(null);
@@ -42,22 +55,28 @@ public class LinePanel extends JPanel {
         this(SwingConstants.RIGHT);
         if ( null == name) {
             setLayout(new GridLayout(2, 0));
-            add(top);
-            add(bottom);
+            add(topPanel);
+            add(bottomPanel);
         } else {
             setLayout(new GridLayout(4, 0));
-            add(top);
-            add(bottom);
-            add(draw);
-            add(total);
+            add(topPanel);
+            add(bottomPanel);
+            add(drawPanel);
+            add(totalPanel);
         }
         setName(name);
     }
-    protected LinePanel(int textAlignment) {
+    private LinePanel(int textAlignment) {
+
         top = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
         bottom = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
         draw = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
         total = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
+
+        topPanel = createContainingComponent(top,leftPaddingSpace,rightPaddingSpace);
+        bottomPanel = createContainingComponent(bottom,leftPaddingSpace,rightPaddingSpace);
+        drawPanel = createContainingComponent(draw,leftPaddingSpace,rightPaddingSpace);
+        totalPanel = createContainingComponent(total,leftPaddingSpace,rightPaddingSpace);
 
         Font myfont = new Font("Arial", Font.PLAIN, 12);
         top.setFont(myfont);
@@ -161,6 +180,7 @@ public class LinePanel extends JPanel {
                 bgcolor = colcolor;
             }
 
+//            topPanel.setBackground(bgcolor);
             top.setBackground(bgcolor);
             top.setForeground(fgcolor);
 
@@ -236,6 +256,7 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
         }
 
+//        bottomPanel.setBackground(bgcolor);
         bottom.setBackground(bgcolor);
         bottom.setForeground(fgcolor);
 
@@ -303,6 +324,7 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
         }
 
+//        drawPanel.setBackground(bgcolor);
         draw.setBackground(bgcolor);
         draw.setForeground(fgcolor);
 
@@ -370,6 +392,7 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
         }
 
+//        totalPanel.setBackground(bgcolor);
         total.setBackground(bgcolor);
         total.setForeground(fgcolor);
 
@@ -553,5 +576,17 @@ public class LinePanel extends JPanel {
             setTotal(table,blank, row, col);
         }
 
+    }
+    private static JComponent createContainingComponent(JComponent comp,int leftPadding, int rightPadding) {
+        JPanel containingPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(containingPanel,BoxLayout.X_AXIS);
+        containingPanel.setLayout(boxLayout);
+        Component leftPaddingComp = Box.createRigidArea(new Dimension(leftPadding, 0));
+        Component rightPaddingComp = Box.createRigidArea(new Dimension(rightPadding, 0));
+        containingPanel.add(leftPaddingComp);
+        containingPanel.add(comp);
+        containingPanel.add(rightPaddingComp);
+        comp.setBorder(BorderFactory.createLineBorder(Color.RED));
+        return containingPanel;
     }
 }

@@ -4,7 +4,6 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
-import com.sia.client.model.Spreadline;
 
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -14,29 +13,19 @@ public class InfoView {
     public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
     public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
     public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
-    Spreadline sl;
-    Totalline tl;
-    LineData topbox;
-    LineData bottombox;
+    private static final Color green = new Color(0, 102, 0);
     LineData[] boxes = new LineData[2];
     LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
-    int bid;
-    int gid;
-    Game g;
-    Sport s;
+    private final int gid;
+    private final Sport s;
 
     public InfoView(int gid) {
 
 
         this.gid = gid;
-        g = AppController.getGame(gid);
-
+        Game g = AppController.getGame(gid);
         s = AppController.getSport(g.getLeague_id());
-        //this.setAndGetPriorBoxes(bid,gid);
-        //this.setAndGetOpenerBoxes(bid,gid);
-
-
     }
 
     public void clearColors() {
@@ -44,38 +33,20 @@ public class InfoView {
         boxes[1].setBackgroundColor(Color.WHITE);
 
     }
-
-    public LineData gettopbox() {
-        return topbox;
-    }
-
-    public LineData getbottombox() {
-        return bottombox;
-    }
-
-
     public LineData[] getCurrentBoxes() {
         setCurrentBoxes();
         return boxes;
     }
 
-    public void setCurrentBoxes() {
-        String topboxS = "";
-        String bottomboxS = "";
-        Color spreadcolor = Color.WHITE;
-        Color totalcolor = Color.WHITE;
+    private void setCurrentBoxes() {
         Color topcolor = Color.WHITE;
         Color bottomcolor = Color.WHITE;
         ImageIcon topicon = ICON_BLANK;
         ImageIcon bottomicon = ICON_BLANK;
-        Color green = new Color(0, 102, 0);
-
-        //g.gettimerremaining = half... g.getstatus == time means its halftime
-        //this is where i need to start my own countdown based on sport...
-
         ld1.setIcon(topicon);
         ld2.setIcon(bottomicon);
 
+        Game g = AppController.getGame(gid);
         if ((g.getStatus() == null || g.getStatus().equalsIgnoreCase("NULL") || g.getStatus().equals("")) && (g.getTimeremaining() == null || g.getTimeremaining().equalsIgnoreCase("") || g.getTimeremaining().equalsIgnoreCase("NULL"))) {
 
 
@@ -145,7 +116,6 @@ public class InfoView {
         }
         boxes[0] = ld1;
         boxes[1] = ld2;
-        //return boxes;
     }
 
     public String makenullblank(String s) {
@@ -157,6 +127,7 @@ public class InfoView {
     }
 
     public String displayHalftimeCountdown() {
+        Game g = AppController.getGame(gid);
         String retstring = "";
         java.text.SimpleDateFormat timerFormat = new java.text.SimpleDateFormat("m:ss");
         long halftimestart = g.getScorets().getTime();
@@ -164,10 +135,6 @@ public class InfoView {
         long startTime = halftimestart + halftimelength;
         long now = System.currentTimeMillis();
         long diff = startTime - now;
-//	System.out.println("ht start = "+g.getScorets());
-//	System.out.println("ht length = "+halftimelength);
-//	System.out.println("diff = "+diff);
-
         if (diff <= 0) {
             retstring = "x";
             diff = now + 1000 - startTime;

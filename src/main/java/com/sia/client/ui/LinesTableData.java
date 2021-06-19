@@ -130,7 +130,7 @@ public class LinesTableData extends TableSection<Game> {
         int gameid = g.getGame_id();
         int leagueID = g.getLeague_id();
         Object value;
-        if ( 900 == bookieid) {
+        if ( 990 == bookieid) {
             value = new InfoView(gameid);
         } else if (bookieid == 991) {
             value = new TimeView(gameid);
