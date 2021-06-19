@@ -76,7 +76,7 @@ public class LineRenderer implements TableCellRenderer {
     private LinePanel createInfoPanel(String name) {
         LinePanel lp = new LinePanel(name);
         lp.top.setHorizontalAlignment(SwingConstants.LEFT);
-        lp.top.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
+        lp.topPanel.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
         lp.bottom.setHorizontalAlignment(SwingConstants.LEFT);
         return lp;
     }

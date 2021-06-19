@@ -5,9 +5,6 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.LinesTableDataSupplier;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -16,8 +13,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.border.MatteBorder;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -36,15 +33,15 @@ public class LinePanel extends JPanel {
     private final static int leftPaddingSpace = 3;
     private final static int rightPaddingSpace = 3;
     public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
-    boolean testprint = false;
+    private boolean testprint = false;
     final JLabel top;
     final JLabel bottom;
     final JLabel draw;
     final JLabel total;
-    private final JComponent topPanel;
-    private final JComponent bottomPanel;
-    private final JComponent drawPanel;
-    private final JComponent totalPanel;
+    final JComponent topPanel;
+    final JComponent bottomPanel;
+    final JComponent drawPanel;
+    final JComponent totalPanel;
 
 
     public LinePanel() {
@@ -180,7 +177,7 @@ public class LinePanel extends JPanel {
                 bgcolor = colcolor;
             }
 
-//            topPanel.setBackground(bgcolor);
+            topPanel.setBackground(bgcolor);
             top.setBackground(bgcolor);
             top.setForeground(fgcolor);
 
@@ -256,7 +253,7 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
         }
 
-//        bottomPanel.setBackground(bgcolor);
+        bottomPanel.setBackground(bgcolor);
         bottom.setBackground(bgcolor);
         bottom.setForeground(fgcolor);
 
@@ -324,7 +321,7 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
         }
 
-//        drawPanel.setBackground(bgcolor);
+        drawPanel.setBackground(bgcolor);
         draw.setBackground(bgcolor);
         draw.setForeground(fgcolor);
 
@@ -392,7 +389,7 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
         }
 
-//        totalPanel.setBackground(bgcolor);
+        totalPanel.setBackground(bgcolor);
         total.setBackground(bgcolor);
         total.setForeground(fgcolor);
 
@@ -415,7 +412,6 @@ public class LinePanel extends JPanel {
 
         } else if (ld.getBorder().contains("bestunder")) {
             total.setBorder(bestunderborder);
-
         } else {
             total.setBorder(null);
         }
@@ -579,14 +575,24 @@ public class LinePanel extends JPanel {
     }
     private static JComponent createContainingComponent(JComponent comp,int leftPadding, int rightPadding) {
         JPanel containingPanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(containingPanel,BoxLayout.X_AXIS);
-        containingPanel.setLayout(boxLayout);
-        Component leftPaddingComp = Box.createRigidArea(new Dimension(leftPadding, 0));
-        Component rightPaddingComp = Box.createRigidArea(new Dimension(rightPadding, 0));
-        containingPanel.add(leftPaddingComp);
-        containingPanel.add(comp);
-        containingPanel.add(rightPaddingComp);
-        comp.setBorder(BorderFactory.createLineBorder(Color.RED));
+        Dimension leftPaddingDim = new Dimension(leftPadding,0);
+        Dimension rightPaddingDim = new Dimension(rightPadding,0);
+
+        containingPanel.setLayout(new BorderLayout());
+        JPanel leftPaddingPanel = new JPanel();
+        JPanel rightPaddingPanel = new JPanel();
+        leftPaddingPanel.setOpaque(false);
+        rightPaddingPanel.setOpaque(false);
+
+        leftPaddingPanel.setPreferredSize(leftPaddingDim);
+        leftPaddingPanel.setMaximumSize(leftPaddingDim);
+        rightPaddingPanel.setPreferredSize(rightPaddingDim);
+        rightPaddingPanel.setMaximumSize(rightPaddingDim);
+
+        containingPanel.add(leftPaddingPanel,BorderLayout.WEST);
+        containingPanel.add(comp,BorderLayout.CENTER);
+        containingPanel.add(rightPaddingPanel,BorderLayout.EAST);
+
         return containingPanel;
     }
 }
