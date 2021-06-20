@@ -117,21 +117,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         });
 
         alertsComp = new UrgentMesgHistComp();
-
-//        alertsCombo.addFocusListener(new FocusAdapter() {
-//
-//            @Override
-//            public void focusGained(FocusEvent e) {
-//                alertsCombo.removeAllItems();
-//                alertsCombo.addItem("RECENT ALERTS LIST             ");
-//                for (int i = (AppController.alertsVector.size()); i > 0; i--) {
-//                    alertsCombo.addItem(AppController.alertsVector.get(i - 1));
-//                }
-//                log("inside" + AppController.alertsVector.size());
-//
-//
-//            }
-//        });
         AppController.alertsVector.bind(alertsComp);
 
 
