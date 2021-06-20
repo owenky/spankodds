@@ -50,6 +50,7 @@ public class NewWindowAction implements ActionListener {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                tv.unBindAlertsComp();
                 AppController.getUserPrefsProducer().sendUserPrefs();
                 log("Window Closing2! ");
                 AppController.removeFrame(frame);

@@ -138,7 +138,11 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         });
 
     }
-
+    public void unBindAlertsComp() {
+        if ( null != alertsComp) {
+            AppController.alertsVector.unBind(alertsComp);
+        }
+    }
     public void initEvents() {
 
         newWindowBut.addActionListener(AppController.getNewWindowAction());
