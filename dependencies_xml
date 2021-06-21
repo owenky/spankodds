@@ -5,7 +5,7 @@
 
 	<groupId>com.sia</groupId>
 	<artifactId>common-client-dependency</artifactId>
-	<version>1.0.0</version>
+	<version>1.2.0</version>
 	<name>common-client-dependency</name>
 	<packaging>pom</packaging>
 	<description>Common dependency of client applications</description>
