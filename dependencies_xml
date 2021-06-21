@@ -77,107 +77,107 @@
          <dependency>
              <groupId>jide</groupId>
              <artifactId>action</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
          <dependency>
              <groupId>jide</groupId>
              <artifactId>beaninfo</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
          <dependency>
              <groupId>jide</groupId>
              <artifactId>charts</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>common</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>components</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
         </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>dashboard</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>data</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>designer</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>dialogs</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>diff</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>dock</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>editor</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>gantt</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>grids</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>pivot</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>plaf</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>plaf-jdk7</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>properties</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>rss</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>shortcut</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
              <groupId>jide</groupId>
              <artifactId>treemap</artifactId>
-             <version>3.7.11</version>
+             <version>3.7.12</version>
          </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
