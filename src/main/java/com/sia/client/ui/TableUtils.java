@@ -47,6 +47,9 @@ public abstract class TableUtils {
         container.add(tableScrollPane.getHorizontalScrollBar(),BorderLayout.SOUTH);
 
         mainTable.getTableColumnHeaderManager().installListeners();
+        //add table column header listeners
+        new TableColumnManager(mainTable,"");
+        new TableColumnManager(mainTable.getRowHeaderTable(),"fixed");
         return container;
     }
     public static boolean toRebuildCache(TableModelEvent e) {
