@@ -30,8 +30,8 @@ public class LinePanel extends JPanel {
     private static final MatteBorder bestallborder = new MatteBorder(1, 1, 1, 1, new Color(222, 235, 52));
     private static final Color altcolor = new Color(204, 255, 229);
     private static final Color openercolor = Color.LIGHT_GRAY;
-    private final static int leftPaddingSpace = 3;
-    private final static int rightPaddingSpace = 3;
+    private final static int leftPaddingSpace = 0;
+    private final static int rightPaddingSpace = 0;
     public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
     private boolean testprint = false;
     final JLabel top;
