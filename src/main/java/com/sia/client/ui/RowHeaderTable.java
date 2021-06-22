@@ -25,6 +25,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		this.getTableHeader().setReorderingAllowed(false);
 	}
 	public void optimizeSize() {
 		getParent().setPreferredSize(getPreferredSize());
