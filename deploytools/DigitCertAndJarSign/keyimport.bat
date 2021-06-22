@@ -1,1 +1,1 @@
-keytool -import -trustcacerts -alias sia -file sia.p7b -keystore sia.jks < siakeytorepass
+keytool -import -trustcacerts -alias sia -file sia.p7b -keystore sia.jks < siakeystorepass
