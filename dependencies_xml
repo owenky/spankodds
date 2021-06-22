@@ -20,10 +20,10 @@
 		<maven.test.skip>true</maven.test.skip>
 		<!-- following used for jar singing -->
 		<key.store.path>${user.dir}/DigitCertAndJarSign/</key.store.path>
-		<key.store.name>oosbt.jks</key.store.name>
-		<store.password>oksbt5798138</store.password>
-		<key.password>oksbt5798138</key.password>
-		<key.alias>oksbt</key.alias>
+		<key.store.name>sia.jks</key.store.name>
+		<store.password>sia04032021</store.password>
+		<key.password>sia04032021</key.password>
+		<key.alias>sia</key.alias>
 		<key.store>${key.store.path}${key.store.name}</key.store>
 	</properties>
     <dependencies>
