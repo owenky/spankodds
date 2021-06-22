@@ -1,6 +1,6 @@
 rem run it in sialibs folder where jars reside ( copy jars from spankodds_jar if they are missing)
 rem to add/delete a  dependency, need to change version of -DgroupId=com.sia  -DartifactId=common-client-dependency ! and make sure newly added version folder is added to git to be pushed to github
-call mvn install:install-file -Dfile=dependencies_xml -DgroupId=com.sia  -DartifactId=common-client-dependency -Dversion=1.2.0 -Dpackaging=pom -DlocalRepositoryPath=.  -DcreateChecksum=true
+call mvn install:install-file -Dfile=dependencies_xml -DgroupId=com.sia  -DartifactId=common-client-dependency -Dversion=1.2.1 -Dpackaging=pom -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=swingx-action-1.6.5-1.jar -DgroupId=com.sia  -DartifactId=swingx-action -Dversion=1.6.5 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=swingx-autocomplete-1.6.5-1.jar -DgroupId=com.sia  -DartifactId=swingx-autocomplete -Dversion=1.6.5 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
 call mvn install:install-file -Dfile=swingx-common-1.6.5-1.jar -DgroupId=com.sia  -DartifactId=swingx-common -Dversion=1.6.5 -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=.  -DcreateChecksum=true
