@@ -35,6 +35,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private final PropertyChangeListener rowHeightConfigListener;
     private final ColumnHeaderDrawer<V> columnHeaderDrawer;
     private final Map<ColumnAdjuster, ResizingProperties> tableResizingProp = new HashMap<>();
+    //flag to turn on/off auto adjusting feature on column width narrowing. if it is true, when user narrow a column, the column is auto adjusted to the width that just fit data.
+    //otherwise, column width won't auto adjusted unless the column with does not fit data. --05/25/2021
+    private static boolean autoAdjustOnNarrowing = false;
 
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
@@ -211,13 +214,17 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             int column = table.columnAtPoint(mouseLocation);
             TableColumn tc = table.getColumnModel().getColumn(column);
 
-            tc.setPreferredWidth(0);
+            if ( autoAdjustOnNarrowing) {
+                tc.setPreferredWidth(0);
+            }
             columnAdjuster.adjustColumn(column);
             //sometimes users drag on column but mainTable.columnAtPoint(mouseLocation) returns right next column, to be safe, adjust both of them.
             column --;
             if ( 0 <= column) {
                 TableColumn tc2 = table.getColumnModel().getColumn(column);
-                tc2.setPreferredWidth(0);
+                if ( autoAdjustOnNarrowing) {
+                    tc2.setPreferredWidth(0);
+                }
                 columnAdjuster.adjustColumn(column);
             }
 
