@@ -216,7 +216,13 @@ public class TableColumnAdjuster {
             return tableColumn.getPreferredWidth();
         }
 
-        int columnHeaderWidth = getColumnHeaderWidth(column);
+        /**
+         * For all columns, we always want to auto adjust only if data does not fit (exclude column header in factoring)…
+         * If user makes column bigger than data then it stays that way. If user makes column smaller but data still fits then we also keep it that way.
+         * The only time auto adjust kicks in to make column bigger is if data does not fit.  -- 06/25/2021
+         */
+//        int columnHeaderWidth = getColumnHeaderWidth(column);  //excluding header as stated above -- 06/25/2021
+        int columnHeaderWidth = 0;
 
         int columnDataWidth = getColumnDataWidth(column);
 
