@@ -60,12 +60,13 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         //detect column dragging
         mainTable.getTableHeader().addMouseListener( new MouseAdapter() {
             public void mouseReleased(MouseEvent arg0) {
-                adjustColumnOnColumnDraging(mainTable,arg0.getPoint());
+                adjustColumnOnColumnDraging(mainTable,arg0.getPoint(),false);
 
         }});
         mainTable.getRowHeaderTable().getTableHeader().addMouseListener( new MouseAdapter() {
             public void mouseReleased(MouseEvent arg0) {
-                adjustColumnOnColumnDraging(mainTable.getRowHeaderTable(),arg0.getPoint());
+                //set adjustOnWidening to adjust row header width -- 06/25/2021
+                adjustColumnOnColumnDraging(mainTable.getRowHeaderTable(),arg0.getPoint(),true);
 
         }});
     }
@@ -206,12 +207,15 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         }
         mainTable.configHeaderRow(firstRow,lastRow,false);
     }
-    private void adjustColumnOnColumnDraging(ColumnAdjuster columnAdjuster,Point mouseLocation){
+    private void adjustColumnOnColumnDraging(ColumnAdjuster columnAdjuster,Point mouseLocation,boolean adjustOnWidening){
+        JTable table = columnAdjuster.table();
         ResizingProperties resizingProperties = tableResizingProp.get(columnAdjuster);
+        int column = table.columnAtPoint(mouseLocation);
+        if ( column < 0) {
+            return;
+        }
         if (  null != resizingProperties && resizingProperties.widthBeforeResized > resizingProperties.width) {
-            JTable table = columnAdjuster.table();
             //narrow width
-            int column = table.columnAtPoint(mouseLocation);
             TableColumn tc = table.getColumnModel().getColumn(column);
 
             if ( autoAdjustOnNarrowing) {
@@ -228,6 +232,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
                 columnAdjuster.adjustColumn(column);
             }
 
+        } else if ( adjustOnWidening) {
+            columnAdjuster.adjustColumn(column);
         }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

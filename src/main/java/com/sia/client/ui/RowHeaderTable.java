@@ -4,6 +4,7 @@ import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -27,7 +28,11 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 	public void optimizeSize() {
+		//set jviewport (row header of jscroll pane of mainTable) preferred size
 		getParent().setPreferredSize(getPreferredSize());
+		//flip policy makes main table takes up space that RowHeaderTable releases. --06/25/2021
+		mainTable.getTableScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		mainTable.getTableScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	}
 	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
