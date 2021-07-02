@@ -422,6 +422,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             for (int j = 0; j < v.size(); j++) {
                 v.get(j).setDisplayType(display[cb.getSelectedIndex()]);
             }
+            if ( 0 < v.size()) {
+                TableUtils.fireTableModelChanged(v.get(0).getContainingTableModel());
+            }
             stb.setDisplay(display[cb.getSelectedIndex()]);
             stb.requestFocusInWindow();
 

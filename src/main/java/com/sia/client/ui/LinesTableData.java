@@ -183,8 +183,9 @@ public class LinesTableData extends TableSection<Game> {
 
     public void setDisplayType(String d) {
         display = d;
-        log("suspecious fire() call in setDisplayType()");
-        fire(null);
+        //call fire() outside loop -- 07/03/2021
+//        log("suspecious fire() call in setDisplayType()");
+//        fire(null);
     }
 
     public int getPeriodType() {

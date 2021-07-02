@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
 import com.sia.client.model.KeyedObject;
 
@@ -51,6 +52,9 @@ public abstract class TableUtils {
         new TableColumnManager(mainTable,"");
         new TableColumnManager(mainTable.getRowHeaderTable(),"fixed");
         return container;
+    }
+    public static void fireTableModelChanged(ColumnCustomizableDataModel<?> tm) {
+        tm.fireTableChanged(new TableModelEvent(tm,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
     }
     public static boolean toRebuildCache(TableModelEvent e) {
         //when update for lastrow=Integer.MAX_VALUE, all row heights are rest to table row height,

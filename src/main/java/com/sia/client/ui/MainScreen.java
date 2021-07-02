@@ -580,6 +580,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 {
                     leagueid = g.getSubleague_id();
                     s2 = AppController.getSport(leagueid);
+                    if ( null == s2) {
+                        log(new Exception("Can't find sport for leagueid "+leagueid));
+                        continue;
+                    }
 
                 } else {
                     s2 = s;
