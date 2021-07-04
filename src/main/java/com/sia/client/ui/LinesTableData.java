@@ -195,8 +195,8 @@ public class LinesTableData extends TableSection<Game> {
 
     public void setPeriodType(int d) {
         period = d;
-        log("suspecious fire() call in setPeriodType");
-        fire(null);
+//        log("suspecious fire() call in setPeriodType");
+//        fire(null);
     }
 
     public void clearColors() {

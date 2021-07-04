@@ -433,6 +433,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             for (int j = 0; j < v.size(); j++) {
                 v.get(j).setPeriodType(perioddisplay[periodcb.getSelectedIndex()]);
             }
+            if ( 0 < v.size()) {
+                TableUtils.fireTableModelChanged(v.get(0).getContainingTableModel());
+            }
             stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
             stb.requestFocusInWindow();
             //owen took out getting period and siaplay from ltd
