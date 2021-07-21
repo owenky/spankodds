@@ -34,13 +34,12 @@ public class TableColumnPopupMenu{
         anchoredLayeredPane = new AnchoredLayeredPane(table, LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
-//        JPopupMenu menuBar = new JPopupMenu();
         JPanel menuBar = new JPanel();
-        menuBar.setSize(new Dimension(120,90));
+        menuBar.setSize(new Dimension(110,57));
         menuBar.setBorder(BorderFactory.createEtchedBorder());
         menuBar.add(getChoseColorItem());
         menuBar.add(getDeleteItem());
-        menuBar.add(getCloseItem());
+//        menuBar.add(getCloseItem());
 
         anchoredLayeredPane.setUserPane(menuBar);
         Supplier<Point> anchorPointSupl = ()-> {

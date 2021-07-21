@@ -9,6 +9,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.function.Supplier;
 
 
@@ -17,7 +19,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private final Integer layer_index;
 	private final JComponent current_screen;
     private final JLayeredPane layeredPane;
-	private boolean hasMouseEntered = false;
+	private final MouseAdapter mouseListener;
     protected JComponent userComponent;
     private boolean isOpened = false;
     private Supplier<Point> anchorLocSupplier;
@@ -25,6 +27,23 @@ public class AnchoredLayeredPane implements ComponentListener {
     public AnchoredLayeredPane(JComponent current_screen, int layer_index_) {
         this.layer_index = layer_index_;
 		this.current_screen = current_screen;
+        mouseListener = new MouseAdapter() {
+            private boolean hasMouseEntered = false;
+            @Override
+            public void mouseExited(MouseEvent e) {
+                JComponent source = (JComponent)e.getSource();
+                if ( ! source.contains(e.getPoint()) ) {
+                    if (hasMouseEntered) {
+                        hide();
+                    }
+                    hasMouseEntered = false;
+                }
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                hasMouseEntered = true;
+            }
+        };
         layeredPane = getJLayeredPane();
     }
 
@@ -33,7 +52,11 @@ public class AnchoredLayeredPane implements ComponentListener {
     }
 
     public void setUserPane(JComponent userComponent_) {
+        if ( null != this.userComponent ) {
+            userComponent.removeMouseListener(mouseListener);
+        }
         this.userComponent = userComponent_;
+        userComponent.addMouseListener(mouseListener);
     }
     public JComponent getUserComponent() {
         return this.userComponent;
@@ -67,6 +90,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         if ( null == userComponent) {
             return;
         }
+        userComponent.removeMouseListener(mouseListener);
         userComponent.setVisible(false);
         layeredPane.remove(userComponent);
         layeredPane.revalidate();
