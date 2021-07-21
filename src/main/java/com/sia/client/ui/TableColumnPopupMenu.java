@@ -3,10 +3,12 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 
+import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.function.Supplier;
@@ -32,7 +34,10 @@ public class TableColumnPopupMenu{
         anchoredLayeredPane = new AnchoredLayeredPane(table, LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
-        JPopupMenu menuBar = new JPopupMenu();
+//        JPopupMenu menuBar = new JPopupMenu();
+        JPanel menuBar = new JPanel();
+        menuBar.setSize(new Dimension(120,90));
+        menuBar.setBorder(BorderFactory.createEtchedBorder());
         menuBar.add(getChoseColorItem());
         menuBar.add(getDeleteItem());
         menuBar.add(getCloseItem());
@@ -51,6 +56,7 @@ public class TableColumnPopupMenu{
         if ( null == closeItem) {
             closeItem = new JMenuItem("Close this menu");
             closeItem.addActionListener((event)-> hideMenu());
+            closeItem.setBorder(BorderFactory.createEmptyBorder());
         }
         return closeItem;
     }
@@ -58,6 +64,7 @@ public class TableColumnPopupMenu{
         if ( null == deleteItem) {
             deleteItem = new JMenuItem("Delete Column");
             deleteItem.addActionListener((event)-> hideMenu());
+            deleteItem.setBorder(BorderFactory.createEmptyBorder());
         }
         return deleteItem;
     }
@@ -65,6 +72,7 @@ public class TableColumnPopupMenu{
         if ( null == choseColorItem) {
             choseColorItem = new JMenuItem("Chose Color");
             choseColorItem.addActionListener((event)-> hideMenu());
+            choseColorItem.setBorder(BorderFactory.createEmptyBorder());
         }
         return choseColorItem;
     }

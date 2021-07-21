@@ -45,9 +45,6 @@ public class AnchoredLayeredPane implements ComponentListener {
         if (null == userComponent) {
             return;
         }
-
-//        removeComponentsFromThisLayer();
-
         userComponent.setVisible(true);
         layeredPane.add(userComponent, layer_index);
 
@@ -71,11 +68,9 @@ public class AnchoredLayeredPane implements ComponentListener {
             return;
         }
         userComponent.setVisible(false);
-//        Utils.fireVisibilityChangedEvent(userComponent, true);
         layeredPane.remove(userComponent);
         layeredPane.revalidate();
         layeredPane.repaint();
-//        removeComponentsFromThisLayer();
     }
 
     private JLayeredPane getJLayeredPane() {
@@ -86,20 +81,6 @@ public class AnchoredLayeredPane implements ComponentListener {
         JRootPane rootPane_ = SwingUtilities.getRootPane(root_comp_);
         return rootPane_.getLayeredPane();
     }
-
-//    private void removeComponentsFromThisLayer() {
-//        JLayeredPane layeredPane_ = getJLayeredPane();
-//        Component[] components_in_this_layer_ = layeredPane_.getComponentsInLayer(layer_index);
-//        if (components_in_this_layer_ != null) {
-//            for (Component comp_ : components_in_this_layer_) {
-//                if (comp_ instanceof JComponent) {
-//                    comp_.setVisible(false);
-//                }
-//                layeredPane_.remove(comp_);
-//            }
-//        }
-//    }
-
     private Component getTopContainer() {
 
         Component topContainer = current_screen.getParent();
