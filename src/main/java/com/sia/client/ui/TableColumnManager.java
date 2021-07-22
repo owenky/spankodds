@@ -87,7 +87,7 @@ public class TableColumnManager
         //  Keep a duplicate TableColumns for managing hidden TableColumns
 
         int count = tcm.getColumnCount();
-        allColumns = new ArrayList<TableColumn>(count);
+        allColumns = new ArrayList<>(count);
 
         for (int i = 0; i < count; i++) {
             allColumns.add(tcm.getColumn(i));

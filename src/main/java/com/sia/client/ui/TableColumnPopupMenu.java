@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -20,6 +21,7 @@ public class TableColumnPopupMenu{
     private JMenuItem deleteItem;
     private JMenuItem choseColorItem;
     private JMenuItem closeItem;
+    private int tableColumnIndex;
     private static TableColumnPopupMenu oldTableColumnPopupMenu=null;
 
     public static TableColumnPopupMenu of(JTable table) {
@@ -34,6 +36,7 @@ public class TableColumnPopupMenu{
         anchoredLayeredPane = new AnchoredLayeredPane(table, LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
+        this.tableColumnIndex = tableColumnIndex;
         JPanel menuBar = new JPanel();
         menuBar.setSize(new Dimension(110,57));
         menuBar.setBorder(BorderFactory.createEtchedBorder());
@@ -62,7 +65,7 @@ public class TableColumnPopupMenu{
     private JMenuItem getDeleteItem() {
         if ( null == deleteItem) {
             deleteItem = new JMenuItem("Delete Column");
-            deleteItem.addActionListener((event)-> hideMenu());
+            deleteItem.addActionListener((event)->deleteColumn());
             deleteItem.setBorder(BorderFactory.createEmptyBorder());
         }
         return deleteItem;
@@ -74,6 +77,14 @@ public class TableColumnPopupMenu{
             choseColorItem.setBorder(BorderFactory.createEmptyBorder());
         }
         return choseColorItem;
+    }
+    private void deleteColumn() {
+        TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
+        BookieColumnController2 bookieColumnController2 = new BookieColumnController2(false);
+        bookieColumnController2.setSelectedValueByBookieId(tc.getIdentifier());
+        bookieColumnController2.doRemove();
+        bookieColumnController2.doSave();
+        hideMenu();
     }
     public void hideMenu() {
         Utils.removeItemListeners(closeItem);
