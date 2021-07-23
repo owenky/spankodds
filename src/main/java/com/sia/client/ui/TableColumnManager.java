@@ -1,33 +1,23 @@
 package com.sia.client.ui;
 
-import javax.swing.JColorChooser;
-import javax.swing.JDialog;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
-import static com.sia.client.config.Utils.log;
 
 /**
  * The TableColumnManager can be used to manage TableColumns. It will give the
@@ -292,50 +282,50 @@ public class TableColumnManager
         TableColumnPopupMenu tableColumnPopupMenu = TableColumnPopupMenu.of(table);
         tableColumnPopupMenu.showMenu(index);
     }
-    private void showPopup2(int index) {
-
-        Object headerValue = tcm.getColumn(index).getHeaderValue();
-        int columnCount = tcm.getColumnCount();
-
-        log("headervalue is " + headerValue);
-        log("index is " + index);
-
-
-        JColorChooser chooser = new JColorChooser();
-
-        chooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                Color color2 = chooser.getColor();
-                System.out.println(color2);
-
-            }
-        });
-
-
-        JDialog dialog = JColorChooser.createDialog(null, headerValue + " Color",
-                true, chooser, null, null);
-
-
-        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        JTableHeader header = table.getTableHeader();
-        Rectangle r = header.getHeaderRect(index);
-        //popup.show(header, r.x, r.height);
-        Point p = r.getLocation();
-        SwingUtilities.convertPointToScreen(p, header);
-        dialog.setLocation(p.x, p.y + r.getSize().height);
-        //dialog.setLocationRelativeTo(r);
-        dialog.setVisible(true);
-
-        Color color = chooser.getColor();
-        if (color != null) {
-            log("color chosen was " + color);
-            String bookieid = AppController.getBookieId(headerValue.toString());
-            AppController.getBookieColors().put(bookieid, color);
-            Vector dm = AppController.getDataModels();
-            ((LinesTableData)dm.get(0)).fire(null);
-        }
-    }
+//    private void showPopup2(int index) {
+//
+//        Object headerValue = tcm.getColumn(index).getHeaderValue();
+//        int columnCount = tcm.getColumnCount();
+//
+//        log("headervalue is " + headerValue);
+//        log("index is " + index);
+//
+//
+//        JColorChooser chooser = new JColorChooser();
+//
+//        chooser.getSelectionModel().addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent arg0) {
+//                Color color2 = chooser.getColor();
+//                System.out.println(color2);
+//
+//            }
+//        });
+//
+//
+//        JDialog dialog = JColorChooser.createDialog(null, headerValue + " Color",
+//                true, chooser, null, null);
+//
+//
+//        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+//        JTableHeader header = table.getTableHeader();
+//        Rectangle r = header.getHeaderRect(index);
+//        //popup.show(header, r.x, r.height);
+//        Point p = r.getLocation();
+//        SwingUtilities.convertPointToScreen(p, header);
+//        dialog.setLocation(p.x, p.y + r.getSize().height);
+//        //dialog.setLocationRelativeTo(r);
+//        dialog.setVisible(true);
+//
+//        Color color = chooser.getColor();
+//        if (color != null) {
+//            log("color chosen was " + color);
+//            String bookieid = AppController.getBookieId(headerValue.toString());
+//            AppController.getBookieColors().put(bookieid, color);
+//            Vector dm = AppController.getDataModels();
+//            ((LinesTableData)dm.get(0)).fire(null);
+//        }
+//    }
     /*
      *  A table column will either be added to the table or removed from the
      *  table depending on the state of the menu item that was clicked.
