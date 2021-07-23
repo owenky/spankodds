@@ -4,9 +4,11 @@ import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -14,6 +16,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -94,10 +97,13 @@ public class TableColumnPopupMenu{
     }
     private void deleteColumn() {
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
-        BookieColumnController2 bookieColumnController2 = new BookieColumnController2(false);
-        bookieColumnController2.setSelectedValueByBookieId(tc.getIdentifier());
-        bookieColumnController2.doRemove();
-        bookieColumnController2.doSave();
+        int option = JOptionPane.showConfirmDialog((Component)null, "Do you really want to delete column "+tc.getHeaderValue()+"?", "Confirmation", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE, (Icon)null);
+        if ( option == JOptionPane.YES_OPTION) {
+            BookieColumnController2 bookieColumnController2 = new BookieColumnController2(false);
+            bookieColumnController2.setSelectedValueByBookieId(tc.getIdentifier());
+            bookieColumnController2.doRemove();
+            bookieColumnController2.doSave();
+        }
         hideMenu();
     }
     private void showColorChoserPanel() {
