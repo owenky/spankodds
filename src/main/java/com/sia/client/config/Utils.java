@@ -17,6 +17,10 @@ import java.awt.event.ComponentListener;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 public abstract class Utils {
 
@@ -212,5 +216,19 @@ public abstract class Utils {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * @return it dest is Final, it replace final and FINAL etc in sourceString with Final
+     */
+    public static String replaceIgnoreCase(String sourceString, String destStr) {
+        Pattern finalPattern = Pattern.compile(destStr,CASE_INSENSITIVE);
+        Matcher matcher = finalPattern.matcher(sourceString);
+        while (matcher.find()) {
+            String matchedStr = matcher.group(0);
+            sourceString = sourceString.replace(matchedStr,destStr);
+        }
+        return sourceString;
     }
 }

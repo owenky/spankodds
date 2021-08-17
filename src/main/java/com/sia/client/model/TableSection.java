@@ -213,19 +213,13 @@ public abstract class TableSection<V extends KeyedObject> {
         return gamesVec.size();
     }
 
-    public boolean checktofire(Integer gameId, boolean repaint) {
+    public boolean checktofire(V game, boolean repaint) {
 
-        int rowIndex = gamesVec.getRowIndex(gameId);
+        int rowIndex = gamesVec.getRowIndex(game.getGame_id());
         boolean status = rowIndex >= 0;
         if (status) {
-            V game = gamesVec.getGame(gameId);
             List<Object> rowData = makeRowData(game);
             rowDataMap.put(rowIndex, rowData);
-//            if ( repaint ) {
-//                int rowModelIndex = containingTableModel.getRowModelIndex(this, gameId);
-//                TableModelEvent e = new TableModelEvent(containingTableModel, rowModelIndex, rowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
-//                fire(e);
-//            }
         }
         return status;
     }

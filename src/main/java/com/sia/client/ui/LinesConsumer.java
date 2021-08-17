@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
@@ -14,6 +15,8 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.sia.client.config.Utils.log;
 
@@ -26,7 +29,8 @@ public class LinesConsumer implements MessageListener {
     private transient Session session;
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LinesConsumer",2000L,-1500L);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(2000L,-1500L);
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -311,8 +315,12 @@ public class LinesConsumer implements MessageListener {
             log(e);
 
         }
-
-        gameMessageProcessor.addGameId(gameid);
+        Game game = AppController.getGame(gameid);
+if ( gameid == AppController.testGameId) {
+     SimpleDateFormat sm = new SimpleDateFormat("HH:mm:ss");
+     String systemTime  = sm.format(new Date(System.currentTimeMillis()));
+     System.out.println("line consumer teams, system time="+systemTime+", remainTime=" + game.getScorets());
+}
+        gameMessageProcessor.addGame(game);
     }
-
 }

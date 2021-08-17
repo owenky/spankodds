@@ -1,8 +1,11 @@
 package com.sia.client.ui.simulator;
 
+import com.sia.client.ui.SpankOddsTest;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 //test ColumnCustomizableDataModel::checktofire performance
 public class CheckToFire implements EventGenerator{
@@ -40,7 +43,7 @@ public class CheckToFire implements EventGenerator{
 
                 for (TableProperties tblProp : tblProps) {
                     if ( tblProp.getMainScreen().isShowing()) {
-                        tblProp.getMainScreen().checktofire(Arrays.asList(testGameIds));
+                        tblProp.getMainScreen().checktofire(Arrays.stream(testGameIds).map(SpankOddsTest.testGameCache::getGame).collect(Collectors.toList()));
                     }
                 }
             }

@@ -123,7 +123,7 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem finals = new JMenuItem("Finals");
         finals.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Final");
+                GameAlert ga = new GameAlert(SiaConst.FinalStr);
             }
         });
         JMenuItem halftimes = new JMenuItem("Halftimes");

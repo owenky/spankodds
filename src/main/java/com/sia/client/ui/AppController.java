@@ -38,6 +38,7 @@ import static com.sia.client.config.Utils.log;
 
 public class AppController {
 
+public static int testGameId = 209305;
 
     public final static AlertVector alertsVector = new AlertVector();
     public static boolean loadinginitial = true;
@@ -604,9 +605,9 @@ public class AppController {
 
     }
 
-    public static void fireAllTableDataChanged(Collection<Integer> gameIds) {
+    public static void fireAllTableDataChanged(Collection<Game> games) {
         for (SportsTabPane stb : tabpanes) {
-            stb.fireAllTableDataChanged(gameIds);
+            stb.fireAllTableDataChanged(games);
         }
     }
 

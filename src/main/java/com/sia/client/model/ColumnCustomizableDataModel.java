@@ -175,11 +175,11 @@ log("DEBUG: moving game id:"+g.getGame_id()+", teams:"+g.getTeams()+" from secio
             fireTableChanged(new TableModelEvent(this));
         }
     }
-    public TableSection<V> checktofire(int gameId,boolean repaint) {
+    public TableSection<V> checktofire(V game,boolean repaint) {
         List<TableSection<V>> gameLines = getTableSections();
         TableSection<V> rtn = null;
         for (final TableSection<V> ltd : gameLines) {
-            boolean status = ltd.checktofire(gameId,repaint);
+            boolean status = ltd.checktofire(game,repaint);
             if (status) {
                 rtn  = ltd;
                 break;

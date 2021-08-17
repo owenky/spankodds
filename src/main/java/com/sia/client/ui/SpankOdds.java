@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.CheckThreadViolationRepaintManager;
 import com.sia.client.config.Utils;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
@@ -13,7 +12,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.RepaintManager;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
@@ -51,7 +49,7 @@ public class SpankOdds {
 
     private void showLoginDialog() {
 
-        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
+//        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
         frame = new JFrame("Spank Odds )" + version + ")");
         String spankoddsicon = "spanky.jpg";
 

@@ -13,14 +13,14 @@ public interface AbstractScreen<T extends KeyedObject> {
 
     void destroyMe();
     ColumnCustomizableTable<T> getColumnCustomizableTable();
-    default void checktofire(Collection<Integer> gameIds) {
+    default void checktofire(Collection<T> games) {
         ColumnCustomizableTable<T> table = getColumnCustomizableTable();
         ColumnCustomizableDataModel<T> model = table.getModel();
         List<Integer> rowModelIndexList = new ArrayList<>();
-        for(int gameId:gameIds) {
-            TableSection<T> ts =  model.checktofire(gameId,table.isShowing());
+        for(T game:games) {
+            TableSection<T> ts =  model.checktofire(game,table.isShowing());
             if ( null != ts ) {
-                int rowModelIndex = model.getRowModelIndex(ts,gameId);
+                int rowModelIndex = model.getRowModelIndex(ts,game.getGame_id());
                 rowModelIndexList.add(rowModelIndex);
             }
         }

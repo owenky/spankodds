@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
@@ -67,7 +68,7 @@ public class InfoView {
             ld2.setBackgroundColor(Color.RED);
 
         } else {
-            if (g.getStatus().equalsIgnoreCase("Final")) {
+            if (g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)) {
                 ld1.setData(" " + g.getCurrentvisitorscore() + " " + makenullblank(g.getTimeremaining()));
                 ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus().toUpperCase());
                 ld1.setBackgroundColor(Color.RED);

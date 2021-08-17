@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
@@ -51,9 +53,9 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     private LinesTableData findStageSectionByHeaderValue(String header) {
         TableSection<Game> ltd;
         List<TableSection<Game>> gameLines = getTableSections();
-//        if (header.equalsIgnoreCase("In Progress")) {
+//        if (header.equalsIgnoreCase(SiaConst.InProgresStr)) {
 //            ltd = gameLines.get(gameLines.size() - 4);
-//        } else if (header.equalsIgnoreCase("Soccer In Progress")) {
+//        } else if (header.equalsIgnoreCase("Soccer "+SiaConst.InProgresStr)) {
 //            ltd = gameLines.get(gameLines.size() - 3);
 //        } else if (header.equalsIgnoreCase("FINAL")) {
 //            ltd = gameLines.get(gameLines.size() - 2);
@@ -83,16 +85,21 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             return null;
         }
 
-        header = header.toLowerCase();
+        header = normalizeStageString(header);
         LinesTableData rtn;
-        if ( header.contains("final") || header.contains("in progress") ) {
+        if ( header.contains(SiaConst.FinalStr) || header.contains(SiaConst.InProgresStr) ) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
-            rtn = new LinesTableData(section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<Game>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
+            rtn = new LinesTableData(section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
                     , section0.getLast(),header,getAllColumns());
             sections.add(rtn);
         } else {
             rtn = null;
         }
         return rtn;
+    }
+    private static String normalizeStageString(String header) {
+        header = Utils.replaceIgnoreCase(header,SiaConst.FinalStr);
+        header = Utils.replaceIgnoreCase(header,SiaConst.InProgresStr);
+        return header;
     }
 }

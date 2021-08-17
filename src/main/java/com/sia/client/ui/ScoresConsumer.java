@@ -38,7 +38,7 @@ public class ScoresConsumer implements MessageListener {
     private transient Session session;
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final MessageConsumingScheduler<Integer> scoreMessageProcessor;
+    private final MessageConsumingScheduler<Game> scoreMessageProcessor;
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
@@ -145,7 +145,7 @@ public class ScoresConsumer implements MessageListener {
                 if (g != null) {
 
                     //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
-                    if ("Final".equalsIgnoreCase(status) || "Win".equalsIgnoreCase(status)) {
+                    if (SiaConst.FinalStr.equalsIgnoreCase(status) || "Win".equalsIgnoreCase(status)) {
                         if (!g.getStatus().equals(status)) // just became final
                         {
 
@@ -155,9 +155,9 @@ public class ScoresConsumer implements MessageListener {
                             if (id == SiaConst.SoccerLeagueId) {
                                 //looks like "Soccer FINAL" is wrong, should be "FINAL" for soccer -- 06/05/2021
 //                                AppController.moveGameToThisHeader(g, "Soccer FINAL");
-                                AppController.moveGameToThisHeader(g, "FINAL");
+                                AppController.moveGameToThisHeader(g, SiaConst.FinalStr);
                             } else {
-                                AppController.moveGameToThisHeader(g, "FINAL");
+                                AppController.moveGameToThisHeader(g, SiaConst.FinalStr);
                             }
                             refreshtabs = true;
                             String finalprefs = AppController.getUser().getFinalAlert();
@@ -217,10 +217,10 @@ public class ScoresConsumer implements MessageListener {
 
 //                                    String popalertname = "Alert at:" + hrmin + "\nFINAL :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 //                                    AppController.alertsVector.addElement(popalertname);
-                                    String mesg = "FINAL :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                                    String mesg = SiaConst.FinalStr+" :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
                                     AppController.addAlert(hrmin,mesg);
 
-                                    new UrgentMessage("<HTML><H2>FINAL " + s.getLeaguename() + "</H2>" +
+                                    new UrgentMessage("<HTML><H2>"+SiaConst.FinalStr+" " + s.getLeaguename() + "</H2>" +
                                             "<TABLE cellspacing=1 cellpadding=1>" +
 
                                             "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
@@ -253,9 +253,9 @@ public class ScoresConsumer implements MessageListener {
                             if (id == SiaConst.SoccerLeagueId) {
                                 //for soccer, In Progress header is NOT Soccer In Progress, it is In Progress -- 06/05/2021
 //                                AppController.moveGameToThisHeader(g, "Soccer In Progress");
-                                AppController.moveGameToThisHeader(g, "In Progress");
+                                AppController.moveGameToThisHeader(g, SiaConst.InProgresStr);
                             } else {
-                                AppController.moveGameToThisHeader(g, "In Progress");
+                                AppController.moveGameToThisHeader(g, SiaConst.InProgresStr);
                             }
 
 
@@ -450,12 +450,12 @@ public class ScoresConsumer implements MessageListener {
                             Sport s = AppController.getSport(g.getLeague_id());
                             int id = s.getParentleague_id();
                             if (id == SiaConst.SoccerLeagueId) {
-//                                AppController.moveGameToThisHeader(g, "Soccer In Progress");
-                                //should be In Progress 06/12/2021
-                                AppController.moveGameToThisHeader(g, "In Progress");
+//                                AppController.moveGameToThisHeader(g, SiaConst.SoccerInProgresStr);
+                                //should be SiaConst.InProgresStr 06/12/2021
+                                AppController.moveGameToThisHeader(g, SiaConst.InProgresStr);
 
                             } else {
-                                AppController.moveGameToThisHeader(g, "In Progress");
+                                AppController.moveGameToThisHeader(g, SiaConst.InProgresStr);
                             }
 
 
@@ -477,21 +477,14 @@ public class ScoresConsumer implements MessageListener {
                             new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
                     AppController.addGame(g);
                 }
-                scoreMessageProcessor.addMessage(gameid);
+                scoreMessageProcessor.addMessage(AppController.getGame(gameid));
             }
-
-            //AppController.fireAllTableDataChanged();
         } catch (Exception e) {
             log("exception scores consumer " + e);
             log(mapMessage.toString());
             log(e);
 
         }
-//        try {
-//            AppController.fireAllTableDataChanged("" + gameid);
-//        } catch (Exception ex) {
-//            log(ex);
-//        }
     }
 
     public void playSound(String file) {
@@ -505,18 +498,15 @@ public class ScoresConsumer implements MessageListener {
             log(ex);
         }
     }
-    private MessageConsumingScheduler<Integer> createScoreMessageProcessor() {
-        Consumer<List<Integer>> messageConsumer = (buffer)-> {
-            Set<Integer> distinctSet = new HashSet<>(buffer);
-if ( buffer.size() > 1) {
-    log("ScoresConsumer batch process: queue size=" + buffer.size() + ", distinctSet size=" + distinctSet.size());
-}
+    private MessageConsumingScheduler<Game> createScoreMessageProcessor() {
+        Consumer<List<Game>> messageConsumer = (buffer)-> {
+            Set<Game> distinctSet = new HashSet<>(buffer);
             Utils.checkAndRunInEDT(()->{
                 AppController.fireAllTableDataChanged(distinctSet);
             });
 
         };
-        MessageConsumingScheduler<Integer> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
+        MessageConsumingScheduler<Game> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
         scoreMessageProcessor.setInitialDelay(2*1000L);
 //        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
         scoreMessageProcessor.setUpdatePeriodInMilliSeconds(-1500L);

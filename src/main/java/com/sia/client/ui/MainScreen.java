@@ -620,7 +620,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
                 int id = s.getParentleague_id();
 
-                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
+                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)
                         || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
 
                 ) {
@@ -724,43 +724,43 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
 
         if (inprogressgames.size() > 0) {
-            gamegroupheadervec.add("In Progress");
+            gamegroupheadervec.add(SiaConst.InProgresStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(inprogressgames);
         } else {
-            gamegroupheadervec.add("In Progress");
+            gamegroupheadervec.add(SiaConst.InProgresStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(new Vector());
         }
 
         if (inprogressgamessoccer.size() > 0) {
-            gamegroupheadervec.add("Soccer In Progress");
+            gamegroupheadervec.add(SiaConst.SoccerInProgressStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(inprogressgamessoccer);
         } else {
-            gamegroupheadervec.add("Soccer In Progress");
+            gamegroupheadervec.add(SiaConst.SoccerInProgressStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
 
         if (finalgames.size() > 0) {
-            gamegroupheadervec.add("FINAL");
+            gamegroupheadervec.add(SiaConst.FinalStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(finalgames);
         } else {
-            gamegroupheadervec.add("FINAL");
+            gamegroupheadervec.add(SiaConst.FinalStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(new Vector());
         }
 
 
         if (finalgamessoccer.size() > 0) {
-            gamegroupheadervec.add("Soccer FINAL");
+            gamegroupheadervec.add(SiaConst.SoccerInFinalStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(finalgamessoccer);
         } else {
-            gamegroupheadervec.add("Soccer FINAL");
+            gamegroupheadervec.add(SiaConst.SoccerInFinalStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
@@ -983,7 +983,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             boolean showit = true;
             Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-            if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
+            if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals(SiaConst.FinalStr)) dont show header if its blank! however must show final for scrollpane purposes
             {
                 showit = false;
             }
