@@ -1,7 +1,7 @@
 package com.sia.client.config;
 
 import javax.jms.MapMessage;
-import javax.swing.JMenuItem;
+import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
@@ -207,7 +207,7 @@ public abstract class Utils {
             }
         }
     }
-    public static void removeItemListeners(JMenuItem menuItem) {
+    public static void removeItemListeners(AbstractButton menuItem) {
         if ( null != menuItem) {
             ActionListener[] allListeners = menuItem.getActionListeners();
             if (null != allListeners) {
@@ -230,5 +230,8 @@ public abstract class Utils {
             sourceString = sourceString.replace(matchedStr,destStr);
         }
         return sourceString;
+    }
+    public static boolean containsOnlyAlphanumeric(String str) {
+        return str.matches("[0-9a-zA-Z]+");
     }
 }
