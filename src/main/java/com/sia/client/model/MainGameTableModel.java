@@ -2,17 +2,19 @@ package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.table.TableColumn;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
+import static com.sia.client.config.Utils.log;
 
-//    private final List<LinesTableData> gameLines = new ArrayList<>();
+public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     public MainGameTableModel(Vector<TableColumn> allColumns) {
         super(allColumns);
@@ -25,10 +27,19 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     }
     //refactored from MainScreen::addGame(Game, boolean)
-    public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint) {
+    public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint,Runnable callBackOnNotFound) {
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
         if ( null != ltd) {
             ltd.addGame(game, paint);
+        } else {
+            //this method is called only when the game belong to this table, see conditioin of ms.parentOfGame(g)  in SportsTabPane::addGame()
+            //need to re-draw screen when game group is not found in this table
+            callBackOnNotFound.run();
+//DEBUG...
+SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid="+game.getGame_id()+", leagueId="+game.getLeague_id()+", sport="+ AppController.getSport(game.getSportIdentifyingLeagueId()).getSportname()+
+        ", title="+AppController.getSport(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(game.getGamedate()));
+//END OF DEBUG
         }
 
     }

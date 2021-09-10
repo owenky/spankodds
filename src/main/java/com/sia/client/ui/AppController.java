@@ -28,7 +28,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -154,10 +156,10 @@ public static int testGameId = 209305;
     public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
     public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode("Auto Racing");
-    public static ArrayList<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<LineOpenerAlertNode>();
+    public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
 
-    public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<Integer, String>();
-    public static Vector<String> SportsTabPaneVector = new Vector<String>();
+    public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
+    public static Vector<String> SportsTabPaneVector = new Vector<>();
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
@@ -512,8 +514,9 @@ public static int testGameId = 209305;
     }
 
     public static void disableTabs() {
-        for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = tabpanes.get(i);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane tp : tabpanes) {
             tp.disableTabs();
         }
     }
@@ -585,8 +588,9 @@ public static int testGameId = 209305;
     }
 
     public static void refreshTabs3() {
-        for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = tabpanes.get(i);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane tp : tabpanes) {
             if (tp != null) {
                 try {
                     tp.refreshCurrentTab();
@@ -825,11 +829,10 @@ public static int testGameId = 209305;
     }
 
     public static void removeGame(int gameid, boolean repaint) {
-        for (int k = 0; k < tabpanes.size(); k++) {
-
-            SportsTabPane stb = tabpanes.get(k);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane stb : tabpanes) {
             stb.removeGame(gameid, repaint);
-
         }
         Game g = games.getGame(gameid);
         if (null != g) {
@@ -885,8 +888,9 @@ public static int testGameId = 209305;
     }
 
     public static void removeGames(String[] gameidarr) {
-        for (int k = 0; k < tabpanes.size(); k++) {
-            SportsTabPane stb = tabpanes.get(k);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane stb : tabpanes) {
             stb.removeGames(gameidarr);
         }
         if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
@@ -897,12 +901,6 @@ public static int testGameId = 209305;
             try {
                 String gameid = gameidarr[i];
                 games.removeGame(gameid);
-//                    Game g = games.getGame(gameid);
-//                    if (g != null) {
-//                        gamesVec.remove(g);
-//
-//                    }
-//                    games.remove(gameid);
                 for (int j = 0; j < bookiesVec.size(); j++) {
                     Bookie b = bookiesVec.get(j);
                     int bid = b.getBookie_id();
@@ -972,16 +970,6 @@ public static int testGameId = 209305;
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
-//
-//    public static void rebuildModels() {
-//
-//        for (int k = 0; k < dataModels.size(); k++) {
-//            LinesTableData ltd =  dataModels.get(k);
-//            ltd.rebuild();
-//        }
-//
-//    }
-
     public static void addGame(Game g) {
         addGame(g, true);
 
@@ -990,10 +978,10 @@ public static int testGameId = 209305;
     public static void addGame(Game g, boolean repaint) {
 
         boolean isAdd = games.updateOrAdd(g);
-        //TODO potential improvement to for loop: use a map to quickly find which LineTableData this game belong to instead of loop through tabpane and mainscreen -- 05/01/2021
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
         if ( isAdd) {
-            for (int k = 0; k < tabpanes.size(); k++) {
-                SportsTabPane stb = tabpanes.get(k);
+            for (SportsTabPane stb : tabpanes) {
                 stb.addGame(g, repaint);
             }
         }
@@ -1001,11 +989,8 @@ public static int testGameId = 209305;
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
-        for (int k = 0; k < tabpanes.size(); k++) {
-
-            SportsTabPane stb = tabpanes.get(k);
+        for (SportsTabPane stb : tabpanes) {
             stb.moveGameToThisHeader(g, header);
-
         }
     }
 
@@ -1015,6 +1000,9 @@ public static int testGameId = 209305;
 
     public static Sport getSport(int leagueId) {
         return sports.get(leagueId);
+    }
+    public static Optional<Sport> getSportBySportId(int sportId) {
+        return sports.values().stream().filter(s->s.getSport_id()==sportId).findAny();
     }
 
     public static Game getGame(int gid) {
@@ -1032,10 +1020,6 @@ public static int testGameId = 209305;
     public static Hashtable getBookies() {
         return bookies;
     }
-
-//    public static Hashtable getSports() {
-//        return sports;
-//    }
 
     public static Hashtable getBookieColors() {
         return bookiecolors;

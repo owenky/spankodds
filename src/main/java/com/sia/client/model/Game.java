@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
+
 public class Game implements KeyedObject {
 
     private int league_id;
@@ -517,7 +519,13 @@ public class Game implements KeyedObject {
     public int getLeague_id() {
         return league_id;
     }
-
+    public int getSportIdentifyingLeagueId() {
+        int sportIdentifyingLeagueId =  getLeague_id();
+        if (sportIdentifyingLeagueId == SiaConst.SoccerLeagueId) {
+            sportIdentifyingLeagueId = getSubleague_id();
+        }
+        return sportIdentifyingLeagueId;
+    }
     public void setLeague_id(int league_id) {
         this.league_id = league_id;
     }

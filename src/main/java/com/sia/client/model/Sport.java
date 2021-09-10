@@ -1,19 +1,20 @@
 package com.sia.client.model;
 
 public class Sport {
-	public int	sport_id;
-	public int league_id;
-	public int parentleague_id;
-	public int region_id;
-	public int numperiods;
-	public double timeperperiod;
-	public double halftimeminutes;
+	private int	sport_id;
+	private int comingDays;
+	private int league_id;
+	private int parentleague_id;
+	private int region_id;
+	private int numperiods;
+	private double timeperperiod;
+	private double halftimeminutes;
 
-	public String leaguename;
-	public String leagueabbr;
-	public String sportname;
-	public String sportabbr;
-	public boolean moneylinedefault;
+	private String leaguename;
+	private String leagueabbr;
+	private String sportname;
+	private String sportabbr;
+	private boolean moneylinedefault;
 
 	public Sport(int sport_id,int league_id,int parentleague_id,int region_id,int numperiods,double timeperperiod,double halftimeminutes,
 				 String leaguename,String leagueabbr,String sportname,String sportabbr,boolean moneylinedefault) {
@@ -126,5 +127,10 @@ public class Sport {
 	{
 			this.moneylinedefault = moneylinedefault;
 	}				
-	
+	public int getComingDays() {
+		return this.comingDays;
+	}
+	public void setComingDays(int comingDays) {
+		this.comingDays = comingDays;
+	}
 }

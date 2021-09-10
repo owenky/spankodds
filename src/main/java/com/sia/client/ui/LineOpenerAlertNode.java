@@ -1,9 +1,10 @@
 package com.sia.client.ui;
 
-import java.util.*;
-import java.time.Duration;
+import javax.swing.SwingConstants;
 import java.time.Instant;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 class LineOpenerAlertNode{
 	
 	String SportName;
@@ -40,7 +41,7 @@ class LineOpenerAlertNode{
 	String audiovalue="Major Line Move";
 	
 	double renotifyvalue=0.5;
-	ArrayList leagues=new ArrayList();
+	List<Integer> leagues=new ArrayList<>();
 	ArrayList bookies=new ArrayList();
 	ArrayList periods=new ArrayList();
 	int sports_id;

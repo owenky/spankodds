@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -141,6 +142,10 @@ public class RenameColumnPopupMenu {
         return err;
     }
     private void saveColumnName() {
-        System.out.println("Need implementation of saveColumnName");
+        String text = inputField.getText().trim();
+        TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
+        tc.setHeaderValue(text);
+        UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
+        userPrefs.sendUserPrefs();
     }
 }

@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.sia.client.config.Utils.log;
+
 public abstract class KeyedObjectList<V extends KeyedObject> {
     private final List<Integer> gamesVec = new ArrayList<>();
     //used to be Hashtable<String, Game> games = new Hashtable() -- 06/11/2021
@@ -53,7 +55,10 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
             gamesVec.add(gameId);
             isAdd = true;
         } else {
-            isAdd = false;
+//            isAdd = false;
+            //even if gameId already exist, game might change, so need to refresh  -- 08/29/2021
+            log("force isAdd to true to force being added, originally isAdd = false-- 08/29/2021");
+            isAdd = true;
         }
         idToGameMap.put(gameId,g);
         return isAdd;

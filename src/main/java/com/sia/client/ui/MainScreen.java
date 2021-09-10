@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
@@ -28,8 +29,6 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +36,11 @@ import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
+import static java.lang.Boolean.parseBoolean;
 
 public class MainScreen extends JPanel implements AbstractScreen<Game> {
-//    public Vector datamodelsvec = new Vector();
+
     public Timer timer;
-    public int timer2count = 0;
     public int currentmaxlength = 0;
     public boolean timesort = false;
     public boolean shortteam = false;
@@ -61,8 +60,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private Vector ingamegames = new Vector();
     private Vector seriesgamessoccer = new Vector();
     private Vector ingamegamessoccer = new Vector();
-    public SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    public SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+    private int sportId;
     public long cleartime;
     public boolean showheaders = true;
     public boolean showseries = true;
@@ -112,17 +112,25 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public Game removeGame(int gameid,boolean repaint) {
         return getDataModels().removeGame(gameid,repaint);
     }
-    public void addGame(Game g, boolean repaint) { // only gets called when adding new game into system
+    public void addGame(Game g, boolean repaint,Runnable callBackOnNotFound) { // only gets called when adding new game into system
         if ( null != mainGameTable) {
-            int leagueid = g.getLeague_id();
-            if (leagueid == SiaConst.SoccerLeagueId) {
-                leagueid = g.getSubleague_id();
-            }
-            String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
-            getColumnCustomizableTable().getModel().addGameToGameGroup(title, g, repaint);
+            int sportIdentifyingLeagueId = g.getSportIdentifyingLeagueId();
+            String title = AppController.getSport(sportIdentifyingLeagueId).getLeaguename() + " " + sdf2.format(g.getGamedate());
+            getColumnCustomizableTable().getModel().addGameToGameGroup(title, g, repaint, callBackOnNotFound);
         }
     }
-
+    public int getSportId() {
+        return this.sportId;
+    }
+    public boolean shouldAddToScreen(Game g){
+        Sport sport = GameUtils.getSport(g);
+        if ( null != sport) {
+            boolean isGameNear = GameUtils.isGameNear(sport.getComingDays(), g);
+            return sport.getSport_id() == this.sportId && isGameNear;
+        } else {
+            return false;
+        }
+    }
     public void moveGameToThisHeader(Game g, String header) {
         getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);
     }
@@ -162,19 +170,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 //            Collections.sort(allgamesforpref, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
 //            Collections.sort(allgamesforpref, new GameDateSorter());
 
-        }
-        catch (Exception ex) {
-            System.out.println("exception sorting " + ex);
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            log("exception sorting " + ex);
+            log(ex);
         }
 
         String name = getName();
+        int comingdays;
         if (name.equalsIgnoreCase("football")) {
             boolean all = false;
             String footballpref = AppController.getUser().getFootballPref();
             prefs = footballpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
             String[] tmp = {};
@@ -184,12 +192,12 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     if (tmp[0].equalsIgnoreCase("football")) {
                         all = true;
                     }
-                    this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                    this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                    this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                    this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                    this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                    this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                    this.showheaders = (parseBoolean(prefs[3]));
+                    this.showseries = (parseBoolean(prefs[4]));
+                    this.showingame = (parseBoolean(prefs[5]));
+                    this.showadded = (parseBoolean(prefs[6]));
+                    this.showextra = (parseBoolean(prefs[7]));
+                    this.showprops = (parseBoolean(prefs[8]));
 
                 }
 
@@ -202,13 +210,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -219,8 +221,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String basketballpref = AppController.getUser().getBasketballPref();
             prefs = basketballpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
 
@@ -230,25 +232,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("basketball")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -258,8 +254,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String baseballpref = AppController.getUser().getBaseballPref();
             prefs = baseballpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
             String tmp[] = {};
@@ -268,25 +264,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("baseball")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
             }
@@ -295,8 +285,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String hockeypref = AppController.getUser().getHockeyPref();
             prefs = hockeypref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
             String[] tmp = {};
@@ -305,25 +295,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("hockey")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -332,35 +316,29 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String fightingpref = AppController.getUser().getFightingPref();
             prefs = fightingpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("fighting")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
+                Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -369,35 +347,29 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String soccerpref = AppController.getUser().getSoccerPref();
             prefs = soccerpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -406,35 +378,29 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String autoracingpref = AppController.getUser().getAutoracingPref();
             prefs = autoracingpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("auto racing")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -443,52 +409,46 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             boolean all = false;
             String golfpref = AppController.getUser().getGolfPref();
             prefs = golfpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
+            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("golf")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) && GameUtils.isGameNear(comingdays,tempGame)) {
                     //	System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
 
             }
         } else if (name.equalsIgnoreCase("tennis")) {
             boolean all = false;
             String tennispref = AppController.getUser().getTennisPref();
             prefs = tennispref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            comingdays = Integer.parseInt(prefs[1]);
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
             String[] tmp = {};
@@ -497,25 +457,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("tennis")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.showheaders = (parseBoolean(prefs[3]));
+                this.showseries = (parseBoolean(prefs[4]));
+                this.showingame = (parseBoolean(prefs[5]));
+                this.showadded = (parseBoolean(prefs[6]));
+                this.showextra = (parseBoolean(prefs[7]));
+                this.showprops = (parseBoolean(prefs[8]));
             }
 
             Set<String> set = new HashSet<>(Arrays.asList(tmp));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ((set.contains(LID + "") || all) &&GameUtils.isGameNear(comingdays,tempGame)) {
                     //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
@@ -523,6 +477,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             }
         } else {
             allgames = allgamesforpref;
+            comingdays = -1;
         }
 
         java.util.Date today = new java.util.Date();
@@ -556,15 +511,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             String todaysgames = sdf.format(today);
             int leagueid = g.getLeague_id();
             Sport s = AppController.getSport(leagueid);
-
-            Sport s2;
+//
             if (s == null) {
                 log("skipping " + leagueid + "...cuz of null sport");
                 continue;
             }
             if (customheaders.size() > 0 || s.getSportname().equalsIgnoreCase(name) || (name.equalsIgnoreCase("Today") && gamedate.compareTo(todaysgames) <= 0)) {
 
-
+                Sport s2;
                 if (shortteam) {
                     maxlength = calcmaxlength(g.getShortvisitorteam(), g.getShorthometeam());
 
@@ -692,9 +646,12 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     currentvec.add(g);
 
                 }
-
+                this.sportId=s2.getSport_id();
+            } else {
+                this.sportId=s.getSport_id();
             }
 
+            AppController.getSportBySportId(this.sportId).get().setComingDays(comingdays);
 
         }
 
@@ -868,11 +825,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     public int calcmaxlength(String s1, String s2) {
-        if (s1.length() > s2.length()) {
-            return s1.length();
-        } else {
-            return s2.length();
-        }
+        return Math.max(s1.length(), s2.length());
     }
 
     public boolean isShowAdded() {

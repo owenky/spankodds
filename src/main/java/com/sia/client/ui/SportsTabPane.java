@@ -46,8 +46,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     private Point currentMouseLocation = null;
     private boolean dragging = false;
 
-//adjustcolumns after line update	
-
     public SportsTabPane() {
 
         thispane = this;
@@ -281,35 +279,52 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         return true;
     }
     // only gets called when adding new game into system
+//    public void addGame(Game g, boolean repaint)   {
+//        int totalTabs = getTabCount();
+//        for (int i = 0; i < totalTabs; i++) {
+//                Component c = getComponentAt(i);
+//                if (c instanceof MainScreen) {
+//                    MainScreen ms = (MainScreen) c;
+//                if ( ms.isShowing()) {
+//                    Utils.checkAndRunInEDT(()-> ms.addGame(g, ms.isShowing()));
+//                        //there might be more than one screen is showing ( multiple windows)
+////                    break;
+//                }
+//            }
+//        }
+//
+//    }
     public void addGame(Game g, boolean repaint)   {
-        int totalTabs = getTabCount();
-        for (int i = 0; i < totalTabs; i++) {
-            Component c = getComponentAt(i);
-
-            if (c instanceof MainScreen) {
-                MainScreen ms = (MainScreen) c;
-                if ( ms.isShowing()) {
-                    Utils.checkAndRunInEDT(()-> ms.addGame(g, ms.isShowing()));
-                    //there might be more than one screen is showing ( multiple windows)
-//                    break;
-                }
+        int selectedIndex = getSelectedIndex();
+        Component c = getComponentAt(selectedIndex);
+        if (c instanceof MainScreen) {
+            MainScreen ms = (MainScreen) c;
+            if (ms.shouldAddToScreen(g) ) {
+                Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> ms.createMe(display, period, timesort, shortteam, opener, last, loadlabel)));
             }
         }
-
     }
-
+//    public void removeGame(int gameid, boolean repaint) {
+//        int totalTabs = getTabCount();
+//        for (int i = 0; i < totalTabs; i++) {
+//            Component c = getComponentAt(i);
+//            if (c instanceof MainScreen) {
+//                MainScreen ms = (MainScreen) c;
+//                if ( ms.isShowing()) {
+//                    Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, ms.isShowing()));
+//                    break;
+//                }
+//            }
+//        }
+//    }
     public void removeGame(int gameid, boolean repaint) {
-        int totalTabs = getTabCount();
-        for (int i = 0; i < totalTabs; i++) {
-            Component c = getComponentAt(i);
-            if (c instanceof MainScreen) {
-                MainScreen ms = (MainScreen) c;
-                if ( ms.isShowing()) {
-                    Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, ms.isShowing()));
-                    break;
-                }
-            }
+        int selectedIndex = getSelectedIndex();
+        Component c = getComponentAt(selectedIndex);
+        if (c instanceof MainScreen) {
+            MainScreen ms = (MainScreen) c;
+            Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, true));
         }
+
     }
 
     public void disableTabs() {
@@ -326,37 +341,56 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
     }
 
+//    public void removeGames(String[] gameids) {
+//        int totalTabs = getTabCount();
+//        for (int i = 0; i < totalTabs; i++) {
+//
+//            Component c = getComponentAt(i);
+//            if (c instanceof MainScreen) {
+//                MainScreen ms = (MainScreen) c;
+//                if ( ms.isShowing()) {
+//                    Utils.checkAndRunInEDT(()-> ms.removeGames(gameids));
+//                    break;
+//                }
+//            }
+//        }
+//    }
     public void removeGames(String[] gameids) {
-        int totalTabs = getTabCount();
-        for (int i = 0; i < totalTabs; i++) {
-            Component c = getComponentAt(i);
-            if (c instanceof MainScreen) {
-                MainScreen ms = (MainScreen) c;
-                if ( ms.isShowing()) {
-                    Utils.checkAndRunInEDT(()-> ms.removeGames(gameids));
-                    break;
-                }
-            }
+        int selectedIndex = getSelectedIndex();
+        Component c = getComponentAt(selectedIndex);
+        if (c instanceof MainScreen) {
+            MainScreen ms = (MainScreen) c;
+            Utils.checkAndRunInEDT(()-> ms.removeGames(gameids));
         }
+
     }
 
+//    public void moveGameToThisHeader(Game g, String header) {
+//
+//        int totalTabs = getTabCount();
+//        for (int i = 0; i < totalTabs; i++) {
+//            Component c = getComponentAt(i);
+//            if (c instanceof MainScreen) {
+//                MainScreen ms = (MainScreen) c;
+//                if ( c.isShowing() ) {
+//                    Utils.checkAndRunInEDT(()-> ms.moveGameToThisHeader(g, header));
+//                    break;
+//                }
+//            }
+//        }
+//
+//
+//    }
     public void moveGameToThisHeader(Game g, String header) {
-
-        int totalTabs = getTabCount();
-        for (int i = 0; i < totalTabs; i++) {
-            Component c = getComponentAt(i);
-            if (c instanceof MainScreen) {
-                MainScreen ms = (MainScreen) c;
-                if ( c.isShowing() ) {
-                    Utils.checkAndRunInEDT(()-> ms.moveGameToThisHeader(g, header));
-                    break;
-                }
-            }
+        int selectedIndex = getSelectedIndex();
+        Component c = getComponentAt(selectedIndex);
+        if (c instanceof MainScreen) {
+            MainScreen ms = (MainScreen) c;
+            Utils.checkAndRunInEDT(()-> ms.moveGameToThisHeader(g, header));
         }
 
 
     }
-
     public void setSort(boolean sort) {
         timesort = sort;
     }
