@@ -73,8 +73,6 @@ public class SpankOdds {
             @Override
             public void loginSucceeded(LoginEvent source) {
                 SpankOdds.this.userName = loginPane.getUserName();
-
-                //SpankOdds.this.createAndShowGui();
                 SpankOdds.this.showGui();
             }
 
@@ -117,8 +115,6 @@ public class SpankOdds {
                 log("date:"+new java.util.Date());
                 boolean loggedin = client.isloggedin();
                 if (loggedin) {
-//                    frame.setTitle(name + " Logged In");
-//                    createGui();
                     userName = name;
                 }
                 return loggedin;
@@ -136,6 +132,7 @@ public class SpankOdds {
 
         JXLoginPane.JXLoginDialog dialog = new JXLoginPane.JXLoginDialog(frame, loginPane);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        Utils.computeEffectiveScreenSize(dialog);
         dialog.setVisible(true);
 
         // if loginPane was cancelled or closed then its status is CANCELLED

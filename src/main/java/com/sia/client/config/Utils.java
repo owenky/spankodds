@@ -1,10 +1,19 @@
 package com.sia.client.config;
 
 import javax.jms.MapMessage;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -98,6 +107,110 @@ public abstract class Utils {
             executorService.submit(r);
         } else {
             r.run();
+        }
+    }
+    public static void resizeAndCenterComponent(Component component){
+
+        Dimension effectiveScreenSize_ = getEffectiveScreenDimension();
+
+        boolean sizeChanged = false;
+        int width = component.getSize().width;
+        int height = component.getSize().height;
+
+        int effectiveScreenWidth_ = (int)effectiveScreenSize_.getWidth();
+        int effectiveScreenHeight_ = (int)effectiveScreenSize_.getHeight();
+        if ( width > effectiveScreenWidth_){
+            width = effectiveScreenWidth_;
+            sizeChanged = true;
+        }
+
+        if ( height > effectiveScreenHeight_){
+            height = effectiveScreenHeight_;
+            sizeChanged = true;
+        }
+
+        if ( sizeChanged){
+            Dimension newDim_ = new Dimension(width,height);
+            setComponentPreferredSize(component,newDim_);
+        }
+        Point left_top_point = getScreenCenterLocation(component);
+
+//System.err.println("in SBTUiManager$resizeAndCenterComponent(), width="+width+" height="+height);
+        component.setBounds(left_top_point.x, left_top_point.y,width ,height );
+    }
+    private static Dimension effectiveScreenSize;
+    public static Dimension getEffectiveScreenDimension() {
+        return effectiveScreenSize;
+    }
+    public static void setComponentPreferredSize(Component comp_,Dimension dim_){
+        comp_.setSize(dim_);
+        comp_.setPreferredSize(dim_);
+    }
+    private static Insets screenInsets;
+    public static Insets getScreenInsets() {
+        return screenInsets;
+    }
+    public static void computeEffectiveScreenSize(Component visibleComponent) {
+        GraphicsConfiguration gcf = visibleComponent.getGraphicsConfiguration();
+        if ( gcf != null) {
+            screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(gcf);
+
+            Dimension screenFullSize_ = Toolkit.getDefaultToolkit().getScreenSize();
+            int screen_width_ = (int)screenFullSize_.getWidth();
+            int screen_height_ = (int)screenFullSize_.getHeight();
+
+            Insets screen_insets_ = getScreenInsets();
+
+            int screen_effective_width_ = screen_width_  - screen_insets_.left - screen_insets_.right;
+            int screen_effective_height_ = screen_height_  - screen_insets_.bottom - screen_insets_.top;
+            effectiveScreenSize = new Dimension(screen_effective_width_,screen_effective_height_);
+        }
+    }
+    public static Point getScreenCenterLocation(Component component){
+
+        Insets screenInsets_ = getScreenInsets();
+        Dimension effectiveScreenDim_ = getEffectiveScreenDimension();
+        int screenWidth = (int)effectiveScreenDim_.getWidth();
+        int componentWidth = component.getWidth();
+        int x = ( screenWidth-componentWidth ) / 2 + screenInsets_.left;
+
+        int screenHeight = (int) effectiveScreenDim_.getHeight();
+        int componentHeight = component.getHeight();
+        int y =  (screenHeight - componentHeight) / 2 + screenInsets_.top;
+
+        return new Point(x,y);
+    }
+    public static void fireVisibilityChangedEvent(Component screenListener,boolean screen_hidden_status_){
+        if ( screenListener != null ){
+            ComponentListener[] componentListeners = screenListener.getComponentListeners();
+            if ( componentListeners != null ){
+                int component_id;
+                if ( screen_hidden_status_ ){
+                    component_id = ComponentEvent.COMPONENT_HIDDEN;
+                }else{
+                    component_id = ComponentEvent.COMPONENT_SHOWN;
+                }
+
+                ComponentEvent event = new ComponentEvent(screenListener,component_id);
+                for ( int i=0;i<componentListeners.length;i++){
+                    ComponentListener componentHiddenListener = componentListeners[i];
+                    if ( screen_hidden_status_ ) {
+                        componentHiddenListener.componentHidden(event);
+                    }else{
+                        componentHiddenListener.componentShown(event);
+                    }
+                }
+            }
+        }
+    }
+    public static void removeItemListeners(JMenuItem menuItem) {
+        if ( null != menuItem) {
+            ActionListener[] allListeners = menuItem.getActionListeners();
+            if (null != allListeners) {
+                for (ActionListener l : allListeners) {
+                    menuItem.removeActionListener(l);
+                }
+            }
         }
     }
 }
