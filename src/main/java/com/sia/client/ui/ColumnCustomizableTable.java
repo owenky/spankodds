@@ -201,6 +201,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void addGameLine(TableSection<V> gameLine) {
         getModel().addGameLine(gameLine);
     }
+    public void addGameLine(int index,TableSection<V> gameLine) {
+        getModel().addGameLine(index,gameLine);
+    }
     public TableSection<V> getLinesTableData(int row) {
         return getModel().getLinesTableData(row).linesTableData;
     }

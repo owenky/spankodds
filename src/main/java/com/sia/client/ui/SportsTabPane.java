@@ -300,7 +300,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
             if (ms.shouldAddToScreen(g) ) {
-                Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> ms.createMe(display, period, timesort, shortteam, opener, last, loadlabel)));
+                Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> refreshMainScreen(ms)));
             }
         }
     }
@@ -426,18 +426,18 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public void refreshCurrentTab() {
         MainScreen thisms = (MainScreen) getComponentAt(currentTabIndex);
-        thisms.revalidate();
-        thisms.repaint();
+        refreshMainScreen(thisms);
+    }
+    private void refreshMainScreen(MainScreen thisms) {
+//        thisms.revalidate();
+//        thisms.repaint();
         thisms.clearTable();
         thisms.destroyMe();
-        log("refreshing currenttab!");
+        log("refreshing MainScreen "+thisms.getName()+" !");
         thisms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
         AppController.addDataModels(thisms.getDataModels());
-//        thisms.adjustcols(false);
         thisms.firedatamodels();
-
     }
-
 
     public void cleanup() {
         MainScreen thisms = (MainScreen) getComponentAt(currentTabIndex);

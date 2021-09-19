@@ -622,4 +622,19 @@ public class Game implements KeyedObject {
     public String getTeams() {
         return getVisitorteam()+"/"+this.getHometeam()+" ";
     }
+    public boolean isInFinal() {
+        String status = getStatus();
+        return status.equalsIgnoreCase("Tie") || status.equalsIgnoreCase("Cncld") || status.equalsIgnoreCase("Poned") || status.equalsIgnoreCase(SiaConst.FinalStr)
+                || status.equalsIgnoreCase("Win") || (getTimeremaining().equalsIgnoreCase("Win"));
+    }
+    public boolean isInHalftimeOrProgress() {
+        String status = getStatus();
+        return !status.equalsIgnoreCase("NULL") && !status.equals("");
+    }
+    public boolean isInGame2() {
+        return  isIngame() || (null != description && description.contains("In-Game"));
+    }
+    public boolean isInStage() {
+        return isInFinal() || isInHalftimeOrProgress() || isSeriesprice() ||  isInGame2();
+    }
 }

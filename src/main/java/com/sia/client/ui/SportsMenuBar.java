@@ -129,7 +129,7 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem halftimes = new JMenuItem("Halftimes");
         halftimes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Halftime");
+                GameAlert ga = new GameAlert(SiaConst.HalfTimeStr);
             }
         });
 

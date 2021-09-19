@@ -91,7 +91,7 @@ public class GameAlert {
             userpref = AppController.getUser().getStartedAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "started.wav";
-        } else if (alerttype.equalsIgnoreCase("Halftime")) {
+        } else if (alerttype.equalsIgnoreCase(SiaConst.HalfTimeStr)) {
             userpref = AppController.getUser().getHalftimeAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "halftime.wav";

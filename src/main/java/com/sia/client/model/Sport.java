@@ -3,6 +3,7 @@ package com.sia.client.model;
 public class Sport {
 	private int	sport_id;
 	private int comingDays;
+	private LeagueFilter leagueFilter;
 	private int league_id;
 	private int parentleague_id;
 	private int region_id;
@@ -132,5 +133,11 @@ public class Sport {
 	}
 	public void setComingDays(int comingDays) {
 		this.comingDays = comingDays;
+	}
+	public void setLeagueFilter(LeagueFilter leagueFilter) {
+		this.leagueFilter = leagueFilter;
+	}
+	public boolean isLeagueSelected(int leagueId) {
+		return  null !=leagueFilter && leagueFilter.isSelected(leagueId);
 	}
 }

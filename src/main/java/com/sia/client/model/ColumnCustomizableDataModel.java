@@ -53,7 +53,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
 
     @Override
     public String getColumnName(final int columnIndex) {
-//        return delegator.getColumnName(columnIndex);
         Object columnName =  allColumns.get(columnIndex).getHeaderValue();
         if ( null == columnName) {
             columnName = allColumns.get(columnIndex).getIdentifier();

@@ -103,6 +103,9 @@ public abstract class TableSection<V extends KeyedObject> {
     }
 
     public int getRowCount() {
+        if ( 1==gamesVec.size() ) { //contains only one game and this game is group game header
+            return 0;
+        }
         return gamesVec.size();
     }
 

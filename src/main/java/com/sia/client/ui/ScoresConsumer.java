@@ -352,10 +352,10 @@ public class ScoresConsumer implements MessageListener {
                             int id = s.getParentleague_id();
                             if (id == SiaConst.SoccerLeagueId) {
 //                                AppController.moveGameToThisHeader(g, "Soccer Halftime");
-                                AppController.moveGameToThisHeader(g, "Halftime");
+                                AppController.moveGameToThisHeader(g, SiaConst.HalfTimeStr);
 
                             } else {
-                                AppController.moveGameToThisHeader(g, "Halftime");
+                                AppController.moveGameToThisHeader(g, SiaConst.HalfTimeStr);
                             }
                             refreshtabs = true;
 
