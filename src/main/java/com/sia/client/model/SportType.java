@@ -18,7 +18,7 @@ public class SportType {
     public static SportType AutoRacing = new SportType(5,"Auto Racing","AU","flag.png",14);
     public static SportType Golf = new SportType(5,"Golf","GO","golf.png",11);
     //TODO what is abbr for tennis
-    public static SportType Tennis = new SportType(5,"Tennis","??","tennis.png",12);
+    public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12);
     public static SportType Today = new SportType(-100,"Today","Today","today.png",-1);
 
     public static boolean isPredefinedSport(String sportName) {
