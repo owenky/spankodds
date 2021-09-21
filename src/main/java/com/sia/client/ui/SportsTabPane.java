@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.MainGameTableModel;
+import com.sia.client.model.SportType;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -64,34 +65,12 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
         List<String> maintabs = AppController.getMainTabVec();
         log(String.valueOf(maintabs));
-        for (int i = 0; i < maintabs.size(); i++) {
-            String title = maintabs.get(i);
-            String img = "";
-            if (title.equals("Football")) {
-                img = "football.png";
-            } else if (title.equals("Basketball")) {
-                img = "basketball.png";
-            } else if (title.equals("Baseball")) {
-                img = "baseball.png";
-            } else if (title.equals("Hockey")) {
-                img = "hockey.png";
-            } else if (title.equals("Fighting")) {
-                img = "boxing.png";
-            } else if (title.equals(SiaConst.SoccerStr)) {
-                img = "soccer.png";
-            } else if (title.equals("Auto Racing")) {
-                img = "flag.png";
-            } else if (title.equals("Golf")) {
-                img = "golf.png";
-            } else if (title.equals("Tennis")) {
-                img = "tennis.png";
-            } else if (title.equals("Today")) {
-                img = "today.png";
-            }
-
-            if (null != img) {
-                URL imgResource = Utils.getMediaResource(img);
-                addTab(title, new ImageIcon(imgResource), new MainScreen(title), title);
+        for (String title : maintabs) {
+            SportType st = SportType.findBySportName(title);
+            if (null != st) {
+                URL imgResource = Utils.getMediaResource(st.getIcon());
+                MainScreen ms = new MainScreen(st);
+                addTab(title, new ImageIcon(imgResource),ms , title);
             }
         }
 
@@ -139,7 +118,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 }
 
             }
-            MainScreen msnew = new MainScreen(name, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
+            SportType customerizedSportType =  new SportType(-200,name,name,null,-1);
+            MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
             addTab(name, null, msnew, name);
         }
         addTab("+", null, null, "+");
@@ -220,9 +200,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         removeItem.addActionListener(e12 -> checkAndRunInEDT(() -> {
                             AppController.removeCustomTab(thispane.getTitleAt(tabindex));
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                            for (Object tabpane : tabpanes) {
+                                SportsTabPane tp = (SportsTabPane) tabpane;
                                 tp.setSelectedIndex(0);
                                 tp.remove(tabindex);
                             }
@@ -232,7 +211,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
 
                     }
-                    if ((TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals(SiaConst.SoccerStr) || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
+                    if (( SportType.isPredefinedSport(TabName)) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals(SportType.Today.getSportName())) {
                         System.out.println("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
                         JPopupMenu jPopupMenu = new JPopupMenu();
                         JMenuItem manageItem = new JMenuItem("Manage " + thispane.getTitleAt(tabindex));
@@ -247,19 +226,14 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                             //AppController.SportsTabPaneVector.remove(TabName);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                            for (Object tabpane : tabpanes) {
+                                SportsTabPane tp = (SportsTabPane) tabpane;
                                 tp.setSelectedIndex(0);
                                 tp.remove(tabindex);
                             }
 
-
                         }));
-
                         jPopupMenu.show(thispane, e.getX(), e.getY());
-
-
                     }
                 }
             }
@@ -300,7 +274,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
             if (ms.shouldAddToScreen(g) ) {
-                Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> refreshMainScreen(ms)));
+                Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> {
+                    if ( ms.isPreDefinedSport()) {
+                        refreshMainScreen(ms);
+                    }
+                }));
             }
         }
     }

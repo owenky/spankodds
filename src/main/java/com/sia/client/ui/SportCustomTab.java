@@ -9,6 +9,7 @@ import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.TreeUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -453,12 +454,11 @@ public class SportCustomTab {
 
                 jfrm.dispose();
                 Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-                log("Total Tab panes............." + tabpanes);
-                for (int i = 0; i < tabpanes.size(); i++) {
-                    SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                for (SportsTabPane tp : tabpanes) {
                     MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
                     oldms.destroyMe();
-                    MainScreen ms = new MainScreen(alerttype);
+                    SportType st = SportType.findBySportName(alerttype);
+                    MainScreen ms = new MainScreen(st);
                     ms.setShowHeaders(includeheaders.isSelected());
                     ms.setShowSeries(includeseries.isSelected());
                     ms.setShowIngame(includeingame.isSelected());

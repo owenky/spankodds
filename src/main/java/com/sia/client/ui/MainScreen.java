@@ -12,22 +12,19 @@ import com.sia.client.model.Games;
 import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
-
+import com.sia.client.model.SportType;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
-import javax.swing.Timer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +36,6 @@ import static java.lang.Boolean.parseBoolean;
 
 public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
-    public Timer timer;
     public int currentmaxlength = 0;
     public boolean timesort = false;
     public boolean shortteam = false;
@@ -61,7 +57,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private Vector ingamegamessoccer = new Vector();
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
-    private int sportId;
+    private final SportType sportType;
     public long cleartime;
     public boolean showheaders = true;
     public boolean showseries = true;
@@ -73,18 +69,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
 
-    public MainScreen(String name) {
+    public MainScreen(SportType sportType) {
         cleartime = new java.util.Date().getTime();
-        setName(name);
+        this.sportType = sportType;
+        setName(sportType.getSportName());
     }
 
-    public MainScreen(String name, Vector customheaders) {
-        this(name);
+    public MainScreen(SportType sportType, Vector customheaders) {
+        this(sportType);
         this.customheaders = customheaders;
     }
 
-    public MainScreen(String name, Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
-        this(name);
+    public MainScreen(SportType sportType,Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+        this(sportType);
         this.customheaders = customheaders;
         this.showheaders = showheaders;
         this.showseries = showseries;
@@ -95,6 +92,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     public MainGameTableModel getDataModels() {
         return getColumnCustomizableTable().getModel();
+    }
+    public SportType getSportType() {
+        return this.sportType;
     }
     public void setClearTime(long clear) {
         cleartime = clear;
@@ -118,9 +118,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             getColumnCustomizableTable().getModel().addGameToGameGroup(title, g, repaint, callBackOnNotFound);
         }
     }
-    public int getSportId() {
-        return this.sportId;
-    }
     public boolean shouldAddToScreen(Game g){
         if ( isFilteredByConfig(g)) {
             return false;
@@ -129,7 +126,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         Sport sport = GameUtils.getSport(g);
         if ( null != sport) {
             boolean isGameNear = GameUtils.isGameNear(sport.getComingDays(), g);
-            return sport.getSport_id() == this.sportId && isGameNear && sport.isLeagueSelected(g.getLeague_id());
+            return this.sportType.isMyType(g) && isGameNear && sport.isLeagueSelected(g.getLeague_id());
         } else {
             return false;
         }
@@ -139,12 +136,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             return true;
         }
 
-        if ( g.isInGame2() && ! this.isShowIngame()) {
-            return true;
-        }
-
-
-        return false;
+        return g.isInGame2() && !this.isShowIngame();
     }
     public void moveGameToThisHeader(Game g, String header) {
         getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);
@@ -509,7 +501,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             String todaysgames = sdf.format(today);
             int leagueid = g.getLeague_id();
             Sport s = AppController.getSport(leagueid);
-//
+
             if (s == null) {
                 log("skipping " + leagueid + "...cuz of null sport");
                 continue;
@@ -639,14 +631,13 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     currentvec.add(g);
 
                 }
-                this.sportId=s2.getSport_id();
-            } else {
-                this.sportId=s.getSport_id();
             }
 
-            Sport sport = AppController.getSportBySportId(this.sportId).get();
-            sport.setComingDays(comingdays);
-            sport.setLeagueFilter(leagueFilter);
+            if (  isPreDefinedSport() ) {
+                Sport sport =  AppController.getSportBySportId(sportType.getSportId()).get();
+                sport.setComingDays(comingdays);
+                sport.setLeagueFilter(leagueFilter);
+            }
         }
 
         if (seriesgames.size() > 0 && isShowSeries()) {
@@ -751,22 +742,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             log("done drawing");
         });
 
-        timer = new Timer(1000, new ActionListener() { //Change parameters to your needs.
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    firedatamodels();
-
-                } catch (Exception ex) {
-                    log(ex);
-                }
-
-            }
-        });
-
-        //TODO disable firedatamodels
-//        timer.start();
-//        log("timer start");
-        //END of debug TODO
     }
 
     public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
@@ -991,25 +966,31 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             oldgamegroupvec = newgamegroupvec;
         }
         MainGameTableModel model = mainGameTable.getModel();
-        addHalfTimeWhenAbsent(model);
-        model.buildIndexMappingCache();
-        log("gamergroup headers end..." + new java.util.Date());
-        log("hidden end..." + new java.util.Date());
-        JScrollPane scrollPane = new JScrollPane(tablePanel);
-//        scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
-        scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
-        scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
+        if ( isPreDefinedSport()) {
+            Sport sport = AppController.getSportBySportId(sportType.getSportId()).get();
+            int rowHeight = sport.getLeague_id() == SiaConst.SoccerLeagueId ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
+            addHalfTimeWhenAbsent(rowHeight, model);
+            model.buildIndexMappingCache();
+            log("gamergroup headers end..." + new java.util.Date());
+            log("hidden end..." + new java.util.Date());
+            JScrollPane scrollPane = new JScrollPane(tablePanel);
+            scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
+            scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
-        removeAll();
-        revalidate();
-        JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
-        add(mainTableContainer, BorderLayout.CENTER);
-//        mainGameTable.configHeaderRow();
-        AppController.addDataModels(getDataModels());
+            removeAll();
+            revalidate();
+            JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
+            add(mainTableContainer, BorderLayout.CENTER);
+            AppController.addDataModels(getDataModels());
+        }
     }
-    private void addHalfTimeWhenAbsent(MainGameTableModel model) {
+    public boolean isPreDefinedSport() {
+        return this.sportType.isPredifined();
+    }
+    private void addHalfTimeWhenAbsent(int rowHeight,MainGameTableModel model) {
         if ( ! model.containsGroupHeader(SiaConst.HalfTimeStr) ) {
             LinesTableData tableSection = createLinesTableData(new Vector(),SiaConst.HalfTimeStr);
+            tableSection.setRowHeight(rowHeight);
             mainGameTable.addGameLine(0,tableSection);
         }
     }
@@ -1062,10 +1043,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         seriesgamessoccer.clear();
         ingamegamessoccer.clear();
         removeAll();
-
-        if (timer != null) {
-            timer.stop();
-        }
         log("destroyed mainscreen!!!!");
     }
     private MainGameTable createMainGameTable() {
