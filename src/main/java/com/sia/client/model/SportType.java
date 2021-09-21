@@ -5,6 +5,7 @@ import com.sia.client.ui.AppController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
@@ -63,6 +64,23 @@ public class SportType {
 
     public int getSportId() {
         return sportId;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final SportType sportType = (SportType) o;
+        return Objects.equals(sportName, sportType.sportName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sportName);
     }
 
     public String getIcon() {

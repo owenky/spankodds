@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
@@ -13,6 +12,7 @@ import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -957,32 +957,23 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 gameGroupHeader = null;
             }
 
-            if ( null == gameGroupHeader && null != newgamegroupvec && 0 < newgamegroupvec.size()) {
-                Utils.log(new Exception("null group header found but there are data for this group..."));
-            } else if ( null != gameGroupHeader){
-                LinesTableData tableSection = createLinesTableData(newgamegroupvec,gameGroupHeader);
-                mainGameTable.addGameLine(tableSection);
-            }
+            LinesTableData tableSection = createLinesTableData(newgamegroupvec,gameGroupHeader);
+            mainGameTable.addGameLine(tableSection);
             oldgamegroupvec = newgamegroupvec;
         }
         MainGameTableModel model = mainGameTable.getModel();
-        if ( isPreDefinedSport()) {
-            Sport sport = AppController.getSportBySportId(sportType.getSportId()).get();
-            int rowHeight = sport.getLeague_id() == SiaConst.SoccerLeagueId ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
-            addHalfTimeWhenAbsent(rowHeight, model);
-            model.buildIndexMappingCache();
-            log("gamergroup headers end..." + new java.util.Date());
-            log("hidden end..." + new java.util.Date());
-            JScrollPane scrollPane = new JScrollPane(tablePanel);
-            scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
-            scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
+        int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
+        addHalfTimeWhenAbsent(rowHeight, model);
+        model.buildIndexMappingCache();
+        JScrollPane scrollPane = new JScrollPane(tablePanel);
+        scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
+        scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
-            removeAll();
-            revalidate();
-            JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
-            add(mainTableContainer, BorderLayout.CENTER);
-            AppController.addDataModels(getDataModels());
-        }
+        removeAll();
+        revalidate();
+        JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
+        add(mainTableContainer, BorderLayout.CENTER);
+        AppController.addDataModels(getDataModels());
     }
     public boolean isPreDefinedSport() {
         return this.sportType.isPredifined();
