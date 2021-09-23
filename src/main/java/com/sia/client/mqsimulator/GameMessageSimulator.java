@@ -43,7 +43,7 @@ public class GameMessageSimulator  {
                 lines.forEach(sb::append);
                 lines.close();
                 String text = sb.toString().trim();
-                if ( text.length() > 0) {
+                if ( text.length() > 0 &&  ! "#".equals(text.substring(0,1))) {
                     TestTextMessage textMessage = new TestTextMessage();
                     textMessage.setText(sb.toString());
                     textMessage.setStringProperty("messageType", "NEWORUPDATE2");
@@ -60,7 +60,7 @@ public class GameMessageSimulator  {
 //        GameMessageSimulator testInst = new GameMessageSimulator(null);
 //        testInst.start();
 //        testInst.start();
-        String dateStr = "2021-09-26";
+        String dateStr = "2021-01-11";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse(dateStr);
         System.out.println(date+", time="+date.getTime());

@@ -25,11 +25,10 @@ public abstract class GameUtils {
         c.add(Calendar.DATE, comingdays);
         Date x = c.getTime();
 
-        c.add(Calendar.DATE, -1*comingdays-1);
+        c.add(Calendar.DATE, -2*comingdays);
         Date y = c.getTime();
-        //why not filtering out yesterday's game ( i.e. gmDate.after(y)) originally
-//        return gmDate.before(x) && gmDate.after(y);
-        return gmDate.before(x) ;
+        return gmDate.before(x) && gmDate.after(y);
+//        return gmDate.before(x) ;
     }
     public static Sport getSport(Game game) {
         return AppController.getSport(game.getSportIdentifyingLeagueId());

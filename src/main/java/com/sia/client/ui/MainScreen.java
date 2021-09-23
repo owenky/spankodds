@@ -119,6 +119,11 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
     }
     public boolean shouldAddToScreen(Game g){
+
+        if ( ! this.isShowing()) {
+            return false;
+        }
+
         if ( isFilteredByConfig(g)) {
             return false;
         }
