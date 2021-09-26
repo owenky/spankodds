@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.ui.simulator.TestGame;
 import com.sia.client.ui.simulator.TestGameCache;
 import com.sia.client.ui.simulator.TestTableSection;
@@ -47,6 +48,72 @@ public class MainGameTableModelTest {
 
         int rowModelIndex = model.getRowModelIndex(l3,31);
         assertEquals(12,rowModelIndex);
+    }
+    @Test
+    public void testEmptyHalfTime1() {
+        TestTableSection halfTime = new TestTableSection(SiaConst.HalfTimeStr,gameCache, true, new ArrayList<>());
+        model.addGameLine(halfTime);
+        assertEquals(0,model.getRowCount());
+
+        List<TestGame> games = new ArrayList<>();
+        games.add(gameCache.makeTestGame(1000));
+        games.add(gameCache.makeTestGame(1001));
+        final String blankHeader = null;
+        TestTableSection blankHeaderSection = new TestTableSection(blankHeader,gameCache, true, games);
+        model.addGameLine(blankHeaderSection);
+        assertEquals(3, model.getRowCount());
+        assertEquals(blankHeader,model.getValueAt(0, 0));
+    }
+    @Test
+    public void testEmptyHalfTime2() {
+        TestTableSection halfTime = new TestTableSection(SiaConst.HalfTimeStr,gameCache, true, new ArrayList<>());
+        model.addGameLine(halfTime);
+        assertEquals(0,model.getRowCount());
+
+        List<TestGame> games = new ArrayList<>();
+        games.add(gameCache.makeTestGame(1000));
+        games.add(gameCache.makeTestGame(1001));
+        final String testHeader = "TestGameHeader";
+        TestTableSection testHeaderSection = new TestTableSection(testHeader,gameCache, true, games);
+        model.addGameLine(testHeaderSection);
+        assertEquals(3, model.getRowCount());
+        assertEquals(testHeader,model.getValueAt(0, 0));
+    }
+    @Test
+    public void testHalfTime() {
+        List<TestGame> halfTimeames = new ArrayList<>();
+        halfTimeames.add(gameCache.makeTestGame(100));
+        TestTableSection halfTime = new TestTableSection(SiaConst.HalfTimeStr,gameCache, true, halfTimeames);
+        model.addGameLine(halfTime);
+        assertEquals(2,model.getRowCount());
+        assertEquals(SiaConst.HalfTimeStr,model.getValueAt(0, 0));
+        assertEquals("100_0",model.getValueAt(1, 0));
+
+        List<TestGame> games = new ArrayList<>();
+        games.add(gameCache.makeTestGame(1000));
+        games.add(gameCache.makeTestGame(1001));
+        final String testHeader = "TestGameHeader";
+        TestTableSection testHeaderSection = new TestTableSection(testHeader,gameCache, true, games);
+        model.addGameLine(testHeaderSection);
+        assertEquals(5, model.getRowCount());
+        assertEquals(testHeader,model.getValueAt(2, 0));
+    }
+    @Test
+    public void testBuildIndexMappingCache() {
+        List<TestGame> halfTimeames = new ArrayList<>();
+        halfTimeames.add(gameCache.makeTestGame(100));
+        TestTableSection halfTime = new TestTableSection(SiaConst.HalfTimeStr,gameCache, true, halfTimeames);
+        model.addGameLine(halfTime);
+
+        List<TestGame> games = new ArrayList<>();
+        games.add(gameCache.makeTestGame(1000));
+        games.add(gameCache.makeTestGame(1001));
+        final String testHeader = "TestGameHeader";
+        TestTableSection testHeaderSection = new TestTableSection(testHeader,gameCache, true, games);
+        model.addGameLine(testHeaderSection);
+        model.buildIndexMappingCache();
+        assertEquals(5, model.getRowCount());
+        assertEquals(testHeader,model.getValueAt(2, 0));
     }
     private TableSection<TestGame> makeLinesTableData(int seed) {
 
