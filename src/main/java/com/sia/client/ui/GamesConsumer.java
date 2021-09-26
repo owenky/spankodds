@@ -33,7 +33,7 @@ public class GamesConsumer implements MessageListener {
     private transient Session session;
     private TextMessage textMessage;
     //TODO set toSimulateMQ to false for production
-    private static boolean toSimulateMQ = true;
+    private static boolean toSimulateMQ = false;
 
     public GamesConsumer(ActiveMQConnectionFactory factory, Connection connection, String gamesconsumerqueue) throws JMSException {
 
