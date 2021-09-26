@@ -629,7 +629,7 @@ public class Game implements KeyedObject {
     }
     public boolean isInHalftimeOrProgress() {
         String status = getStatus();
-        return !status.equalsIgnoreCase("NULL") && !status.equals("");
+        return  ! "NULL".equalsIgnoreCase(status) && !"".equals(status);
     }
     public boolean isInGame2() {
         return  isIngame() || (null != description && description.contains("In-Game"));
