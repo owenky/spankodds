@@ -28,7 +28,7 @@ public class GameMessageSimulator  {
 
     public void start() {
         if (startStatus.compareAndSet(false, true) ) {
-            scheduledExecutorService.scheduleAtFixedRate(this::run, 10, 10, TimeUnit.SECONDS);
+            scheduledExecutorService.scheduleAtFixedRate(this::run, 10, 60, TimeUnit.SECONDS);
         }
     }
     public GameMessageSimulator(GamesConsumer gamesConsumer) {
