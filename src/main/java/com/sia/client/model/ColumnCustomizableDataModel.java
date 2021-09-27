@@ -222,7 +222,7 @@ log("DEBUG: moving game id:"+g.getGame_id()+", teams:"+g.getTeams()+" from secio
         int rowModeIndex=0;
         for(TableSection<V> ltd: tableSections) {
             if ( ltd.getRowCount() > 0 && ltd.hasHeader()) {
-                idIndexList.add(new BlankGameStruct<V>(rowModeIndex, ltd));
+                idIndexList.add(new BlankGameStruct<>(rowModeIndex, ltd));
             }
             rowModeIndex+=ltd.getRowCount();
         }

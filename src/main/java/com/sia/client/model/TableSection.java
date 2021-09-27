@@ -68,7 +68,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
     public V getGame(final int rowModelIndex) {
         int gameId = gamesVec.getGameId(rowModelIndex);
-        return gamesVec.getGame(gameId);
+        return gamesVec.getGameFromDataSource(gameId);
     }
 
     /**
@@ -170,9 +170,9 @@ public abstract class TableSection<V extends KeyedObject> {
     }
 
     public void addGame(V g, boolean repaint) {
-        boolean exist = null != gamesVec.getGame(g.getGame_id());
+        boolean exist = null != gamesVec.getGameFromDataSource(g.getGame_id());
         if (exist) {
-            gamesVec.addIfAbsent(g);
+            boolean isAbsent = gamesVec.addIfAbsent(g);
             resetDataVector(); //including sorting gamesVec
             if (repaint) {
 //                setInitialData();
@@ -184,7 +184,8 @@ public abstract class TableSection<V extends KeyedObject> {
 //                Container comp = scrollpane.getParent();
 //                comp.revalidate();
                 int insertedRowModelIndex = containingTableModel.getRowModelIndex(this, g.getGame_id());
-                TableModelEvent e = new TableModelEvent(containingTableModel, insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
+                int eventType = isAbsent?TableModelEvent.INSERT:TableModelEvent.UPDATE;
+                TableModelEvent e = new TableModelEvent(containingTableModel, insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, eventType);
                 fire(e);
             }
         }

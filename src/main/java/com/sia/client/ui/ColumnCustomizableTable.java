@@ -19,10 +19,13 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
@@ -40,6 +43,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
     private TableModelListener tableChangedListener;
+    private Map<Integer, Component> oldHeaderMap = new HashMap<>();
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
@@ -282,7 +286,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
     }
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
-        getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
+        Component oldHeaderComp = this.oldHeaderMap.get(rowViewIndex);
+        if ( null != oldHeaderComp) {
+            this.remove(oldHeaderComp);
+        }
+        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
+        this.oldHeaderMap.put(rowViewIndex,currentComp);
     }
     public ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {
