@@ -13,9 +13,12 @@ public class EmptySection implements EventGenerator{
         //move all games from first section to second section
         TestTableSection [] sections = tblProp.getSections();
         String targetHeader = sections[1].getGameGroupHeader();
-        for(int i=0;i<sections[0].getRowCount();i++) {
+        for(int i=sections[0].getRowCount()-1;i>=0;i--) {
             TestGame game = sections[0].getGame(i);
-            model.moveGameToThisHeader(game,targetHeader);
+            int gameid = game.getGame_id();
+            if ( gameid >= 0) {
+                model.moveGameToThisHeader(game, targetHeader);
+            }
         }
     }
 }
