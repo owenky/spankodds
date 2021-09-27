@@ -24,7 +24,7 @@ public class TableProperties {
 
         TableProperties rtn = new TableProperties() ;
         rtn.name = name;
-        rtn.sectionCount = sectionCount;
+        rtn.sections = new TestTableSection[sectionCount];
         rtn.sectionRowCount = sectionRowCount;
         rtn.tableIndex = tableIndex;
         rtn.testGameCache = testGameCache;
@@ -78,7 +78,7 @@ public class TableProperties {
         table.setRowHeight(60);
         table.setIntercellSpacing(new Dimension(2, 2));
         table.setName("Table "+tableIndex);
-        buildModels(sectionCount,sectionRowCount,tableIndex);
+        buildModels(sectionRowCount,tableIndex);
         JComponent tableContainer = TableUtils.configTableLockColumns(table, boundaryIndex);
         mainScreen.removeAll();
         mainScreen.setLayout(new BorderLayout());
@@ -87,18 +87,21 @@ public class TableProperties {
     public MainScreenTest getMainScreen() {
         return mainScreen;
     }
+    public TestTableSection [] getSections() {
+        return sections;
+    }
     public String getName() {
         return this.name;
     }
-    private void buildModels(int sectionCount, int sectionRowCount, int tableIndex) {
-        for(int secIndex=0;secIndex<sectionCount;secIndex++) {
-            TestTableSection testTableSection = TestTableSection.createTestTableSection(testGameCache,secIndex,sectionRowCount,tableIndex);
-            table.getModel().addGameLine(testTableSection);
+    private void buildModels(int sectionRowCount, int tableIndex) {
+        for(int secIndex=0;secIndex<sections.length;secIndex++) {
+            sections[secIndex] = TestTableSection.createTestTableSection(testGameCache,secIndex,sectionRowCount,tableIndex);
+            table.getModel().addGameLine(sections[secIndex] );
         }
         table.getModel().buildIndexMappingCache();
     }
     private MainScreenTest mainScreen;
-    private int sectionCount;
+    private TestTableSection [] sections;
     private int sectionRowCount;
     private int tableIndex;
     private int boundaryIndex;
