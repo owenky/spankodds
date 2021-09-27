@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 
+import com.sia.client.config.Utils;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
@@ -105,9 +106,11 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public void fireTableChanged(TableModelEvent e) {
         //TODO: need to  buildIndexMappingCache for update? ( scenario: game data changed.)
         if (TableUtils.toRebuildCache(e) ) {
+            long begin = System.currentTimeMillis();
             rowModelIndex2GameGroupHeaderMap = null;
             columnHeaderProvider.resetColumnHeaderProperty();
             buildIndexMappingCache();
+Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
         }
         delegator.fireTableChanged(e);
     }
@@ -218,8 +221,8 @@ log("DEBUG: moving game id:"+g.getGame_id()+", teams:"+g.getTeams()+" from secio
         List<BlankGameStruct<V>> idIndexList = new ArrayList<>();
         int rowModeIndex=0;
         for(TableSection<V> ltd: tableSections) {
-            if ( ltd.hasHeader()) {
-                idIndexList.add(new BlankGameStruct(rowModeIndex, ltd));
+            if ( ltd.getRowCount() > 0 && ltd.hasHeader()) {
+                idIndexList.add(new BlankGameStruct<V>(rowModeIndex, ltd));
             }
             rowModeIndex+=ltd.getRowCount();
         }
