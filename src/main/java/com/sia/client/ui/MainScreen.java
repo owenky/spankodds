@@ -206,13 +206,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     if (tmp[0].equalsIgnoreCase("football")) {
                         all = true;
                     }
-                    this.showheaders = (parseBoolean(prefs[3]));
-                    this.showseries = (parseBoolean(prefs[4]));
-                    this.showingame = (parseBoolean(prefs[5]));
-                    this.showadded = (parseBoolean(prefs[6]));
-                    this.showextra = (parseBoolean(prefs[7]));
-                    this.showprops = (parseBoolean(prefs[8]));
-
+                    setShowProperties(prefs);
                 }
 
             } catch (Exception ex) {
@@ -241,12 +235,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("basketball")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+                this.setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -270,12 +259,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("baseball")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+                setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -299,12 +283,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("hockey")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+                setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -328,12 +307,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("fighting")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+               setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -357,12 +331,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+               setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -386,12 +355,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("auto racing")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+                setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -415,12 +379,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("golf")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+               setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -431,12 +390,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     //	System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+                setShowProperties(prefs);
 
             }
         } else if (name.equalsIgnoreCase("tennis")) {
@@ -451,12 +405,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("tennis")) {
                     all = true;
                 }
-                this.showheaders = (parseBoolean(prefs[3]));
-                this.showseries = (parseBoolean(prefs[4]));
-                this.showingame = (parseBoolean(prefs[5]));
-                this.showadded = (parseBoolean(prefs[6]));
-                this.showextra = (parseBoolean(prefs[7]));
-                this.showprops = (parseBoolean(prefs[8]));
+                setShowProperties(prefs);
             }
 
             leagueFilter = new LeagueFilter(tmp,all);
@@ -748,7 +697,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         });
 
     }
-
+    private void setShowProperties(String [] prefs) {
+        this.showheaders = (parseBoolean(prefs[3]));
+        this.showseries = (parseBoolean(prefs[4]));
+        this.showingame = (parseBoolean(prefs[5]));
+        this.showadded = (parseBoolean(prefs[6]));
+        this.showextra = (parseBoolean(prefs[7]));
+        this.showprops = (parseBoolean(prefs[8]));
+    }
     public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
 
         if (customheaders.size() == 0) {
@@ -958,12 +914,15 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             if ( null != gameGroupHeader) {
                 gameGroupHeader = gameGroupHeader.trim();
             }
-            if ( ! toShowHeader ) {
-                gameGroupHeader = null;
-            }
+            //suspecious logic -- 09/26/2021
+//            if ( ! toShowHeader ) {
+//                gameGroupHeader = null;
+//            }
 
-            LinesTableData tableSection = createLinesTableData(newgamegroupvec,gameGroupHeader);
-            mainGameTable.addGameLine(tableSection);
+            if ( null !=  gameGroupHeader || ( null != newgamegroupvec && 0 < newgamegroupvec.size())) {
+                LinesTableData tableSection = createLinesTableData(newgamegroupvec, gameGroupHeader);
+                mainGameTable.addGameLine(tableSection);
+            }
             oldgamegroupvec = newgamegroupvec;
         }
         MainGameTableModel model = mainGameTable.getModel();
