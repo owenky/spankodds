@@ -1,24 +1,37 @@
 package com.sia.client.ui.simulator;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.TableSection;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class EmptySection implements EventGenerator{
-    private static int pointer=0;
-    public static final int movedGameId = 2;
+
+    private TableSection<TestGame> sourceSection;
+    private TableSection<TestGame> targetSection;
+    private boolean movingForward = true;
     @Override
-    public void generatEvent(final TableProperties [] tblProps) {
+    public void generatEvent(final TableProperties [] tblProps) throws InvocationTargetException, InterruptedException {
 
         TableProperties tblProp = tblProps[0];
         ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
-        //move all games from first section to second section
+
         TestTableSection [] sections = tblProp.getSections();
-        String targetHeader = sections[1].getGameGroupHeader();
-        for(int i=sections[0].getRowCount()-1;i>=0;i--) {
-            TestGame game = sections[0].getGame(i);
-            int gameid = game.getGame_id();
-            if ( gameid >= 0) {
-                model.moveGameToThisHeader(game, targetHeader);
-            }
+
+        if ( movingForward ) {
+            sourceSection = sections[0];
+            targetSection = sections[1];
+        } else {
+            sourceSection = sections[1];
+            targetSection = sections[0];
+        }
+
+        String targetHeader = targetSection.getGameGroupHeader();
+        TestGame game = sourceSection.getGame(1);
+        model.moveGameToThisHeader(game, targetHeader);
+
+        if ( 0 == sourceSection.getRowCount()) {
+            movingForward = !movingForward;
         }
     }
 }

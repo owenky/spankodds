@@ -2,5 +2,5 @@ package com.sia.client.ui.simulator;
 
 public interface EventGenerator {
 
-    void generatEvent(TableProperties [] tblProps);
+    void generatEvent(TableProperties [] tblProps) throws Exception;
 }

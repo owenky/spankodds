@@ -12,6 +12,7 @@ import javax.swing.Timer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.lang.reflect.InvocationTargetException;
 
 public class SpankOddsTest {
 
@@ -56,7 +57,11 @@ public class SpankOddsTest {
 //        eventGenerator = new CheckToFileTest();
 //        eventGenerator = new CheckToFileTest();
         Timer updateTimer = new Timer(3000, (event) -> {
-            eventGenerator.generatEvent(tblProps);
+            try {
+                eventGenerator.generatEvent(tblProps);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         updateTimer.setInitialDelay(3000);
         updateTimer.start();
