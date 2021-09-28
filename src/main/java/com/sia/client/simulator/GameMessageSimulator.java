@@ -1,4 +1,4 @@
-package com.sia.client.mqsimulator;
+package com.sia.client.simulator;
 
 import com.sia.client.ui.GamesConsumer;
 
@@ -14,27 +14,17 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
-public class GameMessageSimulator  {
+public class GameMessageSimulator extends TestExecutor{
 
     private final GamesConsumer gamesConsumer;
-    private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-    private final AtomicBoolean startStatus = new AtomicBoolean(false);
-
-    public void start() {
-        if (startStatus.compareAndSet(false, true) ) {
-            scheduledExecutorService.scheduleAtFixedRate(this::run, 10, 60, TimeUnit.SECONDS);
-        }
-    }
     public GameMessageSimulator(GamesConsumer gamesConsumer) {
+        super(10,60);
         this.gamesConsumer = gamesConsumer;
     }
-    private void run() {
+    @Override
+    public void run() {
         File testfile = new File("c:\\temp\\gameMesg.txt");
         if ( testfile.exists() && ! testfile.isDirectory()) {
             try {
