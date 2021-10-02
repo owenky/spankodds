@@ -9,12 +9,12 @@ public abstract class SiaConst {
     public static final String ConfigPath = "/config/";
     public static final String SoccerStr = "Soccer";
     public static final String FinalStr = "Final";
+    public static final String HalfTimeStr = "Halftime";
     public static final String InProgresStr = "In Progress";
     public static final String InGamePricesStr = "In Game Prices";
-    public static final String SoccerInGamePricesStr = SoccerStr+" In Game Prices";
     public static final String SeriesPricesStr = "Series Prices";
-    public static final String SoccerSeriesPricesStr = SoccerStr+" Series Prices";
-    public static final String HalfTimeStr = "Halftime";
+    public static final String SoccerInGamePricesStr = SoccerStr+InGamePricesStr;
+    public static final String SoccerSeriesPricesStr = SoccerStr+SeriesPricesStr;
     public static final String SoccerHalfTimeStr = SoccerStr+" "+HalfTimeStr;
     public static final String SoccerInProgressStr = SoccerStr+ " "+InProgresStr;
     public static final String SoccerInFinalStr = SoccerStr+ " "+FinalStr;

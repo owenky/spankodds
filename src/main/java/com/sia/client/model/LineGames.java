@@ -58,6 +58,9 @@ public class LineGames<V extends KeyedObject> {
     }
     public boolean addIfAbsent(V g) {
         int gameId = g.getGame_id();
+        return addIfAbsent(gameId);
+    }
+    public boolean addIfAbsent(int gameId) {
         if ( ! containsGameId(gameId)) {
             gameIdList.add(gameId);
             return true;

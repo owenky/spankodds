@@ -407,14 +407,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         refreshMainScreen(thisms);
     }
     private void refreshMainScreen(MainScreen thisms) {
-//        thisms.revalidate();
-//        thisms.repaint();
         thisms.clearTable();
         thisms.destroyMe();
         log("refreshing MainScreen "+thisms.getName()+" !");
         thisms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
         AppController.addDataModels(thisms.getDataModels());
-        thisms.firedatamodels();
     }
 
     public void cleanup() {

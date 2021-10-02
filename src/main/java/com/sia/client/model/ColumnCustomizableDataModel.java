@@ -189,7 +189,7 @@ log("DEBUG: moving game id:"+g.getGame_id()+", teams:"+g.getTeams()+" from secio
         }
         return rtn;
     }
-    protected List<TableSection<V>> getTableSections() {
+    public List<TableSection<V>> getTableSections() {
         return tableSections;
     }
     //copied from MainScreen::removeGame(int)

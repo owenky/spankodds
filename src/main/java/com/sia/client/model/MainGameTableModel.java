@@ -1,7 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
@@ -23,9 +23,9 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.FinalStr);
         stageStrs.add(SiaConst.InProgresStr);
         stageStrs.add(SiaConst.InGamePricesStr);
-        stageStrs.add(SiaConst.SoccerInGamePricesStr);
+//        stageStrs.add(SiaConst.SoccerInGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
-        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
+//        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
     }
     public MainGameTableModel(Vector<TableColumn> allColumns) {
         super(allColumns);
@@ -96,30 +96,7 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
     }
     private LinesTableData findOrCreateStageSectionByHeaderValue(String header) {
         TableSection<Game> ltd;
-        List<TableSection<Game>> gameLines = getTableSections();
-//        if (header.equalsIgnoreCase(SiaConst.InProgresStr)) {
-//            ltd = gameLines.get(gameLines.size() - 4);
-//        } else if (header.equalsIgnoreCase("Soccer "+SiaConst.InProgresStr)) {
-//            ltd = gameLines.get(gameLines.size() - 3);
-//        } else if (header.equalsIgnoreCase("FINAL")) {
-//            ltd = gameLines.get(gameLines.size() - 2);
-//        } else if (header.equalsIgnoreCase("Soccer FINAL")) {
-//            ltd = gameLines.get(gameLines.size() - 1);
-//        } else if (header.equalsIgnoreCase("Halftime")) {
-//            ltd = gameLines.get(0);
-//        } else if (header.equalsIgnoreCase("Soccer Halftime")) {
-//            ltd = gameLines.get(1);
-//        } else {
-//            ltd = null;
-//        }
-        //the above is no longer correct -- 06/12/2021
-        if (header.equalsIgnoreCase(SiaConst.HalfTimeStr)) {
-            ltd = gameLines.get(0);
-        } else if (header.equalsIgnoreCase(SiaConst.SoccerHalfTimeStr)) {
-            ltd = gameLines.get(1);
-        } else {
-            ltd = createStageSection(header);
-        }
+        ltd = createStageSection(header);
         return (LinesTableData)ltd;
     }
     private LinesTableData createStageSection(String header) {
@@ -129,7 +106,7 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
             return null;
         }
 
-        header = normalizeStageString(header);
+        header = GameUtils.normalizeGameHeader(header);
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
@@ -140,10 +117,5 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
             rtn = null;
         }
         return rtn;
-    }
-    private static String normalizeStageString(String header) {
-        header = Utils.replaceIgnoreCase(header,SiaConst.FinalStr);
-        header = Utils.replaceIgnoreCase(header,SiaConst.InProgresStr);
-        return header;
     }
 }

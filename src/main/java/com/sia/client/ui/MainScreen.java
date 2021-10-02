@@ -12,6 +12,7 @@ import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+import com.sia.client.simulator.MoveToFinal;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -22,12 +23,13 @@ import javax.swing.JViewport;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -68,6 +70,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public Vector customheaders = new Vector();
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
+    //TODO set toSimulateMQ to false for production
+    private static boolean runTest = false;
 
     public MainScreen(SportType sportType) {
         cleartime = new java.util.Date().getTime();
@@ -851,83 +855,29 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             }
             allColumns.add(column);
         }
-
-        // here i'm adding a blank column
-        TableColumn blankcol = new TableColumn(newBookiesVec.size(), 10, null, null);
-        blankcol.setHeaderValue("");
-        blankcol.setIdentifier("9999999");
-
-        blankcol.setMaxWidth(30);
-        blankcol.setPreferredWidth(30);
-
         log("gamergroup headers start..." + new java.util.Date());
 
-        Vector oldgamegroupvec = new Vector();
+        Map<String,LinesTableData> headerMap = new HashMap<>();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
-            boolean showit = true;
-            Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-            if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals(SiaConst.FinalStr)) dont show header if its blank! however must show final for scrollpane purposes
-            {
-                showit = false;
-            }
-
-
-            String gameGroupHeader = gamegroupheaders.get(j);
-            JLabel label = new JLabel("                                                                                                                                                      " +
-                    gamegroupheaders.get(j) +
-                    "                                                                                                                                                      " +
-                    "                                                                                                                                                      " +
-                    "                                                                                                                                                      " +
-                    "                                                                                                                                                      ");
-
-
-            String name = getName();
-            if ((gamegroupheaders.get(j)).contains(SiaConst.SoccerStr)) {
-
-                if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
-                    String orginal = gamegroupheaders.get(j);
-                    String nameWithoutSoccer = orginal.replace(SiaConst.SoccerStr, "").trim();
-                    label.setText("                                                                                                                                                      " +
-
-                            nameWithoutSoccer +
-                            "                                                                                                                                                      " +
-                            "                                                                                                                                                      " +
-                            "                                                                                                                                                      " +
-                            "                                                                                                                                                      ");
-
-                    gameGroupHeader = nameWithoutSoccer;
-                } else {
-                    showit = false;
-                }
-            }
-            label.setOpaque(true);
-            label.setBackground(new Color(0, 0, 128));
-            label.setForeground(Color.WHITE);
-            boolean toShowHeader = false;
-            if (isShowHeaders()) {
-                if (showit) {
-                    tablePanel.add(label);
-                    toShowHeader = true;
-                }
-            }
-
-            if ( null != gameGroupHeader) {
-                gameGroupHeader = gameGroupHeader.trim();
-            }
-            //suspecious logic -- 09/26/2021
-//            if ( ! toShowHeader ) {
-//                gameGroupHeader = null;
-//            }
-
+            Vector<Game> newgamegroupvec = (Vector<Game>) vecofgamegroups.get(j);
+            String gameGroupHeader = GameUtils.normalizeGameHeader(gamegroupheaders.get(j));
             if ( null !=  gameGroupHeader || ( null != newgamegroupvec && 0 < newgamegroupvec.size())) {
-                LinesTableData tableSection = createLinesTableData(newgamegroupvec, gameGroupHeader);
-                mainGameTable.addGameLine(tableSection);
+                LinesTableData tableSection;
+                tableSection = headerMap.get(gameGroupHeader);
+                if ( null == tableSection) {
+                    tableSection = createLinesTableData(newgamegroupvec, gameGroupHeader);
+                    mainGameTable.addGameLine(tableSection);
+                    headerMap.put(gameGroupHeader,tableSection);
+                } else {
+                    tableSection.addAllGames(newgamegroupvec);
+                }
             }
-            oldgamegroupvec = newgamegroupvec;
         }
         MainGameTableModel model = mainGameTable.getModel();
-        int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
-        addHalfTimeWhenAbsent(rowHeight, model);
+        if ( sportType.isPredifined()) {
+            int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
+            addHalfTimeWhenAbsent(rowHeight, model);
+        }
         model.buildIndexMappingCache();
         JScrollPane scrollPane = new JScrollPane(tablePanel);
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
@@ -938,6 +888,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
         AppController.addDataModels(getDataModels());
+        if ( runTest) {
+            new MoveToFinal(model).start();
+        }
     }
     public boolean isPreDefinedSport() {
         return this.sportType.isPredifined();
@@ -954,16 +907,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
         tableSection.setRowHeight(tableSectionRowHeight);
         return tableSection;
-    }
-    public void firedatamodels() {
-        log(new Exception("disable firedatamodels"));
-        //TODO disable
-        /**
-        for (int i = 0; i < datamodelsvec.size(); i++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            ltd.fire();
-        }
-         */
     }
     public boolean isShowHeaders() {
         return showheaders;

@@ -65,12 +65,8 @@ public class LinesTableData extends TableSection<Game> {
         showingPrior = true;
     }
     @Override
-    public void addGame(Game g, boolean repaint) {
-        setHowHeighIfAbsent(g);
-        super.addGame(g,repaint);
-    }
-    private void setHowHeighIfAbsent(Game g) {
-        if ( 0 == size()) {
+    protected void setHowHeighIfAbsent(Game g) {
+        if ( ! containsDataRow() ) {
             List<Game> games = new ArrayList<>();
             games.add(g);
             int rowHeight = TableUtils.calTableSectionRowHeight(games);

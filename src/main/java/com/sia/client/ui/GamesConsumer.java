@@ -4,7 +4,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
-import com.sia.client.mqsimulator.GameMessageSimulator;
+import com.sia.client.simulator.GameMessageSimulator;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;

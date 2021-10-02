@@ -33,4 +33,14 @@ public abstract class GameUtils {
     public static Sport getSport(Game game) {
         return AppController.getSport(game.getSportIdentifyingLeagueId());
     }
+    public static String normalizeGameHeader(String gameGroupHeader) {
+        if ( null != gameGroupHeader) {
+            gameGroupHeader = gameGroupHeader.replace(SiaConst.SoccerStr,"").trim();
+            gameGroupHeader = Utils.replaceIgnoreCase(gameGroupHeader,SiaConst.FinalStr);
+            gameGroupHeader = Utils.replaceIgnoreCase(gameGroupHeader,SiaConst.InProgresStr);
+            return gameGroupHeader;
+        } else {
+            return null;
+        }
+    }
 }
