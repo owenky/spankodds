@@ -12,8 +12,8 @@ public class ScoreChangedProcessor {
     public void process(GameStatus gameStatus, Game g, String status, int currentvisitorscore, int currenthomescore) {
         int gameid = g.getGame_id();
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
-        if (!g.getStatus().equals(status)) { // just became final
-            Sport s = AppController.getSport(g.getLeague_id());
+        if (!g.getStatus().equals(status)) {
+            Sport s = AppController.getSportByLeagueId(g.getLeague_id());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
 
             String finalprefs = gameStatus.getAlertPrefSupplier().get();

@@ -26,7 +26,7 @@ public class InfoView {
 
         this.gid = gid;
         Game g = AppController.getGame(gid);
-        s = AppController.getSport(g.getLeague_id());
+        s = AppController.getSportByLeagueId(g.getLeague_id());
     }
 
     public void clearColors() {

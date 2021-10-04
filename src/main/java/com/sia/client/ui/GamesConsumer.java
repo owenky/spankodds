@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.log;
 
@@ -34,6 +35,7 @@ public class GamesConsumer implements MessageListener {
     private TextMessage textMessage;
     //TODO set toSimulateMQ to false for production
     private static boolean toSimulateMQ = false;
+    private final AtomicBoolean simulateStatus = new AtomicBoolean(false);
 
     public GamesConsumer(ActiveMQConnectionFactory factory, Connection connection, String gamesconsumerqueue) throws JMSException {
 
@@ -63,7 +65,10 @@ public class GamesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         if ( toSimulateMQ) {
-            new GameMessageSimulator(this).start();
+            if ( simulateStatus.compareAndSet(false,true)) {
+                new GameMessageSimulator(this).start();
+            }
+
         } else {
             Utils.ensureNotEdtThread();
             processMessage(message);
@@ -169,7 +174,7 @@ public class GamesConsumer implements MessageListener {
                 g.setTimeremaining(timeremaining);
 
                 AppController.addGame(g, repaint);
-                Sport s = AppController.getSport(g.getLeague_id());
+                Sport s = AppController.getSportByLeagueId(g.getLeague_id());
 
 
                 boolean seriesprice = false;

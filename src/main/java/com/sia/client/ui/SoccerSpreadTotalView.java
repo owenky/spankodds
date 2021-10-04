@@ -79,7 +79,7 @@ public class SoccerSpreadTotalView {
         topborder = bottomborder = drawborder = totalborder = "";
         game = AppController.getGame(gid);
         bookie = AppController.getBookie(bid);
-        sp = AppController.getSport(game.getLeague_id());
+        sp = AppController.getSportByLeagueId(game.getLeague_id());
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);

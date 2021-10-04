@@ -4,13 +4,19 @@ import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
 import com.sia.client.ui.AppController;
 
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class GameUtils {
 
+    public static final DateTimeFormatter gameDateFormatter = DateTimeFormatter.ofPattern("MM/dd");
     private static final Set<String> soccerSpecialGroups;
     static {
         soccerSpecialGroups = new HashSet<> ();
@@ -18,20 +24,8 @@ public abstract class GameUtils {
         soccerSpecialGroups.add("Soccer Final");
         soccerSpecialGroups.add("Soccer In Progress");
     }
-    public static boolean isGameNear(int comingdays,Game game) {
-        Date gmDate = game.getGamedate();
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, comingdays);
-        Date x = c.getTime();
-
-        c.add(Calendar.DATE, -2*comingdays);
-        Date y = c.getTime();
-        return gmDate.before(x) && gmDate.after(y);
-//        return gmDate.before(x) ;
-    }
     public static Sport getSport(Game game) {
-        return AppController.getSport(game.getSportIdentifyingLeagueId());
+        return AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
     }
     public static String normalizeGameHeader(String gameGroupHeader) {
         if ( null != gameGroupHeader) {
@@ -42,5 +36,21 @@ public abstract class GameUtils {
         } else {
             return null;
         }
+    }
+    public static String getGameDateStr(Game game) {
+        LocalDateTime ldt = new Date(game.getGamedate().getTime()).toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
+        return gameDateFormatter.format(ldt);
+    }
+    public static String getGameGroupHeader(Game game) {
+        int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
+        return AppController.getSportByLeagueId(sportIdentifyingLeagueId).getLeaguename() + " " + getGameDateStr(game);
+    }
+    public static void main(String [] argvb ) throws ParseException {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse("2021-02-29");
+        LocalDate ld = LocalDate.of(date.getYear()+1900,date.getMonth()+1,date.getDate());
+
+        System.out.println("ld="+ld);
     }
 }

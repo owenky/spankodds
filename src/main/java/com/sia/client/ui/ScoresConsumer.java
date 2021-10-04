@@ -4,6 +4,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.MessageConsumingScheduler;
+import com.sia.client.simulator.ScoreChangeProcessorTest;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static com.sia.client.config.Utils.log;
@@ -37,6 +39,8 @@ public class ScoresConsumer implements MessageListener {
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
     private final MessageConsumingScheduler<Game> scoreMessageProcessor;
+    private static boolean toSimulateMQ = false;
+    private final AtomicBoolean simulateStatus = new AtomicBoolean(false);
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
@@ -66,7 +70,19 @@ public class ScoresConsumer implements MessageListener {
             connection.close();
         }
     }
+
+    @Override
     public void onMessage(Message message) {
+        if ( toSimulateMQ) {
+            if ( simulateStatus.compareAndSet(false,true)) {
+                new ScoreChangeProcessorTest(this).start();
+            }
+        } else {
+            Utils.ensureNotEdtThread();
+            processMessage(message);
+        }
+    }
+    public void processMessage(Message message) {
         try {
 
             mapMessage = (MapMessage) message;
@@ -143,6 +159,9 @@ public class ScoresConsumer implements MessageListener {
                         new ScoreChangedProcessor().process(gameStatus,g,status,currentvisitorscore,currenthomescore);
                     } else {
                         Utils.log("ScoreConsumer: skip status "+status+", league id="+g.getLeague_id());
+//                        Utils.log("ScoreConsumer: SHOULD Disable DEBUG false status for debugging, set to in progress skip status "+status+", league id="+g.getLeague_id());
+//                        //TOD O should disable following after debug....
+//                        new ScoreChangedProcessor().process(GameStatus.InProgress,g,GameStatus.InProgress.getGroupHeader(),currentvisitorscore,currenthomescore);
                     }
 
                     g.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,

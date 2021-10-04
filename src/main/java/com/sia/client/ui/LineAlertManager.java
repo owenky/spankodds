@@ -23,7 +23,7 @@ public class LineAlertManager {
             return;
         }
 
-        Sport s = AppController.getSport(g.getLeague_id());
+        Sport s = AppController.getSportByLeagueId(g.getLeague_id());
         if (s == null) {
             return;
         }

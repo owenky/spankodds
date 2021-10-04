@@ -30,7 +30,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -39,8 +38,6 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class AppController {
-
-public static int testGameId = 209305;
 
     public final static AlertVector alertsVector = new AlertVector();
     public static boolean loadinginitial = true;
@@ -53,7 +50,7 @@ public static int testGameId = 209305;
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
-    public static Map<Integer, Sport> sports = new HashMap<>();
+    private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
     public static Games games = new Games();
 
     public static Vector<Bookie> openerbookiesVec = new Vector();
@@ -824,7 +821,7 @@ public static int testGameId = 209305;
 
     public static void addSport(Sport s) {
 
-        sports.put(s.getLeague_id(), s);
+        leagueIdToSportMap.put(s.getLeague_id(), s);
         sportsVec.add(s);
     }
 
@@ -998,13 +995,9 @@ public static int testGameId = 209305;
         return bookies.get(bid + "");
     }
 
-    public static Sport getSport(int leagueId) {
-        return sports.get(leagueId);
+    public static Sport getSportByLeagueId(int leagueId) {
+        return leagueIdToSportMap.get(leagueId);
     }
-    public static Optional<Sport> getSportBySportId(int sportId) {
-        return sports.values().stream().filter(s->s.getSport_id()==sportId).findAny();
-    }
-
     public static Game getGame(int gid) {
         return games.getGame(gid);
     }

@@ -514,7 +514,7 @@ public class LineAlertNode {
 
     public boolean doesthislinequalify(Line line) {
         Game g = AppController.getGame(line.getGameid());
-        Sport s = AppController.getSport(g.getLeague_id());
+        Sport s = AppController.getSportByLeagueId(g.getLeague_id());
         int leagueid = g.getLeague_id();
         int bookieid = line.getBookieid();
         int periodid = line.getPeriod();

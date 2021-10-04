@@ -60,8 +60,8 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             //need to re-draw screen when game group is not found in this table
  //TODO remove debug
 SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
-log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", sport=" + AppController.getSport(game.getSportIdentifyingLeagueId()).getSportname() +
-                    ", title=" + AppController.getSport(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(game.getGamedate()));
+log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname() +
+                    ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(game.getGamedate()));
             if ( ! game.isInStage()) {
                 callBackOnNotFound.run();
 //DEBUG...

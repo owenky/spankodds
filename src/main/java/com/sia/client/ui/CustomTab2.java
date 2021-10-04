@@ -253,7 +253,7 @@ public class CustomTab2 extends JPanel {
 
                 int leagueid = g.getLeague_id();
 
-                Sport s = AppController.getSport(leagueid);
+                Sport s = AppController.getSportByLeagueId(leagueid);
 
                 Sport s2;
 
@@ -290,7 +290,7 @@ public class CustomTab2 extends JPanel {
                 if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-                    s2 = AppController.getSport(leagueid);
+                    s2 = AppController.getSportByLeagueId(leagueid);
                 } else {
                     s2 = s;
                 }

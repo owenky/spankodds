@@ -43,7 +43,7 @@ public class ChartView {
         this.gid = gid;
 
         g = AppController.getGame(gid);
-        sp = AppController.getSport(g.getLeague_id());
+        sp = AppController.getSportByLeagueId(g.getLeague_id());
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);

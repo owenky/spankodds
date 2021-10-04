@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import static com.sia.client.config.Utils.log;
+
 public class GameMessageProcessor {
 
     private final MessageConsumingScheduler<Game> gameConsumingScheculer;
@@ -17,7 +19,11 @@ public class GameMessageProcessor {
         gameConsumingScheculer.setUpdatePeriodInMilliSeconds(periodInMilliSeconcs);
     }
     public void addGame(Game game) {
-        gameConsumingScheculer.addMessage(game);
+        if ( null  == game) {
+            log(new Exception("null game detected....."));
+        } else {
+            gameConsumingScheculer.addMessage(game);
+        }
     }
 
     //TODO debug variable lastUpdate

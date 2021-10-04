@@ -153,9 +153,6 @@ public class LinesTableData extends TableSection<Game> {
             }
 
         }
-if ( gameid==AppController.testGameId){
-    System.out.println("value="+value);
-}
         return value;
     }
     public long getClearTime() {

@@ -2,8 +2,6 @@ package com.sia.client.model;
 
 public class Sport {
 	private int	sport_id;
-	private int comingDays;
-	private LeagueFilter leagueFilter;
 	private int league_id;
 	private int parentleague_id;
 	private int region_id;
@@ -104,12 +102,10 @@ public class Sport {
 	{
 			this.leagueabbr = leagueabbr;
 	}	
-	public String getSportname()
-	{
+	public String getSportname() {
 			return sportname;
 	}
-	public void setSportname(String sportname)
-	{
+	public void setSportname(String sportname) {
 			this.sportname = sportname;
 	}			
 	public String getSportabbr()
@@ -127,17 +123,5 @@ public class Sport {
 	public void setMoneylinedefault(boolean moneylinedefault)
 	{
 			this.moneylinedefault = moneylinedefault;
-	}				
-	public int getComingDays() {
-		return this.comingDays;
-	}
-	public void setComingDays(int comingDays) {
-		this.comingDays = comingDays;
-	}
-	public void setLeagueFilter(LeagueFilter leagueFilter) {
-		this.leagueFilter = leagueFilter;
-	}
-	public boolean isLeagueSelected(int leagueId) {
-		return  null !=leagueFilter && leagueFilter.isSelected(leagueId);
 	}
 }
