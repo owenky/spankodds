@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -135,17 +136,19 @@ public class SportType {
             }
         }
     }
+    private static final int PurgeOldGameCutOffTime = 10;
     public boolean isGameNear(Game game) {
-        Date gmDate = game.getGamedate();
-        LocalDate gmLocalDate = LocalDate.of(gmDate.getYear()+1900, gmDate.getMonth()+1,gmDate.getDate());
+        Date gd = game.getGamedate();
+        LocalDate gmDate = LocalDate.of(gd.getYear()+1900, gd.getMonth()+1,gd.getDate());
         Calendar c = Calendar.getInstance();
-        LocalDate todayLocalDate = LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,c.get(Calendar.DAY_OF_MONTH));
-        if ( gmLocalDate.isBefore(todayLocalDate) ) {
-            return false;
+        LocalDate today = LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,c.get(Calendar.DAY_OF_MONTH));
+        if ( gmDate.isBefore(today) ) {
+           LocalDateTime now = LocalDateTime.now();
+           return PurgeOldGameCutOffTime > now.getHour();
         }
 
-        LocalDate upperEndLocalDate = todayLocalDate.plusDays(getComingDays());
-        return ! gmLocalDate.isAfter(upperEndLocalDate);
+        LocalDate upperEndDate = today.plusDays(getComingDays());
+        return ! gmDate.isAfter(upperEndDate);
     }
     public boolean isLeagueSelected(Game game) {
         if ( isFilteredByConfig(game)) {
