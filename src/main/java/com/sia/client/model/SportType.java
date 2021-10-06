@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
@@ -32,6 +33,10 @@ public class SportType {
         } else {
             return st.isPredifined();
         }
+    }
+    public static SportType findByGame(Game game) {
+        Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
+        return stOpt.orElse(null);
     }
     public static SportType findBySportName(String sportName) {
         return instanceMap.get(normalizeName(sportName));

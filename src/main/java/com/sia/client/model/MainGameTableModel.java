@@ -61,15 +61,15 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
  //TODO remove debug
 SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
 log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname() +
-                    ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(game.getGamedate()));
-            if ( ! game.isInStage()) {
+        ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(game.getGamedate())+", status=" + game.getStatus()
+        + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2());
+//END Of DEBUG TODO
+            if ( GameUtils.isGameNear(game)) {
                 callBackOnNotFound.run();
-//DEBUG...
-                log("REFRESH main screen because a game group NOT found.");
+                log("REFRESH main screen for this game id="+game.getGame_id());
             } else {
-                log("ERROR:::::: the game is in stage(status="+ game.getStatus()+", isSeriecPrice="+ game.isSeriesprice()+", isInGame2="+ game.isInGame2()+", but group header NOT found.....");
+                log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is not near.");
             }
-//END OF DEBUG
         }
 
     }

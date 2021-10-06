@@ -2,6 +2,7 @@ package com.sia.client.config;
 
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
 import java.text.ParseException;
@@ -44,6 +45,14 @@ public abstract class GameUtils {
     public static String getGameGroupHeader(Game game) {
         int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
         return AppController.getSportByLeagueId(sportIdentifyingLeagueId).getLeaguename() + " " + getGameDateStr(game);
+    }
+    public static boolean isGameNear(Game game) {
+        SportType sportType = SportType.findByGame(game);
+        if ( null != sportType ) {
+            return sportType.isGameNear(game);
+        } else {
+            return false;
+        }
     }
     public static void main(String [] argvb ) throws ParseException {
 

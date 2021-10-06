@@ -15,6 +15,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -47,10 +51,18 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        e.printStackTrace();
+        System.out.println(nowShortString()+" |");e.printStackTrace();
     }
     public static void log(String mesg) {
-        System.out.println(mesg);
+        System.out.println(nowShortString()+" |"+mesg);
+    }
+    private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+    public static String nowShortString() {
+        java.util.Date date = new java.util.Date(System.currentTimeMillis());
+        Instant instant = date.toInstant();
+
+        LocalDateTime ldt = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return ldt.format(sdf);
     }
     public static int getInt(MapMessage mapMessage, String name) {
         try {
