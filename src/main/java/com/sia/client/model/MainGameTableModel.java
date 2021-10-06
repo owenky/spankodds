@@ -65,8 +65,13 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
         + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2());
 //END Of DEBUG TODO
             if ( GameUtils.isGameNear(game)) {
-                callBackOnNotFound.run();
-                log("REFRESH main screen for this game id="+game.getGame_id());
+                if ( ! game.isInStage()) {
+                    callBackOnNotFound.run();
+                    log("REFRESH main screen for this game id=" + game.getGame_id());
+                } else {
+                    //when game is in stage, there might not be a regular game header for this game, instead this game is in stage header (i.e. Final, Halftime, etc...) -- 2021-10-05
+                    log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is in stage. status="+game.getStatus());
+                }
             } else {
                 log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is not near.");
             }
