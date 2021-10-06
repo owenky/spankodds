@@ -2,8 +2,12 @@ package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Game implements KeyedObject {
 
+    private static final Set<String> StatusSet = new HashSet<>();
     private int league_id;
     int game_id;
     int visitorgamenumber;
@@ -62,7 +66,7 @@ public class Game implements KeyedObject {
     java.sql.Timestamp scorets;
 
     public Game() {
-        status = "";
+        setStatus("");
         timeremaining = "";
     }
 
@@ -115,7 +119,7 @@ public class Game implements KeyedObject {
         this.lineups = lineups;
         this.weather = weather;
         this.location = location;
-        this.status = status;
+        setStatus(status);
         this.period = period;
         this.specialnotes = specialnotes;
         this.subleague_id = subleague_id;
@@ -155,7 +159,7 @@ public class Game implements KeyedObject {
                             java.sql.Timestamp scorets, int currenthomescore, String homescoresupplemental) {
         this.period = period;
         this.timeremaining = timer;
-        this.status = status;
+        setStatus(status);
         this.gamestatusts = gamestatusts;
         this.currentvisitorscore = currentvisitorscore;
         this.visitorscoresupplemental = visitorscoresupplemental;
@@ -575,7 +579,11 @@ public class Game implements KeyedObject {
     }
 
     public void setStatus(String status) {
+        if ( null == status ) {
+            status = "";
+        }
         this.status = status;
+        StatusSet.add(status);
     }
 
     public String getPeriod() {
@@ -624,17 +632,20 @@ public class Game implements KeyedObject {
     }
     public boolean isInFinal() {
         String status = getStatus();
-        return status.equalsIgnoreCase("Tie") || status.equalsIgnoreCase("Cncld") || status.equalsIgnoreCase("Poned") || status.equalsIgnoreCase(SiaConst.FinalStr)
-                || status.equalsIgnoreCase("Win") || (getTimeremaining().equalsIgnoreCase("Win"));
+        return GameStatus.Final.isSame(status);
     }
-    public boolean isInHalftimeOrProgress() {
+    public boolean isHalfTime() {
         String status = getStatus();
-        return  ! "NULL".equalsIgnoreCase(status) && !"".equals(status);
+        return  GameStatus.HalfTime.isSame(status);
+    }
+    public boolean isInProgress() {
+        String status = getStatus();
+        return  GameStatus.InProgress.isSame(status);
     }
     public boolean isInGame2() {
         return  isIngame() || (null != description && description.contains("In-Game"));
     }
     public boolean isInStage() {
-        return isInFinal() || isInHalftimeOrProgress() || isSeriesprice() ||  isInGame2();
+        return isInFinal() || isHalfTime() || isInProgress() || isSeriesprice() ||  isInGame2();
     }
 }

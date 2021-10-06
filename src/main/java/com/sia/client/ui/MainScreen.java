@@ -503,8 +503,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                         finalgames.add(g);
                     }
 
-                } else if (g.isInHalftimeOrProgress()) {
-                    if (g.getStatus().equalsIgnoreCase("Time")) {
+                } else if (g.isHalfTime() || g.isInProgress() ) {
+                    if (g.isHalfTime()) {
                         if (id == SiaConst.SoccerLeagueId) {
                             halftimegamessoccer.add(g);
                         } else {
