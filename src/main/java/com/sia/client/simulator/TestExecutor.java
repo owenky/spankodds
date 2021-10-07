@@ -11,10 +11,17 @@ public abstract class TestExecutor implements Runnable{
     private final AtomicBoolean startStatus = new AtomicBoolean(false);
     private final int initialDelay;
     private final int period;
+    private boolean valid = true;
 
     public TestExecutor(int initialDelay,int period) {
         this.initialDelay = initialDelay;
         this.period = period;
+    }
+    public boolean isValid() {
+        return valid;
+    }
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
     public void start() {
         if (startStatus.compareAndSet(false, true) ) {

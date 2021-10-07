@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class Game implements KeyedObject {
 
+    //TODO remove StatusSet
     private static final Set<String> StatusSet = new HashSet<>();
     private int league_id;
     int game_id;

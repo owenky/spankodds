@@ -12,7 +12,8 @@ import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
-import com.sia.client.simulator.ScoreChangeProcessorTest;
+import com.sia.client.simulator.MainScreenRefresh;
+import com.sia.client.simulator.TestExecutor;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -70,7 +71,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
     //TODO set toSimulateMQ to false for production
-    private static boolean runTest = false;
+    private static boolean runTest = true;
     private static final AtomicBoolean testStatus = new AtomicBoolean(false);
     private static final Map<String,MainScreen> mainScreenMap = new HashMap<>();
 
@@ -136,7 +137,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public void moveGameToThisHeader(Game g, String header) {
         getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);
     }
-
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
         setLayout(new BorderLayout(0, 0));
         // add progress
@@ -150,6 +150,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.shortteam = shortteam;
         this.opener = opener;
         this.last = last;
+        createData();
+
+    }
+    public void createData() {
         Vector gamegroupvec = new Vector();
         Vector gamegroupheadervec = new Vector();
         Vector gamegroupLeagueIDvec = new Vector();
@@ -853,9 +857,16 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         add(mainTableContainer, BorderLayout.CENTER);
         AppController.addDataModels(getDataModels());
         if ( runTest) {
-            if ( testStatus.compareAndSet(false,true)) {
-//                new MoveToFinal(model).start();
-                new ScoreChangeProcessorTest(null).start();
+            if ( ! testStatus.get()) {
+                TestExecutor testExecutor;
+//                testExecutor= new MoveToFinal(model);
+//                testExecutor = new ScoreChangeProcessorTest(null);
+                testExecutor = new MainScreenRefresh(this);
+                if ( testExecutor.isValid()) {
+                    testStatus.set(true);
+                    testExecutor.start();
+                }
+
             }
         }
     }
