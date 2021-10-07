@@ -5,6 +5,8 @@ import com.sia.client.config.SiaConst;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.sia.client.config.Utils.log;
+
 public class Game implements KeyedObject {
 
     //TODO remove StatusSet
@@ -604,8 +606,10 @@ public class Game implements KeyedObject {
     }
 
     public java.sql.Date getGamedate() {
-        if (gamedate == null) {
-            System.out.println("gamedate null for gameid=" + game_id);
+        if (gamedate == null ) {
+            if ( game_id != SiaConst.BlankGameId) {
+                log("gamedate null for gameid=" + game_id);
+            }
             gamedate = new java.sql.Date(1000);
         }
         return gamedate;
@@ -617,7 +621,9 @@ public class Game implements KeyedObject {
 
     public java.sql.Time getGametime() {
         if (gametime == null) {
-            System.out.println("gametime null for gameid=" + game_id);
+            if ( game_id != SiaConst.BlankGameId) {
+                log("gametime null for gameid=" + game_id);
+            }
             gametime = new java.sql.Time(1000);
         }
         return gametime;
