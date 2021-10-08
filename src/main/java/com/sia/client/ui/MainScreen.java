@@ -71,7 +71,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
     //TODO set toSimulateMQ to false for production
-    private static boolean runTest = true;
+    private static boolean runTest = false;
     private static final AtomicBoolean testStatus = new AtomicBoolean(false);
     private static final Map<String,MainScreen> mainScreenMap = new HashMap<>();
 
