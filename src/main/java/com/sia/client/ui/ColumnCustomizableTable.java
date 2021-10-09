@@ -266,7 +266,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     }
     @Override
     public ColumnCustomizableDataModel<V> getModel() {
-        return (ColumnCustomizableDataModel<V>)super.getModel();
+        TableModel model = super.getModel();
+        if ( ! (model instanceof ColumnCustomizableDataModel) ){
+            throw new IllegalStateException("Expecting ColumnCustomizableDataModel");
+        }
+        return (ColumnCustomizableDataModel<V>)model;
     }
     @Override
     public final void createDefaultColumnsFromModel() {
