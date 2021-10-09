@@ -16,11 +16,14 @@ import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -31,21 +34,31 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
+    private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
+
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
     }
     public static Image getImage(String imageFileName) {
-        if( null == imageFileName) {
-            return null;
-        }
-        ImageIcon icon = new ImageIcon(Utils.getMediaResource(imageFileName));
-        return icon.getImage();
+        return getImageIcon(imageFileName).getImage();
     }
-    public static ImageIcon getImageIcon(String imageFileName) {
+    public static synchronized ImageIcon getImageIcon(String imageFileName) {
         if( null == imageFileName) {
             return null;
         }
-        return new ImageIcon(Utils.getMediaResource(imageFileName));
+        SoftReference<ImageIcon> imageIconRef = imageIconCache.get(imageFileName);
+        ImageIcon imageIcon;
+        if ( null == imageIconRef ) {
+            imageIcon = new ImageIcon(Utils.getMediaResource(imageFileName));
+            imageIconCache.put(imageFileName,new SoftReference<>(imageIcon));
+        } else {
+            imageIcon = imageIconRef.get();
+            if ( null == imageIcon) {
+                imageIcon = new ImageIcon(Utils.getMediaResource(imageFileName));
+                imageIconCache.put(imageFileName,new SoftReference<>(imageIcon));
+            }
+        }
+        return imageIcon;
     }
     public static URL getConfigResource(String resourceName) {
         return getResource(SiaConst.ConfigPath+resourceName);

@@ -13,15 +13,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sia.client.config.Utils.log;
 
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     private final SportType sportType;
-    //TODO
-    private static final AtomicInteger counter = new AtomicInteger(0);
     private static final Set<String> stageStrs = new HashSet<>();
     static {
         stageStrs.add(SiaConst.FinalStr);
@@ -34,10 +31,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns) {
         super(allColumns);
         this.sportType = sportType;
-        int cnt = counter.getAndAdd(1);
-        if ( 0 ==cnt%2) {
-            log("*******8 LinesTableData instance: "+cnt);
-        }
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
