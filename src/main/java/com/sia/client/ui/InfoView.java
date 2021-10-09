@@ -1,19 +1,18 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class InfoView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
-    public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
+    public static String ICON_UP = ImageFile.ARR_UP;
+    public static String ICON_DOWN = ImageFile.ARR_DOWN;
+    public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
     private static final Color green = new Color(0, 102, 0);
     LineData[] boxes = new LineData[2];
     LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
@@ -42,10 +41,10 @@ public class InfoView {
     private void setCurrentBoxes() {
         Color topcolor = Color.WHITE;
         Color bottomcolor = Color.WHITE;
-        ImageIcon topicon = ICON_BLANK;
-        ImageIcon bottomicon = ICON_BLANK;
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
+        String topicon = ICON_BLANK;
+        String bottomicon = ICON_BLANK;
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
 
         Game g = AppController.getGame(gid);
         if ((g.getStatus() == null || g.getStatus().equalsIgnoreCase("NULL") || g.getStatus().equals("")) && (g.getTimeremaining() == null || g.getTimeremaining().equalsIgnoreCase("") || g.getTimeremaining().equalsIgnoreCase("NULL"))) {

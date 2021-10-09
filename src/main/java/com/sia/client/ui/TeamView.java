@@ -1,18 +1,17 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Spreadline;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class TeamView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
-    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank.gif"));
+    public static String ICON_UP = ImageFile.ARR_UP;
+    public static String ICON_DOWN = ImageFile.ARR_DOWN;
+    public static String ICON_BLANK = ImageFile.ICON_BLANK;
     Spreadline sl;
     Totalline tl;
     LineData topbox;
@@ -70,11 +69,11 @@ public class TeamView {
         Color totalcolor = Color.WHITE;
         Color topcolor = Color.WHITE;
         Color bottomcolor = Color.WHITE;
-        ImageIcon topicon = ICON_BLANK;
-        ImageIcon bottomicon = ICON_BLANK;
+        String topicon = ICON_BLANK;
+        String bottomicon = ICON_BLANK;
 
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
         //ld1.setData(g.getVisitorteam());
         //ld2.setData(g.getHometeam());
 

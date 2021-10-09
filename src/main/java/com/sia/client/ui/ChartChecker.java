@@ -24,20 +24,20 @@ public class ChartChecker {
 
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = null;
     private static ChartChecker instance;
-    List<ChartData2> cl = new ArrayList<>();
-    List<ChartData3> cl1 = new ArrayList<>();
-    int amt = 1;
-    String filename = "No File Selected";
-    String errormsg;
-    boolean firsttime = true;
-    String url = "";
-    String uname = "";
-    String password = "";
-    int numprocessed = 0;
-    Scanner sc;
-    int gn, p, asa, hsa, oa, ua, ama, hma, dma, aTToa, aTTua, hTToa, hTTua;
-    int count1;
-    int count2;
+    private List<ChartData2> cl = new ArrayList<>();
+    private List<ChartData3> cl1 = new ArrayList<>();
+    private int amt = 1;
+    private String filename = "No File Selected";
+    private String errormsg;
+    private boolean firsttime = true;
+    private String url = "";
+    private String uname = "";
+    private String password = "";
+    private int numprocessed = 0;
+    private Scanner sc;
+    private int gn, p, asa, hsa, oa, ua, ama, hma, dma, aTToa, aTTua, hTToa, hTTua;
+    private int count1;
+    private int count2;
 
     private ChartChecker() {
     }

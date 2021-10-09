@@ -1,19 +1,16 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class SoccerGameNumberView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
-    public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
-//    Spreadline sl;
-//    Totalline tl;
+    public static String ICON_UP = ImageFile.ARR_UP;
+    public static String ICON_DOWN = ImageFile.ARR_DOWN;
+    public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
     LineData topbox;
     LineData bottombox;
     LineData drawbox;
@@ -23,7 +20,6 @@ public class SoccerGameNumberView {
     LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
     LineData ld3 = new LineData(ICON_BLANK, "", Color.WHITE);
     LineData ld4 = new LineData(ICON_BLANK, "", Color.WHITE);
-//    int bid;
     int gid;
     Game g;
     public SoccerGameNumberView(int gid) {
@@ -62,26 +58,21 @@ public class SoccerGameNumberView {
     }
 
     public void setCurrentBoxes() {
-//        String topboxS = "";
-//        String bottomboxS = "";
-//        String drawboxS = "";
-//        String totalboxS = "";
-//        Color spreadcolor = Color.WHITE;
         Color totalcolor = Color.WHITE;
         Color topcolor = Color.WHITE;
         Color bottomcolor = Color.WHITE;
-        ImageIcon topicon = ICON_BLANK;
-        ImageIcon bottomicon = ICON_BLANK;
+        String topicon = ICON_BLANK;
+        String bottomicon = ICON_BLANK;
 
         Color drawcolor = Color.WHITE;
-        ImageIcon drawicon = ICON_BLANK;
-        ImageIcon totalicon = ICON_BLANK;
+        String drawicon = ICON_BLANK;
+        String totalicon = ICON_BLANK;
 
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
 
-        ld3.setIcon(drawicon);
-        ld4.setIcon(totalicon);
+        ld3.setIconPath(drawicon);
+        ld4.setIconPath(totalicon);
 
         ld1.setData("" + g.getVisitorgamenumber());
         ld2.setData("" + g.getHomegamenumber());

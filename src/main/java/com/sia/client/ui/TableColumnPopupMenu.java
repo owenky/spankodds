@@ -22,7 +22,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.log;
@@ -155,8 +155,8 @@ public class TableColumnPopupMenu{
             log("color chosen was " + color);
             String bookieid = AppController.getBookieId(headerValue.toString());
             AppController.getBookieColors().put(bookieid, color);
-            Vector dm = AppController.getDataModels();
-            ((LinesTableData)dm.get(0)).fire(null);
+            List<LinesTableData> dm = AppController.getDataModels();
+            dm.get(0).fire(null);
         }
     }
     public void hideMenu() {

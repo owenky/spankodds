@@ -4,11 +4,14 @@ import com.sia.client.model.SportType;
 import com.sia.client.ui.MainScreen;
 import com.sia.client.ui.SportsTabPane;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.sia.client.config.Utils.log;
 
 public class MainScreenRefresh extends TestExecutor{
 
     private final MainScreen mainScreen;
+    private static final AtomicInteger counter = new AtomicInteger(0);
     public MainScreenRefresh(MainScreen mainScreen) {
         super(5,15);
         this.mainScreen = mainScreen;
@@ -18,6 +21,9 @@ public class MainScreenRefresh extends TestExecutor{
     public void run() {
 
         try {
+            if(0==counter.getAndAdd(1)%5) {
+                log("***** MainScreen Refreshing count=" + counter.get());
+            }
             SportsTabPane.refreshMainScreen(mainScreen);
         } catch(Exception e) {
             log(e);

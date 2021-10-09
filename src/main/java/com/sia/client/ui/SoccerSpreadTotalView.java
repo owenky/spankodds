@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
@@ -8,15 +7,14 @@ import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.Random;
 
 public class SoccerSpreadTotalView {
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("moveup.png"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("movedown.png"));
-    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank.gif"));
+    public static String ICON_UP = ChartView.ICON_UP;
+    public static String ICON_DOWN = ChartView.ICON_DOWN;
+    public static String ICON_BLANK = "blank.gif";
     public String display = "default";
     public int period = 0;
     Spreadline sl;
@@ -49,10 +47,10 @@ public class SoccerSpreadTotalView {
     Color drawcolor = Color.WHITE;
     Color totalcolor2 = Color.WHITE;
 
-    ImageIcon topicon = ICON_BLANK;
-    ImageIcon bottomicon = ICON_BLANK;
-    ImageIcon drawicon = ICON_BLANK;
-    ImageIcon totalicon = ICON_BLANK;
+    String topicon = ICON_BLANK;
+    String bottomicon = ICON_BLANK;
+    String drawicon = ICON_BLANK;
+    String totalicon = ICON_BLANK;
     Timestamp clearts;
     int id;
     Game game;
@@ -724,10 +722,10 @@ public class SoccerSpreadTotalView {
             bottomicon = ICON_BLANK;
         }
 
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
-        ld3.setIcon(drawicon);
-        ld4.setIcon(totalicon);
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
+        ld3.setIconPath(drawicon);
+        ld4.setIconPath(totalicon);
 
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
@@ -1178,10 +1176,10 @@ public class SoccerSpreadTotalView {
         //ld2.setIcon(ICON_BLANK);
 
 
-        ld1.setIcon(null);
-        ld2.setIcon(null);
-        ld3.setIcon(null);
-        ld4.setIcon(null);
+        ld1.setIconPath(null);
+        ld2.setIconPath(null);
+        ld3.setIconPath(null);
+        ld4.setIconPath(null);
 
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
@@ -1662,10 +1660,10 @@ public class SoccerSpreadTotalView {
         }
 
 
-        ld1.setIcon(null);
-        ld2.setIcon(null);
-        ld3.setIcon(null);
-        ld4.setIcon(null);
+        ld1.setIconPath(null);
+        ld2.setIconPath(null);
+        ld3.setIconPath(null);
+        ld4.setIconPath(null);
 
 
         ld1.setData(topboxS);

@@ -43,7 +43,7 @@ public class AppController {
     public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
     public static Vector<String> customTabsVec = new Vector();
-    public static Vector<LinesTableData> dataModels = new Vector();
+    public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
     public static Vector<SportsTabPane> tabpanes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
@@ -477,11 +477,13 @@ public class AppController {
         return linealertnodes;
     }
 
-    public static Vector getDataModels() {
+    public static List<LinesTableData> getDataModels() {
         return dataModels;
     }
 
-    public static void addDataModels(MainGameTableModel model) {
+    public synchronized static void addDataModels(MainGameTableModel model) {
+        //remove the sport type from dataModels to prevent memory leaks
+        dataModels.removeIf(ltd -> ltd.getSportType().equals(model.getSportType()));
         model.copyTo(dataModels);
 
     }

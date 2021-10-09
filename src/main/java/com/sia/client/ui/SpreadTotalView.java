@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
@@ -8,22 +8,14 @@ import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.Random;
 
 public class SpreadTotalView {
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("moveup.png"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("movedown.png"));
-    //public static ImageIcon ICON_UP = new ImageIcon("arrup.gif");
-
-    //public static ImageIcon ICON_DOWN = new ImageIcon("arrdown.gif");
-    //public static ImageIcon ICON_UP = new ImageIcon("uparrow5.png");
-    //public static ImageIcon ICON_DOWN = new ImageIcon("downarrow5.png");
-    //public static ImageIcon ICON_UP = new ImageIcon("angleup.png");
-    //public static ImageIcon ICON_DOWN = new ImageIcon("angledown.png");
-    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank.gif"));
+    public static String ICON_UP = ImageFile.ICON_UP;
+    public static String ICON_DOWN = ImageFile.ICON_DOWN;
+    public static String ICON_BLANK = ImageFile.ICON_BLANK;
     public String display = "default";
     public int period = 0;
     Spreadline sl;
@@ -49,8 +41,8 @@ public class SpreadTotalView {
     Color moneycolor = Color.WHITE;
     Color topcolor = Color.WHITE;
     Color bottomcolor = Color.WHITE;
-    ImageIcon topicon = ICON_BLANK;
-    ImageIcon bottomicon = ICON_BLANK;
+    private String topicon = ICON_BLANK;
+    private String bottomicon = ICON_BLANK;
     Timestamp clearts;
     int id;
     Game game;
@@ -799,8 +791,8 @@ public class SpreadTotalView {
             bottomicon = ICON_BLANK;
         }
 
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
         ld1.setBackgroundColor(topcolor);
@@ -1203,8 +1195,8 @@ public class SpreadTotalView {
         //ld2.setIcon(ICON_BLANK);
 
 
-        ld1.setIcon(null);
-        ld2.setIcon(null);
+        ld1.setIconPath(null);
+        ld2.setIconPath(null);
 
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
@@ -1638,8 +1630,8 @@ public class SpreadTotalView {
         }
 
 
-        ld1.setIcon(null);
-        ld2.setIcon(null);
+        ld1.setIconPath(null);
+        ld2.setIconPath(null);
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
         ld1.setBackgroundColor(Color.BLUE);

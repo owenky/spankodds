@@ -18,10 +18,10 @@ public abstract class TableSection<V extends KeyedObject> {
     private ColumnCustomizableDataModel<V> containingTableModel;
     private int rowHeight;
     private int index;
-    private final String gameGroupHeader;
+    protected final String gameGroupHeader;
 
     public TableSection(String gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
-        this.gameGroupHeader = null== gameGroupHeader?null:gameGroupHeader.trim();
+        this.gameGroupHeader = null== gameGroupHeader?"":gameGroupHeader.trim();
         gamesVec = new LineGames<>(gameCache, toAddBlankGameId);
         gamesVec.addAll(gameVec);
         rowHeight = SiaConst.NormalRowheight;
@@ -56,7 +56,7 @@ public abstract class TableSection<V extends KeyedObject> {
     }
 
     public boolean hasHeader() {
-        return null != getGameGroupHeader();
+        return ! gameGroupHeader.isEmpty();
     }
 
     public String getGameGroupHeader() {

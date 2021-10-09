@@ -31,4 +31,12 @@ public abstract class SiaConst {
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;
     }
+    public interface ImageFile {
+        String ICON_BLANK = "blank.gif";
+        String ICON_UP = "moveup.png";
+        String ICON_DOWN = "movedown.png";
+        String ICON_BLANK2 = "blank2.gif";
+        String ARR_UP = "arrup.gif";
+        String ARR_DOWN = "arrdown.gif";
+    }
 }

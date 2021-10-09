@@ -5,7 +5,6 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.LinesTableDataSupplier;
 
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,7 +31,7 @@ public class LinePanel extends JPanel {
     private static final Color openercolor = Color.LIGHT_GRAY;
     private final static int leftPaddingSpace = 0;
     private final static int rightPaddingSpace = 0;
-    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
+    public static String ICON_BLANK = "blank2.gif";
     private boolean testprint = false;
     final JLabel top;
     final JLabel bottom;
@@ -65,10 +64,10 @@ public class LinePanel extends JPanel {
     }
     private LinePanel(int textAlignment) {
 
-        top = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        bottom = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        draw = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
-        total = new JLabel("", ICON_BLANK, SwingConstants.LEADING);
+        top = new JLabel("", Utils.getImageIcon(ICON_BLANK), SwingConstants.LEADING);
+        bottom = new JLabel("", Utils.getImageIcon(ICON_BLANK), SwingConstants.LEADING);
+        draw = new JLabel("", Utils.getImageIcon(ICON_BLANK), SwingConstants.LEADING);
+        total = new JLabel("", Utils.getImageIcon(ICON_BLANK), SwingConstants.LEADING);
 
         topPanel = createContainingComponent(top,leftPaddingSpace,rightPaddingSpace);
         bottomPanel = createContainingComponent(bottom,leftPaddingSpace,rightPaddingSpace);
@@ -158,7 +157,7 @@ public class LinePanel extends JPanel {
 
             if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
                 blackorred = true;
-                top.setIcon(ld.getIcon());
+                top.setIcon(Utils.getImageIcon(ld.getIconPath()));
                 fgcolor = Color.WHITE;
             } else {
                 if (ld.getData().equals("")) {
@@ -235,7 +234,7 @@ public class LinePanel extends JPanel {
         if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
             fgcolor = Color.WHITE;
-            bottom.setIcon(ld.getIcon());
+            bottom.setIcon(Utils.getImageIcon(ld.getIconPath()));
         } else {
             if (ld.getData().equals("")) {
                 bottom.setIcon(null);
@@ -302,7 +301,7 @@ public class LinePanel extends JPanel {
         if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
             fgcolor = Color.WHITE;
-            draw.setIcon(ld.getIcon());
+            draw.setIcon(Utils.getImageIcon(ld.getIconPath()));
         } else {
 
             if (ld.getData().equals("")) {
@@ -371,7 +370,7 @@ public class LinePanel extends JPanel {
         if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
             fgcolor = Color.WHITE;
-            total.setIcon(ld.getIcon());
+            total.setIcon(Utils.getImageIcon(ld.getIconPath()));
         } else {
             if (ld.getData().equals("")) {
                 total.setIcon(null);

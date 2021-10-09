@@ -13,11 +13,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sia.client.config.Utils.log;
 
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
+    private final SportType sportType;
+    //TODO
+    private static final AtomicInteger counter = new AtomicInteger(0);
     private static final Set<String> stageStrs = new HashSet<>();
     static {
         stageStrs.add(SiaConst.FinalStr);
@@ -27,8 +31,13 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.SeriesPricesStr);
 //        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
     }
-    public MainGameTableModel(Vector<TableColumn> allColumns) {
+    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns) {
         super(allColumns);
+        this.sportType = sportType;
+        int cnt = counter.getAndAdd(1);
+        if ( 0 ==cnt%2) {
+            log("*******8 LinesTableData instance: "+cnt);
+        }
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -85,6 +94,9 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
         }
         TableUtils.fireTableModelChanged(this);
     }
+    public SportType getSportType() {
+        return this.sportType;
+    }
     public int getGameId(int rowModelIndex) {
        return getRowKey(rowModelIndex);
     }
@@ -115,7 +127,7 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
-            rtn = new LinesTableData(section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
+            rtn = new LinesTableData(sportType,section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
                     , section0.getLast(),header,getAllColumns());
             sections.add(rtn);
         } else {

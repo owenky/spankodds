@@ -7,6 +7,7 @@ import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
+import com.sia.client.model.SportType;
 import com.sia.client.model.TableSection;
 
 import javax.swing.table.TableColumn;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -23,11 +25,29 @@ public class LinesTableData extends TableSection<Game> {
 
     protected final SimpleDateFormat m_frm;
     private final boolean shortteam;
-    public String sport = "";
+    private final SportType sportType;
     protected Date m_date;
     boolean showingOpener = false;
     boolean showingPrior = false;
     private String display;
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final LinesTableData that = (LinesTableData) o;
+        return sportType.equals(that.sportType) && gameGroupHeader.equals(that.gameGroupHeader);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sportType, gameGroupHeader);
+    }
+
     private int period;
     private boolean timesort;
     private final List<TableColumn> columns;
@@ -35,11 +55,12 @@ public class LinesTableData extends TableSection<Game> {
     private boolean last;
     private boolean opener;
 
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader,List<TableColumn> columns) {
-        this(display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), columns);
+    public LinesTableData(SportType sportType,String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader,List<TableColumn> columns) {
+        this(sportType,display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), columns);
     }
-    public LinesTableData(String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, List<TableColumn> columns) {
+    public LinesTableData(SportType sportType, String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, List<TableColumn> columns) {
         super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
+        this.sportType = sportType;
         m_frm = new SimpleDateFormat("MM/dd/yyyy");
         this.cleartime = cleartime;
         this.timesort = timesort;
@@ -54,6 +75,9 @@ public class LinesTableData extends TableSection<Game> {
         } else if (last) {
             showPrior();
         }
+    }
+    public SportType getSportType() {
+        return sportType;
     }
     public void showOpener() {
         showingOpener = true;

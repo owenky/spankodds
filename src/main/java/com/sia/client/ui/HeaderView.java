@@ -1,20 +1,16 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
-import com.sia.client.model.Spreadline;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class HeaderView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
-    public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
-    Spreadline sl;
-    Totalline tl;
+    public static String ICON_UP = ImageFile.ARR_UP;
+    public static String ICON_DOWN = ImageFile.ARR_DOWN;
+    public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
     LineData topbox;
     LineData bottombox;
     LineData[] boxes = new LineData[2];
@@ -27,8 +23,6 @@ public class HeaderView {
 
     public HeaderView() {
         this.gid = gid;
-        //this.setAndGetPriorBoxes(bid,gid);
-        //this.setAndGetOpenerBoxes(bid,gid);
     }
 
     public void clearColors() {
@@ -52,24 +46,19 @@ public class HeaderView {
     }
 
     public void setCurrentBoxes() {
-        String topboxS = "";
-        String bottomboxS = "";
-        Color spreadcolor = Color.WHITE;
-        Color totalcolor = Color.WHITE;
         Color topcolor = Color.WHITE;
         Color bottomcolor = Color.WHITE;
-        ImageIcon topicon = ICON_BLANK;
-        ImageIcon bottomicon = ICON_BLANK;
+        String topicon = ICON_BLANK;
+        String bottomicon = ICON_BLANK;
 
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
         ld1.setData("THIS IS A VERY BIG HEADER THAT IS SUPPSED TO SHOW THE DATE AND SPORT TYPE OF STUFF BELOW!!!!!!!!!!!!!!!!!!!");
         ld2.setData("");
         ld1.setBackgroundColor(topcolor);
         ld2.setBackgroundColor(bottomcolor);
         boxes[0] = ld1;
         boxes[1] = ld2;
-        //return boxes;
     }
 
 

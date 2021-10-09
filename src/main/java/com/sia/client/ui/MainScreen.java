@@ -21,8 +21,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -71,9 +73,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
     //TODO set toSimulateMQ to false for production
-    private static boolean runTest = false;
+    private static boolean runTest = true;
     private static final AtomicBoolean testStatus = new AtomicBoolean(false);
     private static final Map<String,MainScreen> mainScreenMap = new HashMap<>();
+    private static final TableModel BlankModel = new DefaultTableModel();
 
     public static MainScreen findMainScreen(String name) {
         return mainScreenMap.get(name);
@@ -115,9 +118,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getDataModels().clearColors();
     }
 
-    public void clearTable() {
-        mainGameTable = createMainGameTable();
-    }
     public Game removeGame(int gameid,boolean repaint) {
         return getDataModels().removeGame(gameid,repaint);
     }
@@ -881,7 +881,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
     }
     private LinesTableData createLinesTableData(Vector newgamegroupvec,String gameGroupHeader) {
-        LinesTableData tableSection = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
+        LinesTableData tableSection = new LinesTableData(sportType,display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
         int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
         tableSection.setRowHeight(tableSectionRowHeight);
         return tableSection;
@@ -922,7 +922,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         log("destroyed mainscreen!!!!");
     }
     private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(allColumns));
+        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(sportType,allColumns));
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
