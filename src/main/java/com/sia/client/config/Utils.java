@@ -2,12 +2,14 @@ package com.sia.client.config;
 
 import javax.jms.MapMessage;
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -31,6 +33,19 @@ public abstract class Utils {
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
+    }
+    public static Image getImage(String imageFileName) {
+        if( null == imageFileName) {
+            return null;
+        }
+        ImageIcon icon = new ImageIcon(Utils.getMediaResource(imageFileName));
+        return icon.getImage();
+    }
+    public static ImageIcon getImageIcon(String imageFileName) {
+        if( null == imageFileName) {
+            return null;
+        }
+        return new ImageIcon(Utils.getMediaResource(imageFileName));
     }
     public static URL getConfigResource(String resourceName) {
         return getResource(SiaConst.ConfigPath+resourceName);
@@ -98,7 +113,11 @@ public abstract class Utils {
     }
     public static void checkAndRunInEDT(Runnable r) {
         if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
+            try {
+                r.run();
+            }catch( Exception e) {
+                log(e);
+            }
         } else {
             SwingUtilities.invokeLater(r);
         }
