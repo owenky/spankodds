@@ -1,12 +1,18 @@
 package com.sia.client.simulator;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
+import com.sia.client.ui.AppController;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static com.sia.client.config.Utils.log;
 
 public abstract class InitialGameMessages {
 
@@ -24,7 +30,11 @@ public abstract class InitialGameMessages {
     }
     private static void loadGamesFromLog() {
         if (SiaConst.TestProperties.getGamesFromLog.get()) {
-//            read games from file
+            try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+                stream.forEach(text->AppController.addGame(GameUtils.parseGameText(text)));
+            } catch ( Exception e) {
+                log(e);
+            }
         }
     }
     private static void flushMessages() {
@@ -38,13 +48,13 @@ public abstract class InitialGameMessages {
                 }
 
             }catch(Exception e) {
-                Utils.log(e);
+                log(e);
             } finally {
                 if ( null != fw) {
                     try {
                         fw.close();
                     } catch (IOException e) {
-                        Utils.log(e);
+                        log(e);
                     }
                 }
             }
