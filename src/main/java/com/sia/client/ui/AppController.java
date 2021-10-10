@@ -51,7 +51,7 @@ public class AppController {
     public static Hashtable<String, Bookie> bookies = new Hashtable();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
-    public static Games games = new Games();
+    private static Games games = new Games();
 
     public static Vector<Bookie> openerbookiesVec = new Vector();
     public static Vector<Bookie> bookiesVec = new Vector();
@@ -128,11 +128,6 @@ public class AppController {
     public static UserPrefsProducer userPrefsProducer;
 
     public static ChartChecker chartchecker;
-
-    public static LinesTableData linestabledata;
-
-//public static LinesTable2 linestable;
-
     public static Hashtable<String, Color> bookiecolors = new Hashtable();
 
     public static int numfixedcols;
@@ -613,15 +608,6 @@ public class AppController {
             stb.fireAllTableDataChanged(games);
         }
     }
-
-    public static LinesTableData getLinesTableData() {
-        return linestabledata;
-    }
-
-    public static void setLinesTableData(LinesTableData tab) {
-        linestabledata = tab;
-    }
-
     public static String getLoginQueue() {
         return loginQueue;
     }

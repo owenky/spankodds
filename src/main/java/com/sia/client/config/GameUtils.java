@@ -5,6 +5,7 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -53,6 +54,43 @@ public abstract class GameUtils {
         } else {
             return false;
         }
+    }
+    public static Game parseGameText(String text) {
+        String[] array = text.split(SiaConst.MessageDelimiter);
+        //System.out.println("gametext="+text);
+        // here in 1st entry i made game_id visitorgamenumber
+        return new Game(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), Integer.parseInt(array[3]),
+                Integer.parseInt(array[4]), new java.sql.Date(Long.parseLong(array[5])), new java.sql.Time(Long.parseLong(array[6])),
+                array[7], array[8], array[9], array[10], Integer.parseInt(array[11]), Integer.parseInt(array[12]), Integer.parseInt(array[13]),
+                Integer.parseInt(array[14]), Integer.parseInt(array[15]), array[16], array[17], array[18], array[19], array[20], array[21],
+                array[22], array[23], Integer.parseInt(array[24]), array[25],
+                Boolean.parseBoolean(array[26]),
+                Boolean.parseBoolean(array[27]),
+                Boolean.parseBoolean(array[28]),
+                Boolean.parseBoolean(array[29]),
+                Boolean.parseBoolean(array[30]),
+                Boolean.parseBoolean(array[31]),
+                Boolean.parseBoolean(array[32]),
+                Boolean.parseBoolean(array[33]),
+                Boolean.parseBoolean(array[34]),
+                array[35],
+                array[36],
+                array[37],
+                array[38],
+                Integer.parseInt(array[39]),
+                Integer.parseInt(array[40]),
+                array[41],
+                array[42],
+                array[43],
+                array[44],
+                array[45],
+                Boolean.parseBoolean(array[46]),
+                Boolean.parseBoolean(array[47]),
+                Boolean.parseBoolean(array[48]),
+                Boolean.parseBoolean(array[49]),
+                array[50],
+                new Timestamp(Long.parseLong(array[51])),
+                new Timestamp(Long.parseLong(array[52])));
     }
     public static void main(String [] argvb ) throws ParseException {
 

@@ -2,6 +2,7 @@ package com.sia.client.config;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class SiaConst {
 
@@ -39,4 +40,10 @@ public abstract class SiaConst {
         String ARR_UP = "arrup.gif";
         String ARR_DOWN = "arrdown.gif";
     }
+    public interface TestProperties {
+        AtomicBoolean shouldLogInitGameMesg = new AtomicBoolean(false);
+        AtomicBoolean shouldRunMainScreenTest = new AtomicBoolean(false);
+        AtomicBoolean getGamesFromLog = new AtomicBoolean(false);
+    }
+    public static final String MessageDelimiter = "~";
 }

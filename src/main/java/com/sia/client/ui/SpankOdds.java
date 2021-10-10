@@ -1,6 +1,8 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
+import com.sia.client.simulator.InitialGameMessages;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;
@@ -41,6 +43,14 @@ public class SpankOdds {
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
         log("CHANGE04242021 ");
+
+        TestProperties.shouldLogInitGameMesg.set(Boolean.parseBoolean(System.getProperty("LogInitGameMesg")));
+        TestProperties.shouldRunMainScreenTest.set(Boolean.parseBoolean(System.getProperty("MainScreenTest")));
+        TestProperties.getGamesFromLog.set(Boolean.parseBoolean(System.getProperty("GetGamesFromLog")));
+
+        if ( TestProperties.getGamesFromLog.get()) {
+            TestProperties.shouldLogInitGameMesg.set(false);
+        }
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
 
@@ -71,6 +81,7 @@ public class SpankOdds {
             @Override
             public void loginSucceeded(LoginEvent source) {
                 SpankOdds.this.userName = loginPane.getUserName();
+                InitialGameMessages.postDataLoading();
                 SpankOdds.this.showGui();
             }
 

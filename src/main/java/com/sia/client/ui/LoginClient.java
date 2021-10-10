@@ -1,12 +1,15 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
-import com.sia.client.model.Game;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 import com.sia.client.model.User;
+import com.sia.client.simulator.InitialGameMessages;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -20,7 +23,6 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import static com.sia.client.config.Utils.log;
@@ -38,7 +40,6 @@ public class LoginClient implements MessageListener {
     public boolean loginresultback = false;
     Connection connection;
     boolean loggedin = false;
-    String delimiter = "~";
     private Session session;
     private MessageProducer producer;
     private MessageConsumer consumer;
@@ -93,7 +94,7 @@ public class LoginClient implements MessageListener {
         while (!client.getLoginResultBack()) //wait for login
         {
             //System.out.println(client.loginresultback+" "+new java.util.Date());
-            System.out.print("");
+            log("");
         }
 
         log("LOGIN=" + client.isloggedin());
@@ -164,7 +165,7 @@ public class LoginClient implements MessageListener {
                     System.out.println("LOGIN NO GOOD");
                 } else {
                     this.setloggedin(true);
-                    String array[] = text.split(delimiter);
+                    String[] array = text.split(SiaConst.MessageDelimiter);
 
                     User user = new User(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8], array[9], array[10], array[11], Boolean.parseBoolean(array[12]), array[13], array[14],
                             array[15],
@@ -214,7 +215,7 @@ public class LoginClient implements MessageListener {
                 setLoginResultBack(true);
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
+                String[] array = text.split(SiaConst.MessageDelimiter);
 
                 AppController.createLoggedInConnection(array[0], array[1]);
 
@@ -224,27 +225,18 @@ public class LoginClient implements MessageListener {
             } else if (messageType.equals("Bookie")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
+                String[] array = text.split(SiaConst.MessageDelimiter);
 
                 int bookieid = Integer.parseInt(array[0]);
                 Bookie bookie = new Bookie(bookieid, array[1], array[2], array[3], array[4]);
                 Bookie openerbookie = new Bookie(1000 + bookieid, array[1] + "-OPEN", array[2] + "-O", array[3], array[4]);
-                //System.out.println(bookie);
                 AppController.addBookie(bookie);
-                // if(bookieid== 204)
-                // {
                 AppController.addBookie(openerbookie);
-                //  }
-
 
             } else if (messageType.equals("Sport")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
-                //Sport
-                // String leaguename,String leagueabbr,String sportname,String sportabbr,boolean moneylinedefault)
-
-
+                String[] array = text.split(SiaConst.MessageDelimiter);
                 Sport sport = new Sport(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]),
                         Integer.parseInt(array[3]), Integer.parseInt(array[4]), Double.parseDouble(array[5]),
                         Double.parseDouble(array[6]), array[7], array[8], array[9], array[10], Boolean.parseBoolean(array[11]));
@@ -253,53 +245,16 @@ public class LoginClient implements MessageListener {
             } else if (messageType.equals("Game")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
-                //System.out.println("gametext="+text);
-                // here in 1st entry i made game_id visitorgamenumber
-                Game game = new Game(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), Integer.parseInt(array[3]),
-                        Integer.parseInt(array[4]), new java.sql.Date(Long.parseLong(array[5])), new java.sql.Time(Long.parseLong(array[6])),
-                        array[7], array[8], array[9], array[10], Integer.parseInt(array[11]), Integer.parseInt(array[12]), Integer.parseInt(array[13]),
-                        Integer.parseInt(array[14]), Integer.parseInt(array[15]), array[16], array[17], array[18], array[19], array[20], array[21],
-                        array[22], array[23], Integer.parseInt(array[24]), array[25],
-                        Boolean.parseBoolean(array[26]),
-                        Boolean.parseBoolean(array[27]),
-                        Boolean.parseBoolean(array[28]),
-                        Boolean.parseBoolean(array[29]),
-                        Boolean.parseBoolean(array[30]),
-                        Boolean.parseBoolean(array[31]),
-                        Boolean.parseBoolean(array[32]),
-                        Boolean.parseBoolean(array[33]),
-                        Boolean.parseBoolean(array[34]),
-                        array[35],
-                        array[36],
-                        array[37],
-                        array[38],
-                        Integer.parseInt(array[39]),
-                        Integer.parseInt(array[40]),
-                        array[41],
-                        array[42],
-                        array[43],
-                        array[44],
-                        array[45],
-                        Boolean.parseBoolean(array[46]),
-                        Boolean.parseBoolean(array[47]),
-                        Boolean.parseBoolean(array[48]),
-                        Boolean.parseBoolean(array[49]),
-                        array[50],
-                        new Timestamp(Long.parseLong(array[51])),
-                        new Timestamp(Long.parseLong(array[52])));
-
-
-                String pattern = "MM-dd hh:mm";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                // System.out.println(simpleDateFormat.format(game.getGamedateandtime()));
-                AppController.addGame(game);
-
-
+                //log game messages  -- 2021-10-09
+                InitialGameMessages.addText(text);
+                //allow reading games from log for test purpose  -- 2021-10-09
+                if ( ! TestProperties.getGamesFromLog.get()) {
+                    AppController.addGame(GameUtils.parseGameText(text));
+                }
             } else if (messageType.equals("Spreadline")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
+                String[] array = text.split(SiaConst.MessageDelimiter);
 
                 Spreadline line = new Spreadline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
@@ -307,9 +262,6 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), new Timestamp(Long.parseLong(array[11])),
                         Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), new Timestamp(Long.parseLong(array[16])),
                         Integer.parseInt(array[17]));
-
-                int period = Integer.parseInt(array[17]);
-
                 AppController.addSpreadline(line);
                 //setLoginResultBack(true);
                 //owen took out 7/11/20 and moved back to loginconnection
@@ -317,7 +269,7 @@ public class LoginClient implements MessageListener {
             } else if (messageType.equals("Totalline")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
+                String[] array = text.split(SiaConst.MessageDelimiter);
 
                 Totalline line = new Totalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
@@ -334,7 +286,7 @@ public class LoginClient implements MessageListener {
             } else if (messageType.equals("TeamTotalline")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
+                String[] array = text.split(SiaConst.MessageDelimiter);
 
 
                 TeamTotalline line = new TeamTotalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
@@ -376,7 +328,7 @@ public class LoginClient implements MessageListener {
             } else if (messageType.equals("Moneyline")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                String array[] = text.split(delimiter);
+                String[] array = text.split(SiaConst.MessageDelimiter);
 
                 Moneyline line = new Moneyline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), new Timestamp(Long.parseLong(array[5])),

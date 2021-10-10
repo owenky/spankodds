@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
@@ -21,10 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -72,11 +71,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public Vector customheaders = new Vector();
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
-    //TODO set toSimulateMQ to false for production
-    private static boolean runTest = false;
     private static final AtomicBoolean testStatus = new AtomicBoolean(false);
     private static final Map<String,MainScreen> mainScreenMap = new HashMap<>();
-    private static final TableModel BlankModel = new DefaultTableModel();
 
     public static MainScreen findMainScreen(String name) {
         return mainScreenMap.get(name);
@@ -856,7 +852,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
         AppController.addDataModels(getDataModels());
-        if ( runTest) {
+        if (TestProperties.shouldRunMainScreenTest.get()) {
             if ( ! testStatus.get()) {
                 TestExecutor testExecutor;
 //                testExecutor= new MoveToFinal(model);
