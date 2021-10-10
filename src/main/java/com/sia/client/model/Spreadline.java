@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
 
 import static com.sia.client.config.Utils.log;
@@ -15,17 +16,20 @@ public class Spreadline extends Line {
     double currentvisitjuice;
     double currenthomespread;
     double currenthomejuice;
-    private long currentts = 1000;
+    long currentts = 1000; //timestamp
 
     double priorvisitspread;
     double priorvisitjuice;
     double priorhomespread;
     double priorhomejuice;
+    long priorts = 1000; //timestamp
 
     double openervisitspread;
     double openervisitjuice;
     double openerhomespread;
     double openerhomejuice;
+    long openerts = 1000; //timestamp
+
 
     public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, int p) {
         this();
@@ -34,7 +38,7 @@ public class Spreadline extends Line {
         currentvisitjuice = priorvisitjuice = openervisitjuice = vj;
         currenthomespread = priorhomespread = openerhomespread = hs;
         currenthomejuice = priorhomejuice = openerhomejuice = hj;
-        currentts = ts;
+        currentts = priorts = openerts = ts;
         gameid = gid;
         bookieid = bid;
         period = p;
@@ -61,6 +65,7 @@ public class Spreadline extends Line {
         priorvisitjuice = pvj;
         priorhomespread = phs;
         priorhomejuice = phj;
+        priorts = pts;
 
         gameid = gid;
         bookieid = bid;
@@ -81,11 +86,14 @@ public class Spreadline extends Line {
         priorvisitjuice = pvj;
         priorhomespread = phs;
         priorhomejuice = phj;
+        priorts = pts;
 
         openervisitspread = ovs;
         openervisitjuice = ovj;
         openerhomespread = ohs;
         openerhomejuice = ohj;
+        openerts = ots;
+
         gameid = gid;
         bookieid = bid;
         period = p;
@@ -97,13 +105,17 @@ public class Spreadline extends Line {
 
 
         Spreadline sl = new Spreadline(109, 29, 5, -5, -110, -110, System.currentTimeMillis(), 0);
-        log("hi " + sl.isOpener());
-//        log(sl.getPriorvisitspread());
+        System.out.println("hi " + sl.isOpener());
+        System.out.println(sl.getPriorvisitspread());
     }
 
     public boolean isOpener() {
 
-        return priorvisitspread == 0 && priorvisitjuice == 0 && priorhomespread == 0 && priorhomejuice == 0;
+        if (priorvisitspread == 0 && priorvisitjuice == 0 && priorhomespread == 0 && priorhomejuice == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public double getPriorvisitspread() {
@@ -140,6 +152,7 @@ public class Spreadline extends Line {
             if (isopener) {
                 this.setOpenervisitspread(visitspread);
                 this.setOpenervisitjuice(visitjuice);
+                this.setOpenerts(ts);
             }
         }
         if (homejuice != 0) {
@@ -150,6 +163,7 @@ public class Spreadline extends Line {
             if (isopener) {
                 this.setOpenerhomespread(homespread);
                 this.setOpenerhomejuice(homejuice);
+                this.setOpenerts(ts);
             }
         }
         try {
@@ -241,6 +255,7 @@ public class Spreadline extends Line {
     }
 
     public void setCurrentts(long currentts) {
+        setPriorts(getCurrentts());
         this.currentts = currentts;
     }
 
@@ -259,14 +274,14 @@ public class Spreadline extends Line {
     public String getShortPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
 
 
-        String retvalue;
+        String retvalue = "";
 		if (vjuice == 0) {
 			return "";
 		}
 
 
         double spreadd = 0;
-        double juice;
+        double juice = 0;
         if (vspread < hspread) {
             spreadd = vspread;
             juice = vjuice;
@@ -337,6 +352,8 @@ public class Spreadline extends Line {
         if (retvalue.equals("0.75") || retvalue.equals("0.750")) {
             retvalue = ".75";
         }
+        char half = AsciiChar.getAscii(170);
+
         retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
         retvalue = retvalue.replace(".75", "\u00BE");
@@ -359,12 +376,12 @@ public class Spreadline extends Line {
     public String getOtherPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
 
 
-        String retvalue;
+        String retvalue = "";
 		if (vjuice == 0) {
 			return "";
 		}
         double spreadd = 0;
-        double juice;
+        double juice = 0;
         if (vspread < hspread) {
             spreadd = hspread;
             juice = hjuice;
@@ -426,6 +443,7 @@ public class Spreadline extends Line {
 
         retvalue = retvalue.replace(".0", "");
 
+        char half = AsciiChar.getAscii(170);
         if (retvalue.equals("0.5") || retvalue.equals("0.50")) {
             retvalue = ".5";
         }
@@ -450,12 +468,29 @@ public class Spreadline extends Line {
         return getOtherPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
     }
 
+    public long getPriorts() {
+
+        return priorts;
+    }
+
+    public void setPriorts(long priorts) {
+        this.priorts = priorts;
+    }
+
     public double getPriorhomespread() {
         return priorhomespread;
     }
 
     public void setPriorhomespread(double priorhomespread) {
         this.priorhomespread = priorhomespread;
+    }
+
+    public long getOpenerts() {
+        return openerts;
+    }
+
+    public void setOpenerts(long openerts) {
+        this.openerts = openerts;
     }
 
     public double getOpenervisitspread() {

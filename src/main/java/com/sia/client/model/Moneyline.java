@@ -15,17 +15,18 @@ public class Moneyline extends Line implements Serializable {
     double currentvisitjuice;
     double currenthomejuice;
     double currentdrawjuice;
-    private long currentts = 1000;  //timestamp
+    private long currentts = 1000; //timestamp
 
     double priorvisitjuice;
     double priorhomejuice;
     double priordrawjuice;
     private long priorts = 1000; //timestamp
+    ;
 
     double openervisitjuice;
     double openerhomejuice;
     double openerdrawjuice;
-    private long openerts = 1000;  //timestamp
+    private long openerts = 1000; //timestamp
 
 
     public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, int p) {
@@ -232,7 +233,11 @@ public class Moneyline extends Line implements Serializable {
 
     public boolean isOpener() {
 
-        return priorvisitjuice == 0 && priorhomejuice == 0;
+        if (priorvisitjuice == 0 && priorhomejuice == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public long getPriorts() {

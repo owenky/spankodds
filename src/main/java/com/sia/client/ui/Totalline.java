@@ -2,11 +2,12 @@ package com.sia.client.ui;
 
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Line;
-
 import java.io.Serializable;
 
 
-public class Totalline extends Line implements Serializable {
+
+public class Totalline extends Line implements Serializable
+{
 
     boolean isbestover = false;
     boolean isbestunder = false;
@@ -21,17 +22,45 @@ public class Totalline extends Line implements Serializable {
     double prioroverjuice;
     double priorunder;
     double priorunderjuice;
-	private long priorts = 1000; //timestamp
+    private long priorts = 1000; //timestamp
 
 
     double openerover;
     double openeroverjuice;
     double openerunder;
     double openerunderjuice;
-	private long openerts = 1000; //timestamp
+    private long openerts = 1000; //timestamp
 
 
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, int p) {
+    public boolean isBestOver()
+    {
+        return isbestover;
+    }
+
+
+    public boolean isBestUnder()
+    {
+        return isbestunder;
+    }
+
+
+    public void setBestOver(boolean b)
+    {
+        isbestover = b;
+    }
+    public void setBestUnder(boolean b)
+    {
+        isbestunder = b;
+    }
+
+
+    public Totalline()
+    {
+        type = "total";
+    }
+
+    public Totalline(int gid, int bid,double o,double oj,double u,double uj,long ts,int p)
+    {
         this();
 
         currentover = priorover = openerover = o;
@@ -44,15 +73,11 @@ public class Totalline extends Line implements Serializable {
         period = p;
 
 
+
     }
 
-
-    public Totalline() {
-        type = "total";
-    }
-
-
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, int p) {
+    public Totalline(int gid, int bid, double o,double oj,double u,double uj,long ts,double po,double poj,double pu,double puj,long pts,int p)
+    {
         this();
         currentover = o;
         currentoverjuice = oj;
@@ -73,7 +98,9 @@ public class Totalline extends Line implements Serializable {
 
     }
 
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots, int p) {
+
+    public Totalline(int gid, int bid, double o,double oj,double u,double uj,long ts,double po,double poj,double pu,double puj,long pts,double oo,double ooj,double ou,double ouj,long ots,int p)
+    {
         this();
         currentover = o;
         currentoverjuice = oj;
@@ -100,387 +127,461 @@ public class Totalline extends Line implements Serializable {
 
     }
 
-    public boolean isBestOver() {
-        return isbestover;
-    }
+    public String recordMove(double over,double overjuice,double under,double underjuice,long ts,boolean isopener)
+    {
 
-    public void setBestOver(boolean b) {
-        isbestover = b;
-    }
-
-    public boolean isBestUnder() {
-        return isbestunder;
-    }
-
-    public void setBestUnder(boolean b) {
-        isbestunder = b;
-    }
-
-    public String recordMove(double over, double overjuice, double under, double underjuice, long ts, boolean isopener) {
-
-        if (overjuice != 0) {
+        if(overjuice != 0)
+        {
             this.setCurrentover(over);
             this.setCurrentoverjuice(overjuice);
             this.setCurrentts(ts);
 
 
-            if (isopener) {
+
+            if(isopener)
+            {
                 this.setOpenerover(over);
                 this.setOpeneroverjuice(overjuice);
                 this.setOpenerts(ts);
             }
         }
-        if (underjuice != 0) {
+        if(underjuice != 0)
+        {
             this.setCurrentunder(under);
             this.setCurrentunderjuice(underjuice);
             this.setCurrentts(ts);
 
-            if (isopener) {
+            if(isopener)
+            {
                 this.setOpenerunder(under);
                 this.setOpenerunderjuice(underjuice);
                 this.setOpenerts(ts);
             }
         }
 
-        try {
-            if (this.getPriorover() < this.getCurrentover()) // 215 to 216
+        try
+        {
+            if(this.getPriorover() < this.getCurrentover()) // 215 to 216
             {
                 this.whowasbet = "o";
-            } else if (this.getPriorover() > this.getCurrentover()) // 216 to 215
+            }
+            else if(this.getPriorover() > this.getCurrentover()) // 216 to 215
             {
                 this.whowasbet = "u";
-            } else //totals equal
+            }
+
+            else //totals equal
             {
-                if (this.getPrioroverjuice() < this.getCurrentoverjuice() && this.getPriorunderjuice() != this.getCurrentunderjuice()) //-110 to -105 , +105 to +110
+                if(this.getPrioroverjuice() < this.getCurrentoverjuice() && this.getPriorunderjuice() != this.getCurrentunderjuice()) //-110 to -105 , +105 to +110
                 {
                     this.whowasbet = "u";
-                } else if (this.getPrioroverjuice() > this.getCurrentoverjuice() && this.getPriorunderjuice() != this.getCurrentunderjuice())// priorjuice > currentjuice -105 to -110 110 to 105
+                }
+                else if(this.getPrioroverjuice() > this.getCurrentoverjuice() && this.getPriorunderjuice() != this.getCurrentunderjuice())// priorjuice > currentjuice -105 to -110 110 to 105
                 {
                     this.whowasbet = "o";
-                } else {
+                }
+                else
+                {
                     //System.out.println("NO CHANGE!");
                     this.whowasbet = "";
 
                 }
 
             }
-        } catch (Exception ex) {
-            this.whowasbet = "";
         }
+        catch(Exception ex)	 { this.whowasbet = "";}
 
-        try {
-            if (!this.whowasbet.equals("")) {
+        try
+        {
+            if(!this.whowasbet.equals(""))
+            {
                 LineAlertManager.checkMove(this);
             }
-        } catch (Exception ex) {
-            System.out.println("exception checking total for linealert! " + ex);
+        }
+        catch(Exception ex)
+        {
+            System.out.println("exception checking total for linealert! "+ex);
         }
 
 
-        BestLines.calculatebesttotal(gameid, period);
+        BestLines.calculatebesttotal(gameid,period);
         return this.whowasbet;
 
     }
 
-    public double getPriorover() {
-        return priorover;
+    public String getShortPrintedCurrentTotal()
+    {
+
+        return getShortPrintedTotal(currentover,currentoverjuice,currentunder,currentunderjuice);
     }
 
-    public double getCurrentover() {
+    public String getShortPrintedPriorTotal()
+    {
+
+        return getShortPrintedTotal(priorover,prioroverjuice,priorunder,priorunderjuice);
+    }
+
+    public String getShortPrintedOpenerTotal()
+    {
+
+        return getShortPrintedTotal(openerover,openeroverjuice,openerunder,openerunderjuice);
+    }
+    public String getOtherPrintedCurrentTotal()
+    {
+
+        return getOtherPrintedTotal(currentover,currentoverjuice,currentunder,currentunderjuice);
+    }
+
+    public String getOtherPrintedPriorTotal()
+    {
+
+        return getOtherPrintedTotal(priorover,prioroverjuice,priorunder,priorunderjuice);
+    }
+
+    public String getOtherPrintedOpenerTotal()
+    {
+
+        return getOtherPrintedTotal(openerover,openeroverjuice,openerunder,openerunderjuice);
+    }
+
+    public String getShortPrintedTotal(double o,double oj,double u,double uj)
+    {
+
+        String retvalue = o+"";
+        if(oj == 0) return "";
+        if(Math.abs(o) < 1 && retvalue.startsWith("0"))
+        {
+            retvalue = retvalue.substring(1);
+        }
+
+
+        double juice = 0;
+        if(oj == uj && oj == -110)
+        {
+
+            retvalue = retvalue.replace(".0","");
+            char half = AsciiChar.getAscii(170);
+
+
+            retvalue = retvalue.replace(".25","\u00BC");
+            retvalue = retvalue.replace(".5","\u00BD");
+            retvalue = retvalue.replace(".75","\u00BE");
+            return retvalue;
+        }
+        else if(oj < uj)
+        {
+            retvalue = retvalue+"o";
+            juice = oj;
+        }
+        else
+        {
+            retvalue = retvalue+"u";
+            juice = uj;
+        }
+
+
+
+        if(juice < 0)
+        {
+            juice = juice+100;
+            String juicestr = ""+juice;
+            if(juice == 0)
+            {
+                retvalue = retvalue+"ev";
+            }
+            else if(juice > -10)
+            {
+                juice = juice*-1;
+                juicestr = "-0"+juice;
+                retvalue = retvalue+""+juicestr;
+            }
+            else if(juice <= -100) // initial juice was  -200 or worse
+            {
+
+                juice = juice -100;
+                juicestr = ""+juice;
+                retvalue = retvalue+""+juicestr;
+            }
+            else
+            {
+                retvalue = retvalue+""+juicestr;
+
+
+            }
+
+        }
+        else
+        {
+            juice = juice -100;
+
+            if(juice == 0)
+            {
+                retvalue = retvalue+"ev";
+            }
+            else if(juice < 10)
+            {
+                retvalue = retvalue+"+0"+juice;
+            }
+            else
+            {
+                retvalue = retvalue+"+"+juice;
+
+            }
+
+        }
+        retvalue = retvalue.replace(".0","");
+        char half = AsciiChar.getAscii(170);
+
+        retvalue = retvalue.replace(".25","\u00BC");
+        retvalue = retvalue.replace(".5","\u00BD");
+        retvalue = retvalue.replace(".75","\u00BE");
+        return retvalue;
+
+    }
+
+    public String getOtherPrintedTotal(double o,double oj,double u,double uj)
+    {
+        String retvalue = o+"";
+        if(oj == 0) return "";
+        if(Math.abs(o) < 1 && retvalue.startsWith("0"))
+        {
+            retvalue = retvalue.substring(1);
+        }
+
+
+
+        double juice = 0;
+        if(oj == uj && oj == -110)
+        {
+
+            retvalue = retvalue.replace(".0","");
+            char half = AsciiChar.getAscii(170);
+
+
+            retvalue = retvalue.replace(".25","\u00BC");
+            retvalue = retvalue.replace(".5","\u00BD");
+            retvalue = retvalue.replace(".75","\u00BE");
+            return retvalue;
+        }
+        else if(oj < uj)
+        {
+            retvalue = retvalue+"u";
+            juice = uj;
+        }
+        else
+        {
+            retvalue = retvalue+"o";
+            juice = oj;
+        }
+
+
+
+        if(juice < 0)
+        {
+            juice = juice+100;
+            String juicestr = ""+juice;
+            if(juice == 0)
+            {
+                retvalue = retvalue+"ev";
+            }
+            else if(juice > -10)
+            {
+                juice = juice*-1;
+                juicestr = "-0"+juice;
+                retvalue = retvalue+""+juicestr;
+            }
+            else if(juice <= -100) // initial juice was  -200 or worse
+            {
+
+                juice = juice -100;
+                juicestr = ""+juice;
+                retvalue = retvalue+""+juicestr;
+            }
+            else
+            {
+                retvalue = retvalue+""+juicestr;
+
+            }
+
+        }
+        else
+        {
+            juice = juice -100;
+
+            if(juice == 0)
+            {
+                retvalue = retvalue+"ev";
+            }
+            else if(juice < 10)
+            {
+                retvalue = retvalue+"+0"+juice;
+            }
+            else
+            {
+                retvalue = retvalue+"+"+juice;
+
+            }
+
+        }
+        retvalue = retvalue.replace(".0","");
+
+        char half = AsciiChar.getAscii(170);
+
+        retvalue = retvalue.replace(".25","\u00BC");
+        retvalue = retvalue.replace(".5","\u00BD");
+        retvalue = retvalue.replace(".75","\u00BE");
+        return retvalue;
+
+    }
+
+    public boolean isOpener()
+    {
+
+        if(priorover == 0 && prioroverjuice == 0 && priorunder == 0 && priorunderjuice == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public double getCurrentover()
+    {
         return currentover;
     }
-
-    public void setCurrentover(double currentover) {
+    public void setCurrentover(double currentover)
+    {
         setPriorover(getCurrentover());
         this.currentover = currentover;
     }
 
-    public double getPrioroverjuice() {
-        return prioroverjuice;
-    }
-
-    public double getCurrentoverjuice() {
+    public double getCurrentoverjuice()
+    {
         return currentoverjuice;
     }
-
-    public void setCurrentoverjuice(double currentoverjuice) {
+    public void setCurrentoverjuice(double currentoverjuice)
+    {
         setPrioroverjuice(getCurrentoverjuice());
         this.currentoverjuice = currentoverjuice;
     }
 
-    public double getPriorunderjuice() {
-        return priorunderjuice;
-    }
-
-    public double getCurrentunderjuice() {
-        return currentunderjuice;
-    }
-
-    public void setCurrentunderjuice(double currentunderjuice) {
-        setPriorunderjuice(getCurrentunderjuice());
-        this.currentunderjuice = currentunderjuice;
-    }
-
-    public long getCurrentts() {
-        return currentts;
-    }
-
-    public double getCurrentunder() {
+    public double getCurrentunder()
+    {
         return currentunder;
     }
-
-    public void setCurrentunder(double currentunder) {
+    public void setCurrentunder(double currentunder)
+    {
         setPriorunder(getCurrentunder());
         this.currentunder = currentunder;
     }
 
-    public void setCurrentts(long currentts) {
+    public double getCurrentunderjuice()
+    {
+        return currentunderjuice;
+    }
+    public void setCurrentunderjuice(double currentunderjuice)
+    {
+        setPriorunderjuice(getCurrentunderjuice());
+        this.currentunderjuice = currentunderjuice;
+    }
+
+    public long getCurrentts()
+    {
+        return currentts;
+    }
+    public void setCurrentts(long currentts)
+    {
         setPriorts(getCurrentts());
         this.currentts = currentts;
     }
-
-    public void setPriorunderjuice(double priorunderjuice) {
-        this.priorunderjuice = priorunderjuice;
+    public long getPriorts()
+    {
+        return priorts;
     }
-
-    public void setPrioroverjuice(double prioroverjuice) {
-        this.prioroverjuice = prioroverjuice;
-    }
-
-    public void setPriorover(double priorover) {
-        this.priorover = priorover;
-    }
-
-    public String getShortPrintedCurrentTotal() {
-
-        return getShortPrintedTotal(currentover, currentoverjuice, currentunder, currentunderjuice);
-    }
-
-    public String getShortPrintedTotal(double o, double oj, double u, double uj) {
-
-        String retvalue = o + "";
-		if (oj == 0) {
-			return "";
-		}
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
-
-
-        double juice = 0;
-        if (oj == uj && oj == -110) {
-
-            retvalue = retvalue.replace(".0", "");
-            char half = AsciiChar.getAscii(170);
-
-
-            retvalue = retvalue.replace(".25", "\u00BC");
-            retvalue = retvalue.replace(".5", "\u00BD");
-            retvalue = retvalue.replace(".75", "\u00BE");
-            return retvalue;
-        } else if (oj < uj) {
-            retvalue = retvalue + "o";
-            juice = oj;
-        } else {
-            retvalue = retvalue + "u";
-            juice = uj;
-        }
-
-
-        if (juice < 0) {
-            juice = juice + 100;
-            String juicestr = "" + juice;
-            if (juice == 0) {
-                retvalue = retvalue + "ev";
-            } else if (juice > -10) {
-                juice = juice * -1;
-                juicestr = "-0" + juice;
-                retvalue = retvalue + "" + juicestr;
-            } else if (juice <= -100) // initial juice was  -200 or worse
-            {
-
-                juice = juice - 100;
-                juicestr = "" + juice;
-                retvalue = retvalue + "" + juicestr;
-            } else {
-                retvalue = retvalue + "" + juicestr;
-
-
-            }
-
-        } else {
-            juice = juice - 100;
-
-            if (juice == 0) {
-                retvalue = retvalue + "ev";
-            } else if (juice < 10) {
-                retvalue = retvalue + "+0" + juice;
-            } else {
-                retvalue = retvalue + "+" + juice;
-
-            }
-
-        }
-        retvalue = retvalue.replace(".0", "");
-        char half = AsciiChar.getAscii(170);
-
-        retvalue = retvalue.replace(".25", "\u00BC");
-        retvalue = retvalue.replace(".5", "\u00BD");
-        retvalue = retvalue.replace(".75", "\u00BE");
-        return retvalue;
-
-    }
-
-    public String getShortPrintedPriorTotal() {
-
-        return getShortPrintedTotal(priorover, prioroverjuice, priorunder, priorunderjuice);
-    }
-
-    public String getShortPrintedOpenerTotal() {
-
-        return getShortPrintedTotal(openerover, openeroverjuice, openerunder, openerunderjuice);
-    }
-
-    public String getOtherPrintedCurrentTotal() {
-
-        return getOtherPrintedTotal(currentover, currentoverjuice, currentunder, currentunderjuice);
-    }
-
-    public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
-        String retvalue = o + "";
-		if (oj == 0) {
-			return "";
-		}
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
-
-
-        double juice = 0;
-        if (oj == uj && oj == -110) {
-
-            retvalue = retvalue.replace(".0", "");
-            char half = AsciiChar.getAscii(170);
-
-
-            retvalue = retvalue.replace(".25", "\u00BC");
-            retvalue = retvalue.replace(".5", "\u00BD");
-            retvalue = retvalue.replace(".75", "\u00BE");
-            return retvalue;
-        } else if (oj < uj) {
-            retvalue = retvalue + "u";
-            juice = uj;
-        } else {
-            retvalue = retvalue + "o";
-            juice = oj;
-        }
-
-
-        if (juice < 0) {
-            juice = juice + 100;
-            String juicestr = "" + juice;
-            if (juice == 0) {
-                retvalue = retvalue + "ev";
-            } else if (juice > -10) {
-                juice = juice * -1;
-                juicestr = "-0" + juice;
-                retvalue = retvalue + "" + juicestr;
-            } else if (juice <= -100) // initial juice was  -200 or worse
-            {
-
-                juice = juice - 100;
-                juicestr = "" + juice;
-                retvalue = retvalue + "" + juicestr;
-            } else {
-                retvalue = retvalue + "" + juicestr;
-
-            }
-
-        } else {
-            juice = juice - 100;
-
-            if (juice == 0) {
-                retvalue = retvalue + "ev";
-            } else if (juice < 10) {
-                retvalue = retvalue + "+0" + juice;
-            } else {
-                retvalue = retvalue + "+" + juice;
-
-            }
-
-        }
-        retvalue = retvalue.replace(".0", "");
-
-        char half = AsciiChar.getAscii(170);
-
-        retvalue = retvalue.replace(".25", "\u00BC");
-        retvalue = retvalue.replace(".5", "\u00BD");
-        retvalue = retvalue.replace(".75", "\u00BE");
-        return retvalue;
-
-    }
-
-    public String getOtherPrintedPriorTotal() {
-
-        return getOtherPrintedTotal(priorover, prioroverjuice, priorunder, priorunderjuice);
-    }
-
-    public String getOtherPrintedOpenerTotal() {
-
-        return getOtherPrintedTotal(openerover, openeroverjuice, openerunder, openerunderjuice);
-    }
-
-    public boolean isOpener() {
-
-		return priorover == 0 && prioroverjuice == 0 && priorunder == 0 && priorunderjuice == 0;
-    }
-
-    public void setPriorts(long priorts) {
+    public void setPriorts(long priorts)
+    {
         this.priorts = priorts;
     }
 
-    public double getPriorunder() {
-        return priorunder;
+    public double getPriorover()
+    {
+        return priorover;
+    }
+    public void setPriorover(double priorover)
+    {
+        this.priorover = priorover;
     }
 
-    public void setPriorunder(double priorunder) {
+    public double getPrioroverjuice()
+    {
+        return prioroverjuice;
+    }
+    public void setPrioroverjuice(double prioroverjuice)
+    {
+        this.prioroverjuice = prioroverjuice;
+    }
+
+    public double getPriorunder()
+    {
+        return priorunder;
+    }
+    public void setPriorunder(double priorunder)
+    {
         this.priorunder = priorunder;
     }
 
+    public double getPriorunderjuice()
+    {
+        return priorunderjuice;
+    }
+    public void setPriorunderjuice(double priorunderjuice)
+    {
+        this.priorunderjuice = priorunderjuice;
+    }
 
-    public void setOpenerts(long openerts) {
+    public long getOpenerts()
+    {
+        return openerts;
+    }
+    public void setOpenerts(long openerts)
+    {
         this.openerts = openerts;
     }
 
-    public double getOpenerover() {
+    public double getOpenerover()
+    {
         return openerover;
     }
-
-    public void setOpenerover(double openerover) {
+    public void setOpenerover(double openerover)
+    {
         this.openerover = openerover;
     }
 
-    public double getOpeneroverjuice() {
+    public double getOpeneroverjuice()
+    {
         return openeroverjuice;
     }
-
-    public void setOpeneroverjuice(double openeroverjuice) {
+    public void setOpeneroverjuice(double openeroverjuice)
+    {
         this.openeroverjuice = openeroverjuice;
     }
 
-    public double getOpenerunder() {
+    public double getOpenerunder()
+    {
         return openerunder;
     }
-
-    public void setOpenerunder(double openerunder) {
+    public void setOpenerunder(double openerunder)
+    {
         this.openerunder = openerunder;
     }
 
-    public double getOpenerunderjuice() {
+    public double getOpenerunderjuice()
+    {
         return openerunderjuice;
     }
-
-    public void setOpenerunderjuice(double openerunderjuice) {
+    public void setOpenerunderjuice(double openerunderjuice)
+    {
         this.openerunderjuice = openerunderjuice;
     }
 

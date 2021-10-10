@@ -262,6 +262,8 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Long.parseLong(array[16]),
                         Integer.parseInt(array[17]));
                 AppController.addSpreadline(line);
+                //setLoginResultBack(true);
+                //owen took out 7/11/20 and moved back to loginconnection
 
             } else if (messageType.equals("Totalline")) {
                 TextMessage textMessage = (TextMessage) message;
@@ -275,6 +277,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[14]), Double.parseDouble(array[15]), Long.parseLong(array[16]),
 
                         Integer.parseInt(array[17]));
+                int period = Integer.parseInt(array[17]);
 
                 AppController.addTotalline(line);
 
@@ -333,6 +336,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[12]), Long.parseLong(array[13]),
 
                         Integer.parseInt(array[14]));
+                int period = Integer.parseInt(array[14]);
 
                 AppController.addMoneyline(line);
 
