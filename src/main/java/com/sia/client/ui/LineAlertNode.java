@@ -745,13 +745,10 @@ public class LineAlertNode {
             return false;
         } else if (queue.size() == spreadnumbookies - 1) {
             queue.add(line);
-            //System.out.println("queue after add "+queue);
             Spreadline old = (Spreadline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
-            long diff = newsecs - oldsecs;
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             long difflastalert = newsecs - queue.getlastalerted();
-            //System.out.println("diff="+diff+"..spreadsecs="+spreadsecs+"..difflastalert="+difflastalert+"..minsren="+spreadminsrenotify);
             if (newsecs - oldsecs <= spreadsecs * 1000) {
 
                 if (newsecs - queue.getlastalerted() >= spreadminsrenotify * 60 * 1000) {
@@ -776,8 +773,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Spreadline old = (Spreadline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             long diff = newsecs - oldsecs;
             long difflastalert = newsecs - queue.getlastalerted();
 
@@ -806,24 +803,12 @@ public class LineAlertNode {
 
     private boolean juicemovedenough(double j1, double j2, int juicemove) {
         if (j1 > 0 && j2 < 0) {
-            if ((j1 - 100.00) + (-100.00 - j2) >= juicemove) {
-                return true;
-            } else {
-                return false;
-            }
+            return (j1 - 100.00) + (-100.00 - j2) >= juicemove;
 
         } else if (j1 < 0 && j2 > 0) {
-            if ((j2 - 100.00) + (-100.00 - j1) >= juicemove) {
-                return true;
-            } else {
-                return false;
-            }
+            return (j2 - 100.00) + (-100.00 - j1) >= juicemove;
         } else {
-            if (Math.abs(j1 - j2) >= juicemove) {
-                return true;
-            } else {
-                return false;
-            }
+            return Math.abs(j1 - j2) >= juicemove;
         }
 
 
@@ -845,8 +830,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Totalline old = (Totalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= totalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= totalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -868,8 +853,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Totalline old = (Totalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= totalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= totalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -907,8 +892,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Moneyline old = (Moneyline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= moneylinesecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= moneylineminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -930,8 +915,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Moneyline old = (Moneyline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= moneylinesecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= moneylineminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -969,8 +954,8 @@ public class LineAlertNode {
             queue.add(line);
 
             TeamTotalline old = (TeamTotalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= teamtotalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= teamtotalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -991,8 +976,8 @@ public class LineAlertNode {
             queue.add(line);
 
             TeamTotalline old = (TeamTotalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= teamtotalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= teamtotalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true

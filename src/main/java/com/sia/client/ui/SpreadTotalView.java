@@ -9,8 +9,9 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
 import java.awt.Color;
-import java.sql.Timestamp;
 import java.util.Random;
+
+import static com.sia.client.config.Utils.log;
 
 public class SpreadTotalView {
     public static String ICON_UP = ImageFile.ICON_UP;
@@ -22,8 +23,6 @@ public class SpreadTotalView {
     Totalline tl;
     Moneyline ml;
     TeamTotalline ttl;
-    LineData topbox;
-    LineData bottombox;
     LineData[] boxes = new LineData[2];
     LineData[] priorboxes = new LineData[2];
     LineData[] openerboxes = new LineData[2];
@@ -43,12 +42,12 @@ public class SpreadTotalView {
     Color bottomcolor = Color.WHITE;
     private String topicon = ICON_BLANK;
     private String bottomicon = ICON_BLANK;
-    Timestamp clearts;
+    private long clearts;
     int id;
     Game game;
     Bookie bookie;
     Sport sp;
-    String topborder = "";
+    String topborder;
     String bottomborder = "";
     String tooltiptext;
     LinesTableData ltd;
@@ -69,9 +68,7 @@ public class SpreadTotalView {
         bookie = AppController.getBookie(bid);
         sp = AppController.getSportByLeagueId(game.getLeague_id());
         this.getCurrentBoxes();
-        //this.setAndGetPriorBoxes(bid,gid);
-        //this.setAndGetOpenerBoxes(bid,gid);
-        clearts = new Timestamp(cleartime);
+        clearts = cleartime;
         id = new Random().nextInt();
         this.ltd = ltd;
 
@@ -80,7 +77,6 @@ public class SpreadTotalView {
 
     public LineData[] getCurrentBoxes() {
         topborder = bottomborder = "";
-        //System.out.println("in getcurrentboxes "+bid+".."+gid);
         if (isopenerbookie) {
             boxes = getOpenerBoxes();
             return boxes;
@@ -104,14 +100,6 @@ public class SpreadTotalView {
         String topboxS = "";
         String bottomboxS = "";
 
-        boolean bestvisitspread = false;
-        boolean besthomespread = false;
-        boolean bestvisitmoney = false;
-        boolean besthomemoney = false;
-        boolean bestdrawmoney = false;
-        boolean bestover = false;
-        boolean bestunder = false;
-
         if (game.getStatus().equalsIgnoreCase("Time") && period == 0) {
             period = 2;
         }
@@ -123,51 +111,31 @@ public class SpreadTotalView {
 
 
         double visitspread;
-        double visitjuice = -150;
-        double homespread;
-        double homejuice = -150;
+        double visitjuice;
+        double homejuice;
         double over;
-        double overjuice;
-        double under;
-        double underjuice;
-
         double visitmljuice;
         double homemljuice;
-        double drawmljuice;
-
-
         double visitover;
-        double visitoverjuice;
-        double visitunder;
-        double visitunderjuice;
         double homeover;
-        double homeoverjuice;
-        double homeunder;
-        double homeunderjuice;
 
 
         String whowasbetspread = "";
         String whowasbettotal = "";
         String whowasbetmoney = "";
         String whowasbetteamtotal = "";
-        Timestamp tsnow = new Timestamp(new java.util.Date().getTime());
+        long tsnow = System.currentTimeMillis();
         try {
             visitspread = sl.getCurrentvisitspread();
             visitjuice = sl.getCurrentvisitjuice();
-            homespread = sl.getCurrenthomespread();
             homejuice = sl.getCurrenthomejuice();
 
 
-            long diff = tsnow.getTime() - sl.getCurrentts().getTime();
             whowasbetspread = sl.getWhowasbet();
-
-            //System.out.println(bid+".."+gid+".."+"ts diff="+diff);
-            if (tsnow.getTime() - sl.getCurrentts().getTime() <= 30000 && clearts.getTime() < sl.getCurrentts().getTime()) {
-                //System.out.println("MAKING IT RED!!!");
+            if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
                 spreadcolor = Color.RED;
             }
-            //else if(priorspreadcolor != Color.WHITE)
-            else if (clearts.getTime() < sl.getCurrentts().getTime()) {
+            else if (clearts < sl.getCurrentts()) {
                 spreadcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("S"+id);
@@ -178,7 +146,7 @@ public class SpreadTotalView {
 
         } catch (Exception e) // no line
         {
-            visitspread = homespread = -99999;
+            visitspread = -99999;
             visitjuice = homejuice = -99999;
 
         }
@@ -186,15 +154,11 @@ public class SpreadTotalView {
 
         try {
             over = tl.getCurrentover();
-            overjuice = tl.getCurrentoverjuice();
-            under = tl.getCurrentunder();
-            underjuice = tl.getCurrentunderjuice();
             whowasbettotal = tl.getWhowasbet();
-            if (tsnow.getTime() - tl.getCurrentts().getTime() <= 30000 && clearts.getTime() < tl.getCurrentts().getTime()) {
+            if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
                 totalcolor = Color.RED;
             }
-            //else if(priortotalcolor != Color.WHITE)
-            else if (clearts.getTime() < tl.getCurrentts().getTime()) {
+            else if (clearts < tl.getCurrentts()) {
                 totalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("T"+id);
@@ -204,27 +168,20 @@ public class SpreadTotalView {
             priortotalcolor = totalcolor;
         } catch (Exception ex) {
             over = 99999;
-            under = -99999;
-            overjuice = underjuice = -99999;
-
+            log(ex);
         }
 
 
         try {
             visitmljuice = ml.getCurrentvisitjuice();
             homemljuice = ml.getCurrenthomejuice();
-            drawmljuice = ml.getCurrentdrawjuice();
-            long diff = tsnow.getTime() - ml.getCurrentts().getTime();
             whowasbetmoney = ml.getWhowasbet();
 
-            if (tsnow.getTime() - ml.getCurrentts().getTime() <= 30000 && clearts.getTime() < ml.getCurrentts().getTime()) {
+            if (tsnow- ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
                 moneycolor = Color.RED;
             }
-            //else if(priormoneycolor != Color.WHITE)
-            else if (clearts.getTime() < ml.getCurrentts().getTime()) {
+            else if (clearts< ml.getCurrentts()) {
                 moneycolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("M"+id);
             } else {
                 moneycolor = Color.WHITE;
             }
@@ -241,10 +198,10 @@ public class SpreadTotalView {
             visitover = ttl.getCurrentvisitover();
             homeover = ttl.getCurrenthomeover();
             whowasbetteamtotal = ttl.getWhowasbet();
-            if (tsnow.getTime() - ttl.getCurrentts().getTime() <= 30000 && clearts.getTime() < ttl.getCurrentts().getTime()) {
+            if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
                 teamtotalcolor = Color.RED;
             }
-            else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
+            else if (clearts < ttl.getCurrentts()) {
                 teamtotalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("TT"+id);
@@ -254,12 +211,8 @@ public class SpreadTotalView {
             priorteamtotalcolor = teamtotalcolor;
         } catch (Exception ex) {
             visitover = 99999;
-            visitunder = -99999;
-            visitoverjuice = visitunderjuice = -99999;
             homeover = 99999;
-            homeunder = -99999;
-            homeoverjuice = homeunderjuice = -99999;
-
+            log(ex);
         }
 
 
@@ -448,11 +401,7 @@ public class SpreadTotalView {
 
             }
         } else if (display.equals("totalmoney") || display.equals("totalbothmoney")) {
-            if (display.equals("totalbothmoney")) {
-                showcomebacks = true;
-            } else {
-                showcomebacks = false;
-            }
+            showcomebacks = display.equals("totalbothmoney");
             if (visitmljuice == -99999) {
                 topboxS = "";
                 topcolor = moneycolor;
@@ -673,7 +622,7 @@ public class SpreadTotalView {
                 String tot1 = tl.getShortPrintedCurrentTotal();
                 String tot2 = tl.getOtherPrintedCurrentTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -709,9 +658,7 @@ public class SpreadTotalView {
                 String tot1 = ttl.getShortPrintedCurrentVisitTotal();
                 String tot2 = ttl.getOtherPrintedCurrentVisitTotal();
 
-                //System.out.println("bookie="+bid+".."+tot1+".."+tot2);
-
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -747,7 +694,7 @@ public class SpreadTotalView {
                 String tot1 = ttl.getShortPrintedCurrentHomeTotal();
                 String tot2 = ttl.getOtherPrintedCurrentHomeTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -914,6 +861,7 @@ public class SpreadTotalView {
 
             }
         } catch (Exception ex) {
+            log(ex);
         }
         return boxes;
     }
@@ -948,30 +896,16 @@ public class SpreadTotalView {
         ttl = AppController.getTeamTotalline(bid, gid, period);
         double visitspread;
         double visitjuice = -110;
-        double homespread;
         double homejuice = -110;
         double over;
-        double overjuice;
-        double under;
-        double underjuice;
         double visitmljuice;
         double homemljuice;
-        double drawmljuice;
-
         double visitover;
-        double visitoverjuice;
-        double visitunder;
-        double visitunderjuice;
         double homeover;
-        double homeoverjuice;
-        double homeunder;
-        double homeunderjuice;
-
 
         try {
             visitspread = sl.getOpenervisitspread();
             visitjuice = sl.getOpenervisitjuice();
-            homespread = sl.getOpenerhomespread();
             homejuice = sl.getOpenerhomejuice();
 
 
@@ -983,33 +917,22 @@ public class SpreadTotalView {
 
         try {
             over = tl.getOpenerover();
-            overjuice = tl.getOpeneroverjuice();
-            under = tl.getOpenerunder();
-            underjuice = tl.getOpenerunderjuice();
-
         } catch (Exception ex) {
             over = 99999;
 
         }
         try {
             visitover = ttl.getOpenervisitover();
-            visitoverjuice = ttl.getOpenervisitoverjuice();
-            visitunder = ttl.getOpenervisitunder();
-            visitunderjuice = ttl.getOpenervisitunderjuice();
             homeover = ttl.getOpenerhomeover();
-            homeoverjuice = ttl.getOpenerhomeoverjuice();
-            homeunder = ttl.getOpenerhomeunder();
-            homeunderjuice = ttl.getOpenerhomeunderjuice();
 
         } catch (Exception ex) {
             visitover = homeover = 99999;
-
+            log(ex);
         }
 
         try {
             visitmljuice = ml.getOpenervisitjuice();
             homemljuice = ml.getOpenerhomejuice();
-            drawmljuice = ml.getOpenerdrawjuice();
 
         } catch (Exception e) // no line
         {
@@ -1062,11 +985,7 @@ public class SpreadTotalView {
 
             }
         } else if (display.equals("totalmoney") || display.equals("totalbothmoney")) {
-            if (display.equals("totalbothmoney")) {
-                showcomebacks = true;
-            } else {
-                showcomebacks = false;
-            }
+            showcomebacks = display.equals("totalbothmoney");
             if (visitmljuice == 99999) {
                 topboxS = "";
                 if (over == 99999) {
@@ -1075,7 +994,6 @@ public class SpreadTotalView {
                     bottomboxS = tl.getShortPrintedOpenerTotal();
                 }
             }
-            //else if(visitmljuice < 0) // visitor is the favorite
             else if (visitmljuice < homemljuice) // visitor is the favorite
             {
                 if (showcomebacks && visitmljuice != 0) {
@@ -1146,7 +1064,7 @@ public class SpreadTotalView {
                 String tot1 = tl.getShortPrintedOpenerTotal();
                 String tot2 = tl.getOtherPrintedOpenerTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -1163,7 +1081,7 @@ public class SpreadTotalView {
                 String tot1 = ttl.getShortPrintedOpenerVisitTotal();
                 String tot2 = ttl.getOtherPrintedOpenerVisitTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -1180,7 +1098,7 @@ public class SpreadTotalView {
                 String tot1 = ttl.getShortPrintedOpenerHomeTotal();
                 String tot2 = ttl.getOtherPrintedOpenerHomeTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -1189,11 +1107,6 @@ public class SpreadTotalView {
                 }
             }
         }
-
-
-        //ld1.setIcon(ICON_BLANK);
-        //ld2.setIcon(ICON_BLANK);
-
 
         ld1.setIconPath(null);
         ld2.setIconPath(null);
@@ -1267,63 +1180,17 @@ public class SpreadTotalView {
         this.openerboxes = boxes;
     }
 
-    public boolean isshowcomebacks() {
-        return showcomebacks;
-    }
-
-    public void setShowComebacks(boolean b) {
-        showcomebacks = b;
-    }
-
-    public void firechange() {
-
-        new FireThread(ltd).start();
-
-
-    }
-
-    public String getDisplayType() {
-        return display;
-    }
-	/*
-		public void clearColors()
-	{
-		priorspreadcolor = Color.WHITE;
-		priortotalcolor = Color.WHITE;		
-		boxes[0].setBackgroundColor(Color.WHITE);
-		boxes[1].setBackgroundColor(Color.WHITE);
-
-		
-	}
-	*/
-
     public void setDisplayType(String d) {
         display = d;
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
     }
-
-    public int getPeriodType() {
-        return period;
-    }
-
     public void setPeriodType(int d) {
         period = d;
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
     }
-
-    public LineData gettopbox() {
-        return topbox;
-    }
-
-    public LineData getbottombox() {
-        return bottombox;
-    }
-
     public String toString() {
-        //getCurrentBoxes();
-
         return boxes[0].getData();
     }
 
@@ -1337,7 +1204,7 @@ public class SpreadTotalView {
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
 
-        clearts = new Timestamp(cleartime);
+        clearts = cleartime;
     }
 
     public LineData[] getPriorBoxes() {
@@ -1370,37 +1237,21 @@ public class SpreadTotalView {
         ttl = AppController.getTeamTotalline(bid, gid, period);
         double visitspread;
         double visitjuice = -110;
-        double homespread;
         double homejuice = -110;
         double over;
-        double overjuice;
-        double under;
-        double underjuice;
         double visitmljuice;
         double homemljuice;
-        double drawmljuice;
-
         double visitover;
-        double visitoverjuice;
-        double visitunder;
-        double visitunderjuice;
         double homeover;
-        double homeoverjuice;
-        double homeunder;
-        double homeunderjuice;
-
-
         try {
             visitspread = sl.getPriorvisitspread();
             visitjuice = sl.getPriorvisitjuice();
-            homespread = sl.getPriorhomespread();
             homejuice = sl.getPriorhomejuice();
 
 
         } catch (Exception e) // no line
         {
             visitspread = 99999;
-            //System.out.println("exception ex"+e+"..");
 
         }
 
@@ -1410,20 +1261,15 @@ public class SpreadTotalView {
 
         try {
             over = tl.getPriorover();
-            overjuice = tl.getPrioroverjuice();
-            under = tl.getPriorunder();
-            underjuice = tl.getPriorunderjuice();
-
         } catch (Exception ex) {
             over = 99999;
-
+            log(ex);
         }
 
 
         try {
             visitmljuice = ml.getPriorvisitjuice();
             homemljuice = ml.getPriorhomejuice();
-            drawmljuice = ml.getPriordrawjuice();
 
         } catch (Exception e) // no line
         {
@@ -1434,17 +1280,10 @@ public class SpreadTotalView {
 
         try {
             visitover = ttl.getPriorvisitover();
-            visitoverjuice = ttl.getPriorvisitoverjuice();
-            visitunder = ttl.getPriorvisitunder();
-            visitunderjuice = ttl.getPriorvisitunderjuice();
             homeover = ttl.getPriorhomeover();
-            homeoverjuice = ttl.getPriorhomeoverjuice();
-            homeunder = ttl.getPriorhomeunder();
-            homeunderjuice = ttl.getPriorhomeunderjuice();
-
         } catch (Exception ex) {
             visitover = homeover = 99999;
-
+            log(ex);
         }
 
 
@@ -1494,11 +1333,7 @@ public class SpreadTotalView {
 
             }
         } else if (display.equals("totalmoney") || display.equals("totalbothmoney")) {
-            if (display.equals("totalbothmoney")) {
-                showcomebacks = true;
-            } else {
-                showcomebacks = false;
-            }
+            showcomebacks = display.equals("totalbothmoney");
             if (visitmljuice == 99999) {
                 topboxS = "";
                 if (over == 99999) {
@@ -1507,7 +1342,6 @@ public class SpreadTotalView {
                     bottomboxS = tl.getShortPrintedPriorTotal();
                 }
             }
-            //else if(visitmljuice < 0) // visitor is the favorite
             else if (visitmljuice < homemljuice) // visitor is the favorite
             {
                 if (showcomebacks && visitmljuice != 0) {
@@ -1595,7 +1429,7 @@ public class SpreadTotalView {
                 String tot1 = ttl.getShortPrintedPriorVisitTotal();
                 String tot2 = ttl.getOtherPrintedPriorVisitTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -1612,7 +1446,7 @@ public class SpreadTotalView {
                 String tot1 = ttl.getShortPrintedPriorHomeTotal();
                 String tot2 = ttl.getOtherPrintedPriorHomeTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -1621,10 +1455,6 @@ public class SpreadTotalView {
                 }
             }
         }
-
-        //ld1.setIcon(ICON_BLANK);
-        //ld2.setIcon(ICON_BLANK);
-
         if (bid == 204 && gid == 6829) {
             //	System.out.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
         }

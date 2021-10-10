@@ -15,7 +15,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
-import java.text.SimpleDateFormat;
 
 import static com.sia.client.config.Utils.log;
 
@@ -29,7 +28,6 @@ public class LinesConsumer implements MessageListener {
     private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
     private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(2000L,-1500L);
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -60,7 +58,7 @@ public class LinesConsumer implements MessageListener {
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
             String changetype = mapMessage.getStringProperty("messageType");
-            long newlongts = 0;
+            long newlongts;
 
 
             boolean isopener = false;
@@ -105,13 +103,11 @@ public class LinesConsumer implements MessageListener {
 
                 Spreadline sl = AppController.getSpreadline(bookieid, gameid, period);
                 if (null != sl) {
-                    sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new java.sql.Timestamp(newlongts), isopener);
+                    sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, isopener);
                 } else {
-                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new java.sql.Timestamp(newlongts), period);
-                    //System.out.println("***************************************spreadxyzabc******************************");
+                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, period);
                     if (isopener) {
                         LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
-                        //System.out.println("***************************************"+sportname+"******************************");
                     }
 
                     AppController.addSpreadline(sl);
@@ -156,9 +152,9 @@ public class LinesConsumer implements MessageListener {
 
                 Totalline tl = AppController.getTotalline(bookieid, gameid, period);
                 if (null != tl) {
-                    tl.recordMove(newover, newoverjuice, newunder, newunderjuice, new java.sql.Timestamp(newlongts), isopener);
+                    tl.recordMove(newover, newoverjuice, newunder, newunderjuice, newlongts, isopener);
                 } else {
-                    tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, new java.sql.Timestamp(newlongts), period);
+                    tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, newlongts, period);
                     if (isopener) {
                         LineAlertOpeners.totalOpenerAlert(gameid, bookieid, period, isopenerS, newover, newoverjuice, newunder, newunderjuice);
                         //System.out.println("***************************************"+sportname+"******************************");
@@ -234,10 +230,10 @@ public class LinesConsumer implements MessageListener {
 
                     ttl.recordMove(newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
                             newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice,
-                            new java.sql.Timestamp(newlongts), isopener);
+                            newlongts, isopener);
                 } else {
                     ttl = new TeamTotalline(gameid, bookieid, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
-                            newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, new java.sql.Timestamp(newlongts), period);
+                            newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, newlongts, period);
                     if (isopener) {
                         LineAlertOpeners.teamTotalOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice);
                     }
@@ -292,22 +288,15 @@ public class LinesConsumer implements MessageListener {
 
 
                 if (null != ml) {
-                    ml.recordMove(newvisitorjuice, newhomejuice, newdrawjuice, new java.sql.Timestamp(newlongts), isopener);
+                    ml.recordMove(newvisitorjuice, newhomejuice, newdrawjuice, newlongts, isopener);
                 } else {
-                    ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, new java.sql.Timestamp(newlongts), period);
+                    ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, newlongts, period);
                     if (isopener) {
                         LineAlertOpeners.moneyOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorjuice, newhomejuice);
-                        //System.out.println("***************************************"+sportname+"******************************");
                     }
-                    //	System.out.println("***************************************moneyOpenerAlert******************************");
                     AppController.addMoneyline(ml);
                 }
-
-
-                // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
             }
-            //com.sia.client.ui.AppController.getLinesTableData().fireTableDataChanged();
-
 
         } catch (Exception e) {
             log(mapMessage.toString());
