@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -62,9 +63,8 @@ public abstract class InitialGameMessages {
     }
     public static void main(String [] argv) {
 
-        SiaConst.TestProperties.shouldLogInitGameMesg.set(Boolean.parseBoolean(System.getProperty("LogInitGameMesg")));
-        addText("this is line10");
-        addText("this is line20");
-        flushMessages();
+       System.out.println(""+new Timestamp(0).getTime());
+        System.out.println(""+new Timestamp(-1).getTime());
+        System.out.println(Long.parseLong(""));
     }
 }

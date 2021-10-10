@@ -257,9 +257,9 @@ public class LoginClient implements MessageListener {
 
                 Spreadline line = new Spreadline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
-                        Long.parseLong(array[6]),
-                        Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Long.parseLong(array[11]),
-                        Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Long.parseLong(array[16]),
+                        Utils.parseTimestamp(array[6]),
+                        Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
+                        Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
                         Integer.parseInt(array[17]));
                 AppController.addSpreadline(line);
                 //setLoginResultBack(true);
@@ -272,9 +272,9 @@ public class LoginClient implements MessageListener {
 
                 Totalline line = new Totalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
-                        Long.parseLong(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]),
-                        Double.parseDouble(array[10]), Long.parseLong(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
-                        Double.parseDouble(array[14]), Double.parseDouble(array[15]), Long.parseLong(array[16]),
+                        Utils.parseTimestamp(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]),
+                        Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
+                        Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
 
                         Integer.parseInt(array[17]));
                 int period = Integer.parseInt(array[17]);
@@ -295,7 +295,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[8]),
                         Double.parseDouble(array[9]),
 
-                        Long.parseLong(array[10]),
+                        Utils.parseTimestamp(array[10]),
 
                         Double.parseDouble(array[11]),
                         Double.parseDouble(array[12]),
@@ -306,7 +306,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[17]),
                         Double.parseDouble(array[18]),
 
-                        Long.parseLong(array[19]),
+                        Utils.parseTimestamp(array[19]),
 
                         Double.parseDouble(array[20]),
                         Double.parseDouble(array[21]),
@@ -317,7 +317,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[26]),
                         Double.parseDouble(array[27]),
 
-                        Long.parseLong(array[28]),
+                        Utils.parseTimestamp(array[28]),
                         Integer.parseInt(array[29]));
                 int period = Integer.parseInt(array[29]);
 
@@ -330,10 +330,10 @@ public class LoginClient implements MessageListener {
                 String[] array = text.split(SiaConst.MessageDelimiter);
 
                 Moneyline line = new Moneyline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
-                        Double.parseDouble(array[3]), Double.parseDouble(array[4]), Long.parseLong(array[5]),
+                        Double.parseDouble(array[3]), Double.parseDouble(array[4]), Utils.parseTimestamp(array[5]),
                         Double.parseDouble(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]),
-                        Long.parseLong(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
-                        Double.parseDouble(array[12]), Long.parseLong(array[13]),
+                        Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
+                        Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
 
                         Integer.parseInt(array[14]));
                 int period = Integer.parseInt(array[14]);

@@ -275,6 +275,14 @@ public abstract class Utils {
         }
         return sourceString;
     }
+    public static long parseTimestamp(String timeStampStr) {
+        try {
+            return Long.parseLong(timeStampStr);
+        }catch(NumberFormatException e) {
+            log(e);
+            return 0L;
+        }
+    }
     public static boolean containsOnlyAlphanumeric(String str) {
         return str.matches("[0-9a-zA-Z]+");
     }

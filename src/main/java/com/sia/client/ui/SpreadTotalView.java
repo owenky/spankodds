@@ -126,46 +126,53 @@ public class SpreadTotalView {
         String whowasbetteamtotal = "";
         long tsnow = System.currentTimeMillis();
         try {
-            visitspread = sl.getCurrentvisitspread();
-            visitjuice = sl.getCurrentvisitjuice();
-            homejuice = sl.getCurrenthomejuice();
+            if (null != sl) {
+                visitspread = sl.getCurrentvisitspread();
+                visitjuice = sl.getCurrentvisitjuice();
+                homejuice = sl.getCurrenthomejuice();
 
 
-            whowasbetspread = sl.getWhowasbet();
-            if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
-                spreadcolor = Color.RED;
-            }
-            else if (clearts < sl.getCurrentts()) {
-                spreadcolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("S"+id);
+                whowasbetspread = sl.getWhowasbet();
+                if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
+                    spreadcolor = Color.RED;
+                } else if (clearts < sl.getCurrentts()) {
+                    spreadcolor = Color.BLACK;
+                    //owen took out cuz maionscreen refreshes every sec
+                    //FireThreadManager.remove("S"+id);
+                } else {
+                    spreadcolor = Color.WHITE;
+                }
+                priorspreadcolor = spreadcolor;
             } else {
-                spreadcolor = Color.WHITE;
+                visitspread = -99999;
+                visitjuice = homejuice = -99999;
             }
-            priorspreadcolor = spreadcolor;
 
         } catch (Exception e) // no line
         {
             visitspread = -99999;
             visitjuice = homejuice = -99999;
-
+            log(e);
         }
 
 
         try {
-            over = tl.getCurrentover();
-            whowasbettotal = tl.getWhowasbet();
-            if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
-                totalcolor = Color.RED;
+            if ( null != tl) {
+                over = tl.getCurrentover();
+                whowasbettotal = tl.getWhowasbet();
+                if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
+                    totalcolor = Color.RED;
+                } else if (clearts < tl.getCurrentts()) {
+                    totalcolor = Color.BLACK;
+                    //owen took out cuz maionscreen refreshes every sec
+                    //FireThreadManager.remove("T"+id);
+                } else {
+                    totalcolor = Color.WHITE;
+                }
+                priortotalcolor = totalcolor;
+            }else {
+                over = 99999;
             }
-            else if (clearts < tl.getCurrentts()) {
-                totalcolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("T"+id);
-            } else {
-                totalcolor = Color.WHITE;
-            }
-            priortotalcolor = totalcolor;
         } catch (Exception ex) {
             over = 99999;
             log(ex);
@@ -173,42 +180,49 @@ public class SpreadTotalView {
 
 
         try {
-            visitmljuice = ml.getCurrentvisitjuice();
-            homemljuice = ml.getCurrenthomejuice();
-            whowasbetmoney = ml.getWhowasbet();
+            if ( null != ml) {
+                visitmljuice = ml.getCurrentvisitjuice();
+                homemljuice = ml.getCurrenthomejuice();
+                whowasbetmoney = ml.getWhowasbet();
 
-            if (tsnow- ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
-                moneycolor = Color.RED;
+                if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
+                    moneycolor = Color.RED;
+                } else if (clearts < ml.getCurrentts()) {
+                    moneycolor = Color.BLACK;
+                } else {
+                    moneycolor = Color.WHITE;
+                }
+                priormoneycolor = moneycolor;
+            }else {
+                visitmljuice = homemljuice = -99999;
             }
-            else if (clearts< ml.getCurrentts()) {
-                moneycolor = Color.BLACK;
-            } else {
-                moneycolor = Color.WHITE;
-            }
-            priormoneycolor = moneycolor;
 
         } catch (Exception e) // no line
         {
             visitmljuice = homemljuice = -99999;
-
+            log(e);
         }
 
 
         try {
-            visitover = ttl.getCurrentvisitover();
-            homeover = ttl.getCurrenthomeover();
-            whowasbetteamtotal = ttl.getWhowasbet();
-            if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
-                teamtotalcolor = Color.RED;
-            }
-            else if (clearts < ttl.getCurrentts()) {
-                teamtotalcolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("TT"+id);
+            if ( null != ttl) {
+                visitover = ttl.getCurrentvisitover();
+                homeover = ttl.getCurrenthomeover();
+                whowasbetteamtotal = ttl.getWhowasbet();
+                if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
+                    teamtotalcolor = Color.RED;
+                } else if (clearts < ttl.getCurrentts()) {
+                    teamtotalcolor = Color.BLACK;
+                    //owen took out cuz maionscreen refreshes every sec
+                    //FireThreadManager.remove("TT"+id);
+                } else {
+                    teamtotalcolor = Color.WHITE;
+                }
+                priorteamtotalcolor = teamtotalcolor;
             } else {
-                teamtotalcolor = Color.WHITE;
+                visitover = 99999;
+                homeover = 99999;
             }
-            priorteamtotalcolor = teamtotalcolor;
         } catch (Exception ex) {
             visitover = 99999;
             homeover = 99999;
@@ -904,26 +918,37 @@ public class SpreadTotalView {
         double homeover;
 
         try {
-            visitspread = sl.getOpenervisitspread();
-            visitjuice = sl.getOpenervisitjuice();
-            homejuice = sl.getOpenerhomejuice();
-
+            if ( null != sl) {
+                visitspread = sl.getOpenervisitspread();
+                visitjuice = sl.getOpenervisitjuice();
+                homejuice = sl.getOpenerhomejuice();
+            }else {
+                visitspread = 99999;
+            }
 
         } catch (Exception e) // no line
         {
             visitspread = 99999;
-
+            log(e);
         }
 
         try {
-            over = tl.getOpenerover();
+            if ( null != tl) {
+                over = tl.getOpenerover();
+            } else {
+                over = 99999;
+            }
         } catch (Exception ex) {
             over = 99999;
-
+            log(ex);
         }
         try {
-            visitover = ttl.getOpenervisitover();
-            homeover = ttl.getOpenerhomeover();
+            if ( null != ttl) {
+                visitover = ttl.getOpenervisitover();
+                homeover = ttl.getOpenerhomeover();
+            } else {
+                visitover = homeover = 99999;
+            }
 
         } catch (Exception ex) {
             visitover = homeover = 99999;
@@ -931,13 +956,17 @@ public class SpreadTotalView {
         }
 
         try {
-            visitmljuice = ml.getOpenervisitjuice();
-            homemljuice = ml.getOpenerhomejuice();
+            if ( null != ml) {
+                visitmljuice = ml.getOpenervisitjuice();
+                homemljuice = ml.getOpenerhomejuice();
+            }else {
+                visitmljuice = homemljuice = 99999;
+            }
 
         } catch (Exception e) // no line
         {
             visitmljuice = homemljuice = 99999;
-
+            log(e);
         }
         if (display.equals("spreadtotal")) {
             if (visitspread == 99999) {
@@ -1244,15 +1273,18 @@ public class SpreadTotalView {
         double visitover;
         double homeover;
         try {
-            visitspread = sl.getPriorvisitspread();
-            visitjuice = sl.getPriorvisitjuice();
-            homejuice = sl.getPriorhomejuice();
-
+            if ( null != sl) {
+                visitspread = sl.getPriorvisitspread();
+                visitjuice = sl.getPriorvisitjuice();
+                homejuice = sl.getPriorhomejuice();
+            } else {
+                visitspread = 99999;
+            }
 
         } catch (Exception e) // no line
         {
             visitspread = 99999;
-
+            log(e);
         }
 
         if (bid == 204 && gid == 465) {
@@ -1260,7 +1292,11 @@ public class SpreadTotalView {
         }
 
         try {
-            over = tl.getPriorover();
+            if ( null != tl) {
+                over = tl.getPriorover();
+            } else {
+                over = 99999;
+            }
         } catch (Exception ex) {
             over = 99999;
             log(ex);
@@ -1268,19 +1304,27 @@ public class SpreadTotalView {
 
 
         try {
-            visitmljuice = ml.getPriorvisitjuice();
-            homemljuice = ml.getPriorhomejuice();
+            if ( null != ml) {
+                visitmljuice = ml.getPriorvisitjuice();
+                homemljuice = ml.getPriorhomejuice();
+            } else {
+                visitmljuice = homemljuice = 99999;
+            }
 
         } catch (Exception e) // no line
         {
             visitmljuice = homemljuice = 99999;
-
+            log(e);
         }
 
 
         try {
-            visitover = ttl.getPriorvisitover();
-            homeover = ttl.getPriorhomeover();
+            if ( null != ttl) {
+                visitover = ttl.getPriorvisitover();
+                homeover = ttl.getPriorhomeover();
+            } else {
+                visitover = homeover = 99999;
+            }
         } catch (Exception ex) {
             visitover = homeover = 99999;
             log(ex);

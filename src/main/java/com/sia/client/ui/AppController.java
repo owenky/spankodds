@@ -1193,23 +1193,25 @@ public class AppController {
 
     public static TeamTotalline getTeamTotalline(int b, int g, int period) {
 
+        TeamTotalline rtn;
         if (period == 0) {
-            return teamtotals.get(b + "-" + g);
+            rtn = teamtotals.get(b + "-" + g);
         } else if (period == 1) {
-            return h1teamtotals.get(b + "-" + g);
+            rtn =  h1teamtotals.get(b + "-" + g);
         } else if (period == 2) {
-            return h2teamtotals.get(b + "-" + g);
+            rtn =  h2teamtotals.get(b + "-" + g);
         } else if (period == 5) {
-            return q1teamtotals.get(b + "-" + g);
+            rtn =  q1teamtotals.get(b + "-" + g);
         } else if (period == 6) {
-            return q2teamtotals.get(b + "-" + g);
+            rtn =  q2teamtotals.get(b + "-" + g);
         } else if (period == 7) {
-            return q3teamtotals.get(b + "-" + g);
+            rtn =  q3teamtotals.get(b + "-" + g);
         } else if (period == 8) {
-            return q4teamtotals.get(b + "-" + g);
+            rtn =  q4teamtotals.get(b + "-" + g);
         } else {
-            return liveteamtotals.get(b + "-" + g);
+            rtn =  liveteamtotals.get(b + "-" + g);
         }
+        return rtn;
     }
 
     public static String getCurrentHoursMinutes() {
