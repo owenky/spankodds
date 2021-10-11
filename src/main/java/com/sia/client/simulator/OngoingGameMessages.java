@@ -35,7 +35,7 @@ public abstract class OngoingGameMessages {
     private static final long period = 1800L;
     private static final ScheduledExecutorService bckThread = Executors.newScheduledThreadPool(1);
     private static final int batchSize = 2000;
-    private static final String MessageTypeDelimiter = "|~#$|";
+    private static final String MessageTypeDelimiter = "####@@@@";
     public static final String TextPropertyName = "TEXT";
     private static final AtomicBoolean startStatus = new AtomicBoolean(false);
     private static List<String> buffer = new ArrayList<>();

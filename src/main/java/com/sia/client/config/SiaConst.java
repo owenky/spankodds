@@ -43,5 +43,5 @@ public abstract class SiaConst {
         String MesgDir = "c:\\temp\\OngingGameMessages";
     }
     public static final String MessageDelimiter = "~";
-    public static final String PropertyDelimiter = "*******";
+    public static final String PropertyDelimiter = "@#_#_#@";
 }
