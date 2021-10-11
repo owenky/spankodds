@@ -9,17 +9,21 @@ import java.util.Map;
 public class LocalTextMessage implements TextMessage {
 
     private final Map<String,String> content;
+    private String text;
+
     public LocalTextMessage(Map<String,String> content) {
         this.content = content;
+        text = this.content.remove(OngoingGameMessages.TextPropertyName);
+
     }
     @Override
     public void setText(final String s) throws JMSException {
-
+        this.text = s;
     }
 
     @Override
     public String getText() throws JMSException {
-        return null;
+        return text;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
 import com.sia.client.simulator.GameMessageSimulator;
+import com.sia.client.simulator.InitialGameMessages;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -65,7 +67,7 @@ public class GamesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        if ( ! TestProperties.getMessagesFromLog.get()) {
+        if ( ! InitialGameMessages.getMessagesFromLog) {
             if (toSimulateMQ) {
                 if (simulateStatus.compareAndSet(false, true)) {
                     new GameMessageSimulator(this).start();
@@ -73,6 +75,7 @@ public class GamesConsumer implements MessageListener {
 
             } else {
                 Utils.ensureNotEdtThread();
+                OngoingGameMessages.addMessage(MessageType.Game,message);
                 processMessage(message);
             }
         }

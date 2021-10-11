@@ -1,8 +1,8 @@
 package com.sia.client.simulator;
 
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.TestProperties;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import com.sia.client.ui.AppController;
 
 import java.io.File;
@@ -13,29 +13,55 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
 
 public abstract class InitialGameMessages {
 
+    public static boolean shouldLogMesg = false;
+    public static boolean shouldRunMainScreenTest = false;
+    public static boolean getMessagesFromLog = false;
+    public static Set<MessageType> interestedMessageTypes;
+
     private static List<String> buffer = new ArrayList<>();
     private static final String filePath = TestProperties.MesgDir+ File.separator+"initGameMesgs.txt";
 
     public static void initMsgLoggingProps() {
-        TestProperties.shouldLogMesg.set(Boolean.parseBoolean(System.getProperty("LogMesg")));
-        TestProperties.shouldRunMainScreenTest.set(Boolean.parseBoolean(System.getProperty("MainScreenTest")));
-        TestProperties.getMessagesFromLog.set(Boolean.parseBoolean(System.getProperty("GetMesgFromLog")));
+        shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
+        shouldRunMainScreenTest = Boolean.parseBoolean(System.getProperty("MainScreenTest"));
+        getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
+        String interestedMesgTypeStr = System.getProperty("InterestedMessageTypes");
 
-        if ( TestProperties.getMessagesFromLog.get()) {
-            TestProperties.shouldLogMesg.set(false);
+        interestedMessageTypes = configInterestedMessageTypes(interestedMesgTypeStr);
+
+        if ( getMessagesFromLog) {
+            shouldLogMesg = false;
         }
 
-        if ( TestProperties.shouldLogMesg.get()) {
+        if ( shouldLogMesg) {
             backupTempDir();
         }
+    }
+    static Set<MessageType> configInterestedMessageTypes(String interestedMesgTypeStr) {
+        Set<MessageType> interestedMsgTypes = new HashSet<>();
+        if ( null != interestedMesgTypeStr && ! interestedMesgTypeStr.isEmpty()) {
+            String [] typesStr = interestedMesgTypeStr.split(",");
+            for(String typeStr:typesStr) {
+                try {
+                    MessageType type = MessageType.valueOf(typeStr);
+                    interestedMsgTypes.add(type);
+                }catch(Exception e) {
+                    throw new IllegalArgumentException("Interested message type defined as property in -DInterestedMessageTypes is not supported: " + typeStr);
+                }
+            }
+        }
+        return Collections.unmodifiableSet(interestedMsgTypes);
     }
     static void backupTempDir() {
         File tempDir = new File(TestProperties.MesgDir);
@@ -52,7 +78,7 @@ public abstract class InitialGameMessages {
         tempDir.mkdirs();
     }
     public static void addText(String text) {
-        if (SiaConst.TestProperties.shouldLogMesg.get()) {
+        if (shouldLogMesg) {
             buffer.add(text);
         }
     }
@@ -61,7 +87,7 @@ public abstract class InitialGameMessages {
         loadGamesFromLog();
     }
     private static void loadGamesFromLog() {
-        if (SiaConst.TestProperties.getMessagesFromLog.get()) {
+        if (getMessagesFromLog) {
             try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
                 stream.forEach(text->AppController.addGame(GameUtils.parseGameText(text)));
             } catch ( Exception e) {
@@ -70,7 +96,7 @@ public abstract class InitialGameMessages {
         }
     }
     private static void flushMessages() {
-        if (SiaConst.TestProperties.shouldLogMesg.get()) {
+        if (shouldLogMesg) {
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filePath);

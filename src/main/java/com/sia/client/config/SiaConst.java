@@ -2,7 +2,6 @@ package com.sia.client.config;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class SiaConst {
 
@@ -41,10 +40,8 @@ public abstract class SiaConst {
         String ARR_DOWN = "arrdown.gif";
     }
     public interface TestProperties {
-        AtomicBoolean shouldLogMesg = new AtomicBoolean(false);
-        AtomicBoolean shouldRunMainScreenTest = new AtomicBoolean(false);
-        AtomicBoolean getMessagesFromLog = new AtomicBoolean(false);
         String MesgDir = "c:\\temp\\OngingGameMessages";
     }
     public static final String MessageDelimiter = "~";
+    public static final String PropertyDelimiter = "*******";
 }

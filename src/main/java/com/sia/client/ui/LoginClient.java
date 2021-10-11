@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Moneyline;
@@ -247,7 +246,7 @@ public class LoginClient implements MessageListener {
                 //log game messages  -- 2021-10-09
                 InitialGameMessages.addText(text);
                 //allow reading games from log for test purpose  -- 2021-10-09
-                if ( ! TestProperties.getMessagesFromLog.get()) {
+                if ( ! InitialGameMessages.getMessagesFromLog) {
                     AppController.addGame(GameUtils.parseGameText(text));
                 }
             } else if (messageType.equals("Spreadline")) {

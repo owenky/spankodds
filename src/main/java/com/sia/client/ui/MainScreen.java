@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
@@ -13,6 +12,7 @@ import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.MainScreenRefresh;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
@@ -853,7 +853,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
         AppController.addDataModels(getDataModels());
-        if (TestProperties.shouldRunMainScreenTest.get()) {
+        if (InitialGameMessages.shouldRunMainScreenTest) {
             if ( ! testStatus.get()) {
                 TestExecutor testExecutor;
 //                testExecutor= new MoveToFinal(model);
@@ -866,7 +866,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
             }
         }
-        if (SiaConst.TestProperties.getMessagesFromLog.get()) {
+        if (InitialGameMessages.getMessagesFromLog) {
             OngoingGameMessages.loadMessagesFromLog();
         }
     }

@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
 
 import java.time.LocalDate;
@@ -143,6 +144,10 @@ public class SportType {
     }
     private static final int PurgeOldGameCutOffTime = 10;
     public boolean isGameNear(Game game) {
+        if (InitialGameMessages.getMessagesFromLog) {
+            //if messages come from local, then all messages should be processed and added to table -- 2021-10-11
+            return true;
+        }
         Date gd = game.getGamedate();
         LocalDate gmDate = LocalDate.of(gd.getYear()+1900, gd.getMonth()+1,gd.getDate());
         Calendar c = Calendar.getInstance();
