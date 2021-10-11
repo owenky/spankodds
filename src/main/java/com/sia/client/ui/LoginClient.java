@@ -247,7 +247,7 @@ public class LoginClient implements MessageListener {
                 //log game messages  -- 2021-10-09
                 InitialGameMessages.addText(text);
                 //allow reading games from log for test purpose  -- 2021-10-09
-                if ( ! TestProperties.getGamesFromLog.get()) {
+                if ( ! TestProperties.getMessagesFromLog.get()) {
                     AppController.addGame(GameUtils.parseGameText(text));
                 }
             } else if (messageType.equals("Spreadline")) {

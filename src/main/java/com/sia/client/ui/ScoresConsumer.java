@@ -1,9 +1,12 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.MessageConsumingScheduler;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import com.sia.client.simulator.ScoreChangeProcessorTest;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -73,22 +76,22 @@ public class ScoresConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        if ( toSimulateMQ) {
-            if ( simulateStatus.compareAndSet(false,true)) {
-                new ScoreChangeProcessorTest(this).start();
+        if ( ! TestProperties.getMessagesFromLog.get()) {
+            if (toSimulateMQ) {
+                if (simulateStatus.compareAndSet(false, true)) {
+                    new ScoreChangeProcessorTest(this).start();
+                }
+            } else {
+                Utils.ensureNotEdtThread();
+                processMessage(message);
             }
-        } else {
-            Utils.ensureNotEdtThread();
-            processMessage(message);
         }
     }
     public void processMessage(Message message) {
         try {
-
             mapMessage = (MapMessage) message;
-
+            OngoingGameMessages.addMessage(MessageType.Line,mapMessage);
             String changetype = mapMessage.getStringProperty("messageType");
-
 
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");

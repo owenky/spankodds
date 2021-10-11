@@ -14,6 +14,7 @@ import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.simulator.MainScreenRefresh;
+import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
 
 import javax.swing.BoxLayout;
@@ -864,6 +865,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 }
 
             }
+        }
+        if (SiaConst.TestProperties.getMessagesFromLog.get()) {
+            OngoingGameMessages.loadMessagesFromLog();
         }
     }
     public boolean isPreDefinedSport() {

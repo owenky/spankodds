@@ -1,10 +1,13 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -49,11 +52,13 @@ public class LinesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
-        processMessage((MapMessage)message);
+        if ( ! TestProperties.getMessagesFromLog.get()) {
+            processMessage((MapMessage) message);
+        }
     }
-    private void processMessage(MapMessage message) {
+    public void processMessage(MapMessage message) {
         try {
-
+            OngoingGameMessages.addMessage(MessageType.Line,message);
             mapMessage =  message;
             gameid = mapMessage.getInt("gameid");
             int bookieid = mapMessage.getInt("bookieid");

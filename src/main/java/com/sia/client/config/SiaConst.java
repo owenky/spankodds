@@ -41,9 +41,10 @@ public abstract class SiaConst {
         String ARR_DOWN = "arrdown.gif";
     }
     public interface TestProperties {
-        AtomicBoolean shouldLogInitGameMesg = new AtomicBoolean(false);
+        AtomicBoolean shouldLogMesg = new AtomicBoolean(false);
         AtomicBoolean shouldRunMainScreenTest = new AtomicBoolean(false);
-        AtomicBoolean getGamesFromLog = new AtomicBoolean(false);
+        AtomicBoolean getMessagesFromLog = new AtomicBoolean(false);
+        String MesgDir = "c:\\temp\\OngingGameMessages";
     }
     public static final String MessageDelimiter = "~";
 }
