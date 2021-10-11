@@ -19,9 +19,7 @@ public class GameMessageProcessor {
         gameConsumingScheculer.setUpdatePeriodInMilliSeconds(periodInMilliSeconcs);
     }
     public void addGame(Game game) {
-        if ( null  == game) {
-            log(new Exception("null game detected....."));
-        } else {
+        if ( null  != game) {
             gameConsumingScheculer.addMessage(game);
         }
     }

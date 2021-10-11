@@ -68,13 +68,13 @@ log("***** Game not found in the table -- "+GameUtils.getGameDebugInfo(game));
             if ( GameUtils.isGameNear(game)) {
                 if ( ! game.isInStage()) {
                     callBackOnNotFound.run();
-                    log("REFRESH main screen for this game id=" + game.getGame_id());
+                    log("REFRESH main screen for this game "+GameUtils.getGameDebugInfo(game));
                 } else {
                     //when game is in stage, there might not be a regular game header for this game, instead this game is in stage header (i.e. Final, Halftime, etc...) -- 2021-10-05
-                    log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is in stage. ----"+GameUtils.getGameDebugInfo(game));
+                    log("SKIP REFRESHing main screen for this game because the game is in stage. ----"+GameUtils.getGameDebugInfo(game));
                 }
             } else {
-                log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is not near.---"+GameUtils.getGameDebugInfo(game));
+                log("SKIP REFRESHing main screen for this game  because the game is not near.---"+GameUtils.getGameDebugInfo(game));
             }
         }
 

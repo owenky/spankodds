@@ -92,6 +92,9 @@ public abstract class Utils {
         LocalDateTime ldt = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
         return ldt.format(sdf);
     }
+    public static void main(String [] argv) {
+        System.out.println(nowShortString());
+    }
     public static int getInt(MapMessage mapMessage, String name) {
         try {
             return mapMessage.getInt(name);

@@ -82,7 +82,7 @@ public abstract class OngoingGameMessages {
         }
     }
 
-    static String convert(ActiveMQTextMessage message) {
+    public static String convert(ActiveMQTextMessage message) {
         try {
             Map<String, Object> prop = message.getMessage().getProperties();
             StringBuilder sb = new StringBuilder(convertMap(prop));

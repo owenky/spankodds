@@ -9,6 +9,7 @@ import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -26,7 +27,6 @@ public class LinesConsumer implements MessageListener {
 
     //private static String brokerURL = "failover:(ssl://localhost:61617)";
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
-    int gameid = 0;
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
@@ -58,6 +58,7 @@ public class LinesConsumer implements MessageListener {
         }
     }
     public void processMessage(MapMessage message) {
+        int gameid = 0;
         try {
             mapMessage =  message;
             gameid = mapMessage.getInt("gameid");
@@ -320,6 +321,10 @@ public class LinesConsumer implements MessageListener {
 
         }
         Game game = AppController.getGame(gameid);
-        gameMessageProcessor.addGame(game);
+        if ( null == game) {
+            log(new Exception("null game detected...gameid="+gameid+", message="+OngoingGameMessages.convert((ActiveMQTextMessage)message)));
+        } else {
+            gameMessageProcessor.addGame(game);
+        }
     }
 }
