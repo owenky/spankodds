@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
+
 public class Sport {
 	private int	sport_id;
 	private int league_id;
@@ -9,7 +11,8 @@ public class Sport {
 	private double timeperperiod;
 	private double halftimeminutes;
 
-	private String leaguename;
+	private final String leaguename;
+	private final String normalizeLeaguename;
 	private String leagueabbr;
 	private String sportname;
 	private String sportabbr;
@@ -25,6 +28,7 @@ public class Sport {
 	this.timeperperiod = timeperperiod;
 	this.halftimeminutes = halftimeminutes;
 	this.leaguename = leaguename;
+	this.normalizeLeaguename = GameUtils.normalizeGameHeader(leaguename);
 	this.leagueabbr = leagueabbr;
 	this.sportname = sportname;
 	this.sportabbr = sportabbr;
@@ -86,14 +90,12 @@ public class Sport {
 	{
 			this.halftimeminutes = halftimeminutes;
 	}			
-	public String getLeaguename()
-	{
+	public String getLeaguename() {
 			return leaguename;
 	}
-	public void setLeaguename(String leaguename)
-	{
-			this.leaguename = leaguename;
-	}			
+	public String getNormalizedLeaguename() {
+		return this.normalizeLeaguename;
+	}
 	public String getLeagueabbr()
 	{
 			return leagueabbr;

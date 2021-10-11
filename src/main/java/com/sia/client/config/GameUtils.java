@@ -8,7 +8,6 @@ import com.sia.client.ui.AppController;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +33,7 @@ public abstract class GameUtils {
             gameGroupHeader = gameGroupHeader.replace(SiaConst.SoccerStr,"").trim();
             gameGroupHeader = Utils.replaceIgnoreCase(gameGroupHeader,SiaConst.FinalStr);
             gameGroupHeader = Utils.replaceIgnoreCase(gameGroupHeader,SiaConst.InProgresStr);
+            gameGroupHeader = gameGroupHeader.replaceAll("\\s+"," ");
             return gameGroupHeader;
         } else {
             return null;
@@ -45,7 +45,7 @@ public abstract class GameUtils {
     }
     public static String getGameGroupHeader(Game game) {
         int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
-        return AppController.getSportByLeagueId(sportIdentifyingLeagueId).getLeaguename() + " " + getGameDateStr(game);
+        return AppController.getSportByLeagueId(sportIdentifyingLeagueId).getNormalizedLeaguename() + " " + getGameDateStr(game);
     }
     public static boolean isGameNear(Game game) {
         SportType sportType = SportType.findByGame(game);
@@ -108,10 +108,7 @@ public abstract class GameUtils {
     }
     public static void main(String [] argvb ) throws ParseException {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse("2021-02-29");
-        LocalDate ld = LocalDate.of(date.getYear()+1900,date.getMonth()+1,date.getDate());
-
-        System.out.println("ld="+ld);
+      String abc="a   b c ";
+      System.out.println("abc="+normalizeGameHeader(abc)+"|");
     }
 }
