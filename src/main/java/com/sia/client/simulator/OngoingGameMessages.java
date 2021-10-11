@@ -4,6 +4,8 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
+import org.apache.activemq.command.ActiveMQMapMessage;
+import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -15,10 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +45,12 @@ public abstract class OngoingGameMessages {
     }
     public synchronized static void addMessage(MessageType messgeType, Message message) {
         if (SiaConst.TestProperties.shouldLogMesg.get()) {
-            String text = convert(message);
+            String text;
+            if ( message instanceof ActiveMQMapMessage) {
+                text = convert((ActiveMQMapMessage)message);
+            } else {
+                text = convert((ActiveMQTextMessage)message);
+            }
             addText(messgeType,text);
         }
     }
@@ -134,13 +141,13 @@ public abstract class OngoingGameMessages {
             }
         }
     }
-    static String convert(Message message) {
+    static String convert(ActiveMQMapMessage message) {
         try {
+            Map<String, Object> contentMap = message.getContentMap();
+            Set<String> keySet = contentMap.keySet();
             StringBuilder sb = new StringBuilder();
-            Enumeration names = message.getPropertyNames();
-            while ( names.hasMoreElements()) {
-                String name = names.nextElement().toString();
-                Object value = message.getObjectProperty(name);
+            for ( String name: keySet) {
+                Object value = contentMap.get(name);
                 if ( null != value) {
                     sb.append(name).append("=").append(value).append(SiaConst.MessageDelimiter);
                 }
@@ -148,6 +155,25 @@ public abstract class OngoingGameMessages {
             return sb.toString();
 
         } catch (JMSException e) {
+            Utils.log(e);
+            return "";
+        }
+    }
+    static String convert(ActiveMQTextMessage message) {
+        try {
+//            Map<String, Object> contentMap = message.getContentMap();
+//            Set<String> keySet = contentMap.keySet();
+//            StringBuilder sb = new StringBuilder();
+//            for ( String name: keySet) {
+//                Object value = message.getObjectProperty(name);
+//                if ( null != value) {
+//                    sb.append(name).append("=").append(value).append(SiaConst.MessageDelimiter);
+//                }
+//            }
+//            return sb.toString();
+            return message.toString();
+
+        } catch (Exception e) {
             Utils.log(e);
             return "";
         }
