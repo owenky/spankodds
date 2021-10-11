@@ -83,7 +83,7 @@ public class ScoresConsumer implements MessageListener {
                 }
             } else {
                 Utils.ensureNotEdtThread();
-                OngoingGameMessages.addMessage(MessageType.Line,mapMessage);
+                OngoingGameMessages.addMessage(MessageType.Score,mapMessage);
                 processMessage(message);
             }
         }
