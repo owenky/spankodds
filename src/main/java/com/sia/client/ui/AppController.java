@@ -50,59 +50,45 @@ public class AppController {
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
-    private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
-    private static Games games = new Games();
-
     public static Vector<Bookie> openerbookiesVec = new Vector();
     public static Vector<Bookie> bookiesVec = new Vector();
     public static Vector<Sport> sportsVec = new Vector();
     public static Vector<Bookie> hiddenCols = new Vector();
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
-
     public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
     public static Hashtable<String, Moneyline> moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> teamtotals = new Hashtable();
-
-
     public static Hashtable<String, Spreadline> h1spreads = new Hashtable();
     public static Hashtable<String, Totalline> h1totals = new Hashtable();
     public static Hashtable<String, Moneyline> h1moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> h1teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> h2spreads = new Hashtable();
     public static Hashtable<String, Totalline> h2totals = new Hashtable();
     public static Hashtable<String, Moneyline> h2moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> h2teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q1spreads = new Hashtable();
     public static Hashtable<String, Totalline> q1totals = new Hashtable();
     public static Hashtable<String, Moneyline> q1moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q1teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q2spreads = new Hashtable();
     public static Hashtable<String, Totalline> q2totals = new Hashtable();
     public static Hashtable<String, Moneyline> q2moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q2teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q3spreads = new Hashtable();
     public static Hashtable<String, Totalline> q3totals = new Hashtable();
     public static Hashtable<String, Moneyline> q3moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q3teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q4spreads = new Hashtable();
     public static Hashtable<String, Totalline> q4totals = new Hashtable();
     public static Hashtable<String, Moneyline> q4moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q4teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> livespreads = new Hashtable();
     public static Hashtable<String, Totalline> livetotals = new Hashtable();
     public static Hashtable<String, Moneyline> livemoneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> liveteamtotals = new Hashtable();
-
-
     public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     //public static String brokerURL = "failover:(ssl://localhost:61617)";
@@ -110,35 +96,25 @@ public class AppController {
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
     public static Connection loggedInConnection;
-
     public static String loginQueue = "spankodds.LOGIN";
     public static String userPrefsQueue = "spankodds.USERPREFS";
     public static String linechangesQueue = "spankoddsin.LINECHANGE";
     public static String gamechangesQueue = "spankoddsin.GAMECHANGE";
     public static String scorechangesQueue = "spankoddsin.SCORECHANGE";
     public static String urgentQueue = "spankoddsin.URGENT";
-
     public static String displaytype = "default";
-
     public static LinesConsumer linesConsumer;
     public static GamesConsumer gamesConsumer;
     public static ScoresConsumer scoresConsumer;
     public static UrgentsConsumer urgentsConsumer;
-
     public static UserPrefsProducer userPrefsProducer;
-
     public static ChartChecker chartchecker;
     public static Hashtable<String, Color> bookiecolors = new Hashtable();
-
     public static int numfixedcols;
-
     public static long clearalltime;
-
     public static DefaultTableColumnModel columnmodel;
     public static DefaultTableColumnModel fixedcolumnmodel;
-
     public static NewWindowAction nwa;
-
     public static LineOpenerAlertNode football = new LineOpenerAlertNode("Football");
     public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
     public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
@@ -149,9 +125,10 @@ public class AppController {
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
     public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode("Auto Racing");
     public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
-
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
     public static Vector<String> SportsTabPaneVector = new Vector<>();
+    private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
+    private static Games games = new Games();
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
@@ -162,7 +139,9 @@ public class AppController {
 
         }
     }
-
+    public static boolean existLeagueId(Integer leagueId) {
+        return leagueIdToSportMap.containsKey(leagueId);
+    }
     public static void initializeLineAlertVectorFromUser() {
         String[] linealerts = u.getLineAlerts().split("\\?");
         for (int i = 0; i < linealerts.length; i++) {
@@ -482,6 +461,7 @@ public class AppController {
         model.copyTo(dataModels);
 
     }
+
     public static void addTabPane(SportsTabPane stb) {
         tabpanes.add(stb);
 
@@ -608,6 +588,7 @@ public class AppController {
             stb.fireAllTableDataChanged(games);
         }
     }
+
     public static String getLoginQueue() {
         return loginQueue;
     }
@@ -873,59 +854,61 @@ public class AppController {
     }
 
     public static void removeGames(String[] gameidarr) {
-        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-        //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane stb : tabpanes) {
-            stb.removeGames(gameidarr);
-        }
-        if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
-            return;
-        }
+        synchronized (SiaConst.DataUpdateLock) {
+            //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+            //game need to populated to each window. -- 08/22/2021
+            for (SportsTabPane stb : tabpanes) {
+                stb.removeGames(gameidarr);
+            }
+            if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
+                return;
+            }
 
-        for (int i = 0; i < gameidarr.length; i++) {
-            try {
-                String gameid = gameidarr[i];
-                games.removeGame(gameid);
-                for (int j = 0; j < bookiesVec.size(); j++) {
-                    Bookie b = bookiesVec.get(j);
-                    int bid = b.getBookie_id();
-                    spreads.remove(bid + "-" + gameid);
-                    totals.remove(bid + "-" + gameid);
-                    moneylines.remove(bid + "-" + gameid);
-                    teamtotals.remove(bid + "-" + gameid);
-                    h1spreads.remove(bid + "-" + gameid);
-                    h1totals.remove(bid + "-" + gameid);
-                    h1moneylines.remove(bid + "-" + gameid);
-                    h1teamtotals.remove(bid + "-" + gameid);
-                    h2spreads.remove(bid + "-" + gameid);
-                    h2totals.remove(bid + "-" + gameid);
-                    h2moneylines.remove(bid + "-" + gameid);
-                    h2teamtotals.remove(bid + "-" + gameid);
-                    q1spreads.remove(bid + "-" + gameid);
-                    q1totals.remove(bid + "-" + gameid);
-                    q1moneylines.remove(bid + "-" + gameid);
-                    q1teamtotals.remove(bid + "-" + gameid);
-                    q2spreads.remove(bid + "-" + gameid);
-                    q2totals.remove(bid + "-" + gameid);
-                    q2moneylines.remove(bid + "-" + gameid);
-                    q2teamtotals.remove(bid + "-" + gameid);
-                    q3spreads.remove(bid + "-" + gameid);
-                    q3totals.remove(bid + "-" + gameid);
-                    q3moneylines.remove(bid + "-" + gameid);
-                    q3teamtotals.remove(bid + "-" + gameid);
-                    q4spreads.remove(bid + "-" + gameid);
-                    q4totals.remove(bid + "-" + gameid);
-                    q4moneylines.remove(bid + "-" + gameid);
-                    q4teamtotals.remove(bid + "-" + gameid);
-                    livespreads.remove(bid + "-" + gameid);
-                    livetotals.remove(bid + "-" + gameid);
-                    livemoneylines.remove(bid + "-" + gameid);
-                    liveteamtotals.remove(bid + "-" + gameid);
+            for (int i = 0; i < gameidarr.length; i++) {
+                try {
+                    String gameid = gameidarr[i];
+                    games.removeGame(gameid);
+                    for (int j = 0; j < bookiesVec.size(); j++) {
+                        Bookie b = bookiesVec.get(j);
+                        int bid = b.getBookie_id();
+                        spreads.remove(bid + "-" + gameid);
+                        totals.remove(bid + "-" + gameid);
+                        moneylines.remove(bid + "-" + gameid);
+                        teamtotals.remove(bid + "-" + gameid);
+                        h1spreads.remove(bid + "-" + gameid);
+                        h1totals.remove(bid + "-" + gameid);
+                        h1moneylines.remove(bid + "-" + gameid);
+                        h1teamtotals.remove(bid + "-" + gameid);
+                        h2spreads.remove(bid + "-" + gameid);
+                        h2totals.remove(bid + "-" + gameid);
+                        h2moneylines.remove(bid + "-" + gameid);
+                        h2teamtotals.remove(bid + "-" + gameid);
+                        q1spreads.remove(bid + "-" + gameid);
+                        q1totals.remove(bid + "-" + gameid);
+                        q1moneylines.remove(bid + "-" + gameid);
+                        q1teamtotals.remove(bid + "-" + gameid);
+                        q2spreads.remove(bid + "-" + gameid);
+                        q2totals.remove(bid + "-" + gameid);
+                        q2moneylines.remove(bid + "-" + gameid);
+                        q2teamtotals.remove(bid + "-" + gameid);
+                        q3spreads.remove(bid + "-" + gameid);
+                        q3totals.remove(bid + "-" + gameid);
+                        q3moneylines.remove(bid + "-" + gameid);
+                        q3teamtotals.remove(bid + "-" + gameid);
+                        q4spreads.remove(bid + "-" + gameid);
+                        q4totals.remove(bid + "-" + gameid);
+                        q4moneylines.remove(bid + "-" + gameid);
+                        q4teamtotals.remove(bid + "-" + gameid);
+                        livespreads.remove(bid + "-" + gameid);
+                        livetotals.remove(bid + "-" + gameid);
+                        livemoneylines.remove(bid + "-" + gameid);
+                        liveteamtotals.remove(bid + "-" + gameid);
 
-                }
+                    }
 //                    g = null;
-            } catch (Exception ex) {
-                log(ex);
+                } catch (Exception ex) {
+                    log(ex);
+                }
             }
         }
     }
@@ -955,27 +938,30 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
+
     public static void addGame(Game g) {
         addGame(g, true);
 
     }
 
     public static void addGame(Game g, boolean repaint) {
-
-        boolean isAdd = games.updateOrAdd(g);
-        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-        //game need to populated to each window. -- 08/22/2021
-        if ( isAdd) {
-            for (SportsTabPane stb : tabpanes) {
-                stb.addGame(g, repaint);
+        synchronized (SiaConst.DataUpdateLock) {
+            boolean isAdd = games.updateOrAdd(g);
+            //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+            //game need to populated to each window. -- 08/22/2021
+            if (isAdd) {
+                for (SportsTabPane stb : tabpanes) {
+                    stb.addGame(g, repaint);
+                }
             }
         }
-
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
-        for (SportsTabPane stb : tabpanes) {
-            stb.moveGameToThisHeader(g, header);
+        synchronized (SiaConst.DataUpdateLock) {
+            for (SportsTabPane stb : tabpanes) {
+                stb.moveGameToThisHeader(g, header);
+            }
         }
     }
 
@@ -986,6 +972,7 @@ public class AppController {
     public static Sport getSportByLeagueId(int leagueId) {
         return leagueIdToSportMap.get(leagueId);
     }
+
     public static Game getGame(int gid) {
         return games.getGame(gid);
     }
@@ -1197,19 +1184,19 @@ public class AppController {
         if (period == 0) {
             rtn = teamtotals.get(b + "-" + g);
         } else if (period == 1) {
-            rtn =  h1teamtotals.get(b + "-" + g);
+            rtn = h1teamtotals.get(b + "-" + g);
         } else if (period == 2) {
-            rtn =  h2teamtotals.get(b + "-" + g);
+            rtn = h2teamtotals.get(b + "-" + g);
         } else if (period == 5) {
-            rtn =  q1teamtotals.get(b + "-" + g);
+            rtn = q1teamtotals.get(b + "-" + g);
         } else if (period == 6) {
-            rtn =  q2teamtotals.get(b + "-" + g);
+            rtn = q2teamtotals.get(b + "-" + g);
         } else if (period == 7) {
-            rtn =  q3teamtotals.get(b + "-" + g);
+            rtn = q3teamtotals.get(b + "-" + g);
         } else if (period == 8) {
-            rtn =  q4teamtotals.get(b + "-" + g);
+            rtn = q4teamtotals.get(b + "-" + g);
         } else {
-            rtn =  liveteamtotals.get(b + "-" + g);
+            rtn = liveteamtotals.get(b + "-" + g);
         }
         return rtn;
     }
@@ -1224,8 +1211,9 @@ public class AppController {
         return "" + hours + "hr," + minutes + "min";
 
     }
-    public static void addAlert(String hrmin,String mesg) {
-        alertsVector.addAlert(hrmin,mesg);
+
+    public static void addAlert(String hrmin, String mesg) {
+        alertsVector.addAlert(hrmin, mesg);
     }
 
 }

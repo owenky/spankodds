@@ -55,6 +55,13 @@ public abstract class GameUtils {
             return false;
         }
     }
+    public static String checkError(Game game) {
+        if ( ! AppController.existLeagueId(game.getSportIdentifyingLeagueId()) ) {
+            return "League id:"+game.getLeague_id()+", identifyingLeagueId:"+game.getSportIdentifyingLeagueId()+" does not exist...";
+        } else {
+            return null;
+        }
+    }
     public static Game parseGameText(String text) {
         String[] array = text.split(SiaConst.MessageDelimiter);
         //System.out.println("gametext="+text);
@@ -91,6 +98,13 @@ public abstract class GameUtils {
                 array[50],
                 new Timestamp(Long.parseLong(array[51])),
                 new Timestamp(Long.parseLong(array[52])));
+    }
+    public static String getGameDebugInfo(Game game) {
+        Date gameDate = game.getGamedate();
+        SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+        return  "DEBUGING Game , gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname() +
+                ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(gameDate)+", status=" + game.getStatus()
+                + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
     }
     public static void main(String [] argvb ) throws ParseException {
 

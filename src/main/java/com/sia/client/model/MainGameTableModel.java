@@ -2,12 +2,10 @@ package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.ui.AppController;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.table.TableColumn;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -55,16 +53,17 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             }
         }
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
+        String err;
         if ( null != ltd) {
             ltd.addGame(game, paint);
+        }  else if (null != ( err= GameUtils.checkError(game))) {
+            log("***** Suspecious game ignored to be added to screen. err="+err+"---- "+GameUtils.getGameDebugInfo(game));
+
         } else {
             //this method is called only when the game belong to this table, see conditioin of ms.parentOfGame(g)  in SportsTabPane::addGame()
             //need to re-draw screen when game group is not found in this table
  //TODO remove debug
-SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
-log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname() +
-        ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " " + sdf2.format(game.getGamedate())+", status=" + game.getStatus()
-        + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2());
+log("***** Game not found in the table -- "+GameUtils.getGameDebugInfo(game));
 //END Of DEBUG TODO
             if ( GameUtils.isGameNear(game)) {
                 if ( ! game.isInStage()) {
@@ -72,10 +71,10 @@ log("DEBUG::::::::::::::::::::::::, game not found in the table, gameid=" + game
                     log("REFRESH main screen for this game id=" + game.getGame_id());
                 } else {
                     //when game is in stage, there might not be a regular game header for this game, instead this game is in stage header (i.e. Final, Halftime, etc...) -- 2021-10-05
-                    log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is in stage. status="+game.getStatus());
+                    log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is in stage. ----"+GameUtils.getGameDebugInfo(game));
                 }
             } else {
-                log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is not near.");
+                log("SKIP REFRESHing main screen for this game id="+game.getGame_id()+" because the game is not near.---"+GameUtils.getGameDebugInfo(game));
             }
         }
 

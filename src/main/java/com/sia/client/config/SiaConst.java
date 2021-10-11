@@ -2,9 +2,11 @@ package com.sia.client.config;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
+    public static final ReentrantLock DataUpdateLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
     public static final String ConfigPath = "/config/";
     public static final String SoccerStr = "Soccer";
