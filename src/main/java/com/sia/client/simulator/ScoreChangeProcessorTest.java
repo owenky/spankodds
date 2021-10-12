@@ -38,7 +38,6 @@ public class ScoreChangeProcessorTest extends TestExecutor {
     public void run() {
 
         try {
-            ScoreChangedProcessor processor = new ScoreChangedProcessor();
             int count=0;
             System.out.println("START ScoreChangeProcessorTest++++++++++++++++++++++++++++++++++++++++++++++++++++");
             MainScreen testScreen = MainScreen.findMainScreen(SportType.Soccer.getSportName());
@@ -51,7 +50,7 @@ public class ScoreChangeProcessorTest extends TestExecutor {
             for(Game game:soccerGames) {
                 if ( testScreen.shouldAddToScreen(game)) {
 System.out.println("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.getGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
-                    processor.process(GameStatus.InProgress, game, GameStatus.InProgress.getGroupHeader(), 0, 0);
+                    ScoreChangedProcessor.process(GameStatus.InProgress, game,0, 0);
                 }
                 if ( count++ > 1000) {
                     break;

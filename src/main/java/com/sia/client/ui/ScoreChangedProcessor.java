@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -7,12 +9,19 @@ import com.sia.client.model.Sport;
 
 import static com.sia.client.config.Utils.log;
 
-public class ScoreChangedProcessor {
+public abstract class ScoreChangedProcessor {
 
-    public void process(GameStatus gameStatus, Game g, String status, int currentvisitorscore, int currenthomescore) {
+    public static void process(GameStatus gameStatus, Game g,  int currentvisitorscore, int currenthomescore) {
         int gameid = g.getGame_id();
+        //debug TODO
+        String debugInfo = GameUtils.getGameDebugInfo(g);
+        Sport s1 = AppController.getSportByLeagueId(g.getLeague_id());
+        if ( s1.getSportname().equalsIgnoreCase(SiaConst.SoccerStr) && (gameStatus == GameStatus.Final || gameStatus==GameStatus.HalfTime)) {
+            log("ScoreChangedProcessor -- " + debugInfo);
+        }
+        //END OF TODO debug
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
-        if (!g.getStatus().equals(status)) {
+        if (! gameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
 
