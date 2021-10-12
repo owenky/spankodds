@@ -27,10 +27,10 @@ public abstract class InitialGameMessages {
     public static boolean shouldLogMesg = false;
     public static boolean shouldRunMainScreenTest = false;
     public static boolean getMessagesFromLog = false;
+    public static String MesgDir = TestProperties.DefaultMesgDir;
     public static Set<MessageType> interestedMessageTypes;
-
     private static List<String> buffer = new ArrayList<>();
-    private static final String filePath = TestProperties.MesgDir+ File.separator+"initGameMesgs.txt";
+    private static String InitialLoadingFilePath;
 
     public static void initMsgLoggingProps() {
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
@@ -42,7 +42,13 @@ public abstract class InitialGameMessages {
 
         if ( getMessagesFromLog) {
             shouldLogMesg = false;
+            String msgDir = System.getProperty("MessageLoadingFolder");
+            if ( null != msgDir) {
+                MesgDir = msgDir;
+            }
         }
+
+        InitialLoadingFilePath = MesgDir + File.separator+TestProperties.InitialLoadingFileName;
 
         if ( shouldLogMesg) {
             backupTempDir();
@@ -64,14 +70,14 @@ public abstract class InitialGameMessages {
         return Collections.unmodifiableSet(interestedMsgTypes);
     }
     static void backupTempDir() {
-        File tempDir = new File(TestProperties.MesgDir);
+        File tempDir = new File(MesgDir);
         SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_HH_mm_ss");
         String timeStamp = sdf.format(new Date());
         if ( tempDir.exists()) {
             if ( ! tempDir.isDirectory()) {
                 tempDir.delete();
             } else {
-                File backupdir = new File(TestProperties.MesgDir + "_" + timeStamp);
+                File backupdir = new File(MesgDir + "_" + timeStamp);
                 tempDir.renameTo(backupdir);
             }
         }
@@ -88,7 +94,7 @@ public abstract class InitialGameMessages {
     }
     private static void loadGamesFromLog() {
         if (getMessagesFromLog) {
-            try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+            try (Stream<String> stream = Files.lines(Paths.get(InitialLoadingFilePath))) {
                 stream.forEach(text->AppController.addGame(GameUtils.parseGameText(text)));
             } catch ( Exception e) {
                 log(e);
@@ -99,7 +105,7 @@ public abstract class InitialGameMessages {
         if (shouldLogMesg) {
             FileWriter fw = null;
             try {
-                fw = new FileWriter(filePath);
+                fw = new FileWriter(InitialLoadingFilePath);
                 for (String line : buffer) {
                     fw.write(line);
                     fw.write("\n");

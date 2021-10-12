@@ -42,7 +42,8 @@ public abstract class SiaConst {
         String ARR_DOWN = "arrdown.gif";
     }
     public interface TestProperties {
-        String MesgDir = "c:\\temp\\OngingGameMessages";
+        String DefaultMesgDir = "c:\\temp\\OngingGameMessages";
+        String InitialLoadingFileName = "initGameMesgs.txt";
     }
     public static final String MessageDelimiter = "~";
     public static final String PropertyDelimiter = "@#_#_#@";

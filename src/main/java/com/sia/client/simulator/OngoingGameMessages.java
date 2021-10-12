@@ -108,7 +108,7 @@ public abstract class OngoingGameMessages {
 
     private synchronized static void flushMessages() {
         if (InitialGameMessages.shouldLogMesg) {
-            String filePath = TestProperties.MesgDir + File.separator + batchCount.getAndAdd(1) + ".txt";
+            String filePath = InitialGameMessages.MesgDir + File.separator + batchCount.getAndAdd(1) + ".txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filePath);
@@ -158,11 +158,11 @@ public abstract class OngoingGameMessages {
 
     public static void loadMessagesFromLog() {
         if (InitialGameMessages.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
-            File tempDir = new File(TestProperties.MesgDir);
+            File tempDir = new File(InitialGameMessages.MesgDir);
             String[] files = tempDir.list();
             if (null != files) {
                 for (int i = 0; i < (files.length-1); i++) {  //skip initGameMesgs.txt
-                    String filePath = TestProperties.MesgDir + File.separator + i + ".txt";
+                    String filePath = InitialGameMessages.MesgDir + File.separator + i + ".txt";
                     log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
                         stream.forEach(OngoingGameMessages::processMessage);

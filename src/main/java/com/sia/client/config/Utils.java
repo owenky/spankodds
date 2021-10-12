@@ -135,7 +135,11 @@ public abstract class Utils {
                 log(e);
             }
         } else {
-            SwingUtilities.invokeLater(r);
+            try {
+                SwingUtilities.invokeLater(r);
+            } catch ( Exception e) {
+                log(e);
+            }
         }
     }
     public static void showMessageDialog(Component parentComponent, Object message) throws HeadlessException {
