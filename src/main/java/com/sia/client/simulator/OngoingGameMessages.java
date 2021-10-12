@@ -153,23 +153,28 @@ public abstract class OngoingGameMessages {
             File tempDir = new File(TestProperties.MesgDir);
             String[] files = tempDir.list();
             if (null != files) {
-                for (int i = 0; i < files.length; i++) {
+                for (int i = 0; i < (files.length-1); i++) {  //skip initGameMesgs.txt
                     String filePath = TestProperties.MesgDir + File.separator + i + ".txt";
+                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-                        log("loading the "+i+".txt of out total of "+files.length+" files.");
                         stream.forEach(OngoingGameMessages::processMessage);
                     } catch (Exception e) {
                         log(e);
                     }
                 }
+                log("Finished loading messages from local.....");
             }
         }
     }
-
     private static void processMessage(String text) {
         String[] strs = text.split(MessageTypeDelimiter);
         String type = strs[0];
+        if (2 > strs.length) {
+            return;
+        }
         String messageText = strs[1];
+        pause(1000L);
+
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
             AppController.linesConsumer.processMessage(mapMessgage);
@@ -183,7 +188,16 @@ public abstract class OngoingGameMessages {
             log("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
         }
     }
-
+    private static int messageCount=0;
+    static void pause(long time) {
+        if ( 0 == ((++messageCount)%100)) {
+            try {
+                Thread.sleep(time);
+            } catch (InterruptedException e) {
+                log(e);
+            }
+        }
+    }
     private static Map<String, String> parseText(String text) {
         Map<String, String> map = new HashMap<>();
         String[] parts = text.split(SiaConst.PropertyDelimiter);
