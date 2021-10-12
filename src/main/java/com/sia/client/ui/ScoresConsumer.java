@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -76,15 +77,17 @@ public class ScoresConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        if ( ! InitialGameMessages.getMessagesFromLog) {
-            if (toSimulateMQ) {
-                if (simulateStatus.compareAndSet(false, true)) {
-                    new ScoreChangeProcessorTest(this).start();
+        synchronized (SiaConst.GameLock) {
+            if (!InitialGameMessages.getMessagesFromLog) {
+                if (toSimulateMQ) {
+                    if (simulateStatus.compareAndSet(false, true)) {
+                        new ScoreChangeProcessorTest(this).start();
+                    }
+                } else {
+                    Utils.ensureNotEdtThread();
+                    OngoingGameMessages.addMessage(MessageType.Score, mapMessage);
+                    processMessage(message);
                 }
-            } else {
-                Utils.ensureNotEdtThread();
-                OngoingGameMessages.addMessage(MessageType.Score,mapMessage);
-                processMessage(message);
             }
         }
     }

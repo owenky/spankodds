@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
@@ -67,16 +68,18 @@ public class GamesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        if ( ! InitialGameMessages.getMessagesFromLog) {
-            if (toSimulateMQ) {
-                if (simulateStatus.compareAndSet(false, true)) {
-                    new GameMessageSimulator(this).start();
-                }
+        synchronized (SiaConst.GameLock) {
+            if (!InitialGameMessages.getMessagesFromLog) {
+                if (toSimulateMQ) {
+                    if (simulateStatus.compareAndSet(false, true)) {
+                        new GameMessageSimulator(this).start();
+                    }
 
-            } else {
-                Utils.ensureNotEdtThread();
-                OngoingGameMessages.addMessage(MessageType.Game,message);
-                processMessage(message);
+                } else {
+                    Utils.ensureNotEdtThread();
+                    OngoingGameMessages.addMessage(MessageType.Game, message);
+                    processMessage(message);
+                }
             }
         }
     }

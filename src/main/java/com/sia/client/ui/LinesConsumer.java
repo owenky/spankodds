@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
@@ -51,10 +52,12 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        Utils.ensureNotEdtThread();
-        if ( ! InitialGameMessages.getMessagesFromLog) {
-            OngoingGameMessages.addMessage(MessageType.Line,message);
-            processMessage((MapMessage) message);
+        synchronized (SiaConst.GameLock) {
+            Utils.ensureNotEdtThread();
+            if (!InitialGameMessages.getMessagesFromLog) {
+                OngoingGameMessages.addMessage(MessageType.Line, message);
+                processMessage((MapMessage) message);
+            }
         }
     }
     public void processMessage(MapMessage message) {

@@ -276,9 +276,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             if (ms.shouldAddToScreen(g) ) {
                 Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> {
                     if ( ms.isPreDefinedSport() ) {
-                        synchronized (SiaConst.DataUpdateLock) {
-                            refreshMainScreen(ms);
-                        }
+                        refreshMainScreen(ms);
                     }
                 }));
             }
