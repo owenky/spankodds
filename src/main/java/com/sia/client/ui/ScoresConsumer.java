@@ -177,9 +177,9 @@ public class ScoresConsumer implements MessageListener {
                     g = new Game();
                     g.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,
                             new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
-                    AppController.addGame(g);
+//                    AppController.addGame(g);
+                    scoreMessageProcessor.addMessage(AppController.getGame(gameid));
                 }
-                scoreMessageProcessor.addMessage(AppController.getGame(gameid));
             }
         } catch (Exception e) {
             log("exception scores consumer " + e);

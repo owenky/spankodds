@@ -342,37 +342,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
 
     }
-
-//    public void moveGameToThisHeader(Game g, String header) {
-//
-//        int totalTabs = getTabCount();
-//        for (int i = 0; i < totalTabs; i++) {
-//            Component c = getComponentAt(i);
-//            if (c instanceof MainScreen) {
-//                MainScreen ms = (MainScreen) c;
-//                if ( c.isShowing() ) {
-//                    Utils.checkAndRunInEDT(()-> ms.moveGameToThisHeader(g, header));
-//                    break;
-//                }
-//            }
-//        }
-//
-//
-//    }
     public void moveGameToThisHeader(Game g, String header) {
         int selectedIndex = getSelectedIndex();
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
-            boolean belongsToThisScreen = ms.getSportType().isPredifined() && ms.getSportType().isMyType(g);
-            if (belongsToThisScreen ) {
+            if (ms.getSportType().isPredifined() && ms.getSportType().isMyType(g) ) {
                 Utils.checkAndRunInEDT(() -> ms.moveGameToThisHeader(g, header));
-            } else {
-                log("MOVING GAME FAILED, game not belonged to displaying screen. sport type="+ms.getSportType()+", isMyType="+ms.getSportType().isMyType(g));
             }
         }
-
-
     }
     public void setSort(boolean sort) {
         timesort = sort;

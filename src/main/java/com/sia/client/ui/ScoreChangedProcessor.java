@@ -12,18 +12,18 @@ import static com.sia.client.config.Utils.log;
 public abstract class ScoreChangedProcessor {
 
     public static void process(GameStatus gameStatus, Game g,  int currentvisitorscore, int currenthomescore) {
-        int gameid = g.getGame_id();
         //debug TODO
         String debugInfo = GameUtils.getGameDebugInfo(g);
         Sport s1 = AppController.getSportByLeagueId(g.getLeague_id());
-        if ( s1.getSportname().equalsIgnoreCase(SiaConst.SoccerStr) && (gameStatus == GameStatus.Final || gameStatus==GameStatus.HalfTime)) {
-            log("ScoreChangedProcessor -- " + debugInfo);
+        boolean debugSoccer =  null != s1 && s1.getSportname().equalsIgnoreCase(SiaConst.SoccerStr);
+        if ( debugSoccer && gameStatus.isSame(g.getStatus()) && gameStatus == GameStatus.Final) {
+            log("ScoreChangedProcessor,gameStatus.isSame() is true, gameStatus="+gameStatus+" -- " + debugInfo);
         }
         //END OF TODO debug
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
         if (! gameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
-            log("MOVING GAME !!!! " + GameUtils.getGameDebugInfo(g) + "..is about to move to " + gameStatus.getGroupHeader());
+if ( debugSoccer) log("MOVING GAME !!!! " + GameUtils.getGameDebugInfo(g) + "..is about to move to " + gameStatus.getGroupHeader());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
 
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
