@@ -25,6 +25,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
@@ -136,16 +138,22 @@ public abstract class OngoingGameMessages {
         }
     }
     public static void main(String[] argv) throws InterruptedException {
-        InitialGameMessages.shouldLogMesg = true;
-        InitialGameMessages.getMessagesFromLog = true;
-        InitialGameMessages.backupTempDir();
-        for (int i = 0; i < 10; i++) {
-            addText(MessageType.Game, "game line " + i);
-            addText(MessageType.Score, "score line " + i);
-            addText(MessageType.Line, "Line line " + i);
-        }
-        Thread.sleep(5000L);
-        loadMessagesFromLog();
+//        InitialGameMessages.shouldLogMesg = true;
+//        InitialGameMessages.getMessagesFromLog = true;
+//        InitialGameMessages.backupTempDir();
+//        for (int i = 0; i < 10; i++) {
+//            addText(MessageType.Game, "game line " + i);
+//            addText(MessageType.Score, "score line " + i);
+//            addText(MessageType.Line, "Line line " + i);
+//        }
+//        Thread.sleep(5000L);
+//        loadMessagesFromLog();
+        String test="{abcd}";
+        System.out.println(rmSpecialCharacters(test));
+
+        test="1234";
+        System.out.println(rmSpecialCharacters(test));
+        System.exit(0);
     }
 
     public static void loadMessagesFromLog() {
@@ -173,7 +181,7 @@ public abstract class OngoingGameMessages {
             return;
         }
         String messageText = strs[1];
-        pause(1000L);
+        pause(10L);
 
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
@@ -202,6 +210,7 @@ public abstract class OngoingGameMessages {
         Map<String, String> map = new HashMap<>();
         String[] parts = text.split(SiaConst.PropertyDelimiter);
         for (String part : parts) {
+            part = rmSpecialCharacters(part);
             String[] prop = part.split("=");
             if (2 == prop.length) {
                 String name = prop[0].trim();
@@ -213,7 +222,17 @@ public abstract class OngoingGameMessages {
         }
         return map;
     }
+    private static Pattern pattern1 = Pattern.compile("^\\{.+?}$");
+    private static String rmSpecialCharacters(String str) {
+        str = str.trim();
+        Matcher matcher = pattern1.matcher(str);
+        if  ( matcher.find()) {
+            return str.substring(1,str.length()-1).trim();
+        } else {
+            return str;
+        }
 
+    }
     /////////////////////////////////////////////////////////////
     public enum MessageType {
         Game,
