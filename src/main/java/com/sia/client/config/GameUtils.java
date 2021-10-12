@@ -46,7 +46,7 @@ public abstract class GameUtils {
         int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
         Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
         if ( null == sport) {
-            throw new IllegalArgumentException("Unknown sport: game---"+GameUtils.getGameDebugInfo(game));
+            return "Unknown sport: game---";
         }
         return sport.getNormalizedLeaguename() + " " + getGameDateStr(game);
     }
