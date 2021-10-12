@@ -84,7 +84,6 @@ public class GamesConsumer implements MessageListener {
         }
     }
     public void processMessage(Message message) {
-        Utils.ensureNotEdtThread();
         try {
             boolean repaint = true;
             String leagueid = "";
