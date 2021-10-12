@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -867,7 +868,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             }
         }
         if (InitialGameMessages.getMessagesFromLog) {
-            OngoingGameMessages.loadMessagesFromLog();
+            Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
         }
     }
     public boolean isPreDefinedSport() {
