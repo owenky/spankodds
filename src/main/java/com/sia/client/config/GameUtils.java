@@ -103,7 +103,7 @@ public abstract class GameUtils {
         Date gameDate = game.getGamedate();
         SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
         return  "DEBUGING Game , gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()+", sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname() +
-                ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + ",  "+game.getVisitorteam()+"/"+game.getHometeam()+", " + sdf2.format(gameDate)+", status=" + game.getStatus()
+                ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " "+sdf2.format(gameDate)+",  "+game.getVisitorteam()+"/"+game.getHometeam()+", " + ", status=" + game.getStatus()
                 + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
     }
     public static void main(String [] argvb ) throws ParseException {
