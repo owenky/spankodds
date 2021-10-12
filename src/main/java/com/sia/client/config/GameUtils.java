@@ -44,7 +44,11 @@ public abstract class GameUtils {
     }
     public static String getGameGroupHeader(Game game) {
         int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
-        return AppController.getSportByLeagueId(sportIdentifyingLeagueId).getNormalizedLeaguename() + " " + getGameDateStr(game);
+        Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
+        if ( null == sport) {
+            throw new IllegalArgumentException("Unknown sport: game---"+GameUtils.getGameDebugInfo(game));
+        }
+        return sport.getNormalizedLeaguename() + " " + getGameDateStr(game);
     }
     public static boolean isGameNear(Game game) {
         SportType sportType = SportType.findByGame(game);
