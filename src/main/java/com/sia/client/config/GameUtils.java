@@ -103,7 +103,9 @@ public abstract class GameUtils {
                 new Timestamp(Long.parseLong(array[52])));
     }
     public static String getGameDebugInfo(Game game) {
-        return  "DEBUGING Game, sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname()
+        Sport sport = AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
+        String sportName = null == sport?"Unknown sport ":sport.getSportname();
+        return  "DEBUGING Game, sport=" + sportName
                 + ", header=" + getGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
                 + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
