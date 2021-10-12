@@ -156,6 +156,7 @@ public abstract class OngoingGameMessages {
                 for (int i = 0; i < files.length; i++) {
                     String filePath = TestProperties.MesgDir + File.separator + i + ".txt";
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+                        log("loading the "+i+".txt of out total of "+files.length+" files.");
                         stream.forEach(OngoingGameMessages::processMessage);
                     } catch (Exception e) {
                         log(e);
