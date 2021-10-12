@@ -95,7 +95,6 @@ public class ScoresConsumer implements MessageListener {
         try {
             mapMessage = (MapMessage) message;
             String changetype = mapMessage.getStringProperty("messageType");
-
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
 

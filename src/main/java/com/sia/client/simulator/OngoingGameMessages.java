@@ -25,6 +25,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
@@ -106,7 +108,7 @@ public abstract class OngoingGameMessages {
 
     private synchronized static void flushMessages() {
         if (InitialGameMessages.shouldLogMesg) {
-            String filePath = TestProperties.MesgDir + File.separator + batchCount.getAndAdd(1) + ".txt";
+            String filePath = InitialGameMessages.MesgDir + File.separator + batchCount.getAndAdd(1) + ".txt";
             FileWriter fw = null;
             try {
                 fw = new FileWriter(filePath);
@@ -136,25 +138,31 @@ public abstract class OngoingGameMessages {
         }
     }
     public static void main(String[] argv) throws InterruptedException {
-        InitialGameMessages.shouldLogMesg = true;
-        InitialGameMessages.getMessagesFromLog = true;
-        InitialGameMessages.backupTempDir();
-        for (int i = 0; i < 10; i++) {
-            addText(MessageType.Game, "game line " + i);
-            addText(MessageType.Score, "score line " + i);
-            addText(MessageType.Line, "Line line " + i);
-        }
-        Thread.sleep(5000L);
-        loadMessagesFromLog();
+//        InitialGameMessages.shouldLogMesg = true;
+//        InitialGameMessages.getMessagesFromLog = true;
+//        InitialGameMessages.backupTempDir();
+//        for (int i = 0; i < 10; i++) {
+//            addText(MessageType.Game, "game line " + i);
+//            addText(MessageType.Score, "score line " + i);
+//            addText(MessageType.Line, "Line line " + i);
+//        }
+//        Thread.sleep(5000L);
+//        loadMessagesFromLog();
+        String test="{abcd}";
+        System.out.println(rmSpecialCharacters(test));
+
+        test="1234";
+        System.out.println(rmSpecialCharacters(test));
+        System.exit(0);
     }
 
     public static void loadMessagesFromLog() {
         if (InitialGameMessages.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
-            File tempDir = new File(TestProperties.MesgDir);
+            File tempDir = new File(InitialGameMessages.MesgDir);
             String[] files = tempDir.list();
             if (null != files) {
                 for (int i = 0; i < (files.length-1); i++) {  //skip initGameMesgs.txt
-                    String filePath = TestProperties.MesgDir + File.separator + i + ".txt";
+                    String filePath = InitialGameMessages.MesgDir + File.separator + i + ".txt";
                     log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
                         stream.forEach(OngoingGameMessages::processMessage);
@@ -173,7 +181,7 @@ public abstract class OngoingGameMessages {
             return;
         }
         String messageText = strs[1];
-        pause(1000L);
+        pause(10L);
 
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
@@ -202,6 +210,7 @@ public abstract class OngoingGameMessages {
         Map<String, String> map = new HashMap<>();
         String[] parts = text.split(SiaConst.PropertyDelimiter);
         for (String part : parts) {
+            part = rmSpecialCharacters(part);
             String[] prop = part.split("=");
             if (2 == prop.length) {
                 String name = prop[0].trim();
@@ -213,7 +222,17 @@ public abstract class OngoingGameMessages {
         }
         return map;
     }
+    private static Pattern pattern1 = Pattern.compile("^\\{.+?}$");
+    private static String rmSpecialCharacters(String str) {
+        str = str.trim();
+        Matcher matcher = pattern1.matcher(str);
+        if  ( matcher.find()) {
+            return str.substring(1,str.length()-1).trim();
+        } else {
+            return str;
+        }
 
+    }
     /////////////////////////////////////////////////////////////
     public enum MessageType {
         Game,
