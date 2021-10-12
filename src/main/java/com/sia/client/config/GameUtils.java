@@ -7,7 +7,6 @@ import com.sia.client.ui.AppController;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -100,11 +99,10 @@ public abstract class GameUtils {
                 new Timestamp(Long.parseLong(array[52])));
     }
     public static String getGameDebugInfo(Game game) {
-        Date gameDate = game.getGamedate();
-        SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
-        return  "DEBUGING Game , gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()+", sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname() +
-                ", title=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getLeaguename() + " "+sdf2.format(gameDate)+",  "+game.getVisitorteam()+"/"+game.getHometeam()+", " + ", status=" + game.getStatus()
-                + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
+        return  "DEBUGING Game, sport=" + AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId()).getSportname()
+                + ", header=" + getGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
+                +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
+                + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
     }
     public static void main(String [] argvb ) throws ParseException {
 
