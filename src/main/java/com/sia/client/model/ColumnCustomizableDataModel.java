@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.TableUtils;
 
@@ -167,14 +168,17 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         {
             TableSection<V> ltd = findTableSectionByHeaderValue(header);
 
-log("DEBUG: moving game id:"+g.getGame_id()+", teams:"+g.getTeams()+" from secion "+group.getGameGroupHeader()+" to specified header "+header);
+log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and is about to add to header "+header);
 
             if ( null != ltd) {
                 ltd.addGame(thisgame, false);
+                log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and SUCCESSFULLY added to "+header);
             } else {
                 log( new Exception("can't find LinesTableData for header:"+header));
             }
             fireTableChanged(new TableModelEvent(this));
+        } else {
+            log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
         }
     }
     public TableSection<V> checktofire(V game,boolean repaint) {

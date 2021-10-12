@@ -23,10 +23,10 @@ public abstract class ScoreChangedProcessor {
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
         if (! gameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
+            log("MOVING GAME !!!! " + GameUtils.getGameDebugInfo(g) + "..is about to move to " + gameStatus.getGroupHeader());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
 
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
-            log("GAME MOVED!!!! game--" + GameUtils.getGameDebugInfo(g) + "..just went to " + gameStatus.getGroupHeader());
             String[] arr  = finalprefs.split("\\|");
             boolean popup = false;
             boolean sound = false;
