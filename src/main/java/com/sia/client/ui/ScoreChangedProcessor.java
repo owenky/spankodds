@@ -26,7 +26,7 @@ public abstract class ScoreChangedProcessor {
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
 
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
-            log("game--" + GameUtils.getGameGroupHeader(g) + "..just went " + gameStatus.getGroupHeader());
+            log("GAME MOVED!!!! game--" + GameUtils.getGameDebugInfo(g) + "..just went to " + gameStatus.getGroupHeader());
             String[] arr  = finalprefs.split("\\|");
             boolean popup = false;
             boolean sound = false;
