@@ -119,8 +119,9 @@ public abstract class TableSection<V extends KeyedObject> {
 
         int gameModelIndex = containingTableModel.getRowModelIndex(this, gameidtoremove);
         V g;
-        if (gameModelIndex >= 0) {
+        if ( 0 <= gameModelIndex) {
             g = gamesVec.removeGame(gameidtoremove);
+            this.rowDataMap.remove(gameModelIndex);
             if (repaint) {
                 resetDataVector();
                 TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
