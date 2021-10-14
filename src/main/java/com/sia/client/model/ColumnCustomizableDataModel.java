@@ -176,6 +176,7 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
             } else {
                 log( new Exception("can't find LinesTableData for header:"+header));
             }
+            this.buildIndexMappingCache();
             fireTableChanged(new TableModelEvent(this));
         } else {
             log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
