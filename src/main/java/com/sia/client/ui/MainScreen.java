@@ -7,6 +7,7 @@ import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
+import com.sia.client.model.GameStatus;
 import com.sia.client.model.Games;
 import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
@@ -121,7 +122,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     public void addGame(Game g, boolean repaint,Runnable callBackOnNotFound) { // only gets called when adding new game into system
         if ( null != mainGameTable) {
-            getColumnCustomizableTable().getModel().addGameToGameGroup(GameUtils.getGameGroupHeader(g), g, repaint, callBackOnNotFound);
+            String gameGroupHeader;
+            GameStatus gameStatus = GameStatus.find(g.getStatus());
+            if ( null == gameStatus) {
+                gameGroupHeader = GameUtils.getGameGroupHeader(g);
+            } else {
+                gameGroupHeader= gameStatus.getGroupHeader();
+            }
+            getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, repaint, callBackOnNotFound);
         }
     }
     public boolean shouldAddToScreen(Game g){
