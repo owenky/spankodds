@@ -1,15 +1,13 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
-import com.sia.client.media.SoundPlayer;
+import com.sia.client.config.GameUtils;
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.config.SiaConst;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.Sport;
-import com.sia.client.model.SportType;
-import com.sia.client.model.TableSection;
-
-import java.util.List;
 
 import static com.sia.client.config.Utils.log;
 

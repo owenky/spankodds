@@ -1367,6 +1367,10 @@ class LineAlertOpeners implements ItemListener {
 
 
         Game game = AppController.getGame(Gid);
+        if ( null == game) {
+            log(new Exception("Can find game for game id:"+Gid));
+            return;
+        }
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
