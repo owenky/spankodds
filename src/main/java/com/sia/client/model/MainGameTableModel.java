@@ -56,9 +56,11 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
         String err;
         if ( null != ltd) {
-            ltd.addGame(game, false);  //don't need repain in ltd, update all caches in next 2 statements -- 2021-10-17
-            this.buildIndexMappingCache();
-            fireTableChanged(new TableModelEvent(this));
+            boolean isAdded = ltd.addGame(game, false);  //don't need repain in ltd, update all caches in next 2 statements -- 2021-10-17
+            if ( isAdded) {
+                this.buildIndexMappingCache();
+                fireTableChanged(new TableModelEvent(this));
+            }
         }  else if (null != ( err= GameUtils.checkError(game))) {
             log("***** Suspecious game ignored to be added to screen. err="+err+"---- "+GameUtils.getGameDebugInfo(game));
 
