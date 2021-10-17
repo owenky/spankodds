@@ -5,6 +5,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import java.util.Collection;
 import java.util.HashSet;
@@ -55,7 +56,9 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
         String err;
         if ( null != ltd) {
-            ltd.addGame(game, paint);
+            ltd.addGame(game, false);  //don't need repain in ltd, update all caches in next 2 statements -- 2021-10-17
+            this.buildIndexMappingCache();
+            fireTableChanged(new TableModelEvent(this));
         }  else if (null != ( err= GameUtils.checkError(game))) {
             log("***** Suspecious game ignored to be added to screen. err="+err+"---- "+GameUtils.getGameDebugInfo(game));
 
