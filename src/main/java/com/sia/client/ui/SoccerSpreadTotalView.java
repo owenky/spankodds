@@ -170,10 +170,10 @@ public class SoccerSpreadTotalView {
             homejuice = sl.getCurrenthomejuice();
 
             whowasbetspread = sl.getWhowasbet();
-            if (tsnow.getTime() - sl.getCurrentts() <= 30000 && clearts.getTime() < sl.getCurrentts()) {
+            if (tsnow.getTime() - sl.getCurrentts().getTime()<= 30000 && clearts.getTime() < sl.getCurrentts().getTime()) {
                 spreadcolor = Color.RED;
             }
-            else if (clearts.getTime() < sl.getCurrentts()) {
+            else if (clearts.getTime() < sl.getCurrentts().getTime()) {
                 spreadcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("S"+id);
@@ -192,10 +192,10 @@ public class SoccerSpreadTotalView {
         try {
             over = tl.getCurrentover();
             whowasbettotal = tl.getWhowasbet();
-            if (tsnow.getTime() - tl.getCurrentts() <= 30000 && clearts.getTime() < tl.getCurrentts()) {
+            if (tsnow.getTime() - tl.getCurrentts().getTime() <= 30000 && clearts.getTime() < tl.getCurrentts().getTime()) {
                 totalcolor = Color.RED;
             }
-            else if (clearts.getTime() < tl.getCurrentts()) {
+            else if (clearts.getTime() < tl.getCurrentts().getTime()) {
                 totalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("T"+id);
@@ -214,10 +214,10 @@ public class SoccerSpreadTotalView {
             drawmljuice = ml.getCurrentdrawjuice();
             whowasbetmoney = ml.getWhowasbet();
 
-            if (tsnow.getTime() - ml.getCurrentts() <= 30000 && clearts.getTime() < ml.getCurrentts()) {
+            if (tsnow.getTime() - ml.getCurrentts().getTime() <= 30000 && clearts.getTime() < ml.getCurrentts().getTime()) {
                 moneycolor = Color.RED;
             }
-            else if (clearts.getTime() < ml.getCurrentts()) {
+            else if (clearts.getTime() < ml.getCurrentts().getTime()) {
                 moneycolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("M"+id);
@@ -238,11 +238,11 @@ public class SoccerSpreadTotalView {
             visitover = ttl.getCurrentvisitover();
             homeover = ttl.getCurrenthomeover();
             whowasbetteamtotal = ttl.getWhowasbet();
-            if (tsnow.getTime() - ttl.getCurrentts() <= 30000 && clearts.getTime() < ttl.getCurrentts()) {
+            if (tsnow.getTime() - ttl.getCurrentts().getTime() <= 30000 && clearts.getTime() < ttl.getCurrentts().getTime()) {
                 teamtotalcolor = Color.RED;
             }
             //else if(priortotalcolor != Color.WHITE)
-            else if (clearts.getTime() < ttl.getCurrentts()) {
+            else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
                 teamtotalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("TT"+id);

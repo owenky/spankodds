@@ -3,11 +3,13 @@ package com.sia.client.model;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
 
+import java.sql.Timestamp;
+
 import static com.sia.client.config.Utils.log;
 
 
 public class Spreadline extends Line {
-    static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, 1L, 0);
+    static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, new Timestamp(1L), 0);
 
     boolean isbestvisitspread = false;
     boolean isbesthomespread = false;
@@ -16,22 +18,22 @@ public class Spreadline extends Line {
     double currentvisitjuice;
     double currenthomespread;
     double currenthomejuice;
-    long currentts = 1000; //timestamp
+    private Timestamp currentts = new Timestamp(1000);
 
     double priorvisitspread;
     double priorvisitjuice;
     double priorhomespread;
     double priorhomejuice;
-    long priorts = 1000; //timestamp
+    private Timestamp  priorts = new Timestamp(1000);
 
     double openervisitspread;
     double openervisitjuice;
     double openerhomespread;
     double openerhomejuice;
-    long openerts = 1000; //timestamp
+    private Timestamp  openerts = new Timestamp(1000);
 
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, int p) {
         this();
 
         currentvisitspread = priorvisitspread = openervisitspread = vs;
@@ -52,7 +54,7 @@ public class Spreadline extends Line {
     }
 
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, double pvs, double pvj, double phs, double phj, long pts, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, double pvs, double pvj, double phs, double phj, Timestamp pts, int p) {
         this();
 
         currentvisitspread = vs;
@@ -73,7 +75,7 @@ public class Spreadline extends Line {
 
     }
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, double pvs, double pvj, double phs, double phj, long pts, double ovs, double ovj, double ohs, double ohj, long ots, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, double pvs, double pvj, double phs, double phj, Timestamp pts, double ovs, double ovj, double ohs, double ohj, Timestamp ots, int p) {
         this();
 
         currentvisitspread = vs;
@@ -102,11 +104,11 @@ public class Spreadline extends Line {
     }
 
     public static void main(String args[]) {
-
-
-        Spreadline sl = new Spreadline(109, 29, 5, -5, -110, -110, System.currentTimeMillis(), 0);
-        System.out.println("hi " + sl.isOpener());
-        System.out.println(sl.getPriorvisitspread());
+//
+//
+//        Spreadline sl = new Spreadline(109, 29, 5, -5, -110, -110, System.currentTimeMillis(), 0);
+//        System.out.println("hi " + sl.isOpener());
+//        System.out.println(sl.getPriorvisitspread());
     }
 
     public boolean isOpener() {
@@ -142,7 +144,7 @@ public class Spreadline extends Line {
         isbesthomespread = b;
     }
 
-    public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, long ts, boolean isopener) {
+    public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, Timestamp ts, boolean isopener) {
 
         if (visitjuice != 0) {
             this.setCurrentvisitspread(visitspread);
@@ -241,7 +243,7 @@ public class Spreadline extends Line {
         this.currenthomejuice = currenthomejuice;
     }
 
-    public long getCurrentts() {
+    public Timestamp getCurrentts() {
         return currentts;
     }
 
@@ -254,7 +256,7 @@ public class Spreadline extends Line {
         this.currenthomespread = currenthomespread;
     }
 
-    public void setCurrentts(long currentts) {
+    public void setCurrentts(Timestamp currentts) {
         setPriorts(getCurrentts());
         this.currentts = currentts;
     }
@@ -468,12 +470,12 @@ public class Spreadline extends Line {
         return getOtherPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
     }
 
-    public long getPriorts() {
+    public Timestamp getPriorts() {
 
         return priorts;
     }
 
-    public void setPriorts(long priorts) {
+    public void setPriorts(Timestamp priorts) {
         this.priorts = priorts;
     }
 
@@ -485,11 +487,11 @@ public class Spreadline extends Line {
         this.priorhomespread = priorhomespread;
     }
 
-    public long getOpenerts() {
+    public Timestamp getOpenerts() {
         return openerts;
     }
 
-    public void setOpenerts(long openerts) {
+    public void setOpenerts(Timestamp openerts) {
         this.openerts = openerts;
     }
 

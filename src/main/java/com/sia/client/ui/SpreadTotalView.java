@@ -9,6 +9,7 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
 import java.awt.Color;
+import java.sql.Timestamp;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -42,11 +43,9 @@ public class SpreadTotalView {
     Color bottomcolor = Color.WHITE;
     private String topicon = ICON_BLANK;
     private String bottomicon = ICON_BLANK;
-    private long clearts;
+    private Timestamp clearts;
     int id;
-    Game game;
     Bookie bookie;
-    Sport sp;
     String topborder;
     String bottomborder = "";
     String tooltiptext;
@@ -64,17 +63,13 @@ public class SpreadTotalView {
         this.bid = bid;
         this.gid = gid;
         topborder = bottomborder = "";
-        game = AppController.getGame(gid);
         bookie = AppController.getBookie(bid);
-        sp = AppController.getSportByLeagueId(game.getLeague_id());
-        this.getCurrentBoxes();
-        clearts = cleartime;
+        setClearts(cleartime);
         id = new Random().nextInt();
         this.ltd = ltd;
-
+        this.getCurrentBoxes();
 
     }
-
     public LineData[] getCurrentBoxes() {
         topborder = bottomborder = "";
         if (isopenerbookie) {
@@ -84,7 +79,7 @@ public class SpreadTotalView {
         }
 
         if (display.equals("default")) {
-
+            Sport sp = getSport();
             if (sp.getSport_id() == 3) // baseball
             {
                 display = "totalbothmoney";
@@ -100,7 +95,7 @@ public class SpreadTotalView {
         String topboxS = "";
         String bottomboxS = "";
 
-        if (game.getStatus().equalsIgnoreCase("Time") && period == 0) {
+        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
             period = 2;
         }
 
@@ -133,9 +128,12 @@ public class SpreadTotalView {
 
 
                 whowasbetspread = sl.getWhowasbet();
-                if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
+boolean isRed=(tsnow - sl.getCurrentts().getTime()) <= 30000 && clearts.getTime() <= sl.getCurrentts().getTime();
+Game game = getGame();
+if ( game.getGame_id()==9273) {System.out.println("******* game:"+game.getGame_id()+", red="+isRed+", sl.getCurrentts().getTime()="+new Timestamp(sl.getCurrentts().getTime())+",now="+tsnow+", diff="+(tsnow-sl.getCurrentts().getTime())+", clearts="+clearts);}
+                if ( (tsnow - sl.getCurrentts().getTime()) <= 30000 && clearts.getTime() <= sl.getCurrentts().getTime()) {
                     spreadcolor = Color.RED;
-                } else if (clearts < sl.getCurrentts()) {
+                } else if (clearts.getTime() < sl.getCurrentts().getTime()) {
                     spreadcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("S"+id);
@@ -160,9 +158,9 @@ public class SpreadTotalView {
             if ( null != tl) {
                 over = tl.getCurrentover();
                 whowasbettotal = tl.getWhowasbet();
-                if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
+                if (tsnow - tl.getCurrentts().getTime() <= 30000 && clearts.getTime() < tl.getCurrentts().getTime()) {
                     totalcolor = Color.RED;
-                } else if (clearts < tl.getCurrentts()) {
+                } else if (clearts.getTime() < tl.getCurrentts().getTime()) {
                     totalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("T"+id);
@@ -185,9 +183,9 @@ public class SpreadTotalView {
                 homemljuice = ml.getCurrenthomejuice();
                 whowasbetmoney = ml.getWhowasbet();
 
-                if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
+                if (tsnow - ml.getCurrentts().getTime() <= 30000 && clearts.getTime() < ml.getCurrentts().getTime()) {
                     moneycolor = Color.RED;
-                } else if (clearts < ml.getCurrentts()) {
+                } else if (clearts.getTime() < ml.getCurrentts().getTime()) {
                     moneycolor = Color.BLACK;
                 } else {
                     moneycolor = Color.WHITE;
@@ -209,9 +207,9 @@ public class SpreadTotalView {
                 visitover = ttl.getCurrentvisitover();
                 homeover = ttl.getCurrenthomeover();
                 whowasbetteamtotal = ttl.getWhowasbet();
-                if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
+                if (tsnow - ttl.getCurrentts().getTime() <= 30000 && clearts.getTime() < ttl.getCurrentts().getTime()) {
                     teamtotalcolor = Color.RED;
-                } else if (clearts < ttl.getCurrentts()) {
+                } else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
                     teamtotalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("TT"+id);
@@ -770,6 +768,7 @@ public class SpreadTotalView {
         //if(ml == null) ml = Moneyline.ml;
 
         try {
+            Game game = getGame();
             if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
                 tooltiptext = "<html><body>" +
                         "<table border=1>" +
@@ -879,14 +878,17 @@ public class SpreadTotalView {
         }
         return boxes;
     }
-
+    public static void main(String [] argvb) {
+        long time=1130;
+        System.out.println(new Timestamp(time).getTime());
+    }
     public void setCurrentBoxes(LineData[] boxes) {
         this.boxes = boxes;
     }
 
     public LineData[] getOpenerBoxes() {
         if (display.equals("default")) {
-
+            Sport sp = getSport();
             if (sp.getSport_id() == 3) // baseball
             {
                 display = "totalbothmoney";
@@ -901,7 +903,7 @@ public class SpreadTotalView {
         }
         String topboxS = "";
         String bottomboxS = "";
-        if (game.getStatus().equalsIgnoreCase("Time") && period == 0) {
+        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
             period = 2;
         }
         sl = AppController.getSpreadline(bid, gid, period);
@@ -1233,16 +1235,18 @@ public class SpreadTotalView {
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
 
-        clearts = cleartime;
+        setClearts(cleartime);
     }
-
+    private void setClearts(long clearTime) {
+        this.clearts = new Timestamp(clearTime);
+    }
     public LineData[] getPriorBoxes() {
         if (isopenerbookie) {
             priorboxes = getOpenerBoxes();
             return priorboxes;
         }
         if (display.equals("default")) {
-
+            Sport sp = getSport();
             if (sp.getSport_id() == 3) // baseball
             {
                 display = "totalbothmoney";
@@ -1257,7 +1261,7 @@ public class SpreadTotalView {
         }
         String topboxS = "";
         String bottomboxS = "";
-        if (game.getStatus().equalsIgnoreCase("Time") && period == 0) {
+        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
             period = 2;
         }
         sl = AppController.getSpreadline(bid, gid, period);
@@ -1521,6 +1525,10 @@ public class SpreadTotalView {
     public void setPriorBoxes(LineData[] boxes) {
         this.priorboxes = boxes;
     }
-
-
+    public Game getGame() {
+        return AppController.getGame(gid);
+    }
+    public Sport getSport() {
+        return AppController.getSportByLeagueId(getGame().getLeague_id());
+    }
 }

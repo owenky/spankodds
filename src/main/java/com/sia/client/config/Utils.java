@@ -18,6 +18,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.lang.ref.SoftReference;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -282,12 +283,12 @@ public abstract class Utils {
         }
         return sourceString;
     }
-    public static long parseTimestamp(String timeStampStr) {
+    public static Timestamp parseTimestamp(String timeStampStr) {
         try {
-            return Long.parseLong(timeStampStr);
+            return new Timestamp(Long.parseLong(timeStampStr));
         }catch(NumberFormatException e) {
             log(e);
-            return 0L;
+            return new Timestamp(0L);
         }
     }
     public static boolean containsOnlyAlphanumeric(String str) {
