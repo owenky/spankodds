@@ -105,7 +105,7 @@ public class GamesConsumer implements MessageListener {
             if ("NEWORUPDATE".equals(messagetype)) {
 
                 String data = textMessage.getText();
-//                log("new game! " + data);
+                log("new game! " + data);
                 String[] items = data.split("~");
                 int x = 0;
 
