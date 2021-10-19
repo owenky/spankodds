@@ -1,9 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.GameUtils;
-import com.sia.client.config.GameUtils;
-import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.config.SiaConst;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -12,38 +8,12 @@ import com.sia.client.model.Sport;
 import static com.sia.client.config.Utils.log;
 
 public abstract class ScoreChangedProcessor {
-private static int DebugInfoCounter=0;
-    private static boolean debugCode(GameStatus gameStatus, Game g) {
-        //debug TODO
-        String debugInfo = GameUtils.getGameDebugInfo(g);
-//        Sport s1 = AppController.getSportByLeagueId(g.getLeague_id());
-//        boolean debugSoccer =  null != s1 && s1.getSportname().equalsIgnoreCase(SiaConst.SoccerStr);
-//        if ( debugSoccer && gameStatus.isSame(g.getStatus()) && gameStatus == GameStatus.Final) {
-//            log("ScoreChangedProcessor,gameStatus.isSame() is true, gameStatus="+gameStatus+" -- " + debugInfo);
-//        }
-        int gid = g.getGame_id();
-        boolean debugSoccer = gid == 225201 ;//|| gid == 225205 || gid == 225209 || gid == 225213 || gid == 225217;
-        if ( debugSoccer ) {
-            ColumnCustomizableDataModel model = MainScreen.findMainScreen(SportType.Soccer.getSportName()).getColumnCustomizableTable().getModel();
-            List<TableSection> tsList = model.getTableSections();
-            DebugInfoCounter++;
-            if ( DebugInfoCounter == 2 ||   DebugInfoCounter == 19 ||  DebugInfoCounter == 20) {
-                try { Thread.sleep(5000L); } catch (InterruptedException e) { e.printStackTrace(); }
-            }
-            if (DebugInfoCounter ==97 || DebugInfoCounter==47) {
-                log("ScoreChangedProcessor,gameStatus.isSame() is true, gameStatus=" + gameStatus + " -- " + debugInfo);
-            }
-        }
-        return debugSoccer;
-        //END OF TODO debug
-    }
+
     public static void process(GameStatus gameStatus, Game g,  int currentvisitorscore, int currenthomescore) {
 
-        boolean debugSoccer = debugCode(gameStatus,g);
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
         if (! gameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
-if ( debugSoccer) log("MOVING GAME !!!! DebugInfoCounter="+DebugInfoCounter+", " + GameUtils.getGameDebugInfo(g) + "..is about to move to " + gameStatus.getGroupHeader());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
             String[] arr  = finalprefs.split("\\|");
