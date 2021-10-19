@@ -747,8 +747,8 @@ public class LineAlertNode {
             queue.add(line);
             //System.out.println("queue after add "+queue);
             Spreadline old = (Spreadline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             long diff = newsecs - oldsecs;
             long difflastalert = newsecs - queue.getlastalerted();
             //System.out.println("diff="+diff+"..spreadsecs="+spreadsecs+"..difflastalert="+difflastalert+"..minsren="+spreadminsrenotify);
@@ -776,8 +776,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Spreadline old = (Spreadline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             long diff = newsecs - oldsecs;
             long difflastalert = newsecs - queue.getlastalerted();
 
@@ -845,8 +845,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Totalline old = (Totalline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             if (newsecs - oldsecs <= totalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= totalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -868,8 +868,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Totalline old = (Totalline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             if (newsecs - oldsecs <= totalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= totalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -907,8 +907,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Moneyline old = (Moneyline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             if (newsecs - oldsecs <= moneylinesecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= moneylineminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -930,8 +930,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Moneyline old = (Moneyline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             if (newsecs - oldsecs <= moneylinesecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= moneylineminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -969,8 +969,8 @@ public class LineAlertNode {
             queue.add(line);
 
             TeamTotalline old = (TeamTotalline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             if (newsecs - oldsecs <= teamtotalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= teamtotalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -991,8 +991,8 @@ public class LineAlertNode {
             queue.add(line);
 
             TeamTotalline old = (TeamTotalline) queue.peek();
-            long oldsecs = old.getCurrentts();
-            long newsecs = line.getCurrentts();
+            long oldsecs = old.getCurrentts().getTime();
+            long newsecs = line.getCurrentts().getTime();
             if (newsecs - oldsecs <= teamtotalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= teamtotalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true

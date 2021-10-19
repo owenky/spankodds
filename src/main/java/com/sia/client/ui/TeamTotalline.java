@@ -3,6 +3,8 @@ package com.sia.client.ui;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Line;
 
+import java.sql.Timestamp;
+
 public class TeamTotalline extends Line
 {
 
@@ -19,7 +21,7 @@ public class TeamTotalline extends Line
     double currenthomeoverjuice;
     double currenthomeunder;
     double currenthomeunderjuice;
-    private long currentts = 1000; //timestamp
+    private Timestamp currentts = new Timestamp(1000);
 
 
     double priorvisitover;
@@ -30,7 +32,7 @@ public class TeamTotalline extends Line
     double priorhomeoverjuice;
     double priorhomeunder;
     double priorhomeunderjuice;
-    private long priorts = 1000; //timestamp
+    private Timestamp priorts = new Timestamp(1000);
 
 
     double openervisitover;
@@ -41,7 +43,7 @@ public class TeamTotalline extends Line
     double openerhomeoverjuice;
     double openerhomeunder;
     double openerhomeunderjuice;
-    private long openerts = 1000; //timestamp
+    private Timestamp openerts = new Timestamp(1000);
 
 
     public boolean isBestVisitOver()
@@ -86,7 +88,7 @@ public class TeamTotalline extends Line
         type = "teamtotal";
     }
 
-    public TeamTotalline(int gid, int bid,double vo,double voj,double vu,double vuj,double ho,double hoj,double hu,double huj,long ts,int p)
+    public TeamTotalline(int gid, int bid,double vo,double voj,double vu,double vuj,double ho,double hoj,double hu,double huj,Timestamp ts,int p)
     {
         this();
 
@@ -109,9 +111,9 @@ public class TeamTotalline extends Line
 
 
 
-    public TeamTotalline(int gid, int bid,double vo,double voj,double vu,double vuj,double ho,double hoj,double hu,double huj,long ts,
-                         double pvo,double pvoj,double pvu,double pvuj,double pho,double phoj,double phu,double phuj,long pts,
-                         double ovo,double ovoj,double ovu,double ovuj,double oho,double ohoj,double ohu,double ohuj,long ots,int p)
+    public TeamTotalline(int gid, int bid,double vo,double voj,double vu,double vuj,double ho,double hoj,double hu,double huj,Timestamp ts,
+                         double pvo,double pvoj,double pvu,double pvuj,double pho,double phoj,double phu,double phuj,Timestamp pts,
+                         double ovo,double ovoj,double ovu,double ovuj,double oho,double ohoj,double ohu,double ohuj,Timestamp ots,int p)
     {
         this();
         currentvisitover = vo;
@@ -152,7 +154,7 @@ public class TeamTotalline extends Line
     }
 
     public String recordMove(double visitover,double visitoverjuice,double visitunder,double visitunderjuice,
-                             double homeover,double homeoverjuice,double homeunder,double homeunderjuice,long ts,boolean isopener)
+                             double homeover,double homeoverjuice,double homeunder,double homeunderjuice,Timestamp ts,boolean isopener)
     {
 
         if(visitoverjuice != 0)
@@ -769,28 +771,28 @@ public class TeamTotalline extends Line
     {
         this.openerhomeunderjuice = openerhomeunderjuice;
     }
-    public long getOpenerts()
+    public Timestamp getOpenerts()
     {
         return openerts;
     }
-    public void setOpenerts(long openerts)
+    public void setOpenerts(Timestamp openerts)
     {
         this.openerts = openerts;
     }
-    public void setCurrentts(long currentts)
+    public void setCurrentts(Timestamp currentts)
     {
         setPriorts(getCurrentts());
         this.currentts = currentts;
     }
-    public long getCurrentts()
+    public Timestamp getCurrentts()
     {
         return currentts;
     }
-    public long getPriorts()
+    public Timestamp getPriorts()
     {
         return priorts;
     }
-    public void setPriorts(long priorts)
+    public void setPriorts(Timestamp priorts)
     {
         this.priorts = priorts;
     }

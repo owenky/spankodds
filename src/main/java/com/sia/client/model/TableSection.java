@@ -140,19 +140,23 @@ public abstract class TableSection<V extends KeyedObject> {
         resetDataVector(); //including sorting gamesVec
     }
 
-    public void addGame(V g, boolean repaint) {
+    public boolean addGame(V g, boolean repaint) {
         setHowHeighIfAbsent(g);
         boolean exist = null != gamesVec.getGameFromDataSource(g.getGame_id());
+        boolean isAdded;
         if (exist) {
-            boolean isAbsent = gamesVec.addIfAbsent(g);
+            isAdded = gamesVec.addIfAbsent(g);
             resetDataVector(); //including sorting gamesVec
             if (repaint) {
                 int insertedRowModelIndex = containingTableModel.getRowModelIndex(this, g.getGame_id());
-                int eventType = isAbsent?TableModelEvent.INSERT:TableModelEvent.UPDATE;
+                int eventType = isAdded?TableModelEvent.INSERT:TableModelEvent.UPDATE;
                 TableModelEvent e = new TableModelEvent(containingTableModel, insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, eventType);
                 fire(e);
             }
+        } else {
+            isAdded = false;
         }
+        return isAdded;
     }
     protected void setHowHeighIfAbsent(V v) {
         //for sub class to override

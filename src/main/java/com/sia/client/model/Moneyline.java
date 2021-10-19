@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.ui.LineAlertManager;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import static com.sia.client.config.Utils.log;
 
@@ -15,21 +16,21 @@ public class Moneyline extends Line implements Serializable {
     double currentvisitjuice;
     double currenthomejuice;
     double currentdrawjuice;
-    private long currentts = 1000; //timestamp
+    private Timestamp currentts = new Timestamp(1000);
 
     double priorvisitjuice;
     double priorhomejuice;
     double priordrawjuice;
-    private long priorts = 1000; //timestamp
+    private Timestamp priorts = new Timestamp(1000);
     ;
 
     double openervisitjuice;
     double openerhomejuice;
     double openerdrawjuice;
-    private long openerts = 1000; //timestamp
+    private Timestamp openerts = new Timestamp(1000);
 
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, int p) {
         this();
         currentvisitjuice = priorvisitjuice = openervisitjuice = vj;
         currenthomejuice = priorhomejuice = openerhomejuice = hj;
@@ -48,7 +49,7 @@ public class Moneyline extends Line implements Serializable {
         type = "moneyline";
     }
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, double pvj, double phj, double pdj, long pts, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, double pvj, double phj, double pdj, Timestamp pts, int p) {
         this();
         currentvisitjuice = vj;
         currenthomejuice = hj;
@@ -67,7 +68,7 @@ public class Moneyline extends Line implements Serializable {
 
     }
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, double pvj, double phj, double pdj, long pts, double ovj, double ohj, double odj, long ots, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, double pvj, double phj, double pdj, Timestamp pts, double ovj, double ohj, double odj, Timestamp ots, int p) {
         this();
         currentvisitjuice = vj;
         currenthomejuice = hj;
@@ -115,7 +116,7 @@ public class Moneyline extends Line implements Serializable {
         isbestdrawmoney = b;
     }
 
-    public String recordMove(double visitjuice, double homejuice, double drawjuice, long ts, boolean isopener) {
+    public String recordMove(double visitjuice, double homejuice, double drawjuice, Timestamp ts, boolean isopener) {
 
         if (visitjuice != 0) {
             this.setCurrentvisitjuice(visitjuice);
@@ -200,7 +201,7 @@ public class Moneyline extends Line implements Serializable {
         this.currenthomejuice = currenthomejuice;
     }
 
-    public long getCurrentts() {
+    public Timestamp getCurrentts() {
         return currentts;
     }
 
@@ -213,7 +214,7 @@ public class Moneyline extends Line implements Serializable {
         this.currentdrawjuice = currentdrawjuice;
     }
 
-    public void setCurrentts(long currentts) {
+    public void setCurrentts(Timestamp currentts) {
         setPriorts(getCurrentts());
         this.currentts = currentts;
     }
@@ -240,11 +241,11 @@ public class Moneyline extends Line implements Serializable {
         }
     }
 
-    public long getPriorts() {
+    public Timestamp getPriorts() {
         return priorts;
     }
 
-    public void setPriorts(long priorts) {
+    public void setPriorts(Timestamp priorts) {
         this.priorts = priorts;
     }
 
@@ -256,11 +257,11 @@ public class Moneyline extends Line implements Serializable {
         this.priordrawjuice = priordrawjuice;
     }
 
-    public long getOpenerts() {
+    public Timestamp getOpenerts() {
         return openerts;
     }
 
-    public void setOpenerts(long openerts) {
+    public void setOpenerts(Timestamp openerts) {
         this.openerts = openerts;
     }
 
