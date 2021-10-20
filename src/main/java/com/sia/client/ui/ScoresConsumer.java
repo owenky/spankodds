@@ -40,7 +40,6 @@ public class ScoresConsumer implements MessageListener {
     private static ActiveMQConnectionFactory factory;
     private transient Connection connection;
     private transient Session session;
-    private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
     private final MessageConsumingScheduler<Game> scoreMessageProcessor;
     private static boolean toSimulateMQ = false;
@@ -85,15 +84,14 @@ public class ScoresConsumer implements MessageListener {
                     }
                 } else {
                     Utils.ensureNotEdtThread();
-                    OngoingGameMessages.addMessage(MessageType.Score, mapMessage);
-                    processMessage(message);
+                    OngoingGameMessages.addMessage(MessageType.Score, message);
+                    processMessage((MapMessage)message);
                 }
             }
         }
     }
-    public void processMessage(Message message) {
+    public void processMessage(MapMessage mapMessage) {
         try {
-            mapMessage = (MapMessage) message;
             String changetype = mapMessage.getStringProperty("messageType");
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
