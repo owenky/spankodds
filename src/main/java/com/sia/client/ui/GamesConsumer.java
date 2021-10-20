@@ -36,7 +36,6 @@ public class GamesConsumer implements MessageListener {
 
     private transient Connection connection;
     private transient Session session;
-    private TextMessage textMessage;
     //TODO set toSimulateMQ to false for production
     private static boolean toSimulateMQ = false;
     private final AtomicBoolean simulateStatus = new AtomicBoolean(false);
@@ -78,16 +77,15 @@ public class GamesConsumer implements MessageListener {
                 } else {
                     Utils.ensureNotEdtThread();
                     OngoingGameMessages.addMessage(MessageType.Game, message);
-                    processMessage(message);
+                    processMessage((TextMessage)message);
                 }
             }
         }
     }
-    public void processMessage(Message message) {
+    public void processMessage(TextMessage textMessage) {
         try {
             boolean repaint = true;
-            String leagueid = "";
-            textMessage = (TextMessage) message;
+            String leagueid;
             String messagetype = textMessage.getStringProperty("messageType");
             String repaintstr = textMessage.getStringProperty("repaint");
             leagueid = textMessage.getStringProperty("leagueid");
