@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.Line;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
@@ -128,10 +129,7 @@ public class SpreadTotalView {
 
 
                 whowasbetspread = sl.getWhowasbet();
-boolean isRed=(tsnow - sl.getCurrentts().getTime()) <= 30000 && clearts.getTime() <= sl.getCurrentts().getTime();
-Game game = getGame();
-if ( game.getGame_id()==9273) {System.out.println("******* game:"+game.getGame_id()+", red="+isRed+", sl.getCurrentts().getTime()="+new Timestamp(sl.getCurrentts().getTime())+",now="+tsnow+", diff="+(tsnow-sl.getCurrentts().getTime())+", clearts="+clearts);}
-                if ( (tsnow - sl.getCurrentts().getTime()) <= 30000 && clearts.getTime() <= sl.getCurrentts().getTime()) {
+                if ( shouldGoRed(sl) ) {
                     spreadcolor = Color.RED;
                 } else if (clearts.getTime() < sl.getCurrentts().getTime()) {
                     spreadcolor = Color.BLACK;
@@ -158,7 +156,7 @@ if ( game.getGame_id()==9273) {System.out.println("******* game:"+game.getGame_i
             if ( null != tl) {
                 over = tl.getCurrentover();
                 whowasbettotal = tl.getWhowasbet();
-                if (tsnow - tl.getCurrentts().getTime() <= 30000 && clearts.getTime() < tl.getCurrentts().getTime()) {
+                if (shouldGoRed(tl)) {
                     totalcolor = Color.RED;
                 } else if (clearts.getTime() < tl.getCurrentts().getTime()) {
                     totalcolor = Color.BLACK;
@@ -183,7 +181,7 @@ if ( game.getGame_id()==9273) {System.out.println("******* game:"+game.getGame_i
                 homemljuice = ml.getCurrenthomejuice();
                 whowasbetmoney = ml.getWhowasbet();
 
-                if (tsnow - ml.getCurrentts().getTime() <= 30000 && clearts.getTime() < ml.getCurrentts().getTime()) {
+                if (shouldGoRed(ml)) {
                     moneycolor = Color.RED;
                 } else if (clearts.getTime() < ml.getCurrentts().getTime()) {
                     moneycolor = Color.BLACK;
@@ -207,7 +205,7 @@ if ( game.getGame_id()==9273) {System.out.println("******* game:"+game.getGame_i
                 visitover = ttl.getCurrentvisitover();
                 homeover = ttl.getCurrenthomeover();
                 whowasbetteamtotal = ttl.getWhowasbet();
-                if (tsnow - ttl.getCurrentts().getTime() <= 30000 && clearts.getTime() < ttl.getCurrentts().getTime()) {
+                if (shouldGoRed(ttl)) {
                     teamtotalcolor = Color.RED;
                 } else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
                     teamtotalcolor = Color.BLACK;
@@ -1521,7 +1519,18 @@ if ( game.getGame_id()==9273) {System.out.println("******* game:"+game.getGame_i
         setPriorBoxes(priorboxes);
         return priorboxes;
     }
+    private boolean shouldGoRed(Line line) {
+        long tsnow = System.currentTimeMillis();
+        long curTime = line.getCurrentts().getTime();
+        boolean isRed=(tsnow - curTime) <= 30000 && clearts.getTime() <= curTime;
+        Game game = getGame();
+if ( Line.testGameIds.contains(game.getGame_id())) {
+    log("******* game:"+game.getGame_id()+", red="+isRed+", sl.getCurrentts().getTime()="+sl.getCurrentts()+", timevalue="+curTime
+                +",now="+tsnow+", diff="+(tsnow-curTime)+", clearts="+clearts+", line="+line.hashCode());
+}
 
+        return isRed;
+    }
     public void setPriorBoxes(LineData[] boxes) {
         this.priorboxes = boxes;
     }

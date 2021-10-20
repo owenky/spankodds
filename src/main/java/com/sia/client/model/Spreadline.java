@@ -13,24 +13,19 @@ public class Spreadline extends Line {
 
     boolean isbestvisitspread = false;
     boolean isbesthomespread = false;
-
     double currentvisitspread;
     double currentvisitjuice;
     double currenthomespread;
     double currenthomejuice;
-    private Timestamp currentts = new Timestamp(1000);
-
     double priorvisitspread;
     double priorvisitjuice;
     double priorhomespread;
     double priorhomejuice;
-    private Timestamp  priorts = new Timestamp(1000);
-
     double openervisitspread;
     double openervisitjuice;
     double openerhomespread;
     double openerhomejuice;
-    private Timestamp  openerts = new Timestamp(1000);
+
 
 
     public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, int p) {
@@ -242,11 +237,6 @@ public class Spreadline extends Line {
         setPriorhomejuice(getCurrenthomejuice());
         this.currenthomejuice = currenthomejuice;
     }
-
-    public Timestamp getCurrentts() {
-        return currentts;
-    }
-
     public double getCurrenthomespread() {
         return currenthomespread;
     }
@@ -256,10 +246,7 @@ public class Spreadline extends Line {
         this.currenthomespread = currenthomespread;
     }
 
-    public void setCurrentts(Timestamp currentts) {
-        setPriorts(getCurrentts());
-        this.currentts = currentts;
-    }
+
 
     public void setPriorhomejuice(double priorhomejuice) {
         this.priorhomejuice = priorhomejuice;
@@ -469,16 +456,6 @@ public class Spreadline extends Line {
     public String getOtherPrintedOpenerSpread() {
         return getOtherPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
     }
-
-    public Timestamp getPriorts() {
-
-        return priorts;
-    }
-
-    public void setPriorts(Timestamp priorts) {
-        this.priorts = priorts;
-    }
-
     public double getPriorhomespread() {
         return priorhomespread;
     }
@@ -487,13 +464,7 @@ public class Spreadline extends Line {
         this.priorhomespread = priorhomespread;
     }
 
-    public Timestamp getOpenerts() {
-        return openerts;
-    }
 
-    public void setOpenerts(Timestamp openerts) {
-        this.openerts = openerts;
-    }
 
     public double getOpenervisitspread() {
         return openervisitspread;

@@ -5,8 +5,7 @@ import com.sia.client.model.Line;
 
 import java.sql.Timestamp;
 
-public class TeamTotalline extends Line
-{
+public class TeamTotalline extends Line {
 
 
     boolean isbestvisitover = false;
@@ -21,9 +20,6 @@ public class TeamTotalline extends Line
     double currenthomeoverjuice;
     double currenthomeunder;
     double currenthomeunderjuice;
-    private Timestamp currentts = new Timestamp(1000);
-
-
     double priorvisitover;
     double priorvisitoverjuice;
     double priorvisitunder;
@@ -32,9 +28,6 @@ public class TeamTotalline extends Line
     double priorhomeoverjuice;
     double priorhomeunder;
     double priorhomeunderjuice;
-    private Timestamp priorts = new Timestamp(1000);
-
-
     double openervisitover;
     double openervisitoverjuice;
     double openervisitunder;
@@ -43,53 +36,12 @@ public class TeamTotalline extends Line
     double openerhomeoverjuice;
     double openerhomeunder;
     double openerhomeunderjuice;
+    private Timestamp currentts = new Timestamp(1000);
+    private Timestamp priorts = new Timestamp(1000);
     private Timestamp openerts = new Timestamp(1000);
 
 
-    public boolean isBestVisitOver()
-    {
-        return isbestvisitover;
-    }
-    public boolean isBestVisitUnder()
-    {
-        return isbestvisitunder;
-    }
-    public boolean isBestHomeOver()
-    {
-        return isbesthomeover;
-    }
-    public boolean isBestHomeUnder()
-    {
-        return isbesthomeunder;
-    }
-
-
-    public void setBestVisitOver(boolean b)
-    {
-        isbestvisitover = b;
-    }
-    public void setBestVisitUnder(boolean b)
-    {
-        isbestvisitunder = b;
-    }
-
-    public void setBestHomeOver(boolean b)
-    {
-        isbesthomeover = b;
-    }
-    public void setBestHomeUnder(boolean b)
-    {
-        isbesthomeunder = b;
-    }
-
-
-    public TeamTotalline()
-    {
-        type = "teamtotal";
-    }
-
-    public TeamTotalline(int gid, int bid,double vo,double voj,double vu,double vuj,double ho,double hoj,double hu,double huj,Timestamp ts,int p)
-    {
+    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, Timestamp ts, int p) {
         this();
 
         currentvisitover = priorvisitover = openervisitover = vo;
@@ -106,15 +58,15 @@ public class TeamTotalline extends Line
         period = p;
 
 
-
     }
 
+    public TeamTotalline() {
+        type = "teamtotal";
+    }
 
-
-    public TeamTotalline(int gid, int bid,double vo,double voj,double vu,double vuj,double ho,double hoj,double hu,double huj,Timestamp ts,
-                         double pvo,double pvoj,double pvu,double pvuj,double pho,double phoj,double phu,double phuj,Timestamp pts,
-                         double ovo,double ovoj,double ovu,double ovuj,double oho,double ohoj,double ohu,double ohuj,Timestamp ots,int p)
-    {
+    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, Timestamp ts,
+                         double pvo, double pvoj, double pvu, double pvuj, double pho, double phoj, double phu, double phuj, Timestamp pts,
+                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, Timestamp ots, int p) {
         this();
         currentvisitover = vo;
         currentvisitoverjuice = voj;
@@ -153,62 +105,83 @@ public class TeamTotalline extends Line
 
     }
 
-    public String recordMove(double visitover,double visitoverjuice,double visitunder,double visitunderjuice,
-                             double homeover,double homeoverjuice,double homeunder,double homeunderjuice,Timestamp ts,boolean isopener)
-    {
+    public boolean isBestVisitOver() {
+        return isbestvisitover;
+    }
 
-        if(visitoverjuice != 0)
-        {
+    public void setBestVisitOver(boolean b) {
+        isbestvisitover = b;
+    }
+
+    public boolean isBestVisitUnder() {
+        return isbestvisitunder;
+    }
+
+    public void setBestVisitUnder(boolean b) {
+        isbestvisitunder = b;
+    }
+
+    public boolean isBestHomeOver() {
+        return isbesthomeover;
+    }
+
+    public void setBestHomeOver(boolean b) {
+        isbesthomeover = b;
+    }
+
+    public boolean isBestHomeUnder() {
+        return isbesthomeunder;
+    }
+
+    public void setBestHomeUnder(boolean b) {
+        isbesthomeunder = b;
+    }
+
+    public String recordMove(double visitover, double visitoverjuice, double visitunder, double visitunderjuice,
+                             double homeover, double homeoverjuice, double homeunder, double homeunderjuice, Timestamp ts, boolean isopener) {
+
+        if (visitoverjuice != 0) {
             this.setCurrentvisitover(visitover);
             this.setCurrentvisitoverjuice(visitoverjuice);
             this.setCurrentts(ts);
 
 
-
-            if(isopener)
-            {
+            if (isopener) {
                 this.setOpenervisitover(visitover);
                 this.setOpenervisitoverjuice(visitoverjuice);
                 this.setOpenerts(ts);
             }
         }
-        if(visitunderjuice != 0)
-        {
+        if (visitunderjuice != 0) {
             this.setCurrentvisitunder(visitunder);
             this.setCurrentvisitunderjuice(visitunderjuice);
             this.setCurrentts(ts);
 
-            if(isopener)
-            {
+            if (isopener) {
                 this.setOpenervisitunder(visitunder);
                 this.setOpenervisitunderjuice(visitunderjuice);
                 this.setOpenerts(ts);
             }
         }
 
-        if(homeoverjuice != 0)
-        {
+        if (homeoverjuice != 0) {
             this.setCurrenthomeover(homeover);
             this.setCurrenthomeoverjuice(homeoverjuice);
             this.setCurrentts(ts);
 
 
-
-            if(isopener)
-            {
+            if (isopener) {
                 this.setOpenerhomeover(homeover);
                 this.setOpenerhomeoverjuice(homeoverjuice);
                 this.setOpenerts(ts);
             }
         }
-        if(homeunderjuice != 0)
-        {
+        if (homeunderjuice != 0) {
             this.setCurrenthomeunder(homeunder);
             this.setCurrenthomeunderjuice(homeunderjuice);
             this.setCurrentts(ts);
 
-            if(isopener)
-            {
+            if (isopener) {
                 this.setOpenerhomeunder(homeunder);
                 this.setOpenerhomeunderjuice(homeunderjuice);
                 this.setOpenerts(ts);
@@ -216,587 +189,464 @@ public class TeamTotalline extends Line
         }
 
 
-
-        try
-        {
-            if(getPriorvisitover() < getCurrentvisitover()) // 215 to 216
+        try {
+            if (getPriorvisitover() < getCurrentvisitover()) // 215 to 216
             {
                 whowasbet = "o";
-            }
-            else if(getPriorvisitover() > getCurrentvisitover()) // 216 to 215
+            } else if (getPriorvisitover() > getCurrentvisitover()) // 216 to 215
             {
                 whowasbet = "u";
-            }
-
-            else //totals equal
+            } else //totals equal
             {
-                if(getPriorvisitoverjuice() < getCurrentvisitoverjuice() && this.getPriorvisitunderjuice() != this.getCurrentvisitunderjuice()) //-110 to -105 , +105 to +110
+                if (getPriorvisitoverjuice() < getCurrentvisitoverjuice() && this.getPriorvisitunderjuice() != this.getCurrentvisitunderjuice()) //-110 to -105 , +105 to +110
                 {
                     whowasbet = "u";
-                }
-                else if(getPriorvisitoverjuice() > getCurrentvisitoverjuice() && this.getPriorvisitunderjuice() != this.getCurrentvisitunderjuice())// priorjuice > currentjuice -105 to -110 110 to 105
+                } else if (getPriorvisitoverjuice() > getCurrentvisitoverjuice() && this.getPriorvisitunderjuice() != this.getCurrentvisitunderjuice())// priorjuice > currentjuice -105 to -110 110 to 105
                 {
                     whowasbet = "o";
-                }
-                else
-                {
+                } else {
                     //System.out.println("NO CHANGE!");
                     whowasbet = "";
 
                 }
 
             }
+        } catch (Exception ex) {
+            whowasbet = "";
         }
-        catch(Exception ex)	 { whowasbet = "";}
 
-        try
-        {
-            if(!this.whowasbet.equals(""))
-            {
+        try {
+            if (!this.whowasbet.equals("")) {
                 LineAlertManager.checkMove(this);
             }
-        }
-        catch(Exception ex)
-        {
-            System.out.println("exception checking team total for linealert! "+ex);
+        } catch (Exception ex) {
+            System.out.println("exception checking team total for linealert! " + ex);
         }
 
 
-        BestLines.calculatebestteamtotal(gameid,period);
+        BestLines.calculatebestteamtotal(gameid, period);
         return whowasbet;
 
     }
 
-    public String getShortPrintedCurrentVisitTotal()
-    {
-
-        return getShortPrintedTotal(currentvisitover,currentvisitoverjuice,currentvisitunder,currentvisitunderjuice);
+    public double getPriorvisitover() {
+        return priorvisitover;
     }
 
-    public String getShortPrintedCurrentHomeTotal()
-    {
-
-        return getShortPrintedTotal(currenthomeover,currenthomeoverjuice,currenthomeunder,currenthomeunderjuice);
-    }
-
-    public String getShortPrintedPriorVisitTotal()
-    {
-
-        return getShortPrintedTotal(priorvisitover,priorvisitoverjuice,priorvisitunder,priorvisitunderjuice);
-    }
-
-    public String getShortPrintedPriorHomeTotal()
-    {
-
-        return getShortPrintedTotal(priorhomeover,priorhomeoverjuice,priorhomeunder,priorhomeunderjuice);
-    }
-
-    public String getShortPrintedOpenerVisitTotal()
-    {
-
-        return getShortPrintedTotal(openervisitover,openervisitoverjuice,openervisitunder,openervisitunderjuice);
-    }
-    public String getShortPrintedOpenerHomeTotal()
-    {
-
-        return getShortPrintedTotal(openerhomeover,openerhomeoverjuice,openerhomeunder,openerhomeunderjuice);
-    }
-
-    public String getOtherPrintedCurrentVisitTotal()
-    {
-
-        return getOtherPrintedTotal(currentvisitover,currentvisitoverjuice,currentvisitunder,currentvisitunderjuice);
-    }
-
-    public String getOtherPrintedCurrentHomeTotal()
-    {
-
-        return getOtherPrintedTotal(currenthomeover,currenthomeoverjuice,currenthomeunder,currenthomeunderjuice);
-    }
-
-    public String getOtherPrintedPriorVisitTotal()
-    {
-
-        return getOtherPrintedTotal(priorvisitover,priorvisitoverjuice,priorvisitunder,priorvisitunderjuice);
-    }
-
-    public String getOtherPrintedPriorHomeTotal()
-    {
-
-        return getOtherPrintedTotal(priorhomeover,priorhomeoverjuice,priorhomeunder,priorhomeunderjuice);
-    }
-
-    public String getOtherPrintedOpenerVisitTotal()
-    {
-
-        return getOtherPrintedTotal(openervisitover,openervisitoverjuice,openervisitunder,openervisitunderjuice);
-    }
-    public String getOtherPrintedOpenerHomeTotal()
-    {
-
-        return getOtherPrintedTotal(openerhomeover,openerhomeoverjuice,openerhomeunder,openerhomeunderjuice);
-    }
-
-
-    public String getShortPrintedTotal(double o,double oj,double u,double uj)
-    {
-
-        String retvalue = o+"";
-        if(oj == 0) return "";
-        if(Math.abs(o) < 1 && retvalue.startsWith("0"))
-        {
-            retvalue = retvalue.substring(1);
-        }
-
-
-        double juice = 0;
-        if(oj == uj && oj == -110)
-        {
-
-            retvalue = retvalue.replace(".0","");
-            char half = AsciiChar.getAscii(170);
-
-
-            retvalue = retvalue.replace(".25","\u00BC");
-            retvalue = retvalue.replace(".5","\u00BD");
-            retvalue = retvalue.replace(".75","\u00BE");
-            return retvalue;
-        }
-        else if(oj < uj)
-        {
-            retvalue = retvalue+"o";
-            juice = oj;
-        }
-        else
-        {
-            retvalue = retvalue+"u";
-            juice = uj;
-        }
-
-
-
-        if(juice < 0)
-        {
-            juice = juice+100;
-            String juicestr = ""+juice;
-            if(juice == 0)
-            {
-                retvalue = retvalue+"ev";
-            }
-            else if(juice > -10)
-            {
-                juice = juice*-1;
-                juicestr = "-0"+juice;
-                retvalue = retvalue+""+juicestr;
-            }
-            else if(juice <= -100) // initial juice was  -200 or worse
-            {
-
-                juice = juice -100;
-                juicestr = ""+juice;
-                retvalue = retvalue+""+juicestr;
-            }
-            else
-            {
-                retvalue = retvalue+""+juicestr;
-
-
-            }
-
-        }
-        else
-        {
-            juice = juice -100;
-
-            if(juice == 0)
-            {
-                retvalue = retvalue+"ev";
-            }
-            else if(juice < 10)
-            {
-                retvalue = retvalue+"+0"+juice;
-            }
-            else
-            {
-                retvalue = retvalue+"+"+juice;
-
-            }
-
-        }
-        retvalue = retvalue.replace(".0","");
-        char half = AsciiChar.getAscii(170);
-
-        retvalue = retvalue.replace(".25","\u00BC");
-        retvalue = retvalue.replace(".5","\u00BD");
-        retvalue = retvalue.replace(".75","\u00BE");
-        return retvalue;
-
-    }
-
-    public String getOtherPrintedTotal(double o,double oj,double u,double uj)
-    {
-        String retvalue = o+"";
-        if(oj == 0) return "";
-        if(Math.abs(o) < 1 && retvalue.startsWith("0"))
-        {
-            retvalue = retvalue.substring(1);
-        }
-
-
-
-        double juice = 0;
-        if(oj == uj && oj == -110)
-        {
-
-            retvalue = retvalue.replace(".0","");
-            char half = AsciiChar.getAscii(170);
-
-
-            retvalue = retvalue.replace(".25","\u00BC");
-            retvalue = retvalue.replace(".5","\u00BD");
-            retvalue = retvalue.replace(".75","\u00BE");
-            return retvalue;
-        }
-        else if(oj < uj)
-        {
-            retvalue = retvalue+"u";
-            juice = uj;
-        }
-        else
-        {
-            retvalue = retvalue+"o";
-            juice = oj;
-        }
-
-
-
-        if(juice < 0)
-        {
-            juice = juice+100;
-            String juicestr = ""+juice;
-            if(juice == 0)
-            {
-                retvalue = retvalue+"ev";
-            }
-            else if(juice > -10)
-            {
-                juice = juice*-1;
-                juicestr = "-0"+juice;
-                retvalue = retvalue+""+juicestr;
-            }
-            else if(juice <= -100) // initial juice was  -200 or worse
-            {
-
-                juice = juice -100;
-                juicestr = ""+juice;
-                retvalue = retvalue+""+juicestr;
-            }
-            else
-            {
-                retvalue = retvalue+""+juicestr;
-
-            }
-
-        }
-        else
-        {
-            juice = juice -100;
-
-            if(juice == 0)
-            {
-                retvalue = retvalue+"ev";
-            }
-            else if(juice < 10)
-            {
-                retvalue = retvalue+"+0"+juice;
-            }
-            else
-            {
-                retvalue = retvalue+"+"+juice;
-
-            }
-
-        }
-        retvalue = retvalue.replace(".0","");
-
-        char half = AsciiChar.getAscii(170);
-
-        retvalue = retvalue.replace(".25","\u00BC");
-        retvalue = retvalue.replace(".5","\u00BD");
-        retvalue = retvalue.replace(".75","\u00BE");
-        return retvalue;
-
-    }
-
-    public boolean isOpener()
-    {
-
-        if(priorvisitover == 0 && priorvisitoverjuice == 0 && priorvisitunder == 0 && priorvisitunderjuice == 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public double getCurrentvisitover()
-    {
+    public double getCurrentvisitover() {
         return currentvisitover;
     }
-    public void setCurrentvisitover(double currentvisitover)
-    {
+
+    public void setCurrentvisitover(double currentvisitover) {
         setPriorvisitover(getCurrentvisitover());
         this.currentvisitover = currentvisitover;
     }
 
-    public double getCurrentvisitoverjuice()
-    {
+    public double getPriorvisitoverjuice() {
+        return priorvisitoverjuice;
+    }
+
+    public double getCurrentvisitoverjuice() {
         return currentvisitoverjuice;
     }
-    public void setCurrentvisitoverjuice(double currentvisitoverjuice)
-    {
+
+    public void setCurrentvisitoverjuice(double currentvisitoverjuice) {
         setPriorvisitoverjuice(getCurrentvisitoverjuice());
         this.currentvisitoverjuice = currentvisitoverjuice;
     }
 
-    public double getCurrentvisitunder()
-    {
+    public double getPriorvisitunderjuice() {
+        return priorvisitunderjuice;
+    }
+
+    public double getCurrentvisitunderjuice() {
+        return currentvisitunderjuice;
+    }
+
+    public double getCurrentvisitunder() {
         return currentvisitunder;
     }
-    public void setCurrentvisitunder(double currentvisitunder)
-    {
+
+    public void setCurrentvisitunder(double currentvisitunder) {
         setPriorvisitunder(getCurrentvisitunder());
         this.currentvisitunder = currentvisitunder;
     }
 
-    public double getCurrentvisitunderjuice()
-    {
-        return currentvisitunderjuice;
-    }
-    public void setCurrentvisitunderjuice(double currentvisitunderjuice)
-    {
-        setPriorvisitunderjuice(getCurrentvisitunderjuice());
-        this.currentvisitunderjuice = currentvisitunderjuice;
-    }
-
-
-
-    public double getPriorvisitover()
-    {
-        return priorvisitover;
-    }
-    public void setPriorvisitover(double priorvisitover)
-    {
-        this.priorvisitover = priorvisitover;
-    }
-
-    public double getPriorvisitoverjuice()
-    {
-        return priorvisitoverjuice;
-    }
-    public void setPriorvisitoverjuice(double priorvisitoverjuice)
-    {
-        this.priorvisitoverjuice = priorvisitoverjuice;
-    }
-
-    public double getPriorvisitunder()
-    {
-        return priorvisitunder;
-    }
-    public void setPriorvisitunder(double priorvisitunder)
-    {
-        this.priorvisitunder = priorvisitunder;
-    }
-
-    public double getPriorvisitunderjuice()
-    {
-        return priorvisitunderjuice;
-    }
-    public void setPriorvisitunderjuice(double priorvisitunderjuice)
-    {
-        this.priorvisitunderjuice = priorvisitunderjuice;
-    }
-
-
-
-    public double getOpenervisitover()
-    {
-        return openervisitover;
-    }
-    public void setOpenervisitover(double openervisitover)
-    {
-        this.openervisitover = openervisitover;
-    }
-
-    public double getOpenervisitoverjuice()
-    {
-        return openervisitoverjuice;
-    }
-    public void setOpenervisitoverjuice(double openervisitoverjuice)
-    {
-        this.openervisitoverjuice = openervisitoverjuice;
-    }
-
-    public double getOpenervisitunder()
-    {
-        return openervisitunder;
-    }
-    public void setOpenervisitunder(double openervisitunder)
-    {
-        this.openervisitunder = openervisitunder;
-    }
-
-    public double getOpenervisitunderjuice()
-    {
-        return openervisitunderjuice;
-    }
-    public void setOpenervisitunderjuice(double openervisitunderjuice)
-    {
-        this.openervisitunderjuice = openervisitunderjuice;
-    }
-
-    public double getCurrenthomeover()
-    {
+    public double getCurrenthomeover() {
         return currenthomeover;
     }
-    public void setCurrenthomeover(double currenthomeover)
-    {
+
+    public void setCurrenthomeover(double currenthomeover) {
         setPriorhomeover(getCurrenthomeover());
         this.currenthomeover = currenthomeover;
     }
 
-    public double getCurrenthomeoverjuice()
-    {
+    public double getCurrenthomeoverjuice() {
         return currenthomeoverjuice;
     }
-    public void setCurrenthomeoverjuice(double currenthomeoverjuice)
-    {
+
+    public void setCurrenthomeoverjuice(double currenthomeoverjuice) {
         setPriorhomeoverjuice(getCurrenthomeoverjuice());
         this.currenthomeoverjuice = currenthomeoverjuice;
     }
 
-    public double getCurrenthomeunder()
-    {
+    public double getCurrenthomeunder() {
         return currenthomeunder;
     }
-    public void setCurrenthomeunder(double currenthomeunder)
-    {
+
+    public void setCurrenthomeunder(double currenthomeunder) {
         setPriorhomeunder(getCurrenthomeunder());
         this.currenthomeunder = currenthomeunder;
     }
 
-    public double getCurrenthomeunderjuice()
-    {
+    public double getCurrenthomeunderjuice() {
         return currenthomeunderjuice;
     }
-    public void setCurrenthomeunderjuice(double currenthomeunderjuice)
-    {
+
+    public void setCurrenthomeunderjuice(double currenthomeunderjuice) {
         setPriorhomeunderjuice(getCurrenthomeunderjuice());
         this.currenthomeunderjuice = currenthomeunderjuice;
     }
 
+    public void setCurrentvisitunderjuice(double currentvisitunderjuice) {
+        setPriorvisitunderjuice(getCurrentvisitunderjuice());
+        this.currentvisitunderjuice = currentvisitunderjuice;
+    }
+
+    public void setPriorvisitunderjuice(double priorvisitunderjuice) {
+        this.priorvisitunderjuice = priorvisitunderjuice;
+    }
+
+    public void setPriorvisitoverjuice(double priorvisitoverjuice) {
+        this.priorvisitoverjuice = priorvisitoverjuice;
+    }
+
+    public void setPriorvisitover(double priorvisitover) {
+        this.priorvisitover = priorvisitover;
+    }
+
+    public String getShortPrintedCurrentVisitTotal() {
+
+        return getShortPrintedTotal(currentvisitover, currentvisitoverjuice, currentvisitunder, currentvisitunderjuice);
+    }
+
+    public String getShortPrintedTotal(double o, double oj, double u, double uj) {
+
+        String retvalue = o + "";
+        if (oj == 0) {
+            return "";
+        }
+        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+            retvalue = retvalue.substring(1);
+        }
 
 
-    public double getPriorhomeover()
-    {
+        double juice = 0;
+        if (oj == uj && oj == -110) {
+
+            retvalue = retvalue.replace(".0", "");
+            char half = AsciiChar.getAscii(170);
+
+
+            retvalue = retvalue.replace(".25", "\u00BC");
+            retvalue = retvalue.replace(".5", "\u00BD");
+            retvalue = retvalue.replace(".75", "\u00BE");
+            return retvalue;
+        } else if (oj < uj) {
+            retvalue = retvalue + "o";
+            juice = oj;
+        } else {
+            retvalue = retvalue + "u";
+            juice = uj;
+        }
+
+
+        if (juice < 0) {
+            juice = juice + 100;
+            String juicestr = "" + juice;
+            if (juice == 0) {
+                retvalue = retvalue + "ev";
+            } else if (juice > -10) {
+                juice = juice * -1;
+                juicestr = "-0" + juice;
+                retvalue = retvalue + "" + juicestr;
+            } else if (juice <= -100) // initial juice was  -200 or worse
+            {
+
+                juice = juice - 100;
+                juicestr = "" + juice;
+                retvalue = retvalue + "" + juicestr;
+            } else {
+                retvalue = retvalue + "" + juicestr;
+
+
+            }
+
+        } else {
+            juice = juice - 100;
+
+            if (juice == 0) {
+                retvalue = retvalue + "ev";
+            } else if (juice < 10) {
+                retvalue = retvalue + "+0" + juice;
+            } else {
+                retvalue = retvalue + "+" + juice;
+
+            }
+
+        }
+        retvalue = retvalue.replace(".0", "");
+        char half = AsciiChar.getAscii(170);
+
+        retvalue = retvalue.replace(".25", "\u00BC");
+        retvalue = retvalue.replace(".5", "\u00BD");
+        retvalue = retvalue.replace(".75", "\u00BE");
+        return retvalue;
+
+    }
+
+    public String getShortPrintedCurrentHomeTotal() {
+
+        return getShortPrintedTotal(currenthomeover, currenthomeoverjuice, currenthomeunder, currenthomeunderjuice);
+    }
+
+    public String getShortPrintedPriorVisitTotal() {
+
+        return getShortPrintedTotal(priorvisitover, priorvisitoverjuice, priorvisitunder, priorvisitunderjuice);
+    }
+
+    public String getShortPrintedPriorHomeTotal() {
+
+        return getShortPrintedTotal(priorhomeover, priorhomeoverjuice, priorhomeunder, priorhomeunderjuice);
+    }
+
+    public String getShortPrintedOpenerVisitTotal() {
+
+        return getShortPrintedTotal(openervisitover, openervisitoverjuice, openervisitunder, openervisitunderjuice);
+    }
+
+    public String getShortPrintedOpenerHomeTotal() {
+
+        return getShortPrintedTotal(openerhomeover, openerhomeoverjuice, openerhomeunder, openerhomeunderjuice);
+    }
+
+    public String getOtherPrintedCurrentVisitTotal() {
+
+        return getOtherPrintedTotal(currentvisitover, currentvisitoverjuice, currentvisitunder, currentvisitunderjuice);
+    }
+
+    public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
+        String retvalue = o + "";
+        if (oj == 0) {
+            return "";
+        }
+        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+            retvalue = retvalue.substring(1);
+        }
+
+
+        double juice = 0;
+        if (oj == uj && oj == -110) {
+
+            retvalue = retvalue.replace(".0", "");
+            char half = AsciiChar.getAscii(170);
+
+
+            retvalue = retvalue.replace(".25", "\u00BC");
+            retvalue = retvalue.replace(".5", "\u00BD");
+            retvalue = retvalue.replace(".75", "\u00BE");
+            return retvalue;
+        } else if (oj < uj) {
+            retvalue = retvalue + "u";
+            juice = uj;
+        } else {
+            retvalue = retvalue + "o";
+            juice = oj;
+        }
+
+
+        if (juice < 0) {
+            juice = juice + 100;
+            String juicestr = "" + juice;
+            if (juice == 0) {
+                retvalue = retvalue + "ev";
+            } else if (juice > -10) {
+                juice = juice * -1;
+                juicestr = "-0" + juice;
+                retvalue = retvalue + "" + juicestr;
+            } else if (juice <= -100) // initial juice was  -200 or worse
+            {
+
+                juice = juice - 100;
+                juicestr = "" + juice;
+                retvalue = retvalue + "" + juicestr;
+            } else {
+                retvalue = retvalue + "" + juicestr;
+
+            }
+
+        } else {
+            juice = juice - 100;
+
+            if (juice == 0) {
+                retvalue = retvalue + "ev";
+            } else if (juice < 10) {
+                retvalue = retvalue + "+0" + juice;
+            } else {
+                retvalue = retvalue + "+" + juice;
+
+            }
+
+        }
+        retvalue = retvalue.replace(".0", "");
+
+        char half = AsciiChar.getAscii(170);
+
+        retvalue = retvalue.replace(".25", "\u00BC");
+        retvalue = retvalue.replace(".5", "\u00BD");
+        retvalue = retvalue.replace(".75", "\u00BE");
+        return retvalue;
+
+    }
+
+    public String getOtherPrintedCurrentHomeTotal() {
+
+        return getOtherPrintedTotal(currenthomeover, currenthomeoverjuice, currenthomeunder, currenthomeunderjuice);
+    }
+
+    public String getOtherPrintedPriorVisitTotal() {
+
+        return getOtherPrintedTotal(priorvisitover, priorvisitoverjuice, priorvisitunder, priorvisitunderjuice);
+    }
+
+    public String getOtherPrintedPriorHomeTotal() {
+
+        return getOtherPrintedTotal(priorhomeover, priorhomeoverjuice, priorhomeunder, priorhomeunderjuice);
+    }
+
+    public String getOtherPrintedOpenerVisitTotal() {
+
+        return getOtherPrintedTotal(openervisitover, openervisitoverjuice, openervisitunder, openervisitunderjuice);
+    }
+
+    public String getOtherPrintedOpenerHomeTotal() {
+
+        return getOtherPrintedTotal(openerhomeover, openerhomeoverjuice, openerhomeunder, openerhomeunderjuice);
+    }
+
+    public boolean isOpener() {
+
+        if (priorvisitover == 0 && priorvisitoverjuice == 0 && priorvisitunder == 0 && priorvisitunderjuice == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public double getPriorvisitunder() {
+        return priorvisitunder;
+    }
+
+    public void setPriorvisitunder(double priorvisitunder) {
+        this.priorvisitunder = priorvisitunder;
+    }
+
+    public double getOpenervisitover() {
+        return openervisitover;
+    }
+
+    public void setOpenervisitover(double openervisitover) {
+        this.openervisitover = openervisitover;
+    }
+
+    public double getOpenervisitoverjuice() {
+        return openervisitoverjuice;
+    }
+
+    public void setOpenervisitoverjuice(double openervisitoverjuice) {
+        this.openervisitoverjuice = openervisitoverjuice;
+    }
+
+    public double getOpenervisitunder() {
+        return openervisitunder;
+    }
+
+    public void setOpenervisitunder(double openervisitunder) {
+        this.openervisitunder = openervisitunder;
+    }
+
+    public double getOpenervisitunderjuice() {
+        return openervisitunderjuice;
+    }
+
+    public void setOpenervisitunderjuice(double openervisitunderjuice) {
+        this.openervisitunderjuice = openervisitunderjuice;
+    }
+
+    public double getPriorhomeover() {
         return priorhomeover;
     }
-    public void setPriorhomeover(double priorhomeover)
-    {
+
+    public void setPriorhomeover(double priorhomeover) {
         this.priorhomeover = priorhomeover;
     }
 
-    public double getPriorhomeoverjuice()
-    {
+    public double getPriorhomeoverjuice() {
         return priorhomeoverjuice;
     }
-    public void setPriorhomeoverjuice(double priorhomeoverjuice)
-    {
+
+    public void setPriorhomeoverjuice(double priorhomeoverjuice) {
         this.priorhomeoverjuice = priorhomeoverjuice;
     }
 
-    public double getPriorhomeunder()
-    {
+    public double getPriorhomeunder() {
         return priorhomeunder;
     }
-    public void setPriorhomeunder(double priorhomeunder)
-    {
+
+    public void setPriorhomeunder(double priorhomeunder) {
         this.priorhomeunder = priorhomeunder;
     }
 
-    public double getPriorhomeunderjuice()
-    {
+    public double getPriorhomeunderjuice() {
         return priorhomeunderjuice;
     }
-    public void setPriorhomeunderjuice(double priorhomeunderjuice)
-    {
+
+    public void setPriorhomeunderjuice(double priorhomeunderjuice) {
         this.priorhomeunderjuice = priorhomeunderjuice;
     }
 
 
-
-    public double getOpenerhomeover()
-    {
+    public double getOpenerhomeover() {
         return openerhomeover;
     }
-    public void setOpenerhomeover(double openerhomeover)
-    {
+
+    public void setOpenerhomeover(double openerhomeover) {
         this.openerhomeover = openerhomeover;
     }
 
-    public double getOpenerhomeoverjuice()
-    {
+    public double getOpenerhomeoverjuice() {
         return openerhomeoverjuice;
     }
-    public void setOpenerhomeoverjuice(double openerhomeoverjuice)
-    {
+
+    public void setOpenerhomeoverjuice(double openerhomeoverjuice) {
         this.openerhomeoverjuice = openerhomeoverjuice;
     }
 
-    public double getOpenerhomeunder()
-    {
+    public double getOpenerhomeunder() {
         return openerhomeunder;
     }
-    public void setOpenerhomeunder(double openerhomeunder)
-    {
+
+    public void setOpenerhomeunder(double openerhomeunder) {
         this.openerhomeunder = openerhomeunder;
     }
 
-    public double getOpenerhomeunderjuice()
-    {
+    public double getOpenerhomeunderjuice() {
         return openerhomeunderjuice;
     }
-    public void setOpenerhomeunderjuice(double openerhomeunderjuice)
-    {
+
+    public void setOpenerhomeunderjuice(double openerhomeunderjuice) {
         this.openerhomeunderjuice = openerhomeunderjuice;
     }
-    public Timestamp getOpenerts()
-    {
-        return openerts;
-    }
-    public void setOpenerts(Timestamp openerts)
-    {
-        this.openerts = openerts;
-    }
-    public void setCurrentts(Timestamp currentts)
-    {
-        setPriorts(getCurrentts());
-        this.currentts = currentts;
-    }
-    public Timestamp getCurrentts()
-    {
-        return currentts;
-    }
-    public Timestamp getPriorts()
-    {
-        return priorts;
-    }
-    public void setPriorts(Timestamp priorts)
-    {
-        this.priorts = priorts;
-    }
-
 
 
 }

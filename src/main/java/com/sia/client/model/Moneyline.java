@@ -12,24 +12,15 @@ public class Moneyline extends Line implements Serializable {
     boolean isbestvisitmoney = false;
     boolean isbesthomemoney = false;
     boolean isbestdrawmoney = false;
-
     double currentvisitjuice;
     double currenthomejuice;
     double currentdrawjuice;
-    private Timestamp currentts = new Timestamp(1000);
-
     double priorvisitjuice;
     double priorhomejuice;
     double priordrawjuice;
-    private Timestamp priorts = new Timestamp(1000);
-    ;
-
     double openervisitjuice;
     double openerhomejuice;
     double openerdrawjuice;
-    private Timestamp openerts = new Timestamp(1000);
-
-
     public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, int p) {
         this();
         currentvisitjuice = priorvisitjuice = openervisitjuice = vj;
@@ -201,9 +192,6 @@ public class Moneyline extends Line implements Serializable {
         this.currenthomejuice = currenthomejuice;
     }
 
-    public Timestamp getCurrentts() {
-        return currentts;
-    }
 
     public double getCurrentdrawjuice() {
         return currentdrawjuice;
@@ -213,12 +201,6 @@ public class Moneyline extends Line implements Serializable {
         setPriordrawjuice(getCurrentdrawjuice());
         this.currentdrawjuice = currentdrawjuice;
     }
-
-    public void setCurrentts(Timestamp currentts) {
-        setPriorts(getCurrentts());
-        this.currentts = currentts;
-    }
-
     public void setPriorhomejuice(double priorhomejuice) {
         this.priorhomejuice = priorhomejuice;
     }
@@ -241,28 +223,12 @@ public class Moneyline extends Line implements Serializable {
         }
     }
 
-    public Timestamp getPriorts() {
-        return priorts;
-    }
-
-    public void setPriorts(Timestamp priorts) {
-        this.priorts = priorts;
-    }
-
     public double getPriordrawjuice() {
         return priordrawjuice;
     }
 
     public void setPriordrawjuice(double priordrawjuice) {
         this.priordrawjuice = priordrawjuice;
-    }
-
-    public Timestamp getOpenerts() {
-        return openerts;
-    }
-
-    public void setOpenerts(Timestamp openerts) {
-        this.openerts = openerts;
     }
 
     public double getOpenervisitjuice() {

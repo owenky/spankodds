@@ -132,13 +132,13 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, repaint, callBackOnNotFound);
         }
     }
+    @Override
     public boolean shouldAddToScreen(Game g){
 
         if ( ! this.isShowing()) {
             return false;
         }
         return this.sportType.shouldSelect(g);
-
     }
     public void moveGameToThisHeader(Game g, String header) {
         getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);

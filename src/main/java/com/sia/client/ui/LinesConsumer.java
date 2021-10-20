@@ -1,13 +1,11 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
 import com.sia.client.simulator.OngoingGameMessages;
-import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
@@ -20,7 +18,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 import static com.sia.client.config.Utils.log;
 
@@ -30,10 +27,8 @@ public class LinesConsumer implements MessageListener {
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
     private transient Connection connection;
     private transient Session session;
-    private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
     private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(2000L,-1500L);
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -52,24 +47,26 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        synchronized (SiaConst.GameLock) {
+//        synchronized (SiaConst.GameLock) {
             Utils.ensureNotEdtThread();
-            OngoingGameMessages.addMessage(MessageType.Line, message);
             processMessage((MapMessage) message);
-        }
+//            OngoingGameMessages.addMessage(MessageType.Line, message);
+//        }
     }
-    public void processMessage(MapMessage message) {
+    public void processMessage(MapMessage mapMessage) {
         int gameid = 0;
         try {
-            mapMessage =  message;
             gameid = mapMessage.getInt("gameid");
+            if  ( 0 == gameid) {
+                return;
+            }
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
             String changetype = mapMessage.getStringProperty("messageType");
-            long newlongts = 0;
+            long newlongts;
 
-
+log("LineConsumer received mesg for game id="+gameid);
             boolean isopener = false;
             if ("1".equals(isopenerS)) {
                 isopener = true;
@@ -108,7 +105,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
 
                 Spreadline sl = AppController.getSpreadline(bookieid, gameid, period);
                 if (null != sl) {
@@ -158,7 +155,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
 
 
                 Totalline tl = AppController.getTotalline(bookieid, gameid, period);
@@ -233,7 +230,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
 
 
                 TeamTotalline ttl = AppController.getTeamTotalline(bookieid, gameid, period);
@@ -279,7 +276,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
                 Moneyline ml = AppController.getMoneyline(bookieid, gameid, period);
 
                 // owen hack this since draw change comes in seperately
@@ -323,7 +320,7 @@ public class LinesConsumer implements MessageListener {
         }
         Game game = AppController.getGame(gameid);
         if ( null == game) {
-            log(new Exception("null game detected...gameid="+gameid+", message="+OngoingGameMessages.convert((ActiveMQTextMessage)message)));
+            log(new Exception("null game detected...gameid="+gameid+", message="+OngoingGameMessages.convert((ActiveMQTextMessage)mapMessage)));
         } else {
             gameMessageProcessor.addGame(game);
         }

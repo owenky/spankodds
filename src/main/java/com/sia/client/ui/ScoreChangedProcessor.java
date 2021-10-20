@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -14,6 +15,7 @@ public abstract class ScoreChangedProcessor {
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
         if (! gameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
+            log("game "+ GameUtils.getGameDebugInfo(g)+" is about to move from "+g.getStatus()+" to "+gameStatus.name());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
 
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
