@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.KeyedObject;
 import sun.swing.SwingUtilities2;
 
@@ -28,7 +28,7 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
         this.mainTable = mainTable;
     }
     public Component drawOnViewIndex(int rowViewIndex, Object headerValue, int horizontalScrollBarAdjustmentValue) {
-        ColumnHeaderProvider<V> columnHeaderProvider = mainTable.getModel().getColumnHeaderProvider();
+        ColumnHeaderProperty columnHeaderProvider = mainTable.getModel().getColumnHeaderProperty();
         Font headerFont = columnHeaderProvider.getHeaderFont();
         JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(String.valueOf(headerValue), header -> makeColumnHeaderComp(mainTable, header,columnHeaderProvider.getHeaderForeground()
                 ,headerFont));

@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.TableUtils;
 
@@ -24,15 +25,19 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final List<TableColumn> allColumns;
-    private final ColumnHeaderProvider<V> columnHeaderProvider;
+    private ColumnHeaderProperty columnHeaderProperty;
     private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
 
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
         this.allColumns = allColumns;
         validateAndFixColumnModelIndex(allColumns);
-        columnHeaderProvider = new ColumnHeaderProvider<>();
-        columnHeaderProvider.setTableModel(this);
+    }
+    public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
+        if ( null == columnHeaderProperty) {
+            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight, new RowHeaderProviderImpl<>(this));
+        }
+        return columnHeaderProperty;
     }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -109,7 +114,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         if (TableUtils.toRebuildCache(e) ) {
             long begin = System.currentTimeMillis();
             rowModelIndex2GameGroupHeaderMap = null;
-            columnHeaderProvider.resetColumnHeaderProperty();
             buildIndexMappingCache();
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
         }
@@ -141,10 +145,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
         return section.getGame(rowIndexInLinesTableData);
     }
-    public ColumnHeaderProvider<V> getColumnHeaderProvider() {
-        return columnHeaderProvider;
-    }
-    public final Map<Integer,Object> getRowModelIndex2GameGroupHeaderMap() {
+    public synchronized final Map<Integer,Object> getRowModelIndex2GameGroupHeaderMap() {
         if ( null == rowModelIndex2GameGroupHeaderMap) {
             Map<Integer,Object> map = getBlankGameIdIndex().stream().
                     collect(HashMap::new, (m, struct)->m.put(struct.tableRowModelIndex,struct.linesTableData.getGameGroupHeader()), HashMap::putAll);

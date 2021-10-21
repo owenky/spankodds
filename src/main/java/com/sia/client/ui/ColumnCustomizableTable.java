@@ -3,7 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnCustomizableDataModel.LtdSrhStruct;
-import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
@@ -63,11 +63,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         configHeaderRow(0,getRowCount()-1,true);
     }
     public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
-        ColumnHeaderProvider<V> columnHeaderProvider = getModel().getColumnHeaderProvider();
+        ColumnHeaderProperty columnHeaderProperty = getModel().getColumnHeaderProperty();
         for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
-            Object headerValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
+            Object headerValue = columnHeaderProperty.getColumnHeaderAt(rowModelIndex);
             if ( null == headerValue) {
 //                rowHeight = getRowHeight();
                 LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
@@ -77,7 +77,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                     rowHeight = SiaConst.NormalRowheight;
                 }
             } else {
-                rowHeight = columnHeaderProvider.getColumnHeaderHeight();
+                rowHeight = columnHeaderProperty.getColumnHeaderHeight();
                 drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
             }
             if ( toSetRowHeight) {
@@ -151,7 +151,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 int colDataModelIndex = ColumnCustomizableTable.this.convertColumnIndexToModel(col) + lockedColumnIndex.size();
                 return getUserCellRenderer(row,colDataModelIndex);
             };
-            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProvider(),getMarginProvider());
+            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProperty(),getMarginProvider());
         }
         return headerCellRenderer;
     }

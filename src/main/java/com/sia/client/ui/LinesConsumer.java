@@ -1,13 +1,15 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
 import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apache.activemq.command.ActiveMQMapMessage;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -47,11 +49,11 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-//        synchronized (SiaConst.GameLock) {
+        synchronized (SiaConst.GameLock) {
             Utils.ensureNotEdtThread();
             processMessage((MapMessage) message);
-//            OngoingGameMessages.addMessage(MessageType.Line, message);
-//        }
+            OngoingGameMessages.addMessage(MessageType.Line, message);
+        }
     }
     public void processMessage(MapMessage mapMessage) {
         int gameid = 0;
@@ -103,7 +105,6 @@ log("LineConsumer received mesg for game id="+gameid);
                 } catch (Exception ex) {
                     log(ex);
                 }
-
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
 
@@ -120,8 +121,8 @@ log("LineConsumer received mesg for game id="+gameid);
 
                     AppController.addSpreadline(sl);
                 }
-            } else if ("LineChangeTotal".equals(changetype)) {
-
+            }
+            else if ("LineChangeTotal".equals(changetype)) {
 
                 double newover = 0;
                 double newunder = 0;
@@ -171,7 +172,8 @@ log("LineConsumer received mesg for game id="+gameid);
                     AppController.addTotalline(tl);
                 }
 
-            } else if ("LineChangeTeamTotal".equals(changetype)) {
+            }
+            else if ("LineChangeTeamTotal".equals(changetype)) {
                 double newvisitorover = 0;
                 double newvisitorunder = 0;
                 double newvisitoroverjuice = 0;
@@ -248,7 +250,8 @@ log("LineConsumer received mesg for game id="+gameid);
                     AppController.addTeamTotalline(ttl);
                 }
 
-            } else if ("LineChangeMoney".equals(changetype)) {
+            }
+            else if ("LineChangeMoney".equals(changetype)) {
                 double newvisitorjuice = 0;
                 double newhomejuice = 0;
                 double newdrawjuice = 0;
@@ -320,9 +323,14 @@ log("LineConsumer received mesg for game id="+gameid);
         }
         Game game = AppController.getGame(gameid);
         if ( null == game) {
-            log(new Exception("null game detected...gameid="+gameid+", message="+OngoingGameMessages.convert((ActiveMQTextMessage)mapMessage)));
+            if ( mapMessage instanceof ActiveMQMapMessage) {
+//                log(new Exception("null game detected...gameid=" + gameid + ", message=" + OngoingGameMessages.convert((ActiveMQMapMessage)mapMessage)));
+                log("LinesConsumer: null game detected...gameid=" + gameid);
+            } else {
+                log("LinesConsumer: null game detected...gameid=" + gameid);
+            }
         } else {
-            gameMessageProcessor.addGame(game);
+            gameMessageProcessor.addGame(game);;
         }
     }
 }
