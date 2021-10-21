@@ -1,7 +1,6 @@
 package com.sia.client.simulator;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 import org.apache.activemq.command.ActiveMQMapMessage;
@@ -71,7 +70,7 @@ public abstract class OngoingGameMessages {
         }
         return sb.toString();
     }
-    static String convert(ActiveMQMapMessage message) {
+    public static String convert(ActiveMQMapMessage message) {
         try {
             Map<String, Object> contentMap = message.getContentMap();
             StringBuilder sb = new StringBuilder(convertMap(contentMap));
