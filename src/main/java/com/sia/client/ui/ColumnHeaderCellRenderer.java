@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
@@ -39,9 +40,8 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
-        int rowModelIndex = table.convertRowIndexToModel(row);
-        Object headValue = columnHeaderProperty.getColumnHeaderAt(rowModelIndex);
-        if ( null != headValue) {
+
+        if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

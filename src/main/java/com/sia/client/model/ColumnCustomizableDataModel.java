@@ -12,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final List<TableColumn> allColumns;
     private ColumnHeaderProperty columnHeaderProperty;
-    private Map<Integer,Object> rowModelIndex2GameGroupHeaderMap;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
 
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
@@ -35,7 +33,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
-            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight, new RowHeaderProviderImpl<>(this));
+            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
     }
@@ -113,7 +111,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         //TODO: need to  buildIndexMappingCache for update? ( scenario: game data changed.)
         if (TableUtils.toRebuildCache(e) ) {
             long begin = System.currentTimeMillis();
-            rowModelIndex2GameGroupHeaderMap = null;
             buildIndexMappingCache();
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
         }
@@ -144,14 +141,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         TableSection<V> section = ltdSrhStruct.linesTableData;
         int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
         return section.getGame(rowIndexInLinesTableData);
-    }
-    public synchronized final Map<Integer,Object> getRowModelIndex2GameGroupHeaderMap() {
-        if ( null == rowModelIndex2GameGroupHeaderMap) {
-            Map<Integer,Object> map = getBlankGameIdIndex().stream().
-                    collect(HashMap::new, (m, struct)->m.put(struct.tableRowModelIndex,struct.linesTableData.getGameGroupHeader()), HashMap::putAll);
-            rowModelIndex2GameGroupHeaderMap = Collections.unmodifiableMap(map);
-        }
-        return rowModelIndex2GameGroupHeaderMap;
     }
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
     public void moveGameToThisHeader(V g, String header) {
@@ -277,6 +266,28 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
             return new LtdSrhStruct<>(rtn,modelIndex);
         });
 
+    }
+
+    /**
+     *
+     * @param rowModelIndex row model index
+     * @return game group header if the row is game group header row, otherwise return null
+     */
+    public String getGameGroupHeader(int rowModelIndex) {
+        Object value = this.getValueAt(rowModelIndex,0);
+        return retrieveGameGroupHeader(value);
+    }
+    public static String retrieveGameGroupHeader(Object value) {
+        if ( value instanceof String) {
+            String [] parts = ((String)value).split(SiaConst.GameGroupHeaderIden);
+            if ( 2 == parts.length && parts[0].isEmpty()) {
+                return parts[1];
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
     public TableSection<V> getLinesTableDataWithSecionIndex(int sectionIndex) {
        return tableSections.get(sectionIndex);

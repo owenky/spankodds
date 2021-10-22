@@ -2,7 +2,6 @@ package com.sia.client.model;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Collection;
 
 public class ColumnHeaderProperty {
 
@@ -10,14 +9,12 @@ public class ColumnHeaderProperty {
     private final Color headerForeground;
     private final Font headerFont;
     private final int columnHeaderHeight;
-    private final RowHeaderProvider rowHeaderProvider;
 
-    public ColumnHeaderProperty(Color headerBackground, Color headerForeground, Font headerFont, int columnHeaderHeight,RowHeaderProvider rowHeaderProvider) {
+    public ColumnHeaderProperty(Color headerBackground, Color headerForeground, Font headerFont, int columnHeaderHeight) {
         this.headerBackground = headerBackground;
         this.headerForeground = headerForeground;
         this.headerFont = headerFont;
         this.columnHeaderHeight = columnHeaderHeight;
-        this.rowHeaderProvider = rowHeaderProvider;
     }
     public Color getHeaderBackground() {
         return headerBackground;
@@ -32,9 +29,6 @@ public class ColumnHeaderProperty {
 
     public int getColumnHeaderHeight() {
         return columnHeaderHeight;
-    }
-    public Object getColumnHeaderAt(int rowModelIndex) {
-        return rowHeaderProvider.get(rowModelIndex);
     }
 //    @Override
 //    public boolean equals(final Object o) {
@@ -61,11 +55,11 @@ public class ColumnHeaderProperty {
 //    public int hashCode() {
 //        return Objects.hash(headerBackground, headerForeground, headerFont, columnHeaderHeight, rowIndexToHeadValueMap);
 //    }
-    public static boolean isSetsSame(Collection<?> set1, Collection<?> set2) {
-        boolean status = set1.size()==set2.size();
-        if ( status ) {
-            status = set1.containsAll(set2);
-        }
-        return status;
-    }
+//    public static boolean isSetsSame(Collection<?> set1, Collection<?> set2) {
+//        boolean status = set1.size()==set2.size();
+//        if ( status ) {
+//            status = set1.containsAll(set2);
+//        }
+//        return status;
+//    }
 }

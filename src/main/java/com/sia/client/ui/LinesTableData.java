@@ -133,7 +133,7 @@ public class LinesTableData extends TableSection<Game> {
         for (TableColumn tc : columns) {
             Object value;
             if (SiaConst.BlankGameId == gameid) {
-                value = SiaConst.GameGroupHeaderIden;
+                value = SiaConst.GameGroupHeaderIden+getGameGroupHeader();
             } else {
                 value = getCellValue(tc, g);
             }

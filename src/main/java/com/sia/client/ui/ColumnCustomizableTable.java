@@ -63,11 +63,14 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         configHeaderRow(0,getRowCount()-1,true);
     }
     public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
-        ColumnHeaderProperty columnHeaderProperty = getModel().getColumnHeaderProperty();
+
+        ColumnCustomizableDataModel<V> model = getModel();
+        ColumnHeaderProperty columnHeaderProperty = model.getColumnHeaderProperty();
+
         for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
-            Object headerValue = columnHeaderProperty.getColumnHeaderAt(rowModelIndex);
+            Object headerValue = model.getGameGroupHeader(rowModelIndex);
             if ( null == headerValue) {
 //                rowHeight = getRowHeight();
                 LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
