@@ -25,7 +25,7 @@ import static com.sia.client.config.Utils.log;
 public abstract class InitialGameMessages {
 
     public static boolean shouldLogMesg = false;
-    public static boolean shouldRunMainScreenTest = false;
+    public static boolean shouldRunMainScreenTest; //set by System Property
     public static boolean getMessagesFromLog = false;
     public static String MesgDir = TestProperties.DefaultMesgDir;
     public static Set<MessageType> interestedMessageTypes;
