@@ -68,7 +68,7 @@ public class LinesConsumer implements MessageListener {
             String changetype = mapMessage.getStringProperty("messageType");
             long newlongts;
 
-log("LineConsumer received mesg for game id="+gameid);
+//log("LineConsumer received mesg for game id="+gameid);
             boolean isopener = false;
             if ("1".equals(isopenerS)) {
                 isopener = true;
