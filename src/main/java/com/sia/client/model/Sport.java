@@ -1,19 +1,22 @@
 package com.sia.client.model;
 
-public class Sport {
-	public int	sport_id;
-	public int league_id;
-	public int parentleague_id;
-	public int region_id;
-	public int numperiods;
-	public double timeperperiod;
-	public double halftimeminutes;
+import com.sia.client.config.GameUtils;
 
-	public String leaguename;
-	public String leagueabbr;
-	public String sportname;
-	public String sportabbr;
-	public boolean moneylinedefault;
+public class Sport {
+	private int	sport_id;
+	private int league_id;
+	private int parentleague_id;
+	private int region_id;
+	private int numperiods;
+	private double timeperperiod;
+	private double halftimeminutes;
+
+	private final String leaguename;
+	private final String normalizeLeaguename;
+	private String leagueabbr;
+	private String sportname;
+	private String sportabbr;
+	private boolean moneylinedefault;
 
 	public Sport(int sport_id,int league_id,int parentleague_id,int region_id,int numperiods,double timeperperiod,double halftimeminutes,
 				 String leaguename,String leagueabbr,String sportname,String sportabbr,boolean moneylinedefault) {
@@ -25,6 +28,7 @@ public class Sport {
 	this.timeperperiod = timeperperiod;
 	this.halftimeminutes = halftimeminutes;
 	this.leaguename = leaguename;
+	this.normalizeLeaguename = GameUtils.normalizeGameHeader(leaguename);
 	this.leagueabbr = leagueabbr;
 	this.sportname = sportname;
 	this.sportabbr = sportabbr;
@@ -86,14 +90,12 @@ public class Sport {
 	{
 			this.halftimeminutes = halftimeminutes;
 	}			
-	public String getLeaguename()
-	{
+	public String getLeaguename() {
 			return leaguename;
 	}
-	public void setLeaguename(String leaguename)
-	{
-			this.leaguename = leaguename;
-	}			
+	public String getNormalizedLeaguename() {
+		return this.normalizeLeaguename;
+	}
 	public String getLeagueabbr()
 	{
 			return leagueabbr;
@@ -102,12 +104,10 @@ public class Sport {
 	{
 			this.leagueabbr = leagueabbr;
 	}	
-	public String getSportname()
-	{
+	public String getSportname() {
 			return sportname;
 	}
-	public void setSportname(String sportname)
-	{
+	public void setSportname(String sportname) {
 			this.sportname = sportname;
 	}			
 	public String getSportabbr()
@@ -125,6 +125,5 @@ public class Sport {
 	public void setMoneylinedefault(boolean moneylinedefault)
 	{
 			this.moneylinedefault = moneylinedefault;
-	}				
-	
+	}
 }

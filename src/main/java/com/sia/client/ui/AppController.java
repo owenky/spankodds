@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -38,71 +39,56 @@ import static com.sia.client.config.Utils.log;
 
 public class AppController {
 
-
     public final static AlertVector alertsVector = new AlertVector();
     public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
     public static Vector<String> customTabsVec = new Vector();
-    public static Vector<LinesTableData> dataModels = new Vector();
+    public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
     public static Vector<SportsTabPane> tabpanes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
-    public static Map<Integer, Sport> sports = new HashMap<>();
-    public static Games games = new Games();
-
     public static Vector<Bookie> openerbookiesVec = new Vector();
     public static Vector<Bookie> bookiesVec = new Vector();
     public static Vector<Sport> sportsVec = new Vector();
     public static Vector<Bookie> hiddenCols = new Vector();
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
-
     public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
     public static Hashtable<String, Moneyline> moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> teamtotals = new Hashtable();
-
-
     public static Hashtable<String, Spreadline> h1spreads = new Hashtable();
     public static Hashtable<String, Totalline> h1totals = new Hashtable();
     public static Hashtable<String, Moneyline> h1moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> h1teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> h2spreads = new Hashtable();
     public static Hashtable<String, Totalline> h2totals = new Hashtable();
     public static Hashtable<String, Moneyline> h2moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> h2teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q1spreads = new Hashtable();
     public static Hashtable<String, Totalline> q1totals = new Hashtable();
     public static Hashtable<String, Moneyline> q1moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q1teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q2spreads = new Hashtable();
     public static Hashtable<String, Totalline> q2totals = new Hashtable();
     public static Hashtable<String, Moneyline> q2moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q2teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q3spreads = new Hashtable();
     public static Hashtable<String, Totalline> q3totals = new Hashtable();
     public static Hashtable<String, Moneyline> q3moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q3teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> q4spreads = new Hashtable();
     public static Hashtable<String, Totalline> q4totals = new Hashtable();
     public static Hashtable<String, Moneyline> q4moneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> q4teamtotals = new Hashtable();
-
     public static Hashtable<String, Spreadline> livespreads = new Hashtable();
     public static Hashtable<String, Totalline> livetotals = new Hashtable();
     public static Hashtable<String, Moneyline> livemoneylines = new Hashtable();
     public static Hashtable<String, TeamTotalline> liveteamtotals = new Hashtable();
-
-
     public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     //public static String brokerURL = "failover:(ssl://localhost:61617)";
@@ -110,40 +96,25 @@ public class AppController {
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
     public static Connection loggedInConnection;
-
     public static String loginQueue = "spankodds.LOGIN";
     public static String userPrefsQueue = "spankodds.USERPREFS";
     public static String linechangesQueue = "spankoddsin.LINECHANGE";
     public static String gamechangesQueue = "spankoddsin.GAMECHANGE";
     public static String scorechangesQueue = "spankoddsin.SCORECHANGE";
     public static String urgentQueue = "spankoddsin.URGENT";
-
     public static String displaytype = "default";
-
     public static LinesConsumer linesConsumer;
     public static GamesConsumer gamesConsumer;
     public static ScoresConsumer scoresConsumer;
     public static UrgentsConsumer urgentsConsumer;
-
     public static UserPrefsProducer userPrefsProducer;
-
     public static ChartChecker chartchecker;
-
-    public static LinesTableData linestabledata;
-
-//public static LinesTable2 linestable;
-
     public static Hashtable<String, Color> bookiecolors = new Hashtable();
-
     public static int numfixedcols;
-
     public static long clearalltime;
-
     public static DefaultTableColumnModel columnmodel;
     public static DefaultTableColumnModel fixedcolumnmodel;
-
     public static NewWindowAction nwa;
-
     public static LineOpenerAlertNode football = new LineOpenerAlertNode("Football");
     public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
     public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
@@ -153,10 +124,11 @@ public class AppController {
     public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
     public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode("Auto Racing");
-    public static ArrayList<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<LineOpenerAlertNode>();
-
-    public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<Integer, String>();
-    public static Vector<String> SportsTabPaneVector = new Vector<String>();
+    public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
+    public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
+    public static Vector<String> SportsTabPaneVector = new Vector<>();
+    private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
+    private static Games games = new Games();
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
@@ -166,6 +138,10 @@ public class AppController {
             SportsTabPaneVector.add(tabsindex[i]);
 
         }
+    }
+
+    public static boolean existLeagueId(Integer leagueId) {
+        return leagueIdToSportMap.containsKey(leagueId);
     }
 
     public static void initializeLineAlertVectorFromUser() {
@@ -477,14 +453,17 @@ public class AppController {
         return linealertnodes;
     }
 
-    public static Vector getDataModels() {
+    public static List<LinesTableData> getDataModels() {
         return dataModels;
     }
 
-    public static void addDataModels(MainGameTableModel model) {
+    public synchronized static void addDataModels(MainGameTableModel model) {
+        //remove the sport type from dataModels to prevent memory leaks
+        dataModels.removeIf(ltd -> ltd.getSportType().equals(model.getSportType()));
         model.copyTo(dataModels);
 
     }
+
     public static void addTabPane(SportsTabPane stb) {
         tabpanes.add(stb);
 
@@ -511,8 +490,9 @@ public class AppController {
     }
 
     public static void disableTabs() {
-        for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = tabpanes.get(i);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane tp : tabpanes) {
             tp.disableTabs();
         }
     }
@@ -584,8 +564,9 @@ public class AppController {
     }
 
     public static void refreshTabs3() {
-        for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = tabpanes.get(i);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane tp : tabpanes) {
             if (tp != null) {
                 try {
                     tp.refreshCurrentTab();
@@ -604,18 +585,10 @@ public class AppController {
 
     }
 
-    public static void fireAllTableDataChanged(Collection<Integer> gameIds) {
+    public static void fireAllTableDataChanged(Collection<Game> games) {
         for (SportsTabPane stb : tabpanes) {
-            stb.fireAllTableDataChanged(gameIds);
+            stb.fireAllTableDataChanged(games);
         }
-    }
-
-    public static LinesTableData getLinesTableData() {
-        return linestabledata;
-    }
-
-    public static void setLinesTableData(LinesTableData tab) {
-        linestabledata = tab;
     }
 
     public static String getLoginQueue() {
@@ -819,16 +792,15 @@ public class AppController {
 
     public static void addSport(Sport s) {
 
-        sports.put(s.getLeague_id(), s);
+        leagueIdToSportMap.put(s.getLeague_id(), s);
         sportsVec.add(s);
     }
 
     public static void removeGame(int gameid, boolean repaint) {
-        for (int k = 0; k < tabpanes.size(); k++) {
-
-            SportsTabPane stb = tabpanes.get(k);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane stb : tabpanes) {
             stb.removeGame(gameid, repaint);
-
         }
         Game g = games.getGame(gameid);
         if (null != g) {
@@ -884,8 +856,9 @@ public class AppController {
     }
 
     public static void removeGames(String[] gameidarr) {
-        for (int k = 0; k < tabpanes.size(); k++) {
-            SportsTabPane stb = tabpanes.get(k);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        for (SportsTabPane stb : tabpanes) {
             stb.removeGames(gameidarr);
         }
         if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
@@ -896,12 +869,6 @@ public class AppController {
             try {
                 String gameid = gameidarr[i];
                 games.removeGame(gameid);
-//                    Game g = games.getGame(gameid);
-//                    if (g != null) {
-//                        gamesVec.remove(g);
-//
-//                    }
-//                    games.remove(gameid);
                 for (int j = 0; j < bookiesVec.size(); j++) {
                     Bookie b = bookiesVec.get(j);
                     int bid = b.getBookie_id();
@@ -971,15 +938,6 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
-//
-//    public static void rebuildModels() {
-//
-//        for (int k = 0; k < dataModels.size(); k++) {
-//            LinesTableData ltd =  dataModels.get(k);
-//            ltd.rebuild();
-//        }
-//
-//    }
 
     public static void addGame(Game g) {
         addGame(g, true);
@@ -987,24 +945,19 @@ public class AppController {
     }
 
     public static void addGame(Game g, boolean repaint) {
-
         boolean isAdd = games.updateOrAdd(g);
-        //TODO potential improvement to for loop: use a map to quickly find which LineTableData this game belong to instead of loop through tabpane and mainscreen -- 05/01/2021
-        if ( isAdd) {
-            for (int k = 0; k < tabpanes.size(); k++) {
-                SportsTabPane stb = tabpanes.get(k);
+        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+        //game need to populated to each window. -- 08/22/2021
+        if (isAdd) {
+            for (SportsTabPane stb : tabpanes) {
                 stb.addGame(g, repaint);
             }
         }
-
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
-        for (int k = 0; k < tabpanes.size(); k++) {
-
-            SportsTabPane stb = tabpanes.get(k);
+        for (SportsTabPane stb : tabpanes) {
             stb.moveGameToThisHeader(g, header);
-
         }
     }
 
@@ -1012,8 +965,8 @@ public class AppController {
         return bookies.get(bid + "");
     }
 
-    public static Sport getSport(int leagueId) {
-        return sports.get(leagueId);
+    public static Sport getSportByLeagueId(int leagueId) {
+        return leagueIdToSportMap.get(leagueId);
     }
 
     public static Game getGame(int gid) {
@@ -1031,10 +984,6 @@ public class AppController {
     public static Hashtable getBookies() {
         return bookies;
     }
-
-//    public static Hashtable getSports() {
-//        return sports;
-//    }
 
     public static Hashtable getBookieColors() {
         return bookiecolors;
@@ -1227,23 +1176,25 @@ public class AppController {
 
     public static TeamTotalline getTeamTotalline(int b, int g, int period) {
 
+        TeamTotalline rtn;
         if (period == 0) {
-            return teamtotals.get(b + "-" + g);
+            rtn = teamtotals.get(b + "-" + g);
         } else if (period == 1) {
-            return h1teamtotals.get(b + "-" + g);
+            rtn = h1teamtotals.get(b + "-" + g);
         } else if (period == 2) {
-            return h2teamtotals.get(b + "-" + g);
+            rtn = h2teamtotals.get(b + "-" + g);
         } else if (period == 5) {
-            return q1teamtotals.get(b + "-" + g);
+            rtn = q1teamtotals.get(b + "-" + g);
         } else if (period == 6) {
-            return q2teamtotals.get(b + "-" + g);
+            rtn = q2teamtotals.get(b + "-" + g);
         } else if (period == 7) {
-            return q3teamtotals.get(b + "-" + g);
+            rtn = q3teamtotals.get(b + "-" + g);
         } else if (period == 8) {
-            return q4teamtotals.get(b + "-" + g);
+            rtn = q4teamtotals.get(b + "-" + g);
         } else {
-            return liveteamtotals.get(b + "-" + g);
+            rtn = liveteamtotals.get(b + "-" + g);
         }
+        return rtn;
     }
 
     public static String getCurrentHoursMinutes() {
@@ -1256,8 +1207,9 @@ public class AppController {
         return "" + hours + "hr," + minutes + "min";
 
     }
-    public static void addAlert(String hrmin,String mesg) {
-        alertsVector.addAlert(hrmin,mesg);
+
+    public static void addAlert(String hrmin, String mesg) {
+        alertsVector.addAlert(hrmin, mesg);
     }
 
 }

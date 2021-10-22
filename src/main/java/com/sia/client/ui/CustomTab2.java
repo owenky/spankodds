@@ -6,6 +6,7 @@ import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -252,7 +253,7 @@ public class CustomTab2 extends JPanel {
 
                 int leagueid = g.getLeague_id();
 
-                Sport s = AppController.getSport(leagueid);
+                Sport s = AppController.getSportByLeagueId(leagueid);
 
                 Sport s2;
 
@@ -289,7 +290,7 @@ public class CustomTab2 extends JPanel {
                 if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-                    s2 = AppController.getSport(leagueid);
+                    s2 = AppController.getSportByLeagueId(leagueid);
                 } else {
                     s2 = s;
                 }
@@ -311,7 +312,7 @@ public class CustomTab2 extends JPanel {
                 }
 
 
-                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
+                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)
                         || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
 
                 ) {
@@ -996,14 +997,14 @@ public class CustomTab2 extends JPanel {
 
 
                     Vector tabpanes = AppController.getTabPanes();
-                    System.out.println("tabpanes size= " + tabpanes.size());
-                    for (int i = 0; i < tabpanes.size(); i++) {
-                        SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+                    for (Object tabpane : tabpanes) {
+                        SportsTabPane tp = (SportsTabPane) tabpane;
                         int numtabs = tp.getTabCount();
                         System.out.println("numtabs= " + numtabs);
 
                         tp.removeTabAt(numtabs - 1);
-                        MainScreen ms = new MainScreen(tab, customvec);
+                        SportType st = SportType.findBySportName(tab);
+                        MainScreen ms = new MainScreen(st, customvec);
                         ms.setShowHeaders(includeheaders.isSelected());
                         ms.setShowSeries(includeseries.isSelected());
                         ms.setShowIngame(includeingame.isSelected());
@@ -1011,30 +1012,6 @@ public class CustomTab2 extends JPanel {
                         ms.setShowExtra(includeextra.isSelected());
                         ms.setShowProps(includeprops.isSelected());
                         tp.addTab(ms.getName(), null, ms, ms.getName());
-
-								/*
-								JPanel pnlTab = new JPanel(new GridBagLayout());
-								pnlTab.setOpaque(false);
-								JLabel lblTitle = new JLabel(ms.getName());
-								JButton btnClose = new JButton("x");
-
-								GridBagConstraints gbc = new GridBagConstraints();
-								gbc.gridx = 0;
-								gbc.gridy = 0;
-								gbc.weightx = 1;
-
-								pnlTab.add(lblTitle, gbc);
-
-								gbc.gridx++;
-								gbc.weightx = 0;
-								pnlTab.add(btnClose, gbc);
-
-								tp.setTabComponentAt(tp.getTabCount()-1, pnlTab);
-
-								//btnClose.addActionListener(myCloseActionHandler);
-
-								*/
-
                         tp.addTab("+", null, null, "+");
 
 
@@ -1046,16 +1023,11 @@ public class CustomTab2 extends JPanel {
                 checkAndRunInEDT(() -> {
 
                     Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-                    log("tabpanes size= " + tabpanes.size());
-                    for (int i = 0; i < tabpanes.size(); i++) {
-                        SportsTabPane tp = tabpanes.get(i);
-                        int numtabs = tp.getTabCount();
-                        log("numtabs= " + numtabs);
-
+                    for (SportsTabPane tp : tabpanes) {
                         MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
                         oldms.destroyMe();
-
-                        MainScreen ms = new MainScreen(tab, customvec);
+                        SportType st = SportType.findBySportName(tab);
+                        MainScreen ms = new MainScreen(st, customvec);
                         ms.setShowHeaders(includeheaders.isSelected());
                         ms.setShowSeries(includeseries.isSelected());
                         ms.setShowIngame(includeingame.isSelected());

@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.KeyedObject;
 import sun.swing.SwingUtilities2;
 
@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
@@ -26,12 +27,13 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
     public ColumnHeaderDrawer(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
     }
-    public void drawOnViewIndex(int rowViewIndex, Object headerValue,int horizontalScrollBarAdjustmentValue) {
-        ColumnHeaderProvider<V> columnHeaderProvider = mainTable.getModel().getColumnHeaderProvider();
+    public Component drawOnViewIndex(int rowViewIndex, Object headerValue, int horizontalScrollBarAdjustmentValue) {
+        ColumnHeaderProperty columnHeaderProvider = mainTable.getModel().getColumnHeaderProperty();
         Font headerFont = columnHeaderProvider.getHeaderFont();
         JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(String.valueOf(headerValue), header -> makeColumnHeaderComp(mainTable, header,columnHeaderProvider.getHeaderForeground()
                 ,headerFont));
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, String.valueOf(headerValue),columnHeaderProvider.getColumnHeaderHeight(), horizontalScrollBarAdjustmentValue,headerFont);
+        return headerComponent;
     }
     private static <V extends KeyedObject> JComponent makeColumnHeaderComp(ColumnCustomizableTable<V> jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
         JPanel jPanel = new JPanel();

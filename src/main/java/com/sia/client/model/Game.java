@@ -1,7 +1,16 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.sia.client.config.Utils.log;
+
 public class Game implements KeyedObject {
 
+    //TODO remove StatusSet
+    private static final Set<String> StatusSet = new HashSet<>();
     private int league_id;
     int game_id;
     int visitorgamenumber;
@@ -60,7 +69,7 @@ public class Game implements KeyedObject {
     java.sql.Timestamp scorets;
 
     public Game() {
-        status = "";
+        setStatus("");
         timeremaining = "";
     }
 
@@ -113,7 +122,7 @@ public class Game implements KeyedObject {
         this.lineups = lineups;
         this.weather = weather;
         this.location = location;
-        this.status = status;
+        setStatus(status);
         this.period = period;
         this.specialnotes = specialnotes;
         this.subleague_id = subleague_id;
@@ -153,7 +162,7 @@ public class Game implements KeyedObject {
                             java.sql.Timestamp scorets, int currenthomescore, String homescoresupplemental) {
         this.period = period;
         this.timeremaining = timer;
-        this.status = status;
+        setStatus(status);
         this.gamestatusts = gamestatusts;
         this.currentvisitorscore = currentvisitorscore;
         this.visitorscoresupplemental = visitorscoresupplemental;
@@ -517,7 +526,13 @@ public class Game implements KeyedObject {
     public int getLeague_id() {
         return league_id;
     }
-
+    public int getSportIdentifyingLeagueId() {
+        int sportIdentifyingLeagueId =  getLeague_id();
+        if (sportIdentifyingLeagueId == SiaConst.SoccerLeagueId) {
+            sportIdentifyingLeagueId = getSubleague_id();
+        }
+        return sportIdentifyingLeagueId;
+    }
     public void setLeague_id(int league_id) {
         this.league_id = league_id;
     }
@@ -567,7 +582,11 @@ public class Game implements KeyedObject {
     }
 
     public void setStatus(String status) {
+        if ( null == status ) {
+            status = "";
+        }
         this.status = status;
+        StatusSet.add(status);
     }
 
     public String getPeriod() {
@@ -587,8 +606,10 @@ public class Game implements KeyedObject {
     }
 
     public java.sql.Date getGamedate() {
-        if (gamedate == null) {
-            System.out.println("gamedate null for gameid=" + game_id);
+        if (gamedate == null ) {
+            if ( game_id != SiaConst.BlankGameId) {
+                log("gamedate null for gameid=" + game_id);
+            }
             gamedate = new java.sql.Date(1000);
         }
         return gamedate;
@@ -600,7 +621,9 @@ public class Game implements KeyedObject {
 
     public java.sql.Time getGametime() {
         if (gametime == null) {
-            System.out.println("gametime null for gameid=" + game_id);
+            if ( game_id != SiaConst.BlankGameId) {
+                log("gametime null for gameid=" + game_id);
+            }
             gametime = new java.sql.Time(1000);
         }
         return gametime;
@@ -613,5 +636,23 @@ public class Game implements KeyedObject {
     @Override
     public String getTeams() {
         return getVisitorteam()+"/"+this.getHometeam()+" ";
+    }
+    public boolean isInFinal() {
+        String status = getStatus();
+        return GameStatus.Final.isSame(status);
+    }
+    public boolean isHalfTime() {
+        String status = getStatus();
+        return  GameStatus.HalfTime.isSame(status);
+    }
+    public boolean isInProgress() {
+        String status = getStatus();
+        return  GameStatus.InProgress.isSame(status);
+    }
+    public boolean isInGame2() {
+        return  isIngame() || (null != description && description.contains("In-Game"));
+    }
+    public boolean isInStage() {
+        return isInFinal() || isHalfTime() || isInProgress() || isSeriesprice() ||  isInGame2();
     }
 }

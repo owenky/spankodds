@@ -1,27 +1,22 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
-import com.sia.client.model.Spreadline;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 
 public class TimeView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("arrup.gif"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("arrdown.gif"));
-    public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
-    Spreadline sl;
-    Totalline tl;
+    public static String ICON_UP = ImageFile.ARR_UP;
+    public static String ICON_DOWN = ImageFile.ARR_DOWN;
+    public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
     LineData topbox;
     LineData bottombox;
     LineData[] boxes = new LineData[2];
     LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
-    int bid;
     int gid;
     Game g;
     SimpleDateFormat sdf = new SimpleDateFormat("h:mma");
@@ -35,8 +30,6 @@ public class TimeView {
 
         this.gid = gid;
         g = AppController.getGame(gid);
-        //this.setAndGetPriorBoxes(bid,gid);
-        //this.setAndGetOpenerBoxes(bid,gid);
         dateformat = sdf2.format(g.getGamedate());
 
         timeformat = sdf.format(g.getGametime());
@@ -73,18 +66,13 @@ public class TimeView {
         timeformat = timeformat.replace("PM", "p");
         timeformat = timeformat.replace("AM", "a");
 
-
-        String topboxS = "";
-        String bottomboxS = "";
-        Color spreadcolor = Color.WHITE;
-        Color totalcolor = Color.WHITE;
         Color topcolor = Color.WHITE;
         Color bottomcolor = Color.WHITE;
-        ImageIcon topicon = ICON_BLANK;
-        ImageIcon bottomicon = ICON_BLANK;
+        String topicon = ICON_BLANK;
+        String bottomicon = ICON_BLANK;
 
-        ld1.setIcon(topicon);
-        ld2.setIcon(bottomicon);
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
 
         ld1.setData(dateformat);
         ld2.setData(timeformat);
@@ -93,7 +81,6 @@ public class TimeView {
         ld2.setBackgroundColor(bottomcolor);
         boxes[0] = ld1;
         boxes[1] = ld2;
-        //return boxes;
     }
 
 

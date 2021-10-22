@@ -23,7 +23,6 @@ public class UrgentsConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     private MapMessage mapMessage;
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("UrgentsConsumer",3000L,1500);
 
     public UrgentsConsumer(ActiveMQConnectionFactory factory, Connection connection, String urgentsconsumerqueue) throws JMSException {
 

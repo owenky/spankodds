@@ -1,7 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.CheckThreadViolationRepaintManager;
 import com.sia.client.config.Utils;
+import com.sia.client.simulator.InitialGameMessages;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;
@@ -13,7 +13,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.RepaintManager;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
@@ -43,15 +42,17 @@ public class SpankOdds {
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
         log("CHANGE04242021 ");
+
+        InitialGameMessages.initMsgLoggingProps();
+
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
 
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog());
     }
-
     private void showLoginDialog() {
 
-        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
+//        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
         frame = new JFrame("Spank Odds )" + version + ")");
         String spankoddsicon = "spanky.jpg";
 
@@ -73,6 +74,7 @@ public class SpankOdds {
             @Override
             public void loginSucceeded(LoginEvent source) {
                 SpankOdds.this.userName = loginPane.getUserName();
+                InitialGameMessages.postDataLoading();
                 SpankOdds.this.showGui();
             }
 

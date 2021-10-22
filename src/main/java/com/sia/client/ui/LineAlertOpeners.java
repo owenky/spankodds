@@ -123,7 +123,7 @@ class LineAlertOpeners implements ItemListener {
     int popupsecs = 5;
     int popuplocationint = 0;
     Vector bookeis;
-    Vector sports;
+    List<Sport> sports;
     Games games;
     private Vector checkednodes2 = new Vector();
     private Vector checkednodes3 = new Vector();
@@ -1118,10 +1118,9 @@ class LineAlertOpeners implements ItemListener {
 
                         }
                     }
-                    System.out.println("***********selectedbookieids added ********");
-                    for (int i = 0; i < sports.size(); i++) {
-                        Sport s = (Sport) sports.get(i);
-                        if (s.sportname.equalsIgnoreCase(sport)) {
+                    log("***********selectedbookieids added ********");
+                    for (Sport s : sports) {
+                        if (s.getSportname().equalsIgnoreCase(sport)) {
                             sport_id = s.getSport_id();
                             break;
                         }
@@ -1129,14 +1128,13 @@ class LineAlertOpeners implements ItemListener {
                     }
                     System.out.println("***********sport id added ********");
 
-                    ArrayList selectedleagueids = new ArrayList();
+                    List<Integer> selectedleagueids = new ArrayList<>();
                     if (treeRows1 != null) {
-                        for (int j = 0; j < selectedleagues.length; j++) {
-                            for (int i = 0; i < sports.size(); i++) {
-                                Sport s = (Sport) sports.get(i);
+                        for (final String selectedleague : selectedleagues) {
+                            for (Sport s : sports) {
                                 String leaguename = s.getLeaguename();
                                 int sid = s.getSport_id();
-                                if (selectedleagues[j].equalsIgnoreCase(leaguename) && sport_id == sid) {
+                                if (selectedleague.equalsIgnoreCase(leaguename) && sport_id == sid) {
                                     selectedleagueids.add(s.getLeague_id());
                                 }
 
@@ -1144,8 +1142,8 @@ class LineAlertOpeners implements ItemListener {
 
                         }
                     }
-                    System.out.println("***********selectedleagueids added ********");
-                    System.out.println("selectedleagueidssize=" + selectedleagueids.size());
+                    log("***********selectedleagueids added ********");
+                    log("selectedleagueidssize=" + selectedleagueids.size());
                     AppController.LineOpenerAlertNodeList.get(idx).sports_id = sport_id;
                     AppController.LineOpenerAlertNodeList.get(idx).leagues = selectedleagueids;
                     AppController.LineOpenerAlertNodeList.get(idx).bookies = selectedbookieids;
@@ -1369,6 +1367,10 @@ class LineAlertOpeners implements ItemListener {
 
 
         Game game = AppController.getGame(Gid);
+        if ( null == game) {
+            log(new Exception("Can find game for game id:"+Gid));
+            return;
+        }
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();

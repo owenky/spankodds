@@ -53,7 +53,10 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
             gamesVec.add(gameId);
             isAdd = true;
         } else {
-            isAdd = false;
+//            isAdd = false;
+            //even if gameId already exist, game might change, so need to refresh  -- 08/29/2021
+//            log("force isAdd to true to force being added, originally isAdd = false-- 08/29/2021");
+            isAdd = true;
         }
         idToGameMap.put(gameId,g);
         return isAdd;
@@ -107,8 +110,8 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
             }
 
             @Override
-            public void forEachRemaining(final Consumer action) {
-
+            public void forEachRemaining(final Consumer<? super V> action) {
+                idIterator.forEachRemaining(id -> action.accept(idToGameMap.get(id)));
             }
         };
     }

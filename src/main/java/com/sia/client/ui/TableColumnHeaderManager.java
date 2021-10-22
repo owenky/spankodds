@@ -13,6 +13,7 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.AdjustmentEvent;
@@ -95,8 +96,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private void configHeaderRow() {
        mainTable.configHeaderRow();
     }
-    public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
-        columnHeaderDrawer.drawOnViewIndex(rowViewIndex,headerValue,horizontalScrollBarAdjustmentValue);
+    public Component drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
+        return columnHeaderDrawer.drawOnViewIndex(rowViewIndex,headerValue,horizontalScrollBarAdjustmentValue);
     }
 
     @Override

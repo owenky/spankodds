@@ -4,6 +4,7 @@ import com.sia.client.ui.SpankOddsTest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CheckToFileTest implements EventGenerator{
 
@@ -24,7 +25,7 @@ public class CheckToFileTest implements EventGenerator{
         for(TableProperties tp: tblProps) {
             MainScreenTest mst = tp.getMainScreen();
             if ( mst.isShowing()) {
-                mst.checktofire(Arrays.asList(gameIds));
+                mst.checktofire(Arrays.stream(gameIds).map(SpankOddsTest.testGameCache::getGame).collect(Collectors.toList()));
             }
         }
     }

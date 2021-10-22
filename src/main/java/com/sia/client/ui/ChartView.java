@@ -1,31 +1,20 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class ChartView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("moveup.png"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("movedown.png"));
-    public static ImageIcon ICON_BLANK = new ImageIcon(Utils.getMediaResource("blank2.gif"));
+    public static String ICON_UP = ImageFile.ICON_UP;
+    public static String ICON_DOWN = ImageFile.ICON_DOWN;
+    public static String ICON_BLANK = ImageFile.ICON_BLANK2;
     public static LineData[] boxes = new LineData[2];
     public static LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     public static LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
-/*	static Color spreadcolor = Color.WHITE;
-	static Color totalcolor = Color.WHITE;
-	static Color moneycolor = Color.WHITE;
-	static Color awaycolor = Color.WHITE;
-	static Color homecolor = Color.WHITE;
-	static ImageIcon spreadicon = ICON_BLANK;
-	static ImageIcon totalicon = ICON_BLANK;
-	static ImageIcon moneyicon = ICON_BLANK;
-	static ImageIcon awayicon = ICON_BLANK;
-	static ImageIcon homeicon = ICON_BLANK;*/
     LineData topbox;
     LineData bottombox;
     int gid;
@@ -43,7 +32,7 @@ public class ChartView {
         this.gid = gid;
 
         g = AppController.getGame(gid);
-        sp = AppController.getSport(g.getLeague_id());
+        sp = AppController.getSportByLeagueId(g.getLeague_id());
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);
@@ -64,8 +53,8 @@ public class ChartView {
 
         ld1.setData("");
         ld2.setData("");
-        ld1.setIcon(ICON_BLANK);
-        ld2.setIcon(ICON_BLANK);
+        ld1.setIconPath(ICON_BLANK);
+        ld2.setIconPath(ICON_BLANK);
         for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
 
             if (ChartChecker.getCl1().get(i).gn == gid && ChartChecker.getCl1().get(i).p == period) {
@@ -89,8 +78,8 @@ public class ChartView {
                 }
 
                 if (item.equals("spreadtotal")) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).spreadicon);
-                    ld2.setIcon(ChartChecker.getCl1().get(i).totalicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
+                    ld2.setIconPath(ChartChecker.getCl1().get(i).totalicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
                     ld2.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
                     ld1.setData(ChartChecker.getCl1().get(i).NDS);
@@ -99,8 +88,8 @@ public class ChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if (item.equals("totalmoney") || item.equals("totalbothmoney")) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).totalicon);
-                    ld2.setIcon(ChartChecker.getCl1().get(i).moneyicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).totalicon);
+                    ld2.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
                     ld2.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
                     ld1.setData(ChartChecker.getCl1().get(i).NDT);
@@ -109,7 +98,7 @@ public class ChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if (item.equals("justspread")) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).spreadicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld1.setData(ChartChecker.getCl1().get(i).NDS);
@@ -118,7 +107,7 @@ public class ChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if (item.equals("justtotal")) {
-                    ld2.setIcon(ChartChecker.getCl1().get(i).totalicon);
+                    ld2.setIconPath(ChartChecker.getCl1().get(i).totalicon);
                     ld1.setBackgroundColor(Color.WHITE);
                     ld2.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
                     ld1.setData("");
@@ -127,7 +116,7 @@ public class ChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if (item.equals("justmoney")) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).moneyicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld1.setData(ChartChecker.getCl1().get(i).NDM);
@@ -136,14 +125,14 @@ public class ChartView {
                     //	boxes[0] = ld1;
                     //	boxes[1] = ld2;
                 } else if (item.equals("awayteamtotal")) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).awayicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).awayicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).awaycolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld1.setData(ChartChecker.getCl1().get(i).NDA);
                     ld2.setData("");
 
                 } else if (item.equals("hometeamtotal")) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).homeicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).homeicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).homecolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld1.setData(ChartChecker.getCl1().get(i).NDH);

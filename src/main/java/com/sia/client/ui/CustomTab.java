@@ -106,7 +106,7 @@ public class CustomTab extends JPanel {
 
             String gamedate = sdf.format(g.getGamedate());
             int leagueid = g.getLeague_id();
-            Sport s = AppController.getSport(leagueid);
+            Sport s = AppController.getSportByLeagueId(leagueid);
 
             Sport s2;
 
@@ -146,7 +146,7 @@ public class CustomTab extends JPanel {
             {
                 leagueid = g.getSubleague_id();
 
-                s2 = AppController.getSport(leagueid);
+                s2 = AppController.getSportByLeagueId(leagueid);
 
             } else {
                 s2 = s;
@@ -165,7 +165,7 @@ public class CustomTab extends JPanel {
             }
 
 
-            if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
+            if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)
                     || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
 
             ) {

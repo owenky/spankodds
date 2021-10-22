@@ -8,31 +8,20 @@ import java.sql.Timestamp;
 import static com.sia.client.config.Utils.log;
 
 public class Moneyline extends Line implements Serializable {
-    static Moneyline ml = new Moneyline(99999, 99999, 99999, 99999, 99999, new Timestamp(1), 0);
-
 
     boolean isbestvisitmoney = false;
     boolean isbesthomemoney = false;
     boolean isbestdrawmoney = false;
-
     double currentvisitjuice;
     double currenthomejuice;
     double currentdrawjuice;
-    java.sql.Timestamp currentts = new java.sql.Timestamp(1000);
-
     double priorvisitjuice;
     double priorhomejuice;
     double priordrawjuice;
-    java.sql.Timestamp priorts = new java.sql.Timestamp(1000);
-    ;
-
     double openervisitjuice;
     double openerhomejuice;
     double openerdrawjuice;
-    java.sql.Timestamp openerts = new java.sql.Timestamp(1000);
-
-
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, java.sql.Timestamp ts, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, int p) {
         this();
         currentvisitjuice = priorvisitjuice = openervisitjuice = vj;
         currenthomejuice = priorhomejuice = openerhomejuice = hj;
@@ -51,7 +40,7 @@ public class Moneyline extends Line implements Serializable {
         type = "moneyline";
     }
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, java.sql.Timestamp ts, double pvj, double phj, double pdj, java.sql.Timestamp pts, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, double pvj, double phj, double pdj, Timestamp pts, int p) {
         this();
         currentvisitjuice = vj;
         currenthomejuice = hj;
@@ -70,7 +59,7 @@ public class Moneyline extends Line implements Serializable {
 
     }
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, java.sql.Timestamp ts, double pvj, double phj, double pdj, java.sql.Timestamp pts, double ovj, double ohj, double odj, java.sql.Timestamp ots, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, double pvj, double phj, double pdj, Timestamp pts, double ovj, double ohj, double odj, Timestamp ots, int p) {
         this();
         currentvisitjuice = vj;
         currenthomejuice = hj;
@@ -118,7 +107,7 @@ public class Moneyline extends Line implements Serializable {
         isbestdrawmoney = b;
     }
 
-    public String recordMove(double visitjuice, double homejuice, double drawjuice, java.sql.Timestamp ts, boolean isopener) {
+    public String recordMove(double visitjuice, double homejuice, double drawjuice, Timestamp ts, boolean isopener) {
 
         if (visitjuice != 0) {
             this.setCurrentvisitjuice(visitjuice);
@@ -203,9 +192,6 @@ public class Moneyline extends Line implements Serializable {
         this.currenthomejuice = currenthomejuice;
     }
 
-    public java.sql.Timestamp getCurrentts() {
-        return currentts;
-    }
 
     public double getCurrentdrawjuice() {
         return currentdrawjuice;
@@ -215,12 +201,6 @@ public class Moneyline extends Line implements Serializable {
         setPriordrawjuice(getCurrentdrawjuice());
         this.currentdrawjuice = currentdrawjuice;
     }
-
-    public void setCurrentts(java.sql.Timestamp currentts) {
-        setPriorts(getCurrentts());
-        this.currentts = currentts;
-    }
-
     public void setPriorhomejuice(double priorhomejuice) {
         this.priorhomejuice = priorhomejuice;
     }
@@ -243,28 +223,12 @@ public class Moneyline extends Line implements Serializable {
         }
     }
 
-    public java.sql.Timestamp getPriorts() {
-        return priorts;
-    }
-
-    public void setPriorts(java.sql.Timestamp priorts) {
-        this.priorts = priorts;
-    }
-
     public double getPriordrawjuice() {
         return priordrawjuice;
     }
 
     public void setPriordrawjuice(double priordrawjuice) {
         this.priordrawjuice = priordrawjuice;
-    }
-
-    public java.sql.Timestamp getOpenerts() {
-        return openerts;
-    }
-
-    public void setOpenerts(java.sql.Timestamp openerts) {
-        this.openerts = openerts;
     }
 
     public double getOpenervisitjuice() {

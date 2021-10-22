@@ -1,28 +1,65 @@
 package com.sia.client.config;
 
 import javax.jms.MapMessage;
-import javax.swing.JMenuItem;
+import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.lang.ref.SoftReference;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
+    private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
+
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
+    }
+    public static Image getImage(String imageFileName) {
+        return getImageIcon(imageFileName).getImage();
+    }
+    public static synchronized ImageIcon getImageIcon(String imageFileName) {
+        if( null == imageFileName) {
+            return null;
+        }
+        SoftReference<ImageIcon> imageIconRef = imageIconCache.get(imageFileName);
+        ImageIcon imageIcon;
+        if ( null == imageIconRef ) {
+            imageIcon = new ImageIcon(Utils.getMediaResource(imageFileName));
+            imageIconCache.put(imageFileName,new SoftReference<>(imageIcon));
+        } else {
+            imageIcon = imageIconRef.get();
+            if ( null == imageIcon) {
+                imageIcon = new ImageIcon(Utils.getMediaResource(imageFileName));
+                imageIconCache.put(imageFileName,new SoftReference<>(imageIcon));
+            }
+        }
+        return imageIcon;
     }
     public static URL getConfigResource(String resourceName) {
         return getResource(SiaConst.ConfigPath+resourceName);
@@ -43,10 +80,21 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        e.printStackTrace();
+        System.out.println(nowShortString()+" |");e.printStackTrace();
     }
     public static void log(String mesg) {
-        System.out.println(mesg);
+        System.out.println(nowShortString()+" |"+mesg);
+    }
+    private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+    public static String nowShortString() {
+        java.util.Date date = new java.util.Date(System.currentTimeMillis());
+        Instant instant = date.toInstant();
+
+        LocalDateTime ldt = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return ldt.format(sdf);
+    }
+    public static void main(String [] argv) {
+        System.out.println(nowShortString());
     }
     public static int getInt(MapMessage mapMessage, String name) {
         try {
@@ -82,9 +130,17 @@ public abstract class Utils {
     }
     public static void checkAndRunInEDT(Runnable r) {
         if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
+            try {
+                r.run();
+            }catch( Exception e) {
+                log(e);
+            }
         } else {
-            SwingUtilities.invokeLater(r);
+            try {
+                SwingUtilities.invokeLater(r);
+            } catch ( Exception e) {
+                log(e);
+            }
         }
     }
     public static void showMessageDialog(Component parentComponent, Object message) throws HeadlessException {
@@ -203,7 +259,7 @@ public abstract class Utils {
             }
         }
     }
-    public static void removeItemListeners(JMenuItem menuItem) {
+    public static void removeItemListeners(AbstractButton menuItem) {
         if ( null != menuItem) {
             ActionListener[] allListeners = menuItem.getActionListeners();
             if (null != allListeners) {
@@ -212,5 +268,30 @@ public abstract class Utils {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * @return it dest is Final, it replace final and FINAL etc in sourceString with Final
+     */
+    public static String replaceIgnoreCase(String sourceString, String destStr) {
+        Pattern finalPattern = Pattern.compile(destStr,CASE_INSENSITIVE);
+        Matcher matcher = finalPattern.matcher(sourceString);
+        while (matcher.find()) {
+            String matchedStr = matcher.group(0);
+            sourceString = sourceString.replace(matchedStr,destStr);
+        }
+        return sourceString;
+    }
+    public static Timestamp parseTimestamp(String timeStampStr) {
+        try {
+            return new Timestamp(Long.parseLong(timeStampStr));
+        }catch(NumberFormatException e) {
+            log(e);
+            return new Timestamp(0L);
+        }
+    }
+    public static boolean containsOnlyAlphanumeric(String str) {
+        return str.matches("[0-9a-zA-Z]+");
     }
 }

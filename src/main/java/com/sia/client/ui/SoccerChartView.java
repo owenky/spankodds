@@ -1,33 +1,22 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Utils;
+import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Sport;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class SoccerChartView {
 
-    public static ImageIcon ICON_UP = new ImageIcon(Utils.getMediaResource("moveup.png"));
-    public static ImageIcon ICON_DOWN = new ImageIcon(Utils.getMediaResource("movedown.png"));
-    public static ImageIcon ICON_BLANK = null;//new ImageIcon("blank.gif");
+    public static String ICON_UP = ImageFile.ICON_UP;
+    public static String ICON_DOWN = ImageFile.ICON_DOWN;
+    public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
     public static LineData[] boxes = new LineData[4];
     public static LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     public static LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
     public static LineData ld3 = new LineData(ICON_BLANK, "", Color.WHITE);
     public static LineData ld4 = new LineData(ICON_BLANK, "", Color.WHITE);
-    /*static Color spreadcolor = Color.WHITE;
-    static Color totalcolor = Color.WHITE;
-    static Color moneycolor = Color.WHITE;
-    static Color awaycolor = Color.WHITE;
-    static Color homecolor = Color.WHITE;
-    static ImageIcon spreadicon = ICON_BLANK;
-    static ImageIcon totalicon = ICON_BLANK;
-    static ImageIcon moneyicon = ICON_BLANK;
-    static ImageIcon awayicon = ICON_BLANK;
-    static ImageIcon homeicon = ICON_BLANK;*/
     LineData topbox;
     LineData bottombox;
     int gid;
@@ -42,7 +31,7 @@ public class SoccerChartView {
         this.gid = gid;
 
         g = AppController.getGame(gid);
-        sp = AppController.getSport(g.getLeague_id());
+        sp = AppController.getSportByLeagueId(g.getLeague_id());
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);
@@ -86,8 +75,8 @@ public class SoccerChartView {
                 }
 
                 if ("spreadtotal".equals(item)) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).spreadicon);
-                    ld4.setIcon(ChartChecker.getCl1().get(i).totalicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
+                    ld4.setIconPath(ChartChecker.getCl1().get(i).totalicon);
 
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
                     ld2.setBackgroundColor(Color.WHITE);
@@ -102,8 +91,8 @@ public class SoccerChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if ("totalmoney".equals(item) || "totalbothmoney".equals(item)) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).moneyicon);
-                    ld4.setIcon(ChartChecker.getCl1().get(i).totalicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
+                    ld4.setIconPath(ChartChecker.getCl1().get(i).totalicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld3.setBackgroundColor(Color.WHITE);
@@ -117,7 +106,7 @@ public class SoccerChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if ("justspread".equals(item)) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).spreadicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld3.setBackgroundColor(Color.WHITE);
@@ -131,7 +120,7 @@ public class SoccerChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if ("justtotal".equals(item)) {
-                    ld4.setIcon(ChartChecker.getCl1().get(i).totalicon);
+                    ld4.setIconPath(ChartChecker.getCl1().get(i).totalicon);
                     ld1.setBackgroundColor(Color.WHITE);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld3.setBackgroundColor(Color.WHITE);
@@ -145,7 +134,7 @@ public class SoccerChartView {
                     //boxes[0] = ld1;
                     //boxes[1] = ld2;
                 } else if ("justmoney".equals(item)) {
-                    ld1.setIcon(ChartChecker.getCl1().get(i).moneyicon);
+                    ld1.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
                     ld1.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld3.setBackgroundColor(Color.WHITE);
@@ -159,7 +148,7 @@ public class SoccerChartView {
                     //	boxes[0] = ld1;
                     //	boxes[1] = ld2;
                 } else if ("awayteamtotal".equals(item)) {
-                    ld4.setIcon(ChartChecker.getCl1().get(i).awayicon);
+                    ld4.setIconPath(ChartChecker.getCl1().get(i).awayicon);
                     ld1.setBackgroundColor(Color.WHITE);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld3.setBackgroundColor(Color.WHITE);
@@ -171,7 +160,7 @@ public class SoccerChartView {
                     ld4.setData(ChartChecker.getCl1().get(i).NDA);
 
                 } else if ("hometeamtotal".equals(item)) {
-                    ld4.setIcon(ChartChecker.getCl1().get(i).homeicon);
+                    ld4.setIconPath(ChartChecker.getCl1().get(i).homeicon);
                     ld1.setBackgroundColor(Color.WHITE);
                     ld2.setBackgroundColor(Color.WHITE);
                     ld3.setBackgroundColor(Color.WHITE);

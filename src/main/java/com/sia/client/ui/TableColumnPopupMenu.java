@@ -21,7 +21,8 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.Vector;
+import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.log;
@@ -31,6 +32,7 @@ public class TableColumnPopupMenu{
     private final JTable table;
     private final AnchoredLayeredPane anchoredLayeredPane;
     private JMenuItem deleteItem;
+    private JMenuItem renameItem;
     private JMenuItem choseColorItem;
     private JMenuItem closeItem;
     private int tableColumnIndex;
@@ -51,8 +53,9 @@ public class TableColumnPopupMenu{
     public void showMenu(int tableColumnIndex) {
         this.tableColumnIndex = tableColumnIndex;
         menuBar = new JPanel();
-        menuBar.setSize(new Dimension(110,57));
+        menuBar.setSize(new Dimension(110,80));
         menuBar.setBorder(BorderFactory.createEtchedBorder());
+        menuBar.add(getRenmeItem());
         menuBar.add(getChoseColorItem());
         menuBar.add(getDeleteItem());
 //        menuBar.add(getCloseItem());
@@ -75,6 +78,14 @@ public class TableColumnPopupMenu{
         }
         return closeItem;
     }
+    private JMenuItem getRenmeItem() {
+        if ( null == renameItem) {
+            renameItem = new JMenuItem("Rename Column");
+            renameItem.addActionListener((event)->renameColumn());
+            renameItem.setBorder(BorderFactory.createEmptyBorder());
+        }
+        return renameItem;
+    }
     private JMenuItem getDeleteItem() {
         if ( null == deleteItem) {
             deleteItem = new JMenuItem("Delete Column");
@@ -93,6 +104,12 @@ public class TableColumnPopupMenu{
     }
     private void choseColumnColor() {
         showColorChoserPanel();
+        hideMenu();
+    }
+    private void renameColumn() {
+        ActionListener cancelAction = (evt)-> this.showMenu(tableColumnIndex);
+        RenameColumnPopupMenu renameColumnPopupMenu = RenameColumnPopupMenu.of(table,cancelAction);
+        renameColumnPopupMenu.showMenu(tableColumnIndex);
         hideMenu();
     }
     private void deleteColumn() {
@@ -138,8 +155,8 @@ public class TableColumnPopupMenu{
             log("color chosen was " + color);
             String bookieid = AppController.getBookieId(headerValue.toString());
             AppController.getBookieColors().put(bookieid, color);
-            Vector dm = AppController.getDataModels();
-            ((LinesTableData)dm.get(0)).fire(null);
+            List<LinesTableData> dm = AppController.getDataModels();
+            dm.get(0).fire(null);
         }
     }
     public void hideMenu() {

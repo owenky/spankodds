@@ -1,10 +1,15 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQMapMessage;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -14,6 +19,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import java.sql.Timestamp;
 
 import static com.sia.client.config.Utils.log;
 
@@ -21,12 +27,10 @@ public class LinesConsumer implements MessageListener {
 
     //private static String brokerURL = "failover:(ssl://localhost:61617)";
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
-    int gameid = 0;
     private transient Connection connection;
     private transient Session session;
-    private MapMessage mapMessage;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LinesConsumer",2000L,-1500L);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(2000L,-1500L);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -45,21 +49,26 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        Utils.ensureNotEdtThread();
-        processMessage((MapMessage)message);
+        synchronized (SiaConst.GameLock) {
+            Utils.ensureNotEdtThread();
+            processMessage((MapMessage) message);
+            OngoingGameMessages.addMessage(MessageType.Line, message);
+        }
     }
-    private void processMessage(MapMessage message) {
+    public void processMessage(MapMessage mapMessage) {
+        int gameid = 0;
         try {
-
-            mapMessage =  message;
             gameid = mapMessage.getInt("gameid");
+            if  ( 0 == gameid) {
+                return;
+            }
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
             String changetype = mapMessage.getStringProperty("messageType");
-            long newlongts = 0;
+            long newlongts;
 
-
+//log("LineConsumer received mesg for game id="+gameid);
             boolean isopener = false;
             if ("1".equals(isopenerS)) {
                 isopener = true;
@@ -96,15 +105,14 @@ public class LinesConsumer implements MessageListener {
                 } catch (Exception ex) {
                     log(ex);
                 }
-
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
 
                 Spreadline sl = AppController.getSpreadline(bookieid, gameid, period);
                 if (null != sl) {
-                    sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new java.sql.Timestamp(newlongts), isopener);
+                    sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new Timestamp(newlongts), isopener);
                 } else {
-                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new java.sql.Timestamp(newlongts), period);
+                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, new Timestamp(newlongts), period);
                     //System.out.println("***************************************spreadxyzabc******************************");
                     if (isopener) {
                         LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
@@ -113,8 +121,8 @@ public class LinesConsumer implements MessageListener {
 
                     AppController.addSpreadline(sl);
                 }
-            } else if ("LineChangeTotal".equals(changetype)) {
-
+            }
+            else if ("LineChangeTotal".equals(changetype)) {
 
                 double newover = 0;
                 double newunder = 0;
@@ -148,14 +156,14 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
 
 
                 Totalline tl = AppController.getTotalline(bookieid, gameid, period);
                 if (null != tl) {
-                    tl.recordMove(newover, newoverjuice, newunder, newunderjuice, new java.sql.Timestamp(newlongts), isopener);
+                    tl.recordMove(newover, newoverjuice, newunder, newunderjuice, new Timestamp(newlongts), isopener);
                 } else {
-                    tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, new java.sql.Timestamp(newlongts), period);
+                    tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, new Timestamp(newlongts), period);
                     if (isopener) {
                         LineAlertOpeners.totalOpenerAlert(gameid, bookieid, period, isopenerS, newover, newoverjuice, newunder, newunderjuice);
                         //System.out.println("***************************************"+sportname+"******************************");
@@ -164,7 +172,8 @@ public class LinesConsumer implements MessageListener {
                     AppController.addTotalline(tl);
                 }
 
-            } else if ("LineChangeTeamTotal".equals(changetype)) {
+            }
+            else if ("LineChangeTeamTotal".equals(changetype)) {
                 double newvisitorover = 0;
                 double newvisitorunder = 0;
                 double newvisitoroverjuice = 0;
@@ -223,7 +232,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
 
 
                 TeamTotalline ttl = AppController.getTeamTotalline(bookieid, gameid, period);
@@ -231,17 +240,18 @@ public class LinesConsumer implements MessageListener {
 
                     ttl.recordMove(newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
                             newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice,
-                            new java.sql.Timestamp(newlongts), isopener);
+                            new Timestamp(newlongts), isopener);
                 } else {
                     ttl = new TeamTotalline(gameid, bookieid, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
-                            newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, new java.sql.Timestamp(newlongts), period);
+                            newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, new Timestamp(newlongts), period);
                     if (isopener) {
                         LineAlertOpeners.teamTotalOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice);
                     }
                     AppController.addTeamTotalline(ttl);
                 }
 
-            } else if ("LineChangeMoney".equals(changetype)) {
+            }
+            else if ("LineChangeMoney".equals(changetype)) {
                 double newvisitorjuice = 0;
                 double newhomejuice = 0;
                 double newdrawjuice = 0;
@@ -269,7 +279,7 @@ public class LinesConsumer implements MessageListener {
                 }
 
                 // owen put this in cuz db sending us garbage timestamps!!!
-                newlongts = message.getJMSTimestamp();
+                newlongts = mapMessage.getJMSTimestamp();
                 Moneyline ml = AppController.getMoneyline(bookieid, gameid, period);
 
                 // owen hack this since draw change comes in seperately
@@ -289,9 +299,9 @@ public class LinesConsumer implements MessageListener {
 
 
                 if (null != ml) {
-                    ml.recordMove(newvisitorjuice, newhomejuice, newdrawjuice, new java.sql.Timestamp(newlongts), isopener);
+                    ml.recordMove(newvisitorjuice, newhomejuice, newdrawjuice, new Timestamp(newlongts), isopener);
                 } else {
-                    ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, new java.sql.Timestamp(newlongts), period);
+                    ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, new Timestamp(newlongts), period);
                     if (isopener) {
                         LineAlertOpeners.moneyOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorjuice, newhomejuice);
                         //System.out.println("***************************************"+sportname+"******************************");
@@ -311,8 +321,16 @@ public class LinesConsumer implements MessageListener {
             log(e);
 
         }
-
-        gameMessageProcessor.addGameId(gameid);
+        Game game = AppController.getGame(gameid);
+        if ( null == game) {
+            if ( mapMessage instanceof ActiveMQMapMessage) {
+//                log(new Exception("null game detected...gameid=" + gameid + ", message=" + OngoingGameMessages.convert((ActiveMQMapMessage)mapMessage)));
+                log("LinesConsumer: null game detected...gameid=" + gameid);
+            } else {
+                log("LinesConsumer: null game detected...gameid=" + gameid);
+            }
+        } else {
+            gameMessageProcessor.addGame(game);;
+        }
     }
-
 }

@@ -12,16 +12,19 @@ import java.util.stream.Collectors;
 public interface AbstractScreen<T extends KeyedObject> {
 
     void destroyMe();
+    boolean shouldAddToScreen(T game);
     ColumnCustomizableTable<T> getColumnCustomizableTable();
-    default void checktofire(Collection<Integer> gameIds) {
+    default void checktofire(Collection<T> games) {
         ColumnCustomizableTable<T> table = getColumnCustomizableTable();
         ColumnCustomizableDataModel<T> model = table.getModel();
         List<Integer> rowModelIndexList = new ArrayList<>();
-        for(int gameId:gameIds) {
-            TableSection<T> ts =  model.checktofire(gameId,table.isShowing());
-            if ( null != ts ) {
-                int rowModelIndex = model.getRowModelIndex(ts,gameId);
-                rowModelIndexList.add(rowModelIndex);
+        for(T game:games) {
+            if ( shouldAddToScreen(game)) {
+                TableSection<T> ts = model.checktofire(game, table.isShowing());
+                if (null != ts) {
+                    int rowModelIndex = model.getRowModelIndex(ts, game.getGame_id());
+                    rowModelIndexList.add(rowModelIndex);
+                }
             }
         }
         List<Integer> sortedRowModelIndexList = rowModelIndexList.stream().sorted().collect(Collectors.toList());

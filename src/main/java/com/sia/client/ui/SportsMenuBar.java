@@ -1,9 +1,9 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
+import com.sia.client.model.SportType;
+import com.sia.client.model.TabUnhideListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -123,13 +123,13 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem finals = new JMenuItem("Finals");
         finals.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Final");
+                GameAlert ga = new GameAlert(SiaConst.FinalStr);
             }
         });
         JMenuItem halftimes = new JMenuItem("Halftimes");
         halftimes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Halftime");
+                GameAlert ga = new GameAlert(SiaConst.HalfTimeStr);
             }
         });
 
@@ -281,24 +281,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     football.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(0, "Football");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Football");
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Football", new ImageIcon(Utils.getMediaResource("football.png")), new MainScreen("Football"), "Football", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Football"));
-
-                            }
-
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Football,0).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -362,23 +347,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     basketball.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-
-                            AppController.SpotsTabPaneVector.put(1, "Basketball");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Basketball");
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Basketball", new ImageIcon(Utils.getMediaResource("Basketball.png")), new MainScreen("Basketball"), "Basketball", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Basketball"));
-
-                            }
-
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Basketball,1).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -442,22 +413,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     baseball.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(2, "Baseball");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Baseball");
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Baseball", new ImageIcon(Utils.getMediaResource("baseball.png")), new MainScreen("Baseball"), "Baseball", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Baseball"));
-
-                            }
-
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Baseball,2).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -523,22 +481,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     hockey.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(3, "Hockey");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Hockey");
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Hockey", new ImageIcon(Utils.getMediaResource("Hockey.png")), new MainScreen("Hockey"), "Hockey", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Hockey"));
-
-                            }
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Hockey,3).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -605,19 +550,7 @@ public class SportsMenuBar extends JMenuBar {
                     fighting.add(unhide);
                     unhide.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(4, "Fighting");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Fighting");
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Fighting", new ImageIcon(Utils.getMediaResource("boxing.png")), new MainScreen("Fighting"), "Fighting", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Fighting"));
-
-                            }
+                            new TabUnhideListener(SportType.Fighting,4).unHide();
                             go.setEnabled(true);
                         }
                     });
@@ -685,23 +618,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     soccer.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(5, SiaConst.SoccerStr);
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf(SiaConst.SoccerStr);
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab(SiaConst.SoccerStr, new ImageIcon(Utils.getMediaResource("soccer.png")), new MainScreen(SiaConst.SoccerStr), SiaConst.SoccerStr, idx);
-                                tp.setSelectedIndex(tp.indexOfTab(SiaConst.SoccerStr));
-
-                            }
-
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Soccer,5).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -767,22 +686,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     golf.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(7, "Golf");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Golf");
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Golf", new ImageIcon(Utils.getMediaResource("golf.png")), new MainScreen("Golf"), "Golf", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Golf"));
-
-                            }
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Golf,7).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -848,23 +754,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     autoracing.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(6, "Auto Racing");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Auto Racing");
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Auto Racing", new ImageIcon(Utils.getMediaResource("flag.png")), new MainScreen("Auto Racing"), "Auto Racing", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Auto Racing"));
-
-                            }
-
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.AutoRacing,6).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }
@@ -928,22 +820,9 @@ public class SportsMenuBar extends JMenuBar {
                     });
                 } else {
                     tennis.add(unhide);
-                    unhide.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            AppController.SpotsTabPaneVector.put(8, "Tennis");
-                            Vector currentvec = AppController.getMainTabVec();
-                            int idx = currentvec.indexOf("Tennis");
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-                                tp.insertTab("Tennis", new ImageIcon(Utils.getMediaResource("tennis.png")), new MainScreen("Tennis"), "Tennis", idx);
-                                tp.setSelectedIndex(tp.indexOfTab("Tennis"));
-
-                            }
-                            go.setEnabled(true);
-                        }
+                    unhide.addActionListener(ae -> {
+                        new TabUnhideListener(SportType.Tennis,8).unHide();
+                        go.setEnabled(true);
                     });
                     go.setEnabled(false);
                 }

@@ -1,38 +1,39 @@
 package com.sia.client.model;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class LineData {
 
 
-    public ImageIcon m_icon;
-    public String m_data;
-    public Color m_color;
-    public String border = "";
-    public String tooltip = "";
+    private String iconPath;
+    private String m_data;
+    private Color m_color;
+    private String border = "";
+    private String tooltip = "";
 
-    public LineData(ImageIcon icon, String data, Color c) {
-        m_icon = icon;
+    public LineData(String iconPath, String data, Color c) {
+        this.iconPath = iconPath;
         m_data = data;
         m_color = c;
     }
 
-    public LineData(ImageIcon icon, String data, Color c, String border) {
-        this(icon,data,c);
+    public LineData(String iconPath, String data, Color c, String border) {
+        this(iconPath,data,c);
         this.border = border;
     }
-
+    public String getM_data() {
+        return m_data;
+    }
     public String toString() {
-        return m_data.toString();
+        return m_data;
     }
 
-    public ImageIcon getIcon() {
-        return m_icon;
+    public String getIconPath() {
+        return iconPath;
     }
 
-    public void setIcon(ImageIcon i) {
-        m_icon = i;
+    public void setIconPath(String i) {
+        iconPath = i;
     }
 
     public String getData() {

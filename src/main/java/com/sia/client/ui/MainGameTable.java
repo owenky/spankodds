@@ -53,6 +53,9 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
             }
         }
     }
+    public LinesTableData findTableSectionByHeaderValue(String gameGroupHeader) {
+        return getModel().findTableSectionByHeaderValue(gameGroupHeader);
+    }
     private boolean isSoccer(int rowViewIndex) {
         int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
         Game g  = getModel().getGame(rowModelIndex);

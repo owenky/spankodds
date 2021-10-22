@@ -16,6 +16,13 @@ public class MainScreenTest extends JPanel implements AbstractScreen<TestGame> {
     public void destroyMe() {
 
     }
+
+    @Override
+    public boolean shouldAddToScreen(final TestGame game) {
+        new Exception("need implementation....").printStackTrace();
+        return false;
+    }
+
     public void createMe() {
         tblProp.rebuild();
     }

@@ -1,12 +1,14 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.ColorData;
 import com.sia.client.model.LineData;
 
-import java.awt.*;
-
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.Color;
+import java.awt.Component;
 
 public class ColoredTableCellRenderer extends DefaultTableCellRenderer {
 	
@@ -45,8 +47,8 @@ public class ColoredTableCellRenderer extends DefaultTableCellRenderer {
     }
 	 else if (value instanceof LineData) {
       LineData ivalue = (LineData)value;
-      setIcon(ivalue.m_icon);
-      setText(ivalue.m_data.toString());
+      setIcon(Utils.getImageIcon(ivalue.getIconPath()));
+      setText(ivalue.getM_data());
 	  setHorizontalTextPosition(SwingConstants.LEADING);
     }
 

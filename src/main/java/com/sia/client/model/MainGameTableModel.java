@@ -1,19 +1,35 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
+
+import static com.sia.client.config.Utils.log;
 
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
-//    private final List<LinesTableData> gameLines = new ArrayList<>();
-
-    public MainGameTableModel(Vector<TableColumn> allColumns) {
+    private final SportType sportType;
+    private static final Set<String> stageStrs = new HashSet<>();
+    static {
+        stageStrs.add(SiaConst.FinalStr);
+        stageStrs.add(SiaConst.InProgresStr);
+        stageStrs.add(SiaConst.InGamePricesStr);
+//        stageStrs.add(SiaConst.SoccerInGamePricesStr);
+        stageStrs.add(SiaConst.SeriesPricesStr);
+//        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
+    }
+    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns) {
         super(allColumns);
+        this.sportType = sportType;
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -23,10 +39,48 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     }
     //refactored from MainScreen::addGame(Game, boolean)
-    public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint) {
+    public void addGameToGameGroup(String gameGroupHeader,Game game,boolean paint,Runnable callBackOnNotFound) {
+        if ( game.isSeriesprice()) {
+            if ( game.getLeague_id() == SiaConst.SoccerLeagueId) {
+                gameGroupHeader = SiaConst.SoccerSeriesPricesStr;
+            } else {
+                gameGroupHeader = SiaConst.SeriesPricesStr;
+            }
+        }  else if ( game.isInGame2()) {
+            if ( game.getLeague_id() == SiaConst.SoccerLeagueId) {
+                gameGroupHeader = SiaConst.SoccerInGamePricesStr;
+            } else {
+                gameGroupHeader = SiaConst.InGamePricesStr;
+            }
+        }
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
+        String err;
         if ( null != ltd) {
-            ltd.addGame(game, paint);
+            boolean isAdded = ltd.addGame(game, false);  //don't need repain in ltd, update all caches in next 2 statements -- 2021-10-17
+            if ( isAdded) {
+                this.buildIndexMappingCache();
+                fireTableChanged(new TableModelEvent(this));
+            }
+        }  else if (null != ( err= GameUtils.checkError(game))) {
+            log("***** Suspecious game ignored to be added to screen. err="+err+"---- "+GameUtils.getGameDebugInfo(game));
+
+        } else {
+            //this method is called only when the game belong to this table, see conditioin of ms.parentOfGame(g)  in SportsTabPane::addGame()
+            //need to re-draw screen when game group is not found in this table
+ //TODO remove debug
+log("***** Game not found in the table -- "+GameUtils.getGameDebugInfo(game));
+//END Of DEBUG TODO
+            if ( GameUtils.isGameNear(game)) {
+                if ( ! game.isInStage()) {
+                    callBackOnNotFound.run();
+                    log("REFRESH main screen for this game "+GameUtils.getGameDebugInfo(game));
+                } else {
+                    //when game is in stage, there might not be a regular game header for this game, instead this game is in stage header (i.e. Final, Halftime, etc...) -- 2021-10-05
+                    log("SKIP REFRESHing main screen for this game because the game is in stage. ----"+GameUtils.getGameDebugInfo(game));
+                }
+            } else {
+                log("SKIP REFRESHing main screen for this game  because the game is not near.---"+GameUtils.getGameDebugInfo(game));
+            }
         }
 
     }
@@ -37,6 +91,9 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         }
         TableUtils.fireTableModelChanged(this);
     }
+    public SportType getSportType() {
+        return this.sportType;
+    }
     public int getGameId(int rowModelIndex) {
        return getRowKey(rowModelIndex);
     }
@@ -44,36 +101,16 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     public LinesTableData findTableSectionByHeaderValue(String gameGroupHeader) {
         LinesTableData rtn = (LinesTableData)super.findTableSectionByHeaderValue(gameGroupHeader);
         if ( null == rtn) {
-            rtn = findStageSectionByHeaderValue(gameGroupHeader);
+            rtn = findOrCreateStageSectionByHeaderValue(gameGroupHeader);
         }
         return rtn;
     }
-    private LinesTableData findStageSectionByHeaderValue(String header) {
+    public boolean containsGroupHeader(String gameGroupHeader) {
+        return null != super.findTableSectionByHeaderValue(gameGroupHeader);
+    }
+    private LinesTableData findOrCreateStageSectionByHeaderValue(String header) {
         TableSection<Game> ltd;
-        List<TableSection<Game>> gameLines = getTableSections();
-//        if (header.equalsIgnoreCase("In Progress")) {
-//            ltd = gameLines.get(gameLines.size() - 4);
-//        } else if (header.equalsIgnoreCase("Soccer In Progress")) {
-//            ltd = gameLines.get(gameLines.size() - 3);
-//        } else if (header.equalsIgnoreCase("FINAL")) {
-//            ltd = gameLines.get(gameLines.size() - 2);
-//        } else if (header.equalsIgnoreCase("Soccer FINAL")) {
-//            ltd = gameLines.get(gameLines.size() - 1);
-//        } else if (header.equalsIgnoreCase("Halftime")) {
-//            ltd = gameLines.get(0);
-//        } else if (header.equalsIgnoreCase("Soccer Halftime")) {
-//            ltd = gameLines.get(1);
-//        } else {
-//            ltd = null;
-//        }
-        //the above is no longer correct -- 06/12/2021
-        if (header.equalsIgnoreCase("Halftime")) {
-            ltd = gameLines.get(0);
-        } else if (header.equalsIgnoreCase("Soccer Halftime")) {
-            ltd = gameLines.get(1);
-        } else {
-            ltd = createStageSection(header);
-        }
+        ltd = createStageSection(header);
         return (LinesTableData)ltd;
     }
     private LinesTableData createStageSection(String header) {
@@ -83,11 +120,11 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             return null;
         }
 
-        header = header.toLowerCase();
+        header = GameUtils.normalizeGameHeader(header);
         LinesTableData rtn;
-        if ( header.contains("final") || header.contains("in progress") ) {
+        if ( stageStrs.contains(header)) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
-            rtn = new LinesTableData(section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<Game>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
+            rtn = new LinesTableData(sportType,section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
                     , section0.getLast(),header,getAllColumns());
             sections.add(rtn);
         } else {

@@ -83,7 +83,7 @@ public class GameAlert {
         alerttype = atype;
         String userpref = "";
 
-        if (alerttype.equalsIgnoreCase("Final")) {
+        if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
             userpref = AppController.getUser().getFinalAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "final.wav";
@@ -91,7 +91,7 @@ public class GameAlert {
             userpref = AppController.getUser().getStartedAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "started.wav";
-        } else if (alerttype.equalsIgnoreCase("Halftime")) {
+        } else if (alerttype.equalsIgnoreCase(SiaConst.HalfTimeStr)) {
             userpref = AppController.getUser().getHalftimeAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "halftime.wav";
@@ -520,7 +520,7 @@ public class GameAlert {
                         soundfile + "|" + sportselected;
 
                 System.out.println("newprefs=" + newuserprefs);
-                if (alerttype.equalsIgnoreCase("Final")) {
+                if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
                     AppController.getUser().setFinalAlert(newuserprefs);
                 } else if (alerttype.equalsIgnoreCase("Started")) {
                     AppController.getUser().setStartedAlert(newuserprefs);

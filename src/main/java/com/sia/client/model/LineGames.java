@@ -32,14 +32,14 @@ public class LineGames<V extends KeyedObject> {
     public int getGameId(int rowModelIndex) {
         return gameIdList.get(rowModelIndex);
     }
-    public V getGame(int gameId) {
+    public V getGameFromDataSource(int gameId) {
        return gameCache.getGame(gameId);
     }
     public V getByIndex(int index) {
         return gameCache.getGame(gameIdList.get(index));
     }
-    public V getGame(String gameId) {
-        return getGame(Integer.parseInt(gameId));
+    public V getGameFromDataSource(String gameId) {
+        return getGameFromDataSource(Integer.parseInt(gameId));
     }
     public V removeGame(Integer gameId) {
         V game;
@@ -56,10 +56,16 @@ public class LineGames<V extends KeyedObject> {
     public void addAll(Collection<? extends V> games) {
         games.forEach(this::addIfAbsent);
     }
-    public void addIfAbsent(V g) {
+    public boolean addIfAbsent(V g) {
         int gameId = g.getGame_id();
+        return addIfAbsent(gameId);
+    }
+    public boolean addIfAbsent(int gameId) {
         if ( ! containsGameId(gameId)) {
             gameIdList.add(gameId);
+            return true;
+        } else {
+            return false;
         }
     }
     public boolean containsGameId(int gameId) {

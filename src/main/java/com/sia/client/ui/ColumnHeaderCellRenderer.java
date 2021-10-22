@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 
@@ -23,25 +24,24 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private static final Border userRenderBorderNormal = new MatteBorder(0, 0, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick, 1, userRenderBorderColr);
-    private final ColumnHeaderProvider<?> columnHeaderProvider;
+    private final ColumnHeaderProperty columnHeaderProperty;
     private final TableCellRendererProvider tableCellRendererProvider;
     private final MarginProvider marginProvider;
     private final JLabel headerCellRender = new JLabel();
 
-    public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProvider<?> columnHeaderProvider, MarginProvider marginProvider) {
+    public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProperty columnHeaderProperty, MarginProvider marginProvider) {
         this.tableCellRendererProvider = tableCellRendererProvider;
-        this.columnHeaderProvider = columnHeaderProvider;
+        this.columnHeaderProperty = columnHeaderProperty;
         this.marginProvider = marginProvider;
         this.headerCellRender.setOpaque(true);
-        this.headerCellRender.setBackground(columnHeaderProvider.getHeaderBackground());
+        this.headerCellRender.setBackground(columnHeaderProperty.getHeaderBackground());
         this.headerCellRender.setBorder(BorderFactory.createEmptyBorder());
     }
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
-        int rowModelIndex = table.convertRowIndexToModel(row);
-        Object headValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
-        if ( null != headValue) {
+
+        if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

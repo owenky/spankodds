@@ -3,7 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnCustomizableDataModel.LtdSrhStruct;
-import com.sia.client.model.ColumnHeaderProvider;
+import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
@@ -19,10 +19,13 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
@@ -40,6 +43,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
     private TableModelListener tableChangedListener;
+    private Map<Integer, Component> oldHeaderMap = new HashMap<>();
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
@@ -59,11 +63,14 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         configHeaderRow(0,getRowCount()-1,true);
     }
     public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
-        ColumnHeaderProvider<V> columnHeaderProvider = getModel().getColumnHeaderProvider();
+
+        ColumnCustomizableDataModel<V> model = getModel();
+        ColumnHeaderProperty columnHeaderProperty = model.getColumnHeaderProperty();
+
         for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
-            Object headerValue = columnHeaderProvider.getColumnHeaderAt(rowModelIndex);
+            Object headerValue = model.getGameGroupHeader(rowModelIndex);
             if ( null == headerValue) {
 //                rowHeight = getRowHeight();
                 LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
@@ -73,7 +80,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                     rowHeight = SiaConst.NormalRowheight;
                 }
             } else {
-                rowHeight = columnHeaderProvider.getColumnHeaderHeight();
+                rowHeight = columnHeaderProperty.getColumnHeaderHeight();
                 drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
             }
             if ( toSetRowHeight) {
@@ -147,7 +154,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 int colDataModelIndex = ColumnCustomizableTable.this.convertColumnIndexToModel(col) + lockedColumnIndex.size();
                 return getUserCellRenderer(row,colDataModelIndex);
             };
-            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProvider(),getMarginProvider());
+            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProperty(),getMarginProvider());
         }
         return headerCellRenderer;
     }
@@ -200,6 +207,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     }
     public void addGameLine(TableSection<V> gameLine) {
         getModel().addGameLine(gameLine);
+    }
+    public void addGameLine(int index,TableSection<V> gameLine) {
+        getModel().addGameLine(index,gameLine);
     }
     public TableSection<V> getLinesTableData(int row) {
         return getModel().getLinesTableData(row).linesTableData;
@@ -259,7 +269,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     }
     @Override
     public ColumnCustomizableDataModel<V> getModel() {
-        return (ColumnCustomizableDataModel<V>)super.getModel();
+        TableModel model = super.getModel();
+        if ( ! (model instanceof ColumnCustomizableDataModel) ){
+            throw new IllegalStateException("Expecting ColumnCustomizableDataModel");
+        }
+        return (ColumnCustomizableDataModel<V>)model;
     }
     @Override
     public final void createDefaultColumnsFromModel() {
@@ -279,7 +293,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
     }
     public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
-        getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
+        Component oldHeaderComp = this.oldHeaderMap.get(rowViewIndex);
+        if ( null != oldHeaderComp) {
+            this.remove(oldHeaderComp);
+        }
+        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
+        this.oldHeaderMap.put(rowViewIndex,currentComp);
     }
     public ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {

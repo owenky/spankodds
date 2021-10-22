@@ -9,31 +9,26 @@ import static com.sia.client.config.Utils.log;
 
 
 public class Spreadline extends Line {
-    static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, new Timestamp(1), 0);
+    static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, new Timestamp(1L), 0);
 
     boolean isbestvisitspread = false;
     boolean isbesthomespread = false;
-
     double currentvisitspread;
     double currentvisitjuice;
     double currenthomespread;
     double currenthomejuice;
-    java.sql.Timestamp currentts = new java.sql.Timestamp(1000);
-
     double priorvisitspread;
     double priorvisitjuice;
     double priorhomespread;
     double priorhomejuice;
-    java.sql.Timestamp priorts = new java.sql.Timestamp(1000);
-
     double openervisitspread;
     double openervisitjuice;
     double openerhomespread;
     double openerhomejuice;
-    java.sql.Timestamp openerts = new java.sql.Timestamp(1000);
 
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, java.sql.Timestamp ts, int p) {
+
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, int p) {
         this();
 
         currentvisitspread = priorvisitspread = openervisitspread = vs;
@@ -54,7 +49,7 @@ public class Spreadline extends Line {
     }
 
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, java.sql.Timestamp ts, double pvs, double pvj, double phs, double phj, java.sql.Timestamp pts, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, double pvs, double pvj, double phs, double phj, Timestamp pts, int p) {
         this();
 
         currentvisitspread = vs;
@@ -75,7 +70,7 @@ public class Spreadline extends Line {
 
     }
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, java.sql.Timestamp ts, double pvs, double pvj, double phs, double phj, java.sql.Timestamp pts, double ovs, double ovj, double ohs, double ohj, java.sql.Timestamp ots, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, double pvs, double pvj, double phs, double phj, Timestamp pts, double ovs, double ovj, double ohs, double ohj, Timestamp ots, int p) {
         this();
 
         currentvisitspread = vs;
@@ -104,11 +99,11 @@ public class Spreadline extends Line {
     }
 
     public static void main(String args[]) {
-
-
-        Spreadline sl = new Spreadline(109, 29, 5, -5, -110, -110, new java.sql.Timestamp(new java.util.Date().getTime()), 0);
-        System.out.println("hi " + sl.isOpener());
-        System.out.println(sl.getPriorvisitspread());
+//
+//
+//        Spreadline sl = new Spreadline(109, 29, 5, -5, -110, -110, System.currentTimeMillis(), 0);
+//        System.out.println("hi " + sl.isOpener());
+//        System.out.println(sl.getPriorvisitspread());
     }
 
     public boolean isOpener() {
@@ -144,7 +139,7 @@ public class Spreadline extends Line {
         isbesthomespread = b;
     }
 
-    public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, java.sql.Timestamp ts, boolean isopener) {
+    public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, Timestamp ts, boolean isopener) {
 
         if (visitjuice != 0) {
             this.setCurrentvisitspread(visitspread);
@@ -242,11 +237,6 @@ public class Spreadline extends Line {
         setPriorhomejuice(getCurrenthomejuice());
         this.currenthomejuice = currenthomejuice;
     }
-
-    public java.sql.Timestamp getCurrentts() {
-        return currentts;
-    }
-
     public double getCurrenthomespread() {
         return currenthomespread;
     }
@@ -256,10 +246,7 @@ public class Spreadline extends Line {
         this.currenthomespread = currenthomespread;
     }
 
-    public void setCurrentts(java.sql.Timestamp currentts) {
-        setPriorts(getCurrentts());
-        this.currentts = currentts;
-    }
+
 
     public void setPriorhomejuice(double priorhomejuice) {
         this.priorhomejuice = priorhomejuice;
@@ -469,16 +456,6 @@ public class Spreadline extends Line {
     public String getOtherPrintedOpenerSpread() {
         return getOtherPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
     }
-
-    public java.sql.Timestamp getPriorts() {
-
-        return priorts;
-    }
-
-    public void setPriorts(java.sql.Timestamp priorts) {
-        this.priorts = priorts;
-    }
-
     public double getPriorhomespread() {
         return priorhomespread;
     }
@@ -487,13 +464,7 @@ public class Spreadline extends Line {
         this.priorhomespread = priorhomespread;
     }
 
-    public java.sql.Timestamp getOpenerts() {
-        return openerts;
-    }
 
-    public void setOpenerts(java.sql.Timestamp openerts) {
-        this.openerts = openerts;
-    }
 
     public double getOpenervisitspread() {
         return openervisitspread;

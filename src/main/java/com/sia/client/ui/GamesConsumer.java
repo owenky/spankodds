@@ -1,10 +1,14 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Sport;
+import com.sia.client.simulator.GameMessageSimulator;
+import com.sia.client.simulator.InitialGameMessages;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -24,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.log;
 
@@ -31,8 +36,9 @@ public class GamesConsumer implements MessageListener {
 
     private transient Connection connection;
     private transient Session session;
-    private TextMessage textMessage;
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("GamesConsumer",2000L,1500L);
+    //TODO set toSimulateMQ to false for production
+    private static boolean toSimulateMQ = false;
+    private final AtomicBoolean simulateStatus = new AtomicBoolean(false);
 
     public GamesConsumer(ActiveMQConnectionFactory factory, Connection connection, String gamesconsumerqueue) throws JMSException {
 
@@ -61,15 +67,25 @@ public class GamesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        Utils.ensureNotEdtThread();
-        processMessage(message);
+        synchronized (SiaConst.GameLock) {
+            if (!InitialGameMessages.getMessagesFromLog) {
+                if (toSimulateMQ) {
+                    if (simulateStatus.compareAndSet(false, true)) {
+                        new GameMessageSimulator(this).start();
+                    }
+
+                } else {
+                    Utils.ensureNotEdtThread();
+                    OngoingGameMessages.addMessage(MessageType.Game, message);
+                    processMessage((TextMessage)message);
+                }
+            }
+        }
     }
-    private void processMessage(Message message) {
-        Utils.ensureNotEdtThread();
+    public void processMessage(TextMessage textMessage) {
         try {
             boolean repaint = true;
-            String leagueid = "";
-            textMessage = (TextMessage) message;
+            String leagueid;
             String messagetype = textMessage.getStringProperty("messageType");
             String repaintstr = textMessage.getStringProperty("repaint");
             leagueid = textMessage.getStringProperty("leagueid");
@@ -164,7 +180,7 @@ public class GamesConsumer implements MessageListener {
                 g.setTimeremaining(timeremaining);
 
                 AppController.addGame(g, repaint);
-                Sport s = AppController.getSport(g.getLeague_id());
+                Sport s = AppController.getSportByLeagueId(g.getLeague_id());
 
 
                 boolean seriesprice = false;
@@ -308,7 +324,7 @@ public class GamesConsumer implements MessageListener {
             {
 
                 String data = textMessage.getText();
-                log("new game! " + data);
+//                log("new game! " + data);
                 String items[] = data.split("~");
                 int x = 0;
                 String eventnumber = items[x++];

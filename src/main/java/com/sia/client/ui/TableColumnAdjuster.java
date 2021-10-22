@@ -15,8 +15,6 @@ import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.sia.client.config.Utils.log;
-
 /*
  *	Class to manage the widths of colunmns in a table.
  *
@@ -341,8 +339,8 @@ public class TableColumnAdjuster {
         public void finish() {
             long now = System.currentTimeMillis();
             if (adjustCount > 0) {
-                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
-                        + ", skipCount=" + skipCount + " ******ADJUST COUNT*******=" + adjustCount + ", TOTAL:" + totalCount);
+//                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
+//                        + ", skipCount=" + skipCount + " ******ADJUST COUNT*******=" + adjustCount + ", TOTAL:" + totalCount);
             } else {
 //                log("Apart from last call: " + ((now - lastTime) / 1000L) + " seconds, processing time=" + (now - begin) + " milliseconds, rowCount=" + rowCount
 //                        + " ALL SKIPPED, TOTAL:" + totalCount);

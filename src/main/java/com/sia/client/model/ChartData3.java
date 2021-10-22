@@ -2,7 +2,6 @@ package com.sia.client.model;
 
 import com.sia.client.ui.ChartView;
 
-import javax.swing.ImageIcon;
 import java.awt.Color;
 
 public class ChartData3 {
@@ -11,11 +10,11 @@ public class ChartData3 {
     public Color moneycolor = Color.WHITE;
     public Color awaycolor = Color.WHITE;
     public Color homecolor = Color.WHITE;
-    public ImageIcon spreadicon = ChartView.ICON_BLANK;
-    public ImageIcon totalicon = ChartView.ICON_BLANK;
-    public ImageIcon moneyicon = ChartView.ICON_BLANK;
-    public ImageIcon awayicon = ChartView.ICON_BLANK;
-    public ImageIcon homeicon = ChartView.ICON_BLANK;
+    public String spreadicon = ChartView.ICON_BLANK;
+    public String totalicon = ChartView.ICON_BLANK;
+    public String moneyicon = ChartView.ICON_BLANK;
+    public String awayicon = ChartView.ICON_BLANK;
+    public String homeicon = ChartView.ICON_BLANK;
     public int gn;
     public int p;
     public int DS;

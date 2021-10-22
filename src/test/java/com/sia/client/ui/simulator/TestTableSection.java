@@ -13,21 +13,23 @@ public class TestTableSection extends TableSection<TestGame> {
     public static final String TestGroupGameHeaderPrefix = "TEST GAME ";
     private static int instanceCount = 0;
 
-    public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed,int rowCount,int tableIndex) {
+    public static TestTableSection createTestTableSection(TestGameCache testGameCache, final int idSeed, int rowCount, int tableIndex) {
 
         List<TestGame> gameVec = new ArrayList<>();
-        for(int rowIndex=0;rowIndex<rowCount;rowIndex++) {
-            TestGame tg = testGameCache.makeTestGame(1000*tableIndex+idSeed*100+rowIndex);
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            TestGame tg = testGameCache.makeTestGame(1000 * tableIndex + idSeed * 100 + rowIndex);
             gameVec.add(tg);
         }
-        TestTableSection testTableSection = new TestTableSection(TestGroupGameHeaderPrefix+idSeed,testGameCache,true,gameVec);
-        int sectionRowHeight = 0 == (instanceCount++)%2? SiaConst.NormalRowheight:SiaConst.SoccerRowheight;
+        TestTableSection testTableSection = new TestTableSection(TestGroupGameHeaderPrefix + idSeed, testGameCache, true, gameVec);
+        int sectionRowHeight = 0 == (instanceCount++) % 2 ? SiaConst.NormalRowheight : SiaConst.SoccerRowheight;
         testTableSection.setRowHeight(sectionRowHeight);
         return testTableSection;
     }
-    public TestTableSection(String groupHeader,TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
-        super(groupHeader,gameCache, toAddBlankGameId, gameVec);
+
+    public TestTableSection(String groupHeader, TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
+        super(groupHeader, gameCache, toAddBlankGameId, gameVec);
     }
+
     @Override
     protected void prepareLineGamesForTableModel(final LineGames<TestGame> gamesVec) {
         gamesVec.sort(Comparator.comparingInt(TestGame::getGame_id));
@@ -35,8 +37,15 @@ public class TestTableSection extends TableSection<TestGame> {
 
     @Override
     protected List<Object> makeRowData(final TestGame game) {
-       return game.getRowData();
+        int gameid = game.getGame_id();
+        if (SiaConst.BlankGameId == gameid) {
+            List<Object> rtn = new ArrayList<>(game.colCount);
+            for (int i=0;i<game.colCount;i++) {
+                rtn.add(this.getGameGroupHeader());
+            }
+            return rtn;
+        } else {
+            return game.getRowData();
+        }
     }
-
-
 }

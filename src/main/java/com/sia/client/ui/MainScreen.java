@@ -1,14 +1,22 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
 import com.sia.client.model.GameNumSorter;
+import com.sia.client.model.GameStatus;
 import com.sia.client.model.Games;
+import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
+import com.sia.client.simulator.InitialGameMessages;
+import com.sia.client.simulator.MainScreenRefresh;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.TestExecutor;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -16,32 +24,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
-import javax.swing.Timer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
+import static java.lang.Boolean.parseBoolean;
 
 public class MainScreen extends JPanel implements AbstractScreen<Game> {
-//    public Vector datamodelsvec = new Vector();
-    public Timer timer;
-    public int timer2count = 0;
+
     public int currentmaxlength = 0;
     public boolean timesort = false;
     public boolean shortteam = false;
@@ -61,41 +63,50 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private Vector ingamegames = new Vector();
     private Vector seriesgamessoccer = new Vector();
     private Vector ingamegamessoccer = new Vector();
-    public SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    public SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+    private final SportType sportType;
     public long cleartime;
     public boolean showheaders = true;
-    public boolean showseries = true;
-    public boolean showingame = true;
     public boolean showadded = true;
     public boolean showextra = true;
     public boolean showprops = true;
     public Vector customheaders = new Vector();
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
+    private static final AtomicBoolean testStatus = new AtomicBoolean(false);
+    private static final Map<String,MainScreen> mainScreenMap = new HashMap<>();
 
-    public MainScreen(String name) {
-        cleartime = new java.util.Date().getTime();
-        setName(name);
+    public static MainScreen findMainScreen(String name) {
+        return mainScreenMap.get(name);
     }
-
-    public MainScreen(String name, Vector customheaders) {
-        this(name);
+    public MainScreen(SportType sportType) {
+        cleartime = new java.util.Date().getTime();
+        this.sportType = sportType;
+        final String name = sportType.getSportName();
+        setName(name);
+        mainScreenMap.put(name,this);
+    }
+    public MainScreen(SportType sportType, Vector customheaders) {
+        this(sportType);
         this.customheaders = customheaders;
     }
 
-    public MainScreen(String name, Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
-        this(name);
+    public MainScreen(SportType sportType,Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+        this(sportType);
         this.customheaders = customheaders;
         this.showheaders = showheaders;
-        this.showseries = showseries;
-        this.showingame = showingame;
+        sportType.setShowseries(showseries);
+        sportType.setShowingame(showingame);
         this.showadded = showadded;
         this.showextra = showextra;
         this.showprops = showprops;
     }
     public MainGameTableModel getDataModels() {
         return getColumnCustomizableTable().getModel();
+    }
+    public SportType getSportType() {
+        return this.sportType;
     }
     public void setClearTime(long clear) {
         cleartime = clear;
@@ -106,27 +117,32 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getDataModels().clearColors();
     }
 
-    public void clearTable() {
-        mainGameTable = createMainGameTable();
-    }
     public Game removeGame(int gameid,boolean repaint) {
         return getDataModels().removeGame(gameid,repaint);
     }
-    public void addGame(Game g, boolean repaint) { // only gets called when adding new game into system
+    public void addGame(Game g, boolean repaint,Runnable callBackOnNotFound) { // only gets called when adding new game into system
         if ( null != mainGameTable) {
-            int leagueid = g.getLeague_id();
-            if (leagueid == SiaConst.SoccerLeagueId) {
-                leagueid = g.getSubleague_id();
+            String gameGroupHeader;
+            GameStatus gameStatus = GameStatus.find(g.getStatus());
+            if ( null == gameStatus) {
+                gameGroupHeader = GameUtils.getGameGroupHeader(g);
+            } else {
+                gameGroupHeader= gameStatus.getGroupHeader();
             }
-            String title = AppController.getSport(leagueid).getLeaguename() + " " + sdf2.format(g.getGamedate());
-            getColumnCustomizableTable().getModel().addGameToGameGroup(title, g, repaint);
+            getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, repaint, callBackOnNotFound);
         }
     }
+    @Override
+    public boolean shouldAddToScreen(Game g){
 
+        if ( ! this.isShowing()) {
+            return false;
+        }
+        return this.sportType.shouldSelect(g);
+    }
     public void moveGameToThisHeader(Game g, String header) {
         getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);
     }
-
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
         setLayout(new BorderLayout(0, 0));
         // add progress
@@ -140,6 +156,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.shortteam = shortteam;
         this.opener = opener;
         this.last = last;
+        createData();
+
+    }
+    public void createData() {
         Vector gamegroupvec = new Vector();
         Vector gamegroupheadervec = new Vector();
         Vector gamegroupLeagueIDvec = new Vector();
@@ -162,360 +182,225 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 //            Collections.sort(allgamesforpref, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
 //            Collections.sort(allgamesforpref, new GameDateSorter());
 
-        }
-        catch (Exception ex) {
-            System.out.println("exception sorting " + ex);
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            log("exception sorting " + ex);
+            log(ex);
         }
 
         String name = getName();
+        boolean all = false;
+        String[] tmp = {};
         if (name.equalsIgnoreCase("football")) {
-            boolean all = false;
             String footballpref = AppController.getUser().getFootballPref();
             prefs = footballpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String[] tmp = {};
+
             try {
                 if (prefs.length > 2) {
                     tmp = prefs[2].split(",");
                     if (tmp[0].equalsIgnoreCase("football")) {
                         all = true;
                     }
-                    this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                    this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                    this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                    this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                    this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                    this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
-
+                    setShowProperties(prefs);
                 }
 
             } catch (Exception ex) {
                 log(ex);
             }
-
-
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ( sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
 
             }
         } else if (name.equalsIgnoreCase("basketball")) {
-
-            boolean all = false;
             String basketballpref = AppController.getUser().getBasketballPref();
             prefs = basketballpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-
-            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("basketball")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                this.setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                Game tempGame = allgamesforpref.getByIndex(z);
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
             }
         } else if (name.equalsIgnoreCase("baseball")) {
-
-            boolean all = false;
             String baseballpref = AppController.getUser().getBaseballPref();
             prefs = baseballpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("baseball")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
             }
             log("size of all ames="+allgames.size());
         } else if (name.equalsIgnoreCase("hockey")) {
-            boolean all = false;
             String hockeypref = AppController.getUser().getHockeyPref();
             prefs = hockeypref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("hockey")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                Game tempGame = allgamesforpref.getByIndex(z);
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
             }
         } else if (name.equalsIgnoreCase("fighting")) {
-            boolean all = false;
             String fightingpref = AppController.getUser().getFightingPref();
             prefs = fightingpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("fighting")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+               setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = (Game) allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                Game tempGame = allgamesforpref.getByIndex(z);
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
             }
         } else if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
-            boolean all = false;
             String soccerpref = AppController.getUser().getSoccerPref();
             prefs = soccerpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+               setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
             }
         } else if (name.equalsIgnoreCase("auto racing")) {
-            boolean all = false;
             String autoracingpref = AppController.getUser().getAutoracingPref();
             prefs = autoracingpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("auto racing")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
             }
         } else if (name.equalsIgnoreCase("golf")) {
-            boolean all = false;
             String golfpref = AppController.getUser().getGolfPref();
             prefs = golfpref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String tmp[] = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("golf")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+               setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if (sportType.shouldSelect(tempGame)) {
                     //	System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                setShowProperties(prefs);
 
             }
         } else if (name.equalsIgnoreCase("tennis")) {
-            boolean all = false;
             String tennispref = AppController.getUser().getTennisPref();
             prefs = tennispref.split("\\|");
-            int comingdays = Integer.parseInt(prefs[1]);
-            if (Boolean.parseBoolean(prefs[0])) {
+            sportType.setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
                 this.timesort = true;
             }
-            String[] tmp = {};
             if (prefs.length > 2) {
                 tmp = prefs[2].split(",");
                 if (tmp[0].equalsIgnoreCase("tennis")) {
                     all = true;
                 }
-                this.showheaders = (Boolean.parseBoolean(prefs[3]) ? true : false);
-                this.showseries = (Boolean.parseBoolean(prefs[4]) ? true : false);
-                this.showingame = (Boolean.parseBoolean(prefs[5]) ? true : false);
-                this.showadded = (Boolean.parseBoolean(prefs[6]) ? true : false);
-                this.showextra = (Boolean.parseBoolean(prefs[7]) ? true : false);
-                this.showprops = (Boolean.parseBoolean(prefs[8]) ? true : false);
+                setShowProperties(prefs);
             }
 
-            Set<String> set = new HashSet<>(Arrays.asList(tmp));
+            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                int LID = tempGame.getLeague_id();
-                Date gmDate = tempGame.getGamedate();
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, comingdays);
-                Date x = c.getTime();
-
-                if ((set.contains(LID + "") || all) && gmDate.before(x)) {
+                if ( sportType.shouldSelect(tempGame) ) {
                     //System.out.println("yes"+set+"---");
                     allgames.add(tempGame);
                 }
@@ -523,6 +408,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             }
         } else {
             allgames = allgamesforpref;
+            sportType.setComingDays(-1);
+            sportType.setLeagueFilter(null);
         }
 
         java.util.Date today = new java.util.Date();
@@ -555,16 +442,15 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             String gamedate = sdf.format(g.getGamedate());
             String todaysgames = sdf.format(today);
             int leagueid = g.getLeague_id();
-            Sport s = AppController.getSport(leagueid);
+            Sport s = AppController.getSportByLeagueId(leagueid);
 
-            Sport s2;
             if (s == null) {
                 log("skipping " + leagueid + "...cuz of null sport");
                 continue;
             }
             if (customheaders.size() > 0 || s.getSportname().equalsIgnoreCase(name) || (name.equalsIgnoreCase("Today") && gamedate.compareTo(todaysgames) <= 0)) {
 
-
+                Sport s2;
                 if (shortteam) {
                     maxlength = calcmaxlength(g.getShortvisitorteam(), g.getShorthometeam());
 
@@ -579,7 +465,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-                    s2 = AppController.getSport(leagueid);
+                    s2 = AppController.getSportByLeagueId(leagueid);
                     if ( null == s2) {
                         log(new Exception("Can't find sport for leagueid "+leagueid));
                         continue;
@@ -620,20 +506,15 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
                 int id = s.getParentleague_id();
 
-                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase("Final")
-                        || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
-
-                ) {
-
-
+                if ( g.isInFinal() ) {
                     if (id == SiaConst.SoccerLeagueId) {
                         finalgamessoccer.add(g);
                     } else {
                         finalgames.add(g);
                     }
 
-                } else if (!g.getStatus().equalsIgnoreCase("NULL") && !g.getStatus().equals("")) {
-                    if (g.getStatus().equalsIgnoreCase("Time")) {
+                } else if (g.isHalfTime() || g.isInProgress() ) {
+                    if (g.isHalfTime()) {
                         if (id == SiaConst.SoccerLeagueId) {
                             halftimegamessoccer.add(g);
                         } else {
@@ -657,7 +538,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     }
 
 
-                } else if ((g.isIngame() || description.indexOf("In-Game") != -1)) {
+                } else if (g.isInGame2() ) {
                     if (id == SiaConst.SoccerLeagueId) {
                         ingamegamessoccer.add(g);
                     } else {
@@ -692,96 +573,93 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     currentvec.add(g);
 
                 }
-
             }
-
-
         }
 
-        if (seriesgames.size() > 0 && isShowSeries()) {
-            gamegroupheadervec.add("Series Prices");
+        if (seriesgames.size() > 0 && sportType.isShowseries()) {
+            gamegroupheadervec.add(SiaConst.SeriesPricesStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(seriesgames);
         }
-        if (seriesgamessoccer.size() > 0 && isShowSeries()) {
-            gamegroupheadervec.add("Soccer Series Prices");
+        if (seriesgamessoccer.size() > 0 && sportType.isShowseries()) {
+            gamegroupheadervec.add(SiaConst.SoccerSeriesPricesStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(seriesgamessoccer);
         }
 
 
         if (ingamegames.size() > 0 && isShowIngame()) {
-            gamegroupheadervec.add("In Game Prices");
+            gamegroupheadervec.add(SiaConst.InGamePricesStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(ingamegames);
         }
 
         if (ingamegamessoccer.size() > 0 && isShowIngame()) {
-            gamegroupheadervec.add("Soccer  In Game Prices");
+            gamegroupheadervec.add(SiaConst.SoccerInGamePricesStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(ingamegamessoccer);
         }
 
 
         if (inprogressgames.size() > 0) {
-            gamegroupheadervec.add("In Progress");
+            gamegroupheadervec.add(SiaConst.InProgresStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(inprogressgames);
         } else {
-            gamegroupheadervec.add("In Progress");
+            gamegroupheadervec.add(SiaConst.InProgresStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(new Vector());
         }
 
         if (inprogressgamessoccer.size() > 0) {
-            gamegroupheadervec.add("Soccer In Progress");
+            gamegroupheadervec.add(SiaConst.SoccerInProgressStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(inprogressgamessoccer);
         } else {
-            gamegroupheadervec.add("Soccer In Progress");
+            gamegroupheadervec.add(SiaConst.SoccerInProgressStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
 
         if (finalgames.size() > 0) {
-            gamegroupheadervec.add("FINAL");
+            gamegroupheadervec.add(SiaConst.FinalStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(finalgames);
         } else {
-            gamegroupheadervec.add("FINAL");
+            gamegroupheadervec.add(SiaConst.FinalStr);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(new Vector());
         }
 
 
         if (finalgamessoccer.size() > 0) {
-            gamegroupheadervec.add("Soccer FINAL");
+            gamegroupheadervec.add(SiaConst.SoccerInFinalStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(finalgamessoccer);
         } else {
-            gamegroupheadervec.add("Soccer FINAL");
+            gamegroupheadervec.add(SiaConst.SoccerInFinalStr);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
 
         if (halftimegames.size() > 0) {
-            gamegroupheadervec.insertElementAt("Halftime", 0);
+            gamegroupheadervec.insertElementAt(SiaConst.HalfTimeStr, 0);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.insertElementAt(halftimegames, 0);
         } else {
-            gamegroupheadervec.insertElementAt("Halftime", 0);
+            gamegroupheadervec.insertElementAt(SiaConst.HalfTimeStr, 0);
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.insertElementAt(new Vector(), 0);
         }
 
         if (halftimegamessoccer.size() > 0) {
-            gamegroupheadervec.insertElementAt("Soccer Halftime", 1);
+            gamegroupheadervec.insertElementAt(SiaConst.SoccerHalfTimeStr, 1);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.insertElementAt(halftimegamessoccer, 1);
         } else {
-            gamegroupheadervec.insertElementAt("Soccer Halftime", 1);
+            gamegroupheadervec.insertElementAt(SiaConst.SoccerHalfTimeStr, 1);
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.insertElementAt(new Vector(), 1);
         }
@@ -800,24 +678,15 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             log("done drawing");
         });
 
-        timer = new Timer(1000, new ActionListener() { //Change parameters to your needs.
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    firedatamodels();
-
-                } catch (Exception ex) {
-                    log(ex);
-                }
-
-            }
-        });
-
-        //TODO disable firedatamodels
-//        timer.start();
-//        log("timer start");
-        //END of debug TODO
     }
-
+    private void setShowProperties(String [] prefs) {
+        this.showheaders = (parseBoolean(prefs[3]));
+        sportType.setShowseries(parseBoolean(prefs[4]));
+        sportType.setShowingame(parseBoolean(prefs[5]));
+        this.showadded = (parseBoolean(prefs[6]));
+        this.showextra = (parseBoolean(prefs[7]));
+        this.showprops = (parseBoolean(prefs[8]));
+    }
     public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
 
         if (customheaders.size() == 0) {
@@ -838,7 +707,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 }
 
                 int leagueid = g.getLeague_id();
-                Sport s = AppController.getSport(leagueid);
+                Sport s = AppController.getSportByLeagueId(leagueid);
 
                 Sport s2;
                 if (s == null) {
@@ -847,7 +716,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
                 {
                     leagueid = g.getSubleague_id();
-                    s2 = AppController.getSport(leagueid);
+                    s2 = AppController.getSportByLeagueId(leagueid);
                 } else {
                     s2 = s;
                 }
@@ -868,11 +737,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     public int calcmaxlength(String s1, String s2) {
-        if (s1.length() > s2.length()) {
-            return s1.length();
-        } else {
-            return s2.length();
-        }
+        return Math.max(s1.length(), s2.length());
     }
 
     public boolean isShowAdded() {
@@ -899,20 +764,16 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         showprops = b;
     }
 
-    public boolean isShowSeries() {
-        return showseries;
-    }
-
     public void setShowSeries(boolean b) {
-        showseries = b;
+        sportType.setShowseries(b);
     }
 
     public boolean isShowIngame() {
-        return showingame;
+        return sportType.isShowingame();
     }
 
     public void setShowIngame(boolean b) {
-        showingame = b;
+        sportType.setShowingame(b);
     }
     public void drawIt() {
 
@@ -968,120 +829,31 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             }
             allColumns.add(column);
         }
-
-        // here i'm adding a blank column
-        TableColumn blankcol = new TableColumn(newBookiesVec.size(), 10, null, null);
-        blankcol.setHeaderValue("");
-        blankcol.setIdentifier("9999999");
-
-        blankcol.setMaxWidth(30);
-        blankcol.setPreferredWidth(30);
-
         log("gamergroup headers start..." + new java.util.Date());
 
-        Vector oldgamegroupvec = new Vector();
+        Map<String,LinesTableData> headerMap = new HashMap<>();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
-            boolean showit = true;
-            Vector newgamegroupvec = (Vector) vecofgamegroups.get(j);
-            if ((newgamegroupvec == null || newgamegroupvec.size() == 0))// && !gamegroupheaders.get(j).equals("FINAL")) dont show header if its blank! however must show final for scrollpane purposes
-            {
-                showit = false;
-            }
-
-
-            String gameGroupHeader = gamegroupheaders.get(j);
-            JLabel label = new JLabel("                                                                                                                                                      " +
-                    gamegroupheaders.get(j) +
-                    "                                                                                                                                                      " +
-                    "                                                                                                                                                      " +
-                    "                                                                                                                                                      " +
-                    "                                                                                                                                                      ");
-
-
-            String name = getName();
-            if ((gamegroupheaders.get(j)).contains(SiaConst.SoccerStr)) {
-
-                if (name.equalsIgnoreCase(SiaConst.SoccerStr) || (oldgamegroupvec.size() == 0)) {
-                    String orginal = gamegroupheaders.get(j);
-                    String nameWithoutSoccer = orginal.replace(SiaConst.SoccerStr, "");
-                    label.setText("                                                                                                                                                      " +
-
-                            nameWithoutSoccer +
-                            "                                                                                                                                                      " +
-                            "                                                                                                                                                      " +
-                            "                                                                                                                                                      " +
-                            "                                                                                                                                                      ");
-
-                    gameGroupHeader = nameWithoutSoccer;
+            Vector<Game> newgamegroupvec = (Vector<Game>) vecofgamegroups.get(j);
+            String gameGroupHeader = GameUtils.normalizeGameHeader(gamegroupheaders.get(j));
+            if ( null !=  gameGroupHeader || ( null != newgamegroupvec && 0 < newgamegroupvec.size())) {
+                LinesTableData tableSection;
+                tableSection = headerMap.get(gameGroupHeader);
+                if ( null == tableSection) {
+                    tableSection = createLinesTableData(newgamegroupvec, gameGroupHeader);
+                    mainGameTable.addGameLine(tableSection);
+                    headerMap.put(gameGroupHeader,tableSection);
                 } else {
-                    showit = false;
+                    tableSection.addAllGames(newgamegroupvec);
                 }
             }
-            label.setOpaque(true);
-            label.setBackground(new Color(0, 0, 128));
-            label.setForeground(Color.WHITE);
-            if (j == vecofgamegroups.size() - 1) // last group
-            {
-
-//                scrollPanex.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//                lastScrollPane = scrollPanex;
-
-
-//                JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, true);
-                //fixedx.setColumnAutoResizable(true);
-//                fixedx.setColumnModel(fixed0.getColumnModel());
-                //fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-
-//                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-//                    fixedx.setRowHeight(60);
-//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
-//                } else {
-//                    fixedx.setRowHeight(30);
-//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-//                }
-//                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-//                scrollPanex.setRowHeaderView(fixedx);
-
-            } else {
-//                scrollPanex.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0));
-//
-//                JTable fixedx = makeFixedRowHeader(AppController.getNumFixedCols(), tablex, false);
-//                fixedx.setColumnModel(fixed0.getColumnModel());
-//
-//                if ((gamegroupheaders.get(j) + "").contains(SiaConst.SoccerStr) || (LID == 9)) {
-//                    fixedx.setRowHeight(60);
-//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer(SiaConst.SoccerStr.toLowerCase()));
-//                } else {
-//                    fixedx.setRowHeight(30);
-//                    fixedx.setDefaultRenderer(Object.class, new LineRenderer());
-//                }
-//
-//                fixedx.setPreferredScrollableViewportSize(fixedx.getPreferredSize());
-//                scrollPanex.setRowHeaderView(fixedx);
-            }
-            boolean toShowHeader = false;
-            if (isShowHeaders()) {
-                if (showit) {
-                    tablePanel.add(label);
-                    toShowHeader = true;
-                }
-            }
-            //TODO add tablemodel to MainGameTable
-            if ( ! toShowHeader ) {
-                gameGroupHeader = null;
-            }
-            LinesTableData tableSection = new LinesTableData(display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last,gameGroupHeader,allColumns);
-            int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
-            tableSection.setRowHeight(tableSectionRowHeight);
-            mainGameTable.addGameLine(tableSection);
-            oldgamegroupvec = newgamegroupvec;
         }
         MainGameTableModel model = mainGameTable.getModel();
+        if ( sportType.isPredifined()) {
+            int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
+            addHalfTimeWhenAbsent(rowHeight, model);
+        }
         model.buildIndexMappingCache();
-        log("gamergroup headers end..." + new java.util.Date());
-        log("hidden end..." + new java.util.Date());
         JScrollPane scrollPane = new JScrollPane(tablePanel);
-//        scrollPane.getVerticalScrollBar().setUnitIncrement(29); // 29 has nothing to do with rowheight
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
@@ -1089,19 +861,39 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         revalidate();
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
-//        mainGameTable.configHeaderRow();
         AppController.addDataModels(getDataModels());
-    }
+        if (InitialGameMessages.shouldRunMainScreenTest) {
+            if ( ! testStatus.get()) {
+                TestExecutor testExecutor;
+//                testExecutor= new MoveToFinal(model);
+//                testExecutor = new ScoreChangeProcessorTest(null);
+                testExecutor = new MainScreenRefresh(this);
+                if ( testExecutor.isValid()) {
+                    testStatus.set(true);
+                    testExecutor.start();
+                }
 
-    public void firedatamodels() {
-        log(new Exception("disable firedatamodels"));
-        //TODO disable
-        /**
-        for (int i = 0; i < datamodelsvec.size(); i++) {
-            LinesTableData ltd = (LinesTableData) datamodelsvec.get(i);
-            ltd.fire();
+            }
         }
-         */
+        if (InitialGameMessages.getMessagesFromLog) {
+            Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
+        }
+    }
+    public boolean isPreDefinedSport() {
+        return this.sportType.isPredifined();
+    }
+    private void addHalfTimeWhenAbsent(int rowHeight,MainGameTableModel model) {
+        if ( ! model.containsGroupHeader(SiaConst.HalfTimeStr) ) {
+            LinesTableData tableSection = createLinesTableData(new Vector(),SiaConst.HalfTimeStr);
+            tableSection.setRowHeight(rowHeight);
+            mainGameTable.addGameLine(0,tableSection);
+        }
+    }
+    private LinesTableData createLinesTableData(Vector newgamegroupvec,String gameGroupHeader) {
+        LinesTableData tableSection = new LinesTableData(sportType,display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
+        int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
+        tableSection.setRowHeight(tableSectionRowHeight);
+        return tableSection;
     }
     public boolean isShowHeaders() {
         return showheaders;
@@ -1136,14 +928,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         seriesgamessoccer.clear();
         ingamegamessoccer.clear();
         removeAll();
-
-        if (timer != null) {
-            timer.stop();
-        }
         log("destroyed mainscreen!!!!");
     }
     private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(allColumns));
+        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(sportType,allColumns));
         mainGameTable.setIntercellSpacing(new Dimension(4,2));
         mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
