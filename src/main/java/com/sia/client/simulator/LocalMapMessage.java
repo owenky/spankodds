@@ -51,7 +51,7 @@ public class LocalMapMessage implements MapMessage {
     public long getLong(final String s) throws JMSException {
         String value = content.get(s);
         if ( null == value) {
-            throw new JMSException("Can't parse null value");
+            return 0L;
         } else {
             return Long.parseLong(value);
         }
@@ -68,10 +68,10 @@ public class LocalMapMessage implements MapMessage {
     }
 
     @Override
-    public double getDouble(final String s) throws JMSException {
+    public double getDouble(final String s) {
         String value = content.get(s);
         if ( null == value) {
-            throw new JMSException("Can't parse null value");
+            return 0;
         } else {
             return Double.parseDouble(value);
         }
@@ -174,7 +174,7 @@ public class LocalMapMessage implements MapMessage {
 
     @Override
     public long getJMSTimestamp() throws JMSException {
-        return 0;
+        return System.currentTimeMillis();
     }
 
     @Override

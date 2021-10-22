@@ -17,7 +17,6 @@ public abstract class ScoreChangedProcessor {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
             log("game "+ GameUtils.getGameDebugInfo(g)+" is about to move from "+g.getStatus()+" to "+gameStatus.name());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
-
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
             String[] arr  = finalprefs.split("\\|");
             boolean popup = false;
