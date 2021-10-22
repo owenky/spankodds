@@ -95,7 +95,7 @@ public class SpankOdds {
                 log("data:"+new java.util.Date());
                 try {
                     //Platform.runLater(new Runnable() { @Override public void run() {lbllogin.setText("Processing...");}});
-
+                    //
                     client.login(name, String.valueOf(password));
                     Thread.sleep(1000);
 
