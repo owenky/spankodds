@@ -109,16 +109,19 @@ public class Moneyline extends Line implements Serializable {
 
     public String recordMove(double visitjuice, double homejuice, double drawjuice, Timestamp ts, boolean isopener) {
 
-        if (visitjuice != 0) {
+       // if (visitjuice != 0)
+      //  {
             this.setCurrentvisitjuice(visitjuice);
             this.setCurrentts(ts);
 
-            if (isopener) {
+            if (isopener)
+            {
                 this.setOpenervisitjuice(visitjuice);
                 this.setOpenerts(ts);
             }
-        }
-        if (homejuice != 0) {
+      //  }
+      //  if (homejuice != 0)
+      //  {
             this.setCurrenthomejuice(homejuice);
             this.setCurrentts(ts);
 
@@ -126,7 +129,7 @@ public class Moneyline extends Line implements Serializable {
                 this.setOpenerhomejuice(homejuice);
                 this.setOpenerts(ts);
             }
-        }
+       // }
         if (drawjuice != 0) {
             this.setCurrentdrawjuice(drawjuice);
             this.setCurrentts(ts);

@@ -140,29 +140,38 @@ public class Spreadline extends Line {
     }
 
     public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, Timestamp ts, boolean isopener) {
+        if(bookieid==880 & gameid == 345)
+        {
+         //   System.out.println("BAX TEST "+visitspread+".."+visitjuice+".."+homespread+".."+homejuice+".."+isopener);
 
-        if (visitjuice != 0) {
+        }
+
+       // if (visitjuice != 0)
+        //{
             this.setCurrentvisitspread(visitspread);
             this.setCurrentvisitjuice(visitjuice);
             this.setCurrentts(ts);
 
-            if (isopener) {
+            if (isopener)
+            {
                 this.setOpenervisitspread(visitspread);
                 this.setOpenervisitjuice(visitjuice);
                 this.setOpenerts(ts);
             }
-        }
-        if (homejuice != 0) {
+       // }
+      //  if (homejuice != 0)
+       // {
             this.setCurrenthomespread(homespread);
             this.setCurrenthomejuice(homejuice);
             this.setCurrentts(ts);
 
-            if (isopener) {
+            if (isopener)
+            {
                 this.setOpenerhomespread(homespread);
                 this.setOpenerhomejuice(homejuice);
                 this.setOpenerts(ts);
             }
-        }
+      //  }
         try {
             if (this.getPriorvisitspread() < this.getCurrentvisitspread()) // -6 to -5  5 to 6
             {
