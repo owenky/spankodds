@@ -313,6 +313,73 @@ public class LinesConsumer implements MessageListener {
 
                 // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
             }
+            else if ("LimitChange".equals(changetype)) {
+                int newlimit = 0;
+                int oldlimit = 0;
+                String linetype = "";
+
+                try {
+                    linetype = mapMessage.getString("linetype");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    newlimit = mapMessage.getInt("newlimit");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+
+                try {
+                    newlongts = mapMessage.getLong("newlongts");
+                    newlongts = newlongts + 1000 * 60 * 60 * 3;
+                } catch (Exception ex) {
+                    log(ex);
+                }
+
+                // owen put this in cuz db sending us garbage timestamps!!!
+                newlongts = mapMessage.getJMSTimestamp();
+
+                if(linetype.equalsIgnoreCase("Spread"))
+                {
+                    Spreadline sl = AppController.getSpreadline(bookieid, gameid, period);
+                    if(sl != null)
+                    {
+                        sl.setLimit(newlimit);
+                    }
+                }
+                else if(linetype.equalsIgnoreCase("Total"))
+                {
+                    Totalline tl = AppController.getTotalline(bookieid, gameid, period);
+                    if(tl != null)
+                    {
+                        tl.setLimit(newlimit);
+                    }
+                }
+                else if(linetype.equalsIgnoreCase("Moneyline"))
+                {
+                    Moneyline ml = AppController.getMoneyline(bookieid, gameid, period);
+                    if(ml != null)
+                    {
+                        ml.setLimit(newlimit);
+                    }
+                }
+                else if(linetype.equalsIgnoreCase("TeamTotal"))
+                {
+                    TeamTotalline ttl = AppController.getTeamTotalline(bookieid, gameid, period);
+                    if(ttl != null)
+                    {
+                        ttl.setLimit(newlimit);
+                    }
+                }
+
+
+
+
+
+
+
+                // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
+            }
             //com.sia.client.ui.AppController.getLinesTableData().fireTableDataChanged();
 
 
