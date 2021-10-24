@@ -45,7 +45,7 @@ public class SpreadTotalView extends ViewValue  {
     Color bottomcolor = Color.WHITE;
     private String topicon = ICON_BLANK;
     private String bottomicon = ICON_BLANK;
-    private Timestamp clearts;
+    private long clearts;
     int id;
     Bookie bookie;
     String topborder;
@@ -131,7 +131,7 @@ public class SpreadTotalView extends ViewValue  {
                 whowasbetspread = sl.getWhowasbet();
                 if ( shouldGoRed(sl) ) {
                     spreadcolor = Color.RED;
-                } else if (clearts.getTime() < sl.getCurrentts()) {
+                } else if (clearts < sl.getCurrentts()) {
                     spreadcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("S"+id);
@@ -158,7 +158,7 @@ public class SpreadTotalView extends ViewValue  {
                 whowasbettotal = tl.getWhowasbet();
                 if (shouldGoRed(tl)) {
                     totalcolor = Color.RED;
-                } else if (clearts.getTime() < tl.getCurrentts()) {
+                } else if (clearts < tl.getCurrentts()) {
                     totalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("T"+id);
@@ -183,7 +183,7 @@ public class SpreadTotalView extends ViewValue  {
 
                 if (shouldGoRed(ml)) {
                     moneycolor = Color.RED;
-                } else if (clearts.getTime() < ml.getCurrentts()) {
+                } else if (clearts < ml.getCurrentts()) {
                     moneycolor = Color.BLACK;
                 } else {
                     moneycolor = Color.WHITE;
@@ -207,7 +207,7 @@ public class SpreadTotalView extends ViewValue  {
                 whowasbetteamtotal = ttl.getWhowasbet();
                 if (shouldGoRed(ttl)) {
                     teamtotalcolor = Color.RED;
-                } else if (clearts.getTime() < ttl.getCurrentts()) {
+                } else if (clearts < ttl.getCurrentts()) {
                     teamtotalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("TT"+id);
@@ -1212,7 +1212,7 @@ public class SpreadTotalView extends ViewValue  {
         setClearts(cleartime);
     }
     private void setClearts(long clearTime) {
-        this.clearts = new Timestamp(clearTime);
+        this.clearts = clearTime;
     }
     public LineData[] getPriorBoxes() {
         if (isopenerbookie) {
@@ -1498,7 +1498,7 @@ public class SpreadTotalView extends ViewValue  {
     private boolean shouldGoRed(Line line) {
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
-        boolean isRed=(tsnow - curTime) <= 30000 && clearts.getTime() <= curTime;
+        boolean isRed=(tsnow - curTime) <= 30000 && clearts <= curTime;
         Game game = getGame();
         return isRed;
     }
