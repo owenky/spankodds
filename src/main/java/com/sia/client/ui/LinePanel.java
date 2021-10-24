@@ -117,13 +117,13 @@ public class LinePanel extends JPanel {
                 boxes = stv.getCurrentBoxes();
 
             }
-            String tooltip = stv.getToolTip();
-
-            if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
-                this.setToolTipText(tooltip);
-            } else {
-                this.setToolTipText(null);
-            }
+//            String tooltip = stv.getToolTip();
+//
+//            if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
+//                this.setToolTipText(tooltip);
+//            } else {
+//                this.setToolTipText(null);
+//            }
             setTop(table,boxes[0], row, col);
 
             setBottom(table,boxes[1], row, col);
@@ -437,12 +437,12 @@ public class LinePanel extends JPanel {
             }
 
 
-            String tooltip = stv.getToolTip();
-            if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
-                this.setToolTipText(tooltip);
-            } else {
-                this.setToolTipText(null);
-            }
+//            String tooltip = stv.getToolTip();
+//            if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
+//                this.setToolTipText(tooltip);
+//            } else {
+//                this.setToolTipText(null);
+//            }
 
             setTop(table,boxes[0], row, col);
             setBottom(table,boxes[1], row, col);
@@ -480,13 +480,13 @@ public class LinePanel extends JPanel {
 
 
         }
-
-        String tooltip = stv.getToolTip();
-        if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
-            this.setToolTipText(tooltip);
-        } else {
-            this.setToolTipText(null);
-        }
+//
+//        String tooltip = stv.getToolTip();
+//        if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
+//            this.setToolTipText(tooltip);
+//        } else {
+//            this.setToolTipText(null);
+//        }
     }
 
     private boolean isSoccer() {
