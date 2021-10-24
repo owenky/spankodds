@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnCustomizableDataModel.LtdSrhStruct;
 import com.sia.client.model.ColumnHeaderProperty;
@@ -12,6 +13,7 @@ import com.sun.javafx.collections.ImmutableObservableList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
@@ -22,6 +24,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +55,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         this.setAutoCreateColumnsFromModel(true);
         instanceIndex = instanceCounter.addAndGet(1);
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
+        ToolTipManager.sharedInstance().registerComponent(this);
+    }
+    @Override
+    public String getToolTipText(MouseEvent e) {
+       return Utils.getTableCellToolTipText(this,e);
     }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
@@ -292,12 +300,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             createUnlockedColumns();
         }
     }
-    public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
+    public void drawColumnHeaderOnViewIndex(int rowViewIndex, String columnHeaderValue){
         Component oldHeaderComp = this.oldHeaderMap.get(rowViewIndex);
         if ( null != oldHeaderComp) {
             this.remove(oldHeaderComp);
         }
-        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
+        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,columnHeaderValue);
         this.oldHeaderMap.put(rowViewIndex,currentComp);
     }
     public ColumnAdjusterManager getColumnAdjusterManager() {

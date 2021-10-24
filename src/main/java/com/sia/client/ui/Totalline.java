@@ -115,7 +115,8 @@ public class Totalline extends Line implements Serializable {
 
     public String recordMove(double over, double overjuice, double under, double underjuice, Timestamp ts, boolean isopener) {
 
-        if (overjuice != 0) {
+       // if (overjuice != 0)
+       // {
             this.setCurrentover(over);
             this.setCurrentoverjuice(overjuice);
             this.setCurrentts(ts);
@@ -126,8 +127,9 @@ public class Totalline extends Line implements Serializable {
                 this.setOpeneroverjuice(overjuice);
                 this.setOpenerts(ts);
             }
-        }
-        if (underjuice != 0) {
+       // }
+       // if (underjuice != 0)
+       // {
             this.setCurrentunder(under);
             this.setCurrentunderjuice(underjuice);
             this.setCurrentts(ts);
@@ -137,7 +139,7 @@ public class Totalline extends Line implements Serializable {
                 this.setOpenerunderjuice(underjuice);
                 this.setOpenerts(ts);
             }
-        }
+       // }
 
         try {
             if (this.getPriorover() < this.getCurrentover()) // 215 to 216

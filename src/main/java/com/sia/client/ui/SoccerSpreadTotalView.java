@@ -6,12 +6,15 @@ import com.sia.client.model.LineData;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
+import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.Random;
 
-public class SoccerSpreadTotalView {
+import static com.sia.client.config.Utils.log;
+
+public class SoccerSpreadTotalView extends ViewValue {
     public static String ICON_UP = ChartView.ICON_UP;
     public static String ICON_DOWN = ChartView.ICON_DOWN;
     public static String ICON_BLANK = "blank.gif";
@@ -60,7 +63,6 @@ public class SoccerSpreadTotalView {
     String bottomborder = "";
     String drawborder = "";
     String totalborder = "";
-    String tooltiptext;
     LinesTableData ltd;
     boolean showcomebacks = false;
 
@@ -755,7 +757,7 @@ public class SoccerSpreadTotalView {
 
         try {
             if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
-                tooltiptext = "<html><body>" +
+                setTooltiptext("<html><body>" +
                         "<table border=1>" +
                         "<tr>" +
                         "<td align='center'><b><u>" + bookie.getName() + "</u></b></td>" +
@@ -770,96 +772,81 @@ public class SoccerSpreadTotalView {
                         "</table></td>" +
 
                         "<td><table>" +
-                        "<tr>";
+                        "<tr>");
 
                 if (sl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(sl.getCurrentvisitspread() + "") + makeNullBlank(sl.getCurrentvisitjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getCurrentvisitspread() + "") + makeNullBlank(sl.getCurrentvisitjuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(ml.getCurrentvisitjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getCurrentvisitjuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>");
                 }
-                tooltiptext = tooltiptext + "</tr>" +
-                        "<tr>";
+                appendTooltipText("</tr><tr>");
 
                 if (sl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(sl.getCurrenthomespread() + "") + makeNullBlank(sl.getCurrenthomejuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getCurrenthomespread() + "") + makeNullBlank(sl.getCurrenthomejuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(ml.getCurrenthomejuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getCurrenthomejuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeUnderNullBlank(tl.getCurrentunder() + "") + makeNullBlank(tl.getCurrentunderjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getCurrentunder() + "") + makeNullBlank(tl.getCurrentunderjuice() + "") + "</td>");
                 }
 
 
-                tooltiptext = tooltiptext + "</tr>" +
-                        "</table></td>" +
+                appendTooltipText("</tr></table></td><td><table><tr>");
 
-
-                        "<td><table>" +
-                        "<tr>";
                 if (sl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(sl.getPriorvisitspread() + "") + makeNullBlank(sl.getPriorvisitjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getPriorvisitspread() + "") + makeNullBlank(sl.getPriorvisitjuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(ml.getPriorvisitjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getPriorvisitjuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeOverNullBlank(tl.getPriorover() + "") + makeNullBlank(tl.getPrioroverjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getPriorover() + "") + makeNullBlank(tl.getPrioroverjuice() + "") + "</td>");
                 }
 
-                tooltiptext = tooltiptext + "</tr>" +
-                        "<tr>";
+                appendTooltipText("</tr><tr>");
+
                 if (sl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(sl.getPriorhomespread() + "") + makeNullBlank(sl.getPriorhomejuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getPriorhomespread() + "") + makeNullBlank(sl.getPriorhomejuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(ml.getPriorhomejuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getPriorhomejuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeUnderNullBlank(tl.getPriorunder() + "") + makeNullBlank(tl.getPriorunderjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getPriorunder() + "") + makeNullBlank(tl.getPriorunderjuice() + "") + "</td>");
                 }
-                tooltiptext = tooltiptext + "</tr>" +
-                        "</table></td>" +
+                appendTooltipText("</tr></table></td><td><table><tr>");
 
-                        "<td><table>" +
-                        "<tr>";
                 if (sl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(sl.getOpenervisitspread() + "") + makeNullBlank(sl.getOpenervisitjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getOpenervisitspread() + "") + makeNullBlank(sl.getOpenervisitjuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(ml.getOpenervisitjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getOpenervisitjuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeOverNullBlank(tl.getOpenerover() + "") + makeNullBlank(tl.getOpeneroverjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getOpenerover() + "") + makeNullBlank(tl.getOpeneroverjuice() + "") + "</td>");
                 }
 
-                tooltiptext = tooltiptext + "</tr>" +
-
-                        "<tr>";
+                appendTooltipText("</tr><tr>");
                 if (sl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(sl.getOpenerhomespread() + "") + makeNullBlank(sl.getOpenerhomejuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getOpenerhomespread() + "") + makeNullBlank(sl.getOpenerhomejuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeNullBlank(ml.getOpenerhomejuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getOpenerhomejuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    tooltiptext = tooltiptext + "<td align='left' >" + makeUnderNullBlank(tl.getOpenerunder() + "") + makeNullBlank(tl.getOpenerunderjuice() + "") + "</td>";
+                    appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getOpenerunder() + "") + makeNullBlank(tl.getOpenerunderjuice() + "") + "</td>");
                 }
 
-                tooltiptext = tooltiptext + "</tr>" +
-                        "</table></td>" +
-                        "</tr>" +
-
-
-                        "</table></body></html>";
+                appendTooltipText("</tr></table></td></tr></table></body></html>");
 
             }
         } catch (Exception ex) {
-            System.out.println(ex + "err");
+            log(ex);
         }
         return boxes;
     }
@@ -1330,11 +1317,6 @@ public class SoccerSpreadTotalView {
 
         return boxes[0].getData();
     }
-
-    public String getToolTip() {
-        return tooltiptext;
-    }
-
     public void clearColors(long cleartime) {
         priorspreadcolor = Color.WHITE;
         priortotalcolor = Color.WHITE;

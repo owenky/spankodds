@@ -1,9 +1,12 @@
 package com.sia.client.config;
 
+import com.sia.client.model.ViewValue;
+
 import javax.jms.MapMessage;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -16,6 +19,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -293,5 +297,28 @@ public abstract class Utils {
     }
     public static boolean containsOnlyAlphanumeric(String str) {
         return str.matches("[0-9a-zA-Z]+");
+    }
+    public static String getTableCellToolTipText(JTable table, MouseEvent e) {
+        java.awt.Point p = e.getPoint();
+        int rowIndex = table.rowAtPoint(p);
+        int colIndex = table.columnAtPoint(p);
+
+        String toolTipTxt;
+        try {
+            Object value = table.getValueAt(rowIndex, colIndex);
+            if ( value instanceof ViewValue) {
+                toolTipTxt = ((ViewValue)value).getTooltiptext();
+                if ( "".equals(toolTipTxt) || "null".equalsIgnoreCase(toolTipTxt)) {
+                    toolTipTxt = null;
+                }
+            } else {
+                toolTipTxt = null;
+            }
+        } catch (RuntimeException ex) {
+            log(ex);
+            toolTipTxt = null;
+        }
+
+        return toolTipTxt;
     }
 }

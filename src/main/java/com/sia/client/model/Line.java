@@ -17,6 +17,7 @@ public class Line {
     protected int bookieid;
 	protected int gameid;
 	protected int period;
+    protected int limit;
 	protected String type;
 	public String whowasbet = "";
 	protected Timestamp priorts = new Timestamp(1000);
@@ -89,6 +90,14 @@ public class Line {
 
     public void setGameid(int gameid) {
         this.gameid = gameid;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public int getBookieid() {

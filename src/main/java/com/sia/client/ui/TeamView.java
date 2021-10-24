@@ -4,10 +4,11 @@ import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
 import com.sia.client.model.Spreadline;
+import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
 
-public class TeamView {
+public class TeamView extends ViewValue {
 
     public static String ICON_UP = ImageFile.ARR_UP;
     public static String ICON_DOWN = ImageFile.ARR_DOWN;
@@ -19,10 +20,8 @@ public class TeamView {
     LineData[] boxes = new LineData[2];
     LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
-    int bid;
     int gid;
     Game g;
-    String tooltiptext = "";
     boolean shortteam;
 
     public TeamView(int gid, boolean shortteam) {
@@ -31,10 +30,7 @@ public class TeamView {
         this.gid = gid;
         this.shortteam = shortteam;
         g = AppController.getGame(gid);
-        //this.setAndGetPriorBoxes(bid,gid);
-        //this.setAndGetOpenerBoxes(bid,gid);
-        tooltiptext = g.getDescription();
-
+        setTooltiptext(g.getDescription());
     }
 
     public void clearColors() {
@@ -50,12 +46,6 @@ public class TeamView {
     public LineData getbottombox() {
         return bottombox;
     }
-
-    public String getToolTip() {
-        return tooltiptext;
-    }
-
-
     public LineData[] getCurrentBoxes() {
         setCurrentBoxes();
         return boxes;

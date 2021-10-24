@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 
 import javax.imageio.ImageIO;
@@ -25,7 +26,7 @@ public class NewWindowAction implements ActionListener {
         tv.initComponents();
         SportsMenuBar smb = new SportsMenuBar(stbnew, tv);
 
-        JFrame frame = new JFrame(AppController.getUser().getUsername() + " Logged In");
+        JFrame frame = new JFrame(AppController.getUser().getUsername() + " Logged In"+ SiaConst.Version);
         String spankoddsicon = "spanky.jpg";
 
         try {

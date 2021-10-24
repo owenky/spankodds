@@ -1,15 +1,18 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
@@ -26,6 +29,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 	public void optimizeSize() {
 		//set jviewport (row header of jscroll pane of mainTable) preferred size
@@ -56,6 +60,10 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getModel().getColumnHeaderProperty(),mainTable.getMarginProvider());
 		}
 		return headerCellRenderer;
+	}
+	@Override
+	public String getToolTipText(MouseEvent e) {
+		return Utils.getTableCellToolTipText(this,e);
 	}
 	@Override
 	public void setRowMargin(int rowMargin) {

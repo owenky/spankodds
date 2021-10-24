@@ -140,7 +140,8 @@ public class TeamTotalline extends Line {
     public String recordMove(double visitover, double visitoverjuice, double visitunder, double visitunderjuice,
                              double homeover, double homeoverjuice, double homeunder, double homeunderjuice, Timestamp ts, boolean isopener) {
 
-        if (visitoverjuice != 0) {
+      //  if (visitoverjuice != 0)
+       // {
             this.setCurrentvisitover(visitover);
             this.setCurrentvisitoverjuice(visitoverjuice);
             this.setCurrentts(ts);
@@ -151,8 +152,8 @@ public class TeamTotalline extends Line {
                 this.setOpenervisitoverjuice(visitoverjuice);
                 this.setOpenerts(ts);
             }
-        }
-        if (visitunderjuice != 0) {
+       // }
+       // if (visitunderjuice != 0) {
             this.setCurrentvisitunder(visitunder);
             this.setCurrentvisitunderjuice(visitunderjuice);
             this.setCurrentts(ts);
@@ -162,9 +163,9 @@ public class TeamTotalline extends Line {
                 this.setOpenervisitunderjuice(visitunderjuice);
                 this.setOpenerts(ts);
             }
-        }
+      //  }
 
-        if (homeoverjuice != 0) {
+       // if (homeoverjuice != 0) {
             this.setCurrenthomeover(homeover);
             this.setCurrenthomeoverjuice(homeoverjuice);
             this.setCurrentts(ts);
@@ -175,8 +176,8 @@ public class TeamTotalline extends Line {
                 this.setOpenerhomeoverjuice(homeoverjuice);
                 this.setOpenerts(ts);
             }
-        }
-        if (homeunderjuice != 0) {
+       // }
+      //  if (homeunderjuice != 0) {
             this.setCurrenthomeunder(homeunder);
             this.setCurrenthomeunderjuice(homeunderjuice);
             this.setCurrentts(ts);
@@ -186,7 +187,7 @@ public class TeamTotalline extends Line {
                 this.setOpenerhomeunderjuice(homeunderjuice);
                 this.setOpenerts(ts);
             }
-        }
+      //  }
 
 
         try {
