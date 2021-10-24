@@ -16,22 +16,15 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ColumnHeaderDrawer<V extends KeyedObject> {
 
-    private final Map<String, JComponent> columnHeaderComponentMap = new HashMap<>();
-    private final ColumnCustomizableTable<V> mainTable;
-
-    public ColumnHeaderDrawer(ColumnCustomizableTable<V> mainTable) {
-        this.mainTable = mainTable;
+    public ColumnHeaderDrawer() {
     }
-    public Component drawOnViewIndex(int rowViewIndex, Object headerValue, int horizontalScrollBarAdjustmentValue) {
+    public Component drawOnViewIndex(ColumnCustomizableTable<V> mainTable,int rowViewIndex, String headerValue, int horizontalScrollBarAdjustmentValue) {
         ColumnHeaderProperty columnHeaderProvider = mainTable.getModel().getColumnHeaderProperty();
         Font headerFont = columnHeaderProvider.getHeaderFont();
-        JComponent headerComponent = columnHeaderComponentMap.computeIfAbsent(String.valueOf(headerValue), header -> makeColumnHeaderComp(mainTable, header,columnHeaderProvider.getHeaderForeground()
-                ,headerFont));
+        JComponent headerComponent = makeColumnHeaderComp(mainTable, headerValue,columnHeaderProvider.getHeaderForeground(),headerFont);
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, String.valueOf(headerValue),columnHeaderProvider.getColumnHeaderHeight(), horizontalScrollBarAdjustmentValue,headerFont);
         return headerComponent;
     }

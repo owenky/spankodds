@@ -42,7 +42,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
-        columnHeaderDrawer = new ColumnHeaderDrawer<>(mainTable);
+        columnHeaderDrawer = new ColumnHeaderDrawer<>();
         rowHeightConfigListener = (e)-> mainTable.configHeaderRow();
     }
 
@@ -96,8 +96,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private void configHeaderRow() {
        mainTable.configHeaderRow();
     }
-    public Component drawColumnHeaderOnViewIndex(int rowViewIndex, Object headerValue) {
-        return columnHeaderDrawer.drawOnViewIndex(rowViewIndex,headerValue,horizontalScrollBarAdjustmentValue);
+    public Component drawColumnHeaderOnViewIndex(ColumnCustomizableTable<V> table,int rowViewIndex, String headerValue) {
+        return columnHeaderDrawer.drawOnViewIndex(table,rowViewIndex,headerValue,horizontalScrollBarAdjustmentValue);
     }
 
     @Override

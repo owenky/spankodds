@@ -300,12 +300,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             createUnlockedColumns();
         }
     }
-    public void drawColumnHeaderOnViewIndex(int rowViewIndex, Object columnHeaderValue){
+    public void drawColumnHeaderOnViewIndex(int rowViewIndex, String columnHeaderValue){
         Component oldHeaderComp = this.oldHeaderMap.get(rowViewIndex);
         if ( null != oldHeaderComp) {
             this.remove(oldHeaderComp);
         }
-        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(rowViewIndex,columnHeaderValue);
+        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,columnHeaderValue);
         this.oldHeaderMap.put(rowViewIndex,currentComp);
     }
     public ColumnAdjusterManager getColumnAdjusterManager() {

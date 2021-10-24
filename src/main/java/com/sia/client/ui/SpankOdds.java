@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
 import org.jdesktop.swingx.JXLoginPane;
@@ -151,7 +152,7 @@ public class SpankOdds {
         checkAndRunInEDT(
                 () -> {
                     try {
-                        frame.setTitle(userName + " Logged In");
+                        frame.setTitle(userName + " Logged In "+ SiaConst.Version);
                         createGui();
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         frame.addWindowListener(new WindowAdapter() {
