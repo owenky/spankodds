@@ -4,7 +4,6 @@ import com.sia.client.model.BestLines;
 import com.sia.client.model.Line;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 
 public class Totalline extends Line implements Serializable {
@@ -23,12 +22,8 @@ public class Totalline extends Line implements Serializable {
     double openeroverjuice;
     double openerunder;
     double openerunderjuice;
-    private Timestamp currentts = new Timestamp(1000);
-    private Timestamp priorts = new Timestamp(1000);
-    private Timestamp openerts = new Timestamp(1000);
 
-
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, Timestamp ts, int p) {
+    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, int p) {
         this();
 
         currentover = priorover = openerover = o;
@@ -49,7 +44,7 @@ public class Totalline extends Line implements Serializable {
     }
 
 
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, Timestamp ts, double po, double poj, double pu, double puj, long pts, int p) {
+    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, int p) {
         this();
         currentover = o;
         currentoverjuice = oj;
@@ -70,7 +65,7 @@ public class Totalline extends Line implements Serializable {
 
     }
 
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, Timestamp ts, double po, double poj, double pu, double puj, Timestamp pts, double oo, double ooj, double ou, double ouj, Timestamp ots, int p) {
+    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots, int p) {
         this();
         currentover = o;
         currentoverjuice = oj;
@@ -113,7 +108,7 @@ public class Totalline extends Line implements Serializable {
         isbestunder = b;
     }
 
-    public String recordMove(double over, double overjuice, double under, double underjuice, Timestamp ts, boolean isopener) {
+    public String recordMove(double over, double overjuice, double under, double underjuice, long ts, boolean isopener) {
 
        // if (overjuice != 0)
        // {

@@ -57,7 +57,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 				int colDataModelIndex = mainTable.getLockedColumns().get(colModelIndex);
 				return mainTable.getUserCellRenderer(rViewIndex,colDataModelIndex);
 			};
-			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getModel().getColumnHeaderProperty(),mainTable.getMarginProvider());
+			headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, mainTable.getModel().getColumnHeaderProperty());
 		}
 		return headerCellRenderer;
 	}

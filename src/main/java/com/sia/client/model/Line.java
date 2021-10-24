@@ -2,52 +2,17 @@ package com.sia.client.model;
 
 import com.sia.client.ui.AppController;
 
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import static com.sia.client.config.Utils.log;
-
 public class Line {
-
-    private static final Integer [] testGameArr = {}; //{208453,209273,219133,200201,200205,200209,200213,200217,200221};
-    public static final Set<Integer> testGameIds = new HashSet<>(Arrays.asList(testGameArr));
-
     protected int bookieid;
 	protected int gameid;
 	protected int period;
     protected int limit;
 	protected String type;
 	public String whowasbet = "";
-	protected Timestamp priorts = new Timestamp(1000);
-	protected Timestamp currentts = new Timestamp(1000);
-	protected Timestamp  openerts = new Timestamp(1000);
+	protected long priorts = 1000;
+	protected long currentts = 1000;
+	protected long  openerts = 1000;
 
-    //public String getPrintedSpreadLine(double ml)
-//{
-//	String retvalue = "";
-//	if(ml >0)
-//	{
-//		retvalue =  "+"+ml;
-//	}
-//	else if(ml <0)
-//	{
-//		retvalue = ml+"";
-//	}
-//	else if(ml == 0)
-//	{
-//		retvalue =  "pk";
-//	}
-//	else
-//	{
-//		retvalue = "";
-//	}
-//	retvalue = retvalue.replace(".0","");
-//	char half = AsciiChar.getAscii(170);
-//	retvalue = retvalue.replace(".5",half+"");
-//	return retvalue;
-//}
     public String getPrintedJuiceLine(double ml) {
         String retvalue = "";
         if (ml > 0) {
@@ -128,17 +93,14 @@ public class Line {
         Game g = AppController.getGame(gameid);
         return g.getVisitorteam() + "@" + g.getHometeam();
     }
-	public final Timestamp getCurrentts() {
+	public final long getCurrentts() {
 		return currentts;
 	}
-	public final void setCurrentts(Timestamp currentts) {
+	public final void setCurrentts(long currentts) {
         this.priorts = this.currentts;
 		this.currentts = currentts;
-if ( testGameIds.contains(gameid)) {
-			log("gameid="+gameid+", current="+currentts+", value="+currentts.getTime())       ;
-}
 	}
-	public final void setOpenerts(Timestamp openerts) {
+	public final void setOpenerts(long openerts) {
 		this.openerts = openerts;
 	}
 }

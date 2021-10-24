@@ -3,7 +3,6 @@ package com.sia.client.model;
 import com.sia.client.ui.LineAlertManager;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import static com.sia.client.config.Utils.log;
 
@@ -21,7 +20,7 @@ public class Moneyline extends Line implements Serializable {
     double openervisitjuice;
     double openerhomejuice;
     double openerdrawjuice;
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, int p) {
         this();
         currentvisitjuice = priorvisitjuice = openervisitjuice = vj;
         currenthomejuice = priorhomejuice = openerhomejuice = hj;
@@ -40,7 +39,7 @@ public class Moneyline extends Line implements Serializable {
         type = "moneyline";
     }
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, double pvj, double phj, double pdj, Timestamp pts, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, double pvj, double phj, double pdj, long pts, int p) {
         this();
         currentvisitjuice = vj;
         currenthomejuice = hj;
@@ -59,7 +58,7 @@ public class Moneyline extends Line implements Serializable {
 
     }
 
-    public Moneyline(int gid, int bid, double vj, double hj, double dj, Timestamp ts, double pvj, double phj, double pdj, Timestamp pts, double ovj, double ohj, double odj, Timestamp ots, int p) {
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, double pvj, double phj, double pdj, long pts, double ovj, double ohj, double odj, long ots, int p) {
         this();
         currentvisitjuice = vj;
         currenthomejuice = hj;
@@ -107,7 +106,7 @@ public class Moneyline extends Line implements Serializable {
         isbestdrawmoney = b;
     }
 
-    public String recordMove(double visitjuice, double homejuice, double drawjuice, Timestamp ts, boolean isopener) {
+    public String recordMove(double visitjuice, double homejuice, double drawjuice, long ts, boolean isopener) {
 
        // if (visitjuice != 0)
       //  {

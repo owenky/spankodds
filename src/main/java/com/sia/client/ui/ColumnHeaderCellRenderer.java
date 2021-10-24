@@ -2,7 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
-import com.sia.client.model.MarginProvider;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.BorderFactory;
@@ -24,15 +23,11 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private static final Border userRenderBorderNormal = new MatteBorder(0, 0, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick, 1, userRenderBorderColr);
-    private final ColumnHeaderProperty columnHeaderProperty;
     private final TableCellRendererProvider tableCellRendererProvider;
-    private final MarginProvider marginProvider;
     private final JLabel headerCellRender = new JLabel();
 
-    public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProperty columnHeaderProperty, MarginProvider marginProvider) {
+    public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProperty columnHeaderProperty ){
         this.tableCellRendererProvider = tableCellRendererProvider;
-        this.columnHeaderProperty = columnHeaderProperty;
-        this.marginProvider = marginProvider;
         this.headerCellRender.setOpaque(true);
         this.headerCellRender.setBackground(columnHeaderProperty.getHeaderBackground());
         this.headerCellRender.setBorder(BorderFactory.createEmptyBorder());

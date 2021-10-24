@@ -3,13 +3,11 @@ package com.sia.client.model;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
 
-import java.sql.Timestamp;
-
 import static com.sia.client.config.Utils.log;
 
 
 public class Spreadline extends Line {
-    static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, new Timestamp(1L), 0);
+    static Spreadline sl = new Spreadline(99999, 99999, 99999, 99999, 99999, 99999, 1L, 0);
 
     boolean isbestvisitspread = false;
     boolean isbesthomespread = false;
@@ -28,7 +26,7 @@ public class Spreadline extends Line {
 
 
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, int p) {
         this();
 
         currentvisitspread = priorvisitspread = openervisitspread = vs;
@@ -49,7 +47,7 @@ public class Spreadline extends Line {
     }
 
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, double pvs, double pvj, double phs, double phj, Timestamp pts, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, double pvs, double pvj, double phs, double phj, long pts, int p) {
         this();
 
         currentvisitspread = vs;
@@ -70,7 +68,7 @@ public class Spreadline extends Line {
 
     }
 
-    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, Timestamp ts, double pvs, double pvj, double phs, double phj, Timestamp pts, double ovs, double ovj, double ohs, double ohj, Timestamp ots, int p) {
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, double pvs, double pvj, double phs, double phj, long pts, double ovs, double ovj, double ohs, double ohj, long ots, int p) {
         this();
 
         currentvisitspread = vs;
@@ -139,7 +137,7 @@ public class Spreadline extends Line {
         isbesthomespread = b;
     }
 
-    public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, Timestamp ts, boolean isopener) {
+    public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, long ts, boolean isopener) {
         if(bookieid==880 & gameid == 345)
         {
          //   System.out.println("BAX TEST "+visitspread+".."+visitjuice+".."+homespread+".."+homejuice+".."+isopener);
