@@ -347,7 +347,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
-            if (ms.getSportType().isPredifined() && ms.getSportType().isMyType(g) ) {
+            if ( ms.containsGame(g)) {
                 Utils.checkAndRunInEDT(() -> ms.moveGameToThisHeader(g, header));
             }
         }

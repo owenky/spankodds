@@ -913,6 +913,16 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         return mainGameTable;
     }
+    public boolean containsGame(Game g) {
+        boolean containing;
+        if (getSportType().isPredifined() && getSportType().isMyType(g) ) {
+            //this is faster than getDataModels().containsGame(g.getGame_id());
+            containing = true;
+        } else {
+            containing = getDataModels().containsGame(g.getGame_id());
+        }
+        return containing;
+    }
     @Override
     public void destroyMe() {
         mainGameTable = null;
