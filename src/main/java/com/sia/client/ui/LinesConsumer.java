@@ -112,10 +112,10 @@ public class LinesConsumer implements MessageListener {
                     sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, isopener);
                 } else {
                     sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice,newlongts, period);
-                    //System.out.println("***************************************spreadxyzabc******************************");
+                    //log("***************************************spreadxyzabc******************************");
                     if (isopener) {
                         LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
-                        //System.out.println("***************************************"+sportname+"******************************");
+                        //log("***************************************"+sportname+"******************************");
                     }
 
                     AppController.addSpreadline(sl);
@@ -165,9 +165,9 @@ public class LinesConsumer implements MessageListener {
                     tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, newlongts, period);
                     if (isopener) {
                         LineAlertOpeners.totalOpenerAlert(gameid, bookieid, period, isopenerS, newover, newoverjuice, newunder, newunderjuice);
-                        //System.out.println("***************************************"+sportname+"******************************");
+                        //log("***************************************"+sportname+"******************************");
                     }
-                    //	System.out.println("***************************************totalOpenerAlert******************************");
+                    //	log("***************************************totalOpenerAlert******************************");
                     AppController.addTotalline(tl);
                 }
 
@@ -284,12 +284,12 @@ public class LinesConsumer implements MessageListener {
                 // owen hack this since draw change comes in seperately
                 // this is a draw move only so use old visit and home lines
                 if (period == 0 && bookieid == 17 && gameid >= 200000 && gameid <= 300000) {
-                    //System.out.println("MONEY..gameid="+gameid+"..bookieid="+bookieid+"...cur="+newdrawjuice+"..prior="+ml.getPriordrawjuice());
+                    //log("MONEY..gameid="+gameid+"..bookieid="+bookieid+"...cur="+newdrawjuice+"..prior="+ml.getPriordrawjuice());
                 }
                 if (newdrawjuice == 0 && ml != null && newvisitorjuice != 0 && newhomejuice != 0) {
                     newdrawjuice = ml.getCurrentdrawjuice();
                     if (period == 0 && bookieid == 17) {
-                        //System.out.println("gameid="+gameid+"..bookieid="+bookieid+"...cur="+newdrawjuice+"..prior="+ml.getPriordrawjuice());
+                        //log("gameid="+gameid+"..bookieid="+bookieid+"...cur="+newdrawjuice+"..prior="+ml.getPriordrawjuice());
                     }
                 } else if (newdrawjuice != 0 && ml != null && newvisitorjuice == 0 && newhomejuice == 0) {
                     //newvisitorjuice = ml.getCurrentvisitjuice();
@@ -303,9 +303,9 @@ public class LinesConsumer implements MessageListener {
                     ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, newlongts, period);
                     if (isopener) {
                         LineAlertOpeners.moneyOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorjuice, newhomejuice);
-                        //System.out.println("***************************************"+sportname+"******************************");
+                        //log("***************************************"+sportname+"******************************");
                     }
-                    //	System.out.println("***************************************moneyOpenerAlert******************************");
+                    //	log("***************************************moneyOpenerAlert******************************");
                     AppController.addMoneyline(ml);
                 }
 

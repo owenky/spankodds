@@ -245,7 +245,7 @@ class LineAlertOpeners implements ItemListener {
                 int value = source.getValue();
                 if (!source.getValueIsAdjusting()) {
                     popupsecs = (int) source.getValue();
-                    System.out.println("secs=" + popupsecs);
+                    log("secs=" + popupsecs);
                 }
             }
         });
@@ -844,11 +844,11 @@ class LineAlertOpeners implements ItemListener {
                     firstquarter.setSelected(false);
 
                     secondquarter.setSelected(false);
-                    System.out.println("iam after 2nd");
+                    log("iam after 2nd");
                     thirdquarter.setSelected(false);
-                    System.out.println("iam after 3rd");
+                    log("iam after 3rd");
                     fourthtquarter.setSelected(false);
-                    System.out.println("iam after 4rt");
+                    log("iam after 4rt");
                     AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
                     AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = false;
                     AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
@@ -876,7 +876,7 @@ class LineAlertOpeners implements ItemListener {
             public void actionPerformed(ActionEvent ae) {
                 int i = LineAlertOpeners.idx;
                 JFileChooser jfc = new JFileChooser();
-                System.out.println("hai iam from filechooser");
+                log("hai iam from filechooser");
                 jfc.showOpenDialog(jfrm);
                 File f1 = jfc.getSelectedFile();
 
@@ -1042,13 +1042,13 @@ class LineAlertOpeners implements ItemListener {
                     String selectedleagues[] = new String[treeRows.length];
 
                     //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).leagues=treeRows;
-                    System.out.println("********treerows length*****=" + treeRows.length);
+                    log("********treerows length*****=" + treeRows.length);
                     if (treeRows != null) {
                         AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes.clear();
                         java.util.Arrays.sort(treeRows);
                         for (int i = 0; i < treeRows.length; i++) {
                             TreePath path = _tree.getPathForRow(treeRows[i]);
-                            //System.out.println("treerows="+treeRows[0]);
+                            //log("treerows="+treeRows[0]);
                             selectedleagues[i] = "" + path.getLastPathComponent();
                             DefaultMutableTreeNode child = new DefaultMutableTreeNode(selectedleagues[i]);
                             //tempnode.add(child);
@@ -1059,7 +1059,7 @@ class LineAlertOpeners implements ItemListener {
 
                         }
                     }
-                    System.out.println("********kkk length*****=" + treeRows.length);
+                    log("********kkk length*****=" + treeRows.length);
                     if (treeRows.length != 0) {
                         if (selectedleagues[0].equalsIgnoreCase(sport)) {
                             AppController.LineOpenerAlertNodeList.get(idx).isAllLeaguesSelected = true;
@@ -1067,19 +1067,19 @@ class LineAlertOpeners implements ItemListener {
                             AppController.LineOpenerAlertNodeList.get(idx).isAllLeaguesSelected = false;
                         }
                     }
-                    System.out.println("***********selectedleagues Arrays are prepared********");
-                    //System.out.println("treerows="+treeRows[0]);
+                    log("***********selectedleagues Arrays are prepared********");
+                    //log("treerows="+treeRows[0]);
                     int[] treeRows1 = sportsbooktree.getCheckBoxTreeSelectionModel().getSelectionRows();
                     String selectedbookies[] = new String[treeRows1.length];
-                    System.out.println("********abc length*****=" + treeRows.length);
+                    log("********abc length*****=" + treeRows.length);
                     //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).bookies=treeRows1;
-                    //System.out.println("treerows="+treeRows[0]);
+                    //log("treerows="+treeRows[0]);
                     if (treeRows1 != null) {
                         AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes.clear();
                         java.util.Arrays.sort(treeRows1);
                         for (int i = 0; i < treeRows1.length; i++) {
                             TreePath path = sportsbooktree.getPathForRow(treeRows1[i]);
-                            System.out.println("treerows=" + treeRows1[0]);
+                            log("treerows=" + treeRows1[0]);
                             selectedbookies[i] = "" + path.getLastPathComponent();
                             DefaultMutableTreeNode child = new DefaultMutableTreeNode(selectedbookies[i]);
                             //tempnode.add(child);
@@ -1090,7 +1090,7 @@ class LineAlertOpeners implements ItemListener {
 
                         }
                     }
-                    System.out.println("********xyz length*****=" + treeRows.length);
+                    log("********xyz length*****=" + treeRows.length);
                     if (treeRows1.length != 0) {
                         if (selectedbookies[0].equalsIgnoreCase("All Bookies")) {
                             AppController.LineOpenerAlertNodeList.get(idx).isAllBookiesSelected = true;
@@ -1098,7 +1098,7 @@ class LineAlertOpeners implements ItemListener {
                             AppController.LineOpenerAlertNodeList.get(idx).isAllBookiesSelected = false;
                         }
                     }
-                    System.out.println("***********selectedbookies Arrays are prepared********");
+                    log("***********selectedbookies Arrays are prepared********");
                     int game_id = 0;
                     bookeis = AppController.getBookiesVec();
                     games = AppController.getGames();
@@ -1126,7 +1126,7 @@ class LineAlertOpeners implements ItemListener {
                         }
 
                     }
-                    System.out.println("***********sport id added ********");
+                    log("***********sport id added ********");
 
                     List<Integer> selectedleagueids = new ArrayList<>();
                     if (treeRows1 != null) {
@@ -1153,21 +1153,21 @@ class LineAlertOpeners implements ItemListener {
                     String popsec = (String) popupsecsComboBox.getSelectedItem();
                     AppController.LineOpenerAlertNodeList.get(idx).popupsec = Integer.parseInt(popsec);
 
-                    System.out.println("*****************BOOOOOOOOOOOOKIES************************");
+                    log("*****************BOOOOOOOOOOOOKIES************************");
                     for (int i = 0; i < selectedbookieids.size(); i++) {
-                        System.out.println("selectedbookieids=" + selectedbookieids.get(i) + "  selectedbookies=" + selectedbookies[i]);
+                        log("selectedbookieids=" + selectedbookieids.get(i) + "  selectedbookies=" + selectedbookies[i]);
                     }
 
-                    System.out.println("*****************LEAGuEEEEEEEEEEEEEEEEEEEEEE************************");
+                    log("*****************LEAGuEEEEEEEEEEEEEEEEEEEEEE************************");
                     for (int i = 0; i < selectedleagueids.size(); i++) {
-                        System.out.println("selectedleagueids=" + selectedleagueids.get(i) + "  selectedleagues=" + selectedleagues[i]);
+                        log("selectedleagueids=" + selectedleagueids.get(i) + "  selectedleagues=" + selectedleagues[i]);
                     }
-                    System.out.println("*****************Selected Periods************************");
+                    log("*****************Selected Periods************************");
                     ArrayList per = AppController.LineOpenerAlertNodeList.get(idx).periods;
                     for (int i = 0; i < per.size(); i++) {
-                        System.out.println("per=" + per.get(i));
+                        log("per=" + per.get(i));
                     }
-                    System.out.println("*****************Selected Periods************************");
+                    log("*****************Selected Periods************************");
                 } catch (Exception e) {
                     checkednodes2.clear();
                     checkednodes3.clear();
@@ -1291,7 +1291,7 @@ class LineAlertOpeners implements ItemListener {
                                 String mesg = "Spread Opener:" + getLeagueAbbr(lid) + "," + teaminfo;
                                 AppController.addAlert(hrmin,mesg);
 
-                                //System.out.println(com.sia.client.ui.AppController.alertsVector.size());
+                                //log(com.sia.client.ui.AppController.alertsVector.size());
 
                                 new UrgentMessage("<HTML><H1>Openers " + sn + "</H1><FONT COLOR=BLUE>" +
                                         leaguename + "<BR><TABLE cellspacing=5 cellpadding=5>" +
@@ -1795,15 +1795,15 @@ class LineAlertOpeners implements ItemListener {
 
 
                 Vector checkedLeagueNodes = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes;
-                System.out.println("gjhhsizeeeee" + checkednodes2.size());
+                log("gjhhsizeeeee" + checkednodes2.size());
                 for (int j = 0; j < checkednodes2.size(); j++) {
                     //  ArrayList<TreePath> arrayList;
-                    //System.out.println("its==========================="+checkedLeagueNodes.get(j));
+                    //log("its==========================="+checkedLeagueNodes.get(j));
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes2.elementAt(j);
-                    //System.out.println("its"+node);
+                    //log("its"+node);
 
                     TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-                    System.out.println("its===========================" + checkednodes2.get(j) + "psth" + path);
+                    log("its===========================" + checkednodes2.get(j) + "psth" + path);
                     _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
                 }
                 selectedList.revalidate();
@@ -1813,9 +1813,8 @@ class LineAlertOpeners implements ItemListener {
                 Vector checkedBookieNodes = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
                 for (int j = 0; j < checkednodes3.size(); j++) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes3.elementAt(j);
-                    //System.out.println("its"+node);
                     TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-                    System.out.println("its===========================" + checkednodes3.get(j) + "psth" + path);
+                    log("its===========================" + checkednodes3.get(j) + "psth" + path);
                     sportsbooktree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
                 }
                 selectedList.revalidate();
@@ -1889,13 +1888,13 @@ class LineAlertOpeners implements ItemListener {
                 if (sport.getSportname().equals(tabname)) {
                     tempnode = sportnode;
                     DefaultMutableTreeNode child = new DefaultMutableTreeNode(sport.getLeaguename());
-                    System.out.println("sports name   " + sport.getSportname());
+                    log("sports name   " + sport.getSportname());
                     tempnode.add(child);
                     leaguenameidhash.put(sport.getLeaguename(), "" + sport.getLeague_id());
 
                     for (int j = 0; j < checkedsports.size(); j++) {
                         if ((checkedsports.get(j) + "").equalsIgnoreCase("" + sport.getLeaguename()) || (checkedsports.get(j) + "").equalsIgnoreCase(tabname)) {
-                            System.out.println("Checked Sports araay  " + checkedsports.get(j));
+                            log("Checked Sports araay  " + checkedsports.get(j));
                             checkednodes2.add(child);
                         }
 
@@ -1932,13 +1931,12 @@ class LineAlertOpeners implements ItemListener {
                 if (!(bookie.getName().equalsIgnoreCase("Team") || bookie.getName().equalsIgnoreCase("Gm#") || bookie.getName().equalsIgnoreCase("Time") || bookie.getName().equalsIgnoreCase("Details") || bookie.getName().equalsIgnoreCase("Chart"))) {
                     tempnode = bookienode;
                     DefaultMutableTreeNode child = new DefaultMutableTreeNode(bookie.getName());
-                    //System.out.println("sports name   "+bookie.getSportname());
                     tempnode.add(child);
                     bookienameidhash.put(bookie.getName(), "" + bookie.getBookie_id());
 
                     for (int j = 0; j < checkedbookies.size(); j++) {
                         if ((checkedbookies.get(j) + "").equalsIgnoreCase("" + bookie.getName()) || (checkedbookies.get(j) + "").equalsIgnoreCase("All Bookies")) {
-                            System.out.println("Checked Sports araay  " + checkedbookies.get(j));
+                            log("Checked Sports araay  " + checkedbookies.get(j));
                             checkednodes3.add(child);
                         }
 

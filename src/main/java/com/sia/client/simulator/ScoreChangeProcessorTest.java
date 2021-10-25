@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.sia.client.config.Utils.log;
+
 public class ScoreChangeProcessorTest extends TestExecutor {
 
     private final ScoresConsumer scoreConsumer;
@@ -39,7 +41,7 @@ public class ScoreChangeProcessorTest extends TestExecutor {
 
         try {
             int count=0;
-            System.out.println("START ScoreChangeProcessorTest++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            log("START ScoreChangeProcessorTest++++++++++++++++++++++++++++++++++++++++++++++++++++");
             MainScreen testScreen = MainScreen.findMainScreen(SportType.Soccer.getSportName());
             Games games = AppController.getGames();
             List<Game> allGames = new ArrayList<>();
@@ -49,14 +51,14 @@ public class ScoreChangeProcessorTest extends TestExecutor {
                     .filter(game-> ! GameStatus.Final.isSame(game.getStatus())).collect(Collectors.toList());
             for(Game game:soccerGames) {
                 if ( testScreen.shouldAddToScreen(game)) {
-System.out.println("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.getGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
+log("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.getGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
                     ScoreChangedProcessor.process(GameStatus.InProgress, game,0, 0);
                 }
                 if ( count++ > 1000) {
                     break;
                 }
             }
-            System.out.println("END OF START ScoreChangeProcessorTest-----------------------------------------------");
+            log("END OF START ScoreChangeProcessorTest-----------------------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();

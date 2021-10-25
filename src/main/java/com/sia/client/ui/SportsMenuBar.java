@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
 public class SportsMenuBar extends JMenuBar {
 
@@ -266,7 +267,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(0);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
 
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
@@ -336,7 +337,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(1);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -402,7 +403,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(2);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -470,7 +471,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(3);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -537,7 +538,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(4);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -607,7 +608,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(5);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -675,7 +676,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(7);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -743,7 +744,7 @@ public class SportsMenuBar extends JMenuBar {
                             AppController.SpotsTabPaneVector.remove(6);
 
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -809,7 +810,7 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab("Tennis");
                             AppController.SpotsTabPaneVector.remove(8);
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int i = 0; i < tabpanes.size(); i++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
                                 tp.setSelectedIndex(0);
@@ -879,7 +880,7 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab(temp.getText());
                             AppController.removeCustomTab(stb.getTitleAt(idx));
                             Vector tabpanes = AppController.getTabPanes();
-                            System.out.println("tabpanes size= " + tabpanes.size());
+                            log("tabpanes size= " + tabpanes.size());
                             for (int j = 0; j < tabpanes.size(); j++) {
                                 SportsTabPane tp = (SportsTabPane) tabpanes.get(j);
                                 tp.setSelectedIndex(0);

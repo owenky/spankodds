@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.sia.client.config.Utils.log;
+
 public class GameMessageSimulator extends TestExecutor{
 
     private final GamesConsumer gamesConsumer;
@@ -53,7 +55,7 @@ public class GameMessageSimulator extends TestExecutor{
         String dateStr = "2021-01-11";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse(dateStr);
-        System.out.println(date+", time="+date.getTime());
+        log(date+", time="+date.getTime());
     }
     private static class TestTextMessage implements TextMessage {
 

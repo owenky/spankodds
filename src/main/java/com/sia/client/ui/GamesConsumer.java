@@ -449,8 +449,8 @@ public class GamesConsumer implements MessageListener {
     }
 
     public static void writeToFile(String fileName, String data, boolean append) {
-        //System.out.println("Data is "+data);
-        //System.out.println("Writing to "+fileName);
+        //log("Data is "+data);
+        //log("Writing to "+fileName);
         DataOutputStream out = null;
 
         try {

@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.net.URL;
 
+import static com.sia.client.config.Utils.log;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,10 +12,10 @@ public class UtilsTest {
 
     public static void main(String [] argv) {
         URL url = Utils.getMediaResource("boxing.png");
-        System.out.println("url="+url);
+        log("url="+url);
 
         url = Utils.getConfigResource("spankoddsurlinfo.txt");
-        System.out.println("url="+url);
+        log("url="+url);
     }
     @Test
     public void testContainsOnlyAlphanumeric() {

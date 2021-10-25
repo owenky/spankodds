@@ -13,6 +13,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.log;
+
 public class UserPrefsProducer {
     public boolean loginresultback = false;
     User u = AppController.getUser();
@@ -40,7 +42,7 @@ public class UserPrefsProducer {
             connection.start();
 
         } catch (Exception ex) {
-            System.out.println("problem with constructor " + ex);
+            log(ex);
         }
     }
 
@@ -60,11 +62,11 @@ public class UserPrefsProducer {
             if (colorprefs.length() > 0) {
                 colorprefs = colorprefs.substring(0, colorprefs.length() - 1);
             }
-            System.out.println("SENDING COLORPREFS=" + colorprefs);
+            log("SENDING COLORPREFS=" + colorprefs);
             u.setColumnColors(colorprefs);
 
         } catch (Exception ex) {
-            System.out.println("exception preparing column colors! " + ex);
+            log(ex);
         }
         try {
             String tabsindex = "";
@@ -78,11 +80,11 @@ public class UserPrefsProducer {
             if (tabsindex.length() > 0) {
                 tabsindex = tabsindex.substring(0, tabsindex.length() - 1);
             }
-            System.out.println("SENDING TABSINDEX=" + tabsindex);
+            log("SENDING TABSINDEX=" + tabsindex);
             u.setTabsIndex(tabsindex);
 
         } catch (Exception ex) {
-            System.out.println("exception preparing tabs index! " + ex);
+            log( ex);
         }
 
 
@@ -95,17 +97,17 @@ public class UserPrefsProducer {
             Enumeration enumtabs = customtabsvec.elements();
             while (enumtabs.hasMoreElements()) {
                 String tabinfo = "" + enumtabs.nextElement();
-                System.out.println("CUSTOMTAB INFO=" + tabinfo);
+                log("CUSTOMTAB INFO=" + tabinfo);
                 customtabs = customtabs + tabinfo + "?";
             }
             if (customtabs.length() > 0) {
                 customtabs = customtabs.substring(0, customtabs.length() - 1);
             }
-            System.out.println("SENDING CUSTOMTABS=" + customtabs);
+            log("SENDING CUSTOMTABS=" + customtabs);
             u.setCustomTabs(customtabs);
 
         } catch (Exception ex) {
-            System.out.println("exception preparing customtabs! " + ex);
+            log(ex);
         }
 
         try {
@@ -125,11 +127,11 @@ public class UserPrefsProducer {
             if (linealerts.length() > 0) {
                 linealerts = linealerts.substring(0, linealerts.length() - 1);
             }
-            System.out.println("SENDING LINEALERTS=" + linealerts);
+            log("SENDING LINEALERTS=" + linealerts);
             u.setLineAlerts(linealerts);
 
         } catch (Exception ex) {
-            System.out.println("exception preparing customtabs! " + ex);
+            log(ex);
         }
 
 
@@ -186,7 +188,7 @@ public class UserPrefsProducer {
 
             this.producer.send(mapMessage);
         } catch (Exception ex) {
-            System.out.println("EXCPETION SENDING USER PREFS MESSAGE " + ex);
+            log(ex);
         }
 
 

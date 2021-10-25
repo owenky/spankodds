@@ -493,49 +493,49 @@ public class LineAlert implements ItemListener {
   if(alerttype.equalsIgnoreCase("Final"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getFinalAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "final.wav";
   }
 else if(alerttype.equalsIgnoreCase("Started"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getStartedAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "started.wav";
   }
 else if(alerttype.equalsIgnoreCase("Halftime"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getHalftimeAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "halftime.wav";
   }
 else if(alerttype.equalsIgnoreCase("Lineup"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getLineupAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "lineups.wav";
   }
 else if(alerttype.equalsIgnoreCase("Official"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getOfficialAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "officials.wav";
   }
 else if(alerttype.equalsIgnoreCase("Injury"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getInjuryAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "injury.wav";
   }
   else if(alerttype.equalsIgnoreCase("Time change"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getTimechangeAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "timechange.wav";
   }
   else if(alerttype.equalsIgnoreCase("Limit change"))
   {
 	  userpref = com.sia.client.ui.AppController.getUser().getLimitchangeAlert();
-	  System.out.println("userprefs ="+userpref);
+	  log("userprefs ="+userpref);
 	  defaultsoundfile = "limitchange.wav";
   }
   defaultsoundfileplay = defaultsoundfile;
@@ -568,7 +568,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
   }
   for(int j=0;j < prefs.length;j++)
   {
-	  System.out.println(j+"="+prefs[j]);
+	  log(j+"="+prefs[j]);
   }
 
 
@@ -695,7 +695,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                 int value = source.getValue();
                 if (!source.getValueIsAdjusting()) {
                     popupsecs = (int) source.getValue();
-                    System.out.println("secs=" + popupsecs);
+                    log("secs=" + popupsecs);
                 }
             }
         });
@@ -791,7 +791,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                         "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
                         "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
                         "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm);
-                System.out.println("popupsecs=" + popupsecs);
+                log("popupsecs=" + popupsecs);
 
             }
         });
@@ -815,7 +815,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     defaultsoundfileplay = soundfile;
                     soundlabel.setText(soundfile);
                     //This is where a real application would open the file.
-                    System.out.println("Opening: " + file.getName());
+                    log("Opening: " + file.getName());
                 } else {
                     //log.append("Open command cancelled by user." + newline);
                 }
@@ -868,21 +868,21 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 						z++;
 						String key = (String)enum00.nextElement();
 						String value = (String)leaguenameidhash.get(key);
-						System.out.println("key="+key+"..value="+value);
+						log("key="+key+"..value="+value);
 						if(z > 20) {break;}
 					}
 					*/
 
 
                 int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                System.out.println("treerows=" + treeRows);
+                log("treerows=" + treeRows);
                 if (treeRows != null) {
                     java.util.Arrays.sort(treeRows);
                     for (int i = 0; i < treeRows.length; i++) {
                         TreePath path = _tree.getPathForRow(treeRows[i]);
 
                         String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
-                        System.out.println("SAVE=" + path.getLastPathComponent() + "...." + id);
+                        log("SAVE=" + path.getLastPathComponent() + "...." + id);
                         if (id == null || id.equals("null")) {
                             id = "" + path.getLastPathComponent();
                         }
@@ -906,12 +906,12 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                 String bookieselected = "";
                 Vector bookieselectedvec = new Vector();
                 int[] treeRows2 = sportsbooktree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                System.out.println("treerows2=" + treeRows2);
+                log("treerows2=" + treeRows2);
                 if (treeRows2 != null) {
                     java.util.Arrays.sort(treeRows2);
                     for (int i = 0; i < treeRows2.length; i++) {
                         TreePath path = sportsbooktree.getPathForRow(treeRows2[i]);
-                        System.out.println(path.getLastPathComponent());
+                        log(path.getLastPathComponent());
                         String id2 = "" + bookienameidhash.get("" + path.getLastPathComponent());
 
                         if (id2 == null || id2.equals("null")) {
@@ -937,96 +937,96 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                 // printing
 
                 //sportselected = sportselected.substring(1);
-                System.out.println("lan=" + name);
-                System.out.println("sportselected=" + sportselected);
-                System.out.println("bookieselected=" + bookieselected);
+                log("lan=" + name);
+                log("sportselected=" + sportselected);
+                log("bookieselected=" + bookieselected);
 
-                System.out.println("spreadcheckbox=" + spreadcheckbox.isSelected());
-                System.out.println("totalcheckbox=" + totalcheckbox.isSelected());
-                System.out.println("moneylinecheckbox=" + moneylinecheckbox.isSelected());
-                System.out.println("teamtotalcheckbox=" + teamtotalcheckbox.isSelected());
+                log("spreadcheckbox=" + spreadcheckbox.isSelected());
+                log("totalcheckbox=" + totalcheckbox.isSelected());
+                log("moneylinecheckbox=" + moneylinecheckbox.isSelected());
+                log("teamtotalcheckbox=" + teamtotalcheckbox.isSelected());
 
-                System.out.println("gameperiodComboBox=" + gameperiodlist[gameperiodComboBox.getSelectedIndex()]);
+                log("gameperiodComboBox=" + gameperiodlist[gameperiodComboBox.getSelectedIndex()]);
 
                 //need to use model here
-                System.out.println("spreadptsComboBox=" + spreadptsComboBox.getModel().getSelectedItem());
-                System.out.println("totalptsComboBox=" + totalptsComboBox.getModel().getSelectedItem());
-                System.out.println("teamtotalptsComboBox=" + teamtotalptsComboBox.getModel().getSelectedItem());
+                log("spreadptsComboBox=" + spreadptsComboBox.getModel().getSelectedItem());
+                log("totalptsComboBox=" + totalptsComboBox.getModel().getSelectedItem());
+                log("teamtotalptsComboBox=" + teamtotalptsComboBox.getModel().getSelectedItem());
 
 
-                System.out.println("spreadsecsComboBox=" + secslist[spreadsecsComboBox.getSelectedIndex()]);
-                System.out.println("totalsecsComboBox=" + secslist[totalsecsComboBox.getSelectedIndex()]);
-                System.out.println("moneylinesecsComboBox=" + secslist[moneylinesecsComboBox.getSelectedIndex()]);
-                System.out.println("teamtotalsecsComboBox=" + secslist[teamtotalsecsComboBox.getSelectedIndex()]);
+                log("spreadsecsComboBox=" + secslist[spreadsecsComboBox.getSelectedIndex()]);
+                log("totalsecsComboBox=" + secslist[totalsecsComboBox.getSelectedIndex()]);
+                log("moneylinesecsComboBox=" + secslist[moneylinesecsComboBox.getSelectedIndex()]);
+                log("teamtotalsecsComboBox=" + secslist[teamtotalsecsComboBox.getSelectedIndex()]);
 
 
-                System.out.println("spreadbookiesComboBox=" + numbookieslist[spreadbookiesComboBox.getSelectedIndex()]);
-                System.out.println("totalbookiesComboBox=" + numbookieslist[totalbookiesComboBox.getSelectedIndex()]);
-                System.out.println("moneylinebookiesComboBox=" + numbookieslist[moneylinebookiesComboBox.getSelectedIndex()]);
-                System.out.println("teamtotalbookiesComboBox=" + numbookieslist[teamtotalbookiesComboBox.getSelectedIndex()]);
+                log("spreadbookiesComboBox=" + numbookieslist[spreadbookiesComboBox.getSelectedIndex()]);
+                log("totalbookiesComboBox=" + numbookieslist[totalbookiesComboBox.getSelectedIndex()]);
+                log("moneylinebookiesComboBox=" + numbookieslist[moneylinebookiesComboBox.getSelectedIndex()]);
+                log("teamtotalbookiesComboBox=" + numbookieslist[teamtotalbookiesComboBox.getSelectedIndex()]);
 
 
-                System.out.println("spreadjuiceComboBox=" + centslist[spreadjuiceComboBox.getSelectedIndex()]);
-                System.out.println("totaljuiceComboBox=" + centslist[totaljuiceComboBox.getSelectedIndex()]);
-                System.out.println("moneylinejuiceComboBox=" + centslist[moneylinejuiceComboBox.getSelectedIndex()]);
-                System.out.println("teamtotaljuiceComboBox=" + centslist[teamtotaljuiceComboBox.getSelectedIndex()]);
+                log("spreadjuiceComboBox=" + centslist[spreadjuiceComboBox.getSelectedIndex()]);
+                log("totaljuiceComboBox=" + centslist[totaljuiceComboBox.getSelectedIndex()]);
+                log("moneylinejuiceComboBox=" + centslist[moneylinejuiceComboBox.getSelectedIndex()]);
+                log("teamtotaljuiceComboBox=" + centslist[teamtotaljuiceComboBox.getSelectedIndex()]);
 
 
-                System.out.println("spreadpercentageComboBox=" + percentagelist[spreadpercentageComboBox.getSelectedIndex()]);
-                System.out.println("totalpercentageComboBox=" + percentagelist[totalpercentageComboBox.getSelectedIndex()]);
-                System.out.println("moneylinepercentageComboBox=" + percentagelist[moneylinepercentageComboBox.getSelectedIndex()]);
-                System.out.println("teamtotalpercentageComboBox=" + percentagelist[teamtotalpercentageComboBox.getSelectedIndex()]);
+                log("spreadpercentageComboBox=" + percentagelist[spreadpercentageComboBox.getSelectedIndex()]);
+                log("totalpercentageComboBox=" + percentagelist[totalpercentageComboBox.getSelectedIndex()]);
+                log("moneylinepercentageComboBox=" + percentagelist[moneylinepercentageComboBox.getSelectedIndex()]);
+                log("teamtotalpercentageComboBox=" + percentagelist[teamtotalpercentageComboBox.getSelectedIndex()]);
 
 
-                System.out.println("spreadaudiocheckbox=" + spreadaudiocheckbox.isSelected());
-                System.out.println("totalaudiocheckbox=" + totalaudiocheckbox.isSelected());
-                System.out.println("moneylineaudiocheckbox=" + moneylineaudiocheckbox.isSelected());
-                System.out.println("teamtotalaudiocheckbox=" + teamtotalaudiocheckbox.isSelected());
-                System.out.println("spreadaudioComboBox=" + audiolist[spreadaudioComboBox.getSelectedIndex()]);
-                System.out.println("totalaudioComboBox=" + audiolist[totalaudioComboBox.getSelectedIndex()]);
-                System.out.println("moneylineaudioComboBox=" + audiolist[moneylineaudioComboBox.getSelectedIndex()]);
-                System.out.println("teamtotalaudioComboBox=" + audiolist[teamtotalaudioComboBox.getSelectedIndex()]);
+                log("spreadaudiocheckbox=" + spreadaudiocheckbox.isSelected());
+                log("totalaudiocheckbox=" + totalaudiocheckbox.isSelected());
+                log("moneylineaudiocheckbox=" + moneylineaudiocheckbox.isSelected());
+                log("teamtotalaudiocheckbox=" + teamtotalaudiocheckbox.isSelected());
+                log("spreadaudioComboBox=" + audiolist[spreadaudioComboBox.getSelectedIndex()]);
+                log("totalaudioComboBox=" + audiolist[totalaudioComboBox.getSelectedIndex()]);
+                log("moneylineaudioComboBox=" + audiolist[moneylineaudioComboBox.getSelectedIndex()]);
+                log("teamtotalaudioComboBox=" + audiolist[teamtotalaudioComboBox.getSelectedIndex()]);
 
 
-                System.out.println("spreadpopupsecsComboBox=" + secslist[spreadpopupsecsComboBox.getSelectedIndex()]);
-                System.out.println("totalpopupsecsComboBox=" + secslist[totalpopupsecsComboBox.getSelectedIndex()]);
-                System.out.println("moneylinepopupsecsComboBox=" + secslist[moneylinepopupsecsComboBox.getSelectedIndex()]);
-                System.out.println("teamtotalpopupsecsComboBox=" + secslist[teamtotalpopupsecsComboBox.getSelectedIndex()]);
+                log("spreadpopupsecsComboBox=" + secslist[spreadpopupsecsComboBox.getSelectedIndex()]);
+                log("totalpopupsecsComboBox=" + secslist[totalpopupsecsComboBox.getSelectedIndex()]);
+                log("moneylinepopupsecsComboBox=" + secslist[moneylinepopupsecsComboBox.getSelectedIndex()]);
+                log("teamtotalpopupsecsComboBox=" + secslist[teamtotalpopupsecsComboBox.getSelectedIndex()]);
 
 
-                System.out.println("spreadpopupcheckbox=" + spreadpopupcheckbox.isSelected());
-                System.out.println("totalpopupcheckbox=" + totalpopupcheckbox.isSelected());
-                System.out.println("moneylinepopupcheckbox=" + moneylinepopupcheckbox.isSelected());
-                System.out.println("teamtotalpopupcheckbox=" + teamtotalpopupcheckbox.isSelected());
+                log("spreadpopupcheckbox=" + spreadpopupcheckbox.isSelected());
+                log("totalpopupcheckbox=" + totalpopupcheckbox.isSelected());
+                log("moneylinepopupcheckbox=" + moneylinepopupcheckbox.isSelected());
+                log("teamtotalpopupcheckbox=" + teamtotalpopupcheckbox.isSelected());
 
-                System.out.println("renotifyComboBox=" + minslist[renotifyComboBox.getSelectedIndex()]);
-                System.out.println("renotifytotalComboBox=" + minslist[renotifytotalComboBox.getSelectedIndex()]);
-                System.out.println("renotifymoneylineComboBox=" + minslist[renotifymoneylineComboBox.getSelectedIndex()]);
-                System.out.println("renotifyteamtotalComboBox=" + minslist[renotifyteamtotalComboBox.getSelectedIndex()]);
-
-
-                System.out.println("spreadpopuplocationint=" + spreadpopuplocationint);
-                System.out.println("totalpopuplocationint=" + totalpopuplocationint);
-                System.out.println("moneylinepopuplocationint=" + moneylinepopuplocationint);
-                System.out.println("teamtotalpopuplocationint=" + teamtotalpopuplocationint);
+                log("renotifyComboBox=" + minslist[renotifyComboBox.getSelectedIndex()]);
+                log("renotifytotalComboBox=" + minslist[renotifytotalComboBox.getSelectedIndex()]);
+                log("renotifymoneylineComboBox=" + minslist[renotifymoneylineComboBox.getSelectedIndex()]);
+                log("renotifyteamtotalComboBox=" + minslist[renotifyteamtotalComboBox.getSelectedIndex()]);
 
 
-                System.out.println("moveatallButton=" + moveatallButton.isSelected());
-                System.out.println("movelinejuiceButton=" + movelinejuiceButton.isSelected());
-                System.out.println("movepercentagebutton=" + movepercentagebutton.isSelected());
+                log("spreadpopuplocationint=" + spreadpopuplocationint);
+                log("totalpopuplocationint=" + totalpopuplocationint);
+                log("moneylinepopuplocationint=" + moneylinepopuplocationint);
+                log("teamtotalpopuplocationint=" + teamtotalpopuplocationint);
 
 
-                System.out.println("totalmoveatallButton=" + totalmoveatallButton.isSelected());
-                System.out.println("totalmovelinejuiceButton=" + totalmovelinejuiceButton.isSelected());
-                System.out.println("totalmovepercentagebutton=" + totalmovepercentagebutton.isSelected());
+                log("moveatallButton=" + moveatallButton.isSelected());
+                log("movelinejuiceButton=" + movelinejuiceButton.isSelected());
+                log("movepercentagebutton=" + movepercentagebutton.isSelected());
 
-                System.out.println("moneylinemoveatallButton=" + moneylinemoveatallButton.isSelected());
-                System.out.println("moneylinemovelinejuiceButton=" + moneylinemovelinejuiceButton.isSelected());
-                System.out.println("moneylinemovepercentagebutton=" + moneylinemovepercentagebutton.isSelected());
 
-                System.out.println("teamtotalmoveatallButton=" + teamtotalmoveatallButton.isSelected());
-                System.out.println("teamtotalmovelinejuiceButton=" + teamtotalmovelinejuiceButton.isSelected());
-                System.out.println("teamtotalmovepercentagebutton=" + teamtotalmovepercentagebutton.isSelected());
+                log("totalmoveatallButton=" + totalmoveatallButton.isSelected());
+                log("totalmovelinejuiceButton=" + totalmovelinejuiceButton.isSelected());
+                log("totalmovepercentagebutton=" + totalmovepercentagebutton.isSelected());
+
+                log("moneylinemoveatallButton=" + moneylinemoveatallButton.isSelected());
+                log("moneylinemovelinejuiceButton=" + moneylinemovelinejuiceButton.isSelected());
+                log("moneylinemovepercentagebutton=" + moneylinemovepercentagebutton.isSelected());
+
+                log("teamtotalmoveatallButton=" + teamtotalmoveatallButton.isSelected());
+                log("teamtotalmovelinejuiceButton=" + teamtotalmovelinejuiceButton.isSelected());
+                log("teamtotalmovepercentagebutton=" + teamtotalmovepercentagebutton.isSelected());
 
                 int gameperiodint = gameperiodintlist[gameperiodComboBox.getSelectedIndex()];
 
@@ -2118,8 +2118,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
         //initialize tree
         for (int j = 0; j < checkednodes.size(); j++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes.elementAt(j);
-            //System.out.println("its"+node);
-            TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
+            TreePath path = new TreePath((node).getPath());
             _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
         }
 
@@ -2270,14 +2269,10 @@ else if(alerttype.equalsIgnoreCase("Injury"))
         }
     }
     public void itemStateChanged(ItemEvent e) {
-        // if the state combobox is changed
-        //System.out.println("IN ITEM STATE CHANGED="+e.getSource());
         if (e.getStateChange() != ItemEvent.SELECTED) {
-            //System.out.println("NOT SELECTED EXITING!");
             return;
         }
         if (e.getSource() == sportComboBox) {
-            // sportComboBox.getSelectedIndex()
             sport = sportlist[sportComboBox.getSelectedIndex()];
             _tree = trees[sportComboBox.getSelectedIndex()];
             treePanel.removeAll();
@@ -2567,7 +2562,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     if (!sport.getSportname().equals(lan.getSport())) {
                         continue;
                     } else {
-                        //System.out.println(i+" Found sport! "+sport.getSportname());
+                        //log(i+" Found sport! "+sport.getSportname());
                     }
 
                     DefaultMutableTreeNode child = new DefaultMutableTreeNode(sport.getLeaguename());
@@ -2575,10 +2570,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
                     TreePath path = new TreePath(((DefaultMutableTreeNode) child).getPath());
 
                     if (lansports.contains("" + sport.getLeague_id())) {
-                        //System.out.println(sport.getLeague_id()+" adding path "+path);
                         _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
                     } else {
-                        //System.out.println(sport.getLeague_id()+" removing path "+path);
                         _tree.getCheckBoxTreeSelectionModel().removeSelectionPath(path);
                     }
 

@@ -69,7 +69,6 @@ public class LoginClient implements MessageListener {
             connection.start();
 
         } catch (Exception ex) {
-
             log(ex);
         }
     }
@@ -86,12 +85,12 @@ public class LoginClient implements MessageListener {
         String queuename = "spankodds.LOGIN";
         LoginClient client = new LoginClient();
 
-        System.out.println(new java.util.Date());
+        log(new java.util.Date());
         client.login(args[0], args[1]);
 
         while (!client.getLoginResultBack()) //wait for login
         {
-            //System.out.println(client.loginresultback+" "+new java.util.Date());
+            //log(client.loginresultback+" "+new java.util.Date());
             log("");
         }
 
@@ -150,17 +149,17 @@ public class LoginClient implements MessageListener {
         Utils.ensureNotEdtThread();
         try {
             String messageType = message.getStringProperty("messageType");
-            //System.out.println("Messagetype is: "+message.getStringProperty("messageType"));
+            //log("Messagetype is: "+message.getStringProperty("messageType"));
 
             if (messageType.equals("loginResult")) {
-                System.out.println("login back start " + new java.util.Date());
+                log("login back start " + new java.util.Date());
                 TextMessage response = (TextMessage) message;
                 String text = response.getText();
-                System.out.println("TEXTRECEIVED=" + text);
+                log("TEXTRECEIVED=" + text);
                 if (text.equals("")) {
                     this.setloggedin(false);
                     setLoginResultBack(true);
-                    System.out.println("LOGIN NO GOOD");
+                    log("LOGIN NO GOOD");
                 } else {
                     this.setloggedin(true);
                     String[] array = text.split(SiaConst.MessageDelimiter);
@@ -192,17 +191,14 @@ public class LoginClient implements MessageListener {
                             array[38],
                             array[39]
                     );
-                    System.out.println("ABOUT TO CALL SETUSER!!!");
+                    log("ABOUT TO CALL SETUSER!!!");
                     AppController.setUser(user);
 
                     AppController.initializeSportsTabPaneVectorFromUser();
-                    try
-                    {
+                    try {
                         AppController.initializeLineAlertVectorFromUser();
-                    }
-                    catch(Exception ex)
-                    {
-                        System.out.println("exception loading in linealerts.."+ex);
+                    } catch (Exception ex) {
+                        log(ex);
 
                     }
 
@@ -217,7 +213,7 @@ public class LoginClient implements MessageListener {
 
                 AppController.createLoggedInConnection(array[0], array[1]);
 
-                System.out.println("just created loginconnection!");
+                log("just created loginconnection!");
 
 
             } else if (messageType.equals("Bookie")) {
@@ -246,7 +242,7 @@ public class LoginClient implements MessageListener {
                 //log game messages  -- 2021-10-09
                 InitialGameMessages.addText(text);
                 //allow reading games from log for test purpose  -- 2021-10-09
-                if ( ! InitialGameMessages.getMessagesFromLog) {
+                if (!InitialGameMessages.getMessagesFromLog) {
                     AppController.addGame(GameUtils.parseGameText(text));
                 }
             } else if (messageType.equals("Spreadline")) {
@@ -352,10 +348,8 @@ public class LoginClient implements MessageListener {
 
             }
 
-        } catch (JMSException e) {
-            System.out.println("message prcoessing exception " + e);
         } catch (Exception ex) {
-            System.out.println("general message prcessing exception " + ex + "src/main" + message);
+            log(ex);
 
         }
     }

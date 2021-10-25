@@ -148,10 +148,10 @@ public abstract class OngoingGameMessages {
 //        Thread.sleep(5000L);
 //        loadMessagesFromLog();
         String test="{abcd}";
-        System.out.println(rmSpecialCharacters(test));
+        log(rmSpecialCharacters(test));
 
         test="1234";
-        System.out.println(rmSpecialCharacters(test));
+        log(rmSpecialCharacters(test));
         System.exit(0);
     }
 

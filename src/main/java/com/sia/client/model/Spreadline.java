@@ -100,8 +100,8 @@ public class Spreadline extends Line {
 //
 //
 //        Spreadline sl = new Spreadline(109, 29, 5, -5, -110, -110, System.currentTimeMillis(), 0);
-//        System.out.println("hi " + sl.isOpener());
-//        System.out.println(sl.getPriorvisitspread());
+//        log("hi " + sl.isOpener());
+//        log(sl.getPriorvisitspread());
     }
 
     public boolean isOpener() {
@@ -140,7 +140,7 @@ public class Spreadline extends Line {
     public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, long ts, boolean isopener) {
         if(bookieid==880 & gameid == 345)
         {
-         //   System.out.println("BAX TEST "+visitspread+".."+visitjuice+".."+homespread+".."+homejuice+".."+isopener);
+         //   log("BAX TEST "+visitspread+".."+visitjuice+".."+homespread+".."+homejuice+".."+isopener);
 
         }
 

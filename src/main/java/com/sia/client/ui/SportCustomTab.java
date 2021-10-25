@@ -79,39 +79,39 @@ public class SportCustomTab {
 
         if (alerttype.equalsIgnoreCase("Football")) {
             userpref = AppController.getUser().getFootballPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Basketball")) {
             userpref = AppController.getUser().getBasketballPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Baseball")) {
             userpref = AppController.getUser().getBaseballPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Hockey")) {
             userpref = AppController.getUser().getHockeyPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Fighting")) {
             userpref = AppController.getUser().getFightingPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase(SiaConst.SoccerStr)) {
             userpref = AppController.getUser().getSoccerPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Auto racing")) {
             userpref = AppController.getUser().getAutoracingPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Golf")) {
             userpref = AppController.getUser().getGolfPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         } else if (alerttype.equalsIgnoreCase("Tennis")) {
             userpref = AppController.getUser().getTennisPref();
-            System.out.println("userprefs =" + userpref);
+            log("userprefs =" + userpref);
 
         }
 
@@ -132,7 +132,7 @@ public class SportCustomTab {
             }
         }
         for (int j = 0; j < prefs.length; j++) {
-            System.out.println(j + "=" + prefs[j]);
+            log(j + "=" + prefs[j]);
         }
 
 
@@ -201,14 +201,12 @@ public class SportCustomTab {
                 TreePath[] treePaths = _tree.getCheckBoxTreeSelectionModel().getSelectionPaths();
 
                 int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                System.out.println("treerows=" + treeRows);
+                log("treerows=" + treeRows);
                 if (treeRows != null) {
                     java.util.Arrays.sort(treeRows);
                     for (int i = 0; i < treeRows.length; i++) {
                         TreePath path = _tree.getPathForRow(treeRows[i]);
                         selectedModel.addElement(path.getLastPathComponent());
-                        //System.out.println("selected="+path.getLastPathComponent());
-
                     }
                 }
 				
@@ -223,7 +221,7 @@ public class SportCustomTab {
 					
                 }
 				*/
-                System.out.println("-------------------------");
+                log("-------------------------");
                 selectedList.setModel(selectedModel);
             }
         });
@@ -369,8 +367,8 @@ public class SportCustomTab {
                 JSlider source = (JSlider) e.getSource();
                 int value = source.getValue();
                 if (!source.getValueIsAdjusting()) {
-                    popupsecs = (int) source.getValue();
-                    System.out.println("secs=" + popupsecs);
+                    popupsecs = source.getValue();
+                    log("secs=" + popupsecs);
                 }
             }
         });
@@ -390,21 +388,20 @@ public class SportCustomTab {
 						z++;
 						String key = (String)enum00.nextElement();
 						String value = (String)leaguenameidhash.get(key);
-						System.out.println("key="+key+"..value="+value);
+						log("key="+key+"..value="+value);
 						if(z > 20) {break;}
 					}
 					*/
 
 
                 int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                System.out.println("treerows=" + treeRows);
+                log("treerows=" + treeRows);
                 if (treeRows != null) {
                     java.util.Arrays.sort(treeRows);
                     for (int i = 0; i < treeRows.length; i++) {
                         TreePath path = _tree.getPathForRow(treeRows[i]);
-                        System.out.println(path.getLastPathComponent());
+                        log(path.getLastPathComponent());
                         String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
-                        System.out.println("prprprpprpr" + id);
                         if (id == null || id.equals("null")) {
                             id = "" + path.getLastPathComponent();
                         }
@@ -422,7 +419,7 @@ public class SportCustomTab {
                 //sportselected = sportselected.substring(1);
                 String newuserprefs = dateRadioButton.isSelected() + "|" + popupsecs + "|" + sportselected + "|" + includeheaders.isSelected() + "|" + includeseries.isSelected() + "|" + includeingame.isSelected() + "|" + includeadded.isSelected() + "|" + includeextra.isSelected() + "|" + includeprops.isSelected();
 
-                System.out.println("newprefs=" + newuserprefs);
+                log("newprefs=" + newuserprefs);
                 if (alerttype.equalsIgnoreCase("football")) {
                     tabVal = 0;
                     AppController.getUser().setFootballPref(newuserprefs);
@@ -542,9 +539,9 @@ public class SportCustomTab {
         //initialize tree
         for (int j = 0; j < checkednodes.size(); j++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes.elementAt(j);
-            //System.out.println("its"+node);
+            //log("its"+node);
             TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-            System.out.println(checkednodes.elementAt(j) + "its" + path);
+            log(checkednodes.elementAt(j) + "its" + path);
             _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
         }
 

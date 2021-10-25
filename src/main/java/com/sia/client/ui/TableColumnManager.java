@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 
 /**
  * The TableColumnManager can be used to manage TableColumns. It will give the
@@ -149,20 +150,19 @@ public class TableColumnManager
      * @param columnName the column name of the column to be removed
      */
     public void hideColumn(Object columnName) {
-        //System.out.println("in hide column");
+        //log("in hide column");
         if (columnName == null) {
             return;
         }
 
         for (int i = 0; i < tcm.getColumnCount(); i++) {
             TableColumn column = tcm.getColumn(i);
-            //System.out.println("columnname is.."+columnName+"..header value is.."+column.getHeaderValue()+"..");
+            //log("columnname is.."+columnName+"..header value is.."+column.getHeaderValue()+"..");
             if (columnName.toString().equals(column.getHeaderValue() + "")) {
                 hideColumn(column);
                 break;
             }
         }
-        //System.out.println("leaving hide column");
     }
 
     /**
@@ -200,7 +200,7 @@ public class TableColumnManager
             columnString = columnString + col.getIdentifier() + ",";
         }
 
-        System.out.println("COLUMNSTRING=" + fixed + "=" + columnString);
+        log("COLUMNSTRING=" + fixed + "=" + columnString);
         //  Move the column to its position before it was hidden.
         //  (Multiple columns may be hidden so we need to find the first
         //  visible column before this column so the column can be moved
@@ -297,7 +297,7 @@ public class TableColumnManager
 //            @Override
 //            public void stateChanged(ChangeEvent arg0) {
 //                Color color2 = chooser.getColor();
-//                System.out.println(color2);
+//                log(color2);
 //
 //            }
 //        });
@@ -392,7 +392,7 @@ public class TableColumnManager
             columnString = columnString + "," + col.getIdentifier();
         }
 
-        System.out.println(fixed + "COLUMNSTRINGAFTERMOVE=" + columnString);
+        log(fixed + "COLUMNSTRINGAFTERMOVE=" + columnString);
         if (fixed.equals("")) {
             AppController.getUser().setBookieColumnPrefs(columnString.substring(1));
         } else {

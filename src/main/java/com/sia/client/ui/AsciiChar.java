@@ -1,9 +1,8 @@
 package com.sia.client.ui;
 
-public class AsciiChar
-{
-	
- public static final char[] EXTENDED = { 0x00C7, 0x00FC, 0x00E9, 0x00E2,
+public class AsciiChar {
+
+    public static final char[] EXTENDED = {0x00C7, 0x00FC, 0x00E9, 0x00E2,
             0x00E4, 0x00E0, 0x00E5, 0x00E7, 0x00EA, 0x00EB, 0x00E8, 0x00EF,
             0x00EE, 0x00EC, 0x00C4, 0x00C5, 0x00C9, 0x00E6, 0x00C6, 0x00F4,
             0x00F6, 0x00F2, 0x00FB, 0x00F9, 0x00FF, 0x00D6, 0x00DC, 0x00A2,
@@ -19,34 +18,13 @@ public class AsciiChar
             0x03A3, 0x03C3, 0x00B5, 0x03C4, 0x03A6, 0x0398, 0x03A9, 0x03B4,
             0x221E, 0x03C6, 0x03B5, 0x2229, 0x2261, 0x00B1, 0x2265, 0x2264,
             0x2320, 0x2321, 0x00F7, 0x2248, 0x00B0, 0x2219, 0x00B7, 0x221A,
-            0x207F, 0x00B2, 0x25A0, 0x00A0 };
+            0x207F, 0x00B2, 0x25A0, 0x00A0};
 
- public static final char getAscii(int code) 
- {
+    public static final char getAscii(int code) {
         if (code >= 0x80 && code <= 0xFF) {
             return EXTENDED[code - 0x7F];
         }
         return (char) code;
-    }	
-	
- public static final void printChar(int code) {
-        System.out.printf("%c%n", getAscii(code));
     }
 
-    public static void main(String[] args) {
-		//for(int i =0; i< EXTENDED.length; i++)
-       // printChar(i);
-        //printChar(171);
-		System.out.println("2\u00BE");
-		System.out.println("15 \u2044 16");
-		for(int i=150; i <300; i++)
-		{
-			
-			String charac = Character.toString((char)i);
-			System.out.println(i+" "+charac);
-		}
-		
-    }	
-	
-	
 }

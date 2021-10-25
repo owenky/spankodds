@@ -3,6 +3,8 @@ package com.sia.client.ui;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Line;
 
+import static com.sia.client.config.Utils.log;
+
 public class TeamTotalline extends Line {
 
 
@@ -200,7 +202,7 @@ public class TeamTotalline extends Line {
                 {
                     whowasbet = "o";
                 } else {
-                    //System.out.println("NO CHANGE!");
+                    //log("NO CHANGE!");
                     whowasbet = "";
 
                 }
@@ -215,7 +217,7 @@ public class TeamTotalline extends Line {
                 LineAlertManager.checkMove(this);
             }
         } catch (Exception ex) {
-            System.out.println("exception checking team total for linealert! " + ex);
+            log(ex);
         }
 
 

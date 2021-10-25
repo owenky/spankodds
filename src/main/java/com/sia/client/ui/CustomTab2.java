@@ -318,7 +318,7 @@ public class CustomTab2 extends JPanel {
                 ) {
 
                     //finalgames.add(g);
-                    //System.out.println("skipping "+g.getGame_id());
+                    //log("skipping "+g.getGame_id());
                     continue;
 
                 }
@@ -340,7 +340,7 @@ public class CustomTab2 extends JPanel {
                 } else if (!lastdate.equals(gamedate) || lastleagueid != leagueid) // new date or new league!
                 {
                     if (lastleagueid <= 4 || leagueid <= 4) {
-                        //System.out.println("new!...lastdate="+lastdate+"..gamedate="+g.getGamedate()+".."+lastleagueid+"..new="+leagueid);
+                        //log("new!...lastdate="+lastdate+"..gamedate="+g.getGamedate()+".."+lastleagueid+"..new="+leagueid);
                     }
                     lastdate = gamedate;
                     lastleagueid = leagueid;
@@ -388,7 +388,7 @@ public class CustomTab2 extends JPanel {
             if (customheaders.contains(value)) {
                 childnode.setVisible(false);
                 nodehash.put(value, childnode);
-                System.out.println("adding value=" + value + "..." + childnode.toString());
+                log("adding value=" + value + "..." + childnode.toString());
                 //addDestinationElements(new Object[] {childnode});
             }
 
@@ -398,15 +398,15 @@ public class CustomTab2 extends JPanel {
 
         for (int z = 0; z < customheaders.size(); z++) {
             String key = (String) customheaders.elementAt(z);
-            System.out.print("key=" + key);
+            log("key=" + key);
             InvisibleNode node = (InvisibleNode) nodehash.get(key);
             if (node != null) {
-                System.out.println(" not null");
+                log(" not null");
                 pathhash.put(node.toString(), new TreePath(node.getPath()));
                 node.setVisible(false);
                 addDestinationElements(new Object[]{node});
             } else {
-                System.out.println(" is null");
+                log(" is null");
             }
         }
 
@@ -522,9 +522,9 @@ public class CustomTab2 extends JPanel {
 
 
                     if (me.getClickCount() == 2 && selPath.getPathCount() == 3) {
-                        System.out.println("treepath=" + selPath);
-                        System.out.println("pathcount=" + selPath.getPathCount());
-                        System.out.println("lastPathComponent=" + selPath.getLastPathComponent());
+                        log("treepath=" + selPath);
+                        log("pathcount=" + selPath.getPathCount());
+                        log("lastPathComponent=" + selPath.getLastPathComponent());
                         InvisibleNode node = (InvisibleNode) selPath.getLastPathComponent();
 
                         if (pathhash.get(node.toString()) == null) // not there already
@@ -533,7 +533,7 @@ public class CustomTab2 extends JPanel {
 
                             addDestinationElements(new Object[]{selPath.getLastPathComponent()});
 
-                            System.out.println("node=" + node.toString() + "..");
+                            log("node=" + node.toString() + "..");
                             pathhash.put(node.toString(), selPath);
                             node.setVisible(false);
                             ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
@@ -613,9 +613,9 @@ public class CustomTab2 extends JPanel {
         destList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
-                    System.out.println("Double clicked on.." + destList.getSelectedValue() + "..");
+                    log("Double clicked on.." + destList.getSelectedValue() + "..");
                     TreePath tp = (TreePath) pathhash.get(destList.getSelectedValue() + "");
-                    System.out.println("treepath=" + tp);
+                    log("treepath=" + tp);
                     InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
                     node.setVisible(true);
                     ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
@@ -718,7 +718,7 @@ public class CustomTab2 extends JPanel {
             String[] items = msinfo.split("\\*");
 
             for (int j = 0; j < items.length; j++) {
-                System.out.println(j + " item=" + items[j]);
+                log(j + " item=" + items[j]);
                 if (j == 0) {
                     String[] headers = items[j].split("\\|");
                     for (int k = 0; k < headers.length; k++) {
@@ -727,7 +727,7 @@ public class CustomTab2 extends JPanel {
                             continue;
                         } else {
                             customheaders.add(header);
-                            System.out.println("adding header=" + header);
+                            log("adding header=" + header);
                         }
                     }
                 } else if (j == 1) {
@@ -780,7 +780,7 @@ public class CustomTab2 extends JPanel {
             if (!(node == model.getRoot())) {
                 node.setVisible(isVisible);
             } else {
-                System.out.println("refused: root node");
+                log("refused: root node");
             }
         }
         if (path.length == 1) {
@@ -827,7 +827,7 @@ public class CustomTab2 extends JPanel {
         int size = newValues.getSize();
         for (int i = 0; i < size; i++) {
             model.add(newValues.getElementAt(i));
-            System.out.println("adding .." + newValues.getElementAt(i));
+            log("adding .." + newValues.getElementAt(i));
         }
     }
 
@@ -989,7 +989,7 @@ public class CustomTab2 extends JPanel {
             msstring = msstring + "*" + tab + "*" + includeheaders.isSelected() + "*" + includeseries.isSelected() + "*" + includeingame.isSelected() +
                     "*" + includeadded.isSelected() + "*" + includeextra.isSelected() + "*" + includeprops.isSelected();
 
-            System.out.println("adding=" + msstring);
+            log("adding=" + msstring);
             AppController.addCustomTab(tab, msstring);
 
             if (!editing) {
@@ -1000,7 +1000,7 @@ public class CustomTab2 extends JPanel {
                     for (Object tabpane : tabpanes) {
                         SportsTabPane tp = (SportsTabPane) tabpane;
                         int numtabs = tp.getTabCount();
-                        System.out.println("numtabs= " + numtabs);
+                        log("numtabs= " + numtabs);
 
                         tp.removeTabAt(numtabs - 1);
                         SportType st = SportType.findBySportName(tab);
@@ -1073,9 +1073,9 @@ public class CustomTab2 extends JPanel {
             for (int i = 0; i < selPathArray.length; i++) {
                 TreePath selPath = selPathArray[i];
                 if (selPath != null && selPath.getPathCount() == 3) {
-                    System.out.println("treepath=" + selPath);
-                    System.out.println("pathcount=" + selPath.getPathCount());
-                    System.out.println("lastPathComponent=" + selPath.getLastPathComponent());
+                    log("treepath=" + selPath);
+                    log("pathcount=" + selPath.getPathCount());
+                    log("lastPathComponent=" + selPath.getLastPathComponent());
                     InvisibleNode node = (InvisibleNode) selPath.getLastPathComponent();
                     if (pathhash.get(node.toString()) == null) // not there already
                     {
@@ -1083,7 +1083,7 @@ public class CustomTab2 extends JPanel {
 
                         addDestinationElements(new Object[]{selPath.getLastPathComponent()});
 
-                        System.out.println("node=" + node.toString() + "..");
+                        log("node=" + node.toString() + "..");
                         pathhash.put(node.toString(), selPath);
                         node.setVisible(false);
                         ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
@@ -1115,7 +1115,7 @@ public class CustomTab2 extends JPanel {
             for (int i = 0; i < selected.length; i++) {
 
                 TreePath tp = (TreePath) pathhash.get(selected[i] + "");
-                System.out.println("treepath=" + tp);
+                log("treepath=" + tp);
                 InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
                 node.setVisible(true);
                 ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
@@ -1134,7 +1134,7 @@ public class CustomTab2 extends JPanel {
             for (int i = 0; i < selected.length; i++) {
 
                 TreePath tp = (TreePath) pathhash.get(selected[i] + "");
-                System.out.println("treepath=" + tp);
+                log("treepath=" + tp);
                 InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
                 node.setVisible(true);
                 ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);

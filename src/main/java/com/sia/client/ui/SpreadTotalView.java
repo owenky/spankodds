@@ -309,7 +309,7 @@ public class SpreadTotalView extends ViewValue  {
                         topicon = ICON_DOWN;
                     } else if (whowasbettotal.equals("o")) {
                         topicon = ICON_UP;
-                        //System.out.println("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
+                        //log("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
                     } else {
                         topicon = ICON_BLANK;
                     }
@@ -503,7 +503,7 @@ public class SpreadTotalView extends ViewValue  {
                         topicon = ICON_DOWN;
                     } else if (whowasbettotal.equals("o")) {
                         topicon = ICON_UP;
-                        //System.out.println("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
+                        //log.println("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
                     } else {
                         topicon = ICON_BLANK;
                     }
@@ -1261,7 +1261,7 @@ public class SpreadTotalView extends ViewValue  {
         }
 
         if (bid == 204 && gid == 465) {
-            //System.out.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
+            //log.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
         }
 
         try {
@@ -1473,7 +1473,7 @@ public class SpreadTotalView extends ViewValue  {
             }
         }
         if (bid == 204 && gid == 6829) {
-            //	System.out.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
+            //	log.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
         }
 
 

@@ -3,6 +3,8 @@ package com.sia.client.ui.simulator;
 import javax.swing.event.TableModelEvent;
 import java.util.List;
 
+import static com.sia.client.config.Utils.log;
+
 public class ColumnWidthAdjuster implements EventGenerator{
 
 //    private static final ColumnAdjustScheduler COLUMN_ADJUST_SCHEDULER = new ColumnAdjustScheduler();
@@ -30,7 +32,7 @@ public class ColumnWidthAdjuster implements EventGenerator{
         if ( oldValue.length() < 15) {
             rowData.set(col, oldValue + "X");
         } else {
-            System.out.println("Stop adding X.....");
+            log("Stop adding X.....");
         }
     }
 }

@@ -91,7 +91,7 @@ public class SoccerSpreadTotalView extends ViewValue {
 
     public LineData[] getCurrentBoxes() {
         topborder = bottomborder = drawborder = totalborder = ""; // owen added drawborder and totalborder
-        //System.out.println("in getcurrentboxes "+bid+".."+gid);
+        //log("in getcurrentboxes "+bid+".."+gid);
         if (isopenerbookie) {
             boxes = getOpenerBoxes();
             return boxes;
@@ -462,8 +462,6 @@ public class SoccerSpreadTotalView extends ViewValue {
                 }
 
             }
-
-            //System.out.println("09");
         } else if (display.equals("justspread")) {
             drawboxS = "";
             totalboxS = "";
@@ -634,9 +632,6 @@ public class SoccerSpreadTotalView extends ViewValue {
             } else {
                 String tot1 = ttl.getShortPrintedCurrentVisitTotal();
                 String tot2 = ttl.getOtherPrintedCurrentVisitTotal();
-
-                //System.out.println("bookie="+bid+".."+tot1+".."+tot2);
-
                 if (tot1.indexOf("o") != -1) {
                     topboxS = tot1;
                     bottomboxS = tot2;
@@ -1007,31 +1002,26 @@ public class SoccerSpreadTotalView extends ViewValue {
                 showcomebacks = false;
             }
             if (visitmljuice == 99999) {
-                //System.out.println("x0");
+                //log("x0");
                 topboxS = "";
-                //System.out.println("x1");
+                //log("x1");
                 bottomboxS = "";//owen took out ml.getPrintedJuiceLine(homemljuice);
-                //System.out.println("x2");
+                //log("x2");
                 drawboxS = "";//owen took out ml.getPrintedJuiceLine(drawmljuice);
-                //System.out.println("x3");
+                //log("x3");
 
                 if (over == 99999) {
                     totalboxS = "";
                 } else {
                     totalboxS = tl.getShortPrintedOpenerTotal();
-                    //System.out.println("x4");
+                    //log("x4");
                 }
 
             } else if (visitmljuice < homemljuice) // visitor is the favorite
             {
-                //		System.out.println("y0");
                 topboxS = ml.getPrintedJuiceLine(visitmljuice);
-                //	System.out.println("y1");
                 bottomboxS = ml.getPrintedJuiceLine(homemljuice);
-                //	System.out.println("y2");
                 drawboxS = ml.getPrintedJuiceLine(drawmljuice);
-                //	System.out.println("y3");
-
                 if (over == 99999) {
                     totalboxS = "";
                 } else {
@@ -1389,12 +1379,9 @@ public class SoccerSpreadTotalView extends ViewValue {
         } catch (Exception e) // no line
         {
             visitspread = 99999;
-            //System.out.println("exception ex"+e+"..");
-
         }
 
         if (bid == 204 && gid == 465) {
-            //System.out.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
         }
 
         try {
@@ -1633,11 +1620,6 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         //ld1.setIcon(ICON_BLANK);
         //ld2.setIcon(ICON_BLANK);
-
-        if (bid == 204 && gid == 6829) {
-            //	System.out.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
-        }
-
 
         ld1.setIconPath(null);
         ld2.setIconPath(null);

@@ -1,12 +1,13 @@
 package com.sia.client.ui;
 
-import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-
-import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import static com.sia.client.config.Utils.log;
 
 //this thing doesnt work so i stopped using it 7/11/2020
 
@@ -34,7 +35,7 @@ public OddsFrame(SportsTabPane stb , TopView tv)
 		thisframe.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("Window Closing! ");
+                log("Window Closing! ");
 				AppController.removeFrame(thisframe);
                 
             }
@@ -59,7 +60,7 @@ public OddsFrame(SportsTabPane stb , TopView tv)
 						
 					try 
 						{ 
-							//System.out.println("sleeping 5 secs");
+							//log("sleeping 5 secs");
 							//Thread.sleep(5000);
 						}
 						catch(Exception ex ) {}	

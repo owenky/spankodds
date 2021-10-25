@@ -152,7 +152,7 @@ public class AppController {
                 String[] sportselected = lanitems[3].split(",");
                 String[] bookieselected = lanitems[4].split(",");
                 for (int k = 0; k < sportselected.length; k++) {
-                    System.out.println("sport" + k + "=" + sportselected[k]);
+                    log("sport" + k + "=" + sportselected[k]);
                 }
                 Vector sportselectedvec = new Vector(Arrays.asList(sportselected));
                 Vector bookieselectedvec = new Vector(Arrays.asList(bookieselected));
@@ -359,9 +359,9 @@ public class AppController {
     }
 
     public static Vector<Bookie> getBookiesVec() {
-        //System.out.println("BEFORE bookiesvec size="+bookiesVec.size());
+        //log("BEFORE bookiesvec size="+bookiesVec.size());
         reorderBookiesVec();
-        //System.out.println("AFTER bookiesvec size="+bookiesVec.size());
+        //log("AFTER bookiesvec size="+bookiesVec.size());
         return bookiesVec;
     }
 
@@ -379,8 +379,8 @@ public class AppController {
         fixedCols.clear();
         shownCols.clear();
         hiddenCols.clear();
-        //System.out.println("FIXED="+u.getFixedColumnPrefs());
-        //System.out.println("OTHERS"+u.getBookieColumnPrefs());
+        //log("FIXED="+u.getFixedColumnPrefs());
+        //log("OTHERS"+u.getBookieColumnPrefs());
         String fixedcols[] = u.getFixedColumnPrefs().split(",");
         String cols[] = u.getBookieColumnPrefs().split(",");
         for (int i = 0; i < fixedcols.length; i++) {
@@ -521,7 +521,7 @@ public class AppController {
         removeTabPane(stb);
         frames.remove(f);
         if (frames.size() == 0) {
-            System.out.println("exiting..");
+            log("exiting..");
             System.exit(0);
         }
     }
@@ -552,7 +552,7 @@ public class AppController {
 
         for (int i = 0; i < menubars.size(); i++) {
             SportsMenuBar smb = menubars.elementAt(i);
-            System.out.println("smb=" + smb);
+            log("smb=" + smb);
             smb.populateTabsMenu();
 
         }
@@ -684,7 +684,7 @@ public class AppController {
 
     public static UserPrefsProducer getUserPrefsProducer() {
         if (userPrefsProducer == null) {
-            System.out.println("creating userprefsproducer!!!");
+            log("creating userprefsproducer!!!");
             createUserPrefsProducer();
         }
         return userPrefsProducer;
@@ -733,8 +733,8 @@ public class AppController {
                 String id = colcolor.substring(0, colcolor.indexOf("="));
                 String color = colcolor.substring(colcolor.indexOf("=") + 1);
                 try {
-                    System.out.println("BOOKIECOLORS " + id + "=" + color);
-                    System.out.println(Color.decode(color));
+                    log("BOOKIECOLORS " + id + "=" + color);
+                    log(Color.decode(color));
                     bookiecolors.put(id, Color.decode(color));
                 } catch (Exception ex) {
                     log(ex);
@@ -1031,7 +1031,7 @@ public class AppController {
             q4spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
         } else {
             livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-            System.out.println("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
+            log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
         }
         //LineAlertOpeners.spreadOpenerAlert(spread);
     }
@@ -1107,7 +1107,7 @@ public class AppController {
             q4teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
         } else {
             liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-            System.out.println("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
+            log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
         }
 //LineAlertOpeners.teamTotalOpenerAlert(teamtotal);
     }

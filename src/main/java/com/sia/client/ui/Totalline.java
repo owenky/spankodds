@@ -5,6 +5,8 @@ import com.sia.client.model.Line;
 
 import java.io.Serializable;
 
+import static com.sia.client.config.Utils.log;
+
 
 public class Totalline extends Line implements Serializable {
 
@@ -152,7 +154,7 @@ public class Totalline extends Line implements Serializable {
                 {
                     this.whowasbet = "o";
                 } else {
-                    //System.out.println("NO CHANGE!");
+                    //log("NO CHANGE!");
                     this.whowasbet = "";
 
                 }
@@ -167,7 +169,7 @@ public class Totalline extends Line implements Serializable {
                 LineAlertManager.checkMove(this);
             }
         } catch (Exception ex) {
-            System.out.println("exception checking total for linealert! " + ex);
+            log( ex);
         }
 
 

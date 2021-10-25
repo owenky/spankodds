@@ -230,13 +230,13 @@ public class GameAlert {
                 TreePath[] treePaths = _tree.getCheckBoxTreeSelectionModel().getSelectionPaths();
 
                 int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                System.out.println("treerows=" + treeRows);
+                log("treerows=" + treeRows);
                 if (treeRows != null) {
                     java.util.Arrays.sort(treeRows);
                     for (int i = 0; i < treeRows.length; i++) {
                         TreePath path = _tree.getPathForRow(treeRows[i]);
                         selectedModel.addElement(path.getLastPathComponent());
-                        //System.out.println("selected="+path.getLastPathComponent());
+                        //log("selected="+path.getLastPathComponent());
 
                     }
                 }
@@ -349,7 +349,7 @@ public class GameAlert {
                 int value = source.getValue();
                 if (!source.getValueIsAdjusting()) {
                     popupsecs = (int) source.getValue();
-                    System.out.println("secs=" + popupsecs);
+                    log("secs=" + popupsecs);
                 }
             }
         });
@@ -462,7 +462,7 @@ public class GameAlert {
                     defaultsoundfileplay = soundfile;
                     soundlabel.setText(soundfile);
                     //This is where a real application would open the file.
-                    System.out.println("Opening: " + file.getName());
+                    log("Opening: " + file.getName());
                 } else {
                     //log.append("Open command cancelled by user." + newline);
                 }
@@ -490,19 +490,19 @@ public class GameAlert {
 						z++;
 						String key = (String)enum00.nextElement();
 						String value = (String)leaguenameidhash.get(key);
-						System.out.println("key="+key+"..value="+value);
+						log("key="+key+"..value="+value);
 						if(z > 20) {break;}
 					}
 					*/
 
 
                 int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                System.out.println("treerows=" + treeRows);
+                log("treerows=" + treeRows);
                 if (treeRows != null) {
                     java.util.Arrays.sort(treeRows);
                     for (int i = 0; i < treeRows.length; i++) {
                         TreePath path = _tree.getPathForRow(treeRows[i]);
-                        System.out.println(path.getLastPathComponent());
+                        log(path.getLastPathComponent());
                         String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
 
                         if (id == null || id.equals("null")) {
@@ -519,7 +519,7 @@ public class GameAlert {
                 String newuserprefs = enablepopup.isSelected() + "|" + enablesound.isSelected() + "|" + popupsecs + "|" + popuplocationint + "|" +
                         soundfile + "|" + sportselected;
 
-                System.out.println("newprefs=" + newuserprefs);
+                log("newprefs=" + newuserprefs);
                 if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
                     AppController.getUser().setFinalAlert(newuserprefs);
                 } else if (alerttype.equalsIgnoreCase("Started")) {
@@ -609,9 +609,9 @@ public class GameAlert {
         //initialize tree
         for (int j = 0; j < checkednodes.size(); j++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes.elementAt(j);
-            //System.out.println("its"+node);
+            //log("its"+node);
             TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-            //System.out.println("its==========================="+checkednodes.get(j)+"psth"+path);
+            //log("its==========================="+checkednodes.get(j)+"psth"+path);
             _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
         }
 

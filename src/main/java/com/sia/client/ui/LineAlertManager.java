@@ -28,17 +28,17 @@ public class LineAlertManager {
             return;
         }
         if (g.isIngame()) {
-            //System.out.println("skipping check move ingame "+g.getGame_id());
+            //log("skipping check move ingame "+g.getGame_id());
             return;
         }
         Vector linealertnodes = AppController.getLineAlertNodes();
-        //System.out.println(linealertnodes.size());
+        //log(linealertnodes.size());
         for (int i = 0; i < linealertnodes.size(); i++) {
             try {
                 LineAlertNode lan = (LineAlertNode) linealertnodes.elementAt(i);
 
                 if (lan.doesthislinequalify(line)) {
-                    System.out.println("about to send alert..");
+                    log("about to send alert..");
 
                     String html = "<html><body><H2>LINE MOVE&nbsp;<FONT COLOR=BLUE>" + lan.getName() + "</H2>" +
                             "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
