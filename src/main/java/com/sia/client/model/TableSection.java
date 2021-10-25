@@ -111,8 +111,8 @@ public abstract class TableSection<V extends KeyedObject> {
     protected boolean containsDataRow() {
         return 1 < gamesVec.size();
     }
-    public int getRowIndex(final Integer rowKey) {
-        return gamesVec.getRowIndex(rowKey);
+    public int getRowIndex(final Integer gameId) {
+        return gamesVec.getRowIndex(gameId);
     }
 
     public V removeGameId(Integer gameidtoremove, boolean repaint) {

@@ -105,7 +105,7 @@ log("***** Game not found in the table -- "+GameUtils.getGameDebugInfo(game));
         }
         return rtn;
     }
-    public boolean containsGroupHeader(String gameGroupHeader) {
+    public final boolean containsGroupHeader(String gameGroupHeader) {
         return null != super.findTableSectionByHeaderValue(gameGroupHeader);
     }
     private LinesTableData findOrCreateStageSectionByHeaderValue(String header) {
