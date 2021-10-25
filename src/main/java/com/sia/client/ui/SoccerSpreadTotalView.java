@@ -9,7 +9,6 @@ import com.sia.client.model.Spreadline;
 import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
-import java.sql.Timestamp;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -165,14 +164,14 @@ public class SoccerSpreadTotalView extends ViewValue {
         String whowasbetmoney = "";
 
         String whowasbetteamtotal = "";
-        Timestamp tsnow = new Timestamp(new java.util.Date().getTime());
+        long tsnow = System.currentTimeMillis();
         try {
             visitspread = sl.getCurrentvisitspread();
             visitjuice = sl.getCurrentvisitjuice();
             homejuice = sl.getCurrenthomejuice();
 
             whowasbetspread = sl.getWhowasbet();
-            if (tsnow.getTime() - sl.getCurrentts()<= 30000 && clearts < sl.getCurrentts()) {
+            if (tsnow - sl.getCurrentts()<= 30000 && clearts < sl.getCurrentts()) {
                 spreadcolor = Color.RED;
             }
             else if (clearts < sl.getCurrentts()) {
@@ -194,7 +193,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         try {
             over = tl.getCurrentover();
             whowasbettotal = tl.getWhowasbet();
-            if (tsnow.getTime() - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
+            if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
                 totalcolor = Color.RED;
             }
             else if (clearts < tl.getCurrentts()) {
@@ -216,7 +215,7 @@ public class SoccerSpreadTotalView extends ViewValue {
             drawmljuice = ml.getCurrentdrawjuice();
             whowasbetmoney = ml.getWhowasbet();
 
-            if (tsnow.getTime() - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
+            if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
                 moneycolor = Color.RED;
             }
             else if (clearts < ml.getCurrentts()) {
@@ -240,7 +239,7 @@ public class SoccerSpreadTotalView extends ViewValue {
             visitover = ttl.getCurrentvisitover();
             homeover = ttl.getCurrenthomeover();
             whowasbetteamtotal = ttl.getWhowasbet();
-            if (tsnow.getTime() - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
+            if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
                 teamtotalcolor = Color.RED;
             }
             //else if(priortotalcolor != Color.WHITE)

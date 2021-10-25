@@ -1,6 +1,5 @@
 package com.sia.client.model;
 
-import java.sql.Timestamp;
 import java.util.Vector;
 
 public class User {
@@ -46,7 +45,7 @@ public class User {
 
     Vector bookiecolumnsvector;
     Vector colorcolumnvector;
-    java.sql.Timestamp logintime;
+    long logintime;
 
 
     String chartfilename;
@@ -130,7 +129,7 @@ public class User {
         this.linealerts = linealerts;
 
 
-        logintime = new Timestamp(new java.util.Date().getTime());
+        logintime = System.currentTimeMillis();
 
     }
 
@@ -252,7 +251,7 @@ public class User {
     }
 
 
-    public Timestamp getLoginTime() {
+    public long getLoginTime() {
 
         return logintime;
     }

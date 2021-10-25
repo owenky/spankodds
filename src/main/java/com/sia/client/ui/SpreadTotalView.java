@@ -11,7 +11,6 @@ import com.sia.client.model.Spreadline;
 import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
-import java.sql.Timestamp;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -856,10 +855,6 @@ public class SpreadTotalView extends ViewValue  {
             log(ex);
         }
         return boxes;
-    }
-    public static void main(String [] argvb) {
-        long time=1130;
-        System.out.println(new Timestamp(time).getTime());
     }
     public void setCurrentBoxes(LineData[] boxes) {
         this.boxes = boxes;

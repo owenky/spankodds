@@ -5,7 +5,6 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -99,8 +98,8 @@ public abstract class GameUtils {
                 Boolean.parseBoolean(array[48]),
                 Boolean.parseBoolean(array[49]),
                 array[50],
-                new Timestamp(Long.parseLong(array[51])),
-                new Timestamp(Long.parseLong(array[52])));
+                Long.parseLong(array[51]),
+                Long.parseLong(array[52]));
     }
     public static String getGameDebugInfo(Game game) {
         Sport sport = AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());

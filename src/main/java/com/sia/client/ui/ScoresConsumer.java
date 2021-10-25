@@ -167,13 +167,13 @@ public class ScoresConsumer implements MessageListener {
 //                        new ScoreChangedProcessor().process(GameStatus.InProgress,g,GameStatus.InProgress.getGroupHeader(),currentvisitorscore,currenthomescore);
                     }
 
-                    g.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,
-                            new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
+                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
+                            scorets, currenthomescore, homescoresupplemental);
 
                 } else {
                     g = new Game();
-                    g.updateScore(period, timer, status, new java.sql.Timestamp(gamestatuslong), currentvisitorscore, visitorscoresupplemental,
-                            new java.sql.Timestamp(scorets), currenthomescore, homescoresupplemental);
+                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
+                            scorets, currenthomescore, homescoresupplemental);
 //                    AppController.addGame(g);
                     scoreMessageProcessor.addMessage(AppController.getGame(gameid));
                 }

@@ -130,7 +130,7 @@ public class InfoView {
         Game g = AppController.getGame(gid);
         String retstring = "";
         java.text.SimpleDateFormat timerFormat = new java.text.SimpleDateFormat("m:ss");
-        long halftimestart = g.getScorets().getTime();
+        long halftimestart = g.getScorets();
         long halftimelength = (long) (s.getHalftimeminutes() * 60 * 1000);
         long startTime = halftimestart + halftimelength;
         long now = System.currentTimeMillis();
