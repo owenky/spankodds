@@ -129,7 +129,7 @@ public class LineAlertNode {
         this.spreadptsmove = spreadptsmove;
         this.spreadjuicemove = spreadjuicemove;
         this.spreadpercentagemove = spreadpercentagemove;
-        System.out.println("SPM=" + spreadpercentagemove);
+        log("SPM=" + spreadpercentagemove);
         this.isspreadplayaudio = isspreadplayaudio;
         this.spreadaudiofilename = spreadaudiofilename;
         this.isspreadshowpopup = isspreadshowpopup;
@@ -539,41 +539,41 @@ public class LineAlertNode {
 		{
 			if(line instanceof Spreadline)
 			{
-				System.out.println("ITS A SPREAD!!!!");
-				System.out.println("periodid="+periodid+"vs"+period+"....bookieid="+bookieid+"....sportid="+sportid+"..."+isspreadcheck);
+				log("ITS A SPREAD!!!!");
+				log("periodid="+periodid+"vs"+period+"....bookieid="+bookieid+"....sportid="+sportid+"..."+isspreadcheck);
 				for(int k =0; k < bookiecodes.size(); k++)
 				{
 					String thiscode = bookiecodes.elementAt(k);
 					if(thiscode.equals(""+bookieid))
 					{
-						System.out.println("BOOKIECODE HERE!!!!!!"+bookieid);
+						log("BOOKIECODE HERE!!!!!!"+bookieid);
 						bookiecodehere = true;
 					}
-					System.out.println(bookiecodes.elementAt(k)+"....");
+					log(bookiecodes.elementAt(k)+"....");
 
 				}
-				System.out.println("");
+				log("");
 				for(int k =0; k < sportcodes.size(); k++)
 				{
 					System.out.print(sportcodes.elementAt(k)+",");
 				}
-				System.out.println("");
+				log("");
 
 				if(bookiecodes.contains(""+bookieid))
 				{
-					System.out.println("WE GOT THIS BOOKIE ID!");
+					log("WE GOT THIS BOOKIE ID!");
 				}
 				else
 				{
-					System.out.println("WE DONT GOT THIS BOOKIE ID!");
+					log("WE DONT GOT THIS BOOKIE ID!");
 				}
 				if(sportcodes.contains(""+sportid))
 				{
-					System.out.println("WE GOT THIS SPORT ID!");
+					log("WE GOT THIS SPORT ID!");
 				}
 				else
 				{
-					System.out.println("WE DONT GOT THIS SPORT ID!");
+					log("WE DONT GOT THIS SPORT ID!");
 				}
 			}
 
@@ -583,7 +583,7 @@ public class LineAlertNode {
         if (periodgood && bookiecodes.contains("" + bookieid) && sportcodes.contains("" + leagueid)) {
 
             if (line instanceof Spreadline && isspreadcheck) {
-                //System.out.println(isspreadcheck+".."+"periodid="+periodid+"vs"+period+"...bid="+bookieid+"...sid="+sportid);
+                //log(isspreadcheck+".."+"periodid="+periodid+"vs"+period+"...bid="+bookieid+"...sid="+sportid);
                 return documentSpreadMove((Spreadline) line);
             } else if (line instanceof Totalline && istotalcheck) {
                 return documentTotalMove((Totalline) line);
@@ -731,12 +731,12 @@ public class LineAlertNode {
     }
 
     public boolean shouldIAlertSpreadline(Spreadline line) {
-        //System.out.println("In shouldIAlertSpreadLine...");
+        //log("In shouldIAlertSpreadLine...");
         if (spreadmoves.get("" + line.getGameid() + line.whowasbet) == null) {
             spreadmoves.put("" + line.getGameid() + line.whowasbet, new LineAlertQueue(spreadnumbookies));
         }
         LineAlertQueue queue = (LineAlertQueue) spreadmoves.get("" + line.getGameid() + line.whowasbet);
-        //System.out.println("queue inital "+queue+"..."+queue.size());
+        //log("queue inital "+queue+"..."+queue.size());
         // doing this next line to maker sure there are no duplicate bookie moves in queue
         queue.remove(line);
 
@@ -745,13 +745,13 @@ public class LineAlertNode {
             return false;
         } else if (queue.size() == spreadnumbookies - 1) {
             queue.add(line);
-            //System.out.println("queue after add "+queue);
+            //log("queue after add "+queue);
             Spreadline old = (Spreadline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             long diff = newsecs - oldsecs;
             long difflastalert = newsecs - queue.getlastalerted();
-            //System.out.println("diff="+diff+"..spreadsecs="+spreadsecs+"..difflastalert="+difflastalert+"..minsren="+spreadminsrenotify);
+            //log("diff="+diff+"..spreadsecs="+spreadsecs+"..difflastalert="+difflastalert+"..minsren="+spreadminsrenotify);
             if (newsecs - oldsecs <= spreadsecs * 1000) {
 
                 if (newsecs - queue.getlastalerted() >= spreadminsrenotify * 60 * 1000) {
@@ -763,7 +763,7 @@ public class LineAlertNode {
                 } else // move qualifies but its too soon since last notification
                 {
                     double diffinmins = difflastalert / 60000;
-                    System.out.println(old.getGameid() + " move qualifies too soon.difflastalert=" + diffinmins + "..minsren=" + spreadminsrenotify);
+                    log(old.getGameid() + " move qualifies too soon.difflastalert=" + diffinmins + "..minsren=" + spreadminsrenotify);
                     return false;
                 }
             } else {
@@ -776,8 +776,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Spreadline old = (Spreadline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             long diff = newsecs - oldsecs;
             long difflastalert = newsecs - queue.getlastalerted();
 
@@ -791,7 +791,7 @@ public class LineAlertNode {
                 } else // move qualifies but its too soon since last notification
                 {
                     double diffinmins = difflastalert / 60000;
-                    System.out.println(old.getGameid() + " move qualifies too soon.difflastalert=" + diffinmins + "..minsren=" + spreadminsrenotify);
+                    log(old.getGameid() + " move qualifies too soon.difflastalert=" + diffinmins + "..minsren=" + spreadminsrenotify);
                     return false;
                 }
             } else {
@@ -799,7 +799,7 @@ public class LineAlertNode {
             }
         } else // should be impossible!
         {
-            System.out.println("HOW DID I GET HERE SHOULDIALERTSPREADLINE!!!!!");
+            log("HOW DID I GET HERE SHOULDIALERTSPREADLINE!!!!!");
             return false;
         }
     }
@@ -845,8 +845,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Totalline old = (Totalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= totalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= totalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -868,8 +868,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Totalline old = (Totalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= totalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= totalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -886,7 +886,7 @@ public class LineAlertNode {
             }
         } else // should be impossible!
         {
-            System.out.println("HOW DID I GET HERE SHOULDIALERT TOTALLINE!!!!!");
+            log("HOW DID I GET HERE SHOULDIALERT TOTALLINE!!!!!");
             return false;
         }
     }
@@ -907,8 +907,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Moneyline old = (Moneyline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= moneylinesecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= moneylineminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -930,8 +930,8 @@ public class LineAlertNode {
             queue.add(line);
 
             Moneyline old = (Moneyline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= moneylinesecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= moneylineminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -948,7 +948,7 @@ public class LineAlertNode {
             }
         } else // should be impossible!
         {
-            System.out.println("HOW DID I GET HERE SHOULDIALERT MONEYLINE!!!!!");
+            log("HOW DID I GET HERE SHOULDIALERT MONEYLINE!!!!!");
             return false;
         }
     }
@@ -969,8 +969,8 @@ public class LineAlertNode {
             queue.add(line);
 
             TeamTotalline old = (TeamTotalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= teamtotalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= teamtotalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -991,8 +991,8 @@ public class LineAlertNode {
             queue.add(line);
 
             TeamTotalline old = (TeamTotalline) queue.peek();
-            long oldsecs = old.getCurrentts().getTime();
-            long newsecs = line.getCurrentts().getTime();
+            long oldsecs = old.getCurrentts();
+            long newsecs = line.getCurrentts();
             if (newsecs - oldsecs <= teamtotalsecs * 1000) {
                 if (newsecs - queue.getlastalerted() >= teamtotalminsrenotify * 60 * 1000) {
                     //ok i will clear queue, update last alerted and my handler will send out alert when i return true
@@ -1009,7 +1009,7 @@ public class LineAlertNode {
             }
         } else // should be impossible!
         {
-            System.out.println("HOW DID I GET HERE SHOULDIALERT TEAMTOTALLINE!!!!!");
+            log("HOW DID I GET HERE SHOULDIALERT TEAMTOTALLINE!!!!!");
             return false;
         }
     }

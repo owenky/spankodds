@@ -277,6 +277,9 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
         Object value = this.getValueAt(rowModelIndex,0);
         return retrieveGameGroupHeader(value);
     }
+    public boolean containsGame(int gameId) {
+        return this.getTableSections().stream().anyMatch(s-> 0 <= s.getRowIndex(gameId));
+    }
     public static String retrieveGameGroupHeader(Object value) {
         if ( value instanceof String) {
             String [] parts = ((String)value).split(SiaConst.GameGroupHeaderIden);

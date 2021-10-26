@@ -65,8 +65,8 @@ public class Game implements KeyedObject {
     String timeremaining;
 
     String tvstations;
-    java.sql.Timestamp gamestatusts;
-    java.sql.Timestamp scorets;
+    long gamestatusts;
+    long scorets;
 
     public Game() {
         setStatus("");
@@ -101,7 +101,7 @@ public class Game implements KeyedObject {
                 boolean seriesprice, boolean addedgame, boolean extragame, boolean tba, String visitornickname, String homenickname, String visitorcity, String homecity,
                 int visitor_id, int home_id, String visitorscoresupplemental, String homescoresupplemental, String visitorpitcher, String homepitcher,
                 String timeremaining, boolean visitorlefthanded, boolean homelefthanded, boolean visitorscheduled, boolean homescheduled,
-                String tvstations, java.sql.Timestamp gamestatusts, java.sql.Timestamp scorets) {
+                String tvstations, long gamestatusts, long scorets) {
         this.game_id = game_id;
         this.visitorgamenumber = visitorgamenumber;
         this.homegamenumber = homegamenumber;
@@ -158,8 +158,8 @@ public class Game implements KeyedObject {
     }
 
 
-    public void updateScore(String period, String timer, String status, java.sql.Timestamp gamestatusts, int currentvisitorscore, String visitorscoresupplemental,
-                            java.sql.Timestamp scorets, int currenthomescore, String homescoresupplemental) {
+    public void updateScore(String period, String timer, String status, long gamestatusts, int currentvisitorscore, String visitorscoresupplemental,
+                            long scorets, int currenthomescore, String homescoresupplemental) {
         this.period = period;
         this.timeremaining = timer;
         setStatus(status);
@@ -171,19 +171,19 @@ public class Game implements KeyedObject {
         this.homescoresupplemental = homescoresupplemental;
 
     }
-    public java.sql.Timestamp getGamestatusts() {
+    public long getGamestatusts() {
         return gamestatusts;
     }
 
-    public void setGamestatusts(java.sql.Timestamp gamestatusts) {
+    public void setGamestatusts(long gamestatusts) {
         this.gamestatusts = gamestatusts;
     }
 
-    public java.sql.Timestamp getScorets() {
+    public long getScorets() {
         return scorets;
     }
 
-    public void setScorets(java.sql.Timestamp scorets) {
+    public void setScorets(long scorets) {
         this.scorets = scorets;
     }
 

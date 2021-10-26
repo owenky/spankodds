@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
@@ -35,7 +37,14 @@ public class SportType {
             return st.isPredifined();
         }
     }
-    public static SportType findByGame(Game game) {
+
+    /**
+     * customized sport tab pane might also include the game, so return result is a list
+     */
+    public static List<SportType> findAllTypesByGame(Game game) {
+        return instanceMap.values().stream().filter(st->st.isMyType(game)).collect(Collectors.toList());
+    }
+    public static SportType findPredefinedByGame(Game game) {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
         return stOpt.orElse(null);
     }
@@ -146,6 +155,11 @@ public class SportType {
     public boolean isGameNear(Game game) {
         if (InitialGameMessages.getMessagesFromLog) {
             //if messages come from local, then all messages should be processed and added to table -- 2021-10-11
+            return true;
+        }
+
+        if ( ! isPredifined()) {
+            //for customized sport, always add to screen ( or always near game) -- 2021-10-25
             return true;
         }
         Date gd = game.getGamedate();

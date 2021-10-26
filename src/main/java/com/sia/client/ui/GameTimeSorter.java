@@ -12,7 +12,7 @@ public class GameTimeSorter implements Comparator<Game> {
     public int compare(Game g1, Game g2) {
         //if(g1.getGame_id() == 483)
         //{
-        //	System.out.println("gmtime for 483 ="+g1.getGametime();)
+        //	log("gmtime for 483 ="+g1.getGametime();)
         //}
         if (g1 == null || g2 == null || g1.getGametime() == null || g2.getGametime() == null) {
             return 0;

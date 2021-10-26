@@ -101,7 +101,7 @@ public class SpankOdds {
                     Thread.sleep(1000);
 
                 } catch (Exception ex) {
-                    System.out.println("error loggin in " + ex);
+                    log( ex);
                 }
                 int i = 0;
                 while (!client.getLoginResultBack()) //wait for login

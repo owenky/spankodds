@@ -126,8 +126,8 @@ public abstract class InitialGameMessages {
     }
     public static void main(String [] argv) {
 
-       System.out.println(""+new Timestamp(0).getTime());
-        System.out.println(""+new Timestamp(-1).getTime());
-        System.out.println(Long.parseLong(""));
+       log(""+new Timestamp(0).getTime());
+        log(""+new Timestamp(-1).getTime());
+        log(Long.parseLong(""));
     }
 }

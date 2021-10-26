@@ -10,6 +10,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import java.util.List;
 
+import static com.sia.client.config.Utils.log;
+
 public class MoveToFinal extends TestExecutor{
 
     private final MainGameTableModel model;
@@ -37,7 +39,7 @@ public class MoveToFinal extends TestExecutor{
         }
     }
     private void moveGameToFinal(Game game) {
-        System.out.println("move game "+game.getGame_id()+", "+game.getHometeam()+", "+game.getVisitorteam());
+        log("move game "+game.getGame_id()+", "+game.getHometeam()+", "+game.getVisitorteam());
         AppController.moveGameToThisHeader(game, SiaConst.FinalStr);
     }
     private void removeFinalSection() {

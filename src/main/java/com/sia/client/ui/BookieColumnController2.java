@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.log;
+
 public class BookieColumnController2 extends JPanel {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
@@ -129,13 +131,9 @@ public class BookieColumnController2 extends JPanel {
     }
 
     private void fillListModel(MyListModel model, ListModel newValues) {
-
-
         for (int i = 0; i < newValues.getSize(); i++) {
-
-
             model.add(newValues.getElementAt(i));
-            System.out.println("adding .." + newValues.getElementAt(i));
+            log("adding .." + newValues.getElementAt(i));
         }
     }
 
@@ -155,7 +153,7 @@ public class BookieColumnController2 extends JPanel {
 
     public void addDestinationElements(ListModel newValue) {
         int destlistindex = destList.getSelectedIndex();
-        System.out.println("DEST LIST INDEX IS " + destlistindex);
+        log("DEST LIST INDEX IS " + destlistindex);
         if (destlistindex == -1) {
             fillListModel(destListModel, newValue);
         } else {
@@ -169,9 +167,8 @@ public class BookieColumnController2 extends JPanel {
 
         for (int i = 0; i < newValues.getSize(); i++) {
             // add the items at the dest selected 	 position if something is selected in dest list
-
             model.add(newValues.getElementAt(i), atindex);
-            System.out.println("adding .." + newValues.getElementAt(i) + "..at index =" + atindex);
+            log("adding .." + newValues.getElementAt(i) + "..at index =" + atindex);
         }
     }
 
@@ -199,7 +196,7 @@ public class BookieColumnController2 extends JPanel {
 
     public void addDestinationElements(Object[] newValue) {
         int destlistindex = destList.getSelectedIndex();
-        System.out.println("DEST LIST INDEX IS " + destlistindex);
+        log("DEST LIST INDEX IS " + destlistindex);
         if (destlistindex == -1) {
             fillListModel(destListModel, newValue);
         } else {
@@ -381,7 +378,7 @@ public class BookieColumnController2 extends JPanel {
         destList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
-                    System.out.println("Double clicked on " + destList.getSelectedValue());
+                    log("Double clicked on " + destList.getSelectedValue());
                     addSourceElements(new Object[]{destList.getSelectedValue()});
                     clearDestinationSelected();
                     sourceListModel.sort(); // owen added 3/17/2021
@@ -446,20 +443,20 @@ public class BookieColumnController2 extends JPanel {
 
         for (int i = 0; i < fixed.size(); i++) {
             Bookie b = (Bookie) fixed.get(i);
-            System.out.println("fixed adding " + b);
+            log("fixed adding " + b);
             this.addDestinationElements(new Object[]{b});
         }
         this.addDestinationElements(new Object[]{new Bookie(999, "<<<<FIXED COLUMN DIVIDER>>>>", "<<<<FIXED COLUMN DIVIDER>>>>", "", "")});
 
         for (int i = 0; i < shown.size(); i++) {
             Bookie b = (Bookie) shown.get(i);
-            System.out.println("shown adding " + b);
+            log("shown adding " + b);
             this.addDestinationElements(new Object[]{b});
         }
         for (int i = 0; i < hidden.size(); i++) {
             Bookie b = (Bookie) hidden.get(i);
-            System.out.println("hidden adding " + b);
-            if (b.getName().indexOf("OPEN") != -1) {
+            log("hidden adding " + b);
+            if (b.getName().contains("OPEN")) {
                 if (showopen.isSelected()) {
                     this.addSourceElements(new Object[]{b});
                 } else {
@@ -467,8 +464,6 @@ public class BookieColumnController2 extends JPanel {
                 }
             } else {
                 this.addSourceElements(new Object[]{b});
-
-
             }
         }
 
@@ -598,8 +593,8 @@ public class BookieColumnController2 extends JPanel {
             }
             AppController.getUser().setBookieColumnPrefs(showncols);
             AppController.getUser().setFixedColumnPrefs(fixedcols);
-            System.out.println(fixedcols);
-            System.out.println(showncols);
+            log(fixedcols);
+            log(showncols);
             AppController.refreshTabs3();
             f.dispose();
 
@@ -614,7 +609,7 @@ public class BookieColumnController2 extends JPanel {
 
             boolean showit = cb.isSelected();
 
-            System.out.println("checkbox selected=" + showit);
+            log("checkbox selected=" + showit);
             if (showit) {
                 for (Iterator<Bookie> iterator = openerListModel.iterator(); iterator.hasNext(); ) {
 
@@ -653,7 +648,7 @@ public class BookieColumnController2 extends JPanel {
     private class AddListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object[] selected = sourceList.getSelectedValues();
-            System.out.println("JUST ADDED-" + sourceList.getSelectedValue().toString());
+            log("JUST ADDED-" + sourceList.getSelectedValue().toString());
 
 	 /*
 	 if(sourceList.getSelectedValue().toString().equals("Chart")){
@@ -718,7 +713,7 @@ class MyListModel extends AbstractListModel {
         Comparator<Bookie> byName = Comparator.comparing(Bookie::getName);
         Collections.sort(model, byName);
         fireContentsChanged(this, 0, getSize());
-        System.out.println("JUST SORTED THE MODEL!!!");
+        log("JUST SORTED THE MODEL!!!");
     }
 
     public int getSize() {

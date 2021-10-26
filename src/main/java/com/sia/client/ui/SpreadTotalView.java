@@ -11,7 +11,6 @@ import com.sia.client.model.Spreadline;
 import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
-import java.sql.Timestamp;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -45,7 +44,7 @@ public class SpreadTotalView extends ViewValue  {
     Color bottomcolor = Color.WHITE;
     private String topicon = ICON_BLANK;
     private String bottomicon = ICON_BLANK;
-    private Timestamp clearts;
+    private long clearts;
     int id;
     Bookie bookie;
     String topborder;
@@ -131,7 +130,7 @@ public class SpreadTotalView extends ViewValue  {
                 whowasbetspread = sl.getWhowasbet();
                 if ( shouldGoRed(sl) ) {
                     spreadcolor = Color.RED;
-                } else if (clearts.getTime() < sl.getCurrentts().getTime()) {
+                } else if (clearts < sl.getCurrentts()) {
                     spreadcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("S"+id);
@@ -158,7 +157,7 @@ public class SpreadTotalView extends ViewValue  {
                 whowasbettotal = tl.getWhowasbet();
                 if (shouldGoRed(tl)) {
                     totalcolor = Color.RED;
-                } else if (clearts.getTime() < tl.getCurrentts().getTime()) {
+                } else if (clearts < tl.getCurrentts()) {
                     totalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("T"+id);
@@ -183,7 +182,7 @@ public class SpreadTotalView extends ViewValue  {
 
                 if (shouldGoRed(ml)) {
                     moneycolor = Color.RED;
-                } else if (clearts.getTime() < ml.getCurrentts().getTime()) {
+                } else if (clearts < ml.getCurrentts()) {
                     moneycolor = Color.BLACK;
                 } else {
                     moneycolor = Color.WHITE;
@@ -207,7 +206,7 @@ public class SpreadTotalView extends ViewValue  {
                 whowasbetteamtotal = ttl.getWhowasbet();
                 if (shouldGoRed(ttl)) {
                     teamtotalcolor = Color.RED;
-                } else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
+                } else if (clearts < ttl.getCurrentts()) {
                     teamtotalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("TT"+id);
@@ -310,7 +309,7 @@ public class SpreadTotalView extends ViewValue  {
                         topicon = ICON_DOWN;
                     } else if (whowasbettotal.equals("o")) {
                         topicon = ICON_UP;
-                        //System.out.println("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
+                        //log("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
                     } else {
                         topicon = ICON_BLANK;
                     }
@@ -504,7 +503,7 @@ public class SpreadTotalView extends ViewValue  {
                         topicon = ICON_DOWN;
                     } else if (whowasbettotal.equals("o")) {
                         topicon = ICON_UP;
-                        //System.out.println("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
+                        //log.println("BET MADE!!!"+bid+".."+gid+".."+whowasbettotal);
                     } else {
                         topicon = ICON_BLANK;
                     }
@@ -857,10 +856,6 @@ public class SpreadTotalView extends ViewValue  {
         }
         return boxes;
     }
-    public static void main(String [] argvb) {
-        long time=1130;
-        System.out.println(new Timestamp(time).getTime());
-    }
     public void setCurrentBoxes(LineData[] boxes) {
         this.boxes = boxes;
     }
@@ -1212,7 +1207,7 @@ public class SpreadTotalView extends ViewValue  {
         setClearts(cleartime);
     }
     private void setClearts(long clearTime) {
-        this.clearts = new Timestamp(clearTime);
+        this.clearts = clearTime;
     }
     public LineData[] getPriorBoxes() {
         if (isopenerbookie) {
@@ -1266,7 +1261,7 @@ public class SpreadTotalView extends ViewValue  {
         }
 
         if (bid == 204 && gid == 465) {
-            //System.out.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
+            //log.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
         }
 
         try {
@@ -1478,7 +1473,7 @@ public class SpreadTotalView extends ViewValue  {
             }
         }
         if (bid == 204 && gid == 6829) {
-            //	System.out.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
+            //	log.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
         }
 
 
@@ -1497,14 +1492,9 @@ public class SpreadTotalView extends ViewValue  {
     }
     private boolean shouldGoRed(Line line) {
         long tsnow = System.currentTimeMillis();
-        long curTime = line.getCurrentts().getTime();
-        boolean isRed=(tsnow - curTime) <= 30000 && clearts.getTime() <= curTime;
+        long curTime = line.getCurrentts();
+        boolean isRed=(tsnow - curTime) <= 30000 && clearts <= curTime;
         Game game = getGame();
-if ( Line.testGameIds.contains(game.getGame_id())) {
-    log("******* game:"+game.getGame_id()+", red="+isRed+", sl.getCurrentts().getTime()="+sl.getCurrentts()+", timevalue="+curTime
-                +",now="+tsnow+", diff="+(tsnow-curTime)+", clearts="+clearts+", line="+line.hashCode());
-}
-
         return isRed;
     }
     public void setPriorBoxes(LineData[] boxes) {

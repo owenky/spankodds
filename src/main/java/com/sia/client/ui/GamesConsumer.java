@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.log;
@@ -422,8 +421,8 @@ public class GamesConsumer implements MessageListener {
                 g.setIngame(Boolean.parseBoolean(ingame));
                 g.setSeriesprice(Boolean.parseBoolean(seriesprice));
 
-                g.setGamestatusts(new Timestamp(Long.parseLong(gamestatusts)));
-                g.setScorets(new Timestamp(Long.parseLong(scorets)));
+                g.setGamestatusts(Long.parseLong(gamestatusts));
+                g.setScorets(Long.parseLong(scorets));
 
                 AppController.addGame(g, repaint);
                 //AppController.refreshTabs();
@@ -450,8 +449,8 @@ public class GamesConsumer implements MessageListener {
     }
 
     public static void writeToFile(String fileName, String data, boolean append) {
-        //System.out.println("Data is "+data);
-        //System.out.println("Writing to "+fileName);
+        //log("Data is "+data);
+        //log("Writing to "+fileName);
         DataOutputStream out = null;
 
         try {

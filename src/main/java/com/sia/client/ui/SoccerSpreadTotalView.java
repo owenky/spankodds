@@ -9,7 +9,6 @@ import com.sia.client.model.Spreadline;
 import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
-import java.sql.Timestamp;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -54,7 +53,7 @@ public class SoccerSpreadTotalView extends ViewValue {
     String bottomicon = ICON_BLANK;
     String drawicon = ICON_BLANK;
     String totalicon = ICON_BLANK;
-    Timestamp clearts;
+    long clearts;
     int id;
     Game game;
     Bookie bookie;
@@ -83,7 +82,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);
-        clearts = new Timestamp(cleartime);
+        clearts = cleartime;
         id = new Random().nextInt();
         this.ltd = ltd;
 
@@ -92,7 +91,7 @@ public class SoccerSpreadTotalView extends ViewValue {
 
     public LineData[] getCurrentBoxes() {
         topborder = bottomborder = drawborder = totalborder = ""; // owen added drawborder and totalborder
-        //System.out.println("in getcurrentboxes "+bid+".."+gid);
+        //log("in getcurrentboxes "+bid+".."+gid);
         if (isopenerbookie) {
             boxes = getOpenerBoxes();
             return boxes;
@@ -165,17 +164,17 @@ public class SoccerSpreadTotalView extends ViewValue {
         String whowasbetmoney = "";
 
         String whowasbetteamtotal = "";
-        Timestamp tsnow = new Timestamp(new java.util.Date().getTime());
+        long tsnow = System.currentTimeMillis();
         try {
             visitspread = sl.getCurrentvisitspread();
             visitjuice = sl.getCurrentvisitjuice();
             homejuice = sl.getCurrenthomejuice();
 
             whowasbetspread = sl.getWhowasbet();
-            if (tsnow.getTime() - sl.getCurrentts().getTime()<= 30000 && clearts.getTime() < sl.getCurrentts().getTime()) {
+            if (tsnow - sl.getCurrentts()<= 30000 && clearts < sl.getCurrentts()) {
                 spreadcolor = Color.RED;
             }
-            else if (clearts.getTime() < sl.getCurrentts().getTime()) {
+            else if (clearts < sl.getCurrentts()) {
                 spreadcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("S"+id);
@@ -194,10 +193,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         try {
             over = tl.getCurrentover();
             whowasbettotal = tl.getWhowasbet();
-            if (tsnow.getTime() - tl.getCurrentts().getTime() <= 30000 && clearts.getTime() < tl.getCurrentts().getTime()) {
+            if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
                 totalcolor = Color.RED;
             }
-            else if (clearts.getTime() < tl.getCurrentts().getTime()) {
+            else if (clearts < tl.getCurrentts()) {
                 totalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("T"+id);
@@ -216,10 +215,10 @@ public class SoccerSpreadTotalView extends ViewValue {
             drawmljuice = ml.getCurrentdrawjuice();
             whowasbetmoney = ml.getWhowasbet();
 
-            if (tsnow.getTime() - ml.getCurrentts().getTime() <= 30000 && clearts.getTime() < ml.getCurrentts().getTime()) {
+            if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
                 moneycolor = Color.RED;
             }
-            else if (clearts.getTime() < ml.getCurrentts().getTime()) {
+            else if (clearts < ml.getCurrentts()) {
                 moneycolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("M"+id);
@@ -240,11 +239,11 @@ public class SoccerSpreadTotalView extends ViewValue {
             visitover = ttl.getCurrentvisitover();
             homeover = ttl.getCurrenthomeover();
             whowasbetteamtotal = ttl.getWhowasbet();
-            if (tsnow.getTime() - ttl.getCurrentts().getTime() <= 30000 && clearts.getTime() < ttl.getCurrentts().getTime()) {
+            if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
                 teamtotalcolor = Color.RED;
             }
             //else if(priortotalcolor != Color.WHITE)
-            else if (clearts.getTime() < ttl.getCurrentts().getTime()) {
+            else if (clearts < ttl.getCurrentts()) {
                 teamtotalcolor = Color.BLACK;
                 //owen took out cuz maionscreen refreshes every sec
                 //FireThreadManager.remove("TT"+id);
@@ -463,8 +462,6 @@ public class SoccerSpreadTotalView extends ViewValue {
                 }
 
             }
-
-            //System.out.println("09");
         } else if (display.equals("justspread")) {
             drawboxS = "";
             totalboxS = "";
@@ -635,9 +632,6 @@ public class SoccerSpreadTotalView extends ViewValue {
             } else {
                 String tot1 = ttl.getShortPrintedCurrentVisitTotal();
                 String tot2 = ttl.getOtherPrintedCurrentVisitTotal();
-
-                //System.out.println("bookie="+bid+".."+tot1+".."+tot2);
-
                 if (tot1.indexOf("o") != -1) {
                     topboxS = tot1;
                     bottomboxS = tot2;
@@ -1008,31 +1002,26 @@ public class SoccerSpreadTotalView extends ViewValue {
                 showcomebacks = false;
             }
             if (visitmljuice == 99999) {
-                //System.out.println("x0");
+                //log("x0");
                 topboxS = "";
-                //System.out.println("x1");
+                //log("x1");
                 bottomboxS = "";//owen took out ml.getPrintedJuiceLine(homemljuice);
-                //System.out.println("x2");
+                //log("x2");
                 drawboxS = "";//owen took out ml.getPrintedJuiceLine(drawmljuice);
-                //System.out.println("x3");
+                //log("x3");
 
                 if (over == 99999) {
                     totalboxS = "";
                 } else {
                     totalboxS = tl.getShortPrintedOpenerTotal();
-                    //System.out.println("x4");
+                    //log("x4");
                 }
 
             } else if (visitmljuice < homemljuice) // visitor is the favorite
             {
-                //		System.out.println("y0");
                 topboxS = ml.getPrintedJuiceLine(visitmljuice);
-                //	System.out.println("y1");
                 bottomboxS = ml.getPrintedJuiceLine(homemljuice);
-                //	System.out.println("y2");
                 drawboxS = ml.getPrintedJuiceLine(drawmljuice);
-                //	System.out.println("y3");
-
                 if (over == 99999) {
                     totalboxS = "";
                 } else {
@@ -1324,7 +1313,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         boxes[1].setBackgroundColor(Color.WHITE);
         boxes[2].setBackgroundColor(Color.WHITE);
         boxes[3].setBackgroundColor(Color.WHITE);
-        clearts = new Timestamp(cleartime);
+        clearts = cleartime;
     }
 
     public LineData[] getPriorBoxes() {
@@ -1390,12 +1379,9 @@ public class SoccerSpreadTotalView extends ViewValue {
         } catch (Exception e) // no line
         {
             visitspread = 99999;
-            //System.out.println("exception ex"+e+"..");
-
         }
 
         if (bid == 204 && gid == 465) {
-            //System.out.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
         }
 
         try {
@@ -1634,11 +1620,6 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         //ld1.setIcon(ICON_BLANK);
         //ld2.setIcon(ICON_BLANK);
-
-        if (bid == 204 && gid == 6829) {
-            //	System.out.println("boxes 6829 cris "+topboxS+".."+bottomboxS);
-        }
-
 
         ld1.setIconPath(null);
         ld2.setIconPath(null);

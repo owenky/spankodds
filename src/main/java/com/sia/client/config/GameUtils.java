@@ -5,8 +5,6 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -51,7 +49,7 @@ public abstract class GameUtils {
         return sport.getNormalizedLeaguename() + " " + getGameDateStr(game);
     }
     public static boolean isGameNear(Game game) {
-        SportType sportType = SportType.findByGame(game);
+        SportType sportType = SportType.findPredefinedByGame(game);
         if ( null != sportType ) {
             return sportType.isGameNear(game);
         } else {
@@ -67,7 +65,7 @@ public abstract class GameUtils {
     }
     public static Game parseGameText(String text) {
         String[] array = text.split(SiaConst.MessageDelimiter);
-        //System.out.println("gametext="+text);
+        //log("gametext="+text);
         // here in 1st entry i made game_id visitorgamenumber
         return new Game(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), Integer.parseInt(array[3]),
                 Integer.parseInt(array[4]), new java.sql.Date(Long.parseLong(array[5])), new java.sql.Time(Long.parseLong(array[6])),
@@ -99,8 +97,8 @@ public abstract class GameUtils {
                 Boolean.parseBoolean(array[48]),
                 Boolean.parseBoolean(array[49]),
                 array[50],
-                new Timestamp(Long.parseLong(array[51])),
-                new Timestamp(Long.parseLong(array[52])));
+                Long.parseLong(array[51]),
+                Long.parseLong(array[52]));
     }
     public static String getGameDebugInfo(Game game) {
         Sport sport = AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
@@ -109,10 +107,5 @@ public abstract class GameUtils {
                 + ", header=" + getGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
                 + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
-    }
-    public static void main(String [] argvb ) throws ParseException {
-
-      String abc="a   b c ";
-      System.out.println("abc="+normalizeGameHeader(abc)+"|");
     }
 }

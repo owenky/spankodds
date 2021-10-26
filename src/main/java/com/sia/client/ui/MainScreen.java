@@ -376,7 +376,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
-                    //	System.out.println("yes"+set+"---");
+                    //	log("yes"+set+"---");
                     allgames.add(tempGame);
                 }
                 setShowProperties(prefs);
@@ -401,7 +401,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if ( sportType.shouldSelect(tempGame) ) {
-                    //System.out.println("yes"+set+"---");
+                    //log("yes"+set+"---");
                     allgames.add(tempGame);
                 }
 
@@ -547,10 +547,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
                 } else if (lastdate == null) // new date
                 {
-                    System.out.println("ddd");
                     gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
                     gamegroupLeagueIDvec.add(s2.getParentleague_id());
-                    System.out.println("eee");
                     lastdate = gamedate;
                     lastleagueid = leagueid;
                     Vector v = new Vector();
@@ -912,6 +910,16 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             mainGameTable = createMainGameTable();
         }
         return mainGameTable;
+    }
+    public boolean containsGame(Game g) {
+        boolean containing;
+        if (getSportType().isPredifined() && getSportType().isMyType(g) ) {
+            //this is faster than getDataModels().containsGame(g.getGame_id());
+            containing = true;
+        } else {
+            containing = getDataModels().containsGame(g.getGame_id());
+        }
+        return containing;
     }
     @Override
     public void destroyMe() {

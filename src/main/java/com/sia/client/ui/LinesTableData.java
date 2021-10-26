@@ -239,25 +239,27 @@ public class LinesTableData extends TableSection<Game> {
                     try {
                         stv.clearColors(cleartime);
                     } catch (Exception ex) {
-                        System.out.println("clear exception row=" + i + "..col=" + j + ".." + ex);
+                        log("clear exception row=" + i + "..col=" + j + ".." + ex);
                     }
                 }
                 if (obj instanceof ChartView) {
                     ChartView stv = (ChartView) obj;
                     try {
                         stv.clearColors();
-                        //System.out.println("iam chart");
+                        //log("iam chart");
                     } catch (Exception ex) {
-                        System.out.println("clear exception row=" + i + "..col=" + j + ".." + ex);
+                        log("clear exception row=" + i + "..col=" + j);
+                        log(ex);
                     }
                 }
                 if (obj instanceof SoccerChartView) {
                     SoccerChartView stv = (SoccerChartView) obj;
                     try {
                         stv.clearColors();
-                        //System.out.println("iam chart");
+                        //log("iam chart");
                     } catch (Exception ex) {
-                        log("clear exception row=" + i + "..col=" + j + ".." + ex);
+                        log("clear exception row=" + i + "..col=" + j);
+                        log(ex);
                     }
                 }
 

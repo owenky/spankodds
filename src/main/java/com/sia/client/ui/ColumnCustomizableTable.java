@@ -162,7 +162,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 int colDataModelIndex = ColumnCustomizableTable.this.convertColumnIndexToModel(col) + lockedColumnIndex.size();
                 return getUserCellRenderer(row,colDataModelIndex);
             };
-            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProperty(),getMarginProvider());
+            headerCellRenderer = new ColumnHeaderCellRenderer(tableCellRendererProvider, getModel().getColumnHeaderProperty());
         }
         return headerCellRenderer;
     }

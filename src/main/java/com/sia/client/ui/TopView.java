@@ -152,7 +152,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action firsthalfaction = new AbstractAction("1st half") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("1st half button pressed");
+                log("1st half button pressed");
                 periodcb.setSelectedIndex(1);
 
 
@@ -169,7 +169,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action fullgameaction = new AbstractAction("Full Game") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("full game button pressed");
+                log("full game button pressed");
                 periodcb.setSelectedIndex(0);
 
 
@@ -186,7 +186,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action defaultviewaction = new AbstractAction("DefaultView") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("defaultview button pressed");
+                log("defaultview button pressed");
                 cb.setSelectedIndex(0);
 
 
@@ -203,7 +203,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action sidesonlyaction = new AbstractAction("SidesOnly") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("sides only button pressed");
+                log("sides only button pressed");
                 cb.setSelectedIndex(4);
 
 
@@ -220,7 +220,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action totalsonlyaction = new AbstractAction("TotalsOnly") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("totals only button pressed");
+                log("totals only button pressed");
                 cb.setSelectedIndex(5);
 
 
@@ -276,7 +276,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
         adjustcolsBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("ajustcols button pressed");
+                log("ajustcols button pressed");
                 //com.sia.client.ui.AppController.getLinesTableData().clearColors();
 
                 MainScreen ms = (MainScreen) stb.getSelectedComponent();
@@ -353,7 +353,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 (KeyStroke) openeraction.getValue(Action.ACCELERATOR_KEY), "openerAction");
         sortBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("sort button pressed");
+                log("sort button pressed");
                 if (sortBut.getText().equals("Time sort")) {
                     stb.setSort(true);
                     sortBut.setText("Gm# sort");

@@ -4,6 +4,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static com.sia.client.config.Utils.log;
+
 public class ChartCheckerTest {
 
     private static final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
@@ -13,7 +15,7 @@ public class ChartCheckerTest {
         Runnable schduledAction = () -> {
             int count =0;
             while ( count++ < 10000) {
-              System.out.println("count="+count);
+              log("count="+count);
                 try {
                     Thread.sleep(1000L);
                 } catch (InterruptedException e) {

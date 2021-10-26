@@ -22,7 +22,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.lang.ref.SoftReference;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -87,6 +86,9 @@ public abstract class Utils {
         System.out.println(nowShortString()+" |");e.printStackTrace();
     }
     public static void log(String mesg) {
+        System.out.println(nowShortString()+" |"+mesg);
+    }
+    public static void log(Object mesg) {
         System.out.println(nowShortString()+" |"+mesg);
     }
     private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
@@ -287,12 +289,12 @@ public abstract class Utils {
         }
         return sourceString;
     }
-    public static Timestamp parseTimestamp(String timeStampStr) {
+    public static long parseTimestamp(String timeStampStr) {
         try {
-            return new Timestamp(Long.parseLong(timeStampStr));
+            return Long.parseLong(timeStampStr);
         }catch(NumberFormatException e) {
             log(e);
-            return new Timestamp(0L);
+            return 0L;
         }
     }
     public static boolean containsOnlyAlphanumeric(String str) {

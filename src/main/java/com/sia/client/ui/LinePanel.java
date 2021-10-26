@@ -146,7 +146,7 @@ public class LinePanel extends JPanel {
 
             String bookieid = AppController.getBookieId(bookie);
             Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
-            //System.out.println("bookie-color="+bookie+".."+bookieid+".."+colcolor);
+            //log("bookie-color="+bookie+".."+bookieid+".."+colcolor);
 
             Color bgcolor = ld.getBackgroundColor();
             Color fgcolor = Color.BLACK;

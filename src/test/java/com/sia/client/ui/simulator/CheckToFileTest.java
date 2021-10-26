@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.sia.client.config.Utils.log;
+
 public class CheckToFileTest implements EventGenerator{
 
     public static final Integer [] gameIds = {1,3,5,7,9,11,101,103,105,107,109,111,113};
@@ -34,7 +36,7 @@ public class CheckToFileTest implements EventGenerator{
         if ( oldValue.length() < 15) {
             rowData.set(col, oldValue + "X");
         } else {
-            System.out.println("Stop adding X.....");
+            log("Stop adding X.....");
         }
     }
 }

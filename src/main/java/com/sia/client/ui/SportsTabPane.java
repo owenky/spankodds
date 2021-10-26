@@ -176,24 +176,24 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             public void mouseClicked(MouseEvent e) {
 
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    System.out.println("button 1 clicked");
+                    log("button 1 clicked");
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
 
                     TabbedPaneUI ui = thispane.getUI();
                     int tabindex = ui.tabForCoordinate(thispane, e.getX(), e.getY());
-                    System.out.println("button 3 clicked " + tabindex);
+                    log("button 3 clicked " + tabindex);
                     String TabName = thispane.getTitleAt(tabindex);
 
 
                     if (!(TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals(SiaConst.SoccerStr) || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
-                        System.out.println("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
+                        log("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
                         JPopupMenu jPopupMenu = new JPopupMenu();
                         JMenuItem editItem = new JMenuItem("Edit " + thispane.getTitleAt(tabindex));
                         JMenuItem removeItem = new JMenuItem("Remove " + thispane.getTitleAt(tabindex));
                         jPopupMenu.add(editItem);
                         jPopupMenu.add(removeItem);
                         editItem.addActionListener(e1 -> checkAndRunInEDT(() -> {
-                            System.out.println(currentTabIndex + "mouseClicked" + (currentTabIndex == getTabCount() - 1));
+                            log(currentTabIndex + "mouseClicked" + (currentTabIndex == getTabCount() - 1));
                             new CustomTab2(thispane.getTitleAt(tabindex), tabindex);
 
                         }));
@@ -212,7 +212,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
                     }
                     if (( SportType.isPredefinedSport(TabName)) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals(SportType.Today.getSportName())) {
-                        System.out.println("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
+                        log("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
                         JPopupMenu jPopupMenu = new JPopupMenu();
                         JMenuItem manageItem = new JMenuItem("Manage " + thispane.getTitleAt(tabindex));
                         JMenuItem hideItem = new JMenuItem("Hide " + thispane.getTitleAt(tabindex));
@@ -347,7 +347,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
-            if (ms.getSportType().isPredifined() && ms.getSportType().isMyType(g) ) {
+            if ( ms.containsGame(g)) {
                 Utils.checkAndRunInEDT(() -> ms.moveGameToThisHeader(g, header));
             }
         }

@@ -503,7 +503,7 @@ public class BestLines {
 
 
         }
-        //System.out.println("bestline "+gameid+".."+period+".."+bvsl);
+        //log("bestline "+gameid+".."+period+".."+bvsl);
 		if (bvsl != null) {
 			bvsl.setBestVisitSpread(true);
 		}
@@ -539,7 +539,7 @@ public class BestLines {
 		}
 
         if (bhsl != null) {
-            //System.out.println("gameid="+gameid+"..bhsl="+bhsl.getBookieid()+"..bhsl="+bhsl.getCurrenthomespread()+bhsl.getCurrenthomejuice());
+            //log("gameid="+gameid+"..bhsl="+bhsl.getBookieid()+"..bhsl="+bhsl.getCurrenthomespread()+bhsl.getCurrenthomejuice());
         }
 
     }

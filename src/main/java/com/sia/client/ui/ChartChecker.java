@@ -99,7 +99,7 @@ public class ChartChecker {
                     // cl1.clear();
                     prepareURLData(url, uname, password);
                     sc.close();
-                    //System.out.println("**************************************iam from Url Now**********************");
+                    //log("**************************************iam from Url Now**********************");
                 } catch (Exception e) {
                     //TODO disable log() fordeb debug 04-23-2021
 //                    log("ERROR OPENING FILE..." + AppController.getUser().getChartFileName());
@@ -114,7 +114,7 @@ public class ChartChecker {
             else {
                 cl.clear();
                 //cl1.clear();
-                //	System.out.println("**************************************iam from Local file Now**********************");
+                //	log("**************************************iam from Local file Now**********************");
                 //amt=ChartHome.warnamount;
                 filename = AppController.getUser().getChartFileName();
                 File f = new File(filename);
@@ -215,7 +215,7 @@ public class ChartChecker {
             } // end local file reading
             /***************************END READING FROM URL AND FILE*********************/
             for (int i = 0; i < cl.size(); i++) {
-                //System.out.println(i+"CL="+cl.get(i));
+                //log(i+"CL="+cl.get(i));
                 int found = 0;
                 int gn = cl.get(i).gn;
                 int p = cl.get(i).p;
@@ -242,7 +242,7 @@ public class ChartChecker {
 
             //for(int i=0;i<cl.size();i++)
             for (int j = 0; j < cl1.size(); j++) {
-                //System.out.println(j+"CL1="+cl1.get(j));
+                //log(j+"CL1="+cl1.get(j));
                 int lamt = 0;
                 //		int j;
                 //		for(j=0;j<cl1.size();j++)
@@ -445,11 +445,11 @@ public class ChartChecker {
             }
             in.close();
             String[] line = URLData.split("\n");
-            //System.out.println(line[0]);
+            //log(line[0]);
             for (int i = 0; i < line.length; i++) {
 
                 String s = line[i];
-                //System.out.println("processing line="+s);
+                //log("processing line="+s);
                 int ln = (int) s.charAt(0);
                 if (ln == 13) {
                     break;

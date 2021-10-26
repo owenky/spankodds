@@ -94,13 +94,13 @@ public class CustomTab extends JPanel {
 
 
             if (g == null) {
-                System.out.println("skipping gameid=" + gameid + "...cuz of null game");
+                log("skipping gameid=" + gameid + "...cuz of null game");
                 continue;
             } else {
                 gameid = g.getGame_id();
             }
             if (g.getGamedate() == null) {
-                System.out.println("skipping gameid=" + gameid + "...cuz of null game date");
+                log("skipping gameid=" + gameid + "...cuz of null game date");
                 continue;
             }
 
@@ -111,9 +111,9 @@ public class CustomTab extends JPanel {
             Sport s2;
 
 
-            //System.out.println(s.getSportname());
+            //log(s.getSportname());
             if (s == null) {
-                System.out.println("skipping " + leagueid + "...cuz of null sport");
+                log("skipping " + leagueid + "...cuz of null sport");
                 continue;
             }
 
@@ -136,7 +136,7 @@ public class CustomTab extends JPanel {
             } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
                 currenttreenode = tennis;
             } else {
-                System.out.println("should never enter gameid=" + g.getGame_id());
+                log("should never enter gameid=" + g.getGame_id());
                 currenttreenode = football;
 
             }
@@ -171,7 +171,7 @@ public class CustomTab extends JPanel {
             ) {
 
                 //finalgames.add(g);
-                //System.out.println("skipping "+g.getGame_id());
+                //log("skipping "+g.getGame_id());
                 continue;
 
             } else if (!g.getStatus().equalsIgnoreCase("NULL") && !g.getStatus().equals("")) {
@@ -185,7 +185,6 @@ public class CustomTab extends JPanel {
                 //ingamegames.add(g);
             } else if (lastdate == null) // new date
             {
-                System.out.println("ddd");
                 gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
                 currenttreenode.add(new DefaultMutableTreeNode(s2.getLeaguename() + " " + sdf2.format(g.getGamedate())));
                 lastdate = gamedate;
@@ -197,7 +196,7 @@ public class CustomTab extends JPanel {
                 currentvec = v;
             } else if (!lastdate.equals(gamedate) || lastleagueid != leagueid) // new date or new league!
             {
-                //System.out.println("newdate!...lastdate="+lastdate+"..gamedate="+g.getGamedate());
+                //log("newdate!...lastdate="+lastdate+"..gamedate="+g.getGamedate());
                 lastdate = gamedate;
                 lastleagueid = leagueid;
                 gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));

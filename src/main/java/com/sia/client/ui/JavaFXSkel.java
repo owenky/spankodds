@@ -3,13 +3,15 @@ package com.sia.client.ui;// A JavaFX application skeleton.
 import javafx.application.*; 
 import javafx.scene.*; 
 import javafx.stage.*; 
-import javafx.scene.layout.*; 
- 
+import javafx.scene.layout.*;
+
+import static com.sia.client.config.Utils.log;
+
 public class JavaFXSkel extends Application { 
  
   public static void main(String[] args) { 
   
-    System.out.println("Launching JavaFX application."); 
+    log("Launching JavaFX application.");
   
     // Start the JavaFX application by calling launch(). 
     launch(args);   
@@ -17,13 +19,13 @@ public class JavaFXSkel extends Application {
  
   // Override the init() method. 
   public void init() { 
-    System.out.println("Inside the init() method."); 
+    log("Inside the init() method.");
   } 
  
   // Override the start() method. 
   public void start(Stage myStage) { 
  
-    System.out.println("Inside the start() method."); 
+    log("Inside the start() method.");
  
     // Give the stage a title. 
     myStage.setTitle("JavaFX Skeleton"); 
@@ -44,6 +46,6 @@ public class JavaFXSkel extends Application {
  
   // Override the stop() method. 
   public void stop() { 
-    System.out.println("Inside the stop() method."); 
+    log("Inside the stop() method.");
   } 
 }

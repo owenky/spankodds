@@ -42,7 +42,7 @@ public class ChartView {
 
     public LineData[] getCurrentBoxes() {
         if (g.getStatus().equalsIgnoreCase("Time") && period == 0) {
-            //System.out.println("setting period=2 for gameid="+g.getGame_id());
+            //log("setting period=2 for gameid="+g.getGame_id());
             period = 2;
         }
         setCurrentBoxes();
