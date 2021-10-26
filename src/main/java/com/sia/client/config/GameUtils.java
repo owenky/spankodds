@@ -49,7 +49,7 @@ public abstract class GameUtils {
         return sport.getNormalizedLeaguename() + " " + getGameDateStr(game);
     }
     public static boolean isGameNear(Game game) {
-        SportType sportType = SportType.findByGame(game);
+        SportType sportType = SportType.findPredefinedByGame(game);
         if ( null != sportType ) {
             return sportType.isGameNear(game);
         } else {
