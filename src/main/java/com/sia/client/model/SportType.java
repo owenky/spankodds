@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.config.SiaConst;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.MainScreen;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +49,9 @@ public class SportType {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
         return stOpt.orElse(null);
     }
+    public static SportType createCustomizedSportType(String name) {
+        return new SportType(-200,name,name,null,-1);
+    }
     public static SportType findBySportName(String sportName) {
         return instanceMap.get(normalizeName(sportName));
     }
@@ -62,7 +66,7 @@ public class SportType {
     private boolean showseries = true;
     private boolean showingame = true;
 
-    public SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId) {
+    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId) {
         this.sportName = sportName;
         this.sportId = sportId;
         this.icon = icon;
@@ -134,9 +138,8 @@ public class SportType {
     public boolean isMyType(Game game) {
 
         if ( sportId < 0 && identityLeagueId < 0 ) {
-            //when both negative, it is customized main screen, allow all game to come in. games will not be added
-            //to the screen when no group header contains this game.
-            return true;
+            //for customized sport type, use containsGameLeague to check -- 2021-10-26
+            return containsGameLeague(game);
         }
         int identifyingLeagueId = game.getSportIdentifyingLeagueId();
         if ( identityLeagueId > 0) {
@@ -192,5 +195,9 @@ public class SportType {
     }
     private static String normalizeName(String name) {
         return name.replaceAll("\\s","").toLowerCase();
+    }
+    private boolean containsGameLeague(Game g ) {
+        MainScreen ms = MainScreen.findMainScreen(this.getSportName());
+        return null != ms.getDataModels().findLeagueSection(g);
     }
 }

@@ -996,14 +996,14 @@ public class CustomTab2 extends JPanel {
                 checkAndRunInEDT(() -> {
 
 
-                    Vector tabpanes = AppController.getTabPanes();
-                    for (Object tabpane : tabpanes) {
-                        SportsTabPane tp = (SportsTabPane) tabpane;
+                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
+                    for (SportsTabPane tp : tabpanes) {
                         int numtabs = tp.getTabCount();
-                        log("numtabs= " + numtabs);
+//                        log("numtabs= " + numtabs);
 
-                        tp.removeTabAt(numtabs - 1);
-                        SportType st = SportType.findBySportName(tab);
+//                        tp.removeTabAt(numtabs - 1);
+//                        SportType st = SportType.findBySportName(tab);
+                        SportType st = SportType.createCustomizedSportType(tab);
                         MainScreen ms = new MainScreen(st, customvec);
                         ms.setShowHeaders(includeheaders.isSelected());
                         ms.setShowSeries(includeseries.isSelected());
@@ -1011,10 +1011,8 @@ public class CustomTab2 extends JPanel {
                         ms.setShowAdded(includeadded.isSelected());
                         ms.setShowExtra(includeextra.isSelected());
                         ms.setShowProps(includeprops.isSelected());
-                        tp.addTab(ms.getName(), null, ms, ms.getName());
-                        tp.addTab("+", null, null, "+");
-
-
+                        tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs-1);
+//                        tp.addTab("+", null, null, "+");
                     }
 
 

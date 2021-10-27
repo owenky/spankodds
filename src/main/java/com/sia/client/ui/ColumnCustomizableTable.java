@@ -76,6 +76,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         ColumnHeaderProperty columnHeaderProperty = model.getColumnHeaderProperty();
 
         for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
+            //remove group header if the row has it.
+            Component oldHeaderComp = oldHeaderMap.get(rowViewIndex);
+            if ( null != oldHeaderComp) {
+                this.remove(oldHeaderComp);
+            }
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
             Object headerValue = model.getGameGroupHeader(rowModelIndex);
@@ -89,7 +94,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 }
             } else {
                 rowHeight = columnHeaderProperty.getColumnHeaderHeight();
-                drawColumnHeaderOnViewIndex(rowViewIndex,String.valueOf(headerValue));
+                Component newGroupHeader = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,String.valueOf(headerValue));
+                this.oldHeaderMap.put(rowViewIndex,newGroupHeader);
             }
             if ( toSetRowHeight) {
                 setRowHeight(rowViewIndex, rowHeight);
@@ -299,14 +305,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             }
             createUnlockedColumns();
         }
-    }
-    public void drawColumnHeaderOnViewIndex(int rowViewIndex, String columnHeaderValue){
-        Component oldHeaderComp = this.oldHeaderMap.get(rowViewIndex);
-        if ( null != oldHeaderComp) {
-            this.remove(oldHeaderComp);
-        }
-        Component currentComp = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,columnHeaderValue);
-        this.oldHeaderMap.put(rowViewIndex,currentComp);
     }
     public ColumnAdjusterManager getColumnAdjusterManager() {
         if ( null == columnAdjusterManager) {

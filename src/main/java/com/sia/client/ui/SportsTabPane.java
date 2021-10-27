@@ -118,7 +118,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 }
 
             }
-            SportType customerizedSportType =  new SportType(-200,name,name,null,-1);
+            SportType customerizedSportType =  SportType.createCustomizedSportType(name);
             MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
             addTab(name, null, msnew, name);
         }
