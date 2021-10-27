@@ -108,6 +108,15 @@ log("***** Game not found in the table -- "+GameUtils.getGameDebugInfo(game));
     public final boolean containsGroupHeader(String gameGroupHeader) {
         return null != super.findTableSectionByHeaderValue(gameGroupHeader);
     }
+
+    /**
+     * return table section representing league of the game
+     * the game itself might not be in that section if it is in stage sections such as Final, Halftime, In Progress etc... -- 2021-10-26
+     */
+    public LinesTableData findLeagueSection(Game g) {
+        String gameGroupHeader = GameUtils.getGameGroupHeader(g);
+        return findTableSectionByHeaderValue(gameGroupHeader);
+    }
     private LinesTableData findOrCreateStageSectionByHeaderValue(String header) {
         TableSection<Game> ltd;
         ltd = createStageSection(header);
