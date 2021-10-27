@@ -48,6 +48,9 @@ public class SportType {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
         return stOpt.orElse(null);
     }
+    public static SportType createCustomizedSportType(String name) {
+        return new SportType(-200,name,name,null,-1);
+    }
     public static SportType findBySportName(String sportName) {
         return instanceMap.get(normalizeName(sportName));
     }
@@ -62,7 +65,7 @@ public class SportType {
     private boolean showseries = true;
     private boolean showingame = true;
 
-    public SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId) {
+    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId) {
         this.sportName = sportName;
         this.sportId = sportId;
         this.icon = icon;
