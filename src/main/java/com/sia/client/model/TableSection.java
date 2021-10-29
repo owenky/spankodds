@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
-import static com.sia.client.config.Utils.log;
 
 public abstract class TableSection<V extends KeyedObject> {
 
@@ -97,7 +96,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
         List<Object> rowData = getRowDataMap().get(rowModelIndex);
         if (null == rowData) {
-            log(new Exception("rowData is null: rowModelIndex=" + rowModelIndex));
+            throw new IllegalArgumentException("rowData is null: rowModelIndex=" + rowModelIndex);
         }
         return rowData.get(colModelIndex);
     }
