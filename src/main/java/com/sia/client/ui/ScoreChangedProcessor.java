@@ -15,6 +15,10 @@ public abstract class ScoreChangedProcessor {
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
         if (! gameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
+            if ( null == s) {
+                log("ScoreChangedProcessor: Can't find sport for league:"+g.getLeague_id());
+                return;
+            }
             log("game "+ GameUtils.getGameDebugInfo(g)+" is about to move from "+g.getStatus()+" to "+gameStatus.name());
             AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
             String finalprefs = gameStatus.getAlertPrefSupplier().get();
