@@ -206,6 +206,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         if ( 0 > lastRow ) {
             lastRow = mainTable.getRowCount()-1;
         }
+        if ( 0 > firstRow) {
+            firstRow = 0;
+        }
         mainTable.configHeaderRow(firstRow,lastRow,false);
     }
     private void adjustColumnOnColumnDraging(ColumnAdjuster columnAdjuster,Point mouseLocation,boolean adjustOnWidening){

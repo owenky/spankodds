@@ -1,10 +1,14 @@
-package com.sia.client.ui;
+package com.sia.client.ui.control;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
+import com.sia.client.ui.AppController;
+import com.sia.client.ui.CustomTab2;
+import com.sia.client.ui.LinesTableData;
+import com.sia.client.ui.SportCustomTab;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -23,7 +27,9 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -46,6 +52,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     private Image tabImage = null;
     private Point currentMouseLocation = null;
     private boolean dragging = false;
+    private final Map<String, MainScreen> mainScreenMap = new HashMap<>();
 
     public SportsTabPane() {
 
@@ -70,11 +77,12 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             if (null != st) {
                 URL imgResource = Utils.getMediaResource(st.getIcon());
                 MainScreen ms = new MainScreen(st);
+                addMainScreenToCache(ms);
                 addTab(title, new ImageIcon(imgResource),ms , title);
             }
         }
 
-        Vector customtabs = AppController.getCustomTabsVec();
+        Vector<String> customtabs = AppController.getCustomTabsVec();
         //adding=|851 07/03|851 07/04|852 07/04|853 07/04*new1*true*false*false*true*true?
         for (int i = 0; i < customtabs.size(); i++) {
             String name = "";
@@ -84,7 +92,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             boolean showadded = true;
             boolean showextra = true;
             boolean showprops = true;
-            String msstring = (String) customtabs.elementAt(i);
+            String msstring = customtabs.elementAt(i);
             log("customtab=" + msstring);
             String[] items = msstring.split("\\*");
             Vector customheaders = new Vector();
@@ -120,6 +128,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             }
             SportType customerizedSportType =  SportType.createCustomizedSportType(name);
             MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
+            addMainScreenToCache(msnew);
             addTab(name, null, msnew, name);
         }
         addTab("+", null, null, "+");
@@ -129,11 +138,23 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         //setSelectedIndex(getTabCount() - 1);
 
         log("initializing tabs9");
-        //com.sia.client.ui.AppController.doneloadinginitial();
-
-
     }
-
+    public MainScreen createMainScreen(SportType st, Vector<String> customvec) {
+        MainScreen ms = new MainScreen(st, customvec);
+        addMainScreenToCache(ms);
+        return ms;
+    }
+    public MainScreen createMainScreen(SportType st) {
+        MainScreen ms = new MainScreen(st);
+        addMainScreenToCache(ms);
+        return ms;
+    }
+    private void addMainScreenToCache(MainScreen ms) {
+        mainScreenMap.put(ms.getSportType().getSportName(),ms);
+    }
+    public MainScreen findMainScreen(String sportName) {
+        return mainScreenMap.get(sportName);
+    }
     private void addListeners() {
 
         this.addChangeListener(new ChangeListener() {
@@ -274,11 +295,20 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
             if (ms.shouldAddToScreen(g) ) {
-                Utils.checkAndRunInEDT(() -> ms.addGame(g, true,()-> {
-                    if ( ms.isPreDefinedSport() ) {
-                        refreshMainScreen(ms);
+                Runnable r = () -> {
+                    ms.addGame(g, true,()-> {
+                        if ( ms.isPreDefinedSport() ) {
+                            refreshMainScreen(ms);
+                        }
+                    });
+                };
+                Utils.checkAndRunInEDT(() -> {
+                    try {
+                        r.run();
+                    }catch (Exception e) {
+                        log(e);
                     }
-                }));
+                });
             }
         }
     }
