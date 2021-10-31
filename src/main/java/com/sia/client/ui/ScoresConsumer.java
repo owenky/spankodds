@@ -175,7 +175,9 @@ public class ScoresConsumer implements MessageListener {
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
 //                    AppController.addGame(g);
-                    scoreMessageProcessor.addMessage(AppController.getGame(gameid));
+//                    scoreMessageProcessor.addMessage(g);
+                    //should not add if game id not found from cache, because new Game() does not give game critical game info like date, and league -- 2021-10-30
+                    log("Warning: null game found for game id:"+gameid);
                 }
             }
         } catch (Exception e) {
