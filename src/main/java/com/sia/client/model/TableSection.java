@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.config.SiaConst;
 
 import javax.swing.event.TableModelEvent;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +123,6 @@ public abstract class TableSection<V extends KeyedObject> {
             g = gamesVec.removeGame(gameidtoremove);
             this.resetDataVector();
             if (repaint) {
-                resetDataVector();
                 TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
                 fire(e);
          }
@@ -131,12 +131,22 @@ public abstract class TableSection<V extends KeyedObject> {
         }
         return g;
     }
-
-    public void removeGameIds(Integer[] gameidstoremove) {
+    public void removeGameIdsAndCleanup(Collection<Integer> gameidstoremove) {
         for (Integer gameId : gameidstoremove) {
             removeGameId(gameId, false);
         }
-        resetDataVector(); //including sorting gamesVec
+        for(int i=gamesVec.size(); 0<=i; i-- ) {
+            V game = gamesVec.getByIndex(i);
+            boolean toRemove;
+            if ( null == game) {
+                toRemove = true;
+            } else {
+                toRemove = gameidstoremove.contains(game.getGame_id());
+            }
+            if ( toRemove) {
+                gamesVec.removeGameIdAt(i);
+            }
+        }
     }
 
     public boolean addGame(V g, boolean repaint) {

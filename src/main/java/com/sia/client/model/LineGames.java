@@ -38,6 +38,9 @@ public class LineGames<V extends KeyedObject> {
     public V getByIndex(int index) {
         return gameCache.getGame(gameIdList.get(index));
     }
+    public Integer removeGameIdAt(int index) {
+        return gameIdList.remove(index);
+    }
     public V getGameFromDataSource(String gameId) {
         return getGameFromDataSource(Integer.parseInt(gameId));
     }

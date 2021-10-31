@@ -363,12 +363,12 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //            }
 //        }
 //    }
-    public void removeGames(String[] gameids) {
+    public void removeGamesAndCleanup(String[] gameids) {
         int selectedIndex = getSelectedIndex();
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
-            Utils.checkAndRunInEDT(()-> ms.removeGames(gameids));
+            Utils.checkAndRunInEDT(()-> ms.removeGamesAndCleanup(gameids));
         }
 
     }

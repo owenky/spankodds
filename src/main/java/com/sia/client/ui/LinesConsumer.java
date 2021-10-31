@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
@@ -29,7 +28,7 @@ public class LinesConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(2000L,-1500L);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer",2000L,500L);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -48,11 +47,11 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        synchronized (SiaConst.GameLock) {
+//        synchronized (SiaConst.GameLock) {
             Utils.ensureNotEdtThread();
             processMessage((MapMessage) message);
             OngoingGameMessages.addMessage(MessageType.Line, message);
-        }
+//        }
     }
     public void processMessage(MapMessage mapMessage) {
         int gameid = 0;

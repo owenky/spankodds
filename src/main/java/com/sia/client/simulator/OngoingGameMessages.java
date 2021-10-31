@@ -98,7 +98,7 @@ public abstract class OngoingGameMessages {
 
     static void addText(MessageType messgeType, String text) {
         if (InitialGameMessages.shouldLogMesg) {
-            buffer.add(messgeType + MessageTypeDelimiter + text);
+            buffer.add(System.currentTimeMillis() + MessageTypeDelimiter + messgeType + MessageTypeDelimiter + text);
             if (buffer.size() >= batchSize) {
                 flushMessages();
             }
@@ -175,11 +175,12 @@ public abstract class OngoingGameMessages {
     }
     private static void processMessage(String text) {
         String[] strs = text.split(MessageTypeDelimiter);
-        String type = strs[0];
-        if (2 > strs.length) {
+        if (3 > strs.length) {
             return;
         }
-        String messageText = strs[1];
+        String timeStamp = strs[0];
+        String type = strs[1];
+        String messageText = strs[2];
         pause(10L);
 
         if (MessageType.Line.name().equals(type)) {

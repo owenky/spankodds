@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.SportType;
 import com.sia.client.model.TabUnhideListener;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;

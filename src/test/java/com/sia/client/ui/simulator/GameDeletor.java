@@ -6,7 +6,7 @@ public class GameDeletor implements EventGenerator{
     @Override
     public void generatEvent(final TableProperties [] tblProps) {
         for(TableProperties prop: tblProps) {
-            prop.getMainScreen().removeGames(idToDelete);
+            prop.getMainScreen().removeGamesAndCleanup(idToDelete);
         }
     }
 }

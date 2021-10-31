@@ -1,8 +1,8 @@
 package com.sia.client.simulator;
 
 import com.sia.client.model.SportType;
-import com.sia.client.ui.MainScreen;
-import com.sia.client.ui.SportsTabPane;
+import com.sia.client.ui.control.MainScreen;
+import com.sia.client.ui.control.SportsTabPane;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

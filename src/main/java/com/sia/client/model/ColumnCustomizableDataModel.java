@@ -12,9 +12,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
@@ -92,19 +95,17 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         throw new IllegalStateException("Pending implementation");
     }
-    public void removeGames(String[] gameidstr) {
-        Integer [] gameIds = new Integer[gameidstr.length];
-        for(int i=0;i<gameidstr.length;i++) {
-            gameIds[i] = Integer.parseInt(gameidstr[i]);
-        }
+    public void removeGamesAndCleanup(String[] gameidstr) {
+        Set<Integer> gameIdRemovedSet = Arrays.stream(gameidstr).map(Integer::parseInt).collect(Collectors.toSet());
         List<TableSection<V>> gameLines = getTableSections();
         for (TableSection<V> linesTableData : gameLines) {
             try {
-                linesTableData.removeGameIds(gameIds);
+                linesTableData.removeGameIdsAndCleanup(gameIdRemovedSet);
             } catch (Exception ex) {
                 log(ex);
             }
         }
+        this.buildIndexMappingCache();
         this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void fireTableChanged(TableModelEvent e) {

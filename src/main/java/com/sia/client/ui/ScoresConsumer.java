@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -76,7 +75,7 @@ public class ScoresConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        synchronized (SiaConst.GameLock) {
+//        synchronized (SiaConst.GameLock) {
             if (!InitialGameMessages.getMessagesFromLog) {
                 if (toSimulateMQ) {
                     if (simulateStatus.compareAndSet(false, true)) {
@@ -88,7 +87,7 @@ public class ScoresConsumer implements MessageListener {
                     processMessage((MapMessage)message);
                 }
             }
-        }
+//        }
     }
     public void processMessage(MapMessage mapMessage) {
         try {

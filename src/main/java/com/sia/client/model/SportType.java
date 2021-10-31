@@ -3,7 +3,7 @@ package com.sia.client.model;
 import com.sia.client.config.SiaConst;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.MainScreen;
+import com.sia.client.ui.control.MainScreen;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -197,7 +197,7 @@ public class SportType {
         return name.replaceAll("\\s","").toLowerCase();
     }
     private boolean containsGameLeague(Game g ) {
-        MainScreen ms = MainScreen.findMainScreen(this.getSportName());
+        MainScreen ms = AppController.getTabPanes().get(0).findMainScreen(this.getSportName());
         return null != ms.getDataModels().findLeagueSection(g);
     }
 }

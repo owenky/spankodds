@@ -13,6 +13,7 @@ import com.sia.client.model.TableSection;
 import javax.swing.table.TableColumn;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -280,11 +281,11 @@ public class LinesTableData extends TableSection<Game> {
         resetDataVector(); //including sorting gamesVec
     }
     @Override
-    public void removeGameIds(Integer[] gameidstoremove) {
-        if (gameidstoremove.length == 1 && gameidstoremove[0].equals(-1)) {
+    public void removeGameIdsAndCleanup(Collection<Integer> gameidstoremove){
+        if ( 1 == gameidstoremove.size()  && gameidstoremove.iterator().next().equals(-1)) {
             removeYesterdaysGames();
         } else {
-             super.removeGameIds(gameidstoremove);
+             super.removeGameIdsAndCleanup(gameidstoremove);
         }
     }
 

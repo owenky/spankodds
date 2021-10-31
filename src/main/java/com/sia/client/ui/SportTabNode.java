@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.ui.control.MainScreen;
+
 import javax.swing.ImageIcon;
 
 class SportTabNode

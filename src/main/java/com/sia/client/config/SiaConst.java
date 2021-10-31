@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.3)";
+    public static final String Version="(v21.20.6)";
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
     public static final String ConfigPath = "/config/";
@@ -30,6 +30,8 @@ public abstract class SiaConst {
     public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
     public static final Color DefaultHeaderFontColor = Color.WHITE;
     public static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);
+    public static final double DefaultSpread = -99999d;
+    public static final double DefaultOver = 99999d;
 
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;

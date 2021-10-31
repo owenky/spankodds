@@ -1,4 +1,4 @@
-package com.sia.client.ui;
+package com.sia.client.ui.control;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
@@ -17,6 +17,13 @@ import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.MainScreenRefresh;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
+import com.sia.client.ui.AppController;
+import com.sia.client.ui.GameLeagueSorter;
+import com.sia.client.ui.LineRenderer;
+import com.sia.client.ui.LinesTableData;
+import com.sia.client.ui.MainGameTable;
+import com.sia.client.ui.ScrollablePanel;
+import com.sia.client.ui.TableUtils;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -75,24 +82,19 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private MainGameTable mainGameTable;
     private final Vector<TableColumn> allColumns = new Vector<>();
     private static final AtomicBoolean testStatus = new AtomicBoolean(false);
-    private static final Map<String,MainScreen> mainScreenMap = new HashMap<>();
 
-    public static MainScreen findMainScreen(String name) {
-        return mainScreenMap.get(name);
-    }
-    public MainScreen(SportType sportType) {
+    MainScreen(SportType sportType) {
         cleartime = new java.util.Date().getTime();
         this.sportType = sportType;
         final String name = sportType.getSportName();
         setName(name);
-        mainScreenMap.put(name,this);
     }
-    public MainScreen(SportType sportType, Vector customheaders) {
+    MainScreen(SportType sportType, Vector customheaders) {
         this(sportType);
         this.customheaders = customheaders;
     }
 
-    public MainScreen(SportType sportType,Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+    MainScreen(SportType sportType,Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
         this(sportType);
         this.customheaders = customheaders;
         this.showheaders = showheaders;
@@ -467,7 +469,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     leagueid = g.getSubleague_id();
                     s2 = AppController.getSportByLeagueId(leagueid);
                     if ( null == s2) {
-                        log(new Exception("Can't find sport for leagueid "+leagueid));
+                        log("MainScreen: Can't find sport for leagueid "+leagueid+", game id:"+gameid);
                         continue;
                     }
 
@@ -829,7 +831,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         log("gamergroup headers start..." + new java.util.Date());
 
-        Map<String,LinesTableData> headerMap = new HashMap<>();
+        Map<String, LinesTableData> headerMap = new HashMap<>();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             Vector<Game> newgamegroupvec = (Vector<Game>) vecofgamegroups.get(j);
             String gameGroupHeader = GameUtils.normalizeGameHeader(gamegroupheaders.get(j));

@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;

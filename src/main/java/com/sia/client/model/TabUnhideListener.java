@@ -2,11 +2,11 @@ package com.sia.client.model;
 
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.MainScreen;
-import com.sia.client.ui.SportsTabPane;
+import com.sia.client.ui.control.MainScreen;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.ImageIcon;
-import java.util.Vector;
+import java.util.List;
 
 public class TabUnhideListener {
 
@@ -19,11 +19,11 @@ public class TabUnhideListener {
     public void unHide() {
         String stName = sportType.getSportName();
         AppController.SpotsTabPaneVector.put(index, stName);
-        Vector currentvec = AppController.getMainTabVec();
+        List<String> currentvec = AppController.getMainTabVec();
         int idx = currentvec.indexOf(stName);
-        for (Object o : AppController.getTabPanes()) {
-            SportsTabPane tp1 = (SportsTabPane) o;
-            tp1.insertTab(stName, new ImageIcon(Utils.getMediaResource(sportType.getIcon())), new MainScreen(sportType), stName, idx);
+        for (SportsTabPane tp1 : AppController.getTabPanes()) {
+            MainScreen ms = tp1.createMainScreen(sportType);
+            tp1.insertTab(stName, new ImageIcon(Utils.getMediaResource(sportType.getIcon())), ms, stName, idx);
             tp1.setSelectedIndex(tp1.indexOfTab(stName));
 
         }

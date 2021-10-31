@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
+import com.sia.client.ui.control.SportsTabPane;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;

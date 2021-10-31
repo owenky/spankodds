@@ -1453,6 +1453,10 @@ class LineAlertOpeners implements ItemListener {
         String homeValue = LineAlertManager.mlfix(newhomejuice);
 
         Game game = AppController.getGame(Gid);
+        if ( null== game) {
+            log(new Exception("Error: null game detected: game_id="+Gid));
+            return;
+        }
         int hometeamgamenumber = game.getHomegamenumber();
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();

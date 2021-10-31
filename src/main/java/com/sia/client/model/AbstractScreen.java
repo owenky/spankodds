@@ -37,7 +37,7 @@ public interface AbstractScreen<T extends KeyedObject> {
             });
         }
     }
-    default void removeGames(String[] gameids) {
-        getColumnCustomizableTable().getModel().removeGames(gameids);
+    default void removeGamesAndCleanup(String[] gameids) {
+        getColumnCustomizableTable().getModel().removeGamesAndCleanup(gameids);
     }
 }

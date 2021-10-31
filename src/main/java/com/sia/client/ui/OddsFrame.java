@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.ui.control.SportsTabPane;
+
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;

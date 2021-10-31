@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
@@ -66,7 +65,7 @@ public class GamesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        synchronized (SiaConst.GameLock) {
+//        synchronized (SiaConst.GameLock) {
             if (!InitialGameMessages.getMessagesFromLog) {
                 if (toSimulateMQ) {
                     if (simulateStatus.compareAndSet(false, true)) {
@@ -79,7 +78,7 @@ public class GamesConsumer implements MessageListener {
                     processMessage((TextMessage)message);
                 }
             }
-        }
+//        }
     }
     public void processMessage(TextMessage textMessage) {
         try {
@@ -431,7 +430,7 @@ public class GamesConsumer implements MessageListener {
                 //	System.out.print("ABOUT TO REMOVE="+data+".");
                 String[] gameidarr = data.split("~");
                 //AppController.removeGame(Integer.parseInt(data));
-                AppController.removeGames(gameidarr);
+                AppController.removeGamesAndCleanup(gameidarr);
 
 
             } else if (messagetype.equals("REMOVEDATE")) {
