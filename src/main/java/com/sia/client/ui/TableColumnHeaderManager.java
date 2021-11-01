@@ -71,6 +71,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
         }});
     }
+    public ColumnHeaderDrawer getColumnHeaderDrawer() {
+        return columnHeaderDrawer;
+    }
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {

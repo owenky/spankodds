@@ -16,17 +16,23 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ColumnHeaderDrawer<V extends KeyedObject> {
 
+    private final Map<Integer,JComponent> groupHeaderCompCache = new HashMap<>();
     public ColumnHeaderDrawer() {
     }
     public Component drawOnViewIndex(ColumnCustomizableTable<V> mainTable,int rowViewIndex, String headerValue, int horizontalScrollBarAdjustmentValue) {
         ColumnHeaderProperty columnHeaderProvider = mainTable.getModel().getColumnHeaderProperty();
         Font headerFont = columnHeaderProvider.getHeaderFont();
-        JComponent headerComponent = makeColumnHeaderComp(mainTable, headerValue,columnHeaderProvider.getHeaderForeground(),headerFont);
+        JComponent headerComponent = groupHeaderCompCache.computeIfAbsent(rowViewIndex,(key)->makeColumnHeaderComp(mainTable, headerValue,columnHeaderProvider.getHeaderForeground(),headerFont));
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, String.valueOf(headerValue),columnHeaderProvider.getColumnHeaderHeight(), horizontalScrollBarAdjustmentValue,headerFont);
         return headerComponent;
+    }
+    public JComponent getGameGroupHeaderComponent(int rowViewIndex) {
+        return groupHeaderCompCache.get(rowViewIndex);
     }
     private static <V extends KeyedObject> JComponent makeColumnHeaderComp(ColumnCustomizableTable<V> jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
         JPanel jPanel = new JPanel();

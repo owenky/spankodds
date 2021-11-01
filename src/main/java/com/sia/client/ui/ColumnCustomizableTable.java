@@ -26,9 +26,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
@@ -46,7 +44,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
     private TableModelListener tableChangedListener;
-    private Map<Integer, Component> oldHeaderMap = new HashMap<>();
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
@@ -77,7 +74,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 
         for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
             //remove group header if the row has it.
-            Component oldHeaderComp = oldHeaderMap.get(rowViewIndex);
+            Component oldHeaderComp = tableColumnHeaderManager.getColumnHeaderDrawer().getGameGroupHeaderComponent(rowViewIndex);
             if ( null != oldHeaderComp) {
                 this.remove(oldHeaderComp);
             }
@@ -94,8 +91,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 }
             } else {
                 rowHeight = columnHeaderProperty.getColumnHeaderHeight();
-                Component newGroupHeader = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,String.valueOf(headerValue));
-                this.oldHeaderMap.put(rowViewIndex,newGroupHeader);
+                getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,String.valueOf(headerValue));
             }
             if ( toSetRowHeight) {
                 setRowHeight(rowViewIndex, rowHeight);
