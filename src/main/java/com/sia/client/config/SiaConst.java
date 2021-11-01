@@ -26,7 +26,7 @@ public abstract class SiaConst {
     public static final Integer SoccerRowheight = 60;
     public static final Integer NormalRowheight = 30;
     public static final Integer GameGroupHeaderHeight = 20;
-    public static final String GameGroupHeaderIden = "@~@";
+//    public static final String GameGroupHeaderIden = "@~@";
     public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
     public static final Color DefaultHeaderFontColor = Color.WHITE;
     public static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);

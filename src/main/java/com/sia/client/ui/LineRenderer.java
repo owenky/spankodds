@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.GameGroupHeader;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -181,7 +182,7 @@ public class LineRenderer implements TableCellRenderer {
         } else if (value instanceof HeaderView) {
             headerPanel.setHeader(table,(HeaderView) value, row, column);
             rtn = headerPanel;
-        } else if (SiaConst.GameGroupHeaderIden.equals(value)) {
+        } else if (value instanceof GameGroupHeader) {
             rtn = headerCellRenderComp;
         }  else {
             log(new IllegalStateException("Illegal value:"+value));

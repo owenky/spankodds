@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
@@ -134,7 +135,7 @@ public class LinesTableData extends TableSection<Game> {
         for (TableColumn tc : columns) {
             Object value;
             if (SiaConst.BlankGameId == gameid) {
-                value = SiaConst.GameGroupHeaderIden+getGameGroupHeader();
+                value = new GameGroupHeader(getGameGroupHeader());
             } else {
                 value = getCellValue(tc, g);
             }

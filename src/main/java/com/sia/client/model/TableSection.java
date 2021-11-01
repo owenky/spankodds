@@ -135,7 +135,7 @@ public abstract class TableSection<V extends KeyedObject> {
         for (Integer gameId : gameidstoremove) {
             removeGameId(gameId, false);
         }
-        for(int i=gamesVec.size(); 0<=i; i-- ) {
+        for(int i=gamesVec.size()-1; 0<=i; i-- ) {
             V game = gamesVec.getByIndex(i);
             boolean toRemove;
             if ( null == game) {
