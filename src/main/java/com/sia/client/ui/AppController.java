@@ -856,7 +856,7 @@ public class AppController {
 
     }
 
-    public static void removeGamesAndCleanup(String[] gameidarr) {
+    public synchronized static void removeGamesAndCleanup(String[] gameidarr) {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
         for (SportsTabPane stb : tabpanes) {
