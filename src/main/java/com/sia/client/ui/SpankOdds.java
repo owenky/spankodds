@@ -19,6 +19,9 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -38,6 +41,7 @@ public class SpankOdds {
     private int failedAttemptsCount = 0;
 
     public static void main(String[] args) {
+        initSystemProperties();
         com.jidesoft.utils.Lm.verifyLicense("Spank Odds", "Spank Odds",
                 "gJGsTI2f4lYzPcskZ7OHWXN7iPvWAbO2");
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
@@ -51,6 +55,19 @@ public class SpankOdds {
         AppController.initializSpotsTabPaneVector();
 
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog());
+    }
+    private static void initSystemProperties() {
+        if ( Boolean.parseBoolean(System.getProperty("LogToFile")) ) {
+            try {
+                Utils.logPs = new PrintStream(new FileOutputStream(SiaConst.logFileName));
+                Utils.errPs = new PrintStream(new FileOutputStream(SiaConst.errFileName));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Utils.logPs = System.out;
+            Utils.errPs = System.err;
+        }
     }
     private void showLoginDialog() {
 

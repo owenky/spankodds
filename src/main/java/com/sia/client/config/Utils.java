@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
+import java.io.PrintStream;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.time.Instant;
@@ -39,6 +40,8 @@ public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
+    public static PrintStream logPs;
+    public static PrintStream errPs;
 
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
@@ -83,13 +86,13 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        System.out.println(nowShortString()+" |");e.printStackTrace();
+        errPs.println(nowShortString()+" |");e.printStackTrace();
     }
     public static void log(String mesg) {
-        System.out.println(nowShortString()+" |"+mesg);
+        logPs.println(nowShortString()+" |"+mesg);
     }
     public static void log(Object mesg) {
-        System.out.println(nowShortString()+" |"+mesg);
+        logPs.println(nowShortString()+" |"+mesg);
     }
     private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
     public static String nowShortString() {
