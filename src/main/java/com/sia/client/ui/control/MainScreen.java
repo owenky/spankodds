@@ -13,10 +13,6 @@ import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
-import com.sia.client.simulator.InitialGameMessages;
-import com.sia.client.simulator.MainScreenRefresh;
-import com.sia.client.simulator.OngoingGameMessages;
-import com.sia.client.simulator.TestExecutor;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.GameLeagueSorter;
 import com.sia.client.ui.LineRenderer;
@@ -42,8 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -51,6 +45,8 @@ import static java.lang.Boolean.parseBoolean;
 
 public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
+    private final SportType sportType;
+    private final Vector<TableColumn> allColumns = new Vector<>();
     public int currentmaxlength = 0;
     public boolean timesort = false;
     public boolean shortteam = false;
@@ -58,6 +54,12 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public boolean last = false;
     public String display = "default";
     public int period = 0;
+    public long cleartime;
+    public boolean showheaders = true;
+    public boolean showadded = true;
+    public boolean showextra = true;
+    public boolean showprops = true;
+    public Vector customheaders = new Vector();
     private List<String> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
     private Vector inprogressgames = new Vector();
@@ -72,16 +74,12 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private Vector ingamegamessoccer = new Vector();
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
-    private final SportType sportType;
-    public long cleartime;
-    public boolean showheaders = true;
-    public boolean showadded = true;
-    public boolean showextra = true;
-    public boolean showprops = true;
-    public Vector customheaders = new Vector();
     private MainGameTable mainGameTable;
-    private final Vector<TableColumn> allColumns = new Vector<>();
-    private static final AtomicBoolean testStatus = new AtomicBoolean(false);
+
+    MainScreen(SportType sportType, Vector customheaders) {
+        this(sportType);
+        this.customheaders = customheaders;
+    }
 
     MainScreen(SportType sportType) {
         cleartime = new java.util.Date().getTime();
@@ -89,12 +87,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         final String name = sportType.getSportName();
         setName(name);
     }
-    MainScreen(SportType sportType, Vector customheaders) {
-        this(sportType);
-        this.customheaders = customheaders;
-    }
 
-    MainScreen(SportType sportType,Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+    MainScreen(SportType sportType, Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
         this(sportType);
         this.customheaders = customheaders;
         this.showheaders = showheaders;
@@ -104,47 +98,51 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.showextra = showextra;
         this.showprops = showprops;
     }
-    public MainGameTableModel getDataModels() {
-        return getColumnCustomizableTable().getModel();
-    }
-    public SportType getSportType() {
-        return this.sportType;
-    }
+
     public void setClearTime(long clear) {
         cleartime = clear;
         getDataModels().clearColors();
+    }
+
+    public MainGameTableModel getDataModels() {
+        return getColumnCustomizableTable().getModel();
+    }
+
+    private MainGameTable createMainGameTable() {
+        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(sportType, allColumns));
+        mainGameTable.setIntercellSpacing(new Dimension(4, 2));
+        mainGameTable.setName(getName());
+        JTableHeader tableHeader = mainGameTable.getTableHeader();
+        Font headerFont = new Font("Verdana", Font.BOLD, 11);
+        tableHeader.setFont(headerFont);
+        return mainGameTable;
     }
 
     public void clearColors() {
         getDataModels().clearColors();
     }
 
-    public Game removeGame(int gameid,boolean repaint) {
-        return getDataModels().removeGame(gameid,repaint);
+    public Game removeGame(int gameid, boolean repaint) {
+        return getDataModels().removeGame(gameid, repaint);
     }
-    public void addGame(Game g, boolean repaint,Runnable callBackOnNotFound) { // only gets called when adding new game into system
-        if ( null != mainGameTable) {
+
+    public void addGame(Game g, boolean repaint, Runnable callBackOnNotFound) { // only gets called when adding new game into system
+        if (null != mainGameTable) {
             String gameGroupHeader;
             GameStatus gameStatus = GameStatus.find(g.getStatus());
-            if ( null == gameStatus) {
+            if (null == gameStatus) {
                 gameGroupHeader = GameUtils.getGameGroupHeader(g);
             } else {
-                gameGroupHeader= gameStatus.getGroupHeader();
+                gameGroupHeader = gameStatus.getGroupHeader();
             }
             getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, repaint, callBackOnNotFound);
         }
     }
-    @Override
-    public boolean shouldAddToScreen(Game g){
 
-        if ( ! this.isShowing()) {
-            return false;
-        }
-        return this.sportType.shouldSelect(g);
-    }
     public void moveGameToThisHeader(Game g, String header) {
-        getColumnCustomizableTable().getModel().moveGameToThisHeader(g,header);
+        getColumnCustomizableTable().getModel().moveGameToThisHeader(g, header);
     }
+
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
         setLayout(new BorderLayout(0, 0));
         // add progress
@@ -161,6 +159,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         createData();
 
     }
+
     public void createData() {
         Vector gamegroupvec = new Vector();
         Vector gamegroupheadervec = new Vector();
@@ -179,7 +178,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         // added sorting code 5/6/2021
         try {
-            allgamesforpref.sort( new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
+            allgamesforpref.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
             allgamesforpref.sort(new GameDateSorter());
 //            Collections.sort(allgamesforpref, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
 //            Collections.sort(allgamesforpref, new GameDateSorter());
@@ -212,10 +211,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             } catch (Exception ex) {
                 log(ex);
             }
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                if ( sportType.shouldSelect(tempGame)) {
+                if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
 
@@ -236,7 +235,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 this.setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
@@ -259,14 +258,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
                     allgames.add(tempGame);
                 }
             }
-            log("size of all ames="+allgames.size());
+            log("size of all ames=" + allgames.size());
         } else if (name.equalsIgnoreCase("hockey")) {
             String hockeypref = AppController.getUser().getHockeyPref();
             prefs = hockeypref.split("\\|");
@@ -282,7 +281,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
@@ -302,10 +301,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("fighting")) {
                     all = true;
                 }
-               setShowProperties(prefs);
+                setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
@@ -325,10 +324,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
                     all = true;
                 }
-               setShowProperties(prefs);
+                setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
@@ -351,7 +350,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
@@ -371,10 +370,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 if (tmp[0].equalsIgnoreCase("golf")) {
                     all = true;
                 }
-               setShowProperties(prefs);
+                setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
                 if (sportType.shouldSelect(tempGame)) {
@@ -399,10 +398,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 setShowProperties(prefs);
             }
 
-            sportType.setLeagueFilter(new LeagueFilter(tmp,all));
+            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
             for (int z = 0; z < allgamesforpref.size(); z++) {
                 Game tempGame = allgamesforpref.getByIndex(z);
-                if ( sportType.shouldSelect(tempGame) ) {
+                if (sportType.shouldSelect(tempGame)) {
                     //log("yes"+set+"---");
                     allgames.add(tempGame);
                 }
@@ -426,7 +425,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         for (int k = 0; k < allgames.size(); k++) {
 
-            int gameid=-1;
+            int gameid = -1;
             Game g = allgames.getByIndex(k);
 
 
@@ -468,8 +467,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 {
                     leagueid = g.getSubleague_id();
                     s2 = AppController.getSportByLeagueId(leagueid);
-                    if ( null == s2) {
-                        log("MainScreen: Can't find sport for leagueid "+leagueid+", game id:"+gameid);
+                    if (null == s2) {
+                        log("MainScreen: Can't find sport for leagueid " + leagueid + ", game id:" + gameid);
                         continue;
                     }
 
@@ -508,14 +507,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
                 int id = s.getParentleague_id();
 
-                if ( g.isInFinal() ) {
+                if (g.isInFinal()) {
                     if (id == SiaConst.SoccerLeagueId) {
                         finalgamessoccer.add(g);
                     } else {
                         finalgames.add(g);
                     }
 
-                } else if (g.isHalfTime() || g.isInProgress() ) {
+                } else if (g.isHalfTime() || g.isInProgress()) {
                     if (g.isHalfTime()) {
                         if (id == SiaConst.SoccerLeagueId) {
                             halftimegamessoccer.add(g);
@@ -540,7 +539,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                     }
 
 
-                } else if (g.isInGame2() ) {
+                } else if (g.isInGame2()) {
                     if (id == SiaConst.SoccerLeagueId) {
                         ingamegamessoccer.add(g);
                     } else {
@@ -679,7 +678,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         });
 
     }
-    private void setShowProperties(String [] prefs) {
+
+    private void setShowProperties(String[] prefs) {
         this.showheaders = (parseBoolean(prefs[3]));
         sportType.setShowseries(parseBoolean(prefs[4]));
         sportType.setShowingame(parseBoolean(prefs[5]));
@@ -687,6 +687,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.showextra = (parseBoolean(prefs[7]));
         this.showprops = (parseBoolean(prefs[8]));
     }
+
     public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
 
         if (customheaders.size() == 0) {
@@ -764,10 +765,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         showprops = b;
     }
 
-    public void setShowSeries(boolean b) {
-        sportType.setShowseries(b);
-    }
-
     public boolean isShowIngame() {
         return sportType.isShowingame();
     }
@@ -775,6 +772,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public void setShowIngame(boolean b) {
         sportType.setShowingame(b);
     }
+
     public void drawIt() {
 
         mainGameTable = null;
@@ -835,20 +833,20 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             Vector<Game> newgamegroupvec = (Vector<Game>) vecofgamegroups.get(j);
             String gameGroupHeader = GameUtils.normalizeGameHeader(gamegroupheaders.get(j));
-            if ( null !=  gameGroupHeader || ( null != newgamegroupvec && 0 < newgamegroupvec.size())) {
+            if (null != gameGroupHeader || (null != newgamegroupvec && 0 < newgamegroupvec.size())) {
                 LinesTableData tableSection;
                 tableSection = headerMap.get(gameGroupHeader);
-                if ( null == tableSection) {
+                if (null == tableSection) {
                     tableSection = createLinesTableData(newgamegroupvec, gameGroupHeader);
                     mainGameTable.addGameLine(tableSection);
-                    headerMap.put(gameGroupHeader,tableSection);
+                    headerMap.put(gameGroupHeader, tableSection);
                 } else {
                     tableSection.addAllGames(newgamegroupvec);
                 }
             }
         }
         MainGameTableModel model = mainGameTable.getModel();
-        if ( sportType.isPredifined()) {
+        if (sportType.isPredifined()) {
             int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
             addHalfTimeWhenAbsent(rowHeight, model);
         }
@@ -862,39 +860,35 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
         add(mainTableContainer, BorderLayout.CENTER);
         AppController.addDataModels(getDataModels());
-        if (InitialGameMessages.shouldRunMainScreenTest) {
-            if ( ! testStatus.get()) {
-                TestExecutor testExecutor;
-//                testExecutor= new MoveToFinal(model);
-//                testExecutor = new ScoreChangeProcessorTest(null);
-                testExecutor = new MainScreenRefresh(this);
-                if ( testExecutor.isValid()) {
-                    testStatus.set(true);
-                    testExecutor.start();
-                }
+    }
 
-            }
-        }
-        if (InitialGameMessages.getMessagesFromLog) {
-            Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
-        }
-    }
-    public boolean isPreDefinedSport() {
-        return this.sportType.isPredifined();
-    }
-    private void addHalfTimeWhenAbsent(int rowHeight,MainGameTableModel model) {
-        if ( ! model.containsGroupHeader(SiaConst.HalfTimeStr) ) {
-            LinesTableData tableSection = createLinesTableData(new Vector(),SiaConst.HalfTimeStr);
-            tableSection.setRowHeight(rowHeight);
-            mainGameTable.addGameLine(0,tableSection);
-        }
-    }
-    private LinesTableData createLinesTableData(Vector newgamegroupvec,String gameGroupHeader) {
-        LinesTableData tableSection = new LinesTableData(sportType,display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
+    private LinesTableData createLinesTableData(Vector newgamegroupvec, String gameGroupHeader) {
+        LinesTableData tableSection = new LinesTableData(sportType, display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
         int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
         tableSection.setRowHeight(tableSectionRowHeight);
         return tableSection;
     }
+
+    private void addHalfTimeWhenAbsent(int rowHeight, MainGameTableModel model) {
+        if (!model.containsGroupHeader(SiaConst.HalfTimeStr)) {
+            LinesTableData tableSection = createLinesTableData(new Vector(), SiaConst.HalfTimeStr);
+            tableSection.setRowHeight(rowHeight);
+            mainGameTable.addGameLine(0, tableSection);
+        }
+    }
+
+    private JComponent makeMainTableScrollPane(MainGameTable table) {
+        return TableUtils.configTableLockColumns(table, AppController.getNumFixedCols());
+    }
+
+    public void setShowSeries(boolean b) {
+        sportType.setShowseries(b);
+    }
+
+    public boolean isPreDefinedSport() {
+        return this.sportType.isPredifined();
+    }
+
     public boolean isShowHeaders() {
         return showheaders;
     }
@@ -906,16 +900,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public void adjustcols() {
         getColumnCustomizableTable().adjustColumns();
     }
-    @Override
-    public MainGameTable getColumnCustomizableTable() {
-        if ( null == mainGameTable ) {
-            mainGameTable = createMainGameTable();
-        }
-        return mainGameTable;
-    }
+
     public boolean containsGame(Game g) {
         boolean containing;
-        if (getSportType().isPredifined() && getSportType().isMyType(g) ) {
+        if (getSportType().isPredifined() && getSportType().isMyType(g)) {
             //this is faster than getDataModels().containsGame(g.getGame_id());
             containing = true;
         } else {
@@ -923,6 +911,11 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         return containing;
     }
+
+    public SportType getSportType() {
+        return this.sportType;
+    }
+
     @Override
     public void destroyMe() {
         mainGameTable = null;
@@ -940,17 +933,22 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         removeAll();
         log("destroyed mainscreen!!!!");
     }
-    private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(sportType,allColumns));
-        mainGameTable.setIntercellSpacing(new Dimension(4,2));
-        mainGameTable.setName(getName());
-        JTableHeader tableHeader = mainGameTable.getTableHeader();
-        Font headerFont = new Font("Verdana", Font.BOLD, 11);
-        tableHeader.setFont(headerFont);
-        return mainGameTable;
+
+    @Override
+    public boolean shouldAddToScreen(Game g) {
+
+        if (!this.isShowing()) {
+            return false;
+        }
+        return this.sportType.shouldSelect(g);
     }
-    private JComponent makeMainTableScrollPane(MainGameTable table) {
-        return TableUtils.configTableLockColumns(table,AppController.getNumFixedCols());
+
+    @Override
+    public MainGameTable getColumnCustomizableTable() {
+        if (null == mainGameTable) {
+            mainGameTable = createMainGameTable();
+        }
+        return mainGameTable;
     }
 
 }

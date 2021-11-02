@@ -5,6 +5,10 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
+import com.sia.client.simulator.InitialGameMessages;
+import com.sia.client.simulator.MainScreenRefresh;
+import com.sia.client.simulator.OngoingGameMessages;
+import com.sia.client.simulator.TestExecutor;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.CustomTab2;
 import com.sia.client.ui.LinesTableData;
@@ -31,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -53,9 +59,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     private Point currentMouseLocation = null;
     private boolean dragging = false;
     private final Map<String, MainScreen> mainScreenMap = new HashMap<>();
+    private final int counter;
+    private static AtomicInteger instanceCounter = new AtomicInteger(0);
 
     public SportsTabPane() {
-
+        counter = instanceCounter.getAndAdd(1);
         thispane = this;
         //end for draggable tabpane
         try {
@@ -137,7 +145,22 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         //setTabComponentAt(getTabCount() - 1, p);
         //setSelectedIndex(getTabCount() - 1);
 
-        log("initializing tabs9");
+        log("initializing SportTabPane instance:"+counter);
+        doTest();
+    }
+    private void doTest() {
+        if (InitialGameMessages.shouldRunMainScreenTest) {
+            TestExecutor testExecutor;
+//                testExecutor= new MoveToFinal(model);
+//                testExecutor = new ScoreChangeProcessorTest(null);
+            testExecutor = new MainScreenRefresh(this);
+            if ( testExecutor.isValid()) {
+                testExecutor.start();
+            }
+        }
+        if (InitialGameMessages.getMessagesFromLog) {
+            Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
+        }
     }
     public MainScreen createMainScreen(SportType st, Vector<String> customvec) {
         MainScreen ms = new MainScreen(st, customvec);
@@ -419,7 +442,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         MainScreen thisms = (MainScreen) getComponentAt(currentTabIndex);
         refreshMainScreen(thisms);
     }
-    public static void refreshMainScreen(MainScreen thisms) {
+    public void refreshMainScreen(MainScreen thisms) {
         thisms.destroyMe();
         log("refreshing MainScreen "+thisms.getName()+" !");
         thisms.createData();

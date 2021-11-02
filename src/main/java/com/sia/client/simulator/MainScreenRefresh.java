@@ -9,11 +9,11 @@ import static com.sia.client.config.Utils.log;
 
 public class MainScreenRefresh extends TestExecutor{
 
-    private final MainScreen mainScreen;
+    private final SportsTabPane sportTablePane;
     private static final AtomicInteger counter = new AtomicInteger(0);
-    public MainScreenRefresh(MainScreen mainScreen) {
+    public MainScreenRefresh(SportsTabPane sportTablePane) {
         super(15,20);
-        this.mainScreen = mainScreen;
+        this.sportTablePane = sportTablePane;
 //        setValid(mainScreen.getName().equals(SportType.Soccer.getSportName()));
         setValid(true);
     }
@@ -21,10 +21,11 @@ public class MainScreenRefresh extends TestExecutor{
     public void run() {
 
         try {
+            MainScreen mainScreen = (MainScreen)sportTablePane.getSelectedComponent();
             if(0==counter.getAndAdd(1)%5) {
                 log("***** Refreshing MainScreen "+mainScreen.getSportType().getSportName()+", count=" + counter.get());
             }
-            SportsTabPane.refreshMainScreen(mainScreen);
+            sportTablePane.refreshMainScreen(mainScreen);
         } catch(Exception e) {
             log(e);
         }
