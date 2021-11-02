@@ -149,7 +149,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         doTest();
     }
     private void doTest() {
-        if (InitialGameMessages.shouldRunMainScreenTest) {
+        if (InitialGameMessages.shouldRunSimulator) {
             TestExecutor testExecutor;
 //                testExecutor= new MoveToFinal(model);
 //                testExecutor = new ScoreChangeProcessorTest(null);

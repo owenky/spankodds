@@ -25,7 +25,7 @@ import static com.sia.client.config.Utils.log;
 public abstract class InitialGameMessages {
 
     public static boolean shouldLogMesg = false;
-    public static boolean shouldRunMainScreenTest; //set by System Property
+    public static boolean shouldRunSimulator; //set by System Property
     public static boolean getMessagesFromLog = false;
     public static String MesgDir = TestProperties.DefaultMesgDir;
     public static Set<MessageType> interestedMessageTypes;
@@ -34,7 +34,7 @@ public abstract class InitialGameMessages {
 
     public static void initMsgLoggingProps() {
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
-        shouldRunMainScreenTest = Boolean.parseBoolean(System.getProperty("MainScreenTest"));
+        shouldRunSimulator = Boolean.parseBoolean(System.getProperty("RunSimulator"));
         getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
         String interestedMesgTypeStr = System.getProperty("InterestedMessageTypes");
 
