@@ -24,7 +24,6 @@ import javax.sound.sampled.Clip;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -456,7 +455,7 @@ public class GamesConsumer implements MessageListener {
             out = new DataOutputStream(new FileOutputStream(fileName, append));
             out.writeBytes(data + "\n");
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log("Couldn't get I/O for htmlfile " + fileName + "\n" + e);
             log(e);
         } finally {

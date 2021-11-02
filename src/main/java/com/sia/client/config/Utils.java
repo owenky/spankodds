@@ -86,7 +86,7 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        errPs.println(nowShortString()+" |");e.printStackTrace();
+        errPs.println(nowShortString()+" |");e.printStackTrace(errPs);
     }
     public static void log(String mesg) {
         logPs.println(nowShortString()+" |"+mesg);
