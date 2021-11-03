@@ -430,6 +430,7 @@ public class GamesConsumer implements MessageListener {
                 //	System.out.print("ABOUT TO REMOVE="+data+".");
                 String[] gameidarr = data.split("~");
                 //AppController.removeGame(Integer.parseInt(data));
+                log("GamesConsumer: REMOVE game ids "+data);
                 AppController.removeGamesAndCleanup(gameidarr);
 
 
