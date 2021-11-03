@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -103,16 +104,13 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             String msstring = customtabs.elementAt(i);
             log("customtab=" + msstring);
             String[] items = msstring.split("\\*");
-            Vector customheaders = new Vector();
+            List<String> customheaders = new ArrayList<>();
             for (int j = 0; j < items.length; j++) {
                 log(j + " item=" + items[j]);
                 if (j == 0) {
                     String[] headers = items[j].split("\\|");
-                    for (int k = 0; k < headers.length; k++) {
-                        String header = headers[k];
-                        if (header.equals("")) {
-                            continue;
-                        } else {
+                    for (String header : headers) {
+                        if ( ! "".equals(header)) {
                             customheaders.add(header);
                             log("adding header=" + header);
                         }
@@ -348,15 +346,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //            }
 //        }
 //    }
-    public void removeGame(int gameid, boolean repaint) {
-        int selectedIndex = getSelectedIndex();
-        Component c = getComponentAt(selectedIndex);
-        if (c instanceof MainScreen) {
-            MainScreen ms = (MainScreen) c;
-            Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, true));
-        }
-
-    }
+//    public void removeGame(int gameid, boolean repaint) {
+//        int selectedIndex = getSelectedIndex();
+//        Component c = getComponentAt(selectedIndex);
+//        if (c instanceof MainScreen) {
+//            MainScreen ms = (MainScreen) c;
+//            Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, true));
+//        }
+//
+//    }
 
     public void disableTabs() {
         int totalTabs = getTabCount();
@@ -386,13 +384,16 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //            }
 //        }
 //    }
-    public void removeGamesAndCleanup(String[] gameids) {
-        int selectedIndex = getSelectedIndex();
-        Component c = getComponentAt(selectedIndex);
-        if (c instanceof MainScreen) {
-            MainScreen ms = (MainScreen) c;
-            Utils.checkAndRunInEDT(()-> ms.removeGamesAndCleanup(gameids));
-        }
+    public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
+        //remove games from all sport tab panes, not just current sport pane.
+        //otherwise other sport pane might contain games that are not in cache ( AppController.getGame(gameId) return null )
+//        int selectedIndex = getSelectedIndex();
+//        Component c = getComponentAt(selectedIndex);
+//        if (c instanceof MainScreen) {
+            for(MainScreen ms: mainScreenMap.values()) {
+//                MainScreen ms = (MainScreen) c;
+                Utils.checkAndRunInEDT(() -> ms.removeGamesAndCleanup(gameIdRemovedSet));
+            }
 
     }
     public void moveGameToThisHeader(Game g, String header) {

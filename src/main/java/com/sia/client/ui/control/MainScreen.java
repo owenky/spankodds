@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -59,7 +60,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public boolean showadded = true;
     public boolean showextra = true;
     public boolean showprops = true;
-    public Vector customheaders = new Vector();
+    public List<String> customheaders = new Vector();
     private List<String> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
     private Vector inprogressgames = new Vector();
@@ -76,7 +77,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
     private MainGameTable mainGameTable;
 
-    MainScreen(SportType sportType, Vector customheaders) {
+    MainScreen(SportType sportType, List<String> customheaders) {
         this(sportType);
         this.customheaders = customheaders;
     }
@@ -88,7 +89,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         setName(name);
     }
 
-    MainScreen(SportType sportType, Vector customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+    MainScreen(SportType sportType, List<String> customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
         this(sportType);
         this.customheaders = customheaders;
         this.showheaders = showheaders;
@@ -122,10 +123,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getDataModels().clearColors();
     }
 
-    public Game removeGame(int gameid, boolean repaint) {
-        return getDataModels().removeGame(gameid, repaint);
+//    public Game removeGame(int gameid, boolean repaint) {
+//        return getDataModels().removeGame(gameid, repaint);
+//    }
+    @Override
+    public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
+        log("MainScreen: "+getSportType().getSportName()+"-- Removing game ids "+gameIdRemovedSet);
+        AbstractScreen.super.removeGamesAndCleanup(gameIdRemovedSet);
     }
-
     public void addGame(Game g, boolean repaint, Runnable callBackOnNotFound) { // only gets called when adding new game into system
         if (null != mainGameTable) {
             String gameGroupHeader;
@@ -688,15 +693,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.showprops = (parseBoolean(prefs[8]));
     }
 
-    public Games transformGamesVecToCustomGamesVec(Vector customheaders, Games gamesvec) {
+    public Games transformGamesVecToCustomGamesVec(List<String> customheaders, Games gamesvec) {
 
         if (customheaders.size() == 0) {
             return gamesvec;
         }
         Games newgamesvec = new Games();
-        for (int i = 0; i < customheaders.size(); i++) {
+        for (String header : customheaders) {
 
-            String header = (String) customheaders.elementAt(i);
             for (int k = 0; k < gamesvec.size(); k++) {
                 Game g = gamesvec.getByIndex(k);
                 if (g == null) {

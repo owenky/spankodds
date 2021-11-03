@@ -12,12 +12,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
@@ -95,8 +93,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         throw new IllegalStateException("Pending implementation");
     }
-    public void removeGamesAndCleanup(String[] gameidstr) {
-        Set<Integer> gameIdRemovedSet = Arrays.stream(gameidstr).map(Integer::parseInt).collect(Collectors.toSet());
+    public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
         List<TableSection<V>> gameLines = getTableSections();
         for (TableSection<V> linesTableData : gameLines) {
             try {

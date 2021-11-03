@@ -31,9 +31,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -858,8 +860,9 @@ public class AppController {
     public synchronized static void removeGamesAndCleanup(String[] gameidarr) {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
+        Set<Integer> gameIdRemovedSet = Arrays.stream(gameidarr).map(Integer::parseInt).collect(Collectors.toSet());
         for (SportsTabPane stb : tabpanes) {
-            stb.removeGamesAndCleanup(gameidarr);
+            stb.removeGamesAndCleanup(gameIdRemovedSet);
         }
         if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
             return;
