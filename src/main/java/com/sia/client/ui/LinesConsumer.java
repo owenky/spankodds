@@ -60,6 +60,10 @@ public class LinesConsumer implements MessageListener {
             if  ( 0 == gameid) {
                 return;
             }
+            if ( null == AppController.getGame(gameid)) {
+                log("LinesConsumer Warning: null game detected:"+gameid);
+                return;
+            }
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");

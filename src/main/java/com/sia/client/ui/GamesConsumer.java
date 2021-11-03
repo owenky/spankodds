@@ -311,7 +311,8 @@ public class GamesConsumer implements MessageListener {
                     }
                     String tc = new java.util.Date() + "..TIME CHANGE!!! " + g.getVisitorgamenumber() + "..old=" + oldgametime.getTime() + "...new=" + g.getGametime().getTime();
                     try {
-                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
+//                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
+                        log(tc);
                     } catch (Exception ex) {
                         log(ex);
                     }
