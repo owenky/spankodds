@@ -18,11 +18,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,14 +44,13 @@ public class GamesConsumer implements MessageListener {
         connection.start();
     }
 
-    public static void main(String[] args) throws JMSException {
-        System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
-        System.setProperty("javax.net.ssl.keyStorePassword", "password");
-        System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
-        AppController.createLoggedInConnection("reguser", "0hbaby*(");
-        //AppController.createLoggedInConnection("guest","spank0dds4ever");
-        GamesConsumer consumer = new GamesConsumer(AppController.getConnectionFactory(), AppController.getLoggedInConnection(), "spankoddsin.GAMECHANGE");
-    }
+//    public static void main(String[] args) throws JMSException {
+//        System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
+//        System.setProperty("javax.net.ssl.keyStorePassword", "password");
+//        System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
+//        AppController.createLoggedInConnection("reguser", "0hbaby*(");
+//        GamesConsumer consumer = new GamesConsumer(AppController.getConnectionFactory(), AppController.getLoggedInConnection(), "spankoddsin.GAMECHANGE");
+//    }
 
     public void close() throws JMSException {
         if (null != connection) {
@@ -227,11 +222,11 @@ public class GamesConsumer implements MessageListener {
 
                 }
 
-                if (!seriesprice && oldgametime != null && !oldgametime.equals("") && !oldgametime.toString().equals(g.getGametime().toString())) // time change
+                if (!seriesprice && oldgametime != null && !"".equals(oldgametime) && !oldgametime.toString().equals(g.getGametime().toString())) // time change
                 {
 
                     String prefs = AppController.getUser().getTimechangeAlert();
-                    String arr[] = prefs.split("\\|");
+                    String[] arr = prefs.split("\\|");
                     boolean popup = false;
                     boolean sound = false;
                     int popupsecs = 15;
@@ -267,8 +262,7 @@ public class GamesConsumer implements MessageListener {
                     }
                     try {
                         sports = arr[5].split(",");
-                        for (int j = 0; j < sports.length; j++) {
-                            String sportid = sports[j];
+                        for (String sportid : sports) {
                             if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname()) || sportid.equalsIgnoreCase("All Sports")) {
                                 goodsport = true;
                                 break;
@@ -427,17 +421,14 @@ public class GamesConsumer implements MessageListener {
                 //AppController.refreshTabs();
             } else if (messagetype.equals("REMOVE")) {
                 String data = textMessage.getText(); // this is gamenumber
-                //	System.out.print("ABOUT TO REMOVE="+data+".");
                 String[] gameidarr = data.split("~");
-                //AppController.removeGame(Integer.parseInt(data));
                 log("GamesConsumer: REMOVE game ids "+data);
                 AppController.removeGamesAndCleanup(gameidarr);
 
 
             } else if (messagetype.equals("REMOVEDATE")) {
                 String date = textMessage.getText(); // this is gamenumber
-                //	System.out.print("ABOUT TO REMOVE="+data+".");
-
+                log("GamesConsumer: REMOVE DATE date="+date);
                 AppController.removeGameDate(date, leagueid);
 
 
@@ -449,8 +440,6 @@ public class GamesConsumer implements MessageListener {
     }
 
     public static void writeToFile(String fileName, String data, boolean append) {
-        //log("Data is "+data);
-        //log("Writing to "+fileName);
         DataOutputStream out = null;
 
         try {
@@ -472,16 +461,16 @@ public class GamesConsumer implements MessageListener {
 
 
     }
-
-    public void playSound(String file) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            log(ex);
-        }
-    }
+//
+//    public void playSound(String file) {
+//        try {
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
+//            Clip clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.start();
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
+//    }
 
 }
