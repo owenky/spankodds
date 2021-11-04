@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -857,17 +858,26 @@ public class AppController {
 
     }
 
-    public synchronized static void removeGamesAndCleanup(String[] gameidarr) {
+    public static void removeGamesAndCleanup(String[] gameidarr) {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
         Set<Integer> gameIdRemovedSet = Arrays.stream(gameidarr).map(Integer::parseInt).collect(Collectors.toSet());
+        List<CountDownLatch> latches = new ArrayList<>(tabpanes.size());
         for (SportsTabPane stb : tabpanes) {
-            stb.removeGamesAndCleanup(gameIdRemovedSet);
+            CountDownLatch latch = new CountDownLatch(1);
+            latches.add(latch);
+            stb.removeGamesAndCleanup(gameIdRemovedSet,latch);
         }
         if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
             return;
         }
-
+        for(CountDownLatch latch: latches) {
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                log(e);
+            }
+        }
         for (final String s : gameidarr) {
             try {
                 games.removeGame(s);

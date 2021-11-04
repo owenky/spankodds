@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -384,15 +385,18 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //            }
 //        }
 //    }
-    public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
-        //remove games from all sport tab panes, not just current sport pane.
-        //otherwise other sport pane might contain games that are not in cache ( AppController.getGame(gameId) return null )
-//        int selectedIndex = getSelectedIndex();
-//        Component c = getComponentAt(selectedIndex);
-//        if (c instanceof MainScreen) {
-            for(MainScreen ms: mainScreenMap.values()) {
-//                MainScreen ms = (MainScreen) c;
-                Utils.checkAndRunInEDT(() -> ms.removeGamesAndCleanup(gameIdRemovedSet));
+    public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet, CountDownLatch latch) {
+        int selectedIndex = getSelectedIndex();
+        Component c = getComponentAt(selectedIndex);
+        if (c instanceof MainScreen) {
+                MainScreen ms = (MainScreen) c;
+                Utils.checkAndRunInEDT(() -> {
+                    try {
+                        ms.removeGamesAndCleanup(gameIdRemovedSet);
+                    }finally {
+                        latch.countDown();
+                    }
+                });
             }
 
     }
