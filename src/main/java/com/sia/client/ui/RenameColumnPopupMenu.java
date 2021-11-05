@@ -146,7 +146,7 @@ public class RenameColumnPopupMenu {
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
         tc.setHeaderValue(text);
         String updateText = ""+tc.getIdentifier()+"="+text;
-        AppController.getUser().setBookieColumnPrefs(updateText);
+        AppController.getUser().setBookieTitles(updateText);
         UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
         userPrefs.sendUserPrefs();
     }
