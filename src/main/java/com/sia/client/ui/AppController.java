@@ -49,7 +49,7 @@ public class AppController {
     public static Vector<String> customTabsVec = new Vector<>();
     public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
-    public static Vector<SportsTabPane> tabpanes = new Vector();
+//    public static Vector<SportsTabPane> tabpanes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
@@ -60,7 +60,7 @@ public class AppController {
     public static Vector<Bookie> hiddenCols = new Vector();
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
-    public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
+//    public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
     public static Hashtable<String, Moneyline> moneylines = new Hashtable();
@@ -150,16 +150,16 @@ public class AppController {
 
     public static void initializeLineAlertVectorFromUser() {
         String[] linealerts = u.getLineAlerts().split("\\?");
-        for (int i = 0; i < linealerts.length; i++) {
+        for (final String linealert : linealerts) {
             try {
-                String[] lanitems = linealerts[i].split("!");
+                String[] lanitems = linealert.split("!");
                 String[] sportselected = lanitems[3].split(",");
                 String[] bookieselected = lanitems[4].split(",");
                 for (int k = 0; k < sportselected.length; k++) {
                     log("sport" + k + "=" + sportselected[k]);
                 }
-                Vector sportselectedvec = new Vector(Arrays.asList(sportselected));
-                Vector bookieselectedvec = new Vector(Arrays.asList(bookieselected));
+                List<String> sportselectedvec = new ArrayList<>(Arrays.asList(sportselected));
+                List<String> bookieselectedvec = new ArrayList<>(Arrays.asList(bookieselected));
                 int j = 5;
                 LineAlertNode lan2 = new LineAlertNode(
                         lanitems[0],
@@ -234,7 +234,7 @@ public class AppController {
 
                 linealertnodes.add(lan2);
             } catch (Exception ex) {
-                log("exception loading in line alert=" + linealerts[i]);
+                log("exception loading in line alert=" + linealert);
                 log(ex);
             }
 
@@ -295,15 +295,15 @@ public class AppController {
         }
         return true;
     }
-
-
-    public static boolean isLoadingInitial() {
-        return loadinginitial;
-    }
-
-    public static void doneloadinginitial() {
-        loadinginitial = false;
-    }
+//
+//
+//    public static boolean isLoadingInitial() {
+//        return loadinginitial;
+//    }
+//
+//    public static void doneloadinginitial() {
+//        loadinginitial = false;
+//    }
 
     public static TableColumnModel getColumnModel() {
         if (columnmodel == null) {
@@ -385,10 +385,9 @@ public class AppController {
         hiddenCols.clear();
         //log("FIXED="+u.getFixedColumnPrefs());
         //log("OTHERS"+u.getBookieColumnPrefs());
-        String fixedcols[] = u.getFixedColumnPrefs().split(",");
+        String[] fixedcols = u.getFixedColumnPrefs().split(",");
         String cols[] = u.getBookieColumnPrefs().split(",");
-        for (int i = 0; i < fixedcols.length; i++) {
-            String id = fixedcols[i];
+        for (String id : fixedcols) {
             Bookie b = bookies.get(id);
             if (b != null) {
                 newVec.add(b);
@@ -397,8 +396,7 @@ public class AppController {
             }
 
         }
-        for (int i = 0; i < cols.length; i++) {
-            String id = cols[i];
+        for (String id : cols) {
             Bookie b = bookies.get(id);
             if (b != null) {
                 shownCols.add(b);
@@ -406,8 +404,7 @@ public class AppController {
 
             }
         }
-        for (int i = 0; i < bookiesVec.size(); i++) {
-            Bookie b = bookiesVec.get(i);
+        for (Bookie b : bookiesVec) {
             if (!newVec.contains(b)) {
                 newVec.add(b);
                 hiddenCols.add(b);
@@ -433,22 +430,22 @@ public class AppController {
         }
         return nwa;
     }
-
-    public static String getDisplayType() {
-        return displaytype;
-    }
-
-    public static void setDisplayType(String s) {
-        displaytype = s;
-    }
+//
+//    public static String getDisplayType() {
+//        return displaytype;
+//    }
+//
+//    public static void setDisplayType(String s) {
+//        displaytype = s;
+//    }
 
     public static Vector<String> getCustomTabsVec() {
         return customTabsVec;
     }
-
-    public static Hashtable getCustomTabsHash() {
-        return customTabsHash;
-    }
+//
+//    public static Hashtable getCustomTabsHash() {
+//        return customTabsHash;
+//    }
 
     public static Vector getLineAlertNodes() {
         if (linealertnodes.size() != 0) {
@@ -467,49 +464,50 @@ public class AppController {
         model.copyTo(dataModels);
 
     }
-
-    public static void addTabPane(SportsTabPane stb) {
-        tabpanes.add(stb);
-
-    }
+//
+//    public static void addTabPane(SportsTabPane stb) {
+//        tabpanes.add(stb);
+//
+//    }
 
     public static SportsTabPane getMainTabPane() {
-
-        return tabpanes.get(0);
+//
+//        return tabpanes.get(0);
+        return SpankyWindow.getSpankyWindow(0).getSportsTabPane();
     }
-
-    public static Vector<SportsTabPane> getTabPanes() {
-
-        return tabpanes;
-    }
-
-    public static SportsMenuBar getMainMenuBar() {
-
-        return menubars.get(0);
-    }
-
-    public static Vector getMenuBars() {
-
-        return menubars;
-    }
-
-    public static void disableTabs() {
-        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-        //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane tp : tabpanes) {
-            tp.disableTabs();
-        }
-    }
+//
+//    public static Vector<SportsTabPane> getTabPanes() {
+//
+//        return tabpanes;
+//    }
+//
+//    public static SportsMenuBar getMainMenuBar() {
+//
+//        return menubars.get(0);
+//    }
+//
+//    public static Vector getMenuBars() {
+//
+//        return menubars;
+//    }
+//
+//    public static void disableTabs() {
+//        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+//        //game need to populated to each window. -- 08/22/2021
+//        for (SportsTabPane tp : tabpanes) {
+//            tp.disableTabs();
+//        }
+//    }
 
     public static void enableTabs() {
-        for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = tabpanes.get(i);
-            tp.enableTabs();
-        }
+//        for (SportsTabPane tp : tabpanes) {
+//            tp.enableTabs();
+//        }
+        SpankyWindow.applyToAllWindows(SportsTabPane::enableTabs);
     }
 
-    public static void addFrame(JFrame f, SportsTabPane stb) {
-        frames.put(f, stb);
+    public static void addFrame(JFrame f) {
+//        frames.put(f, stb);
         addMenuBar((SportsMenuBar) f.getJMenuBar());
     }
 
@@ -518,13 +516,13 @@ public class AppController {
 
     }
 
-    public static void removeFrame(JFrame f) {
+    public static void removeFrame(SpankyWindow f) {
         removeMenuBar((SportsMenuBar) f.getJMenuBar());
-        SportsTabPane stb = frames.get(f);
+        SportsTabPane stb = f.getSportsTabPane();
         stb.cleanup();
-        removeTabPane(stb);
-        frames.remove(f);
-        if (frames.size() == 0) {
+//        removeTabPane(stb);
+        SpankyWindow.removeWindow(f);
+        if (0 == SpankyWindow.openWindowCount()) {
             log("exiting..");
             System.exit(0);
         }
@@ -534,11 +532,10 @@ public class AppController {
         menubars.remove(smb);
 
     }
-
-    public static void removeTabPane(SportsTabPane stb) {
-        tabpanes.remove(stb);
-
-    }
+//
+//    public static void removeTabPane(SportsTabPane stb) {
+//        tabpanes.remove(stb);
+//    }
 
     public static void removeCustomTab(String key) {
         String val = (String) customTabsHash.get(key);
@@ -553,7 +550,6 @@ public class AppController {
     }
 
     public static void repaintmenubars() {
-
         for (int i = 0; i < menubars.size(); i++) {
             SportsMenuBar smb = menubars.elementAt(i);
             log("smb=" + smb);
@@ -570,29 +566,36 @@ public class AppController {
     public static void refreshTabs3() {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane tp : tabpanes) {
-            if (tp != null) {
-                try {
-                    tp.refreshCurrentTab();
-                } catch (Exception ex) {
-                    log(ex);
-                }
+//        for (SportsTabPane tp : tabpanes) {
+//            if (tp != null) {
+//                try {
+//                    tp.refreshCurrentTab();
+//                } catch (Exception ex) {
+//                    log(ex);
+//                }
+//            }
+//        }
+        SpankyWindow.applyToAllWindows((stp)-> {
+            try {
+                stp.refreshCurrentTab();
+            } catch(Exception e) {
+                log(e);
             }
-        }
+        });
     }
 
     public static void clearAll() {
-        for (SportsTabPane stb : tabpanes) {
-            stb.clearAll();
-
-        }
-
+//        for (SportsTabPane stb : tabpanes) {
+//            stb.clearAll();
+//        }
+        SpankyWindow.applyToAllWindows(SportsTabPane::clearAll);
     }
 
     public static void fireAllTableDataChanged(Collection<Game> games) {
-        for (SportsTabPane stb : tabpanes) {
-            stb.fireAllTableDataChanged(games);
-        }
+//        for (SportsTabPane stb : tabpanes) {
+//            stb.fireAllTableDataChanged(games);
+//        }
+        SpankyWindow.applyToAllWindows((stp)->stp.fireAllTableDataChanged(games));
     }
 
     public static String getLoginQueue() {
@@ -862,8 +865,9 @@ public class AppController {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
         Set<Integer> gameIdRemovedSet = Arrays.stream(gameidarr).map(Integer::parseInt).collect(Collectors.toSet());
-        List<CountDownLatch> latches = new ArrayList<>(tabpanes.size());
-        for (SportsTabPane stb : tabpanes) {
+        List<CountDownLatch> latches = new ArrayList<>(SpankyWindow.openWindowCount());
+        for (int i=0;i<SpankyWindow.openWindowCount();i++) {
+            SportsTabPane stb  = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
             CountDownLatch latch = new CountDownLatch(1);
             latches.add(latch);
             stb.removeGamesAndCleanup(gameIdRemovedSet,latch);
@@ -959,16 +963,20 @@ public class AppController {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
         if (isAdd) {
-            for (SportsTabPane stb : tabpanes) {
-                stb.addGame(g, repaint);
-            }
+//            for(int i=0;i<SpankyWindow.openWindowCount();i++){
+//                SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+//                stb.addGame(g, repaint);
+//            }
+            SpankyWindow.applyToAllWindows((stp)->stp.addGame(g, repaint));
         }
     }
 
     public static void moveGameToThisHeader(Game g, String header) {
-        for (SportsTabPane stb : tabpanes) {
-            stb.moveGameToThisHeader(g, header);
-        }
+//        for(int i=0;i<SpankyWindow.openWindowCount();i++){
+//            SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+//            stb.moveGameToThisHeader(g, header);
+//        }
+        SpankyWindow.applyToAllWindows((stp)->stp.moveGameToThisHeader(g, header));
     }
 
     public static Bookie getBookie(int bid) {

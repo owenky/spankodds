@@ -57,6 +57,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -2338,8 +2339,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             }
 
 
-            Vector lansports = lan.getSportCodes();
-            Vector lanbookies = lan.getBookieCodes();
+            List<String> lansports = lan.getSportCodes();
+            List<String> lanbookies = lan.getBookieCodes();
             linealertname.setText(lan.getName());
             linealertname.setEnabled(false);
 

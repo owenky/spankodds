@@ -6,7 +6,9 @@ import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -16,8 +18,8 @@ public class LineAlertNode {
     String name = "";
     String sport = "";
     int period = 0;
-    Vector<String> sportcodes = new Vector();
-    Vector<String> bookiecodes = new Vector();
+    List<String> sportcodes = new ArrayList<>();
+    List<String> bookiecodes = new ArrayList<>();
 
 
     boolean isspreadcheck = false;
@@ -101,7 +103,7 @@ public class LineAlertNode {
     }
 
 
-    public LineAlertNode(String name, String sport, int period, Vector sportcodes, Vector bookiecodes, boolean isspreadcheck, int spreadsecs, int spreadnumbookies,
+    public LineAlertNode(String name, String sport, int period, List<String> sportcodes, List<String> bookiecodes, boolean isspreadcheck, int spreadsecs, int spreadnumbookies,
                          boolean isspreadmoveatall, boolean isspreadptsmove, boolean isspreadpercentagemove, double spreadptsmove, int spreadjuicemove,
                          double spreadpercentagemove, boolean isspreadplayaudio, String spreadaudiofilename, boolean isspreadshowpopup, int spreadpopuplocation,
                          int spreadpopupsecs, double spreadminsrenotify, boolean istotalcheck, int totalsecs, int totalnumbookies, boolean istotalmoveatall,
@@ -500,11 +502,11 @@ public class LineAlertNode {
         return retValue;
     }
 
-    public Vector getSportCodes() {
+    public List<String> getSportCodes() {
         return sportcodes;
     }
 
-    public Vector getBookieCodes() {
+    public List<String> getBookieCodes() {
         return bookiecodes;
     }
 

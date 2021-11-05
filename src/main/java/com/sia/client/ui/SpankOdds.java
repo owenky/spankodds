@@ -3,26 +3,18 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
-import com.sia.client.ui.control.SportsTabPane;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;
 import org.jdesktop.swingx.auth.LoginListener;
 import org.jdesktop.swingx.auth.LoginService;
 
-import javax.imageio.ImageIO;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Image;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.net.URL;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -31,14 +23,14 @@ import static com.sia.client.config.Utils.log;
 public class SpankOdds {
 
     private static final String version = "20210601001";
-    private SportsTabPane stb;
-    private TopView tv;
-    private SportsMenuBar smb;
-    private OddsFrame of;
-    private JPanel mainpanel;
-    private JFrame frame;
+//    private SportsTabPane stb;
+//    private TopView tv;
+//    private SportsMenuBar smb;
+//    private OddsFrame of;
+//    private JPanel mainpanel;
+    private SpankyWindow frame;
     private String userName;
-    private int failedAttemptsCount = 0;
+//    private int failedAttemptsCount = 0;
 
     public static void main(String[] args) {
         initSystemProperties();
@@ -72,16 +64,8 @@ public class SpankOdds {
     private void showLoginDialog() {
 
 //        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
-        frame = new JFrame("Spank Odds )" + version + ")");
-        String spankoddsicon = "spanky.jpg";
+        frame = SpankyWindow.create("Spank Odds )" + version + ")");
 
-        try {
-            URL imgResource = Utils.getMediaResource(spankoddsicon);
-            Image spankyimage = ImageIO.read(imgResource);
-            frame.setIconImage(spankyimage);
-        } catch (Exception ex) {
-            log("exception loading image!! " + ex);
-        }
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
 
@@ -99,7 +83,7 @@ public class SpankOdds {
 
             @Override
             public void loginFailed(LoginEvent source) {
-                failedAttemptsCount++;
+//                failedAttemptsCount++;
                 String message;
                 message = "Invalid Credentials!";
                 loginPane.setErrorMessage(message);
@@ -171,23 +155,24 @@ public class SpankOdds {
                 () -> {
                     try {
                         frame.setTitle(userName + " Logged In "+ SiaConst.Version);
-                        createGui();
-                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        frame.addWindowListener(new WindowAdapter() {
-                            @Override
-                            public void windowClosing(WindowEvent e) {
-                                log("Window Closing! ");
-                                AppController.getUserPrefsProducer().sendUserPrefs();
-                                AppController.removeFrame(frame);
-
-                            }
-                        });
-                        tv.initComponents();
-                        frame.setLayout(new BorderLayout(1, 1));
-                        frame.getContentPane().add(tv, BorderLayout.PAGE_START);
-                        frame.getContentPane().add(stb, BorderLayout.CENTER);
-                        frame.setJMenuBar(smb);
-                        AppController.addFrame(frame, stb);
+                        frame.populateTabPane();
+//                        createGui();
+//                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//                        frame.addWindowListener(new WindowAdapter() {
+//                            @Override
+//                            public void windowClosing(WindowEvent e) {
+//                                log("Window Closing! ");
+//                                AppController.getUserPrefsProducer().sendUserPrefs();
+//                                AppController.removeFrame(frame);
+//
+//                            }
+//                        });
+//                        tv.initComponents();
+//                        frame.setLayout(new BorderLayout(1, 1));
+//                        frame.getContentPane().add(tv, BorderLayout.PAGE_START);
+//                        frame.getContentPane().add(stb, BorderLayout.CENTER);
+//                        frame.setJMenuBar(smb);
+                        AppController.addFrame(frame);
 
                         frame.setSize(950, 800);
 
@@ -204,16 +189,16 @@ public class SpankOdds {
 
 
     }
-
-    private void createGui() {
-
-        checkAndRunInEDT(() -> {
-
-            // owen took out 7/11/2020
-            log("creating gui");
-            stb = new SportsTabPane();
-            tv = new TopView(stb);
-            smb = new SportsMenuBar(stb, tv);
-        });
-    }
+//
+//    private void createGui() {
+//
+//        checkAndRunInEDT(() -> {
+//
+//            // owen took out 7/11/2020
+//            log("creating gui");
+//            stb = new SportsTabPane();
+//            tv = new TopView(stb);
+//            smb = new SportsMenuBar(stb, tv);
+//        });
+//    }
 }

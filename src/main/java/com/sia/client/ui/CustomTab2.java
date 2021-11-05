@@ -57,6 +57,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -982,10 +983,20 @@ public class CustomTab2 extends JPanel {
 
             if (!editing) {
                 checkAndRunInEDT(() -> {
-
-
-                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-                    for (SportsTabPane tp : tabpanes) {
+//                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
+//                    for (SportsTabPane tp : tabpanes) {
+//                        int numtabs = tp.getTabCount();
+//                        SportType st = SportType.createCustomizedSportType(tab);
+//                        MainScreen ms = tp.createMainScreen(st, customvec);
+//                        ms.setShowHeaders(includeheaders.isSelected());
+//                        ms.setShowSeries(includeseries.isSelected());
+//                        ms.setShowIngame(includeingame.isSelected());
+//                        ms.setShowAdded(includeadded.isSelected());
+//                        ms.setShowExtra(includeextra.isSelected());
+//                        ms.setShowProps(includeprops.isSelected());
+//                        tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs-1);
+//                    }
+                    Consumer<SportsTabPane> consumer = (tp)-> {
                         int numtabs = tp.getTabCount();
                         SportType st = SportType.createCustomizedSportType(tab);
                         MainScreen ms = tp.createMainScreen(st, customvec);
@@ -996,15 +1007,27 @@ public class CustomTab2 extends JPanel {
                         ms.setShowExtra(includeextra.isSelected());
                         ms.setShowProps(includeprops.isSelected());
                         tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs-1);
-                    }
-
-
+                    };
+                    SpankyWindow.applyToAllWindows(consumer);
                 });
             } else {
                 checkAndRunInEDT(() -> {
-
-                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-                    for (SportsTabPane tp : tabpanes) {
+//                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
+//                    for (SportsTabPane tp : tabpanes) {
+//                        MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
+//                        oldms.destroyMe();
+//                        SportType st = SportType.findBySportName(tab);
+//                        MainScreen ms =tp.createMainScreen(st, customvec);
+//                        ms.setShowHeaders(includeheaders.isSelected());
+//                        ms.setShowSeries(includeseries.isSelected());
+//                        ms.setShowIngame(includeingame.isSelected());
+//                        ms.setShowAdded(includeadded.isSelected());
+//                        ms.setShowExtra(includeextra.isSelected());
+//                        ms.setShowProps(includeprops.isSelected());
+//                        tp.setComponentAt(tabindex, ms);
+//                        tp.refreshCurrentTab();
+//                    }
+                    Consumer<SportsTabPane> consumer = (tp)-> {
                         MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
                         oldms.destroyMe();
                         SportType st = SportType.findBySportName(tab);
@@ -1017,7 +1040,8 @@ public class CustomTab2 extends JPanel {
                         ms.setShowProps(includeprops.isSelected());
                         tp.setComponentAt(tabindex, ms);
                         tp.refreshCurrentTab();
-                    }
+                    };
+                    SpankyWindow.applyToAllWindows(consumer);
                 });
 
             }
@@ -1030,7 +1054,7 @@ public class CustomTab2 extends JPanel {
 
     private class MoveDownListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Object selected[] = destList.getSelectedValues();
+            Object[] selected = destList.getSelectedValues();
             int[] selectedindices = destList.getSelectedIndices();
 
 
@@ -1038,7 +1062,7 @@ public class CustomTab2 extends JPanel {
             int[] newselectedindices = new int[selectedindices.length];
             for (int i = 0; i < selectedindices.length; i++) {
                 int oldindex = selectedindices[i];
-                if (oldindex != ((MyListModel2) destList.getModel()).getSize()) {
+                if (oldindex != (destList.getModel()).getSize()) {
                     newselectedindices[i] = oldindex + 1;
                 }
             }
@@ -1051,8 +1075,7 @@ public class CustomTab2 extends JPanel {
         public void actionPerformed(ActionEvent e) {
             TreePath[] selPathArray = jtree.getSelectionPaths();
 
-            for (int i = 0; i < selPathArray.length; i++) {
-                TreePath selPath = selPathArray[i];
+            for (TreePath selPath : selPathArray) {
                 if (selPath != null && selPath.getPathCount() == 3) {
                     log("treepath=" + selPath);
                     log("pathcount=" + selPath.getPathCount());

@@ -12,6 +12,7 @@ import com.sia.client.simulator.TestExecutor;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.CustomTab2;
 import com.sia.client.ui.LinesTableData;
+import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.SportCustomTab;
 
 import javax.swing.ImageIcon;
@@ -52,9 +53,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public boolean shortteam = false;
     public boolean opener = false;
     public boolean last = false;
-    public long cleartime = 1000;
+//    public long cleartime = 1000;
     public ImageIcon loadgif = null;
-    public JLabel loadlabel = null;
+    public JLabel loadlabel;
     public SportsTabPane thispane;
     private int currentTabIndex = 0, previousTabIndex = 0;
     private Image tabImage = null;
@@ -67,18 +68,12 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public SportsTabPane() {
         counter = instanceCounter.getAndAdd(1);
         thispane = this;
-        //end for draggable tabpane
-        try {
-            //loadgif = new ImageIcon(ImageIO.read(getClass().getResource("ajax-loader.gif")));
-            loadlabel = new JLabel("loading...", loadgif, JLabel.CENTER);
-            loadlabel.setOpaque(true);
-            //loadgif = new ImageIcon(ImageIO.read(getClass().getResource("loader2.gif")));
-        } catch (Exception ex) {
-            log(ex);
-        }
-
-        AppController.addTabPane(this);
+        loadlabel = new JLabel("loading...", loadgif, JLabel.CENTER);
+        loadlabel.setOpaque(true);
+        //        AppController.addTabPane(this);
         addListeners();
+    }
+    public void populateComponents() {
 
         List<String> maintabs = AppController.getMainTabVec();
         log(String.valueOf(maintabs));
@@ -202,11 +197,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 } else {
 
                     MainScreen oldms = (MainScreen) getComponentAt(previousTabIndex);
-                    oldms.destroyMe();
+                    if ( null != oldms) {
+                        oldms.destroyMe();
+                    }
                     MainScreen newms = (MainScreen) getComponentAt(currentTabIndex);
-                    log("changelistener create!");
-                    newms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
-                    log(" timesort is:" + timesort + "...now=" + new java.util.Date());
+                    if ( null != newms) {
+                        log("changelistener create!");
+                        newms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
+                        log(" timesort is:" + timesort + "...now=" + new java.util.Date());
+                    }
                 }
 
             }
@@ -242,12 +241,16 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         }));
                         removeItem.addActionListener(e12 -> checkAndRunInEDT(() -> {
                             AppController.removeCustomTab(thispane.getTitleAt(tabindex));
-                            Vector tabpanes = AppController.getTabPanes();
-                            for (Object tabpane : tabpanes) {
-                                SportsTabPane tp = (SportsTabPane) tabpane;
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            for (Object tabpane : tabpanes) {
+//                                SportsTabPane tp = (SportsTabPane) tabpane;
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(tabindex);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(tabindex);
-                            }
+                            });
 
                         }));
                         jPopupMenu.show(thispane, e.getX(), e.getY());
@@ -268,12 +271,16 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                             AppController.SpotsTabPaneVector.remove(tabindex);
                             //AppController.SportsTabPaneVector.remove(TabName);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            for (Object tabpane : tabpanes) {
-                                SportsTabPane tp = (SportsTabPane) tabpane;
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            for (Object tabpane : tabpanes) {
+//                                SportsTabPane tp = (SportsTabPane) tabpane;
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(tabindex);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(tabindex);
-                            }
+                            });
 
                         }));
                         jPopupMenu.show(thispane, e.getX(), e.getY());
@@ -356,13 +363,13 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //        }
 //
 //    }
-
-    public void disableTabs() {
-        int totalTabs = getTabCount();
-        for (int i = 0; i < totalTabs; i++) {
-            setEnabledAt(i, false);
-        }
-    }
+//
+//    public void disableTabs() {
+//        int totalTabs = getTabCount();
+//        for (int i = 0; i < totalTabs; i++) {
+//            setEnabledAt(i, false);
+//        }
+//    }
 
     public void enableTabs() {
         int totalTabs = getTabCount();
@@ -490,22 +497,24 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public void fireAllTableDataChanged(Collection<Game> games) {
 
         MainScreen ms = (MainScreen) getSelectedComponent();
-        ms.checktofire(games);
-    }
-
-    public void refreshTabs() {
-
-        int currenttabindex = getSelectedIndex();
-        int numtabs = getTabCount();
-        if (currenttabindex == 0) {
-            setSelectedIndex(currenttabindex + 1);
-            setSelectedIndex(currenttabindex);
-        } else {
-            setSelectedIndex(currenttabindex - 1);
-            setSelectedIndex(currenttabindex);
+        if ( null != ms) {
+            ms.checktofire(games);
         }
-
     }
-
+//
+//    public void refreshTabs() {
+//
+//        int currenttabindex = getSelectedIndex();
+//        int numtabs = getTabCount();
+//        if (currenttabindex == 0) {
+//            setSelectedIndex(currenttabindex + 1);
+//            setSelectedIndex(currenttabindex);
+//        } else {
+//            setSelectedIndex(currenttabindex - 1);
+//            setSelectedIndex(currenttabindex);
+//        }
+//
+//    }
+//
 
 }
