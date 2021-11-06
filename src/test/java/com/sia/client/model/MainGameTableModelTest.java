@@ -111,7 +111,7 @@ public class MainGameTableModelTest {
         final String testHeader = "TestGameHeader";
         TestTableSection testHeaderSection = new TestTableSection(testHeader,gameCache, true, games);
         model.addGameLine(testHeaderSection);
-        model.buildIndexMappingCache();
+        model.buildIndexMappingCache(true);
         assertEquals(5, model.getRowCount());
         assertEquals(testHeader,model.getValueAt(2, 0));
     }
