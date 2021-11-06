@@ -1,20 +1,19 @@
 package com.sia.client.config;
 
 import com.sia.client.model.Game;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class GameUtils {
 
-    public static final DateTimeFormatter gameDateFormatter = DateTimeFormatter.ofPattern("MM/dd");
     private static final Set<String> soccerSpecialGroups;
     static {
         soccerSpecialGroups = new HashSet<> ();
@@ -36,17 +35,18 @@ public abstract class GameUtils {
             return null;
         }
     }
-    public static String getGameDateStr(Game game) {
-        LocalDateTime ldt = new Date(game.getGamedate().getTime()).toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
-        return gameDateFormatter.format(ldt);
-    }
-    public static String getGameGroupHeader(Game game) {
+    public static GameGroupHeader createGameGroupHeader(Game game) {
         int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
         Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
         if ( null == sport) {
-            return "Unknown sport: game---";
+            return null;
         }
-        return sport.getNormalizedLeaguename() + " " + getGameDateStr(game);
+        return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getGamedate());
+    }
+    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,Date gameDate) {
+
+        LocalDateTime ldt = new Date(gameDate.getTime()).toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
+        return GameGroupHeader.create(leagueName,ldt,subLeagueId);
     }
     public static boolean isGameNear(Game game) {
         SportType sportType = SportType.findPredefinedByGame(game);
@@ -104,7 +104,7 @@ public abstract class GameUtils {
         Sport sport = AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
         String sportName = null == sport?"Unknown sport ":sport.getSportname();
         return  "DEBUGING Game, sport=" + sportName
-                + ", header=" + getGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
+                + ", header=" + createGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
                 + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
     }

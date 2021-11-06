@@ -40,8 +40,8 @@ public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
-    public static PrintStream logPs;
-    public static PrintStream errPs;
+    public static PrintStream logPs=System.out;
+    public static PrintStream errPs=System.err;
 
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
@@ -87,6 +87,9 @@ public abstract class Utils {
     }
     public static void log(Throwable e) {
         errPs.println(nowShortString()+" |");e.printStackTrace(errPs);
+    }
+    public static void debug(String mesg) {
+        logPs.println(nowShortString()+" |DEBUG:"+mesg);
     }
     public static void log(String mesg) {
         logPs.println(nowShortString()+" |"+mesg);

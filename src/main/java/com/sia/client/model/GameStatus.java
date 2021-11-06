@@ -9,12 +9,16 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public enum GameStatus {
-//    the keywords for inprogress is wrong, it is opposite to "NULL" and "", check out Game.StatusSet to find out possible keywords for in progress
-    InProgress(SiaConst.InProgresStr,"started.wav", ()->AppController.getUser().getStartedAlert()
-            , GameStatus::isInProgress),
-    HalfTime(SiaConst.HalfTimeStr,"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
+    HalfTime(GameGroupHeader.createStageGroupHeader(SiaConst.HalfTimeStr,-100),"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
             ,null,"TIME"),
-    Final(SiaConst.FinalStr,"final.wav", ()->AppController.getUser().getFinalAlert(),
+    SeriesPrice(GameGroupHeader.createStageGroupHeader(SiaConst.SeriesPricesStr,100),null, null
+            , null,SiaConst.SeriesPricesStr,SiaConst.SoccerSeriesPricesStr),
+    InGamePrices(GameGroupHeader.createStageGroupHeader(SiaConst.InGamePricesStr,110),null, null
+            , null,SiaConst.InGamePricesStr,SiaConst.SoccerInGamePricesStr),
+    //    the keywords for inprogress is wrong, it is opposite to "NULL" and "", check out Game.StatusSet to find out possible keywords for in progress
+    InProgress(GameGroupHeader.createStageGroupHeader(SiaConst.InProgresStr,130),"started.wav", ()->AppController.getUser().getStartedAlert()
+            , GameStatus::isInProgress),
+    Final(GameGroupHeader.createStageGroupHeader(SiaConst.FinalStr,200),"final.wav", ()->AppController.getUser().getFinalAlert(),
             null,SiaConst.FinalStr,"WIN","TIE","CNCLD","PONED");
 
     public static GameStatus find(String status) {
@@ -27,7 +31,7 @@ public enum GameStatus {
         }
         return rtn;
     }
-    GameStatus(String groupHeader, String defaultSoundFile, Supplier<String> alertPrefSupplier, Function<String,Boolean> rule, String ...keywords) {
+    GameStatus(GameGroupHeader groupHeader, String defaultSoundFile, Supplier<String> alertPrefSupplier, Function<String,Boolean> rule, String ...keywords) {
         this.alertPrefSupplier = alertPrefSupplier;
         this.defaultSoundFile = defaultSoundFile;
         this.groupHeader = groupHeader;
@@ -50,7 +54,7 @@ public enum GameStatus {
     public String getSoundFile() {
         return defaultSoundFile;
     }
-    public String getGroupHeader() {
+    public GameGroupHeader getGroupHeader() {
         return groupHeader;
     }
     public Supplier<String> getAlertPrefSupplier() {
@@ -58,7 +62,7 @@ public enum GameStatus {
     }
     private final Supplier<String> alertPrefSupplier;
     private final String defaultSoundFile;
-    private final String groupHeader;
+    private final GameGroupHeader groupHeader;
     private final Set<String> keywordsInUpperCase;
     private final Function<String,Boolean> rule;
     private static boolean isInProgress(String status) {

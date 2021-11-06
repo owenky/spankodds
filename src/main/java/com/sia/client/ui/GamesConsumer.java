@@ -76,7 +76,6 @@ public class GamesConsumer implements MessageListener {
     }
     public void processMessage(TextMessage textMessage) {
         try {
-            boolean repaint = true;
             String leagueid;
             String messagetype = textMessage.getStringProperty("messageType");
             String repaintstr = textMessage.getStringProperty("repaint");
@@ -85,9 +84,9 @@ public class GamesConsumer implements MessageListener {
             String oldhpitcher = "";
             Time oldgametime = null;
 
-            if (repaintstr != null && repaintstr.equals("false")) {
-                repaint = false;
-            }
+//            if (repaintstr != null && repaintstr.equals("false")) {
+//                repaint = false;
+//            }
             if (leagueid == null) {
                 leagueid = "";
             }
@@ -171,7 +170,7 @@ public class GamesConsumer implements MessageListener {
                 g.setStatus(status);
                 g.setTimeremaining(timeremaining);
 
-                AppController.addGame(g, repaint);
+                AppController.addGame(g);
                 Sport s = AppController.getSportByLeagueId(g.getLeague_id());
 
 
@@ -317,7 +316,7 @@ public class GamesConsumer implements MessageListener {
 
                 String data = textMessage.getText();
 //                log("new game! " + data);
-                String items[] = data.split("~");
+                String[] items = data.split("~");
                 int x = 0;
                 String eventnumber = items[x++];
                 String visitorgamenumber = items[x++];
@@ -417,8 +416,7 @@ public class GamesConsumer implements MessageListener {
                 g.setGamestatusts(Long.parseLong(gamestatusts));
                 g.setScorets(Long.parseLong(scorets));
 
-                AppController.addGame(g, repaint);
-                //AppController.refreshTabs();
+                AppController.addGame(g);
             } else if (messagetype.equals("REMOVE")) {
                 String data = textMessage.getText(); // this is gamenumber
                 String[] gameidarr = data.split("~");

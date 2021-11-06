@@ -5,8 +5,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameDateSorter;
-import com.sia.client.model.GameNumSorter;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.Games;
 import com.sia.client.model.LeagueFilter;
@@ -14,7 +13,6 @@ import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.GameLeagueSorter;
 import com.sia.client.ui.LineRenderer;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
@@ -39,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.Function;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -61,7 +60,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public boolean showextra = true;
     public boolean showprops = true;
     public List<String> customheaders = new Vector();
-    private List<String> gamegroupheaders = new ArrayList<>();
+    private List<GameGroupHeader> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
     private Vector inprogressgames = new Vector();
     private Vector halftimegames = new Vector();
@@ -131,20 +130,27 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         log("MainScreen: "+getSportType().getSportName()+"-- Removing game ids "+gameIdRemovedSet);
         AbstractScreen.super.removeGamesAndCleanup(gameIdRemovedSet);
     }
-    public void addGame(Game g, boolean repaint, Runnable callBackOnNotFound) { // only gets called when adding new game into system
+    public void addGame(Game g) { // only gets called when adding new game into system
+        Function<GameGroupHeader,LinesTableData> function = (ggh) -> {
+            if ( isPreDefinedSport() ) {
+                return this.createLinesTableData(new Vector(),ggh);
+            } else {
+                return null;
+            }
+        };
         if (null != mainGameTable) {
-            String gameGroupHeader;
+            GameGroupHeader gameGroupHeader;
             GameStatus gameStatus = GameStatus.find(g.getStatus());
             if (null == gameStatus) {
-                gameGroupHeader = GameUtils.getGameGroupHeader(g);
+                gameGroupHeader = GameUtils.createGameGroupHeader(g);
             } else {
                 gameGroupHeader = gameStatus.getGroupHeader();
             }
-            getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, repaint, callBackOnNotFound);
+            getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, function);
         }
     }
 
-    public void moveGameToThisHeader(Game g, String header) {
+    public void moveGameToThisHeader(Game g, GameGroupHeader header) {
         getColumnCustomizableTable().getModel().moveGameToThisHeader(g, header);
     }
 
@@ -167,7 +173,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     public void createData() {
         Vector gamegroupvec = new Vector();
-        Vector gamegroupheadervec = new Vector();
+        List<GameGroupHeader> gamegroupheadervec = new ArrayList<>();
         Vector gamegroupLeagueIDvec = new Vector();
         Vector currentvec = new Vector();
 
@@ -183,8 +189,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         // added sorting code 5/6/2021
         try {
-            allgamesforpref.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
-            allgamesforpref.sort(new GameDateSorter());
+//            allgamesforpref.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
+//            allgamesforpref.sort(new GameDateSorter());
 //            Collections.sort(allgamesforpref, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
 //            Collections.sort(allgamesforpref, new GameDateSorter());
 
@@ -553,7 +559,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
                 } else if (lastdate == null) // new date
                 {
-                    gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
+                    gamegroupheadervec.add(GameUtils.createGameGroupHeader(s2.getNormalizedLeaguename(),g.getSubleague_id(),g.getGamedate()));
                     gamegroupLeagueIDvec.add(s2.getParentleague_id());
                     lastdate = gamedate;
                     lastleagueid = leagueid;
@@ -565,7 +571,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 {
                     lastdate = gamedate;
                     lastleagueid = leagueid;
-                    gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
+                    gamegroupheadervec.add(GameUtils.createGameGroupHeader(s2.getNormalizedLeaguename(),g.getSubleague_id(),g.getGamedate()));
                     gamegroupLeagueIDvec.add(s2.getParentleague_id());
                     Vector v2 = new Vector();
                     //v2.add(gameid);
@@ -581,89 +587,89 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
 
         if (seriesgames.size() > 0 && sportType.isShowseries()) {
-            gamegroupheadervec.add(SiaConst.SeriesPricesStr);
+            gamegroupheadervec.add(GameStatus.SeriesPrice.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(seriesgames);
         }
         if (seriesgamessoccer.size() > 0 && sportType.isShowseries()) {
-            gamegroupheadervec.add(SiaConst.SoccerSeriesPricesStr);
+            gamegroupheadervec.add(GameStatus.SeriesPrice.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(seriesgamessoccer);
         }
 
 
         if (ingamegames.size() > 0 && isShowIngame()) {
-            gamegroupheadervec.add(SiaConst.InGamePricesStr);
+            gamegroupheadervec.add(GameStatus.InGamePrices.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(ingamegames);
         }
 
         if (ingamegamessoccer.size() > 0 && isShowIngame()) {
-            gamegroupheadervec.add(SiaConst.SoccerInGamePricesStr);
+            gamegroupheadervec.add(GameStatus.InGamePrices.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(ingamegamessoccer);
         }
 
 
         if (inprogressgames.size() > 0) {
-            gamegroupheadervec.add(SiaConst.InProgresStr);
+            gamegroupheadervec.add(GameStatus.InProgress.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(inprogressgames);
         } else {
-            gamegroupheadervec.add(SiaConst.InProgresStr);
+            gamegroupheadervec.add(GameStatus.InProgress.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(new Vector());
         }
 
         if (inprogressgamessoccer.size() > 0) {
-            gamegroupheadervec.add(SiaConst.SoccerInProgressStr);
+            gamegroupheadervec.add(GameStatus.InProgress.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(inprogressgamessoccer);
         } else {
-            gamegroupheadervec.add(SiaConst.SoccerInProgressStr);
+            gamegroupheadervec.add(GameStatus.InProgress.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
 
         if (finalgames.size() > 0) {
-            gamegroupheadervec.add(SiaConst.FinalStr);
+            gamegroupheadervec.add(GameStatus.Final.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(finalgames);
         } else {
-            gamegroupheadervec.add(SiaConst.FinalStr);
+            gamegroupheadervec.add(GameStatus.Final.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.add(new Vector());
         }
 
 
         if (finalgamessoccer.size() > 0) {
-            gamegroupheadervec.add(SiaConst.SoccerInFinalStr);
+            gamegroupheadervec.add(GameStatus.Final.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(finalgamessoccer);
         } else {
-            gamegroupheadervec.add(SiaConst.SoccerInFinalStr);
+            gamegroupheadervec.add(GameStatus.Final.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.add(new Vector());
         }
 
 
         if (halftimegames.size() > 0) {
-            gamegroupheadervec.insertElementAt(SiaConst.HalfTimeStr, 0);
+            gamegroupheadervec.add(0,GameStatus.HalfTime.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.insertElementAt(halftimegames, 0);
         } else {
-            gamegroupheadervec.insertElementAt(SiaConst.HalfTimeStr, 0);
+            gamegroupheadervec.add(0,GameStatus.HalfTime.getGroupHeader());
             gamegroupLeagueIDvec.add(-1);
             gamegroupvec.insertElementAt(new Vector(), 0);
         }
 
         if (halftimegamessoccer.size() > 0) {
-            gamegroupheadervec.insertElementAt(SiaConst.SoccerHalfTimeStr, 1);
+            gamegroupheadervec.add(1,GameStatus.HalfTime.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.insertElementAt(halftimegamessoccer, 1);
         } else {
-            gamegroupheadervec.insertElementAt(SiaConst.SoccerHalfTimeStr, 1);
+            gamegroupheadervec.add(1,GameStatus.HalfTime.getGroupHeader());
             gamegroupLeagueIDvec.add(SiaConst.SoccerLeagueId);
             gamegroupvec.insertElementAt(new Vector(), 1);
         }
@@ -833,10 +839,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         log("gamergroup headers start..." + new java.util.Date());
 
-        Map<String, LinesTableData> headerMap = new HashMap<>();
+        Map<GameGroupHeader, LinesTableData> headerMap = new HashMap<>();
         for (int j = 0; j < gamegroupheaders.size(); j++) {
             Vector<Game> newgamegroupvec = (Vector<Game>) vecofgamegroups.get(j);
-            String gameGroupHeader = GameUtils.normalizeGameHeader(gamegroupheaders.get(j));
+            GameGroupHeader gameGroupHeader = gamegroupheaders.get(j);
             if (null != gameGroupHeader || (null != newgamegroupvec && 0 < newgamegroupvec.size())) {
                 LinesTableData tableSection;
                 tableSection = headerMap.get(gameGroupHeader);
@@ -854,7 +860,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
             addHalfTimeWhenAbsent(rowHeight, model);
         }
-        model.buildIndexMappingCache();
+        model.buildIndexMappingCache(true);
         JScrollPane scrollPane = new JScrollPane(tablePanel);
         scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
         scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
@@ -866,7 +872,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         AppController.addDataModels(getDataModels());
     }
 
-    private LinesTableData createLinesTableData(Vector newgamegroupvec, String gameGroupHeader) {
+    private LinesTableData createLinesTableData(Vector newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
         int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
         tableSection.setRowHeight(tableSectionRowHeight);
@@ -874,8 +880,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     private void addHalfTimeWhenAbsent(int rowHeight, MainGameTableModel model) {
-        if (!model.containsGroupHeader(SiaConst.HalfTimeStr)) {
-            LinesTableData tableSection = createLinesTableData(new Vector(), SiaConst.HalfTimeStr);
+        if (!model.containsGroupHeader(GameStatus.HalfTime.getGroupHeader())) {
+            LinesTableData tableSection = createLinesTableData(new Vector(), GameStatus.HalfTime.getGroupHeader());
             tableSection.setRowHeight(rowHeight);
             mainGameTable.addGameLine(0, tableSection);
         }

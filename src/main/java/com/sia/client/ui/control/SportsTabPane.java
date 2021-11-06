@@ -3,6 +3,7 @@ package com.sia.client.ui.control;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
 import com.sia.client.simulator.InitialGameMessages;
@@ -318,19 +319,13 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //        }
 //
 //    }
-    public void addGame(Game g, boolean repaint)   {
+    public void addGame(Game g)   {
         int selectedIndex = getSelectedIndex();
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
             if (ms.shouldAddToScreen(g) ) {
-                Runnable r = () -> {
-                    ms.addGame(g, true,()-> {
-                        if ( ms.isPreDefinedSport() ) {
-                            refreshMainScreen(ms);
-                        }
-                    });
-                };
+                Runnable r = () -> ms.addGame(g);
                 Utils.checkAndRunInEDT(() -> {
                     try {
                         r.run();
@@ -407,7 +402,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             }
 
     }
-    public void moveGameToThisHeader(Game g, String header) {
+    public void moveGameToThisHeader(Game g, GameGroupHeader header) {
         int selectedIndex = getSelectedIndex();
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {

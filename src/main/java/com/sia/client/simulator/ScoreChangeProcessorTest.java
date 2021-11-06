@@ -52,7 +52,7 @@ public class ScoreChangeProcessorTest extends TestExecutor {
                     .filter(game-> ! GameStatus.Final.isSame(game.getStatus())).collect(Collectors.toList());
             for(Game game:soccerGames) {
                 if ( testScreen.shouldAddToScreen(game)) {
-log("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.getGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
+log("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.createGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
                     ScoreChangedProcessor.process(GameStatus.InProgress, game,0, 0);
                 }
                 if ( count++ > 1000) {

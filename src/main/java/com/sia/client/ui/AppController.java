@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.AlertVector;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Moneyline;
@@ -952,13 +953,7 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
-
     public static void addGame(Game g) {
-        addGame(g, true);
-
-    }
-
-    public static void addGame(Game g, boolean repaint) {
         boolean isAdd = games.updateOrAdd(g);
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
@@ -967,11 +962,11 @@ public class AppController {
 //                SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
 //                stb.addGame(g, repaint);
 //            }
-            SpankyWindow.applyToAllWindows((stp)->stp.addGame(g, repaint));
+            SpankyWindow.applyToAllWindows((stp)->stp.addGame(g));
         }
     }
 
-    public static void moveGameToThisHeader(Game g, String header) {
+    public static void moveGameToThisHeader(Game g, GameGroupHeader header) {
 //        for(int i=0;i<SpankyWindow.openWindowCount();i++){
 //            SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
 //            stb.moveGameToThisHeader(g, header);

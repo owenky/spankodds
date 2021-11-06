@@ -22,7 +22,7 @@ public abstract class SiaConst {
     public static final String SoccerInProgressStr = SoccerStr+ " "+InProgresStr;
     public static final String SoccerInFinalStr = SoccerStr+ " "+FinalStr;
     public static final int SoccerLeagueId = 9;
-    public static final Integer BlankGameId = Integer.MIN_VALUE;
+    public static final Integer BlankGameId = -10000000; //Integer.MIN_VALUE does not work in sorting
     public static final Integer SoccerRowheight = 60;
     public static final Integer NormalRowheight = 30;
     public static final Integer GameGroupHeaderHeight = 20;

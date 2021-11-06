@@ -1,6 +1,7 @@
 package com.sia.client.ui.simulator;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.TableSection;
 
 import java.lang.reflect.InvocationTargetException;
@@ -26,7 +27,7 @@ public class EmptySection implements EventGenerator{
             targetSection = sections[0];
         }
 
-        String targetHeader = targetSection.getGameGroupHeader();
+        GameGroupHeader targetHeader = targetSection.getGameGroupHeader();
         TestGame game = sourceSection.getGame(1);
         model.moveGameToThisHeader(game, targetHeader);
 

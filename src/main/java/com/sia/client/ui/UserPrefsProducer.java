@@ -29,17 +29,18 @@ public class UserPrefsProducer {
     public UserPrefsProducer() {
         try {
             connection = AppController.getLoggedInConnection();
+            if ( null != connection) {
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                Destination adminQueue = session.createQueue(AppController.getUserPrefsQueue());
 
-            Destination adminQueue = session.createQueue(AppController.getUserPrefsQueue());
+                producer = session.createProducer(adminQueue);
 
-            producer = session.createProducer(adminQueue);
-
-            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+                producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
 
-            connection.start();
+                connection.start();
+            }
 
         } catch (Exception ex) {
             log(ex);
