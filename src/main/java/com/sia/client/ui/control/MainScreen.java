@@ -56,9 +56,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public int period = 0;
     public long cleartime;
     public boolean showheaders = true;
-    public boolean showadded = true;
-    public boolean showextra = true;
-    public boolean showprops = true;
     public List<String> customheaders = new Vector();
     private List<GameGroupHeader> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
@@ -94,9 +91,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.showheaders = showheaders;
         sportType.setShowseries(showseries);
         sportType.setShowingame(showingame);
-        this.showadded = showadded;
-        this.showextra = showextra;
-        this.showprops = showprops;
+        sportType.setShowAdded(showadded);
+        sportType.setShowExtra(showextra);
+        sportType.setShowProps(showprops);
     }
 
     public void setClearTime(long clear) {
@@ -694,9 +691,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.showheaders = (parseBoolean(prefs[3]));
         sportType.setShowseries(parseBoolean(prefs[4]));
         sportType.setShowingame(parseBoolean(prefs[5]));
-        this.showadded = (parseBoolean(prefs[6]));
-        this.showextra = (parseBoolean(prefs[7]));
-        this.showprops = (parseBoolean(prefs[8]));
+        sportType.setShowAdded(parseBoolean(prefs[6]));
+        sportType.setShowExtra(parseBoolean(prefs[7]));
+        sportType.setShowProps(parseBoolean(prefs[8]));
     }
 
     public Games transformGamesVecToCustomGamesVec(List<String> customheaders, Games gamesvec) {
@@ -752,27 +749,27 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     public boolean isShowAdded() {
-        return showadded;
+        return sportType.isShowAdded();
     }
 
     public void setShowAdded(boolean b) {
-        showadded = b;
+        sportType.setShowAdded(b);
     }
 
     public boolean isShowExtra() {
-        return showextra;
+        return sportType.isShowExtra();
     }
 
     public void setShowExtra(boolean b) {
-        showextra = b;
+        sportType.setShowExtra(b);
     }
 
     public boolean isShowProps() {
-        return showprops;
+        return sportType.isShowProps();
     }
 
     public void setShowProps(boolean b) {
-        showprops = b;
+        sportType.setShowProps(b);
     }
 
     public boolean isShowIngame() {
