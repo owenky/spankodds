@@ -129,8 +129,9 @@ public abstract class TableSection<V extends KeyedObject> {
         if ( 0 <= gameModelIndex) {
             g = gamesVec.removeGame(gameidtoremove);
             this.rowDataMap.clear();
-            TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-            fire(e);
+            //caller responsible for firing table model event -- 2021-11-07
+//            TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+//            fire(e);
         } else {
             g = null;
         }

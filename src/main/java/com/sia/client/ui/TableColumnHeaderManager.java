@@ -28,6 +28,8 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sia.client.config.Utils.debug;
+
 public class TableColumnHeaderManager<V extends KeyedObject> implements HierarchyListener, TableColumnModelListener, ComponentListener, TableModelListener, AdjustmentListener {
 
     private final ColumnCustomizableTable<V> mainTable;
@@ -43,7 +45,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     public TableColumnHeaderManager(ColumnCustomizableTable<V> mainTable) {
         this.mainTable = mainTable;
         columnHeaderDrawer = new ColumnHeaderDrawer<>();
-        rowHeightConfigListener = (e)-> mainTable.configHeaderRow();
+        rowHeightConfigListener = (e)-> reconfigHeaderRow();
     }
 
     public void installListeners() {
@@ -80,7 +82,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             Object source = e.getSource();
             if (source == mainTable && mainTable.isShowing()) {
                 Utils.checkAndRunInEDT(() -> {
-                    configHeaderRow();
+                    reconfigHeaderRow();
+                    debug("TableColumnHeaderManager::hierarchyChanged --Why need configHeaderRow here.");
                     adjustComumns();
                 });
             }
@@ -96,8 +99,11 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     private void invokeDrawColumnHeaders() {
         mainTable.repaint();
     }
-    private void configHeaderRow() {
-       mainTable.configHeaderRow();
+    private void reconfigHeaderRow() {
+       mainTable.reconfigHeaderRow();
+    }
+    private void reconfigHeaderRow(int firstRow, int lastRow) {
+        mainTable.reconfigHeaderRow(firstRow,lastRow,false);
     }
     public Component drawColumnHeaderOnViewIndex(ColumnCustomizableTable<V> table,int rowViewIndex, String headerValue) {
         return columnHeaderDrawer.drawOnViewIndex(table,rowViewIndex,headerValue,horizontalScrollBarAdjustmentValue);
@@ -161,7 +167,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             mainTable.getColumnAdjusterManager().clear();
             if (mainTable.isShowing()) {
                 adjustComumns();
-                configHeaderRow();
+                reconfigHeaderRow();
                 invokeDrawColumnHeaders();
             }
         }
@@ -176,7 +182,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             if ( evt.getSource() == mainTable.getTableScrollPane().getHorizontalScrollBar()) {
                 horizontalScrollBarAdjustmentValue = evt.getValue();
                 if ( topWindowResized()) {
-                    mainTable.configHeaderRow();
+                    reconfigHeaderRow();
                 } else {
                     drawHeaderinVisibleRegion();
                 }
@@ -212,7 +218,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         if ( 0 > firstRow) {
             firstRow = 0;
         }
-        mainTable.configHeaderRow(firstRow,lastRow,false);
+        reconfigHeaderRow(firstRow,lastRow);
     }
     private void adjustColumnOnColumnDraging(ColumnAdjuster columnAdjuster,Point mouseLocation,boolean adjustOnWidening){
         JTable table = columnAdjuster.table();

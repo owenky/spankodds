@@ -28,6 +28,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableColumn> allColumns;
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
+    private boolean toConfigHeaderRow = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
 
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
@@ -39,6 +40,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
+    }
+    public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
+        this.toConfigHeaderRow = toConfigHeaderRow;
+    }
+    public boolean toConfigHeaderRow() {
+        return this.toConfigHeaderRow;
     }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -105,12 +112,11 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             }
         }
         fireTableSectionChangeEvent();
-        this.buildIndexMappingCache(false);
+//        this.buildIndexMappingCache(false); //moved to be exceuted by this.fireTableChanged -- 2021-11-06
         this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void fireTableChanged(TableModelEvent e) {
-        //TODO: need to  buildIndexMappingCache for update? ( scenario: game data changed.)
-        if (TableUtils.toRebuildCache(e) ) {
+        if (TableUtils.toRebuildCache(e) || toConfigHeaderRow()) {
             long begin = System.currentTimeMillis();
             buildIndexMappingCache(false);
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
@@ -156,8 +162,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             }
         }
         // now lets see if i found it in either
-        if ( null != thisgame ) // i did find it
-        {
+        if ( null != thisgame ) {
             TableSection<V> ltd = findTableSectionByHeaderValue(header);
 
 log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and is about to add to header "+header);
@@ -177,7 +182,7 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
         ltd.addOrUpdate(game);
         ltd.sort(getDefaultGameComparator());
         fireTableSectionChangeEvent();
-        this.buildIndexMappingCache(false);
+//        this.buildIndexMappingCache(false); //to be executed by  fireTableChanged(e) -- 2021-11-06
         int affectedRowModelIndex = getRowModelIndex(ltd, ltd.getRowIndex(game.getGame_id()));
         TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
         checkAndRunInEDT(() -> fireTableChanged(e));

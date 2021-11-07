@@ -953,8 +953,11 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
+    public static boolean pushGameToCash(Game g) {
+        return games.updateOrAdd(g);
+    }
     public static void addGame(Game g) {
-        boolean isAdd = games.updateOrAdd(g);
+        boolean isAdd = pushGameToCash(g);
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
         if (isAdd) {

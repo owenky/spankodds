@@ -5,6 +5,7 @@ import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
+import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -48,9 +49,11 @@ public class LinesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
 //        synchronized (SiaConst.GameLock) {
-            Utils.ensureNotEdtThread();
-            processMessage((MapMessage) message);
-            OngoingGameMessages.addMessage(MessageType.Line, message);
+            if (! InitialGameMessages.getMessagesFromLog) {
+                Utils.ensureNotEdtThread();
+                processMessage((MapMessage) message);
+                OngoingGameMessages.addMessage(MessageType.Line, message);
+            }
 //        }
     }
     public void processMessage(MapMessage mapMessage) {
