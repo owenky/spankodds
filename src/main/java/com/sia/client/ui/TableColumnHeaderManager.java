@@ -71,7 +71,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
 
         }});
     }
-    public ColumnHeaderDrawer getColumnHeaderDrawer() {
+    public ColumnHeaderDrawer<V> getColumnHeaderDrawer() {
         return columnHeaderDrawer;
     }
     @Override

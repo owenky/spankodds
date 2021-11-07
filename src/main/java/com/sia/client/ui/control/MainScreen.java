@@ -106,12 +106,16 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     private MainGameTable createMainGameTable() {
-        MainGameTable mainGameTable = new MainGameTable(new MainGameTableModel(sportType, allColumns));
+        MainGameTableModel model = new MainGameTableModel(sportType, allColumns);
+        MainGameTable mainGameTable = new MainGameTable(model);
         mainGameTable.setIntercellSpacing(new Dimension(4, 2));
         mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
+        model.addTableSectionListener(() -> {;
+            mainGameTable.setToConfigHeaderRow(true);
+        });
         return mainGameTable;
     }
 

@@ -8,10 +8,10 @@ public class GameGroupLeagueSorter implements GameGroupHeaderSorter {
 	    if ( 0 != result) {
 	        return result;
         }
-	    result = g1.getSubLeagueId()-g2.getSubLeagueId();
-	    if ( 0 != result ) {
-	    	return result;
-		}
+//	    result = g1.getSubLeagueId()-g2.getSubLeagueId();
+//	    if ( 0 != result ) {
+//	    	return result;
+//		}
 	    return g1.getLeagueName().compareTo(g2.getLeagueName());
     }
 }

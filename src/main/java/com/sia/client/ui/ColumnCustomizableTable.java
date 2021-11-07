@@ -43,6 +43,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
+    private boolean toConfigHeaderRow = false;
     private TableModelListener tableChangedListener;
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
@@ -64,11 +65,15 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return marginProvider;
     }
+    public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
+        this.toConfigHeaderRow = toConfigHeaderRow;
+    }
     public void configHeaderRow() {
         configHeaderRow(0,getRowCount()-1,true);
     }
     public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
 
+        toConfigHeaderRow = false;
         ColumnCustomizableDataModel<V> model = getModel();
         ColumnHeaderProperty columnHeaderProperty = model.getColumnHeaderProperty();
 
@@ -264,7 +269,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         super.tableChanged(e);
         //to prevent this method called from constructor.super, need condition null != rowHeaderTable
         if ( isShowing()) {
-            if ((e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW  ) && null != rowHeaderTable) {
+            if ((e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW || toConfigHeaderRow ) && null != rowHeaderTable) {
                 //super method discard row model, need to re-config row height
                 configHeaderRow();
             }

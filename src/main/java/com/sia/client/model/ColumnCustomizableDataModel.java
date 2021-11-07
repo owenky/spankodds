@@ -26,6 +26,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final List<TableColumn> allColumns;
+    private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
 
@@ -103,6 +104,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
                 log(ex);
             }
         }
+        fireTableSectionChangeEvent();
         this.buildIndexMappingCache(false);
         this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
@@ -149,6 +151,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             thisgame = gameLine.removeGameId(g.getGame_id());
             if (thisgame != null) {
                 group = gameLine;
+                fireTableSectionChangeEvent();
                 break;
             }
         }
@@ -173,6 +176,7 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
 
         ltd.addOrUpdate(game);
         ltd.sort(getDefaultGameComparator());
+        fireTableSectionChangeEvent();
         this.buildIndexMappingCache(false);
         int affectedRowModelIndex = getRowModelIndex(ltd, ltd.getRowIndex(game.getGame_id()));
         TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
@@ -241,6 +245,7 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
     public void addGameLine(int index,TableSection<V> gameLine) {
         gameLine.setContainingTableModel(this);
         tableSections.add(index,gameLine);
+        fireTableSectionChangeEvent();
 //        resetSectionIndex(index);
     }
     private void resetSectionIndex(int startIndex) {
@@ -326,10 +331,19 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
         if ( null != tableSectionComparator) {
             tableSections.sort(tableSectionComparator);
             resetSectionIndex(0);
+            fireTableSectionChangeEvent();
         }
     }
     public TableSection<V> getLinesTableDataWithSecionIndex(int sectionIndex) {
        return tableSections.get(sectionIndex);
+    }
+    public void addTableSectionListener(TableSectionListener l) {
+        tableSectionListenerList.add(l);
+    }
+    private void fireTableSectionChangeEvent() {
+        for(TableSectionListener l :tableSectionListenerList) {
+            l.processTableSectionChanged();
+        }
     }
     private static void validateAndFixColumnModelIndex(List<TableColumn> allColumns) {
         if ( ! validateColumnIndex(allColumns)) {
