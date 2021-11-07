@@ -95,7 +95,7 @@ public abstract class InitialGameMessages {
     private static void loadGamesFromLog() {
         if (getMessagesFromLog) {
             try (Stream<String> stream = Files.lines(Paths.get(InitialLoadingFilePath))) {
-                stream.forEach(text->AppController.addGame(GameUtils.parseGameText(text)));
+                stream.forEach(text->AppController.pushGameToCash(GameUtils.parseGameText(text)));
             } catch ( Exception e) {
                 log(e);
             }
