@@ -144,7 +144,7 @@ public class LoginClient implements MessageListener {
         session.close();
         connection.close();
     }
-
+    @Override
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
@@ -243,7 +243,7 @@ public class LoginClient implements MessageListener {
                 InitialGameMessages.addText(text);
                 //allow reading games from log for test purpose  -- 2021-10-09
                 if (!InitialGameMessages.getMessagesFromLog) {
-                    AppController.addGame(GameUtils.parseGameText(text));
+                    AppController.pushGameToCash(GameUtils.parseGameText(text));
                 }
             } else if (messageType.equals("Spreadline")) {
                 TextMessage textMessage = (TextMessage) message;
