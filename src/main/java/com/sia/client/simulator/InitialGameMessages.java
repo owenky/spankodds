@@ -13,11 +13,13 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
@@ -75,6 +77,8 @@ public abstract class InitialGameMessages {
                     throw new IllegalArgumentException("Interested message type defined as property in -DInterestedMessageTypes is not supported: " + typeStr);
                 }
             }
+        } else {
+            interestedMsgTypes = Arrays.stream(MessageType.values()).collect(Collectors.toSet());
         }
         return Collections.unmodifiableSet(interestedMsgTypes);
     }

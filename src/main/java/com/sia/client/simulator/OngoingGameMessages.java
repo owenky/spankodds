@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
+import static com.sia.client.simulator.InitialGameMessages.interestedMessageTypes;
 
 public abstract class OngoingGameMessages {
 
@@ -48,7 +49,7 @@ public abstract class OngoingGameMessages {
     }
 
     public synchronized static void addMessage(MessageType messgeType, Message message) {
-        if (InitialGameMessages.shouldLogMesg && InitialGameMessages.interestedMessageTypes.contains(messgeType)) {
+        if (InitialGameMessages.shouldLogMesg && interestedMessageTypes.contains(messgeType)) {
             String text;
             if (message instanceof ActiveMQMapMessage) {
                 text = convert((ActiveMQMapMessage) message);
@@ -195,6 +196,11 @@ public abstract class OngoingGameMessages {
         String type = strs[1];
         String messageText = strs[2];
         pause(10L);
+
+        toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));
+        if ( ! toContinue){
+            return;
+        }
 
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
