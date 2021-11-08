@@ -27,6 +27,7 @@ public abstract class InitialGameMessages {
     public static boolean shouldLogMesg = false;
     public static boolean shouldRunSimulator; //set by System Property
     public static boolean getMessagesFromLog = false;
+    public static String [] filters;
     public static String MesgDir = TestProperties.DefaultMesgDir;
     public static Set<MessageType> interestedMessageTypes;
     private static List<String> buffer = new ArrayList<>();
@@ -36,6 +37,12 @@ public abstract class InitialGameMessages {
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
         shouldRunSimulator = Boolean.parseBoolean(System.getProperty("RunSimulator"));
         getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
+        String filterStr = System.getProperty("Filter");
+        if ( null == filterStr) {
+            filters = new String [0];
+        } else {
+            filters = filterStr.split(",");
+        }
         String interestedMesgTypeStr = System.getProperty("InterestedMessageTypes");
 
         interestedMessageTypes = configInterestedMessageTypes(interestedMesgTypeStr);

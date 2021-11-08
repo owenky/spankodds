@@ -174,6 +174,19 @@ public abstract class OngoingGameMessages {
         }
     }
     private static void processMessage(String text) {
+
+        boolean toContinue=false;
+        for(String keyword: InitialGameMessages.filters) {
+            if ( text.contains(keyword)) {
+                toContinue=true;
+                break;
+            }
+        }
+
+        if ( ! toContinue && 0 < InitialGameMessages.filters.length) {
+            return;
+        }
+
         String[] strs = text.split(MessageTypeDelimiter);
         if (3 > strs.length) {
             return;
