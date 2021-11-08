@@ -145,9 +145,44 @@ public class RenameColumnPopupMenu {
         String text = inputField.getText().trim();
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
         tc.setHeaderValue(text);
-        String updateText = ""+tc.getIdentifier()+"="+text;
-        AppController.getUser().setBookieTitles(updateText);
+        TableColumn [] allCols = getAllColumns();
+        StringBuilder sb = new StringBuilder();
+        for(TableColumn tblCol: allCols) {
+            sb.append(tblCol.getIdentifier()).append("=").append(tblCol.getHeaderValue()).append(",");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        AppController.getUser().setBookieColumnPrefs(sb.toString());
         UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
         userPrefs.sendUserPrefs();
+    }
+    private TableColumn [] getAllColumns() {
+        JTable bindedTable;
+        if ( table instanceof RowHeaderTable) {
+            bindedTable = ((RowHeaderTable<?>)table).getMainTable();
+        } else if ( table instanceof ColumnCustomizableTable) {
+            bindedTable = ((ColumnCustomizableTable)table).getRowHeaderTable();
+        } else {
+            bindedTable = null;
+        }
+
+        int colCount;
+        if ( null == bindedTable) {
+            colCount = table.getColumnCount();
+        } else {
+            colCount = table.getColumnCount() + bindedTable.getColumnCount();
+        }
+
+        TableColumn [] result = new TableColumn [colCount];
+        int index=0;
+        for(int i=0;i<table.getColumnCount();i++) {
+            result[index++]=table.getColumnModel().getColumn(i);
+        }
+
+        if ( null != bindedTable) {
+            for(int i=0;i<bindedTable.getColumnCount();i++) {
+                result[index++]=bindedTable.getColumnModel().getColumn(i);
+            }
+        }
+        return result;
     }
 }
