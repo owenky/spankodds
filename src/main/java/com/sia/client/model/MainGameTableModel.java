@@ -75,7 +75,13 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             if ( 0 <= rowIndex) {
                 updateRow(ltd,rowIndex);
             } else {
-                addGameToTableSection(ltd,game);
+                //check if this game is in other table section, if yes, then do move, else do add -- 2021-11-07
+                LinesTableData oldTableSection = this.findLeagueSection(game);
+                if ( null != oldTableSection) {
+                    this.moveGameFromSourceToTarget(oldTableSection,game,gameGroupHeader);
+                } else {
+                    addGameToTableSection(ltd, game);
+                }
             }
         }
 //        else if (null != ( err= GameUtils.checkError(game))) {

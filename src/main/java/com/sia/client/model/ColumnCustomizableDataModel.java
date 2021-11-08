@@ -150,32 +150,60 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         return section.getGame(rowIndexInLinesTableData);
     }
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
+//    public void moveGameToThisHeader(V g, GameGroupHeader header) {
+//        V thisgame = null;
+//        TableSection<V> group = null;
+//        for (TableSection<V> gameLine : tableSections) {
+//            thisgame = gameLine.removeGameId(g.getGame_id());
+//            if (thisgame != null) {
+//                group = gameLine;
+//                fireTableSectionChangeEvent();
+//                log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been removed from secion "+group.getGameGroupHeader());
+//                break;
+//            }
+//        }
+//        // now lets see if i found it in either
+//        if ( null != thisgame ) {
+//            TableSection<V> ltd = findTableSectionByHeaderValue(header);
+//            if ( null != ltd) {
+//                addGameToTableSection(ltd,thisgame);
+//                log("GAME MOVED, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and SUCCESSFULLY added to "+header);
+//            } else {
+//                log( new Exception("can't find LinesTableData for header:"+header));
+//            }
+//        } else {
+//            log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
+//        }
+//    }
     public void moveGameToThisHeader(V g, GameGroupHeader header) {
-        V thisgame = null;
-        TableSection<V> group = null;
+        TableSection<V> sourceGroup = null;
         for (TableSection<V> gameLine : tableSections) {
-            thisgame = gameLine.removeGameId(g.getGame_id());
-            if (thisgame != null) {
-                group = gameLine;
-                fireTableSectionChangeEvent();
+            if ( 0 <= gameLine.getRowIndex(g.getGame_id())) {
+                sourceGroup = gameLine;
                 break;
             }
         }
         // now lets see if i found it in either
-        if ( null != thisgame ) {
-            TableSection<V> ltd = findTableSectionByHeaderValue(header);
-
-log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and is about to add to header "+header);
-
-            if ( null != ltd) {
-                addGameToTableSection(ltd,thisgame);
-                log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and SUCCESSFULLY added to "+header);
-            } else {
-                log( new Exception("can't find LinesTableData for header:"+header));
-            }
+        if ( null != sourceGroup ) {
+            moveGameFromSourceToTarget(sourceGroup,g,header);
         } else {
             log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
         }
+    }
+    public void moveGameFromSourceToTarget(TableSection<V> sourceSection, V game,GameGroupHeader targetGameGroupHeader) {
+
+        sourceSection.removeGameId(game.getGame_id());
+        fireTableSectionChangeEvent();
+        log("MOVING GAME, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been removed from secion "+sourceSection.getGameGroupHeader());
+
+        TableSection<V> ltd = findTableSectionByHeaderValue(targetGameGroupHeader);
+        if ( null != ltd) {
+            addGameToTableSection(ltd,game);
+            log("GAME MOVED, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been moved from secion "+sourceSection.getGameGroupHeader()+" and SUCCESSFULLY added to "+targetGameGroupHeader);
+        } else {
+            log( new Exception("can't find LinesTableData for header:"+targetGameGroupHeader));
+        }
+
     }
     protected void addGameToTableSection(TableSection<V> ltd, V game) {
 
@@ -267,13 +295,13 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
         }
         int modelIndex = 0;
         for(TableSection<V> sec: tableSections) {
-//            sec.resetDataVector();
-            debug("resetDataVector Disabled in buildIndexMappingCache");
+//            sec.resetDataVector();  -- Is it safe to disable it? --2021-11-07
             for(int i=0;i<sec.getRowCount();i++) {
                 int offset = modelIndex-i;
                 ltdSrhStructCache.put(modelIndex++,new LtdSrhStruct<>(sec,offset));
             }
         }
+        debug("resetDataVector Disabled in buildIndexMappingCache");
     }
     public LtdSrhStruct<V> getLinesTableData(int rowModelIndex) {
 

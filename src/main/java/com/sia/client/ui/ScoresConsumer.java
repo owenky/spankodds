@@ -155,10 +155,9 @@ public class ScoresConsumer implements MessageListener {
 
                 Game g = AppController.getGame(gameid);
                 if (g != null) {
-
-                    GameStatus gameStatus = GameStatus.find(status);
-                    if ( null != gameStatus ) {
-                        ScoreChangedProcessor.process(gameStatus,g,currentvisitorscore,currenthomescore);
+                    GameStatus newGameStatus = GameStatus.find(status);
+                    if ( null != newGameStatus ) {
+                        ScoreChangedProcessor.process(newGameStatus,g,currentvisitorscore,currenthomescore);
                     } else {
                         Utils.log("ScoreConsumer: skip status "+status+", league id="+g.getLeague_id());
 //                        Utils.log("ScoreConsumer: SHOULD Disable DEBUG false status for debugging, set to in progress skip status "+status+", league id="+g.getLeague_id());

@@ -10,18 +10,18 @@ import static com.sia.client.config.Utils.log;
 
 public abstract class ScoreChangedProcessor {
 
-    public static void process(GameStatus gameStatus, Game g,  int currentvisitorscore, int currenthomescore) {
+    public static void process(GameStatus newGameStatus, Game g,  int currentvisitorscore, int currenthomescore) {
 
         //owen 8/11 moved final as first block since grand salami was causing started and final to both execute
-        if (! gameStatus.isSame(g.getStatus()) ) {
+        if (! newGameStatus.isSame(g.getStatus()) ) {
             Sport s = AppController.getSportByLeagueId(g.getLeague_id());
             if ( null == s) {
                 log("ScoreChangedProcessor: Can't find sport for league:"+g.getLeague_id());
                 return;
             }
-            log("game "+ GameUtils.getGameDebugInfo(g)+" is about to move from "+g.getStatus()+" to "+gameStatus.name());
-            AppController.moveGameToThisHeader(g, gameStatus.getGroupHeader());
-            String finalprefs = gameStatus.getAlertPrefSupplier().get();
+            log("game "+ GameUtils.getGameDebugInfo(g)+" is about to move from "+g.getStatus()+" to "+newGameStatus.name());
+            AppController.moveGameToThisHeader(g, newGameStatus.getGroupHeader());
+            String finalprefs = newGameStatus.getAlertPrefSupplier().get();
             String[] arr  = finalprefs.split("\\|");
             boolean popup = false;
             boolean sound = false;
@@ -74,10 +74,10 @@ public abstract class ScoreChangedProcessor {
                     String hrmin = AppController.getCurrentHoursMinutes();
                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
 
-                    String mesg = gameStatus.getGroupHeader() + " :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                    String mesg = newGameStatus.getGroupHeader() + " :" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
                     AppController.addAlert(hrmin, mesg);
 
-                    new UrgentMessage("<HTML><H2>" + gameStatus.getGroupHeader() + " " + s.getLeaguename() + "</H2>" +
+                    new UrgentMessage("<HTML><H2>" + newGameStatus.getGroupHeader() + " " + s.getLeaguename() + "</H2>" +
                             "<TABLE cellspacing=1 cellpadding=1>" +
 
                             "<TR><TD>" + g.getVisitorgamenumber() + "</TD><TD>" + g.getVisitorteam() + "</TD><TD>" + currentvisitorscore + "</TR>" +
@@ -87,7 +87,7 @@ public abstract class ScoreChangedProcessor {
 
                 if (sound) {
                     if (audiofile.equals("")) {
-                        new SoundPlayer(gameStatus.getSoundFile());
+                        new SoundPlayer(newGameStatus.getSoundFile());
                     } else {
                         //playSound(audiofile);
                         new SoundPlayer(audiofile);
