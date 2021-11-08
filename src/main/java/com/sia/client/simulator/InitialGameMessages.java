@@ -28,12 +28,14 @@ public abstract class InitialGameMessages {
     public static boolean shouldRunSimulator; //set by System Property
     public static boolean getMessagesFromLog = false;
     public static String [] filters;
-    public static String MesgDir = TestProperties.DefaultMesgDir;
+    public static String MesgDir;
     public static Set<MessageType> interestedMessageTypes;
     private static List<String> buffer = new ArrayList<>();
     private static String InitialLoadingFilePath;
 
     public static void initMsgLoggingProps() {
+        String mesgDir = System.getProperty("MesgDir");
+        MesgDir = null==mesgDir?TestProperties.DefaultMesgDir:mesgDir;
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
         shouldRunSimulator = Boolean.parseBoolean(System.getProperty("RunSimulator"));
         getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
