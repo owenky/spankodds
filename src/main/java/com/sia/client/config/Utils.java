@@ -86,16 +86,19 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        errPs.println(nowShortString()+" |");e.printStackTrace(errPs);
+        errPs.println(logHeader());e.printStackTrace(errPs);
+    }
+    private static String logHeader() {
+        return nowShortString()+", Thread="+Thread.currentThread().getName()+" |";
     }
     public static void debug(String mesg) {
-        logPs.println(nowShortString()+" |DEBUG:"+mesg);
+        logPs.println(logHeader()+" DEBUG:"+mesg);
     }
     public static void log(String mesg) {
-        logPs.println(nowShortString()+" |"+mesg);
+        logPs.println(logHeader()+mesg);
     }
     public static void log(Object mesg) {
-        logPs.println(nowShortString()+" |"+mesg);
+        logPs.println(logHeader()+mesg);
     }
     private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
     public static String nowShortString() {
