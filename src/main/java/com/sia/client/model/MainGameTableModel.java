@@ -76,7 +76,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
                 updateRow(ltd,rowIndex);
             } else {
                 //check if this game is in other table section, if yes, then do move, else do add -- 2021-11-07
-                LinesTableData oldTableSection = this.findLeagueSection(game);
+                TableSection<Game> oldTableSection = this.findTableSectionByGameid(game.getGame_id());
                 if ( null != oldTableSection) {
                     this.moveGameFromSourceToTarget(oldTableSection,game,gameGroupHeader);
                 } else {

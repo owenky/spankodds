@@ -134,6 +134,9 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         }
         return rtn;
     }
+    public TableSection<V> findTableSectionByGameid(int gameId) {
+        return getTableSections().stream().filter(ts-> 0<=ts.getRowIndex(gameId)).findAny().orElse(null);
+    }
     public List<TableColumn> getAllColumns() {
         return this.allColumns;
     }
@@ -178,7 +181,8 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     public void moveGameToThisHeader(V g, GameGroupHeader header) {
         TableSection<V> sourceGroup = null;
         for (TableSection<V> gameLine : tableSections) {
-            if ( 0 <= gameLine.getRowIndex(g.getGame_id())) {
+            int index = gameLine.getRowIndex(g.getGame_id());
+            if ( 0 <= index) {
                 sourceGroup = gameLine;
                 break;
             }
