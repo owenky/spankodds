@@ -153,7 +153,11 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
      */
     public LinesTableData findLeagueSection(Game g) {
         GameGroupHeader gameGroupHeader = GameUtils.createGameGroupHeader(g);
-        return findTableSectionByHeaderValue(gameGroupHeader);
+        if (null != gameGroupHeader ) {
+            return findTableSectionByHeaderValue(gameGroupHeader);
+        } else {
+            return null;
+        }
     }
     private LinesTableData findOrCreateStageSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
         TableSection<Game> ltd;
