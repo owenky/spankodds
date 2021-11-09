@@ -1,6 +1,7 @@
 package com.sia.client.config;
 
 import com.sia.client.model.ViewValue;
+import com.sia.client.simulator.InitialGameMessages;
 
 import javax.jms.MapMessage;
 import javax.swing.AbstractButton;
@@ -84,6 +85,11 @@ public abstract class Utils {
             }
         }
         return url;
+    }
+    public static void logPeekGameId(String keyword,int gameid) {
+        if (InitialGameMessages.PeekGameId == gameid) {
+            log("game id "+gameid+" received at "+keyword);
+        }
     }
     public static void log(Throwable e) {
         errPs.println(logHeader());e.printStackTrace(errPs);

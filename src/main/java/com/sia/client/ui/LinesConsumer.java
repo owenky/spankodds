@@ -21,6 +21,7 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import static com.sia.client.config.Utils.log;
+import static com.sia.client.config.Utils.logPeekGameId;
 
 public class LinesConsumer implements MessageListener {
 
@@ -29,7 +30,7 @@ public class LinesConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer",2000L,500L);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer",2000L,10L);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -68,13 +69,13 @@ public class LinesConsumer implements MessageListener {
                 return;
             }
             log("LinesConsumer::processMessage: gameid="+gameid);
+            logPeekGameId("LinesConsumer::processMessage",gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
             String changetype = mapMessage.getStringProperty("messageType");
             long newlongts;
 
-//log("LineConsumer received mesg for game id="+gameid);
             boolean isopener = false;
             if ("1".equals(isopenerS)) {
                 isopener = true;

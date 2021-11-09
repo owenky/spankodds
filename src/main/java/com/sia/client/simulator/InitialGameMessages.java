@@ -26,6 +26,7 @@ import static com.sia.client.config.Utils.log;
 
 public abstract class InitialGameMessages {
 
+    public static final int PeekGameId = 208889;
     public static boolean shouldLogMesg = false;
     public static boolean shouldRunSimulator; //set by System Property
     public static boolean getMessagesFromLog = false;

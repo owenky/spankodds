@@ -24,6 +24,7 @@ import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.log;
+import static com.sia.client.config.Utils.logPeekGameId;
 
 public class GamesConsumer implements MessageListener {
 
@@ -136,6 +137,7 @@ public class GamesConsumer implements MessageListener {
 
                 }
                 log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
+                logPeekGameId("GamesConsumer::processMessage for NEWORUPDATE",gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
@@ -314,7 +316,6 @@ public class GamesConsumer implements MessageListener {
             {
 
                 String data = textMessage.getText();
-//                log("new game! " + data);
                 String[] items = data.split("~");
                 int x = 0;
                 String eventnumber = items[x++];
@@ -367,6 +368,7 @@ public class GamesConsumer implements MessageListener {
                     g = new Game();
                 }
                 log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
+                logPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2",gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
