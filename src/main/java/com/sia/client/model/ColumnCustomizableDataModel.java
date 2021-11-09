@@ -346,14 +346,14 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             return null;
         }
     }
-    protected Comparator<TableSection<V>> getTableSectionComparator() {
+    protected Comparator<TableSection<V>> getdefaultTableSectionComparator() {
         return null;
     }
     protected Comparator<? super V> getDefaultGameComparator() {
         return null;
     }
     public final void sort() {
-        sortTableSection(getTableSectionComparator());
+        sortTableSection(getdefaultTableSectionComparator());
         sortGamesForAllTableSections(getDefaultGameComparator());
     }
 

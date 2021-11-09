@@ -29,7 +29,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 //        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
     }
     @Override
-    public Comparator<TableSection<Game>> getTableSectionComparator() {
+    public Comparator<TableSection<Game>> getdefaultTableSectionComparator() {
         final GameGroupDateSorter gameGroupDateSorter = new GameGroupDateSorter();
         final GameGroupLeagueSorter gameGroupLeagueSorter = new GameGroupLeagueSorter();
         return (l1,l2)-> {
@@ -112,7 +112,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
                 ltd = function.apply(gameGroupHeader);
                 if ( null != ltd) {
                     this.addGameLine(ltd);
-                    this.sortTableSection(getTableSectionComparator());
+                    this.sortTableSection(getdefaultTableSectionComparator());
                 } else {
                     log("Warning: Can't create LinesTableData for gameGroupHeader="+gameGroupHeader+" for game "+GameUtils.getGameDebugInfo(game));
                 }

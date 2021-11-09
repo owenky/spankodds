@@ -11,19 +11,21 @@ public class GameGroupHeader {
     private final String gameGroupHeaderStr;
     private final String leagueName;
     private final int subLeagueId;
+    private final int leagueId;
     private final int anchorPos;
     private final LocalDateTime gameTime;
     private final LocalDate gameDate;
     private final String gameDateStr;
 
-    public static GameGroupHeader create(String leagueName,LocalDateTime gameTime,int subLeagueId) {
-        return new GameGroupHeader(gameTime,leagueName,subLeagueId,0);
+    public static GameGroupHeader create(String leagueName,LocalDateTime gameTime,int subLeagueId,int leagueId) {
+        return new GameGroupHeader(gameTime,leagueName,subLeagueId,leagueId,0);
     }
     public static GameGroupHeader createStageGroupHeader(String stageName,int anchorPos) {
-        return new GameGroupHeader(null,stageName,0,anchorPos);
+        return new GameGroupHeader(null,stageName,0,0,anchorPos);
     }
-    public GameGroupHeader(LocalDateTime gameTime, String leagueName, int subLeagueId, int anchorPos) {
+    public GameGroupHeader(LocalDateTime gameTime, String leagueName, int subLeagueId, int leagueId,int anchorPos) {
         this.subLeagueId = subLeagueId;
+        this.leagueId = leagueId;
         this.anchorPos = anchorPos;
         this.leagueName = leagueName;
         this.gameTime = gameTime;
@@ -33,6 +35,9 @@ public class GameGroupHeader {
     }
     public int getSubLeagueId() {
         return subLeagueId;
+    }
+    public int getLeagueId() {
+        return leagueId;
     }
     public int getAnchorPos() {
         return anchorPos;

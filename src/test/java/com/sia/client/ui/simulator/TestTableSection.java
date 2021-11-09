@@ -28,7 +28,7 @@ public class TestTableSection extends TableSection<TestGame> {
     }
 
     public TestTableSection(String groupHeader, TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
-        super(GameGroupHeader.create(groupHeader,null,0), gameCache, toAddBlankGameId, gameVec);
+        super(GameGroupHeader.create(groupHeader,null,0,0), gameCache, toAddBlankGameId, gameVec);
     }
 
     @Override

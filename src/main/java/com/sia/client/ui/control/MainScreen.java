@@ -560,7 +560,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
                 } else if (lastdate == null) // new date
                 {
-                    gamegroupheadervec.add(GameUtils.createGameGroupHeader(s2.getNormalizedLeaguename(),g.getSubleague_id(),g.getGamedate()));
+                    gamegroupheadervec.add(GameUtils.createGameGroupHeader(s2.getNormalizedLeaguename(),g.getSubleague_id(),g.getLeague_id(),g.getGamedate()));
                     gamegroupLeagueIDvec.add(s2.getParentleague_id());
                     lastdate = gamedate;
                     lastleagueid = leagueid;
@@ -572,7 +572,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 {
                     lastdate = gamedate;
                     lastleagueid = leagueid;
-                    gamegroupheadervec.add(GameUtils.createGameGroupHeader(s2.getNormalizedLeaguename(),g.getSubleague_id(),g.getGamedate()));
+                    gamegroupheadervec.add(GameUtils.createGameGroupHeader(s2.getNormalizedLeaguename(),g.getSubleague_id(),g.getLeague_id(),g.getGamedate()));
                     gamegroupLeagueIDvec.add(s2.getParentleague_id());
                     Vector v2 = new Vector();
                     //v2.add(gameid);

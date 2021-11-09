@@ -41,12 +41,12 @@ public abstract class GameUtils {
         if ( null == sport) {
             return null;
         }
-        return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getGamedate());
+        return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getLeague_id(),game.getGamedate());
     }
-    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,Date gameDate) {
+    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,Date gameDate) {
 
         LocalDateTime ldt = new Date(gameDate.getTime()).toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
-        return GameGroupHeader.create(leagueName,ldt,subLeagueId);
+        return GameGroupHeader.create(leagueName,ldt,subLeagueId,leagueId);
     }
     public static boolean isGameNear(Game game) {
         SportType sportType = SportType.findPredefinedByGame(game);

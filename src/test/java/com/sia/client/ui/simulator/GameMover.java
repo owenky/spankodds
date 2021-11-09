@@ -18,6 +18,6 @@ public class GameMover implements EventGenerator{
             targetHeader = TestTableSection.TestGroupGameHeaderPrefix+0;
         }
         TestGame game = tblProp.testGameCache.getGame(movedGameId);
-        model.moveGameToThisHeader(game, GameGroupHeader.create(targetHeader,null,0));
+        model.moveGameToThisHeader(game, GameGroupHeader.create(targetHeader,null,0,0));
     }
 }

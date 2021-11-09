@@ -42,9 +42,9 @@ public class GameSorterTest {
         LocalDateTime ltd1 = LocalDateTime.of(2021, 1, 1, 0, 0);
         LocalDateTime ltd2 = LocalDateTime.of(2020, 10, 1, 0, 0);
         LocalDateTime ltd3 = LocalDateTime.of(2020, 1, 1, 0, 0);
-        GameGroupHeader ggh1 = GameGroupHeader.create("", ltd1,0);
-        GameGroupHeader ggh2 = GameGroupHeader.create("", ltd2,0);
-        GameGroupHeader ggh3 = GameGroupHeader.create("", ltd3,0);
+        GameGroupHeader ggh1 = GameGroupHeader.create("", ltd1,0,0);
+        GameGroupHeader ggh2 = GameGroupHeader.create("", ltd2,0,0);
+        GameGroupHeader ggh3 = GameGroupHeader.create("", ltd3,0,0);
         List<GameGroupHeader> gghList = new ArrayList<>();
         gghList.add(ggh1);
         gghList.add(ggh2);
