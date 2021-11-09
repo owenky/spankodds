@@ -84,9 +84,6 @@ public class GamesConsumer implements MessageListener {
             String oldhpitcher = "";
             Time oldgametime = null;
 
-//            if (repaintstr != null && repaintstr.equals("false")) {
-//                repaint = false;
-//            }
             if (leagueid == null) {
                 leagueid = "";
             }
@@ -128,7 +125,8 @@ public class GamesConsumer implements MessageListener {
                 String status = items[x++];
                 String timeremaining = items[x++];
 
-                Game g = AppController.getGame(Integer.parseInt(eventnumber));
+                int gameid = Integer.parseInt(eventnumber);
+                Game g = AppController.getGame(gameid);
                 if (g == null) {
                     g = new Game();
                 } else {
@@ -137,7 +135,8 @@ public class GamesConsumer implements MessageListener {
                     oldgametime = g.getGametime();
 
                 }
-                g.setGame_id(Integer.parseInt(eventnumber));
+                log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
+                g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
                 g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
@@ -170,7 +169,7 @@ public class GamesConsumer implements MessageListener {
                 g.setStatus(status);
                 g.setTimeremaining(timeremaining);
 
-                AppController.addGame(g);
+                AppController.addOrUpdateGame(g);
                 Sport s = AppController.getSportByLeagueId(g.getLeague_id());
 
 
@@ -362,12 +361,13 @@ public class GamesConsumer implements MessageListener {
                 String gamestatusts = items[x++];
                 String scorets = items[x++];
 
-
-                Game g = AppController.getGame(Integer.parseInt(eventnumber));
+                int gameid = Integer.parseInt(eventnumber);
+                Game g = AppController.getGame(gameid);
                 if (g == null) {
                     g = new Game();
                 }
-                g.setGame_id(Integer.parseInt(eventnumber));
+                log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
+                g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
                 g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
@@ -416,7 +416,7 @@ public class GamesConsumer implements MessageListener {
                 g.setGamestatusts(Long.parseLong(gamestatusts));
                 g.setScorets(Long.parseLong(scorets));
 
-                AppController.addGame(g);
+                AppController.addOrUpdateGame(g);
             } else if (messagetype.equals("REMOVE")) {
                 String data = textMessage.getText(); // this is gamenumber
                 String[] gameidarr = data.split("~");

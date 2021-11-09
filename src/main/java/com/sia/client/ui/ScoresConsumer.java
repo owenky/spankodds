@@ -94,7 +94,7 @@ public class ScoresConsumer implements MessageListener {
             String changetype = mapMessage.getStringProperty("messageType");
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
-
+                log("ScoreConsumer::processMessage: gameid="+gameid);
 
                 String period = "";
                 String timer = "";
@@ -167,6 +167,7 @@ public class ScoresConsumer implements MessageListener {
 
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
+                    AppController.addOrUpdateGame(g);
 
                 } else {
                     g = new Game();

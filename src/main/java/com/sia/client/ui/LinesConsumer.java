@@ -67,6 +67,7 @@ public class LinesConsumer implements MessageListener {
                 log("LinesConsumer Warning: null game detected:"+gameid);
                 return;
             }
+            log("LinesConsumer::processMessage: gameid="+gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
