@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static com.sia.client.config.Utils.log;
-import static com.sia.client.config.Utils.logPeekGameId;
+import static com.sia.client.config.Utils.consoleLogPeekGameId;
 
 public class ScoresConsumer implements MessageListener {
 
@@ -96,7 +96,7 @@ public class ScoresConsumer implements MessageListener {
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
                 log("ScoreConsumer::processMessage: gameid="+gameid);
-                logPeekGameId("LinesConsumer::processMessage",gameid);
+                consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
 
                 String period = "";
                 String timer = "";

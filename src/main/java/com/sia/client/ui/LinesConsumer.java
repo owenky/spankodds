@@ -21,7 +21,7 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import static com.sia.client.config.Utils.log;
-import static com.sia.client.config.Utils.logPeekGameId;
+import static com.sia.client.config.Utils.consoleLogPeekGameId;
 
 public class LinesConsumer implements MessageListener {
 
@@ -69,7 +69,7 @@ public class LinesConsumer implements MessageListener {
                 return;
             }
             log("LinesConsumer::processMessage: gameid="+gameid);
-            logPeekGameId("LinesConsumer::processMessage",gameid);
+            consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");

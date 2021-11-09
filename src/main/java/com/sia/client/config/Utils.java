@@ -86,9 +86,9 @@ public abstract class Utils {
         }
         return url;
     }
-    public static void logPeekGameId(String keyword,int gameid) {
+    public static void consoleLogPeekGameId(String keyword, int gameid) {
         if (InitialGameMessages.PeekGameId == gameid) {
-            log("game id "+gameid+" received at "+keyword);
+            System.out.println(logHeader()+"game id "+gameid+" received at "+keyword);
         }
     }
     public static void log(Throwable e) {
