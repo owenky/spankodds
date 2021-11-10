@@ -49,9 +49,7 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        if ( ! AppController.isSpankyWindowLoaded() ) {
-            return;
-        }
+        AppController.waitForSpankyWindowLoaded();
 //        synchronized (SiaConst.GameLock) {
             if (! InitialGameMessages.getMessagesFromLog) {
                 Utils.ensureNotEdtThread();

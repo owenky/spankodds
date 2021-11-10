@@ -150,8 +150,12 @@ public class AppController {
     public static void notifyUIComplete() {
         messageProcessingLatch.countDown();
     }
-    public static boolean isSpankyWindowLoaded() {
-        return messageProcessingLatch.getCount()<=0;
+    public static void waitForSpankyWindowLoaded() {
+        try {
+            messageProcessingLatch.await();
+        } catch (InterruptedException e) {
+            log(e);
+        }
     }
     public static boolean existLeagueId(Integer leagueId) {
         return leagueIdToSportMap.containsKey(leagueId);
