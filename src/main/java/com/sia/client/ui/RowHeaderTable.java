@@ -7,11 +7,9 @@ import com.sia.client.model.TableCellRendererProvider;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ToolTipManager;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -19,11 +17,11 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 
 	private final ColumnCustomizableTable<V> mainTable;
 	private final boolean hasRowNumber;
-	private boolean isModelSet = false;
 	private TableCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
 
 	public RowHeaderTable(ColumnCustomizableTable<V> mainTable, boolean hasRowNumber) {
+		super(mainTable.getModel());
 		this.hasRowNumber = hasRowNumber;
 		this.mainTable = mainTable;
 		((RowHeaderColumnModel)this.getColumnModel()).setMainTable(mainTable);
@@ -40,14 +38,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	}
 	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
-	}
-	@Override
-	public TableModel getModel() {
-		if ( ! isModelSet ) {
-			setModel(mainTable.getModel());
-			isModelSet = true;
-		}
-		return super.getModel();
 	}
 	@Override
 	public final TableCellRenderer getCellRenderer(int rowViewIndex, int columnViewIndex) {
@@ -152,39 +142,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	public JTable table() {
 		return this;
 	}
-//
-//	@Override
-//	public int convertColumnIndexToView(int modelColumnIndex){
-//		int columnViewIndex;
-//		if ( modelColumnIndex == SBTTableModelDelegator.RowNoColumnIndex ) { //是序号列
-//			columnViewIndex = 0;
-//		}else if ( modelColumnIndex < 0 ) {
-//			columnViewIndex = -1;
-//		}else{
-//			JTableColumn aColumnIden = mainTable.getColumnFromTableModel(modelColumnIndex);
-//			List<JTableColumn> lockedColumns = mainTable.getLockColumns();
-//			columnViewIndex = lockedColumns.indexOf(aColumnIden);
-//			if ( columnViewIndex >=0 ){
-//				columnViewIndex = columnViewIndex + 1;
-//			}
-//		}
-//
-//		return columnViewIndex;
-//
-//	}
-//	@Override
-//	public int convertColumnIndexToModel(int viewColumnIndex){
-//		int columnModelIndex;
-//		if ( viewColumnIndex == 0 ) { //是序号列
-//			columnModelIndex =  SBTTableModelDelegator.RowNoColumnIndex;
-//		}else{
-//			List<JTableColumn> lockedColumns = mainTable.getLockColumns();
-//			JTableColumn aColumnIden = lockedColumns.get(viewColumnIndex - 1); // 第一列是行号，主表锁住的列从第二列开始
-//			columnModelIndex = mainTable.getColumnModelIndex(aColumnIden);
-//		}
-//		return columnModelIndex;
-//
-//	}
 	@Override
     public int convertRowIndexToModel(int index_) {
 		return mainTable.convertRowIndexToModel(index_);
@@ -201,12 +158,12 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	public String toString() {
 		return getName();
 	}
-	@Override
-	public void tableChanged(TableModelEvent e) {
-		super.tableChanged(e);
-		if ( (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) &&  null != mainTable  ) {
-			//super method discard row model, need to re-config row height
-			mainTable.configHeaderRow();
-		}
-	}
+//	@Override
+//	public void tableChanged(TableModelEvent e) {
+//		super.tableChanged(e);
+//		if ( (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) &&  null != mainTable  ) {
+//			//super method discard row model, need to re-config row height
+//			mainTable.configHeaderRow();
+//		}
+//	}
 }

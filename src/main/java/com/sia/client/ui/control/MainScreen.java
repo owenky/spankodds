@@ -71,6 +71,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
     private MainGameTable mainGameTable;
+    private MainGameTableModel model;
 
     MainScreen(SportType sportType, List<String> customheaders) {
         this(sportType);
@@ -164,9 +165,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.shortteam = shortteam;
         this.opener = opener;
         this.last = last;
-        long begin=System.currentTimeMillis();
         createData();
-        log("createData() took "+(System.currentTimeMillis()-begin)+". About to draw...teammaxlength=" + currentmaxlength);
+        model = buildModel();
         drawIt();
         log("done drawing");
     }
@@ -775,9 +775,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     private void drawIt() {
-
-        MainGameTableModel model = buildModel();
-
         mainGameTable = createMainGameTable(model, getName());
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -948,9 +945,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     @Override
     public MainGameTable getColumnCustomizableTable() {
-//        if (null == mainGameTable) {
-//            mainGameTable = createMainGameTable();
-//        }
         return mainGameTable;
     }
 

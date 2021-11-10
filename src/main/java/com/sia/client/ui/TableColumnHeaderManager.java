@@ -81,11 +81,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
             Object source = e.getSource();
             if (source == mainTable && mainTable.isShowing()) {
-                Utils.checkAndRunInEDT(() -> {
-                    reconfigHeaderRow();
-                    debug("TableColumnHeaderManager::hierarchyChanged --Why need configHeaderRow here.");
-                    adjustComumns();
-                });
+                reconfigHeaderRow();
+                debug("TableColumnHeaderManager::hierarchyChanged --Why need configHeaderRow here.");
+                adjustComumns();
             }
         }
     }
