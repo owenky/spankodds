@@ -13,6 +13,7 @@ import com.sun.javafx.collections.ImmutableObservableList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -54,6 +55,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
         ToolTipManager.sharedInstance().registerComponent(this);
     }
+//    public void reset() {
+//        columnAdjusterManager = null;
+//        tableColumnHeaderManager = null;
+//        headerCellRenderer = null;
+//        marginProvider = null;
+//    }
     @Override
     public String getToolTipText(MouseEvent e) {
        return Utils.getTableCellToolTipText(this,e);
@@ -92,7 +99,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
             String headerValue = model.getGameGroupHeader(rowModelIndex);
-            Component oldHeaderComp = tableColumnHeaderManager.getColumnHeaderDrawer().getGameGroupHeaderComponent(rowViewIndex);
+            Component oldHeaderComp = getTableColumnHeaderManager().getColumnHeaderDrawer().getGameGroupHeaderComponent(rowViewIndex);
             final boolean groupGameHeaderChanged= forceGameGroupHeaderDraw || isGameGroupHeaderChanged(headerValue,oldHeaderComp);
             if ( null != oldHeaderComp && groupGameHeaderChanged) {
                 this.remove(oldHeaderComp);
@@ -154,7 +161,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         super.setRowHeight(rowHeight);
         getRowHeaderTable().setRowHeight(rowHeight);
         //jtable::setRowHeight() set rowModel to null, need to config row height after this call.
-        configHeaderRow();
+        if ( null != SwingUtilities.getWindowAncestor(this) ) {
+            configHeaderRow();
+        }
     }
     @Override
     public void setRowHeight(int rowViewIndex,int rowHeight) {

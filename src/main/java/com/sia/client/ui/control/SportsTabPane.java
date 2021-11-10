@@ -19,7 +19,6 @@ import com.sia.client.ui.SportCustomTab;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -31,6 +30,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,16 +77,14 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public void populateComponents() {
 
         List<String> maintabs = AppController.getMainTabVec();
-        log(String.valueOf(maintabs));
         for (String title : maintabs) {
-//            SportType st = SportType.findBySportName(title);
-//            if (null != st) {
-//                URL imgResource = Utils.getMediaResource(st.getIcon());
-//                MainScreen ms = new MainScreen(st);
-//                addMainScreenToCache(ms);
-//                addTab(title, new ImageIcon(imgResource),ms , title);
-//            }
-            addTab(title, null,new JPanel() , title);
+            SportType st = SportType.findBySportName(title);
+            if (null != st) {
+                URL imgResource = Utils.getMediaResource(st.getIcon());
+                MainScreen ms = new MainScreen(st);
+                addMainScreenToCache(ms);
+                addTab(title, new ImageIcon(imgResource),ms , title);
+            }
         }
 
         Vector<String> customtabs = AppController.getCustomTabsVec();
@@ -130,11 +128,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 }
 
             }
-//            SportType customerizedSportType =  SportType.createCustomizedSportType(name);
-//            MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
-//            addMainScreenToCache(msnew);
-//            addTab(name, null, msnew, name);
-            addTab(name, null, new JPanel(), name);
+            SportType customerizedSportType =  SportType.createCustomizedSportType(name);
+            MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
+            addMainScreenToCache(msnew);
+            addTab(name, null, msnew, name);
         }
         addTab("+", null, null, "+");
 
