@@ -75,7 +75,7 @@ public class SpankOdds {
         LoginListener loginListener = new LoginAdapter() {
             @Override
             public void loginSucceeded(LoginEvent source) {
-                frame = SpankyWindow.create("Spank Odds )" + version + ")");
+                frame = SpankyWindow.create("Spank Odds (" + version + ")");
                 SpankOdds.this.userName = loginPane.getUserName();
                 InitialGameMessages.postDataLoading();
                 SpankOdds.this.showGui();
