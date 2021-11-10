@@ -26,11 +26,12 @@ public class SpankyWindow extends JFrame {
     private static final AtomicInteger counter = new AtomicInteger(1);
     private final SportsTabPane stp;
     private final TopView tv;
+    private static GameClockUpdater gameClockUpdater;
 
     public static SpankyWindow create() {
         return create(AppController.getUser().getUsername() + " Logged In"+ SiaConst.Version);
     }
-    public static SpankyWindow create(String title) {
+    public synchronized static SpankyWindow create(String title) {
         SportsTabPane stp = new SportsTabPane();
         SpankyWindow instance = new SpankyWindow(title,stp);
         instance.setName(String.valueOf(counter.getAndAdd(1)));
@@ -54,6 +55,10 @@ public class SpankyWindow extends JFrame {
 
             }
         });
+        if ( null == gameClockUpdater) {
+            gameClockUpdater = new GameClockUpdater();
+            gameClockUpdater.start();
+        }
         return instance;
     }
     public static void applyToAllWindows(Consumer<SportsTabPane> method) {

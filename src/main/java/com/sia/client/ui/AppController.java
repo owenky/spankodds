@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +63,7 @@ public class AppController {
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
 //    public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
+    public final static Set<Integer> BadGameIds = new HashSet<>();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
     public static Hashtable<String, Moneyline> moneylines = new Hashtable();

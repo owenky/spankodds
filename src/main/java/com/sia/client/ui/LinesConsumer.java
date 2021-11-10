@@ -65,7 +65,10 @@ public class LinesConsumer implements MessageListener {
                 return;
             }
             if ( null == AppController.getGame(gameid)) {
-                log("LinesConsumer Warning: null game detected:"+gameid);
+                if ( ! AppController.BadGameIds.contains(gameid)) {
+                    log("LinesConsumer Warning: null game detected:" + gameid);
+                    AppController.BadGameIds.add(gameid);
+                }
                 return;
             }
             log("LinesConsumer::processMessage: gameid="+gameid);

@@ -94,7 +94,7 @@ public abstract class Utils {
     public static void log(Throwable e) {
         errPs.println(logHeader());e.printStackTrace(errPs);
     }
-    private static String logHeader() {
+    public static String logHeader() {
         return nowShortString()+", Thread="+Thread.currentThread().getName()+" |";
     }
     public static void debug(String mesg) {

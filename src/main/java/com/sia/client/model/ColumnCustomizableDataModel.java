@@ -240,42 +240,21 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     public List<TableSection<V>> getTableSections() {
         return tableSections;
     }
-//    //copied from MainScreen::removeGame(int)
-//    public V removeGame(Integer rowKey,boolean repaint) {
-//        V rowData = null;
-//        for (TableSection<V> sec : tableSections) {
-//            //TODO add if logic
-//            rowData = sec.removeGameId(rowKey,repaint);
-//            if (null != rowData) {
-//                //gameid is removed from a LinesTableData, don't need to continue because a gameid can only be in one LinesTableData
-//                break;
-//            }
-//        }
-//        return rowData;
-//    }
     public int getRowModelIndex(TableSection<V> ltd, Integer gameId) {
         int gameIndex = ltd.getRowIndex(gameId);
-        if ( gameIndex >=0) {
+        return mapToRowModelIndex(ltd,gameIndex);
+    }
+    public int mapToRowModelIndex(TableSection<V> ltd, int rowIndexInTableSection) {
+        if ( 0 <= rowIndexInTableSection) {
             int offset = 0;
             for (int i = 0; i < ltd.getIndex(); i++) {
                 offset += tableSections.get(i).getRowCount();
             }
-            return gameIndex + offset;
+            return rowIndexInTableSection + offset;
         } else {
             return -1;
         }
     }
-//    public List<BlankGameStruct<V>> getBlankGameIdIndex() {
-//        List<BlankGameStruct<V>> idIndexList = new ArrayList<>();
-//        int rowModeIndex=0;
-//        for(TableSection<V> ltd: tableSections) {
-//            if ( ltd.getRowCount() > 0 && ltd.hasHeader()) {
-//                idIndexList.add(new BlankGameStruct<>(rowModeIndex, ltd));
-//            }
-//            rowModeIndex+=ltd.getRowCount();
-//        }
-//        return idIndexList;
-//    }
     public void addGameLine(TableSection<V> gameLine) {
         addGameLine(tableSections.size(),gameLine);
     }
