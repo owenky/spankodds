@@ -64,7 +64,6 @@ public class SpankOdds {
     private void showLoginDialog() {
 
 //        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
-        frame = SpankyWindow.create("Spank Odds )" + version + ")");
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
@@ -76,6 +75,7 @@ public class SpankOdds {
         LoginListener loginListener = new LoginAdapter() {
             @Override
             public void loginSucceeded(LoginEvent source) {
+                frame = SpankyWindow.create("Spank Odds )" + version + ")");
                 SpankOdds.this.userName = loginPane.getUserName();
                 InitialGameMessages.postDataLoading();
                 SpankOdds.this.showGui();
@@ -177,6 +177,7 @@ public class SpankOdds {
                         frame.setSize(950, 800);
 
                         frame.setVisible(true);
+                        AppController.notifyUIComplete();
 
                     } catch (Exception e) {
                         log(e);

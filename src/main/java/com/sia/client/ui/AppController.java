@@ -136,6 +136,7 @@ public class AppController {
     public static Vector<String> SportsTabPaneVector = new Vector<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
     private static Games games = new Games();
+    private static final CountDownLatch messageProcessingLatch = new CountDownLatch(1);
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
@@ -146,7 +147,12 @@ public class AppController {
 
         }
     }
-
+    public static void notifyUIComplete() {
+        messageProcessingLatch.countDown();
+    }
+    public static boolean isSpankyWindowLoaded() {
+        return messageProcessingLatch.getCount()<=0;
+    }
     public static boolean existLeagueId(Integer leagueId) {
         return leagueIdToSportMap.containsKey(leagueId);
     }

@@ -49,6 +49,9 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
+        if ( ! AppController.isSpankyWindowLoaded() ) {
+            return;
+        }
 //        synchronized (SiaConst.GameLock) {
             if (! InitialGameMessages.getMessagesFromLog) {
                 Utils.ensureNotEdtThread();
@@ -71,7 +74,7 @@ public class LinesConsumer implements MessageListener {
                 }
                 return;
             }
-            log("LinesConsumer::processMessage: gameid="+gameid);
+//            log("LinesConsumer::processMessage: gameid="+gameid);
             consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");

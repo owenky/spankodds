@@ -60,6 +60,9 @@ public class GamesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
+        if ( ! AppController.isSpankyWindowLoaded() ) {
+            return;
+        }
 //        synchronized (SiaConst.GameLock) {
             if (!InitialGameMessages.getMessagesFromLog) {
                 if (toSimulateMQ) {
@@ -136,7 +139,7 @@ public class GamesConsumer implements MessageListener {
                     oldgametime = g.getGametime();
 
                 }
-                log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
+//                log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
                 consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE",gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
@@ -367,7 +370,7 @@ public class GamesConsumer implements MessageListener {
                 if (g == null) {
                     g = new Game();
                 }
-                log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
+//                log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
                 consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2",gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
