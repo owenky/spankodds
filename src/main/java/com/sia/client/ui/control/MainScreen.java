@@ -103,7 +103,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     public MainGameTableModel getDataModels() {
-        return getColumnCustomizableTable().getModel();
+        return model;
     }
 
     private static MainGameTable createMainGameTable(MainGameTableModel model,String name) {
@@ -113,7 +113,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
-        model.addTableSectionListener(() -> {;
+        model.addTableSectionListener(() -> {
             mainGameTable.setToConfigHeaderRow(true);
         });
         return mainGameTable;

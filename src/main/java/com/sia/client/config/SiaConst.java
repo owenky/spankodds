@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.7)";
+    public static final String Version="(v21.20.7.1)";
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
     public static final String ConfigPath = "/config/";

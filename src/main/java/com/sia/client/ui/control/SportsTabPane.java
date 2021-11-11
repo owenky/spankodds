@@ -473,7 +473,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             if (c instanceof MainScreen) {
                 MainScreen ms = (MainScreen) c;
                 MainGameTableModel model = ms.getDataModels();
-                model.copyTo(v);
+                if ( null != model) {
+                    model.copyTo(v);
+                }
             }
         }
         return v;
