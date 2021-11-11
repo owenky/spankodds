@@ -39,7 +39,6 @@ public class SpankOdds {
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
-        log("CHANGE04242021 ");
 
         InitialGameMessages.initMsgLoggingProps();
 
