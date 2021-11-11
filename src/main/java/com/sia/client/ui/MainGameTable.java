@@ -43,16 +43,16 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         super.setName(name);
     }
     @Override
-    public void configHeaderRow() {
-        super.configHeaderRow();
+    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight,boolean forceGameGroupHeaderDraw) {
+        super.configHeaderRow(firstRow,lastRow,toSetRowHeight,forceGameGroupHeaderDraw);
         if ( ! getModel().getSportType().isPredifined()) {
             //for customized sport, stage table section contains mixed sport type games.
             //row height has to be calculated per row rather than per section -- 2021-11-09
-           for(int rowViewIndex=0;rowViewIndex < getRowCount();rowViewIndex++) {
-               if ( isSoccer(rowViewIndex)) {
-                   setRowHeight(rowViewIndex,SiaConst.SoccerRowheight);
-               }
-           }
+            for(int rowViewIndex=firstRow;rowViewIndex <=lastRow;rowViewIndex++) {
+                if ( isSoccer(rowViewIndex)) {
+                    setRowHeight(rowViewIndex,SiaConst.SoccerRowheight);
+                }
+            }
         }
     }
 //    public LinesTableData findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {

@@ -102,7 +102,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             Component oldHeaderComp = getTableColumnHeaderManager().getColumnHeaderDrawer().getGameGroupHeaderComponent(rowViewIndex);
             final boolean groupGameHeaderChanged= forceGameGroupHeaderDraw || isGameGroupHeaderChanged(headerValue,oldHeaderComp);
             if ( null != oldHeaderComp && groupGameHeaderChanged) {
+                //the header is either ploted on main game table or row header table. need to remove it from both of tables -- 2021-11-10
                 this.remove(oldHeaderComp);
+                this.getRowHeaderTable().remove(oldHeaderComp);
             }
             if ( null == headerValue) {
 //                rowHeight = getRowHeight();
