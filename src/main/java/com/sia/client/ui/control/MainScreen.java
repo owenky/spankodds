@@ -71,7 +71,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
     private MainGameTable mainGameTable;
-    private MainGameTableModel model;
+    private MainGameTableModel tableModel;
 
     MainScreen(SportType sportType, List<String> customheaders) {
         this(sportType);
@@ -83,7 +83,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.sportType = sportType;
         final String name = sportType.getSportName();
         setName(name);
-        mainGameTable = createMainGameTable(new MainGameTableModel(sportType, new Vector()),name);
+//        mainGameTable = createMainGameTable(new MainGameTableModel(sportType, new Vector()),name);
     }
 
     MainScreen(SportType sportType, List<String> customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
@@ -102,21 +102,24 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getDataModels().clearColors();
     }
 
-    public MainGameTableModel getDataModels() {
-        return model;
+    public synchronized MainGameTableModel getDataModels() {
+        if ( null == tableModel ) {
+            tableModel = buildModel();
+        }
+        return tableModel;
     }
 
     private static MainGameTable createMainGameTable(MainGameTableModel model,String name) {
-        MainGameTable mainGameTable = new MainGameTable(model);
-        mainGameTable.setIntercellSpacing(new Dimension(4, 2));
-        mainGameTable.setName(name);
-        JTableHeader tableHeader = mainGameTable.getTableHeader();
+        MainGameTable table = new MainGameTable(model);
+        table.setIntercellSpacing(new Dimension(4, 2));
+        table.setName(name);
+        JTableHeader tableHeader = table.getTableHeader();
         Font headerFont = new Font("Verdana", Font.BOLD, 11);
         tableHeader.setFont(headerFont);
         model.addTableSectionListener(() -> {
-            mainGameTable.setToConfigHeaderRow(true);
+            table.setToConfigHeaderRow(true);
         });
-        return mainGameTable;
+        return table;
     }
 
     public void clearColors() {
@@ -135,24 +138,23 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 return null;
             }
         };
-        if (null != mainGameTable) {
-            GameGroupHeader gameGroupHeader;
-            GameStatus gameStatus = GameStatus.find(g.getStatus());
-            if (null == gameStatus) {
-                gameGroupHeader = GameUtils.createGameGroupHeader(g);
-            } else {
-                gameGroupHeader = gameStatus.getGroupHeader();
-            }
-            getColumnCustomizableTable().getModel().addGameToGameGroup(gameGroupHeader, g, function);
+
+        GameGroupHeader gameGroupHeader;
+        GameStatus gameStatus = GameStatus.find(g.getStatus());
+        if (null == gameStatus) {
+            gameGroupHeader = GameUtils.createGameGroupHeader(g);
+        } else {
+            gameGroupHeader = gameStatus.getGroupHeader();
         }
+        getDataModels().addGameToGameGroup(gameGroupHeader, g, function);
+
     }
 
     public void moveGameToThisHeader(Game g, GameGroupHeader header) {
-        getColumnCustomizableTable().getModel().moveGameToThisHeader(g, header);
+        getDataModels().moveGameToThisHeader(g, header);
     }
 
     public void createMe(String display, int period, boolean timesort, boolean shortteam, boolean opener, boolean last, JLabel loadlabel) {
-//        mainGameTable = getColumnCustomizableTable();
         setLayout(new BorderLayout(0, 0));
         // add progress
         this.setOpaque(true);
@@ -678,7 +680,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         if (ct > cleartime) {
             cleartime = ct;
         }
-        model = buildModel();
     }
 
     private void setShowProperties(String[] prefs) {
@@ -775,7 +776,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     private void drawIt() {
-        mainGameTable = createMainGameTable(model, getName());
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
         //changed this to stretch for Vertical Scroll Bar to appear if frame is resized and data can not fit in viewport
@@ -788,7 +788,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         removeAll();
         revalidate();
-        JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
+        JComponent mainTableContainer = makeMainTableScrollPane(getColumnCustomizableTable());
         add(mainTableContainer, BorderLayout.CENTER);
     }
     private MainGameTableModel buildModel() {
@@ -918,7 +918,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     @Override
     public void destroyMe() {
-        mainGameTable = null;
         inprogressgames.clear();
         finalgames.clear();
         halftimegames.clear();
@@ -931,6 +930,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         seriesgamessoccer.clear();
         ingamegamessoccer.clear();
         removeAll();
+        mainGameTable = null;
         log("destroyed mainscreen!!!!");
     }
 
@@ -944,7 +944,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     @Override
-    public MainGameTable getColumnCustomizableTable() {
+    public synchronized MainGameTable getColumnCustomizableTable() {
+        if ( null == mainGameTable) {
+            mainGameTable =  createMainGameTable(getDataModels(), getName());
+        }
         return mainGameTable;
     }
 
