@@ -166,7 +166,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.opener = opener;
         this.last = last;
         createData();
-        model = buildModel();
         drawIt();
         log("done drawing");
     }
@@ -679,6 +678,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         if (ct > cleartime) {
             cleartime = ct;
         }
+        model = buildModel();
     }
 
     private void setShowProperties(String[] prefs) {
