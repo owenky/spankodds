@@ -2,6 +2,8 @@ package com.sia.client.simulator;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameGroupHeader;
+import com.sia.client.model.GameStatus;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.TableSection;
 import com.sia.client.ui.AppController;
@@ -40,15 +42,15 @@ public class MoveToFinal extends TestExecutor{
     }
     private void moveGameToFinal(Game game) {
         log("move game "+game.getGame_id()+", "+game.getHometeam()+", "+game.getVisitorteam());
-        AppController.moveGameToThisHeader(game, SiaConst.FinalStr);
+        AppController.moveGameToThisHeader(game, GameStatus.Final.getGroupHeader());
     }
     private void removeFinalSection() {
         List<TableSection<Game>> tableSections = model.getTableSections();
         while ( tableSections.size() > 0) {
             TableSection<Game> lastSection = tableSections.get(tableSections.size() - 1);
-            String header = lastSection.getGameGroupHeader();
+            GameGroupHeader header = lastSection.getGameGroupHeader();
 
-            if ( null != header && header.contains(SiaConst.FinalStr)) {
+            if ( header.getGameGroupHeaderStr().equals(SiaConst.FinalStr)) {
                 tableSections.remove(tableSections.size() - 1);
             } else {
                 break;

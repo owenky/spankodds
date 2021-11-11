@@ -13,6 +13,7 @@ import com.sun.javafx.collections.ImmutableObservableList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -26,9 +27,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
@@ -46,7 +45,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
     private TableModelListener tableChangedListener;
-    private Map<Integer, Component> oldHeaderMap = new HashMap<>();
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
@@ -57,6 +55,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         setName(ColumnCustomizableTable.class.getSimpleName()+":"+instanceIndex);
         ToolTipManager.sharedInstance().registerComponent(this);
     }
+//    public void reset() {
+//        columnAdjusterManager = null;
+//        tableColumnHeaderManager = null;
+//        headerCellRenderer = null;
+//        marginProvider = null;
+//    }
     @Override
     public String getToolTipText(MouseEvent e) {
        return Utils.getTableCellToolTipText(this,e);
@@ -67,23 +71,41 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return marginProvider;
     }
+    public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
+        getModel().setToConfigHeaderRow(toConfigHeaderRow);
+    }
+    public void reconfigHeaderRow() {
+        getTableColumnHeaderManager().getColumnHeaderDrawer().reset();
+        configHeaderRow(0,getRowCount()-1,true,true);
+    }
+    public void reconfigHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
+        getTableColumnHeaderManager().getColumnHeaderDrawer().reset();
+        configHeaderRow(firstRow,lastRow,toSetRowHeight,true);
+    }
     public void configHeaderRow() {
         configHeaderRow(0,getRowCount()-1,true);
     }
     public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
 
+        configHeaderRow(firstRow,lastRow,toSetRowHeight,false);
+    }
+    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight,boolean forceGameGroupHeaderDraw) {
+
+        setToConfigHeaderRow(false);
         ColumnCustomizableDataModel<V> model = getModel();
         ColumnHeaderProperty columnHeaderProperty = model.getColumnHeaderProperty();
 
         for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
-            //remove group header if the row has it.
-            Component oldHeaderComp = oldHeaderMap.get(rowViewIndex);
-            if ( null != oldHeaderComp) {
-                this.remove(oldHeaderComp);
-            }
             int rowModelIndex = convertRowIndexToModel(rowViewIndex);
             int rowHeight;
-            Object headerValue = model.getGameGroupHeader(rowModelIndex);
+            String headerValue = model.getGameGroupHeader(rowModelIndex);
+            Component oldHeaderComp = getTableColumnHeaderManager().getColumnHeaderDrawer().getGameGroupHeaderComponent(rowViewIndex);
+            final boolean groupGameHeaderChanged= forceGameGroupHeaderDraw || isGameGroupHeaderChanged(headerValue,oldHeaderComp);
+            if ( null != oldHeaderComp && groupGameHeaderChanged) {
+                //the header is either ploted on main game table or row header table. need to remove it from both of tables -- 2021-11-10
+                this.remove(oldHeaderComp);
+                this.getRowHeaderTable().remove(oldHeaderComp);
+            }
             if ( null == headerValue) {
 //                rowHeight = getRowHeight();
                 LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
@@ -94,13 +116,24 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 }
             } else {
                 rowHeight = columnHeaderProperty.getColumnHeaderHeight();
-                Component newGroupHeader = getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this,rowViewIndex,String.valueOf(headerValue));
-                this.oldHeaderMap.put(rowViewIndex,newGroupHeader);
+                if ( groupGameHeaderChanged) {
+                    getTableColumnHeaderManager().drawColumnHeaderOnViewIndex(this, rowViewIndex, headerValue);
+                }
             }
             if ( toSetRowHeight) {
                 setRowHeight(rowViewIndex, rowHeight);
             }
         }
+    }
+    private static boolean isGameGroupHeaderChanged(String newHeaderValue, Component oldHeaderComp) {
+        if ( null == newHeaderValue && null == oldHeaderComp) {
+            return false;
+        } else if ( null == newHeaderValue && null != oldHeaderComp) {
+            return true;
+        } else if ( null != newHeaderValue && null == oldHeaderComp) {
+            return true;
+        }
+        return ! newHeaderValue.equals(oldHeaderComp.getName());
     }
     public TableColumnHeaderManager<V> getTableColumnHeaderManager() {
         if ( null == tableColumnHeaderManager) {
@@ -130,7 +163,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         super.setRowHeight(rowHeight);
         getRowHeaderTable().setRowHeight(rowHeight);
         //jtable::setRowHeight() set rowModel to null, need to config row height after this call.
-        configHeaderRow();
+        if ( null != SwingUtilities.getWindowAncestor(this) ) {
+            configHeaderRow();
+        }
     }
     @Override
     public void setRowHeight(int rowViewIndex,int rowHeight) {
@@ -268,13 +303,13 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         super.tableChanged(e);
         //to prevent this method called from constructor.super, need condition null != rowHeaderTable
         if ( isShowing()) {
-            if ((e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW  ) && null != rowHeaderTable) {
+            if ((e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW || getModel().toConfigHeaderRow() ) && null != rowHeaderTable) {
                 //super method discard row model, need to re-config row height
                 configHeaderRow();
             }
-            if (null != tableChangedListener) {
-                tableChangedListener.tableChanged(e);
-            }
+        }
+        if (null != tableChangedListener) {
+            tableChangedListener.tableChanged(e);
         }
     }
     @Override

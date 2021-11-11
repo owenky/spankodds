@@ -98,7 +98,7 @@ public class TableProperties {
             sections[secIndex] = TestTableSection.createTestTableSection(testGameCache,secIndex,sectionRowCount,tableIndex);
             table.getModel().addGameLine(sections[secIndex] );
         }
-        table.getModel().buildIndexMappingCache();
+        table.getModel().buildIndexMappingCache(true);
     }
     private MainScreenTest mainScreen;
     private TestTableSection [] sections;

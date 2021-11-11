@@ -15,7 +15,7 @@ import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
 
-public class SpreadTotalView extends ViewValue  {
+public class SpreadTotalView extends ViewValue {
     public static String ICON_UP = ImageFile.ICON_UP;
     public static String ICON_DOWN = ImageFile.ICON_DOWN;
     public static String ICON_BLANK = ImageFile.ICON_BLANK;
@@ -42,18 +42,16 @@ public class SpreadTotalView extends ViewValue  {
     Color moneycolor = Color.WHITE;
     Color topcolor = Color.WHITE;
     Color bottomcolor = Color.WHITE;
-    private String topicon = ICON_BLANK;
-    private String bottomicon = ICON_BLANK;
-    private long clearts;
     int id;
     Bookie bookie;
     String topborder;
     String bottomborder = "";
     LinesTableData ltd;
     boolean showcomebacks = false;
-
-
     boolean isopenerbookie = false;
+    private String topicon = ICON_BLANK;
+    private String bottomicon = ICON_BLANK;
+    private long clearts;
 
     public SpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
         if (bid > 1000) {
@@ -70,6 +68,7 @@ public class SpreadTotalView extends ViewValue  {
         this.getCurrentBoxes();
 
     }
+
     public LineData[] getCurrentBoxes() {
         topborder = bottomborder = "";
         if (isopenerbookie) {
@@ -128,7 +127,7 @@ public class SpreadTotalView extends ViewValue  {
 
 
                 whowasbetspread = sl.getWhowasbet();
-                if ( shouldGoRed(sl) ) {
+                if (shouldGoRed(sl)) {
                     spreadcolor = Color.RED;
                 } else if (clearts < sl.getCurrentts()) {
                     spreadcolor = Color.BLACK;
@@ -152,7 +151,7 @@ public class SpreadTotalView extends ViewValue  {
 
 
         try {
-            if ( null != tl) {
+            if (null != tl) {
                 over = tl.getCurrentover();
                 whowasbettotal = tl.getWhowasbet();
                 if (shouldGoRed(tl)) {
@@ -165,7 +164,7 @@ public class SpreadTotalView extends ViewValue  {
                     totalcolor = Color.WHITE;
                 }
                 priortotalcolor = totalcolor;
-            }else {
+            } else {
                 over = 99999;
             }
         } catch (Exception ex) {
@@ -175,7 +174,7 @@ public class SpreadTotalView extends ViewValue  {
 
 
         try {
-            if ( null != ml) {
+            if (null != ml) {
                 visitmljuice = ml.getCurrentvisitjuice();
                 homemljuice = ml.getCurrenthomejuice();
                 whowasbetmoney = ml.getWhowasbet();
@@ -188,7 +187,7 @@ public class SpreadTotalView extends ViewValue  {
                     moneycolor = Color.WHITE;
                 }
                 priormoneycolor = moneycolor;
-            }else {
+            } else {
                 visitmljuice = homemljuice = -99999;
             }
 
@@ -200,7 +199,7 @@ public class SpreadTotalView extends ViewValue  {
 
 
         try {
-            if ( null != ttl) {
+            if (null != ttl) {
                 visitover = ttl.getCurrentvisitover();
                 homeover = ttl.getCurrenthomeover();
                 whowasbetteamtotal = ttl.getWhowasbet();
@@ -784,70 +783,70 @@ public class SpreadTotalView extends ViewValue  {
                         "<td><table>" +
                         "<tr>");
 
-				if (sl != null) {
+                if (sl != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(sl.getCurrentvisitspread() + "") + makeNullBlank(sl.getCurrentvisitjuice() + "") + "</td>");
-				}
-				if (ml != null) {
+                }
+                if (ml != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(ml.getCurrentvisitjuice() + "") + "</td>");
-				}
-				if (tl != null) {
-                    appendTooltipText( "<td align='left' >" + makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>");
-				}
-                appendTooltipText( "</tr><tr>");
+                }
+                if (tl != null) {
+                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>");
+                }
+                appendTooltipText("</tr><tr>");
 
-				if (sl != null) {
+                if (sl != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(sl.getCurrenthomespread() + "") + makeNullBlank(sl.getCurrenthomejuice() + "") + "</td>");
-				}
-				if (ml != null) {
-                    appendTooltipText( "<td align='left' >" + makeNullBlank(ml.getCurrenthomejuice() + "") + "</td>");
-				}
-				if (tl != null) {
+                }
+                if (ml != null) {
+                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getCurrenthomejuice() + "") + "</td>");
+                }
+                if (tl != null) {
                     appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getCurrentunder() + "") + makeNullBlank(tl.getCurrentunderjuice() + "") + "</td>");
-				}
+                }
 
 
                 appendTooltipText("</tr></table></td><td><table><tr>");
-				if (sl != null) {
+                if (sl != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(sl.getPriorvisitspread() + "") + makeNullBlank(sl.getPriorvisitjuice() + "") + "</td>");
-				}
-				if (ml != null) {
+                }
+                if (ml != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(ml.getPriorvisitjuice() + "") + "</td>");
-				}
-				if (tl != null) {
+                }
+                if (tl != null) {
                     appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getPriorover() + "") + makeNullBlank(tl.getPrioroverjuice() + "") + "</td>");
-				}
+                }
 
                 appendTooltipText("</tr><tr>");
-				if (sl != null) {
+                if (sl != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(sl.getPriorhomespread() + "") + makeNullBlank(sl.getPriorhomejuice() + "") + "</td>");
-				}
-				if (ml != null) {
+                }
+                if (ml != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(ml.getPriorhomejuice() + "") + "</td>");
-				}
-				if (tl != null) {
+                }
+                if (tl != null) {
                     appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getPriorunder() + "") + makeNullBlank(tl.getPriorunderjuice() + "") + "</td>");
-				}
+                }
                 appendTooltipText("</tr></table></td><td><table><tr>");
-				if (sl != null) {
+                if (sl != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(sl.getOpenervisitspread() + "") + makeNullBlank(sl.getOpenervisitjuice() + "") + "</td>");
-				}
-				if (ml != null) {
+                }
+                if (ml != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(ml.getOpenervisitjuice() + "") + "</td>");
-				}
-				if (tl != null) {
+                }
+                if (tl != null) {
                     appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getOpenerover() + "") + makeNullBlank(tl.getOpeneroverjuice() + "") + "</td>");
-				}
+                }
 
                 appendTooltipText("</tr><tr>");
-				if (sl != null) {
+                if (sl != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(sl.getOpenerhomespread() + "") + makeNullBlank(sl.getOpenerhomejuice() + "") + "</td>");
-				}
-				if (ml != null) {
+                }
+                if (ml != null) {
                     appendTooltipText("<td align='left' >" + makeNullBlank(ml.getOpenerhomejuice() + "") + "</td>");
-				}
-				if (tl != null) {
+                }
+                if (tl != null) {
                     appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getOpenerunder() + "") + makeNullBlank(tl.getOpenerunderjuice() + "") + "</td>");
-				}
+                }
 
                 appendTooltipText("</tr></table></td></tr></table></body></html>");
             }
@@ -856,6 +855,7 @@ public class SpreadTotalView extends ViewValue  {
         }
         return boxes;
     }
+
     public void setCurrentBoxes(LineData[] boxes) {
         this.boxes = boxes;
     }
@@ -894,11 +894,11 @@ public class SpreadTotalView extends ViewValue  {
         double homeover;
 
         try {
-            if ( null != sl) {
+            if (null != sl) {
                 visitspread = sl.getOpenervisitspread();
                 visitjuice = sl.getOpenervisitjuice();
                 homejuice = sl.getOpenerhomejuice();
-            }else {
+            } else {
                 visitspread = 99999;
             }
 
@@ -909,7 +909,7 @@ public class SpreadTotalView extends ViewValue  {
         }
 
         try {
-            if ( null != tl) {
+            if (null != tl) {
                 over = tl.getOpenerover();
             } else {
                 over = 99999;
@@ -919,7 +919,7 @@ public class SpreadTotalView extends ViewValue  {
             log(ex);
         }
         try {
-            if ( null != ttl) {
+            if (null != ttl) {
                 visitover = ttl.getOpenervisitover();
                 homeover = ttl.getOpenerhomeover();
             } else {
@@ -932,10 +932,10 @@ public class SpreadTotalView extends ViewValue  {
         }
 
         try {
-            if ( null != ml) {
+            if (null != ml) {
                 visitmljuice = ml.getOpenervisitjuice();
                 homemljuice = ml.getOpenerhomejuice();
-            }else {
+            } else {
                 visitmljuice = homemljuice = 99999;
             }
 
@@ -998,8 +998,7 @@ public class SpreadTotalView extends ViewValue  {
                 } else {
                     bottomboxS = tl.getShortPrintedOpenerTotal();
                 }
-            }
-            else if (visitmljuice < homemljuice) // visitor is the favorite
+            } else if (visitmljuice < homemljuice) // visitor is the favorite
             {
                 if (showcomebacks && visitmljuice != 0) {
                     topboxS = ml.getPrintedJuiceLine(visitmljuice) + "/" + ml.getPrintedJuiceLine(homemljuice);
@@ -1134,6 +1133,10 @@ public class SpreadTotalView extends ViewValue  {
         return openerboxes;
     }
 
+    public void setOpenerBoxes(LineData[] boxes) {
+        this.openerboxes = boxes;
+    }
+
     public String makeNullBlank(String s) {
         if (s == null) {
             return "";
@@ -1181,23 +1184,22 @@ public class SpreadTotalView extends ViewValue  {
         return s;
     }
 
-    public void setOpenerBoxes(LineData[] boxes) {
-        this.openerboxes = boxes;
-    }
-
     public void setDisplayType(String d) {
         display = d;
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
     }
+
     public void setPeriodType(int d) {
         period = d;
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
     }
+
     public String toString() {
         return boxes[0].getData();
     }
+
     public void clearColors(long cleartime) {
         priorspreadcolor = Color.WHITE;
         priortotalcolor = Color.WHITE;
@@ -1206,9 +1208,11 @@ public class SpreadTotalView extends ViewValue  {
 
         setClearts(cleartime);
     }
+
     private void setClearts(long clearTime) {
         this.clearts = clearTime;
     }
+
     public LineData[] getPriorBoxes() {
         if (isopenerbookie) {
             priorboxes = getOpenerBoxes();
@@ -1245,62 +1249,37 @@ public class SpreadTotalView extends ViewValue  {
         double homemljuice;
         double visitover;
         double homeover;
-        try {
-            if ( null != sl) {
-                visitspread = sl.getPriorvisitspread();
-                visitjuice = sl.getPriorvisitjuice();
-                homejuice = sl.getPriorhomejuice();
-            } else {
-                visitspread = 99999;
-            }
 
-        } catch (Exception e) // no line
-        {
+
+        if (null != sl) {
+            visitspread = sl.getPriorvisitspread();
+            visitjuice = sl.getPriorvisitjuice();
+            homejuice = sl.getPriorhomejuice();
+        } else {
             visitspread = 99999;
-            log(e);
         }
 
-        if (bid == 204 && gid == 465) {
-            //log.println("prior spread for 465 cris "+visitspread+".."+visitjuice);
-        }
 
-        try {
-            if ( null != tl) {
-                over = tl.getPriorover();
-            } else {
-                over = 99999;
-            }
-        } catch (Exception ex) {
+        if (null != tl) {
+            over = tl.getPriorover();
+        } else {
             over = 99999;
-            log(ex);
         }
 
 
-        try {
-            if ( null != ml) {
-                visitmljuice = ml.getPriorvisitjuice();
-                homemljuice = ml.getPriorhomejuice();
-            } else {
-                visitmljuice = homemljuice = 99999;
-            }
-
-        } catch (Exception e) // no line
-        {
+        if (null != ml) {
+            visitmljuice = ml.getPriorvisitjuice();
+            homemljuice = ml.getPriorhomejuice();
+        } else {
             visitmljuice = homemljuice = 99999;
-            log(e);
         }
 
 
-        try {
-            if ( null != ttl) {
-                visitover = ttl.getPriorvisitover();
-                homeover = ttl.getPriorhomeover();
-            } else {
-                visitover = homeover = 99999;
-            }
-        } catch (Exception ex) {
+        if (null != ttl) {
+            visitover = ttl.getPriorvisitover();
+            homeover = ttl.getPriorhomeover();
+        } else {
             visitover = homeover = 99999;
-            log(ex);
         }
 
 
@@ -1358,8 +1337,7 @@ public class SpreadTotalView extends ViewValue  {
                 } else {
                     bottomboxS = tl.getShortPrintedPriorTotal();
                 }
-            }
-            else if (visitmljuice < homemljuice) // visitor is the favorite
+            } else if (visitmljuice < homemljuice) // visitor is the favorite
             {
                 if (showcomebacks && visitmljuice != 0) {
                     topboxS = ml.getPrintedJuiceLine(visitmljuice) + "/" + ml.getPrintedJuiceLine(homemljuice);
@@ -1490,19 +1468,23 @@ public class SpreadTotalView extends ViewValue  {
         setPriorBoxes(priorboxes);
         return priorboxes;
     }
-    private boolean shouldGoRed(Line line) {
-        long tsnow = System.currentTimeMillis();
-        long curTime = line.getCurrentts();
-        boolean isRed=(tsnow - curTime) <= 30000 && clearts <= curTime;
-        Game game = getGame();
-        return isRed;
-    }
+
     public void setPriorBoxes(LineData[] boxes) {
         this.priorboxes = boxes;
     }
+
+    private boolean shouldGoRed(Line line) {
+        long tsnow = System.currentTimeMillis();
+        long curTime = line.getCurrentts();
+        boolean isRed = (tsnow - curTime) <= 30000 && clearts <= curTime;
+        Game game = getGame();
+        return isRed;
+    }
+
     public Game getGame() {
         return AppController.getGame(gid);
     }
+
     public Sport getSport() {
         return AppController.getSportByLeagueId(getGame().getLeague_id());
     }

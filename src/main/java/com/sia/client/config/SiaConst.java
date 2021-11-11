@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.3)";
+    public static final String Version="(v21.20.7.2)";
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
     public static final String ConfigPath = "/config/";
@@ -22,14 +22,16 @@ public abstract class SiaConst {
     public static final String SoccerInProgressStr = SoccerStr+ " "+InProgresStr;
     public static final String SoccerInFinalStr = SoccerStr+ " "+FinalStr;
     public static final int SoccerLeagueId = 9;
-    public static final Integer BlankGameId = Integer.MIN_VALUE;
+    public static final Integer BlankGameId = -10000000; //Integer.MIN_VALUE does not work in sorting
     public static final Integer SoccerRowheight = 60;
     public static final Integer NormalRowheight = 30;
     public static final Integer GameGroupHeaderHeight = 20;
-    public static final String GameGroupHeaderIden = "@~@";
+//    public static final String GameGroupHeaderIden = "@~@";
     public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
     public static final Color DefaultHeaderFontColor = Color.WHITE;
     public static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);
+    public static final double DefaultSpread = -99999d;
+    public static final double DefaultOver = 99999d;
 
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;
@@ -48,4 +50,6 @@ public abstract class SiaConst {
     }
     public static final String MessageDelimiter = "~";
     public static final String PropertyDelimiter = "@#_#_#@";
+    public static final String logFileName = "c:\\temp\\spankyOddsLog.txt";
+    public static final String errFileName = "c:\\temp\\spankyOddsErr.txt";
 }

@@ -13,10 +13,16 @@ import static com.sia.client.config.Utils.log;
 public class GameMessageProcessor {
 
     private final MessageConsumingScheduler<Game> gameConsumingScheculer;
-    public GameMessageProcessor(long initialDelayInMilliSeconds, long periodInMilliSeconcs) {
+    private final boolean doStats;
+    private long lastUpdate = System.currentTimeMillis();
+    private final String name;
+
+    public GameMessageProcessor(String name,long initialDelayInMilliSeconds, long periodInMilliSeconcs) {
         gameConsumingScheculer = new MessageConsumingScheduler<>(createConsumer());
         gameConsumingScheculer.setInitialDelay(initialDelayInMilliSeconds);
         gameConsumingScheculer.setUpdatePeriodInMilliSeconds(periodInMilliSeconcs);
+        doStats = 0 < periodInMilliSeconcs;
+        this.name = name;
     }
     public void addGame(Game game) {
         if ( null  != game) {
@@ -24,17 +30,16 @@ public class GameMessageProcessor {
         }
     }
 
-    //TODO debug variable lastUpdate
-    private static long lastUpdate = System.currentTimeMillis();
-    //END of debug TODO
 
     private Consumer<List<Game>> createConsumer() {
         return (buffer) -> {
             Set<Game> distinctSet = new HashSet<>(buffer);
-            Utils.checkAndRunInEDT(()->{
-                AppController.fireAllTableDataChanged(distinctSet);
-            });
-
+            Utils.checkAndRunInEDT(()-> AppController.fireAllTableDataChanged(distinctSet));
+            if ( doStats) {
+                long now = System.currentTimeMillis();
+                log("GameMessageProcessor, name:"+name+", buffer size="+buffer.size()+", uniq size="+distinctSet.size()+", time since last process:"+(now-lastUpdate));
+                lastUpdate = now;
+            }
         };
     }
 }

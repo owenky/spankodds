@@ -1,11 +1,11 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
+import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -21,6 +21,7 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import static com.sia.client.config.Utils.log;
+import static com.sia.client.config.Utils.consoleLogPeekGameId;
 
 public class LinesConsumer implements MessageListener {
 
@@ -29,7 +30,7 @@ public class LinesConsumer implements MessageListener {
     private transient Connection connection;
     private transient Session session;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor(2000L,-1500L);
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer",2000L,10L);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -48,11 +49,14 @@ public class LinesConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
-        synchronized (SiaConst.GameLock) {
-            Utils.ensureNotEdtThread();
-            processMessage((MapMessage) message);
-            OngoingGameMessages.addMessage(MessageType.Line, message);
-        }
+        AppController.waitForSpankyWindowLoaded();
+//        synchronized (SiaConst.GameLock) {
+            if (! InitialGameMessages.getMessagesFromLog) {
+                Utils.ensureNotEdtThread();
+                processMessage((MapMessage) message);
+                OngoingGameMessages.addMessage(MessageType.Line, message);
+            }
+//        }
     }
     public void processMessage(MapMessage mapMessage) {
         int gameid = 0;
@@ -61,13 +65,21 @@ public class LinesConsumer implements MessageListener {
             if  ( 0 == gameid) {
                 return;
             }
+            if ( null == AppController.getGame(gameid)) {
+                if ( ! AppController.BadGameIds.contains(gameid)) {
+                    log("LinesConsumer Warning: null game detected:" + gameid);
+                    AppController.BadGameIds.add(gameid);
+                }
+                return;
+            }
+//            log("LinesConsumer::processMessage: gameid="+gameid);
+            consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
             String changetype = mapMessage.getStringProperty("messageType");
             long newlongts;
 
-//log("LineConsumer received mesg for game id="+gameid);
             boolean isopener = false;
             if ("1".equals(isopenerS)) {
                 isopener = true;

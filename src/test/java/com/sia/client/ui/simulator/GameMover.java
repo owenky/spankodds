@@ -1,6 +1,7 @@
 package com.sia.client.ui.simulator;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.GameGroupHeader;
 
 public class GameMover implements EventGenerator{
     private static int pointer=0;
@@ -17,6 +18,6 @@ public class GameMover implements EventGenerator{
             targetHeader = TestTableSection.TestGroupGameHeaderPrefix+0;
         }
         TestGame game = tblProp.testGameCache.getGame(movedGameId);
-        model.moveGameToThisHeader(game,targetHeader);
+        model.moveGameToThisHeader(game, GameGroupHeader.create(targetHeader,null,0,0));
     }
 }

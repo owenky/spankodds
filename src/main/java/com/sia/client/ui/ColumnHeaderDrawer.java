@@ -16,20 +16,33 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ColumnHeaderDrawer<V extends KeyedObject> {
 
+    private final Map<Integer,JComponent> groupHeaderCompRowIndexCache = new HashMap<>();
+    private final Map<String,JComponent> groupHeaderCompNameCache = new HashMap<>();
     public ColumnHeaderDrawer() {
+    }
+    public void reset() {
+        groupHeaderCompNameCache.clear();
     }
     public Component drawOnViewIndex(ColumnCustomizableTable<V> mainTable,int rowViewIndex, String headerValue, int horizontalScrollBarAdjustmentValue) {
         ColumnHeaderProperty columnHeaderProvider = mainTable.getModel().getColumnHeaderProperty();
         Font headerFont = columnHeaderProvider.getHeaderFont();
-        JComponent headerComponent = makeColumnHeaderComp(mainTable, headerValue,columnHeaderProvider.getHeaderForeground(),headerFont);
+        JComponent headerComponent = groupHeaderCompNameCache.computeIfAbsent(headerValue,(key)->makeColumnHeaderComp(mainTable, key,columnHeaderProvider.getHeaderForeground(),headerFont));
         layOutColumnHeader(rowViewIndex, mainTable, headerComponent, String.valueOf(headerValue),columnHeaderProvider.getColumnHeaderHeight(), horizontalScrollBarAdjustmentValue,headerFont);
+        groupHeaderCompRowIndexCache.put(rowViewIndex,headerComponent);
         return headerComponent;
+    }
+    public JComponent getGameGroupHeaderComponent(int rowViewIndex) {
+        return groupHeaderCompRowIndexCache.get(rowViewIndex);
     }
     private static <V extends KeyedObject> JComponent makeColumnHeaderComp(ColumnCustomizableTable<V> jtable, String gameGroupHeader, Color headerForeGround, Font titleFont) {
         JPanel jPanel = new JPanel();
+        jPanel.setName(gameGroupHeader);
+
         jPanel.setOpaque(false);
         BorderLayout bl = new BorderLayout();
         jPanel.setLayout(bl);

@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.AlertVector;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Games;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Moneyline;
@@ -11,6 +12,7 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 import com.sia.client.model.UrgentsConsumer;
 import com.sia.client.model.User;
+import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -26,13 +28,17 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -42,10 +48,10 @@ public class AppController {
     public final static AlertVector alertsVector = new AlertVector();
     public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
-    public static Vector<String> customTabsVec = new Vector();
+    public static Vector<String> customTabsVec = new Vector<>();
     public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
-    public static Vector<SportsTabPane> tabpanes = new Vector();
+//    public static Vector<SportsTabPane> tabpanes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
@@ -56,7 +62,8 @@ public class AppController {
     public static Vector<Bookie> hiddenCols = new Vector();
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
-    public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
+//    public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
+    public final static Set<Integer> BadGameIds = new HashSet<>();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
     public static Hashtable<String, Moneyline> moneylines = new Hashtable();
@@ -129,6 +136,7 @@ public class AppController {
     public static Vector<String> SportsTabPaneVector = new Vector<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
     private static Games games = new Games();
+    private static final CountDownLatch messageProcessingLatch = new CountDownLatch(1);
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
@@ -139,23 +147,32 @@ public class AppController {
 
         }
     }
-
+    public static void notifyUIComplete() {
+        messageProcessingLatch.countDown();
+    }
+    public static void waitForSpankyWindowLoaded() {
+        try {
+            messageProcessingLatch.await();
+        } catch (InterruptedException e) {
+            log(e);
+        }
+    }
     public static boolean existLeagueId(Integer leagueId) {
         return leagueIdToSportMap.containsKey(leagueId);
     }
 
     public static void initializeLineAlertVectorFromUser() {
         String[] linealerts = u.getLineAlerts().split("\\?");
-        for (int i = 0; i < linealerts.length; i++) {
+        for (final String linealert : linealerts) {
             try {
-                String[] lanitems = linealerts[i].split("!");
+                String[] lanitems = linealert.split("!");
                 String[] sportselected = lanitems[3].split(",");
                 String[] bookieselected = lanitems[4].split(",");
                 for (int k = 0; k < sportselected.length; k++) {
                     log("sport" + k + "=" + sportselected[k]);
                 }
-                Vector sportselectedvec = new Vector(Arrays.asList(sportselected));
-                Vector bookieselectedvec = new Vector(Arrays.asList(bookieselected));
+                List<String> sportselectedvec = new ArrayList<>(Arrays.asList(sportselected));
+                List<String> bookieselectedvec = new ArrayList<>(Arrays.asList(bookieselected));
                 int j = 5;
                 LineAlertNode lan2 = new LineAlertNode(
                         lanitems[0],
@@ -230,7 +247,7 @@ public class AppController {
 
                 linealertnodes.add(lan2);
             } catch (Exception ex) {
-                log("exception loading in line alert=" + linealerts[i]);
+                log("exception loading in line alert=" + linealert);
                 log(ex);
             }
 
@@ -240,10 +257,10 @@ public class AppController {
     public static void initializSpotsTabPaneVector() {
     }
 
-    public static Vector getMainTabVec() {
+    public static Vector<String> getMainTabVec() {
         Collection<String> al = SpotsTabPaneVector.values();
         Iterator<String> itr = al.iterator();
-        Vector<String> vec = new Vector();
+        Vector<String> vec = new Vector<>();
         while (itr.hasNext()) {
             vec.add(itr.next());
 
@@ -291,15 +308,15 @@ public class AppController {
         }
         return true;
     }
-
-
-    public static boolean isLoadingInitial() {
-        return loadinginitial;
-    }
-
-    public static void doneloadinginitial() {
-        loadinginitial = false;
-    }
+//
+//
+//    public static boolean isLoadingInitial() {
+//        return loadinginitial;
+//    }
+//
+//    public static void doneloadinginitial() {
+//        loadinginitial = false;
+//    }
 
     public static TableColumnModel getColumnModel() {
         if (columnmodel == null) {
@@ -381,10 +398,9 @@ public class AppController {
         hiddenCols.clear();
         //log("FIXED="+u.getFixedColumnPrefs());
         //log("OTHERS"+u.getBookieColumnPrefs());
-        String fixedcols[] = u.getFixedColumnPrefs().split(",");
+        String[] fixedcols = u.getFixedColumnPrefs().split(",");
         String cols[] = u.getBookieColumnPrefs().split(",");
-        for (int i = 0; i < fixedcols.length; i++) {
-            String id = fixedcols[i];
+        for (String id : fixedcols) {
             Bookie b = bookies.get(id);
             if (b != null) {
                 newVec.add(b);
@@ -393,8 +409,7 @@ public class AppController {
             }
 
         }
-        for (int i = 0; i < cols.length; i++) {
-            String id = cols[i];
+        for (String id : cols) {
             Bookie b = bookies.get(id);
             if (b != null) {
                 shownCols.add(b);
@@ -402,8 +417,7 @@ public class AppController {
 
             }
         }
-        for (int i = 0; i < bookiesVec.size(); i++) {
-            Bookie b = bookiesVec.get(i);
+        for (Bookie b : bookiesVec) {
             if (!newVec.contains(b)) {
                 newVec.add(b);
                 hiddenCols.add(b);
@@ -429,22 +443,22 @@ public class AppController {
         }
         return nwa;
     }
+//
+//    public static String getDisplayType() {
+//        return displaytype;
+//    }
+//
+//    public static void setDisplayType(String s) {
+//        displaytype = s;
+//    }
 
-    public static String getDisplayType() {
-        return displaytype;
-    }
-
-    public static void setDisplayType(String s) {
-        displaytype = s;
-    }
-
-    public static Vector getCustomTabsVec() {
+    public static Vector<String> getCustomTabsVec() {
         return customTabsVec;
     }
-
-    public static Hashtable getCustomTabsHash() {
-        return customTabsHash;
-    }
+//
+//    public static Hashtable getCustomTabsHash() {
+//        return customTabsHash;
+//    }
 
     public static Vector getLineAlertNodes() {
         if (linealertnodes.size() != 0) {
@@ -463,49 +477,50 @@ public class AppController {
         model.copyTo(dataModels);
 
     }
-
-    public static void addTabPane(SportsTabPane stb) {
-        tabpanes.add(stb);
-
-    }
+//
+//    public static void addTabPane(SportsTabPane stb) {
+//        tabpanes.add(stb);
+//
+//    }
 
     public static SportsTabPane getMainTabPane() {
-
-        return tabpanes.get(0);
+//
+//        return tabpanes.get(0);
+        return SpankyWindow.getSpankyWindow(0).getSportsTabPane();
     }
-
-    public static Vector<SportsTabPane> getTabPanes() {
-
-        return tabpanes;
-    }
-
-    public static SportsMenuBar getMainMenuBar() {
-
-        return menubars.get(0);
-    }
-
-    public static Vector getMenuBars() {
-
-        return menubars;
-    }
-
-    public static void disableTabs() {
-        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-        //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane tp : tabpanes) {
-            tp.disableTabs();
-        }
-    }
+//
+//    public static Vector<SportsTabPane> getTabPanes() {
+//
+//        return tabpanes;
+//    }
+//
+//    public static SportsMenuBar getMainMenuBar() {
+//
+//        return menubars.get(0);
+//    }
+//
+//    public static Vector getMenuBars() {
+//
+//        return menubars;
+//    }
+//
+//    public static void disableTabs() {
+//        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+//        //game need to populated to each window. -- 08/22/2021
+//        for (SportsTabPane tp : tabpanes) {
+//            tp.disableTabs();
+//        }
+//    }
 
     public static void enableTabs() {
-        for (int i = 0; i < tabpanes.size(); i++) {
-            SportsTabPane tp = tabpanes.get(i);
-            tp.enableTabs();
-        }
+//        for (SportsTabPane tp : tabpanes) {
+//            tp.enableTabs();
+//        }
+        SpankyWindow.applyToAllWindows(SportsTabPane::enableTabs);
     }
 
-    public static void addFrame(JFrame f, SportsTabPane stb) {
-        frames.put(f, stb);
+    public static void addFrame(JFrame f) {
+//        frames.put(f, stb);
         addMenuBar((SportsMenuBar) f.getJMenuBar());
     }
 
@@ -514,13 +529,13 @@ public class AppController {
 
     }
 
-    public static void removeFrame(JFrame f) {
+    public static void removeFrame(SpankyWindow f) {
         removeMenuBar((SportsMenuBar) f.getJMenuBar());
-        SportsTabPane stb = frames.get(f);
+        SportsTabPane stb = f.getSportsTabPane();
         stb.cleanup();
-        removeTabPane(stb);
-        frames.remove(f);
-        if (frames.size() == 0) {
+//        removeTabPane(stb);
+        SpankyWindow.removeWindow(f);
+        if (0 == SpankyWindow.openWindowCount()) {
             log("exiting..");
             System.exit(0);
         }
@@ -530,11 +545,10 @@ public class AppController {
         menubars.remove(smb);
 
     }
-
-    public static void removeTabPane(SportsTabPane stb) {
-        tabpanes.remove(stb);
-
-    }
+//
+//    public static void removeTabPane(SportsTabPane stb) {
+//        tabpanes.remove(stb);
+//    }
 
     public static void removeCustomTab(String key) {
         String val = (String) customTabsHash.get(key);
@@ -549,7 +563,6 @@ public class AppController {
     }
 
     public static void repaintmenubars() {
-
         for (int i = 0; i < menubars.size(); i++) {
             SportsMenuBar smb = menubars.elementAt(i);
             log("smb=" + smb);
@@ -566,29 +579,36 @@ public class AppController {
     public static void refreshTabs3() {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane tp : tabpanes) {
-            if (tp != null) {
-                try {
-                    tp.refreshCurrentTab();
-                } catch (Exception ex) {
-                    log(ex);
-                }
+//        for (SportsTabPane tp : tabpanes) {
+//            if (tp != null) {
+//                try {
+//                    tp.refreshCurrentTab();
+//                } catch (Exception ex) {
+//                    log(ex);
+//                }
+//            }
+//        }
+        SpankyWindow.applyToAllWindows((stp)-> {
+            try {
+                stp.refreshCurrentTab();
+            } catch(Exception e) {
+                log(e);
             }
-        }
+        });
     }
 
     public static void clearAll() {
-        for (SportsTabPane stb : tabpanes) {
-            stb.clearAll();
-
-        }
-
+//        for (SportsTabPane stb : tabpanes) {
+//            stb.clearAll();
+//        }
+        SpankyWindow.applyToAllWindows(SportsTabPane::clearAll);
     }
 
     public static void fireAllTableDataChanged(Collection<Game> games) {
-        for (SportsTabPane stb : tabpanes) {
-            stb.fireAllTableDataChanged(games);
-        }
+//        for (SportsTabPane stb : tabpanes) {
+//            stb.fireAllTableDataChanged(games);
+//        }
+        SpankyWindow.applyToAllWindows((stp)->stp.fireAllTableDataChanged(games));
     }
 
     public static String getLoginQueue() {
@@ -795,118 +815,125 @@ public class AppController {
         leagueIdToSportMap.put(s.getLeague_id(), s);
         sportsVec.add(s);
     }
-
-    public static void removeGame(int gameid, boolean repaint) {
-        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-        //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane stb : tabpanes) {
-            stb.removeGame(gameid, repaint);
-        }
-        Game g = games.getGame(gameid);
-        if (null != g) {
-            games.removeGame(g);
-
-        }
-        games.removeGameId(gameid);
-        for (int j = 0; j < bookiesVec.size(); j++) {
-            Bookie b = bookiesVec.get(j);
-            int bid = b.getBookie_id();
-            spreads.remove(bid + "-" + gameid);
-            totals.remove(bid + "-" + gameid);
-            moneylines.remove(bid + "-" + gameid);
-            teamtotals.remove(bid + "-" + gameid);
-            h1spreads.remove(bid + "-" + gameid);
-            h1totals.remove(bid + "-" + gameid);
-            h1moneylines.remove(bid + "-" + gameid);
-            h1teamtotals.remove(bid + "-" + gameid);
-            h2spreads.remove(bid + "-" + gameid);
-            h2totals.remove(bid + "-" + gameid);
-            h2moneylines.remove(bid + "-" + gameid);
-            h2teamtotals.remove(bid + "-" + gameid);
-            q1spreads.remove(bid + "-" + gameid);
-            q1totals.remove(bid + "-" + gameid);
-            q1moneylines.remove(bid + "-" + gameid);
-            q1teamtotals.remove(bid + "-" + gameid);
-            q2spreads.remove(bid + "-" + gameid);
-            q2totals.remove(bid + "-" + gameid);
-            q2moneylines.remove(bid + "-" + gameid);
-            q2teamtotals.remove(bid + "-" + gameid);
-            q3spreads.remove(bid + "-" + gameid);
-            q3totals.remove(bid + "-" + gameid);
-            q3moneylines.remove(bid + "-" + gameid);
-            q3teamtotals.remove(bid + "-" + gameid);
-            q4spreads.remove(bid + "-" + gameid);
-            q4totals.remove(bid + "-" + gameid);
-            q4moneylines.remove(bid + "-" + gameid);
-            q4teamtotals.remove(bid + "-" + gameid);
-            livespreads.remove(bid + "-" + gameid);
-            livetotals.remove(bid + "-" + gameid);
-            livemoneylines.remove(bid + "-" + gameid);
-            liveteamtotals.remove(bid + "-" + gameid);
-
-        }
-        g = null;
-    }
+//
+//    public static void removeGame(int gameid, boolean repaint) {
+//        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
+//        //game need to populated to each window. -- 08/22/2021
+//        for (SportsTabPane stb : tabpanes) {
+//            stb.removeGame(gameid, repaint);
+//        }
+//        Game g = games.getGame(gameid);
+//        if (null != g) {
+//            games.removeGame(g);
+//
+//        }
+//        games.removeGameId(gameid);
+//        for (Bookie b : bookiesVec) {
+//            int bid = b.getBookie_id();
+//            spreads.remove(bid + "-" + gameid);
+//            totals.remove(bid + "-" + gameid);
+//            moneylines.remove(bid + "-" + gameid);
+//            teamtotals.remove(bid + "-" + gameid);
+//            h1spreads.remove(bid + "-" + gameid);
+//            h1totals.remove(bid + "-" + gameid);
+//            h1moneylines.remove(bid + "-" + gameid);
+//            h1teamtotals.remove(bid + "-" + gameid);
+//            h2spreads.remove(bid + "-" + gameid);
+//            h2totals.remove(bid + "-" + gameid);
+//            h2moneylines.remove(bid + "-" + gameid);
+//            h2teamtotals.remove(bid + "-" + gameid);
+//            q1spreads.remove(bid + "-" + gameid);
+//            q1totals.remove(bid + "-" + gameid);
+//            q1moneylines.remove(bid + "-" + gameid);
+//            q1teamtotals.remove(bid + "-" + gameid);
+//            q2spreads.remove(bid + "-" + gameid);
+//            q2totals.remove(bid + "-" + gameid);
+//            q2moneylines.remove(bid + "-" + gameid);
+//            q2teamtotals.remove(bid + "-" + gameid);
+//            q3spreads.remove(bid + "-" + gameid);
+//            q3totals.remove(bid + "-" + gameid);
+//            q3moneylines.remove(bid + "-" + gameid);
+//            q3teamtotals.remove(bid + "-" + gameid);
+//            q4spreads.remove(bid + "-" + gameid);
+//            q4totals.remove(bid + "-" + gameid);
+//            q4moneylines.remove(bid + "-" + gameid);
+//            q4teamtotals.remove(bid + "-" + gameid);
+//            livespreads.remove(bid + "-" + gameid);
+//            livetotals.remove(bid + "-" + gameid);
+//            livemoneylines.remove(bid + "-" + gameid);
+//            liveteamtotals.remove(bid + "-" + gameid);
+//
+//        }
+//        g = null;
+//    }
 
     public static void removeGameDate(String date, String leagueid) {
         //here i will get all teh game ids for a given date and leagueid and
         // then make an array out of it and call removegames
-        removeGames(getAllGamesForThisDateAndLeagueId(date, leagueid));
+        removeGamesAndCleanup(getAllGamesForThisDateAndLeagueId(date, leagueid));
 
     }
 
-    public static void removeGames(String[] gameidarr) {
+    public static void removeGamesAndCleanup(String[] gameidarr) {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
-        for (SportsTabPane stb : tabpanes) {
-            stb.removeGames(gameidarr);
+        Set<Integer> gameIdRemovedSet = Arrays.stream(gameidarr).map(Integer::parseInt).collect(Collectors.toSet());
+        List<CountDownLatch> latches = new ArrayList<>(SpankyWindow.openWindowCount());
+        for (int i=0;i<SpankyWindow.openWindowCount();i++) {
+            SportsTabPane stb  = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+            CountDownLatch latch = new CountDownLatch(1);
+            latches.add(latch);
+            stb.removeGamesAndCleanup(gameIdRemovedSet,latch);
         }
         if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
             return;
         }
-
-        for (int i = 0; i < gameidarr.length; i++) {
+        for(CountDownLatch latch: latches) {
             try {
-                String gameid = gameidarr[i];
-                games.removeGame(gameid);
-                for (int j = 0; j < bookiesVec.size(); j++) {
-                    Bookie b = bookiesVec.get(j);
+                latch.await();
+            } catch (InterruptedException e) {
+                log(e);
+            }
+        }
+        for (final String s : gameidarr) {
+            try {
+                games.removeGame(s);
+                for (Bookie b : bookiesVec) {
                     int bid = b.getBookie_id();
-                    spreads.remove(bid + "-" + gameid);
-                    totals.remove(bid + "-" + gameid);
-                    moneylines.remove(bid + "-" + gameid);
-                    teamtotals.remove(bid + "-" + gameid);
-                    h1spreads.remove(bid + "-" + gameid);
-                    h1totals.remove(bid + "-" + gameid);
-                    h1moneylines.remove(bid + "-" + gameid);
-                    h1teamtotals.remove(bid + "-" + gameid);
-                    h2spreads.remove(bid + "-" + gameid);
-                    h2totals.remove(bid + "-" + gameid);
-                    h2moneylines.remove(bid + "-" + gameid);
-                    h2teamtotals.remove(bid + "-" + gameid);
-                    q1spreads.remove(bid + "-" + gameid);
-                    q1totals.remove(bid + "-" + gameid);
-                    q1moneylines.remove(bid + "-" + gameid);
-                    q1teamtotals.remove(bid + "-" + gameid);
-                    q2spreads.remove(bid + "-" + gameid);
-                    q2totals.remove(bid + "-" + gameid);
-                    q2moneylines.remove(bid + "-" + gameid);
-                    q2teamtotals.remove(bid + "-" + gameid);
-                    q3spreads.remove(bid + "-" + gameid);
-                    q3totals.remove(bid + "-" + gameid);
-                    q3moneylines.remove(bid + "-" + gameid);
-                    q3teamtotals.remove(bid + "-" + gameid);
-                    q4spreads.remove(bid + "-" + gameid);
-                    q4totals.remove(bid + "-" + gameid);
-                    q4moneylines.remove(bid + "-" + gameid);
-                    q4teamtotals.remove(bid + "-" + gameid);
-                    livespreads.remove(bid + "-" + gameid);
-                    livetotals.remove(bid + "-" + gameid);
-                    livemoneylines.remove(bid + "-" + gameid);
-                    liveteamtotals.remove(bid + "-" + gameid);
+                    spreads.remove(bid + "-" + s);
+                    totals.remove(bid + "-" + s);
+                    moneylines.remove(bid + "-" + s);
+                    teamtotals.remove(bid + "-" + s);
+                    h1spreads.remove(bid + "-" + s);
+                    h1totals.remove(bid + "-" + s);
+                    h1moneylines.remove(bid + "-" + s);
+                    h1teamtotals.remove(bid + "-" + s);
+                    h2spreads.remove(bid + "-" + s);
+                    h2totals.remove(bid + "-" + s);
+                    h2moneylines.remove(bid + "-" + s);
+                    h2teamtotals.remove(bid + "-" + s);
+                    q1spreads.remove(bid + "-" + s);
+                    q1totals.remove(bid + "-" + s);
+                    q1moneylines.remove(bid + "-" + s);
+                    q1teamtotals.remove(bid + "-" + s);
+                    q2spreads.remove(bid + "-" + s);
+                    q2totals.remove(bid + "-" + s);
+                    q2moneylines.remove(bid + "-" + s);
+                    q2teamtotals.remove(bid + "-" + s);
+                    q3spreads.remove(bid + "-" + s);
+                    q3totals.remove(bid + "-" + s);
+                    q3moneylines.remove(bid + "-" + s);
+                    q3teamtotals.remove(bid + "-" + s);
+                    q4spreads.remove(bid + "-" + s);
+                    q4totals.remove(bid + "-" + s);
+                    q4moneylines.remove(bid + "-" + s);
+                    q4teamtotals.remove(bid + "-" + s);
+                    livespreads.remove(bid + "-" + s);
+                    livetotals.remove(bid + "-" + s);
+                    livemoneylines.remove(bid + "-" + s);
+                    liveteamtotals.remove(bid + "-" + s);
 
                 }
-//                    g = null;
             } catch (Exception ex) {
                 log(ex);
             }
@@ -938,27 +965,28 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
-
-    public static void addGame(Game g) {
-        addGame(g, true);
-
+    public static boolean pushGameToCash(Game g) {
+        return games.updateOrAdd(g);
     }
-
-    public static void addGame(Game g, boolean repaint) {
-        boolean isAdd = games.updateOrAdd(g);
+    public static void addOrUpdateGame(Game g) {
+        boolean isAdd = pushGameToCash(g);
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
-        if (isAdd) {
-            for (SportsTabPane stb : tabpanes) {
-                stb.addGame(g, repaint);
-            }
-        }
+//        if (isAdd) {  -- remove if clause for updating game 2021-11-08
+//            for(int i=0;i<SpankyWindow.openWindowCount();i++){
+//                SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+//                stb.addGame(g, repaint);
+//            }
+            SpankyWindow.applyToAllWindows((stp)->stp.addGame(g));
+//        }
     }
 
-    public static void moveGameToThisHeader(Game g, String header) {
-        for (SportsTabPane stb : tabpanes) {
-            stb.moveGameToThisHeader(g, header);
-        }
+    public static void moveGameToThisHeader(Game g, GameGroupHeader header) {
+//        for(int i=0;i<SpankyWindow.openWindowCount();i++){
+//            SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+//            stb.moveGameToThisHeader(g, header);
+//        }
+        SpankyWindow.applyToAllWindows((stp)->stp.moveGameToThisHeader(g, header));
     }
 
     public static Bookie getBookie(int bid) {

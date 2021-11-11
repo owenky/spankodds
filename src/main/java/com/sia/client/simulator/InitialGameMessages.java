@@ -13,29 +13,41 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
 
 public abstract class InitialGameMessages {
 
+    public static final int PeekGameId = 214217;
     public static boolean shouldLogMesg = false;
-    public static boolean shouldRunMainScreenTest; //set by System Property
+    public static boolean shouldRunSimulator; //set by System Property
     public static boolean getMessagesFromLog = false;
-    public static String MesgDir = TestProperties.DefaultMesgDir;
+    public static String [] filters;
+    public static String MesgDir;
     public static Set<MessageType> interestedMessageTypes;
     private static List<String> buffer = new ArrayList<>();
     private static String InitialLoadingFilePath;
 
     public static void initMsgLoggingProps() {
+        String mesgDir = System.getProperty("MesgDir");
+        MesgDir = null==mesgDir?TestProperties.DefaultMesgDir:mesgDir;
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
-        shouldRunMainScreenTest = Boolean.parseBoolean(System.getProperty("MainScreenTest"));
+        shouldRunSimulator = Boolean.parseBoolean(System.getProperty("RunSimulator"));
         getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
+        String filterStr = System.getProperty("Filter");
+        if ( null == filterStr) {
+            filters = new String [0];
+        } else {
+            filters = filterStr.split(",");
+        }
         String interestedMesgTypeStr = System.getProperty("InterestedMessageTypes");
 
         interestedMessageTypes = configInterestedMessageTypes(interestedMesgTypeStr);
@@ -66,6 +78,8 @@ public abstract class InitialGameMessages {
                     throw new IllegalArgumentException("Interested message type defined as property in -DInterestedMessageTypes is not supported: " + typeStr);
                 }
             }
+        } else {
+            interestedMsgTypes = Arrays.stream(MessageType.values()).collect(Collectors.toSet());
         }
         return Collections.unmodifiableSet(interestedMsgTypes);
     }
@@ -95,7 +109,7 @@ public abstract class InitialGameMessages {
     private static void loadGamesFromLog() {
         if (getMessagesFromLog) {
             try (Stream<String> stream = Files.lines(Paths.get(InitialLoadingFilePath))) {
-                stream.forEach(text->AppController.addGame(GameUtils.parseGameText(text)));
+                stream.forEach(text->AppController.pushGameToCash(GameUtils.parseGameText(text)));
             } catch ( Exception e) {
                 log(e);
             }

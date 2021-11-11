@@ -1,6 +1,7 @@
 package com.sia.client.ui.simulator;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.LineGames;
 import com.sia.client.model.TableSection;
 
@@ -27,7 +28,7 @@ public class TestTableSection extends TableSection<TestGame> {
     }
 
     public TestTableSection(String groupHeader, TestGameCache gameCache, boolean toAddBlankGameId, List<TestGame> gameVec) {
-        super(groupHeader, gameCache, toAddBlankGameId, gameVec);
+        super(GameGroupHeader.create(groupHeader,null,0,0), gameCache, toAddBlankGameId, gameVec);
     }
 
     @Override

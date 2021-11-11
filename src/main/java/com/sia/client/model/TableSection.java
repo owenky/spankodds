@@ -3,6 +3,8 @@ package com.sia.client.model;
 import com.sia.client.config.SiaConst;
 
 import javax.swing.event.TableModelEvent;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +19,12 @@ public abstract class TableSection<V extends KeyedObject> {
     private ColumnCustomizableDataModel<V> containingTableModel;
     private int rowHeight;
     private int index;
-    protected final String gameGroupHeader;
+    protected final GameGroupHeader gameGroupHeader;
 
-    public TableSection(String gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
-        this.gameGroupHeader = null== gameGroupHeader?"":gameGroupHeader.trim();
+    abstract protected List<Object> makeRowData(V game);
+
+    public TableSection(GameGroupHeader gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
+        this.gameGroupHeader = gameGroupHeader;
         gamesVec = new LineGames<>(gameCache, toAddBlankGameId);
         gamesVec.addAll(gameVec);
         rowHeight = SiaConst.NormalRowheight;
@@ -53,12 +57,16 @@ public abstract class TableSection<V extends KeyedObject> {
     protected Iterator<V> getGamesIterator() {
         return gamesVec.iterator();
     }
-
-    public boolean hasHeader() {
-        return ! gameGroupHeader.isEmpty();
+    public void sort(Comparator<? super V> gameSorter) {
+        gamesVec.sort(gameSorter);
+        rowDataMap.clear();
     }
 
-    public String getGameGroupHeader() {
+//    public boolean hasHeader() {
+//        return ! gameGroupHeader.isEmpty();
+//    }
+
+    public GameGroupHeader getGameGroupHeader() {
         return this.gameGroupHeader;
     }
     public Integer getRowKey(final int rowModelIndex) {
@@ -84,14 +92,14 @@ public abstract class TableSection<V extends KeyedObject> {
         if (rowDataMap.size() != gamesVec.size()) {
             rowDataMap.clear();
             for (int i = 0; i < gamesVec.size(); i++) {
-                rowDataMap.put(i, makeRowData(gamesVec.getByIndex(i)));
+                updateRowDataMapAtRow(i);
             }
         }
         return rowDataMap;
     }
-
-    abstract protected List<Object> makeRowData(V game);
-
+    private void updateRowDataMapAtRow(int index) {
+        rowDataMap.put(index, makeRowData(gamesVec.getByIndex(index)));
+    }
     public Object getValueAt(final int rowModelIndex, final int colModelIndex) {
 
         List<Object> rowData = getRowDataMap().get(rowModelIndex);
@@ -114,48 +122,47 @@ public abstract class TableSection<V extends KeyedObject> {
         return gamesVec.getRowIndex(gameId);
     }
 
-    public V removeGameId(Integer gameidtoremove, boolean repaint) {
+    public V removeGameId(Integer gameidtoremove) {
 
         int gameModelIndex = containingTableModel.getRowModelIndex(this, gameidtoremove);
         V g;
         if ( 0 <= gameModelIndex) {
             g = gamesVec.removeGame(gameidtoremove);
-            this.resetDataVector();
-            if (repaint) {
-                resetDataVector();
-                TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-                fire(e);
-         }
+            this.rowDataMap.clear();
+            //caller responsible for firing table model event -- 2021-11-07
+//            TableModelEvent e = new TableModelEvent(containingTableModel, gameModelIndex, gameModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+//            fire(e);
         } else {
             g = null;
         }
         return g;
     }
-
-    public void removeGameIds(Integer[] gameidstoremove) {
-        for (Integer gameId : gameidstoremove) {
-            removeGameId(gameId, false);
+    public void removeGameIdsAndCleanup(Collection<Integer> gameidstoremove) {
+        for(int i=gamesVec.size()-1; 0<=i; i-- ) {
+            V game = gamesVec.getByIndex(i);
+            boolean toRemove;
+            if ( null == game) {
+                toRemove = true;
+            } else {
+                toRemove = gameidstoremove.contains(game.getGame_id());
+            }
+            if ( toRemove) {
+                gamesVec.removeGameIdAt(i);
+                this.rowDataMap.clear();
+            }
         }
-        resetDataVector(); //including sorting gamesVec
     }
 
-    public boolean addGame(V g, boolean repaint) {
+    public int addOrUpdate(V g) {
         setHowHeighIfAbsent(g);
-        boolean exist = null != gamesVec.getGameFromDataSource(g.getGame_id());
-        boolean isAdded;
-        if (exist) {
-            isAdded = gamesVec.addIfAbsent(g);
-            resetDataVector(); //including sorting gamesVec
-            if (repaint) {
-                int insertedRowModelIndex = containingTableModel.getRowModelIndex(this, g.getGame_id());
-                int eventType = isAdded?TableModelEvent.INSERT:TableModelEvent.UPDATE;
-                TableModelEvent e = new TableModelEvent(containingTableModel, insertedRowModelIndex, insertedRowModelIndex, TableModelEvent.ALL_COLUMNS, eventType);
-                fire(e);
-            }
+        int index = gamesVec.addIfAbsent(g);
+        if ( 0 > index ) {
+            //it is adding, game was added to gamesVec, need to clear up rowDataMap -- 2021-11-06
+            this.rowDataMap.clear();
         } else {
-            isAdded = false;
+            updateRowDataMapAtRow(index);
         }
-        return isAdded;
+        return index;
     }
     protected void setHowHeighIfAbsent(V v) {
         //for sub class to override

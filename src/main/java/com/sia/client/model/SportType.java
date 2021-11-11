@@ -3,7 +3,8 @@ package com.sia.client.model;
 import com.sia.client.config.SiaConst;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.MainScreen;
+import com.sia.client.ui.SpankyWindow;
+import com.sia.client.ui.control.MainScreen;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -65,6 +66,9 @@ public class SportType {
     private LeagueFilter leagueFilter;
     private boolean showseries = true;
     private boolean showingame = true;
+    private boolean showAdded = true;
+    private boolean showExtra = true;
+    private boolean showProps = true;
 
     private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId) {
         this.sportName = sportName;
@@ -121,9 +125,31 @@ public class SportType {
     public boolean isShowseries() {
         return showseries;
     }
-
     public void setShowseries(final boolean showseries) {
         this.showseries = showseries;
+    }
+    public boolean isShowAdded() {
+        return showAdded;
+    }
+
+    public void setShowAdded(final boolean showAdded) {
+        this.showAdded = showAdded;
+    }
+
+    public boolean isShowExtra() {
+        return showExtra;
+    }
+
+    public void setShowExtra(final boolean showExtra) {
+        this.showExtra = showExtra;
+    }
+
+    public boolean isShowProps() {
+        return showProps;
+    }
+
+    public void setShowProps(final boolean showProps) {
+        this.showProps = showProps;
     }
     public boolean isLeagueSelected(int leagueId) {
         return  null !=leagueFilter && leagueFilter.isSelected(leagueId);
@@ -187,17 +213,29 @@ public class SportType {
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);
     }
     private boolean isFilteredByConfig(Game g) {
-        if ( g.isSeriesprice() && ! isShowseries()) {
+        if ( seriesPriceConfig(g) || addedConfig(g) || extraConfig(g) || forPropConfig(g)) {
             return true;
         }
 
         return g.isInGame2() && ! isShowingame();
     }
+    private boolean seriesPriceConfig(Game g) {
+        return g.isSeriesprice() && ! isShowseries();
+    }
+    private boolean addedConfig(Game g) {
+        return g.isAddedgame() && !isShowAdded();
+    }
+    private boolean extraConfig(Game g) {
+        return g.isExtragame() && !isShowExtra();
+    }
+    private boolean forPropConfig(Game g) {
+        return g.isForprop() && !isShowProps();
+    }
     private static String normalizeName(String name) {
         return name.replaceAll("\\s","").toLowerCase();
     }
     private boolean containsGameLeague(Game g ) {
-        MainScreen ms = MainScreen.findMainScreen(this.getSportName());
+        MainScreen ms = SpankyWindow.getSpankyWindow(0).getSportsTabPane().findMainScreen(this.getSportName());
         return null != ms.getDataModels().findLeagueSection(g);
     }
 }

@@ -38,9 +38,12 @@ public class LineGames<V extends KeyedObject> {
     public V getByIndex(int index) {
         return gameCache.getGame(gameIdList.get(index));
     }
-    public V getGameFromDataSource(String gameId) {
-        return getGameFromDataSource(Integer.parseInt(gameId));
+    public Integer removeGameIdAt(int index) {
+        return gameIdList.remove(index);
     }
+//    public V getGameFromDataSource(String gameId) {
+//        return getGameFromDataSource(Integer.parseInt(gameId));
+//    }
     public V removeGame(Integer gameId) {
         V game;
         if ( gameIdList.remove(gameId) ) {
@@ -50,27 +53,32 @@ public class LineGames<V extends KeyedObject> {
         }
         return game;
     }
-    public V removeGame(String gameId) {
-        return removeGame(Integer.parseInt(gameId));
-    }
+//    public V removeGame(String gameId) {
+//        return removeGame(Integer.parseInt(gameId));
+//    }
     public void addAll(Collection<? extends V> games) {
         games.forEach(this::addIfAbsent);
     }
-    public boolean addIfAbsent(V g) {
+    public int addIfAbsent(V g) {
         int gameId = g.getGame_id();
         return addIfAbsent(gameId);
     }
-    public boolean addIfAbsent(int gameId) {
-        if ( ! containsGameId(gameId)) {
+
+    /**
+     *
+     * @param gameId
+     * @return index of gameId in the list, otherwise return -1, but gameid is appended
+     */
+    public int addIfAbsent(int gameId) {
+        int index = gameIdList.indexOf(gameId);
+        if ( index < 0) {
             gameIdList.add(gameId);
-            return true;
-        } else {
-            return false;
         }
+        return index;
     }
-    public boolean containsGameId(int gameId) {
-        return gameIdList.contains(gameId);
-    }
+//    public boolean containsGameId(int gameId) {
+//        return gameIdList.contains(gameId);
+//    }
     public void sort(Comparator<? super V> comparator) {
         Comparator<Integer> idComparator = (id1,id2)-> {
             V g1 = gameCache.getGame(id1);
@@ -128,5 +136,9 @@ public class LineGames<V extends KeyedObject> {
     }
     public int indexOf(final Game g) {
         return gameIdList.indexOf(g.getGame_id());
+    }
+    @Override
+    public String toString() {
+        return "size="+gameIdList.size();
     }
 }

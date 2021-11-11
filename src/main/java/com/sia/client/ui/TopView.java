@@ -3,6 +3,8 @@ package com.sia.client.ui;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
+import com.sia.client.ui.control.MainScreen;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;

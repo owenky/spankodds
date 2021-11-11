@@ -10,6 +10,7 @@ import com.jidesoft.tree.TreeUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+import com.sia.client.ui.control.MainScreen;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -450,12 +451,26 @@ public class SportCustomTab {
                 }
 
                 jfrm.dispose();
-                Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-                for (SportsTabPane tp : tabpanes) {
+//                Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
+//                for (SportsTabPane tp : tabpanes) {
+//                    MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
+//                    oldms.destroyMe();
+//                    SportType st = SportType.findBySportName(alerttype);
+//                    MainScreen ms = tp.createMainScreen(st);
+//                    ms.setShowHeaders(includeheaders.isSelected());
+//                    ms.setShowSeries(includeseries.isSelected());
+//                    ms.setShowIngame(includeingame.isSelected());
+//                    ms.setShowAdded(includeadded.isSelected());
+//                    ms.setShowExtra(includeextra.isSelected());
+//                    ms.setShowProps(includeprops.isSelected());
+//                    tp.setComponentAt(tabVal, ms);
+//                    tp.refreshCurrentTab();
+//                }
+                SpankyWindow.applyToAllWindows((tp)-> {
                     MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
                     oldms.destroyMe();
                     SportType st = SportType.findBySportName(alerttype);
-                    MainScreen ms = new MainScreen(st);
+                    MainScreen ms = tp.createMainScreen(st);
                     ms.setShowHeaders(includeheaders.isSelected());
                     ms.setShowSeries(includeseries.isSelected());
                     ms.setShowIngame(includeingame.isSelected());
@@ -464,8 +479,7 @@ public class SportCustomTab {
                     ms.setShowProps(includeprops.isSelected());
                     tp.setComponentAt(tabVal, ms);
                     tp.refreshCurrentTab();
-                }
-
+                });
 
             }
         });

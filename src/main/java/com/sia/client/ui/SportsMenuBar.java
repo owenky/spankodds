@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.SportType;
 import com.sia.client.model.TabUnhideListener;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -15,10 +16,8 @@ import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
-import static com.sia.client.config.Utils.log;
 
 public class SportsMenuBar extends JMenuBar {
 
@@ -236,9 +235,7 @@ public class SportsMenuBar extends JMenuBar {
                 int tc = stb.getTabCount();
                 int tp = 0;
                 int j;
-                Vector tabpanes = AppController.getTabPanes();
-
-
+//                Vector tabpanes = AppController.getTabPanes();
                 for (j = 0; j < tc; j++) {
                     if (stb.getTitleAt(j).equalsIgnoreCase("Football")) {
                         tp = 1;
@@ -261,22 +258,23 @@ public class SportsMenuBar extends JMenuBar {
                     football.add(hide);
                     hide.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ae) {
-
                             int idx = stb.indexOfTab("Football");
-
                             AppController.SpotsTabPaneVector.remove(0);
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
-
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//
+//                                tp.remove(idx);
+//
+//                                tp.setSelectedIndex(0);
+//
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.remove(idx);
-
                                 tp.setSelectedIndex(0);
-
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -335,14 +333,17 @@ public class SportsMenuBar extends JMenuBar {
                         public void actionPerformed(ActionEvent ae) {
                             int idx = stb.indexOfTab("Basketball");
                             AppController.SpotsTabPaneVector.remove(1);
-
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -402,13 +403,17 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab("Baseball");
                             AppController.SpotsTabPaneVector.remove(2);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -470,13 +475,17 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab("Hockey");
                             AppController.SpotsTabPaneVector.remove(3);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -537,13 +546,17 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab("Fighting");
                             AppController.SpotsTabPaneVector.remove(4);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -607,13 +620,17 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab(SiaConst.SoccerStr);
                             AppController.SpotsTabPaneVector.remove(5);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -675,13 +692,17 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab("Golf");
                             AppController.SpotsTabPaneVector.remove(7);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -743,13 +764,17 @@ public class SportsMenuBar extends JMenuBar {
                             int idx = stb.indexOfTab("Auto Racing");
                             AppController.SpotsTabPaneVector.remove(6);
 
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -809,13 +834,17 @@ public class SportsMenuBar extends JMenuBar {
                         public void actionPerformed(ActionEvent ae) {
                             int idx = stb.indexOfTab("Tennis");
                             AppController.SpotsTabPaneVector.remove(8);
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int i = 0; i < tabpanes.size(); i++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int i = 0; i < tabpanes.size(); i++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(i);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                         }
                     });
@@ -879,13 +908,17 @@ public class SportsMenuBar extends JMenuBar {
                         public void run() {
                             int idx = stb.indexOfTab(temp.getText());
                             AppController.removeCustomTab(stb.getTitleAt(idx));
-                            Vector tabpanes = AppController.getTabPanes();
-                            log("tabpanes size= " + tabpanes.size());
-                            for (int j = 0; j < tabpanes.size(); j++) {
-                                SportsTabPane tp = (SportsTabPane) tabpanes.get(j);
+//                            Vector tabpanes = AppController.getTabPanes();
+//                            log("tabpanes size= " + tabpanes.size());
+//                            for (int j = 0; j < tabpanes.size(); j++) {
+//                                SportsTabPane tp = (SportsTabPane) tabpanes.get(j);
+//                                tp.setSelectedIndex(0);
+//                                tp.remove(idx);
+//                            }
+                            SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(idx);
-                            }
+                            });
                             go.setEnabled(false);
                             hide.setEnabled(false);
                         }

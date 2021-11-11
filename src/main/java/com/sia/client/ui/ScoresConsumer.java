@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -30,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static com.sia.client.config.Utils.log;
+import static com.sia.client.config.Utils.consoleLogPeekGameId;
 
 public class ScoresConsumer implements MessageListener {
 
@@ -76,7 +76,8 @@ public class ScoresConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        synchronized (SiaConst.GameLock) {
+        AppController.waitForSpankyWindowLoaded();
+//        synchronized (SiaConst.GameLock) {
             if (!InitialGameMessages.getMessagesFromLog) {
                 if (toSimulateMQ) {
                     if (simulateStatus.compareAndSet(false, true)) {
@@ -88,14 +89,15 @@ public class ScoresConsumer implements MessageListener {
                     processMessage((MapMessage)message);
                 }
             }
-        }
+//        }
     }
     public void processMessage(MapMessage mapMessage) {
         try {
             String changetype = mapMessage.getStringProperty("messageType");
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
-
+                log("ScoreConsumer::processMessage: gameid="+gameid);
+                consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
 
                 String period = "";
                 String timer = "";
@@ -156,10 +158,9 @@ public class ScoresConsumer implements MessageListener {
 
                 Game g = AppController.getGame(gameid);
                 if (g != null) {
-
-                    GameStatus gameStatus = GameStatus.find(status);
-                    if ( null != gameStatus ) {
-                        ScoreChangedProcessor.process(gameStatus,g,currentvisitorscore,currenthomescore);
+                    GameStatus newGameStatus = GameStatus.find(status);
+                    if ( null != newGameStatus ) {
+                        ScoreChangedProcessor.process(newGameStatus,g,currentvisitorscore,currenthomescore);
                     } else {
                         Utils.log("ScoreConsumer: skip status "+status+", league id="+g.getLeague_id());
 //                        Utils.log("ScoreConsumer: SHOULD Disable DEBUG false status for debugging, set to in progress skip status "+status+", league id="+g.getLeague_id());
@@ -169,13 +170,16 @@ public class ScoresConsumer implements MessageListener {
 
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
+                    AppController.addOrUpdateGame(g);
 
                 } else {
                     g = new Game();
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
 //                    AppController.addGame(g);
-                    scoreMessageProcessor.addMessage(AppController.getGame(gameid));
+//                    scoreMessageProcessor.addMessage(g);
+                    //should not add if game id not found from cache, because new Game() does not give game critical game info like date, and league -- 2021-10-30
+                    log("Warning: null game found for game id:"+gameid);
                 }
             }
         } catch (Exception e) {

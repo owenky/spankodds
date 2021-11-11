@@ -23,22 +23,22 @@ public class BestLines {
         Spreadline bhsl = null;
 
 
-        for (int i = 0; i < allcols.size(); i++) {
-            Bookie b = (Bookie) allcols.get(i);
+		for (Object allcol : allcols) {
+			Bookie b = (Bookie) allcol;
 			if (b.getBookie_id() >= 990) {
 				continue;
 			}
 
 ///////////////////////////////////spreadlines
-            try {
-                Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
-                if ( null != sl) {
+			try {
+				Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
+				if (null != sl) {
 					sl.setBestVisitSpread(false);
 					sl.setBestHomeSpread(false);
 					if (bvsl == null && sl.getCurrentvisitjuice() != 0) {
 						bvsl = sl;
 					} else if (sl.getCurrentvisitjuice() != 0) {
-						if (sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
+						if ( null == bvsl || sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
 							bvsl = sl;
 						} else if (sl.getCurrentvisitspread() == bvsl.getCurrentvisitspread()) {
 							if (sl.getCurrentvisitjuice() > bvsl.getCurrentvisitjuice()) {
@@ -51,7 +51,7 @@ public class BestLines {
 					if (bhsl == null && sl.getCurrenthomejuice() != 0) {
 						bhsl = sl;
 					} else if (sl.getCurrenthomejuice() != 0) {
-						if (sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
+						if ( null == bhsl || sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
 							bhsl = sl;
 						} else if (sl.getCurrenthomespread() == bhsl.getCurrenthomespread()) {
 							if (sl.getCurrenthomejuice() > bhsl.getCurrenthomejuice()) {
@@ -61,10 +61,10 @@ public class BestLines {
 					}
 				}
 
-            } catch (Exception ex) {
-                log(ex);
-            }
-        }
+			} catch (Exception ex) {
+				log(ex);
+			}
+		}
 		if (bvsl != null) {
 			bvsl.setBestVisitSpread(true);
 		}
@@ -86,20 +86,20 @@ public class BestLines {
         Totalline bo = null;
         Totalline bu = null;
 
-        for (int i = 0; i < allcols.size(); i++) {
-            Bookie b = (Bookie) allcols.get(i);
+		for (Object allcol : allcols) {
+			Bookie b = (Bookie) allcol;
 			if (b.getBookie_id() >= 990) {
 				continue;
 			}
-            try {
-                Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
-                if ( null != tl) {
+			try {
+				Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
+				if (null != tl) {
 					tl.setBestOver(false);
 					tl.setBestUnder(false);
 					if (bo == null && tl.getCurrentoverjuice() != 0) {
 						bo = tl;
 					} else if (tl.getCurrentoverjuice() != 0) {
-						if (tl.getCurrentover() < bo.getCurrentover()) {
+						if (null == bo || tl.getCurrentover() < bo.getCurrentover()) {
 							bo = tl;
 						} else if (tl.getCurrentover() == bo.getCurrentover()) {
 							if (tl.getCurrentoverjuice() > bo.getCurrentoverjuice()) {
@@ -112,7 +112,7 @@ public class BestLines {
 					if (bu == null && tl.getCurrentunderjuice() != 0) {
 						bu = tl;
 					} else if (tl.getCurrentunderjuice() != 0) {
-						if (tl.getCurrentunder() > bu.getCurrentunder()) {
+						if (null == bu || tl.getCurrentunder() > bu.getCurrentunder()) {
 							bu = tl;
 						} else if (tl.getCurrentunder() == bu.getCurrentunder()) {
 							if (tl.getCurrentunderjuice() > bu.getCurrentunderjuice()) {
@@ -121,11 +121,11 @@ public class BestLines {
 						}
 					}
 				}
-            } catch (Exception ex) {
-                log(ex);
-            }
+			} catch (Exception ex) {
+				log(ex);
+			}
 
-        }
+		}
 
 		if (bo != null) {
 			bo.setBestOver(true);
@@ -150,14 +150,14 @@ public class BestLines {
         TeamTotalline bho = null;
         TeamTotalline bhu = null;
 
-        for (int i = 0; i < allcols.size(); i++) {
-            Bookie b = (Bookie) allcols.get(i);
+		for (Object allcol : allcols) {
+			Bookie b = (Bookie) allcol;
 			if (b.getBookie_id() >= 990) {
 				continue;
 			}
-            try {
-                TeamTotalline ttl = AppController.getTeamTotalline(b.getBookie_id(), gameid, period);
-                if ( null != ttl) {
+			try {
+				TeamTotalline ttl = AppController.getTeamTotalline(b.getBookie_id(), gameid, period);
+				if (null != ttl) {
 					ttl.setBestVisitOver(false);
 					ttl.setBestVisitUnder(false);
 					ttl.setBestHomeOver(false);
@@ -165,7 +165,7 @@ public class BestLines {
 					if (bvo == null && ttl.getCurrentvisitoverjuice() != 0) {
 						bvo = ttl;
 					} else if (ttl.getCurrentvisitoverjuice() != 0) {
-						if (ttl.getCurrentvisitover() < bvo.getCurrentvisitover()) {
+						if (null == bvo || ttl.getCurrentvisitover() < bvo.getCurrentvisitover()) {
 							bvo = ttl;
 						} else if (ttl.getCurrentvisitover() == bvo.getCurrentvisitover()) {
 							if (ttl.getCurrentvisitoverjuice() > bvo.getCurrentvisitoverjuice()) {
@@ -178,7 +178,7 @@ public class BestLines {
 					if (bvu == null && ttl.getCurrentvisitunderjuice() != 0) {
 						bvu = ttl;
 					} else if (ttl.getCurrentvisitunderjuice() != 0) {
-						if (ttl.getCurrentvisitunder() > bvu.getCurrentvisitunder()) {
+						if (null == bvu || ttl.getCurrentvisitunder() > bvu.getCurrentvisitunder()) {
 							bvu = ttl;
 						} else if (ttl.getCurrentvisitunder() == bvu.getCurrentvisitunder()) {
 							if (ttl.getCurrentvisitunderjuice() > bvu.getCurrentvisitunderjuice()) {
@@ -190,7 +190,7 @@ public class BestLines {
 					if (bho == null && ttl.getCurrenthomeoverjuice() != 0) {
 						bho = ttl;
 					} else if (ttl.getCurrenthomeoverjuice() != 0) {
-						if (ttl.getCurrenthomeover() < bho.getCurrenthomeover()) {
+						if (null == bho || ttl.getCurrenthomeover() < bho.getCurrenthomeover()) {
 							bho = ttl;
 						} else if (ttl.getCurrenthomeover() == bho.getCurrenthomeover()) {
 							if (ttl.getCurrenthomeoverjuice() > bho.getCurrenthomeoverjuice()) {
@@ -203,7 +203,7 @@ public class BestLines {
 					if (bhu == null && ttl.getCurrenthomeunderjuice() != 0) {
 						bhu = ttl;
 					} else if (ttl.getCurrenthomeunderjuice() != 0) {
-						if (ttl.getCurrenthomeunder() > bhu.getCurrenthomeunder()) {
+						if (null == bhu || ttl.getCurrenthomeunder() > bhu.getCurrenthomeunder()) {
 							bhu = ttl;
 						} else if (ttl.getCurrenthomeunder() == bhu.getCurrenthomeunder()) {
 							if (ttl.getCurrenthomeunderjuice() > bhu.getCurrenthomeunderjuice()) {
@@ -213,10 +213,10 @@ public class BestLines {
 					}
 				}
 
-            } catch (Exception ex) {
-                log(ex);
-            }
-        }
+			} catch (Exception ex) {
+				log(ex);
+			}
+		}
 
 
 		if (bvo != null) {
@@ -245,20 +245,20 @@ public class BestLines {
         Moneyline bvml = null;
         Moneyline bhml = null;
         Moneyline bdml = null;
-        for (int i = 0; i < allcols.size(); i++) {
-            Bookie b = (Bookie) allcols.get(i);
+		for (Object allcol : allcols) {
+			Bookie b = (Bookie) allcol;
 			if (b.getBookie_id() >= 990) {
 				continue;
 			}
-            try {
-                Moneyline ml = AppController.getMoneyline(b.getBookie_id(), gameid, period);
-                if ( null != ml) {
+			try {
+				Moneyline ml = AppController.getMoneyline(b.getBookie_id(), gameid, period);
+				if (null != ml) {
 					ml.setBestVisitMoney(false);
 					ml.setBestHomeMoney(false);
 					if (bvml == null && ml.getCurrentvisitjuice() != 0) {
 						bvml = ml;
 					} else if (ml.getCurrentvisitjuice() != 0) {
-						if (ml.getCurrentvisitjuice() > bvml.getCurrentvisitjuice()) {
+						if (null == bvml || ml.getCurrentvisitjuice() > bvml.getCurrentvisitjuice()) {
 							bvml = ml;
 						}
 					}
@@ -267,7 +267,7 @@ public class BestLines {
 					if (bhml == null && ml.getCurrenthomejuice() != 0) {
 						bhml = ml;
 					} else if (ml.getCurrenthomejuice() != 0) {
-						if (ml.getCurrenthomejuice() > bhml.getCurrenthomejuice()) {
+						if (null == bhml || ml.getCurrenthomejuice() > bhml.getCurrenthomejuice()) {
 							bhml = ml;
 						}
 					}
@@ -275,16 +275,16 @@ public class BestLines {
 					if (bdml == null && ml.getCurrentdrawjuice() != 0) {
 						bdml = ml;
 					} else if (ml.getCurrentdrawjuice() != 0) {
-						if (ml.getCurrentdrawjuice() > bdml.getCurrentdrawjuice()) {
+						if (null == bdml || ml.getCurrentdrawjuice() > bdml.getCurrentdrawjuice()) {
 							bdml = ml;
 						}
 					}
 				}
 
-            } catch (Exception ex) {
-                log(ex);
-            }
-        }
+			} catch (Exception ex) {
+				log(ex);
+			}
+		}
 		if (bvml != null) {
 			bvml.setBestVisitMoney(true);
 		}
@@ -323,21 +323,21 @@ public class BestLines {
         TeamTotalline bhu = null;
 
 
-        for (int i = 0; i < allcols.size(); i++) {
-            Bookie b = (Bookie) allcols.get(i);
+		for (Object allcol : allcols) {
+			Bookie b = (Bookie) allcol;
 			if (b.getBookie_id() >= 990) {
 				continue;
 			}
 ///////////////////////////////////spreadlines
-            try {
-                Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
-                if ( null != sl) {
+			try {
+				Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
+				if (null != sl) {
 					sl.setBestVisitSpread(false);
 					sl.setBestHomeSpread(false);
 					if (bvsl == null && sl.getCurrentvisitjuice() != 0) {
 						bvsl = sl;
 					} else if (sl.getCurrentvisitjuice() != 0) {
-						if (sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
+						if (null == bvsl || sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
 							bvsl = sl;
 						} else if (sl.getCurrentvisitspread() == bvsl.getCurrentvisitspread()) {
 							if (sl.getCurrentvisitjuice() > bvsl.getCurrentvisitjuice()) {
@@ -350,7 +350,7 @@ public class BestLines {
 					if (bhsl == null && sl.getCurrenthomejuice() != 0) {
 						bhsl = sl;
 					} else if (sl.getCurrenthomejuice() != 0) {
-						if (sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
+						if (null == bhsl || sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
 							bhsl = sl;
 						} else if (sl.getCurrenthomespread() == bhsl.getCurrenthomespread()) {
 							if (sl.getCurrenthomejuice() > bhsl.getCurrenthomejuice()) {
@@ -359,22 +359,22 @@ public class BestLines {
 						}
 					}
 				}
-            } catch (Exception ex) {
-                log(ex);
-            }
+			} catch (Exception ex) {
+				log(ex);
+			}
 
 
 ///////////////////////////////////moneylines
 
-            try {
-                Moneyline ml = AppController.getMoneyline(b.getBookie_id(), gameid, period);
-                if ( null != ml) {
+			try {
+				Moneyline ml = AppController.getMoneyline(b.getBookie_id(), gameid, period);
+				if (null != ml) {
 					ml.setBestVisitMoney(false);
 					ml.setBestHomeMoney(false);
 					if (bvml == null && ml.getCurrentvisitjuice() != 0) {
 						bvml = ml;
 					} else if (ml.getCurrentvisitjuice() != 0) {
-						if (ml.getCurrentvisitjuice() > bvml.getCurrentvisitjuice()) {
+						if (null == bvml || ml.getCurrentvisitjuice() > bvml.getCurrentvisitjuice()) {
 							bvml = ml;
 						}
 					}
@@ -383,7 +383,7 @@ public class BestLines {
 					if (bhml == null && ml.getCurrenthomejuice() != 0) {
 						bhml = ml;
 					} else if (ml.getCurrenthomejuice() != 0) {
-						if (ml.getCurrenthomejuice() > bhml.getCurrenthomejuice()) {
+						if (null == bhml || ml.getCurrenthomejuice() > bhml.getCurrenthomejuice()) {
 							bhml = ml;
 						}
 					}
@@ -391,27 +391,27 @@ public class BestLines {
 					if (bdml == null && ml.getCurrentdrawjuice() != 0) {
 						bdml = ml;
 					} else if (ml.getCurrentdrawjuice() != 0) {
-						if (ml.getCurrentdrawjuice() > bdml.getCurrentdrawjuice()) {
+						if (null == bdml || ml.getCurrentdrawjuice() > bdml.getCurrentdrawjuice()) {
 							bdml = ml;
 						}
 					}
 				}
 
-            } catch (Exception ex) {
-                log(ex);
-            }
+			} catch (Exception ex) {
+				log(ex);
+			}
 ///////////////////////////////////totalline
 
 
-            try {
-                Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
-                if ( null != tl) {
+			try {
+				Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
+				if (null != tl) {
 					tl.setBestOver(false);
 					tl.setBestUnder(false);
 					if (bo == null && tl.getCurrentoverjuice() != 0) {
 						bo = tl;
 					} else if (tl.getCurrentoverjuice() != 0) {
-						if (tl.getCurrentover() < bo.getCurrentover()) {
+						if (null == bo || tl.getCurrentover() < bo.getCurrentover()) {
 							bo = tl;
 						} else if (tl.getCurrentover() == bo.getCurrentover()) {
 							if (tl.getCurrentoverjuice() > bo.getCurrentoverjuice()) {
@@ -424,7 +424,7 @@ public class BestLines {
 					if (bu == null && tl.getCurrentunderjuice() != 0) {
 						bu = tl;
 					} else if (tl.getCurrentunderjuice() != 0) {
-						if (tl.getCurrentunder() > bu.getCurrentunder()) {
+						if (null == bu || tl.getCurrentunder() > bu.getCurrentunder()) {
 							bu = tl;
 						} else if (tl.getCurrentunder() == bu.getCurrentunder()) {
 							if (tl.getCurrentunderjuice() > bu.getCurrentunderjuice()) {
@@ -433,15 +433,15 @@ public class BestLines {
 						}
 					}
 				}
-            } catch (Exception ex) {
-                log(ex);
-            }
+			} catch (Exception ex) {
+				log(ex);
+			}
 
 
-            //teamtotal line
-            try {
-                TeamTotalline ttl = AppController.getTeamTotalline(b.getBookie_id(), gameid, period);
-                if ( null != ttl) {
+			//teamtotal line
+			try {
+				TeamTotalline ttl = AppController.getTeamTotalline(b.getBookie_id(), gameid, period);
+				if (null != ttl) {
 					ttl.setBestVisitOver(false);
 					ttl.setBestVisitUnder(false);
 					ttl.setBestHomeOver(false);
@@ -449,7 +449,7 @@ public class BestLines {
 					if (bvo == null && ttl.getCurrentvisitoverjuice() != 0) {
 						bvo = ttl;
 					} else if (ttl.getCurrentvisitoverjuice() != 0) {
-						if (ttl.getCurrentvisitover() < bvo.getCurrentvisitover()) {
+						if (null == bvo || ttl.getCurrentvisitover() < bvo.getCurrentvisitover()) {
 							bvo = ttl;
 						} else if (ttl.getCurrentvisitover() == bvo.getCurrentvisitover()) {
 							if (ttl.getCurrentvisitoverjuice() > bvo.getCurrentvisitoverjuice()) {
@@ -462,7 +462,7 @@ public class BestLines {
 					if (bvu == null && ttl.getCurrentvisitunderjuice() != 0) {
 						bvu = ttl;
 					} else if (ttl.getCurrentvisitunderjuice() != 0) {
-						if (ttl.getCurrentvisitunder() > bvu.getCurrentvisitunder()) {
+						if (null == bvu || ttl.getCurrentvisitunder() > bvu.getCurrentvisitunder()) {
 							bvu = ttl;
 						} else if (ttl.getCurrentvisitunder() == bvu.getCurrentvisitunder()) {
 							if (ttl.getCurrentvisitunderjuice() > bvu.getCurrentvisitunderjuice()) {
@@ -474,7 +474,7 @@ public class BestLines {
 					if (bho == null && ttl.getCurrenthomeoverjuice() != 0) {
 						bho = ttl;
 					} else if (ttl.getCurrenthomeoverjuice() != 0) {
-						if (ttl.getCurrenthomeover() < bho.getCurrenthomeover()) {
+						if (null == bho || ttl.getCurrenthomeover() < bho.getCurrenthomeover()) {
 							bho = ttl;
 						} else if (ttl.getCurrenthomeover() == bho.getCurrenthomeover()) {
 							if (ttl.getCurrenthomeoverjuice() > bho.getCurrenthomeoverjuice()) {
@@ -487,7 +487,7 @@ public class BestLines {
 					if (bhu == null && ttl.getCurrenthomeunderjuice() != 0) {
 						bhu = ttl;
 					} else if (ttl.getCurrenthomeunderjuice() != 0) {
-						if (ttl.getCurrenthomeunder() > bhu.getCurrenthomeunder()) {
+						if (null == bhu || ttl.getCurrenthomeunder() > bhu.getCurrenthomeunder()) {
 							bhu = ttl;
 						} else if (ttl.getCurrenthomeunder() == bhu.getCurrenthomeunder()) {
 							if (ttl.getCurrenthomeunderjuice() > bhu.getCurrenthomeunderjuice()) {
@@ -497,12 +497,12 @@ public class BestLines {
 					}
 				}
 
-            } catch (Exception ex) {
-                log(ex);
-            }
+			} catch (Exception ex) {
+				log(ex);
+			}
 
 
-        }
+		}
         //log("bestline "+gameid+".."+period+".."+bvsl);
 		if (bvsl != null) {
 			bvsl.setBestVisitSpread(true);
@@ -538,9 +538,9 @@ public class BestLines {
 			bhu.setBestHomeUnder(true);
 		}
 
-        if (bhsl != null) {
-            //log("gameid="+gameid+"..bhsl="+bhsl.getBookieid()+"..bhsl="+bhsl.getCurrenthomespread()+bhsl.getCurrenthomejuice());
-        }
+//        if (bhsl != null) {
+//            //log("gameid="+gameid+"..bhsl="+bhsl.getBookieid()+"..bhsl="+bhsl.getCurrenthomespread()+bhsl.getCurrenthomejuice());
+//        }
 
     }
 

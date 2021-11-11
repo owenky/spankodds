@@ -3,6 +3,7 @@ package com.sia.client.model;
 import java.util.Vector;
 
 public class User {
+    private String bookieTitles;
     String email;
     String password;
     String username;
@@ -361,7 +362,12 @@ public class User {
     public void setBigearnAlert(String s) {
         bigearnalert = s;
     }
-
+    public void setBookieTitles(String bookieTitles) {
+        this.bookieTitles = bookieTitles;
+    }
+    public String getBookieTitles() {
+        return bookieTitles;
+    }
     // this method will send the login server all of the user preferences for the server
     // to store in its database
     public void notifyServerUserPreferences() {

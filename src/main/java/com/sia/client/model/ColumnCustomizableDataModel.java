@@ -12,11 +12,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import static com.sia.client.config.Utils.log;
+import static com.sia.client.config.Utils.*;
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 
 public class ColumnCustomizableDataModel<V extends KeyedObject> implements TableModel {
@@ -24,7 +26,9 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final List<TableColumn> allColumns;
+    private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
+    private boolean toConfigHeaderRow = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
 
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
@@ -36,6 +40,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
+    }
+    public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
+        this.toConfigHeaderRow = toConfigHeaderRow;
+    }
+    public boolean toConfigHeaderRow() {
+        return this.toConfigHeaderRow;
     }
     @Override
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
@@ -92,40 +102,40 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         throw new IllegalStateException("Pending implementation");
     }
-    public void removeGames(String[] gameidstr) {
-        Integer [] gameIds = new Integer[gameidstr.length];
-        for(int i=0;i<gameidstr.length;i++) {
-            gameIds[i] = Integer.parseInt(gameidstr[i]);
-        }
+    public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
         List<TableSection<V>> gameLines = getTableSections();
         for (TableSection<V> linesTableData : gameLines) {
             try {
-                linesTableData.removeGameIds(gameIds);
+                linesTableData.removeGameIdsAndCleanup(gameIdRemovedSet);
             } catch (Exception ex) {
                 log(ex);
             }
         }
+        fireTableSectionChangeEvent();
+//        this.buildIndexMappingCache(false); //moved to be exceuted by this.fireTableChanged -- 2021-11-06
         this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void fireTableChanged(TableModelEvent e) {
-        //TODO: need to  buildIndexMappingCache for update? ( scenario: game data changed.)
-        if (TableUtils.toRebuildCache(e) ) {
+        if (TableUtils.toRebuildCache(e) || toConfigHeaderRow()) {
             long begin = System.currentTimeMillis();
-            buildIndexMappingCache();
+            buildIndexMappingCache(false);
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
         }
         delegator.fireTableChanged(e);
     }
-    public TableSection<V> findTableSectionByHeaderValue(String gameGroupHeader) {
+    public TableSection<V> findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
         TableSection<V> rtn = null;
         List<TableSection<V>> gameLines = getTableSections();
         for (TableSection<V> ltd : gameLines) {
-            if (gameGroupHeader.equalsIgnoreCase(ltd.getGameGroupHeader())) {
+            if (gameGroupHeader.equals(ltd.getGameGroupHeader())) {
                 rtn = ltd;
                 break;
             }
         }
         return rtn;
+    }
+    public TableSection<V> findTableSectionByGameid(int gameId) {
+        return getTableSections().stream().filter(ts-> 0<=ts.getRowIndex(gameId)).findAny().orElse(null);
     }
     public List<TableColumn> getAllColumns() {
         return this.allColumns;
@@ -143,34 +153,77 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         return section.getGame(rowIndexInLinesTableData);
     }
     //refactored from MainScreen::moveGameToThisHeader(Game, String)
-    public void moveGameToThisHeader(V g, String header) {
-        V thisgame = null;
-        TableSection<V> group = null;
+//    public void moveGameToThisHeader(V g, GameGroupHeader header) {
+//        V thisgame = null;
+//        TableSection<V> group = null;
+//        for (TableSection<V> gameLine : tableSections) {
+//            thisgame = gameLine.removeGameId(g.getGame_id());
+//            if (thisgame != null) {
+//                group = gameLine;
+//                fireTableSectionChangeEvent();
+//                log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been removed from secion "+group.getGameGroupHeader());
+//                break;
+//            }
+//        }
+//        // now lets see if i found it in either
+//        if ( null != thisgame ) {
+//            TableSection<V> ltd = findTableSectionByHeaderValue(header);
+//            if ( null != ltd) {
+//                addGameToTableSection(ltd,thisgame);
+//                log("GAME MOVED, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and SUCCESSFULLY added to "+header);
+//            } else {
+//                log( new Exception("can't find LinesTableData for header:"+header));
+//            }
+//        } else {
+//            log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
+//        }
+//    }
+    public void moveGameToThisHeader(V g, GameGroupHeader header) {
+        TableSection<V> sourceGroup = null;
         for (TableSection<V> gameLine : tableSections) {
-            thisgame = gameLine.removeGameId(g.getGame_id(),false);
-            if (thisgame != null) {
-                group = gameLine;
+            int index = gameLine.getRowIndex(g.getGame_id());
+            if ( 0 <= index) {
+                sourceGroup = gameLine;
                 break;
             }
         }
         // now lets see if i found it in either
-        if ( null != thisgame ) // i did find it
-        {
-            TableSection<V> ltd = findTableSectionByHeaderValue(header);
-
-log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and is about to add to header "+header);
-
-            if ( null != ltd) {
-                ltd.addGame(thisgame, false);
-                log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and SUCCESSFULLY added to "+header);
-            } else {
-                log( new Exception("can't find LinesTableData for header:"+header));
-            }
-            this.buildIndexMappingCache();
-            fireTableChanged(new TableModelEvent(this));
+        if ( null != sourceGroup ) {
+            moveGameFromSourceToTarget(sourceGroup,g,header);
         } else {
             log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
         }
+    }
+    public void moveGameFromSourceToTarget(TableSection<V> sourceSection, V game,GameGroupHeader targetGameGroupHeader) {
+
+        sourceSection.removeGameId(game.getGame_id());
+        fireTableSectionChangeEvent();
+        log("MOVING GAME, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been removed from secion "+sourceSection.getGameGroupHeader());
+
+        TableSection<V> ltd = findTableSectionByHeaderValue(targetGameGroupHeader);
+        if ( null != ltd) {
+            addGameToTableSection(ltd,game);
+            log("GAME MOVED, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been moved from secion "+sourceSection.getGameGroupHeader()+" and SUCCESSFULLY added to "+targetGameGroupHeader);
+        } else {
+            log( new Exception("can't find LinesTableData for header:"+targetGameGroupHeader));
+        }
+
+    }
+    protected void addGameToTableSection(TableSection<V> ltd, V game) {
+
+        ltd.addOrUpdate(game);
+        ltd.sort(getDefaultGameComparator());
+        fireTableSectionChangeEvent();
+//        this.buildIndexMappingCache(false); //to be executed by  fireTableChanged(e) -- 2021-11-06
+        int affectedRowModelIndex = getRowModelIndex(ltd, ltd.getRowIndex(game.getGame_id()));
+        TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
+        checkAndRunInEDT(() -> fireTableChanged(e));
+
+    }
+    public void updateRow(TableSection<V> tableSection, int rowIndexInTableSection) {
+        int affectedRowModelIndex = getRowModelIndex(tableSection, rowIndexInTableSection);
+        TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
+        checkAndRunInEDT(() -> fireTableChanged(e));
     }
     public TableSection<V> checktofire(V game,boolean repaint) {
         List<TableSection<V>> gameLines = getTableSections();
@@ -187,41 +240,20 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
     public List<TableSection<V>> getTableSections() {
         return tableSections;
     }
-    //copied from MainScreen::removeGame(int)
-    public V removeGame(Integer rowKey,boolean repaint) {
-        V rowData = null;
-        for (TableSection<V> sec : tableSections) {
-            //TODO add if logic
-            rowData = sec.removeGameId(rowKey,repaint);
-            if (null != rowData) {
-                //gameid is removed from a LinesTableData, don't need to continue because a gameid can only be in one LinesTableData
-                break;
-            }
-        }
-        return rowData;
-    }
     public int getRowModelIndex(TableSection<V> ltd, Integer gameId) {
         int gameIndex = ltd.getRowIndex(gameId);
-        if ( gameIndex >=0) {
+        return mapToRowModelIndex(ltd,gameIndex);
+    }
+    public int mapToRowModelIndex(TableSection<V> ltd, int rowIndexInTableSection) {
+        if ( 0 <= rowIndexInTableSection) {
             int offset = 0;
             for (int i = 0; i < ltd.getIndex(); i++) {
                 offset += tableSections.get(i).getRowCount();
             }
-            return gameIndex + offset;
+            return rowIndexInTableSection + offset;
         } else {
             return -1;
         }
-    }
-    public List<BlankGameStruct<V>> getBlankGameIdIndex() {
-        List<BlankGameStruct<V>> idIndexList = new ArrayList<>();
-        int rowModeIndex=0;
-        for(TableSection<V> ltd: tableSections) {
-            if ( ltd.getRowCount() > 0 && ltd.hasHeader()) {
-                idIndexList.add(new BlankGameStruct<>(rowModeIndex, ltd));
-            }
-            rowModeIndex+=ltd.getRowCount();
-        }
-        return idIndexList;
     }
     public void addGameLine(TableSection<V> gameLine) {
         addGameLine(tableSections.size(),gameLine);
@@ -229,7 +261,8 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
     public void addGameLine(int index,TableSection<V> gameLine) {
         gameLine.setContainingTableModel(this);
         tableSections.add(index,gameLine);
-        resetSectionIndex(index);
+        fireTableSectionChangeEvent();
+//        resetSectionIndex(index);
     }
     private void resetSectionIndex(int startIndex) {
         for(int i=startIndex;i<tableSections.size();i++) {
@@ -237,16 +270,21 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
             section.setIndex(i);
         }
     }
-    public void buildIndexMappingCache() {
+    public void buildIndexMappingCache(boolean toSort) {
         ltdSrhStructCache.clear();
+        if ( toSort) {
+            sort();
+            resetSectionIndex(0);
+        }
         int modelIndex = 0;
         for(TableSection<V> sec: tableSections) {
-            sec.resetDataVector();
+//            sec.resetDataVector();  -- Is it safe to disable it? --2021-11-07
             for(int i=0;i<sec.getRowCount();i++) {
                 int offset = modelIndex-i;
                 ltdSrhStructCache.put(modelIndex++,new LtdSrhStruct<>(sec,offset));
             }
         }
+        debug("resetDataVector Disabled in buildIndexMappingCache");
     }
     public LtdSrhStruct<V> getLinesTableData(int rowModelIndex) {
 
@@ -281,19 +319,47 @@ log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has bee
         return this.getTableSections().stream().anyMatch(s-> 0 <= s.getRowIndex(gameId));
     }
     public static String retrieveGameGroupHeader(Object value) {
-        if ( value instanceof String) {
-            String [] parts = ((String)value).split(SiaConst.GameGroupHeaderIden);
-            if ( 2 == parts.length && parts[0].isEmpty()) {
-                return parts[1];
-            } else {
-                return null;
-            }
+        if ( value instanceof GameGroupHeader) {
+            return ((GameGroupHeader)value).getGameGroupHeaderStr();
         } else {
             return null;
         }
     }
+    protected Comparator<TableSection<V>> getdefaultTableSectionComparator() {
+        return null;
+    }
+    protected Comparator<? super V> getDefaultGameComparator() {
+        return null;
+    }
+    public final void sort() {
+        sortTableSection(getdefaultTableSectionComparator());
+        sortGamesForAllTableSections(getDefaultGameComparator());
+    }
+
+    public void sortGamesForAllTableSections(Comparator<? super V> gameComparator) {
+        if ( null != gameComparator) {
+            for (TableSection<V> ts : tableSections) {
+                ts.sort(gameComparator);
+            }
+        }
+    }
+    public void sortTableSection(Comparator<TableSection<V>> tableSectionComparator) {
+        if ( null != tableSectionComparator) {
+            tableSections.sort(tableSectionComparator);
+            resetSectionIndex(0);
+            fireTableSectionChangeEvent();
+        }
+    }
     public TableSection<V> getLinesTableDataWithSecionIndex(int sectionIndex) {
        return tableSections.get(sectionIndex);
+    }
+    public void addTableSectionListener(TableSectionListener l) {
+        tableSectionListenerList.add(l);
+    }
+    private void fireTableSectionChangeEvent() {
+        for(TableSectionListener l :tableSectionListenerList) {
+            l.processTableSectionChanged();
+        }
     }
     private static void validateAndFixColumnModelIndex(List<TableColumn> allColumns) {
         if ( ! validateColumnIndex(allColumns)) {

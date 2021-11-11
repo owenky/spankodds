@@ -14,6 +14,6 @@ public class NewGameCreator implements EventGenerator{
         ColumnCustomizableDataModel<TestGame> model = tblProp.table.getModel();
         TableSection<TestGame> section = model.getLinesTableDataWithSecionIndex(insertedSectionIndex);
         TestGame testGame = tblProp.testGameCache.makeTestGame(insertedSectionIndex*100+section.getRowCount());
-        section.addGame(testGame,true);
+        section.addOrUpdate(testGame);
     }
 }

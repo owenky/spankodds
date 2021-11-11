@@ -7,6 +7,7 @@ import javax.swing.event.TableModelEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface AbstractScreen<T extends KeyedObject> {
@@ -37,7 +38,7 @@ public interface AbstractScreen<T extends KeyedObject> {
             });
         }
     }
-    default void removeGames(String[] gameids) {
-        getColumnCustomizableTable().getModel().removeGames(gameids);
+    default void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
+        getColumnCustomizableTable().getModel().removeGamesAndCleanup(gameIdRemovedSet);
     }
 }

@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameDateSorter;
+import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
@@ -13,7 +14,7 @@ import com.sia.client.model.TableSection;
 import javax.swing.table.TableColumn;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -23,14 +24,38 @@ import static com.sia.client.config.Utils.log;
 
 public class LinesTableData extends TableSection<Game> {
 
-    protected final SimpleDateFormat m_frm;
     private final boolean shortteam;
     private final SportType sportType;
-    protected Date m_date;
     boolean showingOpener = false;
     boolean showingPrior = false;
     private String display;
+    private int period;
+    private boolean timesort;
+    private final List<TableColumn> columns;
+    private long cleartime;
+    private boolean last;
+    private boolean opener;
 
+    public LinesTableData(SportType sportType,String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, GameGroupHeader gameGroupHeader,List<TableColumn> columns) {
+        this(sportType,display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), columns);
+    }
+    public LinesTableData(SportType sportType, String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, GameGroupHeader gameGroupHeader, Games gameCache, List<TableColumn> columns) {
+        super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
+        this.sportType = sportType;
+        this.cleartime = cleartime;
+        this.timesort = timesort;
+        this.shortteam = shortteam;
+        this.display = display;
+        this.period = period;
+        this.columns = columns;
+        this.last = last;
+        this.opener = opener;
+        if (opener) {
+            showOpener();
+        } else if (last) {
+            showPrior();
+        }
+    }
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -46,35 +71,6 @@ public class LinesTableData extends TableSection<Game> {
     @Override
     public int hashCode() {
         return Objects.hash(sportType, gameGroupHeader);
-    }
-
-    private int period;
-    private boolean timesort;
-    private final List<TableColumn> columns;
-    private long cleartime;
-    private boolean last;
-    private boolean opener;
-
-    public LinesTableData(SportType sportType,String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader,List<TableColumn> columns) {
-        this(sportType,display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), columns);
-    }
-    public LinesTableData(SportType sportType, String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, String gameGroupHeader, Games gameCache, List<TableColumn> columns) {
-        super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
-        this.sportType = sportType;
-        m_frm = new SimpleDateFormat("MM/dd/yyyy");
-        this.cleartime = cleartime;
-        this.timesort = timesort;
-        this.shortteam = shortteam;
-        this.display = display;
-        this.period = period;
-        this.columns = columns;
-        this.last = last;
-        this.opener = opener;
-        if (opener) {
-            showOpener();
-        } else if (last) {
-            showPrior();
-        }
     }
     public SportType getSportType() {
         return sportType;
@@ -133,7 +129,7 @@ public class LinesTableData extends TableSection<Game> {
         for (TableColumn tc : columns) {
             Object value;
             if (SiaConst.BlankGameId == gameid) {
-                value = SiaConst.GameGroupHeaderIden+getGameGroupHeader();
+                value = getGameGroupHeader();
             } else {
                 value = getCellValue(tc, g);
             }
@@ -280,11 +276,11 @@ public class LinesTableData extends TableSection<Game> {
         resetDataVector(); //including sorting gamesVec
     }
     @Override
-    public void removeGameIds(Integer[] gameidstoremove) {
-        if (gameidstoremove.length == 1 && gameidstoremove[0].equals(-1)) {
+    public void removeGameIdsAndCleanup(Collection<Integer> gameidstoremove){
+        if ( 1 == gameidstoremove.size()  && gameidstoremove.iterator().next().equals(-1)) {
             removeYesterdaysGames();
         } else {
-             super.removeGameIds(gameidstoremove);
+             super.removeGameIdsAndCleanup(gameidstoremove);
         }
     }
 
@@ -315,13 +311,6 @@ log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disab
             fire(null);
         }
         AppController.enableTabs();
-    }
-
-    public String getTitle() {
-        if (m_date == null) {
-            return "Stock Quotes";
-        }
-        return "Stock Quotes at " + m_frm.format(m_date);
     }
     public boolean getTimesort() {
         return timesort;

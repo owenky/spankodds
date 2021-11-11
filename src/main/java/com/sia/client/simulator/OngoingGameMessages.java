@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.sia.client.config.Utils.log;
+import static com.sia.client.simulator.InitialGameMessages.interestedMessageTypes;
 
 public abstract class OngoingGameMessages {
 
@@ -48,7 +49,7 @@ public abstract class OngoingGameMessages {
     }
 
     public synchronized static void addMessage(MessageType messgeType, Message message) {
-        if (InitialGameMessages.shouldLogMesg && InitialGameMessages.interestedMessageTypes.contains(messgeType)) {
+        if (InitialGameMessages.shouldLogMesg && interestedMessageTypes.contains(messgeType)) {
             String text;
             if (message instanceof ActiveMQMapMessage) {
                 text = convert((ActiveMQMapMessage) message);
@@ -98,7 +99,7 @@ public abstract class OngoingGameMessages {
 
     static void addText(MessageType messgeType, String text) {
         if (InitialGameMessages.shouldLogMesg) {
-            buffer.add(messgeType + MessageTypeDelimiter + text);
+            buffer.add(System.currentTimeMillis() + MessageTypeDelimiter + messgeType + MessageTypeDelimiter + text);
             if (buffer.size() >= batchSize) {
                 flushMessages();
             }
@@ -174,13 +175,32 @@ public abstract class OngoingGameMessages {
         }
     }
     private static void processMessage(String text) {
-        String[] strs = text.split(MessageTypeDelimiter);
-        String type = strs[0];
-        if (2 > strs.length) {
+
+        boolean toContinue=false;
+        for(String keyword: InitialGameMessages.filters) {
+            if ( text.contains(keyword)) {
+                toContinue=true;
+                break;
+            }
+        }
+
+        if ( ! toContinue && 0 < InitialGameMessages.filters.length) {
             return;
         }
-        String messageText = strs[1];
+
+        String[] strs = text.split(MessageTypeDelimiter);
+        if (3 > strs.length) {
+            return;
+        }
+        String timeStamp = strs[0];
+        String type = strs[1];
+        String messageText = strs[2];
         pause(10L);
+
+        toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));
+        if ( ! toContinue){
+            return;
+        }
 
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));

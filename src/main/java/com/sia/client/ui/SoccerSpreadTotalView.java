@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.LineData;
@@ -162,104 +163,81 @@ public class SoccerSpreadTotalView extends ViewValue {
         String whowasbetspread = "";
         String whowasbettotal = "";
         String whowasbetmoney = "";
-
         String whowasbetteamtotal = "";
+
         long tsnow = System.currentTimeMillis();
-        try {
-            visitspread = sl.getCurrentvisitspread();
-            visitjuice = sl.getCurrentvisitjuice();
-            homejuice = sl.getCurrenthomejuice();
+        visitspread = null == sl ? SiaConst.DefaultSpread : sl.getCurrentvisitspread();
+        visitjuice = null == sl ? SiaConst.DefaultSpread : sl.getCurrentvisitjuice();
+        homejuice = null == sl ? SiaConst.DefaultSpread : sl.getCurrenthomejuice();
+        whowasbetspread = null == sl ? "" : sl.getWhowasbet();
 
-            whowasbetspread = sl.getWhowasbet();
-            if (tsnow - sl.getCurrentts()<= 30000 && clearts < sl.getCurrentts()) {
-                spreadcolor = Color.RED;
-            }
-            else if (clearts < sl.getCurrentts()) {
-                spreadcolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("S"+id);
-            } else {
-                spreadcolor = Color.WHITE;
-            }
-            priorspreadcolor = spreadcolor;
-
-        } catch (Exception e) // no line
-        {
-            visitspread = homespread = -99999;
-            visitjuice = homejuice = -99999;
+        if (null == sl) {
+            spreadcolor = Color.WHITE;
+        } else if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
+            spreadcolor = Color.RED;
+        } else if (clearts < sl.getCurrentts()) {
+            spreadcolor = Color.BLACK;
+            //owen took out cuz maionscreen refreshes every sec
+            //FireThreadManager.remove("S"+id);
+        } else {
+            spreadcolor = Color.WHITE;
         }
+        priorspreadcolor = spreadcolor;
 
 
-        try {
-            over = tl.getCurrentover();
-            whowasbettotal = tl.getWhowasbet();
-            if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
-                totalcolor = Color.RED;
-            }
-            else if (clearts < tl.getCurrentts()) {
-                totalcolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("T"+id);
-            } else {
-                totalcolor = Color.WHITE;
-            }
-            priortotalcolor = totalcolor;
-        } catch (Exception ex) {
-            over = 99999;
+        over = null == tl ? SiaConst.DefaultOver : tl.getCurrentover();
+        whowasbettotal = null == tl ? "" : tl.getWhowasbet();
+
+        if (null == tl) {
+            totalcolor = Color.WHITE;
+        } else if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
+            totalcolor = Color.RED;
+        } else if (clearts < tl.getCurrentts()) {
+            totalcolor = Color.BLACK;
+            //owen took out cuz maionscreen refreshes every sec
+            //FireThreadManager.remove("T"+id);
+        } else {
+            totalcolor = Color.WHITE;
         }
+        priortotalcolor = totalcolor;
 
 
-        try {
-            visitmljuice = ml.getCurrentvisitjuice();
-            homemljuice = ml.getCurrenthomejuice();
-            drawmljuice = ml.getCurrentdrawjuice();
-            whowasbetmoney = ml.getWhowasbet();
+        visitmljuice = null == ml ? SiaConst.DefaultSpread : ml.getCurrentvisitjuice();
+        homemljuice = null == ml ? SiaConst.DefaultSpread : ml.getCurrenthomejuice();
+        drawmljuice = null == ml ? SiaConst.DefaultSpread : ml.getCurrentdrawjuice();
+        whowasbetmoney = null == ml ? "" : ml.getWhowasbet();
 
-            if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
-                moneycolor = Color.RED;
-            }
-            else if (clearts < ml.getCurrentts()) {
-                moneycolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("M"+id);
-            } else {
-                moneycolor = Color.WHITE;
-            }
-            priormoneycolor = moneycolor;
-
-        } catch (Exception e) // no line
-        {
-            visitmljuice = homemljuice = -99999;
-            drawmljuice = -99999;
-
+        if (null == ml) {
+            moneycolor = Color.WHITE;
+        } else if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
+            moneycolor = Color.RED;
+        } else if (clearts < ml.getCurrentts()) {
+            moneycolor = Color.BLACK;
+            //owen took out cuz maionscreen refreshes every sec
+            //FireThreadManager.remove("M"+id);
+        } else {
+            moneycolor = Color.WHITE;
         }
+        priormoneycolor = moneycolor;
 
+        visitover = null == ttl ? SiaConst.DefaultOver : ttl.getCurrentvisitover();
+        homeover = null == ttl ? SiaConst.DefaultOver : ttl.getCurrenthomeover();
+        whowasbetteamtotal = null == ttl ? "" : ttl.getWhowasbet();
 
-        try {
-            visitover = ttl.getCurrentvisitover();
-            homeover = ttl.getCurrenthomeover();
-            whowasbetteamtotal = ttl.getWhowasbet();
-            if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
-                teamtotalcolor = Color.RED;
-            }
-            //else if(priortotalcolor != Color.WHITE)
-            else if (clearts < ttl.getCurrentts()) {
-                teamtotalcolor = Color.BLACK;
-                //owen took out cuz maionscreen refreshes every sec
-                //FireThreadManager.remove("TT"+id);
-            } else {
-                teamtotalcolor = Color.WHITE;
-            }
-            priorteamtotalcolor = teamtotalcolor;
-        } catch (Exception ex) {
-            visitover = 99999;
-            visitunder = -99999;
-            visitoverjuice = visitunderjuice = -99999;
-            homeover = 99999;
-            homeunder = -99999;
-            homeoverjuice = homeunderjuice = -99999;
-
+        if (null == ttl) {
+            teamtotalcolor = Color.WHITE;
+        } else if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
+            teamtotalcolor = Color.RED;
         }
+        //else if(priortotalcolor != Color.WHITE)
+        else if (clearts < ttl.getCurrentts()) {
+            teamtotalcolor = Color.BLACK;
+            //owen took out cuz maionscreen refreshes every sec
+            //FireThreadManager.remove("TT"+id);
+        } else {
+            teamtotalcolor = Color.WHITE;
+        }
+        priorteamtotalcolor = teamtotalcolor;
 
 
         if (display.equals("spreadtotal")) {
@@ -268,7 +246,7 @@ public class SoccerSpreadTotalView extends ViewValue {
             bottomboxS = "";
             //totalcolor = drawcolor = Color.WHITE;
 
-            if (visitspread == -99999) {
+            if (visitspread == SiaConst.DefaultSpread) {
                 topboxS = "";
                 bottomboxS = "";
                 topcolor = bottomcolor = Color.WHITE; //spreadcolor;
@@ -898,30 +876,31 @@ public class SoccerSpreadTotalView extends ViewValue {
         double homeunderjuice;
 
 
-        try {
+        if ( null != sl) {
             visitspread = sl.getOpenervisitspread();
             visitjuice = sl.getOpenervisitjuice();
             homespread = sl.getOpenerhomespread();
             homejuice = sl.getOpenerhomejuice();
 
 
-        } catch (Exception e) // no line
+        } else  // no line
         {
             visitspread = 99999;
 
         }
 
-        try {
+        if ( null != tl) {
             over = tl.getOpenerover();
             overjuice = tl.getOpeneroverjuice();
             under = tl.getOpenerunder();
             underjuice = tl.getOpenerunderjuice();
 
-        } catch (Exception ex) {
+        } else {
             over = 99999;
 
         }
-        try {
+
+        if ( null != ttl) {
             visitover = ttl.getOpenervisitover();
             visitoverjuice = ttl.getOpenervisitoverjuice();
             visitunder = ttl.getOpenervisitunder();
@@ -931,23 +910,24 @@ public class SoccerSpreadTotalView extends ViewValue {
             homeunder = ttl.getOpenerhomeunder();
             homeunderjuice = ttl.getOpenerhomeunderjuice();
 
-        } catch (Exception ex) {
+        } else {
             visitover = homeover = 99999;
 
         }
 
-        try {
+        if ( null != ml) {
             visitmljuice = ml.getOpenervisitjuice();
             homemljuice = ml.getOpenerhomejuice();
             drawmljuice = ml.getOpenerdrawjuice();
 
-        } catch (Exception e) // no line
+        } else // no line
         {
             visitmljuice = homemljuice = 99999;
             drawmljuice = 99999;
 
         }
-        if (display.equals("spreadtotal")) {
+
+        if ("spreadtotal".equals(display)) {
             //--adding just spread code
 
             if (visitspread == 99999) {
@@ -1306,6 +1286,7 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         return boxes[0].getData();
     }
+
     public void clearColors(long cleartime) {
         priorspreadcolor = Color.WHITE;
         priortotalcolor = Color.WHITE;

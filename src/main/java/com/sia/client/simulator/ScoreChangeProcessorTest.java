@@ -6,7 +6,8 @@ import com.sia.client.model.GameStatus;
 import com.sia.client.model.Games;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.MainScreen;
+import com.sia.client.ui.SpankyWindow;
+import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.ScoreChangedProcessor;
 import com.sia.client.ui.ScoresConsumer;
 
@@ -42,7 +43,7 @@ public class ScoreChangeProcessorTest extends TestExecutor {
         try {
             int count=0;
             log("START ScoreChangeProcessorTest++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            MainScreen testScreen = MainScreen.findMainScreen(SportType.Soccer.getSportName());
+            MainScreen testScreen = SpankyWindow.getSpankyWindow(0).getSportsTabPane().findMainScreen(SportType.Soccer.getSportName());
             Games games = AppController.getGames();
             List<Game> allGames = new ArrayList<>();
             games.iterator().forEachRemaining(allGames::add);
@@ -51,7 +52,7 @@ public class ScoreChangeProcessorTest extends TestExecutor {
                     .filter(game-> ! GameStatus.Final.isSame(game.getStatus())).collect(Collectors.toList());
             for(Game game:soccerGames) {
                 if ( testScreen.shouldAddToScreen(game)) {
-log("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.getGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
+log("moving game "+game.getVisitorteam()+"/"+game.getHometeam()+" from "+ GameUtils.createGameGroupHeader(game)+" to "+GameStatus.InProgress.getGroupHeader());
                     ScoreChangedProcessor.process(GameStatus.InProgress, game,0, 0);
                 }
                 if ( count++ > 1000) {
