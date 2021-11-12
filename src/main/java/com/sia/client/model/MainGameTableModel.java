@@ -8,18 +8,22 @@ import com.sia.client.ui.TableUtils;
 import javax.swing.table.TableColumn;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.function.Function;
 
+import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
 import static com.sia.client.config.Utils.log;
 
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     private final SportType sportType;
     private static final Set<String> stageStrs = new HashSet<>();
+    private final Map<String,Integer> customizedTabGameGroupHeaderIndex = new HashMap<>();
     static {
         stageStrs.add(SiaConst.FinalStr);
         stageStrs.add(SiaConst.InProgresStr);
@@ -28,14 +32,37 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.SeriesPricesStr);
 //        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
     }
+    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns,List<String> customerizedGameGroupHeader) {
+        super(allColumns);
+        this.sportType = sportType;
+        if ( 0 <customerizedGameGroupHeader.size()) {
+            int offset = StageGroupAnchorOffset-1000;
+            for(String header: customerizedGameGroupHeader) {
+                this.customizedTabGameGroupHeaderIndex.put(header,offset++);
+            }
+            //add GameStatus
+            for(GameStatus gs: GameStatus.values()) {
+                this.customizedTabGameGroupHeaderIndex.put(gs.getGroupHeader().getGameGroupHeaderStr(),gs.getGroupHeader().getAnchorPos());
+            }
+        }
+    }
     @Override
     public Comparator<TableSection<Game>> getdefaultTableSectionComparator() {
         final GameGroupDateSorter gameGroupDateSorter = new GameGroupDateSorter();
         final GameGroupLeagueSorter gameGroupLeagueSorter = new GameGroupLeagueSorter();
         return (l1,l2)-> {
-            int result = gameGroupDateSorter.compare(l1.getGameGroupHeader(), l2.getGameGroupHeader());
-            if ( 0 == result ) {
-                result = gameGroupLeagueSorter.compare(l1.getGameGroupHeader(), l2.getGameGroupHeader());
+            int result;
+            if ( 0 == customizedTabGameGroupHeaderIndex.size()) {
+                result = gameGroupDateSorter.compare(l1.getGameGroupHeader(), l2.getGameGroupHeader());
+                if (0 == result) {
+                    result = gameGroupLeagueSorter.compare(l1.getGameGroupHeader(), l2.getGameGroupHeader());
+                }
+            } else {
+                Integer index1 = customizedTabGameGroupHeaderIndex.get(l1.getGameGroupHeader().getGameGroupHeaderStr());
+                Integer index2 = customizedTabGameGroupHeaderIndex.get(l2.getGameGroupHeader().getGameGroupHeaderStr());
+                index1 = null==index1?0:index1;
+                index2 = null==index2?0:index2;
+                result = index1-index2;
             }
             return result;
         };
@@ -43,10 +70,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     @Override
     protected Comparator<? super Game> getDefaultGameComparator() {
         return new GameSorter();
-    }
-    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns) {
-        super(allColumns);
-        this.sportType = sportType;
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -84,25 +107,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
                 }
             }
         }
-//        else if (null != ( err= GameUtils.checkError(game))) {
-//            log("***** Suspecious game ignored to be added to screen. err="+err+"---- "+GameUtils.getGameDebugInfo(game));
-//
-//        } else {
-//            //this method is called only when the game belong to this table, see conditioin of ms.parentOfGame(g)  in SportsTabPane::addGame()
-//            //need to re-draw screen when game group is not found in this table
-////            if ( GameUtils.isGameNear(game)) {
-////                if ( ! game.isInStage()) {
-////                    callBackOnNotFound.run();
-////                    log("REFRESH main screen for this game "+GameUtils.getGameDebugInfo(game));
-////                } else {
-////                    //when game is in stage, there might not be a regular game header for this game, instead this game is in stage header (i.e. Final, Halftime, etc...) -- 2021-10-05
-////                    log("SKIP REFRESHing main screen for this game because the game is in stage. ----"+GameUtils.getGameDebugInfo(game));
-////                }
-////            } else {
-////                log("SKIP REFRESHing main screen for this game  because the game is not near.---"+GameUtils.getGameDebugInfo(game));
-////            }
-//        }
-
     }
     private LinesTableData computeIfNeeded(GameGroupHeader gameGroupHeader, Game game, Function<GameGroupHeader,LinesTableData> function) {
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);

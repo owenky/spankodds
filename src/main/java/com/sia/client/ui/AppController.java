@@ -153,6 +153,7 @@ public class AppController {
     public static void waitForSpankyWindowLoaded() {
         try {
             messageProcessingLatch.await();
+//            Thread.sleep(1000*3600*5);
         } catch (InterruptedException e) {
             log(e);
         }

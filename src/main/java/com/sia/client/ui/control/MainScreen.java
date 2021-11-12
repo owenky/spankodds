@@ -55,7 +55,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public int period = 0;
     public long cleartime;
     public boolean showheaders = true;
-    public List<String> customheaders = new Vector();
+    private List<String> customheaders = new ArrayList<>();
     private List<GameGroupHeader> gamegroupheaders = new ArrayList<>();
     private Vector vecofgamegroups = new Vector();
     private Vector inprogressgames = new Vector();
@@ -87,7 +87,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     MainScreen(SportType sportType, List<String> customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
         this(sportType);
-        this.customheaders = customheaders;
+        this.customheaders = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
         this.showheaders = showheaders;
         sportType.setShowseries(showseries);
         sportType.setShowingame(showingame);
@@ -792,7 +792,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     private MainGameTableModel buildModel() {
 
-        MainGameTableModel model = new MainGameTableModel(sportType,allColumns);
+        MainGameTableModel model = new MainGameTableModel(sportType,allColumns,customheaders);
         Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
         Vector hiddencols = AppController.getHiddenCols();
         allColumns.clear();

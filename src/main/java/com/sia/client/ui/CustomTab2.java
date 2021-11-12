@@ -983,19 +983,6 @@ public class CustomTab2 extends JPanel {
 
             if (!editing) {
                 checkAndRunInEDT(() -> {
-//                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-//                    for (SportsTabPane tp : tabpanes) {
-//                        int numtabs = tp.getTabCount();
-//                        SportType st = SportType.createCustomizedSportType(tab);
-//                        MainScreen ms = tp.createMainScreen(st, customvec);
-//                        ms.setShowHeaders(includeheaders.isSelected());
-//                        ms.setShowSeries(includeseries.isSelected());
-//                        ms.setShowIngame(includeingame.isSelected());
-//                        ms.setShowAdded(includeadded.isSelected());
-//                        ms.setShowExtra(includeextra.isSelected());
-//                        ms.setShowProps(includeprops.isSelected());
-//                        tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs-1);
-//                    }
                     Consumer<SportsTabPane> consumer = (tp)-> {
                         int numtabs = tp.getTabCount();
                         SportType st = SportType.createCustomizedSportType(tab);
@@ -1012,21 +999,6 @@ public class CustomTab2 extends JPanel {
                 });
             } else {
                 checkAndRunInEDT(() -> {
-//                    Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-//                    for (SportsTabPane tp : tabpanes) {
-//                        MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
-//                        oldms.destroyMe();
-//                        SportType st = SportType.findBySportName(tab);
-//                        MainScreen ms =tp.createMainScreen(st, customvec);
-//                        ms.setShowHeaders(includeheaders.isSelected());
-//                        ms.setShowSeries(includeseries.isSelected());
-//                        ms.setShowIngame(includeingame.isSelected());
-//                        ms.setShowAdded(includeadded.isSelected());
-//                        ms.setShowExtra(includeextra.isSelected());
-//                        ms.setShowProps(includeprops.isSelected());
-//                        tp.setComponentAt(tabindex, ms);
-//                        tp.refreshCurrentTab();
-//                    }
                     Consumer<SportsTabPane> consumer = (tp)-> {
                         MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
                         oldms.destroyMe();

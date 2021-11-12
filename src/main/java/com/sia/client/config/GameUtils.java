@@ -8,8 +8,10 @@ import com.sia.client.ui.AppController;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class GameUtils {
@@ -24,6 +26,24 @@ public abstract class GameUtils {
     public static Sport getSport(Game game) {
         return AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
     }
+    public static List<String> convertLeagueIdHeaderToGameGroupHeaderStr(List<String> headerStrList) {
+
+        List<String> result = new ArrayList<>();
+        for (String headerStr : headerStrList) {
+            String[] headerProp = headerStr.split(" +");
+            int leagueId = Integer.parseInt(headerProp[0]);
+            Sport sport = AppController.getSportByLeagueId(leagueId);
+            if (null != sport) {
+                result.add(GameGroupHeader.constructGameGroupHeaderString(sport.getNormalizedLeaguename(),headerProp[1]));
+            }
+        }
+        return result;
+    }
+//    public static void main(String [] argv) {
+//        String headerStr = "1           2";
+//        String [] arr = headerStr.split(" +");
+//        System.out.println(Arrays.toString(arr)+", length="+arr.length);
+//    }
     public static String normalizeGameHeader(String gameGroupHeader) {
         if ( null != gameGroupHeader) {
             gameGroupHeader = gameGroupHeader.replace(SiaConst.SoccerStr,"").trim();

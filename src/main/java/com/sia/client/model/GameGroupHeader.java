@@ -31,7 +31,10 @@ public class GameGroupHeader {
         this.gameTime = gameTime;
         this.gameDate = null==gameTime?LocalDate.now():LocalDate.of(gameTime.getYear(), gameTime.getMonth(),gameTime.getDayOfMonth());
         this.gameDateStr = null==gameTime?"":gameDateFormatter.format(gameTime);
-        this.gameGroupHeaderStr = "".equals(gameDateStr)?leagueName:leagueName + " " + gameDateStr;
+        this.gameGroupHeaderStr = constructGameGroupHeaderString(leagueName,gameDateStr);
+    }
+    public static String constructGameGroupHeaderString(String leagueName,String gameDateStr) {
+        return "".equals(gameDateStr)?leagueName:leagueName + " " + gameDateStr;
     }
     public int getSubLeagueId() {
         return subLeagueId;

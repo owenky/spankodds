@@ -8,17 +8,19 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
+
 public enum GameStatus {
-    HalfTime(GameGroupHeader.createStageGroupHeader(SiaConst.HalfTimeStr,-100),"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
+    HalfTime(GameGroupHeader.createStageGroupHeader(SiaConst.HalfTimeStr,Integer.MIN_VALUE+1000),"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
             ,null,"TIME"),
-    SeriesPrice(GameGroupHeader.createStageGroupHeader(SiaConst.SeriesPricesStr,100),null, null
+    SeriesPrice(GameGroupHeader.createStageGroupHeader(SiaConst.SeriesPricesStr,StageGroupAnchorOffset+100),null, null
             , null,SiaConst.SeriesPricesStr,SiaConst.SoccerSeriesPricesStr),
-    InGamePrices(GameGroupHeader.createStageGroupHeader(SiaConst.InGamePricesStr,110),null, null
+    InGamePrices(GameGroupHeader.createStageGroupHeader(SiaConst.InGamePricesStr,StageGroupAnchorOffset+110),null, null
             , null,SiaConst.InGamePricesStr,SiaConst.SoccerInGamePricesStr),
     //    the keywords for inprogress is wrong, it is opposite to "NULL" and "", check out Game.StatusSet to find out possible keywords for in progress
-    InProgress(GameGroupHeader.createStageGroupHeader(SiaConst.InProgresStr,130),"started.wav", ()->AppController.getUser().getStartedAlert()
+    InProgress(GameGroupHeader.createStageGroupHeader(SiaConst.InProgresStr,StageGroupAnchorOffset+130),"started.wav", ()->AppController.getUser().getStartedAlert()
             , GameStatus::isInProgress),
-    Final(GameGroupHeader.createStageGroupHeader(SiaConst.FinalStr,200),"final.wav", ()->AppController.getUser().getFinalAlert(),
+    Final(GameGroupHeader.createStageGroupHeader(SiaConst.FinalStr,StageGroupAnchorOffset+200),"final.wav", ()->AppController.getUser().getFinalAlert(),
             null,SiaConst.FinalStr,"WIN","TIE","CNCLD","PONED");
 
     public static GameStatus find(String status) {
