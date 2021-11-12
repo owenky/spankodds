@@ -185,13 +185,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 log(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
                 log(" Previous tab is:" + previousTabIndex);
                 if (thispane.getTabCount() > 1 && currentTabIndex == thispane.getTabCount() - 1) {
-                    checkAndRunInEDT(() -> {
-                        log(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
-                        new CustomTab2();
-
-                    });
+                    log(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
+                    new CustomTab2();
                     setSelectedIndex(previousTabIndex);
-
                 } else if (getTabCount() > 1 && previousTabIndex == getTabCount() - 1) {
                     // do nothing
                 } else {

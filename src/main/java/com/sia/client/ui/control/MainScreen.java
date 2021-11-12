@@ -83,7 +83,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.sportType = sportType;
         final String name = sportType.getSportName();
         setName(name);
-//        mainGameTable = createMainGameTable(new MainGameTableModel(sportType, new Vector()),name);
     }
 
     MainScreen(SportType sportType, List<String> customheaders, boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
@@ -853,10 +852,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
                 }
             }
         }
-        if (sportType.isPredifined()) {
-            int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
-            addHalfTimeWhenAbsent(rowHeight, model);
-        }
+//        if (sportType.isPredifined()) {
+//            int rowHeight = SportType.Soccer.equals(sportType) ? SiaConst.SoccerRowheight : SiaConst.NormalRowheight;
+//            addHalfTimeWhenAbsent(rowHeight, model);
+//        }
         model.buildIndexMappingCache(true);
         AppController.addDataModels(model);
 
@@ -931,6 +930,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         ingamegamessoccer.clear();
         removeAll();
         mainGameTable = null;
+        tableModel = null;
         log("destroyed mainscreen!!!!");
     }
 

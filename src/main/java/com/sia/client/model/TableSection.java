@@ -124,7 +124,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
     public V removeGameId(Integer gameidtoremove) {
 
-        int gameModelIndex = containingTableModel.getRowModelIndex(this, gameidtoremove);
+        int gameModelIndex = containingTableModel.getRowModelIndexByGameId(this, gameidtoremove);
         V g;
         if ( 0 <= gameModelIndex) {
             g = gamesVec.removeGame(gameidtoremove);

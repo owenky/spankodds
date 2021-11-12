@@ -18,10 +18,6 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         super(false,tm);
         sporetType = tm.getSportType();
     }
-//    @Override
-//    public void reset() {
-//        super.reset();
-//    }
     @Override
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
@@ -43,21 +39,24 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         super.setName(name);
     }
     @Override
-    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight,boolean forceGameGroupHeaderDraw) {
-        super.configHeaderRow(firstRow,lastRow,toSetRowHeight,forceGameGroupHeaderDraw);
+    protected int computeRowHeight(int rowModelIndex) {
+        int rowHeight;
         if ( ! getModel().getSportType().isPredifined()) {
             //for customized sport, stage table section contains mixed sport type games.
             //row height has to be calculated per row rather than per section -- 2021-11-09
-            for(int rowViewIndex=firstRow;rowViewIndex <=lastRow;rowViewIndex++) {
-                if ( isSoccer(rowViewIndex)) {
-                    setRowHeight(rowViewIndex,SiaConst.SoccerRowheight);
-                }
+            Game g  = getModel().getGame(rowModelIndex);
+            boolean isSoccer = SiaConst.SoccerLeagueId == g.getLeague_id();
+            if ( isSoccer) {
+                rowHeight = SiaConst.SoccerRowheight;
+            } else {
+                rowHeight = SiaConst.NormalRowheight;
             }
+
+        } else {
+            rowHeight = super.computeRowHeight(rowModelIndex);
         }
+        return rowHeight;
     }
-//    public LinesTableData findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
-//        return getModel().findTableSectionByHeaderValue(gameGroupHeader);
-//    }
     private boolean isSoccer(int rowViewIndex) {
         if ( sporetType.equals(SportType.Soccer)) {
             return true;

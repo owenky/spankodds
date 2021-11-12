@@ -23,7 +23,7 @@ public interface AbstractScreen<T extends KeyedObject> {
             if ( shouldAddToScreen(game)) {
                 TableSection<T> ts = model.checktofire(game, table.isShowing());
                 if (null != ts) {
-                    int rowModelIndex = model.getRowModelIndex(ts, game.getGame_id());
+                    int rowModelIndex = model.getRowModelIndexByGameId(ts, game.getGame_id());
                     rowModelIndexList.add(rowModelIndex);
                 }
             }

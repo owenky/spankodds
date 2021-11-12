@@ -215,13 +215,13 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         ltd.sort(getDefaultGameComparator());
         fireTableSectionChangeEvent();
 //        this.buildIndexMappingCache(false); //to be executed by  fireTableChanged(e) -- 2021-11-06
-        int affectedRowModelIndex = getRowModelIndex(ltd, ltd.getRowIndex(game.getGame_id()));
+        int affectedRowModelIndex = getRowModelIndexByGameId(ltd, game.getGame_id());
         TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
         checkAndRunInEDT(() -> fireTableChanged(e));
 
     }
     public void updateRow(TableSection<V> tableSection, int rowIndexInTableSection) {
-        int affectedRowModelIndex = getRowModelIndex(tableSection, rowIndexInTableSection);
+        int affectedRowModelIndex = mapToRowModelIndex(tableSection, rowIndexInTableSection);
         TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
         checkAndRunInEDT(() -> fireTableChanged(e));
     }
@@ -240,7 +240,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     public List<TableSection<V>> getTableSections() {
         return tableSections;
     }
-    public int getRowModelIndex(TableSection<V> ltd, Integer gameId) {
+    public int getRowModelIndexByGameId(TableSection<V> ltd, Integer gameId) {
         int gameIndex = ltd.getRowIndex(gameId);
         return mapToRowModelIndex(ltd,gameIndex);
     }
