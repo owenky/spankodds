@@ -238,4 +238,8 @@ public class SportType {
         MainScreen ms = SpankyWindow.getSpankyWindow(0).getSportsTabPane().findMainScreen(this.getSportName());
         return null != ms.getDataModels().findLeagueSection(g);
     }
+    @Override
+    public String toString() {
+        return sportName+"/"+sportId+":"+identityLeagueId;
+    }
 }
