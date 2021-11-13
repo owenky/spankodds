@@ -178,7 +178,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         Vector currentvec = new Vector();
 
 
-        Games allgames = new Games();
+        Games allgames;
 
 
         int maxlength;
@@ -209,20 +209,17 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         for (int k = 0; k < allgames.size(); k++) {
 
-            int gameid = -1;
             Game g = allgames.getByIndex(k);
 
-
             if (g == null) {
-                log("skipping gameid=" + gameid + "...cuz of null game");
+                log("skipping  null game");
                 continue;
-            } else {
-                gameid = g.getGame_id();
-            }
-            if (g.getGamedate() == null) {
-                log("skipping gameid=" + gameid + "...cuz of null game date");
+            } else if (g.getGamedate() == null) {
+                log("skipping gameid=" + g.getGame_id() + "...cuz of null game date");
                 continue;
             }
+
+            int gameid = g.getGame_id();
 
             String gamedate = sdf.format(g.getGamedate());
             String todaysgames = sdf.format(today);

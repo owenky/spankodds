@@ -39,11 +39,6 @@ public abstract class GameUtils {
         }
         return result;
     }
-//    public static void main(String [] argv) {
-//        String headerStr = "1           2";
-//        String [] arr = headerStr.split(" +");
-//        System.out.println(Arrays.toString(arr)+", length="+arr.length);
-//    }
     public static String normalizeGameHeader(String gameGroupHeader) {
         if ( null != gameGroupHeader) {
             gameGroupHeader = gameGroupHeader.replace(SiaConst.SoccerStr,"").trim();

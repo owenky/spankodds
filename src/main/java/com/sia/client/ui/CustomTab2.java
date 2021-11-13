@@ -51,11 +51,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import java.util.function.Consumer;
 
@@ -965,7 +967,7 @@ public class CustomTab2 extends JPanel {
                 JOptionPane.showMessageDialog(null, "Empty List!");
                 return;
             }
-            Vector<String> customvec = new Vector<>();
+            List<String> customvec = new ArrayList<>();
             StringBuilder msstring = new StringBuilder();
             for (Object o : selectedlist) {
                 String s = o.toString();
@@ -985,7 +987,7 @@ public class CustomTab2 extends JPanel {
                 checkAndRunInEDT(() -> {
                     Consumer<SportsTabPane> consumer = (tp)-> {
                         int numtabs = tp.getTabCount();
-                        SportType st = SportType.createCustomizedSportType(tab);
+                        SportType st = SportType.createCustomizedSportType(tab,customvec);
                         MainScreen ms = tp.createMainScreen(st, customvec);
                         ms.setShowHeaders(includeheaders.isSelected());
                         ms.setShowSeries(includeseries.isSelected());

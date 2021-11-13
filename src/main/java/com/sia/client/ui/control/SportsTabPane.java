@@ -128,7 +128,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 }
 
             }
-            SportType customerizedSportType =  SportType.createCustomizedSportType(name);
+            SportType customerizedSportType =  SportType.createCustomizedSportType(name,customheaders);
             MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
             addMainScreenToCache(msnew);
             addTab(name, null, msnew, name);
@@ -156,7 +156,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
         }
     }
-    public MainScreen createMainScreen(SportType st, Vector<String> customvec) {
+    public MainScreen createMainScreen(SportType st, List<String> customvec) {
         MainScreen ms = new MainScreen(st, customvec);
         addMainScreenToCache(ms);
         return ms;

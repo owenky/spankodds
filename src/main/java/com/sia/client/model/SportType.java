@@ -1,36 +1,39 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.SpankyWindow;
-import com.sia.client.ui.control.MainScreen;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
-    public static SportType Football = new SportType(1,"Football","FB","football.png",-1,()-> AppController.getUser().getFootballPref());
-    public static SportType Basketball = new SportType(2,"Basketball","BK","basketball.png",-1,()->AppController.getUser().getBasketballPref());
-    public static SportType Baseball = new SportType(3,"Baseball","BB","baseball.png",-1,()->AppController.getUser().getBaseballPref());
-    public static SportType Hockey = new SportType(4,"Hockey","HK","hockey.png",-1,()->AppController.getUser().getHockeyPref());
-    public static SportType Fighting = new SportType(5,"Fighting","FI","boxing.png",10,()->AppController.getUser().getFightingPref());
-    public static SportType Soccer = new SportType(5,SiaConst.SoccerStr,"OT","soccer.png",9,()->AppController.getUser().getSoccerPref());
-    public static SportType AutoRacing = new SportType(5,"Auto Racing","AU","flag.png",14,()->AppController.getUser().getAutoracingPref());
-    public static SportType Golf = new SportType(5,"Golf","GO","golf.png",11,()->AppController.getUser().getGolfPref());
+    public static SportType Football = new SportType(1,"Football","FB","football.png",-1,()-> AppController.getUser().getFootballPref(),null);
+    public static SportType Basketball = new SportType(2,"Basketball","BK","basketball.png",-1,()->AppController.getUser().getBasketballPref(),null);
+    public static SportType Baseball = new SportType(3,"Baseball","BB","baseball.png",-1,()->AppController.getUser().getBaseballPref(),null);
+    public static SportType Hockey = new SportType(4,"Hockey","HK","hockey.png",-1,()->AppController.getUser().getHockeyPref(),null);
+    public static SportType Fighting = new SportType(5,"Fighting","FI","boxing.png",10,()->AppController.getUser().getFightingPref(),null);
+    public static SportType Soccer = new SportType(5,SiaConst.SoccerStr,"OT","soccer.png",9,()->AppController.getUser().getSoccerPref(),null);
+    public static SportType AutoRacing = new SportType(5,"Auto Racing","AU","flag.png",14,()->AppController.getUser().getAutoracingPref(),null);
+    public static SportType Golf = new SportType(5,"Golf","GO","golf.png",11,()->AppController.getUser().getGolfPref(),null);
     //TODO what is abbr for tennis
-    public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12,()->AppController.getUser().getTennisPref());
-    public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,null);
+    public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12,()->AppController.getUser().getTennisPref(),null);
+    public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,null,getTodayMyTypeSelector());
 
     public static boolean isPredefinedSport(String sportName) {
         SportType st = findBySportName(sportName);
@@ -51,8 +54,9 @@ public class SportType {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
         return stOpt.orElse(null);
     }
-    public static SportType createCustomizedSportType(String name) {
-        return new SportType(-200,name,name,null,-1,null);
+    public static SportType createCustomizedSportType(String name,List<String> customizedHeaders) {
+        Set<String> customizedHeaderSet = new HashSet<>(customizedHeaders);
+        return new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaderSet));
     }
     public static SportType findBySportName(String sportName) {
         return instanceMap.get(normalizeName(sportName));
@@ -71,14 +75,16 @@ public class SportType {
     private boolean showAdded = true;
     private boolean showExtra = true;
     private boolean showProps = true;
+    private final Function<Game,Boolean> myTypeSelector;
 
-    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId,Supplier<String> perfSupplier) {
+    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId,Supplier<String> perfSupplier,Function<Game,Boolean> myTypeSelector) {
         this.sportName = sportName;
         this.sportId = sportId;
         this.icon = icon;
         this.abbr = abbr;
         this.identityLeagueId = identityLeagueId;
         this.perfSupplier = perfSupplier;
+        this.myTypeSelector = null == myTypeSelector?getDefaultMyTypeSelector():myTypeSelector;
         instanceMap.put(normalizeName(sportName),this);
     }
 
@@ -166,22 +172,23 @@ public class SportType {
     }
     public boolean isMyType(Game game) {
 
-        if ( sportId < 0 && identityLeagueId < 0 ) {
-            //for customized sport type, use containsGameLeague to check -- 2021-10-26
-            return containsGameLeague(game);
-        }
-        int identifyingLeagueId = game.getSportIdentifyingLeagueId();
-        if ( identityLeagueId > 0) {
-            //this condition is for sport id == 5 which is shared by many different sports
-            return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
-        } else {
-            Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
-            if (null == sp){
-                return false;
-            } else {
-                return sportId==sp.getSport_id();
-            }
-        }
+//        if ( sportId < 0 && identityLeagueId < 0 ) {
+//            //for customized sport type, use containsGameLeague to check -- 2021-10-26
+//            return containsGameLeague(game);
+//        }
+//        int identifyingLeagueId = game.getSportIdentifyingLeagueId();
+//        if ( identityLeagueId > 0) {
+//            //this condition is for sport id == 5 which is shared by many different sports
+//            return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
+//        } else {
+//            Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
+//            if (null == sp){
+//                return false;
+//            } else {
+//                return sportId==sp.getSport_id();
+//            }
+//        }
+        return myTypeSelector.apply(game);
     }
     private static final int PurgeOldGameCutOffTime = 10;
     public boolean isGameNear(Game game) {
@@ -248,8 +255,41 @@ public class SportType {
     private static String normalizeName(String name) {
         return name.replaceAll("\\s","").toLowerCase();
     }
-    private boolean containsGameLeague(Game g ) {
-        MainScreen ms = SpankyWindow.getSpankyWindow(0).getSportsTabPane().findMainScreen(this.getSportName());
-        return null != ms.getDataModels().findLeagueSection(g);
+    private Function<Game,Boolean> getDefaultMyTypeSelector() {
+        return (game)-> {
+            int identifyingLeagueId = game.getSportIdentifyingLeagueId();
+            if ( identityLeagueId > 0) {
+                //this condition is for sport id == 5 which is shared by many different sports
+                return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
+            } else {
+                Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
+                if (null == sp){
+                    return false;
+                } else {
+                    return sportId==sp.getSport_id();
+                }
+            }
+        };
+    }
+    private static Function<Game,Boolean> getTodayMyTypeSelector() {
+        return (game)-> {
+            if ( null == game.getGamedate()) {
+                return false;
+            }
+            LocalDate today = LocalDate.now();
+            LocalDate gameDate = game.getGamedate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            return gameDate.compareTo(today) <= 0;
+        };
+    }
+    private static Function<Game,Boolean> getCustomizedHeaderMyTypeSelector(Set<String> customizedHeaders) {
+        return (game)-> {
+            GameGroupHeader gameGroupHeader = GameUtils.createGameGroupHeader(game);
+            if ( null == gameGroupHeader) {
+                return false;
+            }
+            return customizedHeaders.contains(gameGroupHeader.getGameGroupHeaderStr());
+        };
     }
 }
