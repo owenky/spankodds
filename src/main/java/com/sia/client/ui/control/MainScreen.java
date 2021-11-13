@@ -187,237 +187,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         Games allgamesforpref = AppController.getGamesVec();
 
-        // added sorting code 5/6/2021
-        try {
-//            allgamesforpref.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
-//            allgamesforpref.sort(new GameDateSorter());
-//            Collections.sort(allgamesforpref, new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
-//            Collections.sort(allgamesforpref, new GameDateSorter());
-
-        } catch (Exception ex) {
-            log("exception sorting " + ex);
-            log(ex);
-        }
-
         String name = getName();
-        boolean all = false;
-        String[] tmp = {};
-        if (name.equalsIgnoreCase("football")) {
-            String footballpref = AppController.getUser().getFootballPref();
-            prefs = footballpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
 
-            try {
-                if (prefs.length > 2) {
-                    tmp = prefs[2].split(",");
-                    if (tmp[0].equalsIgnoreCase("football")) {
-                        all = true;
-                    }
-                    setShowProperties(prefs);
-                }
-
-            } catch (Exception ex) {
-                log(ex);
-            }
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-
-
-            }
-        } else if (name.equalsIgnoreCase("basketball")) {
-            String basketballpref = AppController.getUser().getBasketballPref();
-            prefs = basketballpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("basketball")) {
-                    all = true;
-                }
-                this.setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-
-            }
-        } else if (name.equalsIgnoreCase("baseball")) {
-            String baseballpref = AppController.getUser().getBaseballPref();
-            prefs = baseballpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("baseball")) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-            }
-            log("size of all ames=" + allgames.size());
-        } else if (name.equalsIgnoreCase("hockey")) {
-            String hockeypref = AppController.getUser().getHockeyPref();
-            prefs = hockeypref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("hockey")) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-
-            }
-        } else if (name.equalsIgnoreCase("fighting")) {
-            String fightingpref = AppController.getUser().getFightingPref();
-            prefs = fightingpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("fighting")) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-
-            }
-        } else if (name.equalsIgnoreCase(SiaConst.SoccerStr)) {
-            String soccerpref = AppController.getUser().getSoccerPref();
-            prefs = soccerpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase(SiaConst.SoccerStr)) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-
-            }
-        } else if (name.equalsIgnoreCase("auto racing")) {
-            String autoracingpref = AppController.getUser().getAutoracingPref();
-            prefs = autoracingpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("auto racing")) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    allgames.add(tempGame);
-                }
-
-            }
-        } else if (name.equalsIgnoreCase("golf")) {
-            String golfpref = AppController.getUser().getGolfPref();
-            prefs = golfpref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("golf")) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    //	log("yes"+set+"---");
-                    allgames.add(tempGame);
-                }
-                setShowProperties(prefs);
-
-            }
-        } else if (name.equalsIgnoreCase("tennis")) {
-            String tennispref = AppController.getUser().getTennisPref();
-            prefs = tennispref.split("\\|");
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                this.timesort = true;
-            }
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase("tennis")) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-            for (int z = 0; z < allgamesforpref.size(); z++) {
-                Game tempGame = allgamesforpref.getByIndex(z);
-                if (sportType.shouldSelect(tempGame)) {
-                    //log("yes"+set+"---");
-                    allgames.add(tempGame);
-                }
-
-            }
+        if (sportType.isPredifined()) {
+            allgames = selectGames();
         } else {
             allgames = allgamesforpref;
             sportType.setComingDays(-1);
@@ -950,5 +723,36 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         return mainGameTable;
     }
+    private Games selectGames() {
+        Games allgamesforpref = AppController.getGamesVec();
+        Games allgames = new Games();
+        String [] prefs = sportType.getUserPerf().split("\\|");
+        String[] tmp = {};
+        boolean all = false;
+        sportType.setComingDays(Integer.parseInt(prefs[1]));
+        if (parseBoolean(prefs[0])) {
+            this.timesort = true;
+        }
 
+        try {
+            if (prefs.length > 2) {
+                tmp = prefs[2].split(",");
+                if (tmp[0].equalsIgnoreCase(sportType.getSportName())) {
+                    all = true;
+                }
+                setShowProperties(prefs);
+            }
+
+        } catch (Exception ex) {
+            log(ex);
+        }
+        sportType.setLeagueFilter(new LeagueFilter(tmp, all));
+        for (int z = 0; z < allgamesforpref.size(); z++) {
+            Game tempGame = allgamesforpref.getByIndex(z);
+            if (sportType.shouldSelect(tempGame)) {
+                allgames.add(tempGame);
+            }
+        }
+        return allgames;
+    }
 }

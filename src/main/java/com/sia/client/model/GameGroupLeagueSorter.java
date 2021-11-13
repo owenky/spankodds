@@ -12,7 +12,7 @@ public class GameGroupLeagueSorter implements GameGroupHeaderSorter {
 //	    if ( 0 != result ) {
 //	    	return result;
 //		}
-		return g1.getLeagueId() - g2.getLeagueId();
-//	    return g1.getLeagueName().compareTo(g2.getLeagueName());
+//		return g1.getLeagueId() - g2.getLeagueId();
+	    return g1.getLeagueName().compareTo(g2.getLeagueName());
     }
 }
