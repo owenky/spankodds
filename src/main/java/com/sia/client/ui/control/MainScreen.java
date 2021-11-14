@@ -1,6 +1,7 @@
 package com.sia.client.ui.control;
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
@@ -141,8 +142,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     private LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
-        int tableSectionRowHeight = TableUtils.calTableSectionRowHeight(newgamegroupvec);
-        tableSection.setRowHeight(tableSectionRowHeight);
+        if (SiaConst.SoccerLeagueId == gameGroupHeader.getLeagueId() || SiaConst.SoccerLeagueId == gameGroupHeader.getSubLeagueId()) {
+            tableSection.setRowHeight(SiaConst.SoccerRowheight);
+        }
         return tableSection;
     }
 
