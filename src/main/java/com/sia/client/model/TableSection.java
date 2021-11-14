@@ -152,7 +152,9 @@ public abstract class TableSection<V extends KeyedObject> {
             }
         }
     }
-
+    public void addOnInit(V g) {
+        gamesVec.addIfAbsent(g);
+    }
     public int addOrUpdate(V g) {
         setHowHeighIfAbsent(g);
         int index = gamesVec.addIfAbsent(g);

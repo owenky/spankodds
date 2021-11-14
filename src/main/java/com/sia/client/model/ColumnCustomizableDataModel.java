@@ -259,9 +259,15 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         addGameLine(tableSections.size(),gameLine);
     }
     public void addGameLine(int index,TableSection<V> gameLine) {
+        addGameLine(index,gameLine,true);
+    }
+    public void addGameLine(int index,TableSection<V> gameLine,boolean toSort) {
         gameLine.setContainingTableModel(this);
         tableSections.add(index,gameLine);
         fireTableSectionChangeEvent();
+        if ( toSort) {
+            this.sortTableSection(getdefaultTableSectionComparator());
+        }
 //        resetSectionIndex(index);
     }
     private void resetSectionIndex(int startIndex) {

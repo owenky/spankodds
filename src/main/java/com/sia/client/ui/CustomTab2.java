@@ -61,7 +61,6 @@ import java.util.List;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class CustomTab2 extends JPanel {
@@ -114,8 +113,10 @@ public class CustomTab2 extends JPanel {
     private JCheckBox includeprops;
     private JTextField tabname;
     private JFrame f = new JFrame("Custom Tab");
+    private final int activeSportsTabPaneIndex;
 
-    public CustomTab2() {
+    public CustomTab2(int activeSportsTabPaneIndex) {
+        this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
         tabname = new JTextField(10);
         tabname.setDocument(new JTextFieldLimit(10));
         TextPrompt tp7 = new TextPrompt("Name Your Tab", tabname);
@@ -217,9 +218,6 @@ public class CustomTab2 extends JPanel {
 
         InvisibleNode currenttreenode;
         Games allgames = AppController.getGamesVec();
-        Vector allsports = AppController.getSportsVec();
-        java.util.Date today = new java.util.Date();
-
         String lastdate = "";
         int lastleagueid = 0;
 
@@ -697,7 +695,8 @@ public class CustomTab2 extends JPanel {
         model.addAll(newValues);
     }
 
-    public CustomTab2(String tabnamestr, int tabindex) {
+    public CustomTab2(int activeSportsTabPaneIndex, String tabnamestr, int tabindex) {
+        this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
         this.tabindex = tabindex;
 
         tabname = new JTextField(tabnamestr, 10);
@@ -946,7 +945,6 @@ public class CustomTab2 extends JPanel {
 
     private class SaveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-
             String tab = tabname.getText().trim();
             String tablc = tab.toLowerCase();
             Vector selectedlist = ((MyListModel2) destList.getModel()).getModelVec();
@@ -983,49 +981,42 @@ public class CustomTab2 extends JPanel {
             log("adding=" + msstring);
             AppController.addCustomTab(tab, msstring.toString());
 
+            Consumer<SportsTabPane> consumer;
             if (!editing) {
-                checkAndRunInEDT(() -> {
-                    Consumer<SportsTabPane> consumer = (tp)-> {
-                        int numtabs = tp.getTabCount();
-                        SportType st = SportType.createCustomizedSportType(tab,customvec);
-                        MainScreen ms = tp.createMainScreen(st, customvec);
-                        ms.setShowHeaders(includeheaders.isSelected());
-                        ms.setShowSeries(includeseries.isSelected());
-                        ms.setShowIngame(includeingame.isSelected());
-                        ms.setShowAdded(includeadded.isSelected());
-                        ms.setShowExtra(includeextra.isSelected());
-                        ms.setShowProps(includeprops.isSelected());
-                        tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs-1);
-                    };
-                    SpankyWindow.applyToAllWindows(consumer);
-                });
+                consumer = (tp) -> {
+                    int numtabs = tp.getTabCount();
+                    SportType st = SportType.createCustomizedSportType(tab, customvec);
+                    MainScreen ms = tp.createMainScreen(st);
+                    setMainScreenProperties(ms);
+                    tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs - 1);
+                    if (tp.getIndex() == activeSportsTabPaneIndex) {
+                        tp.setSelectedIndex(numtabs-1);
+                    }
+                };
             } else {
-                checkAndRunInEDT(() -> {
-                    Consumer<SportsTabPane> consumer = (tp)-> {
-                        MainScreen oldms = (MainScreen) tp.getComponentAt(tabindex);
-                        oldms.destroyMe();
-                        SportType st = SportType.findBySportName(tab);
-                        MainScreen ms =tp.createMainScreen(st, customvec);
-                        ms.setShowHeaders(includeheaders.isSelected());
-                        ms.setShowSeries(includeseries.isSelected());
-                        ms.setShowIngame(includeingame.isSelected());
-                        ms.setShowAdded(includeadded.isSelected());
-                        ms.setShowExtra(includeextra.isSelected());
-                        ms.setShowProps(includeprops.isSelected());
-                        tp.setComponentAt(tabindex, ms);
+                //editing existing tab
+                consumer = (tp) -> {
+                    SportType editedSportType = SportType.findBySportName(tab);
+                    MainScreen editedMs = tp.findMainScreen(editedSportType.getSportName());
+                    editedMs.setCustomheaders(customvec);
+                    setMainScreenProperties(editedMs);
+                    if ( tp.getSelectedComponent() == editedMs) {
                         tp.refreshCurrentTab();
-                    };
-                    SpankyWindow.applyToAllWindows(consumer);
-                });
-
+                    }
+                };
             }
+            SpankyWindow.applyToAllWindows(consumer);
             f.dispose();
-
-
         }
     }
-
-
+    private void setMainScreenProperties(MainScreen ms) {
+        ms.setShowHeaders(includeheaders.isSelected());
+        ms.setShowSeries(includeseries.isSelected());
+        ms.setShowIngame(includeingame.isSelected());
+        ms.setShowAdded(includeadded.isSelected());
+        ms.setShowExtra(includeextra.isSelected());
+        ms.setShowProps(includeprops.isSelected());
+    }
     private class MoveDownListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object[] selected = destList.getSelectedValues();

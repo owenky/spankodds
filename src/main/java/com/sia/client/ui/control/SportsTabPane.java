@@ -1,5 +1,6 @@
 package com.sia.client.ui.control;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
@@ -23,6 +24,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.plaf.TabbedPaneUI;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -63,16 +65,19 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     private Point currentMouseLocation = null;
     private boolean dragging = false;
     private final Map<String, MainScreen> mainScreenMap = new HashMap<>();
-    private final int counter;
+    private final int index;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
 
     public SportsTabPane() {
-        counter = instanceCounter.getAndAdd(1);
+        index = instanceCounter.getAndAdd(1);
         thispane = this;
         loadlabel = new JLabel("loading...", loadgif, JLabel.CENTER);
         loadlabel.setOpaque(true);
         //        AppController.addTabPane(this);
         addListeners();
+    }
+    public int getIndex() {
+        return index;
     }
     public void populateComponents() {
 
@@ -128,8 +133,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 }
 
             }
-            SportType customerizedSportType =  SportType.createCustomizedSportType(name,customheaders);
-            MainScreen msnew = new MainScreen(customerizedSportType, customheaders, showheaders, showseries, showingame, showadded, showextra, showprops);
+            List<String> customheaderStrList = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
+            SportType customerizedSportType =  SportType.createCustomizedSportType(name,customheaderStrList);
+            MainScreen msnew = new MainScreen(customerizedSportType, showheaders, showseries, showingame, showadded, showextra, showprops);
             addMainScreenToCache(msnew);
             addTab(name, null, msnew, name);
         }
@@ -139,7 +145,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         //setTabComponentAt(getTabCount() - 1, p);
         //setSelectedIndex(getTabCount() - 1);
 
-        log("initializing SportTabPane instance:"+counter);
+        log("initializing SportTabPane instance:"+ index);
         doTest();
     }
     private void doTest() {
@@ -155,11 +161,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if (InitialGameMessages.getMessagesFromLog) {
             Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
         }
-    }
-    public MainScreen createMainScreen(SportType st, List<String> customvec) {
-        MainScreen ms = new MainScreen(st, customvec);
-        addMainScreenToCache(ms);
-        return ms;
     }
     public MainScreen createMainScreen(SportType st) {
         MainScreen ms = new MainScreen(st);
@@ -186,7 +187,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 log(" Previous tab is:" + previousTabIndex);
                 if (thispane.getTabCount() > 1 && currentTabIndex == thispane.getTabCount() - 1) {
                     log(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
-                    new CustomTab2();
+                    new CustomTab2(getIndex());
                     setSelectedIndex(previousTabIndex);
                 } else if (getTabCount() > 1 && previousTabIndex == getTabCount() - 1) {
                     // do nothing
@@ -200,7 +201,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                     if ( currentComp instanceof MainScreen) {
                         MainScreen newms = (MainScreen) currentComp;
                         log("changelistener create!");
-                        populateMainScreen(newms);
+                        reCreateMainScreen(newms);
                         log(" timesort is:" + timesort + "...now=" + new java.util.Date());
                     }
                 }
@@ -233,7 +234,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         jPopupMenu.add(removeItem);
                         editItem.addActionListener(e1 -> checkAndRunInEDT(() -> {
                             log(currentTabIndex + "mouseClicked" + (currentTabIndex == getTabCount() - 1));
-                            new CustomTab2(thispane.getTitleAt(tabindex), tabindex);
+                            new CustomTab2(getIndex(),thispane.getTitleAt(tabindex), tabindex);
 
                         }));
                         removeItem.addActionListener(e12 -> checkAndRunInEDT(() -> {
@@ -448,8 +449,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public void refreshMainScreen(MainScreen thisms) {
         thisms.destroyMe();
         log("refreshing MainScreen "+thisms.getName()+" !");
-        populateMainScreen(thisms);
-        AppController.addDataModels(thisms.getDataModels());
+        reCreateMainScreen(thisms);
+        MainGameTableModel model = thisms.getDataModels();
+        AppController.addDataModels(model);
+        model.fireTableChanged(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
     }
 
     public void cleanup() {
@@ -497,7 +500,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             ms.checktofire(games);
         }
     }
-    private void populateMainScreen(MainScreen ms) {
+    private void reCreateMainScreen(MainScreen ms) {
         ms.createMe(display, period, timesort, shortteam, opener, last, loadlabel);
     }
 }

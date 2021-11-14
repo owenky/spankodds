@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
 
 public enum GameStatus {
-    HalfTime(GameGroupHeader.createStageGroupHeader(SiaConst.HalfTimeStr,Integer.MIN_VALUE+1000),"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
+    HalfTime(GameGroupHeader.createStageGroupHeader(SiaConst.HalfTimeStr,-1000000),"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
             ,null,"TIME"),
     SeriesPrice(GameGroupHeader.createStageGroupHeader(SiaConst.SeriesPricesStr,StageGroupAnchorOffset+100),null, null
             , null,SiaConst.SeriesPricesStr,SiaConst.SoccerSeriesPricesStr),
@@ -23,6 +23,14 @@ public enum GameStatus {
     Final(GameGroupHeader.createStageGroupHeader(SiaConst.FinalStr,StageGroupAnchorOffset+200),"final.wav", ()->AppController.getUser().getFinalAlert(),
             null,SiaConst.FinalStr,"WIN","TIE","CNCLD","PONED");
 
+    public static GameStatus getGameStatus(Game game) {
+        if ( game.isInGame2()) {
+            return InGamePrices;
+        } else if ( game.isSeriesprice()) {
+            return SeriesPrice;
+        }
+        return find(game.getStatus());
+    }
     public static GameStatus find(String status) {
         GameStatus rtn = null;
         for(GameStatus gs: GameStatus.values()) {

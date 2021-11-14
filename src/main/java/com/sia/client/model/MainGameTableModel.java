@@ -28,13 +28,12 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.FinalStr);
         stageStrs.add(SiaConst.InProgresStr);
         stageStrs.add(SiaConst.InGamePricesStr);
-//        stageStrs.add(SiaConst.SoccerInGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
-//        stageStrs.add(SiaConst.SoccerSeriesPricesStr);
     }
-    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns,List<String> customerizedGameGroupHeader) {
+    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns) {
         super(allColumns);
         this.sportType = sportType;
+        List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
         if ( 0 <customerizedGameGroupHeader.size()) {
             int offset = StageGroupAnchorOffset-1000;
             for(String header: customerizedGameGroupHeader) {
@@ -79,19 +78,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     }
     public void addGameToGameGroup(GameGroupHeader gameGroupHeader,Game game, Function<GameGroupHeader,LinesTableData> function) {
-        if ( game.isSeriesprice()) {
-            if ( game.getLeague_id() == SiaConst.SoccerLeagueId) {
-                gameGroupHeader = GameStatus.SeriesPrice.getGroupHeader();
-            } else {
-                gameGroupHeader = GameStatus.SeriesPrice.getGroupHeader();
-            }
-        }  else if ( game.isInGame2()) {
-            if ( game.getLeague_id() == SiaConst.SoccerLeagueId) {
-                gameGroupHeader = GameStatus.InGamePrices.getGroupHeader();
-            } else {
-                gameGroupHeader = GameStatus.InGamePrices.getGroupHeader();
-            }
-        }
         LinesTableData ltd = computeIfNeeded(gameGroupHeader,game,function);
         if ( null != ltd) {
             int rowIndex = ltd.getRowIndex(game.getGame_id());
@@ -116,7 +102,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
                 ltd = function.apply(gameGroupHeader);
                 if ( null != ltd) {
                     this.addGameLine(ltd);
-                    this.sortTableSection(getdefaultTableSectionComparator());
                 } else {
                     log("Warning: Can't create LinesTableData for gameGroupHeader="+gameGroupHeader+" for game "+GameUtils.getGameDebugInfo(game));
                 }

@@ -51,7 +51,6 @@ public class AppController {
     public static Vector<String> customTabsVec = new Vector<>();
     public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
-//    public static Vector<SportsTabPane> tabpanes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
     public static Hashtable<String, Bookie> bookies = new Hashtable();
@@ -444,27 +443,12 @@ public class AppController {
         }
         return nwa;
     }
-//
-//    public static String getDisplayType() {
-//        return displaytype;
-//    }
-//
-//    public static void setDisplayType(String s) {
-//        displaytype = s;
-//    }
 
     public static Vector<String> getCustomTabsVec() {
         return customTabsVec;
     }
-//
-//    public static Hashtable getCustomTabsHash() {
-//        return customTabsHash;
-//    }
 
     public static Vector getLineAlertNodes() {
-        if (linealertnodes.size() != 0) {
-            // linealertnodes.add(0,new LineAlertNode("Please Select Line Alert"));
-        }
         return linealertnodes;
     }
 
@@ -478,11 +462,7 @@ public class AppController {
         model.copyTo(dataModels);
 
     }
-//
-//    public static void addTabPane(SportsTabPane stb) {
-//        tabpanes.add(stb);
-//
-//    }
+
 
     public static SportsTabPane getMainTabPane() {
 //
@@ -1022,7 +1002,7 @@ public class AppController {
         return sportsVec;
     }
 
-    public static Vector getHiddenCols() {
+    public static List<Bookie> getHiddenCols() {
         return hiddenCols;
     }
 

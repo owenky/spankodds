@@ -2148,7 +2148,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
         try {
 
             Vector newBookiesVec = AppController.getBookiesVec();
-            Vector hiddencols = AppController.getHiddenCols();
+            List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
             for (int k = 0; k < newBookiesVec.size(); k++) {
                 Bookie b = (Bookie) newBookiesVec.get(k);
@@ -2630,7 +2630,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             try {
 
                 Vector newBookiesVec = AppController.getBookiesVec();
-                Vector hiddencols = AppController.getHiddenCols();
+                List<Bookie> hiddencols = AppController.getHiddenCols();
                 String allbookies = "";
                 for (int k = 0; k < newBookiesVec.size(); k++) {
                     Bookie b = (Bookie) newBookiesVec.get(k);

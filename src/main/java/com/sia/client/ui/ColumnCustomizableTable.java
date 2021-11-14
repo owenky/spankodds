@@ -258,12 +258,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         lockedColumnIndex = new ImmutableObservableList<>(lockedColumnIndexArr);
         needToCreateColumnModel = true;
     }
-    public void addGameLine(TableSection<V> gameLine) {
-        getModel().addGameLine(gameLine);
-    }
-    public void addGameLine(int index,TableSection<V> gameLine) {
-        getModel().addGameLine(index,gameLine);
-    }
     public TableSection<V> getLinesTableData(int row) {
         return getModel().getLinesTableData(row).linesTableData;
     }

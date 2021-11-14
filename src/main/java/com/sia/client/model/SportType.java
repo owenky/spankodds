@@ -7,8 +7,9 @@ import com.sia.client.ui.AppController;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +21,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static com.sia.client.config.Utils.log;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
@@ -55,8 +58,9 @@ public class SportType {
         return stOpt.orElse(null);
     }
     public static SportType createCustomizedSportType(String name,List<String> customizedHeaders) {
-        Set<String> customizedHeaderSet = new HashSet<>(customizedHeaders);
-        return new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaderSet));
+        SportType rtn = new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaders));
+        rtn.customheaders = customizedHeaders;
+        return rtn;
     }
     public static SportType findBySportName(String sportName) {
         return instanceMap.get(normalizeName(sportName));
@@ -75,7 +79,8 @@ public class SportType {
     private boolean showAdded = true;
     private boolean showExtra = true;
     private boolean showProps = true;
-    private final Function<Game,Boolean> myTypeSelector;
+    private Function<Game,Boolean> myTypeSelector;
+    private List<String> customheaders = new ArrayList<>();
 
     private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId,Supplier<String> perfSupplier,Function<Game,Boolean> myTypeSelector) {
         this.sportName = sportName;
@@ -87,7 +92,17 @@ public class SportType {
         this.myTypeSelector = null == myTypeSelector?getDefaultMyTypeSelector():myTypeSelector;
         instanceMap.put(normalizeName(sportName),this);
     }
-
+    public void setCustomheaders(List<String> customheaders) {
+        this.customheaders = customheaders;
+        setMyTypeSelector(this.customheaders);
+    }
+    private void setMyTypeSelector(Collection<String> customizedHeaders) {
+        Function<Game,Boolean> selector = getCustomizedHeaderMyTypeSelector(customizedHeaders);
+        this.myTypeSelector = null==selector?getDefaultMyTypeSelector():selector;
+    }
+    public List<String> getCustomheaders() {
+        return this.customheaders;
+    }
     public String getSportName() {
         return sportName;
     }
@@ -220,6 +235,31 @@ public class SportType {
         return  null == leagueFilter || leagueFilter.isSelected(game.getLeague_id());
     }
     public boolean shouldSelect(Game game) {
+        if ( null == game ) {
+            log("skipping  null game");
+            return false;
+        }
+        if ( null == game.getGamedate()) {
+            log("skipping gameid=" + game.getGame_id() + "...cuz of null game date");
+            return false;
+        }
+
+        if ( null == game.getVisitorteam() ) {
+            log("skipping gameid=" + game.getGame_id() + "...cuz of null visitor team");
+            return false;
+        }
+
+        if ( null == game.getHometeam() ) {
+            log("skipping gameid=" + game.getGame_id() + "...cuz of null home team");
+            return false;
+        }
+
+        int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
+        Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
+        if ( null == sport) {
+            log("skipping " + GameUtils.getGameDebugInfo(game) + "...cuz of null sport");
+            return false;
+        }
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);
     }
     @Override
@@ -277,19 +317,21 @@ public class SportType {
                 return false;
             }
             LocalDate today = LocalDate.now();
-            LocalDate gameDate = game.getGamedate().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
+            LocalDate gameDate = game.getGamedate().toLocalDate();
             return gameDate.compareTo(today) <= 0;
         };
     }
-    private static Function<Game,Boolean> getCustomizedHeaderMyTypeSelector(Set<String> customizedHeaders) {
+    private static Function<Game,Boolean> getCustomizedHeaderMyTypeSelector(Collection<String> customHeaders) {
+        if ( null == customHeaders || 0 == customHeaders.size()) {
+            return null;
+        }
+        Set<String> headerSet = new HashSet<>(customHeaders);
         return (game)-> {
             GameGroupHeader gameGroupHeader = GameUtils.createGameGroupHeader(game);
             if ( null == gameGroupHeader) {
                 return false;
             }
-            return customizedHeaders.contains(gameGroupHeader.getGameGroupHeaderStr());
+            return headerSet.contains(gameGroupHeader.getGameGroupHeaderStr());
         };
     }
 }

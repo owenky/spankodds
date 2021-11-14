@@ -1925,8 +1925,8 @@ class LineAlertOpeners implements ItemListener {
         try {
 
             Vector bookieVec = AppController.getBookiesVec();
-            Vector checkedbookies = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
-            Vector hiddenBookies = AppController.getHiddenCols();
+            Vector checkedbookies = AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
+            List<Bookie> hiddenBookies = AppController.getHiddenCols();
 
             for (int i = 0; i < bookieVec.size(); i++) {
                 Bookie bookie;
@@ -1970,10 +1970,10 @@ class LineAlertOpeners implements ItemListener {
         try {
 
             Vector newBookiesVec = AppController.getBookiesVec();
-            Vector hiddencols = AppController.getHiddenCols();
+            List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
-            for (int k = 0; k < newBookiesVec.size(); k++) {
-                Bookie b = (Bookie) newBookiesVec.get(k);
+            for (Object o : newBookiesVec) {
+                Bookie b = (Bookie) o;
 
                 if (hiddencols.contains(b) || b.getBookie_id() >= 990) {
                     continue;
