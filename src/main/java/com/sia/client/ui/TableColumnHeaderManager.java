@@ -182,7 +182,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
                 if ( topWindowResized()) {
                     reconfigHeaderRow();
                 } else {
-                    drawHeaderinVisibleRegion();
+                    //TODO WATCH IMPACT after disabling -- 2021-11-14
+//                    drawHeaderinVisibleRegion();
                 }
             }
 
