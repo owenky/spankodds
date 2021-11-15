@@ -10,14 +10,14 @@ import java.util.function.Consumer;
 
 import static com.sia.client.config.Utils.log;
 
-public class GameMessageProcessor {
+public class MqMessageProcessor {
 
     private final MessageConsumingScheduler<Game> gameConsumingScheculer;
     private final boolean doStats;
     private long lastUpdate = System.currentTimeMillis();
     private final String name;
 
-    public GameMessageProcessor(String name,long initialDelayInMilliSeconds, long periodInMilliSeconcs) {
+    public MqMessageProcessor(String name, long initialDelayInMilliSeconds, long periodInMilliSeconcs) {
         gameConsumingScheculer = new MessageConsumingScheduler<>(createConsumer());
         gameConsumingScheculer.setInitialDelay(initialDelayInMilliSeconds);
         gameConsumingScheculer.setUpdatePeriodInMilliSeconds(periodInMilliSeconcs);
@@ -37,7 +37,7 @@ public class GameMessageProcessor {
             Utils.checkAndRunInEDT(()-> AppController.fireAllTableDataChanged(distinctSet));
             if ( doStats) {
                 long now = System.currentTimeMillis();
-                log("GameMessageProcessor, name:"+name+", buffer size="+buffer.size()+", uniq size="+distinctSet.size()+", time since last process:"+(now-lastUpdate));
+                log("MqMessageProcessor, name:"+name+", buffer size="+buffer.size()+", uniq size="+distinctSet.size()+", time since last process:"+(now-lastUpdate));
                 lastUpdate = now;
             }
         };

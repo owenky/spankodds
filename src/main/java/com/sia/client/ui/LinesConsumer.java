@@ -2,7 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameMessageProcessor;
+import com.sia.client.model.MqMessageProcessor;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Spreadline;
 import com.sia.client.simulator.InitialGameMessages;
@@ -26,7 +26,7 @@ import static com.sia.client.config.Utils.log;
 public class LinesConsumer implements MessageListener {
 
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer", 2000L, 10L);
+    private final MqMessageProcessor mqMessageProcessor = new MqMessageProcessor("LineConsumer", 2000L, 10L);
     //private static String brokerURL = "failover:(ssl://localhost:61617)";
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
     private transient Connection connection;
@@ -389,7 +389,7 @@ public class LinesConsumer implements MessageListener {
                 log("LinesConsumer: null game detected...gameid=" + gameid);
             }
         } else {
-            gameMessageProcessor.addGame(game);
+            mqMessageProcessor.addGame(game);
             ;
         }
     }
