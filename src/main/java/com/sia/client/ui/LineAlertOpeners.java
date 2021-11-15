@@ -1465,6 +1465,10 @@ class LineAlertOpeners implements ItemListener {
         String homeTeam = game.getHometeam();
         String visitorTeam = game.getVisitorteam();
         Bookie bk = AppController.getBookie(bid + "");
+       if ( null == bk) {
+           log(new Exception("WARNING: null Bookie is detected, bid="+bid));
+           return;
+       }
         String bookiename = bk.getName();
         int lid = game.getLeague_id();
 
