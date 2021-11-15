@@ -173,10 +173,13 @@ public abstract class OngoingGameMessages {
                         log(e);
                     }
                 }
-                log("Finished loading messages from local.....");
+                log("Finished loading messages from local..... linesMesgCnt="+linesMesgCnt+", gamesMesgCnt="+gamesMesgCnt+", scoresMesgCnt="+scoresMesgCnt);
             }
         }
     }
+    private static int linesMesgCnt = 0;
+    private static int gamesMesgCnt = 0;
+    private static int scoresMesgCnt = 0;
     private static void processMessage(String text) {
 
         boolean toContinue=false;
@@ -198,7 +201,7 @@ public abstract class OngoingGameMessages {
         String timeStamp = strs[0];
         String type = strs[1];
         String messageText = strs[2];
-        pause(10L);
+//        pause(10L);
 
         toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));
         if ( ! toContinue){
@@ -208,12 +211,15 @@ public abstract class OngoingGameMessages {
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
             toLinesMessageConsumer.dispatch(mapMessgage);
+            linesMesgCnt++;
         } else if (MessageType.Score.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
             toScoreMessageConsumer.dispatch(mapMessgage);
+            scoresMesgCnt++;
         } else if (MessageType.Game.name().equals(type)) {
             TextMessage txtMessgage = new LocalTextMessage(parseText(messageText));
             toGameMessageConsumer.dispatch(txtMessgage);
+            gamesMesgCnt++;
         } else {
             log("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
         }
