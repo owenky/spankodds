@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
@@ -46,14 +47,13 @@ import static com.sia.client.config.Utils.log;
 public class AppController {
 
     public final static AlertVector alertsVector = new AlertVector();
-    public static boolean loadinginitial = true;
     public static Hashtable customTabsHash = new Hashtable();
     public static Vector<String> customTabsVec = new Vector<>();
     public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
-    public static Hashtable<String, Bookie> bookies = new Hashtable();
+    private static final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
     public static Vector<Bookie> openerbookiesVec = new Vector();
     public static Vector<Bookie> bookiesVec = new Vector();
@@ -61,7 +61,6 @@ public class AppController {
     public static Vector<Bookie> hiddenCols = new Vector();
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
-//    public static Hashtable<JFrame, SportsTabPane> frames = new Hashtable();
     public final static Set<Integer> BadGameIds = new HashSet<>();
     public static Hashtable<String, Spreadline> spreads = new Hashtable();
     public static Hashtable<String, Totalline> totals = new Hashtable();
@@ -97,8 +96,6 @@ public class AppController {
     public static Hashtable<String, TeamTotalline> liveteamtotals = new Hashtable();
     public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
-    //public static String brokerURL = "failover:(ssl://localhost:61617)";
-//public static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
     public static Connection loggedInConnection;
@@ -308,15 +305,6 @@ public class AppController {
         }
         return true;
     }
-//
-//
-//    public static boolean isLoadingInitial() {
-//        return loadinginitial;
-//    }
-//
-//    public static void doneloadinginitial() {
-//        loadinginitial = false;
-//    }
 
     public static TableColumnModel getColumnModel() {
         if (columnmodel == null) {
@@ -396,12 +384,10 @@ public class AppController {
         fixedCols.clear();
         shownCols.clear();
         hiddenCols.clear();
-        //log("FIXED="+u.getFixedColumnPrefs());
-        //log("OTHERS"+u.getBookieColumnPrefs());
         String[] fixedcols = u.getFixedColumnPrefs().split(",");
-        String cols[] = u.getBookieColumnPrefs().split(",");
+        String[] cols = u.getBookieColumnPrefs().split(",");
         for (String id : fixedcols) {
-            Bookie b = bookies.get(id);
+            Bookie b = bookieCache.get(Integer.parseInt(id));
             if (b != null) {
                 newVec.add(b);
                 fixedCols.add(b);
@@ -410,7 +396,7 @@ public class AppController {
 
         }
         for (String id : cols) {
-            Bookie b = bookies.get(id);
+            Bookie b = bookieCache.get(Integer.parseInt(id));
             if (b != null) {
                 shownCols.add(b);
                 newVec.add(b);
@@ -780,14 +766,14 @@ public class AppController {
 
     public static void addBookie(Bookie b) {
 
-        bookies.put(b.getBookie_id() + "", b);
+        bookieCache.put(b.getBookie_id(), b);
         bookieshortnameids.put(b.getShortname(), "" + b.getBookie_id());
         bookiesVec.add(b);
     }
 
     public static void addOpenerBookie(Bookie b) {
 
-        bookies.put(b.getBookie_id() + "", b);
+        bookieCache.put(b.getBookie_id(), b);
         openerbookiesVec.add(b);
     }
 
@@ -971,7 +957,7 @@ public class AppController {
     }
 
     public static Bookie getBookie(int bid) {
-        return bookies.get(bid + "");
+        return bookieCache.get(bid);
     }
 
     public static Sport getSportByLeagueId(int leagueId) {
@@ -982,16 +968,13 @@ public class AppController {
         return games.getGame(gid);
     }
 
-    public static Bookie getBookie(String bid) {
-        return bookies.get(bid + "");
-    }
 
     public static Games getGames() {
         return games;
     }
 
-    public static Hashtable getBookies() {
-        return bookies;
+    public static Map<Integer,Bookie> getBookieCache() {
+        return bookieCache;
     }
 
     public static Hashtable getBookieColors() {
