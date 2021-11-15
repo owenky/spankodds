@@ -134,6 +134,13 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
         headerMap.values().forEach(tableSection->model.addGameLine(model.getTableSections().size(),tableSection,false));
         headerMap.clear();
+        //add stage sections if absent
+        for( GameStatus status: GameStatus.values() ) {
+            if ( ! model.containsGroupHeader(status.getGroupHeader())) {
+                LinesTableData tableSection = createLinesTableData(new Vector<>(),status.getGroupHeader());
+                model.addGameLine(model.getTableSections().size(),tableSection,false);
+            }
+        }
         model.buildIndexMappingCache(true);
         AppController.addDataModels(model);
 
@@ -142,7 +149,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     private LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, display, period, cleartime, newgamegroupvec, timesort, shortteam, opener, last, gameGroupHeader, allColumns);
-        if (SiaConst.SoccerLeagueId == gameGroupHeader.getLeagueId() || SiaConst.SoccerLeagueId == gameGroupHeader.getSubLeagueId()) {
+        if (sportType.equals(SportType.Soccer)) {
             tableSection.setRowHeight(SiaConst.SoccerRowheight);
         }
         return tableSection;
