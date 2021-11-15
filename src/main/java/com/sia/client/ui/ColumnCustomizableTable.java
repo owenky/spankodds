@@ -44,7 +44,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
-    private TableModelListener tableChangedListener;
+    private final List<TableModelListener> tableChangedListenerList = new ArrayList<>();
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
@@ -247,8 +247,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         removeLockedColumnIndex(arr);
     }
-    public void setTableChangedListener(TableModelListener tableChangedListener) {
-        this.tableChangedListener = tableChangedListener;
+    public void addTableChangedListener(TableModelListener tableChangedListener) {
+        this.tableChangedListenerList.add(tableChangedListener);
     }
     public TableColumn getColumnFromDataModel(int colModelIndex) {
         return getModel().getAllColumns().get(colModelIndex);
@@ -306,8 +306,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 configHeaderRow();
             }
         }
-        if (null != tableChangedListener) {
-            tableChangedListener.tableChanged(e);
+        //this method is called from constructor when tableChangedListenerList has not been initialized -- 2-21-11-15
+        if ( null != tableChangedListenerList) {
+            for (TableModelListener tableChangedListener : tableChangedListenerList) {
+                tableChangedListener.tableChanged(e);
+            }
         }
     }
     @Override

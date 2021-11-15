@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
@@ -50,14 +51,14 @@ public class SpankOdds {
     private static void initSystemProperties() {
         if ( Boolean.parseBoolean(System.getProperty("LogToFile")) ) {
             try {
-                Utils.logPs = new PrintStream(new FileOutputStream(SiaConst.logFileName));
-                Utils.errPs = new PrintStream(new FileOutputStream(SiaConst.errFileName));
+                Logger.logPs = new PrintStream(new FileOutputStream(SiaConst.logFileName));
+                Logger.errPs = new PrintStream(new FileOutputStream(SiaConst.errFileName));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
-            Utils.logPs = System.out;
-            Utils.errPs = System.err;
+            Logger.logPs = System.out;
+            Logger.errPs = System.err;
         }
     }
     private void showLoginDialog() {

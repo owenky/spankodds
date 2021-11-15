@@ -33,6 +33,7 @@ public abstract class SiaConst {
     public static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);
     public static final double DefaultSpread = -99999d;
     public static final double DefaultOver = 99999d;
+    public static final long ColumnWidthRefreshRate = 1500L;
 
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;

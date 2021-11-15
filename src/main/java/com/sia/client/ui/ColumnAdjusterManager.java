@@ -4,6 +4,8 @@ import com.sia.client.ui.ColumnAdjustPreparer.AdjustRegion;
 
 import java.util.List;
 
+import static com.sia.client.config.Logger.consoleLogPeek;
+
 public class ColumnAdjusterManager {
 
     private final ColumnCustomizableTable<?> mainTable;
@@ -11,6 +13,7 @@ public class ColumnAdjusterManager {
     private TableColumnAdjuster rowHeaderTableColumnAdjuster;
     private final ColumnAdjustPreparer mainTablePreparer;
     private final ColumnAdjustPreparer rowHeaderTablePreparer;
+    private long lastColumnAdjustTime = 0;
 
     public ColumnAdjusterManager(ColumnCustomizableTable<?> mainTable) {
         this.mainTable = mainTable;
@@ -24,20 +27,27 @@ public class ColumnAdjusterManager {
         rowHeaderTablePreparer.clear();
     }
     public void adjustColumns() {
-        List<AdjustRegion> mainTableAdjustRegions = mainTablePreparer.getAdjustRegions();
-        for(AdjustRegion region:mainTableAdjustRegions) {
-            getMainTableColumnAdjuster().adjustColumns(region);
-        }
+        long now = System.currentTimeMillis();
+//        if (SiaConst.ColumnWidthRefreshRate < (now-lastColumnAdjustTime)) {
+consoleLogPeek("Adjust Column.... table name=" + mainTable.getName()+", last adjust:"+((now-lastColumnAdjustTime)));
+            List<AdjustRegion> mainTableAdjustRegions = mainTablePreparer.getAdjustRegions();
+            for (AdjustRegion region : mainTableAdjustRegions) {
+                getMainTableColumnAdjuster().adjustColumns(region);
+            }
 
-        List<AdjustRegion> rowHeaderAdjustRegions = rowHeaderTablePreparer.getAdjustRegions();
-        for(AdjustRegion region: rowHeaderAdjustRegions) {
-            getRowHeaderTableColumnAdjuster().adjustColumns(region);
-        }
+            List<AdjustRegion> rowHeaderAdjustRegions = rowHeaderTablePreparer.getAdjustRegions();
+            for (AdjustRegion region : rowHeaderAdjustRegions) {
+                getRowHeaderTableColumnAdjuster().adjustColumns(region);
+            }
 
-        if ( rowHeaderAdjustRegions.size() > 0) {
-            RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
-            rowHeaderTable.optimizeSize();
-        }
+            if (rowHeaderAdjustRegions.size() > 0) {
+                RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
+                rowHeaderTable.optimizeSize();
+            }
+            lastColumnAdjustTime = now;
+//        } else {
+//            1
+//        }
     }
     public void adjustColumnsOnRows(Integer ... gameIds) {
         getMainTableColumnAdjuster().adjustColumnsOnRow(gameIds);

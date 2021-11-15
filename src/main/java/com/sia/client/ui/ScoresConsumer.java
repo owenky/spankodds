@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
@@ -28,7 +29,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-import static com.sia.client.config.Utils.consoleLogPeekGameId;
 import static com.sia.client.config.Utils.log;
 
 public class ScoresConsumer implements MessageListener {
@@ -111,7 +111,7 @@ public class ScoresConsumer implements MessageListener {
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
                 log("ScoreConsumer::processMessage: gameid=" + gameid);
-                consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
+                Logger.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
 
                 String period = "";
                 String timer = "";

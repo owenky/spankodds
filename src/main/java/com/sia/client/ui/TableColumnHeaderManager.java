@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
+import com.sia.client.model.MqMessageProcessor;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -55,7 +56,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.getRowHeaderTable().getColumnModel().addColumnModelListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
-        mainTable.setTableChangedListener(this);
+        mainTable.addTableChangedListener(this);
+        mainTable.addTableChangedListener(MqMessageProcessor.getInstance());
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
         mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
         //after sorting, rowModel is set to null, need to re-configure row height

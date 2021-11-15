@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
@@ -23,7 +24,6 @@ import java.io.FileOutputStream;
 import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.sia.client.config.Utils.consoleLogPeekGameId;
 import static com.sia.client.config.Utils.log;
 
 public class GamesConsumer implements MessageListener {
@@ -130,7 +130,7 @@ public class GamesConsumer implements MessageListener {
 
                 }
 //                log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
-                consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE", gameid);
+                Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE", gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
@@ -361,7 +361,7 @@ public class GamesConsumer implements MessageListener {
                     g = new Game();
                 }
 //                log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
-                consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2", gameid);
+                Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2", gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
