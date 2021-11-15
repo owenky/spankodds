@@ -28,8 +28,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.consoleLogPeekGameId;
+import static com.sia.client.config.Utils.log;
 
 public class ScoresConsumer implements MessageListener {
 
@@ -38,12 +38,12 @@ public class ScoresConsumer implements MessageListener {
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
 
     private static ActiveMQConnectionFactory factory;
-    private transient Connection connection;
-    private transient Session session;
+    private static boolean toSimulateMQ = false;
     //TODO: need to fine tune GameMessageProcessor constructor parameters.
     private final MessageConsumingScheduler<Game> scoreMessageProcessor;
-    private static boolean toSimulateMQ = false;
     private final AtomicBoolean simulateStatus = new AtomicBoolean(false);
+    private transient Connection connection;
+    private transient Session session;
 
     public ScoresConsumer(ActiveMQConnectionFactory factory, Connection connection, String scoresconsumerqueue) throws JMSException {
 
@@ -56,6 +56,21 @@ public class ScoresConsumer implements MessageListener {
         messageConsumer.setMessageListener(this);
         scoreMessageProcessor = createScoreMessageProcessor();
         connection.start();
+    }
+
+    private MessageConsumingScheduler<Game> createScoreMessageProcessor() {
+        Consumer<List<Game>> messageConsumer = (buffer) -> {
+            Set<Game> distinctSet = new HashSet<>(buffer);
+            Utils.checkAndRunInEDT(() -> {
+                AppController.fireAllTableDataChanged(distinctSet);
+            });
+
+        };
+        MessageConsumingScheduler<Game> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
+        scoreMessageProcessor.setInitialDelay(2 * 1000L);
+//        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
+        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(-1500L);
+        return scoreMessageProcessor;
     }
 
     public static void main(String[] args) throws JMSException {
@@ -76,28 +91,27 @@ public class ScoresConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        AppController.waitForSpankyWindowLoaded();
-//        synchronized (SiaConst.GameLock) {
-            if (!InitialGameMessages.getMessagesFromLog) {
-                if (toSimulateMQ) {
-                    if (simulateStatus.compareAndSet(false, true)) {
-                        new ScoreChangeProcessorTest(this).start();
-                    }
-                } else {
-                    Utils.ensureNotEdtThread();
-                    OngoingGameMessages.addMessage(MessageType.Score, message);
-                    processMessage((MapMessage)message);
+        if (!InitialGameMessages.getMessagesFromLog) {
+            if (toSimulateMQ) {
+                if (simulateStatus.compareAndSet(false, true)) {
+                    new ScoreChangeProcessorTest(this).start();
                 }
+            } else {
+                Utils.ensureNotEdtThread();
+                OngoingGameMessages.addMessage(MessageType.Score, message);
+                processMessage((MapMessage) message);
             }
-//        }
+        }
     }
+
     public void processMessage(MapMessage mapMessage) {
+        AppController.waitForSpankyWindowLoaded();
         try {
             String changetype = mapMessage.getStringProperty("messageType");
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
-                log("ScoreConsumer::processMessage: gameid="+gameid);
-                consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
+                log("ScoreConsumer::processMessage: gameid=" + gameid);
+                consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
 
                 String period = "";
                 String timer = "";
@@ -159,10 +173,10 @@ public class ScoresConsumer implements MessageListener {
                 Game g = AppController.getGame(gameid);
                 if (g != null) {
                     GameStatus newGameStatus = GameStatus.find(status);
-                    if ( null != newGameStatus ) {
-                        ScoreChangedProcessor.process(newGameStatus,g,currentvisitorscore,currenthomescore);
+                    if (null != newGameStatus) {
+                        ScoreChangedProcessor.process(newGameStatus, g, currentvisitorscore, currenthomescore);
                     } else {
-                        Utils.log("ScoreConsumer: skip status "+status+", league id="+g.getLeague_id());
+                        Utils.log("ScoreConsumer: skip status " + status + ", league id=" + g.getLeague_id());
 //                        Utils.log("ScoreConsumer: SHOULD Disable DEBUG false status for debugging, set to in progress skip status "+status+", league id="+g.getLeague_id());
 //                        //TOD O should disable following after debug....
 //                        new ScoreChangedProcessor().process(GameStatus.InProgress,g,GameStatus.InProgress.getGroupHeader(),currentvisitorscore,currenthomescore);
@@ -179,7 +193,7 @@ public class ScoresConsumer implements MessageListener {
 //                    AppController.addGame(g);
 //                    scoreMessageProcessor.addMessage(g);
                     //should not add if game id not found from cache, because new Game() does not give game critical game info like date, and league -- 2021-10-30
-                    log("Warning: null game found for game id:"+gameid);
+                    log("Warning: null game found for game id:" + gameid);
                 }
             }
         } catch (Exception e) {
@@ -200,19 +214,5 @@ public class ScoresConsumer implements MessageListener {
             log("Error with playing sound.");
             log(ex);
         }
-    }
-    private MessageConsumingScheduler<Game> createScoreMessageProcessor() {
-        Consumer<List<Game>> messageConsumer = (buffer)-> {
-            Set<Game> distinctSet = new HashSet<>(buffer);
-            Utils.checkAndRunInEDT(()->{
-                AppController.fireAllTableDataChanged(distinctSet);
-            });
-
-        };
-        MessageConsumingScheduler<Game> scoreMessageProcessor = new MessageConsumingScheduler<>(messageConsumer);
-        scoreMessageProcessor.setInitialDelay(2*1000L);
-//        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(1500L);
-        scoreMessageProcessor.setUpdatePeriodInMilliSeconds(-1500L);
-        return scoreMessageProcessor;
     }
 }

@@ -43,6 +43,9 @@ public abstract class OngoingGameMessages {
     private static List<String> buffer = new ArrayList<>();
     private static AtomicInteger batchCount = new AtomicInteger(0);
     private static long lastWriteTime = -1;
+    private static final MessageDispatcher toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m));
+    private static final MessageDispatcher toScoreMessageConsumer = new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m));
+    private static final MessageDispatcher toGameMessageConsumer = new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m));
 
     static {
         bckThread.scheduleAtFixedRate(OngoingGameMessages::flushRemainingMessages, initDelay, period, TimeUnit.SECONDS);
@@ -204,13 +207,13 @@ public abstract class OngoingGameMessages {
 
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            AppController.linesConsumer.processMessage(mapMessgage);
+            toLinesMessageConsumer.dispatch(mapMessgage);
         } else if (MessageType.Score.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            AppController.scoresConsumer.processMessage(mapMessgage);
+            toScoreMessageConsumer.dispatch(mapMessgage);
         } else if (MessageType.Game.name().equals(type)) {
             TextMessage txtMessgage = new LocalTextMessage(parseText(messageText));
-            AppController.gamesConsumer.processMessage(txtMessgage);
+            toGameMessageConsumer.dispatch(txtMessgage);
         } else {
             log("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
         }

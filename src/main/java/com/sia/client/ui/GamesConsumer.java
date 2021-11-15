@@ -23,16 +23,16 @@ import java.io.FileOutputStream;
 import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.consoleLogPeekGameId;
+import static com.sia.client.config.Utils.log;
 
 public class GamesConsumer implements MessageListener {
 
-    private transient Connection connection;
-    private transient Session session;
     //TODO set toSimulateMQ to false for production
     private static boolean toSimulateMQ = false;
     private final AtomicBoolean simulateStatus = new AtomicBoolean(false);
+    private transient Connection connection;
+    private transient Session session;
 
     public GamesConsumer(ActiveMQConnectionFactory factory, Connection connection, String gamesconsumerqueue) throws JMSException {
 
@@ -45,38 +45,30 @@ public class GamesConsumer implements MessageListener {
         connection.start();
     }
 
-//    public static void main(String[] args) throws JMSException {
-//        System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
-//        System.setProperty("javax.net.ssl.keyStorePassword", "password");
-//        System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
-//        AppController.createLoggedInConnection("reguser", "0hbaby*(");
-//        GamesConsumer consumer = new GamesConsumer(AppController.getConnectionFactory(), AppController.getLoggedInConnection(), "spankoddsin.GAMECHANGE");
-//    }
-
     public void close() throws JMSException {
         if (null != connection) {
             connection.close();
         }
     }
+
     @Override
     public void onMessage(Message message) {
-        AppController.waitForSpankyWindowLoaded();
-//        synchronized (SiaConst.GameLock) {
-            if (!InitialGameMessages.getMessagesFromLog) {
-                if (toSimulateMQ) {
-                    if (simulateStatus.compareAndSet(false, true)) {
-                        new GameMessageSimulator(this).start();
-                    }
-
-                } else {
-                    Utils.ensureNotEdtThread();
-                    OngoingGameMessages.addMessage(MessageType.Game, message);
-                    processMessage((TextMessage)message);
+        if (!InitialGameMessages.getMessagesFromLog) {
+            if (toSimulateMQ) {
+                if (simulateStatus.compareAndSet(false, true)) {
+                    new GameMessageSimulator(this).start();
                 }
+
+            } else {
+                Utils.ensureNotEdtThread();
+                OngoingGameMessages.addMessage(MessageType.Game, message);
+                processMessage((TextMessage) message);
             }
-//        }
+        }
     }
+
     public void processMessage(TextMessage textMessage) {
+        AppController.waitForSpankyWindowLoaded();
         try {
             String leagueid;
             String messagetype = textMessage.getStringProperty("messageType");
@@ -138,7 +130,7 @@ public class GamesConsumer implements MessageListener {
 
                 }
 //                log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
-                consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE",gameid);
+                consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE", gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
@@ -195,7 +187,7 @@ public class GamesConsumer implements MessageListener {
 //                    String popalertname = "Alert at:" + hrmin + "\nPitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 //                    AppController.alertsVector.addElement(popalertname);
                     String mesg = "Pitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
-                    AppController.addAlert(hrmin,mesg);
+                    AppController.addAlert(hrmin, mesg);
 
                     new UrgentMessage("<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
                             s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
@@ -282,7 +274,7 @@ public class GamesConsumer implements MessageListener {
 //                            String popalertname = "Alert at:" + hrmin + "\nTime Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + g.getGametime();
 //                            AppController.alertsVector.addElement(popalertname);
                             String mesg = "Time Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + g.getGametime();
-                            AppController.addAlert(hrmin,mesg);
+                            AppController.addAlert(hrmin, mesg);
 
                             new UrgentMessage("<HTML><H1>Time Change</H1><FONT COLOR=BLUE>" +
                                     s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
@@ -369,7 +361,7 @@ public class GamesConsumer implements MessageListener {
                     g = new Game();
                 }
 //                log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
-                consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2",gameid);
+                consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2", gameid);
                 g.setGame_id(gameid);
                 g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
                 g.setHomegamenumber(Integer.parseInt(homegamenumber));
@@ -423,13 +415,13 @@ public class GamesConsumer implements MessageListener {
             } else if (messagetype.equals("REMOVE")) {
                 String data = textMessage.getText(); // this is gamenumber
                 String[] gameidarr = data.split("~");
-                log("GamesConsumer: REMOVE game ids "+data);
+                log("GamesConsumer: REMOVE game ids " + data);
                 AppController.removeGamesAndCleanup(gameidarr);
 
 
             } else if (messagetype.equals("REMOVEDATE")) {
                 String date = textMessage.getText(); // this is gamenumber
-                log("GamesConsumer: REMOVE DATE date="+date);
+                log("GamesConsumer: REMOVE DATE date=" + date);
                 AppController.removeGameDate(date, leagueid);
 
 
@@ -452,7 +444,7 @@ public class GamesConsumer implements MessageListener {
             log(e);
         } finally {
             try {
-                if ( null != out) {
+                if (null != out) {
                     out.close();
                 }
             } catch (Exception ex) {

@@ -20,17 +20,17 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
-import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.consoleLogPeekGameId;
+import static com.sia.client.config.Utils.log;
 
 public class LinesConsumer implements MessageListener {
 
+    //TODO: need to fine tune GameMessageProcessor constructor parameters.
+    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer", 2000L, 10L);
     //private static String brokerURL = "failover:(ssl://localhost:61617)";
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
     private transient Connection connection;
     private transient Session session;
-    //TODO: need to fine tune GameMessageProcessor constructor parameters.
-    private final GameMessageProcessor gameMessageProcessor = new GameMessageProcessor("LineConsumer",2000L,10L);
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -47,33 +47,34 @@ public class LinesConsumer implements MessageListener {
             connection.close();
         }
     }
+
     @Override
     public void onMessage(Message message) {
-        AppController.waitForSpankyWindowLoaded();
-//        synchronized (SiaConst.GameLock) {
-            if (! InitialGameMessages.getMessagesFromLog) {
-                Utils.ensureNotEdtThread();
-                processMessage((MapMessage) message);
-                OngoingGameMessages.addMessage(MessageType.Line, message);
-            }
-//        }
+
+        if (!InitialGameMessages.getMessagesFromLog) {
+            Utils.ensureNotEdtThread();
+            processMessage((MapMessage) message);
+            OngoingGameMessages.addMessage(MessageType.Line, message);
+        }
     }
+
     public void processMessage(MapMessage mapMessage) {
+        AppController.waitForSpankyWindowLoaded();
         int gameid = 0;
         try {
             gameid = mapMessage.getInt("gameid");
-            if  ( 0 == gameid) {
+            if (0 == gameid) {
                 return;
             }
-            if ( null == AppController.getGame(gameid)) {
-                if ( ! AppController.BadGameIds.contains(gameid)) {
+            if (null == AppController.getGame(gameid)) {
+                if (!AppController.BadGameIds.contains(gameid)) {
                     log("LinesConsumer Warning: null game detected:" + gameid);
                     AppController.BadGameIds.add(gameid);
                 }
                 return;
             }
 //            log("LinesConsumer::processMessage: gameid="+gameid);
-            consoleLogPeekGameId("LinesConsumer::processMessage",gameid);
+            consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");
@@ -123,7 +124,7 @@ public class LinesConsumer implements MessageListener {
                 if (null != sl) {
                     sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, isopener);
                 } else {
-                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice,newlongts, period);
+                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, period);
                     //log("***************************************spreadxyzabc******************************");
                     if (isopener) {
                         LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
@@ -132,8 +133,7 @@ public class LinesConsumer implements MessageListener {
 
                     AppController.addSpreadline(sl);
                 }
-            }
-            else if ("LineChangeTotal".equals(changetype)) {
+            } else if ("LineChangeTotal".equals(changetype)) {
 
                 double newover = 0;
                 double newunder = 0;
@@ -183,8 +183,7 @@ public class LinesConsumer implements MessageListener {
                     AppController.addTotalline(tl);
                 }
 
-            }
-            else if ("LineChangeTeamTotal".equals(changetype)) {
+            } else if ("LineChangeTeamTotal".equals(changetype)) {
                 double newvisitorover = 0;
                 double newvisitorunder = 0;
                 double newvisitoroverjuice = 0;
@@ -261,8 +260,7 @@ public class LinesConsumer implements MessageListener {
                     AppController.addTeamTotalline(ttl);
                 }
 
-            }
-            else if ("LineChangeMoney".equals(changetype)) {
+            } else if ("LineChangeMoney".equals(changetype)) {
                 double newvisitorjuice = 0;
                 double newhomejuice = 0;
                 double newdrawjuice = 0;
@@ -323,8 +321,7 @@ public class LinesConsumer implements MessageListener {
 
 
                 // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
-            }
-            else if ("LimitChange".equals(changetype)) {
+            } else if ("LimitChange".equals(changetype)) {
                 int newlimit = 0;
                 int oldlimit = 0;
                 String linetype = "";
@@ -350,43 +347,27 @@ public class LinesConsumer implements MessageListener {
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
 
-                if(linetype.equalsIgnoreCase("Spread"))
-                {
+                if (linetype.equalsIgnoreCase("Spread")) {
                     Spreadline sl = AppController.getSpreadline(bookieid, gameid, period);
-                    if(sl != null)
-                    {
+                    if (sl != null) {
                         sl.setLimit(newlimit);
                     }
-                }
-                else if(linetype.equalsIgnoreCase("Total"))
-                {
+                } else if (linetype.equalsIgnoreCase("Total")) {
                     Totalline tl = AppController.getTotalline(bookieid, gameid, period);
-                    if(tl != null)
-                    {
+                    if (tl != null) {
                         tl.setLimit(newlimit);
                     }
-                }
-                else if(linetype.equalsIgnoreCase("Moneyline"))
-                {
+                } else if (linetype.equalsIgnoreCase("Moneyline")) {
                     Moneyline ml = AppController.getMoneyline(bookieid, gameid, period);
-                    if(ml != null)
-                    {
+                    if (ml != null) {
                         ml.setLimit(newlimit);
                     }
-                }
-                else if(linetype.equalsIgnoreCase("TeamTotal"))
-                {
+                } else if (linetype.equalsIgnoreCase("TeamTotal")) {
                     TeamTotalline ttl = AppController.getTeamTotalline(bookieid, gameid, period);
-                    if(ttl != null)
-                    {
+                    if (ttl != null) {
                         ttl.setLimit(newlimit);
                     }
                 }
-
-
-
-
-
 
 
                 // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
@@ -400,15 +381,16 @@ public class LinesConsumer implements MessageListener {
 
         }
         Game game = AppController.getGame(gameid);
-        if ( null == game) {
-            if ( mapMessage instanceof ActiveMQMapMessage) {
+        if (null == game) {
+            if (mapMessage instanceof ActiveMQMapMessage) {
 //                log(new Exception("null game detected...gameid=" + gameid + ", message=" + OngoingGameMessages.convert((ActiveMQMapMessage)mapMessage)));
                 log("LinesConsumer: null game detected...gameid=" + gameid);
             } else {
                 log("LinesConsumer: null game detected...gameid=" + gameid);
             }
         } else {
-            gameMessageProcessor.addGame(game);;
+            gameMessageProcessor.addGame(game);
+            ;
         }
     }
 }

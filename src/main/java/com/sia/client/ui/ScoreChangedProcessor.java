@@ -5,6 +5,7 @@ import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.Sport;
+import com.sia.client.simulator.InitialGameMessages;
 
 import static com.sia.client.config.Utils.log;
 
@@ -69,7 +70,7 @@ public abstract class ScoreChangedProcessor {
                 log(ex);
             }
 
-            if (goodsport) {
+            if (goodsport &&  ! InitialGameMessages.getMessagesFromLog) {
                 if (popup) {
                     String hrmin = AppController.getCurrentHoursMinutes();
                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;
