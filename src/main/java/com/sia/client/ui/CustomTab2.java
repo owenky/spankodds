@@ -989,7 +989,7 @@ public class CustomTab2 extends JPanel {
                     MainScreen ms = tp.createMainScreen(st);
                     setMainScreenProperties(ms);
                     tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs - 1);
-                    if (tp.getIndex() == activeSportsTabPaneIndex) {
+                    if (tp.getWindowIndex() == activeSportsTabPaneIndex) {
                         tp.setSelectedIndex(numtabs-1);
                     }
                 };
