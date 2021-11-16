@@ -310,6 +310,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 //    }
     public void addGame(Game g)   {
         int selectedIndex = getSelectedIndex();
+        if ( 0 > selectedIndex) {
+            //game comes in when UI has not been initialized -- 2021-11-16
+            return;
+        }
         Component c = getComponentAt(selectedIndex);
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
