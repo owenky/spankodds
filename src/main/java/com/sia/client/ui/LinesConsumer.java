@@ -50,6 +50,7 @@ public class LinesConsumer implements MessageListener {
     public void onMessage(Message message) {
 
         if (!InitialGameMessages.getMessagesFromLog) {
+            AppController.waitForSpankyWindowLoaded();
             Utils.ensureNotEdtThread();
             processMessage((MapMessage) message);
             OngoingGameMessages.addMessage(MessageType.Line, message);
@@ -57,7 +58,6 @@ public class LinesConsumer implements MessageListener {
     }
 
     public void processMessage(MapMessage mapMessage) {
-        AppController.waitForSpankyWindowLoaded();
         int gameid = 0;
         try {
             gameid = mapMessage.getInt("gameid");
