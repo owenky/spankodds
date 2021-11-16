@@ -24,14 +24,17 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     private final SportType sportType;
     private static final Set<String> stageStrs = new HashSet<>();
     private final Map<String,Integer> customizedTabGameGroupHeaderIndex = new HashMap<>();
+    private final int windowIndex;
+
     static {
         stageStrs.add(SiaConst.FinalStr);
         stageStrs.add(SiaConst.InProgresStr);
         stageStrs.add(SiaConst.InGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
-    public MainGameTableModel(SportType sportType,Vector<TableColumn> allColumns) {
+    public MainGameTableModel(SportType sportType,int windowIndex,Vector<TableColumn> allColumns) {
         super(allColumns);
+        this.windowIndex = windowIndex;
         this.sportType = sportType;
         List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
         if ( 0 <customerizedGameGroupHeader.size()) {
@@ -44,6 +47,9 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
                 this.customizedTabGameGroupHeaderIndex.put(gs.getGroupHeader().getGameGroupHeaderStr(),gs.getGroupHeader().getAnchorPos());
             }
         }
+    }
+    public int getWindowIndex() {
+        return windowIndex;
     }
     @Override
     public Comparator<TableSection<Game>> getdefaultTableSectionComparator() {
