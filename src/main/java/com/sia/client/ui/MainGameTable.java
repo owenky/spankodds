@@ -18,6 +18,9 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         super(false,tm);
         sporetType = tm.getSportType();
     }
+    public int getWindowIndex() {
+        return getModel().getWindowIndex();
+    }
     @Override
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
