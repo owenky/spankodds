@@ -84,7 +84,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             SportType st = SportType.findBySportName(title);
             if (null != st) {
                 URL imgResource = Utils.getMediaResource(st.getIcon());
-                MainScreen ms = new MainScreen(st);
+                MainScreen ms = new MainScreen(st,this.getWindowIndex());
                 addMainScreenToCache(ms);
                 addTab(title, new ImageIcon(imgResource),ms , title);
             }
@@ -133,7 +133,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             }
             List<String> customheaderStrList = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
             SportType customerizedSportType =  SportType.createCustomizedSportType(name,customheaderStrList);
-            MainScreen msnew = new MainScreen(customerizedSportType, showheaders, showseries, showingame, showadded, showextra, showprops);
+            MainScreen msnew = new MainScreen(customerizedSportType,this.getWindowIndex(),showheaders, showseries, showingame, showadded, showextra, showprops);
             addMainScreenToCache(msnew);
             addTab(name, null, msnew, name);
         }
@@ -161,7 +161,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
     }
     public MainScreen createMainScreen(SportType st) {
-        MainScreen ms = new MainScreen(st);
+        MainScreen ms = new MainScreen(st,this.getWindowIndex());
         addMainScreenToCache(ms);
         return ms;
     }
