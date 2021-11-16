@@ -709,36 +709,30 @@ public class SportsMenuBar extends JMenuBar {
             temp.add(go);
             go.addActionListener(ae -> stb.setSelectedIndex(stb.indexOfTab(temp.getText())));
             temp.add(manage);
-            manage.addActionListener(ae -> SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    int idx = stb.indexOfTab(temp.getText());
-                    new CustomTab2(stb.getIndex(),stb.getTitleAt(idx), idx);
+            manage.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
+                int idx = stb.indexOfTab(temp.getText());
+                new CustomTab2(stb.getWindowIndex(),stb.getTitleAt(idx), idx);
 
-                }
             }));
 
             temp.add(hide);
-            hide.addActionListener(ae -> {
-                SwingUtilities.invokeLater(() -> {
-                    int idx = stb.indexOfTab(temp.getText());
-                    AppController.removeCustomTab(stb.getTitleAt(idx));
-                    SpankyWindow.applyToAllWindows((tp)-> {
-                        tp.setSelectedIndex(0);
-                        tp.remove(idx);
-                    });
-                    go.setEnabled(false);
-                    hide.setEnabled(false);
+            hide.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
+                int idx = stb.indexOfTab(temp.getText());
+                AppController.removeCustomTab(stb.getTitleAt(idx));
+                SpankyWindow.applyToAllWindows((tp)-> {
+                    tp.setSelectedIndex(0);
+                    tp.remove(idx);
                 });
-
-
-            });
+                go.setEnabled(false);
+                hide.setEnabled(false);
+            }));
 
         }
 
 
         JMenuItem addnew = new JMenuItem("Add New...");
         tabsmenu.add(addnew);
-        addnew.addActionListener(ae -> SwingUtilities.invokeLater(() -> new CustomTab2(stb.getIndex())));
+        addnew.addActionListener(ae -> SwingUtilities.invokeLater(() -> new CustomTab2(stb.getWindowIndex())));
 
 
     }
