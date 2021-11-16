@@ -22,6 +22,10 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         return getModel().getWindowIndex();
     }
     @Override
+    public void setName(String name) {
+        super.setName(name+"@"+getWindowIndex());
+    }
+    @Override
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
     }
@@ -36,10 +40,6 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
     @Override
     public LinesTableData getLinesTableData(int row) {
         return (LinesTableData)super.getLinesTableData(row);
-    }
-    @Override
-    public void setName(String name) {
-        super.setName(name);
     }
     @Override
     protected int computeRowHeight(int rowModelIndex) {

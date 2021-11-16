@@ -43,14 +43,31 @@ public abstract class OngoingGameMessages {
     private static List<String> buffer = new ArrayList<>();
     private static AtomicInteger batchCount = new AtomicInteger(0);
     private static long lastWriteTime = -1;
-    private static final MessageDispatcher toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m));
-    private static final MessageDispatcher toScoreMessageConsumer = new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m));
-    private static final MessageDispatcher toGameMessageConsumer = new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m));
+    private static MessageDispatcher toLinesMessageConsumer;
+    private static MessageDispatcher toScoreMessageConsumer;
+    private static MessageDispatcher toGameMessageConsumer;
 
     static {
         bckThread.scheduleAtFixedRate(OngoingGameMessages::flushRemainingMessages, initDelay, period, TimeUnit.SECONDS);
     }
-
+    private static MessageDispatcher toLinesMessageConsumer() {
+        if ( null == toLinesMessageConsumer) {
+            toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m));
+        }
+        return toLinesMessageConsumer;
+    }
+    private static MessageDispatcher toScoreMessageConsumer() {
+        if ( null == toScoreMessageConsumer) {
+            toScoreMessageConsumer =  new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m));
+        }
+        return toScoreMessageConsumer;
+    }
+    private static MessageDispatcher toGameMessageConsumer() {
+        if ( null == toGameMessageConsumer) {
+            toGameMessageConsumer =  new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m));
+        }
+        return toGameMessageConsumer;
+    }
     public synchronized static void addMessage(MessageType messgeType, Message message) {
         if (InitialGameMessages.shouldLogMesg && interestedMessageTypes.contains(messgeType)) {
             String text;
@@ -62,6 +79,7 @@ public abstract class OngoingGameMessages {
             addText(messgeType, text);
         }
     }
+
     static String convertMap(Map<String, Object> contentMap) {
 
         Set<String> keySet = contentMap.keySet();
@@ -160,6 +178,7 @@ public abstract class OngoingGameMessages {
     }
 
     public static void loadMessagesFromLog() {
+        AppController.waitForSpankyWindowLoaded();
         if (InitialGameMessages.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
             File tempDir = new File(InitialGameMessages.MesgDir);
             String[] files = tempDir.list();
@@ -201,7 +220,7 @@ public abstract class OngoingGameMessages {
         String timeStamp = strs[0];
         String type = strs[1];
         String messageText = strs[2];
-//        pause(10L);
+        pause(5L);
 
         toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));
         if ( ! toContinue){
@@ -210,15 +229,15 @@ public abstract class OngoingGameMessages {
 
         if (MessageType.Line.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            toLinesMessageConsumer.dispatch(mapMessgage);
+            toLinesMessageConsumer().dispatch(mapMessgage);
             linesMesgCnt++;
         } else if (MessageType.Score.name().equals(type)) {
             MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            toScoreMessageConsumer.dispatch(mapMessgage);
+            toScoreMessageConsumer().dispatch(mapMessgage);
             scoresMesgCnt++;
         } else if (MessageType.Game.name().equals(type)) {
             TextMessage txtMessgage = new LocalTextMessage(parseText(messageText));
-            toGameMessageConsumer.dispatch(txtMessgage);
+            toGameMessageConsumer().dispatch(txtMessgage);
             gamesMesgCnt++;
         } else {
             log("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
