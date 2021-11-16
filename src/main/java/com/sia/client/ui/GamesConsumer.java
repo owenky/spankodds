@@ -60,6 +60,7 @@ public class GamesConsumer implements MessageListener {
                 }
 
             } else {
+                AppController.waitForSpankyWindowLoaded();
                 Utils.ensureNotEdtThread();
                 OngoingGameMessages.addMessage(MessageType.Game, message);
                 processMessage((TextMessage) message);
@@ -68,7 +69,6 @@ public class GamesConsumer implements MessageListener {
     }
 
     public void processMessage(TextMessage textMessage) {
-        AppController.waitForSpankyWindowLoaded();
         try {
             String leagueid;
             String messagetype = textMessage.getStringProperty("messageType");
