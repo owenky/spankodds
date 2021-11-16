@@ -3,6 +3,9 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.ColumnAdjustPreparer.AdjustRegion;
 
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +23,18 @@ public class ColumnAdjusterManager {
     private static final int initialCapicity = 50;
     private final List<AdjustRegion> mainTableAdjustRegions = new ArrayList<>(initialCapicity);
     private final List<AdjustRegion> rowHeaderTableAdjustRegions = new ArrayList<>(initialCapicity);
+    private final static ColumnAdjusterFlusher COLUMN_ADJUSTER_FLUSHER = new ColumnAdjusterFlusher();
+    private final static Timer flushScheduler = new Timer(SiaConst.ColumnWidthRefreshRate,COLUMN_ADJUSTER_FLUSHER);
+
+    static {
+        flushScheduler.start();
+    }
 
     public ColumnAdjusterManager(ColumnCustomizableTable<?> mainTable) {
         this.mainTable = mainTable;
         this.mainTablePreparer = new ColumnAdjustPreparer(mainTable);
         this.rowHeaderTablePreparer = new ColumnAdjustPreparer(mainTable.getRowHeaderTable());
+        COLUMN_ADJUSTER_FLUSHER.addColumnAdjusterManager(this);
     }
     public void clear() {
         this.getMainTableColumnAdjuster().clear();
@@ -85,5 +95,19 @@ public class ColumnAdjusterManager {
             rowHeaderTableColumnAdjuster = new TableColumnAdjuster(mainTable.getRowHeaderTable(),mainTable.getMarginProvider());
         }
         return rowHeaderTableColumnAdjuster;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static class ColumnAdjusterFlusher implements ActionListener {
+
+        private final List<ColumnAdjusterManager> columnAdjusterManagerList = new ArrayList<>();
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            for(ColumnAdjusterManager manager:columnAdjusterManagerList ) {
+                manager.adjustColumns();
+            }
+        }
+        public void addColumnAdjusterManager(ColumnAdjusterManager manager) {
+            columnAdjusterManagerList.add(manager);
+        }
     }
 }
