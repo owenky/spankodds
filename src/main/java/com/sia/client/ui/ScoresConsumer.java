@@ -97,6 +97,7 @@ public class ScoresConsumer implements MessageListener {
                     new ScoreChangeProcessorTest(this).start();
                 }
             } else {
+                AppController.waitForSpankyWindowLoaded();
                 Utils.ensureNotEdtThread();
                 OngoingGameMessages.addMessage(MessageType.Score, message);
                 processMessage((MapMessage) message);
@@ -105,7 +106,6 @@ public class ScoresConsumer implements MessageListener {
     }
 
     public void processMessage(MapMessage mapMessage) {
-        AppController.waitForSpankyWindowLoaded();
         try {
             String changetype = mapMessage.getStringProperty("messageType");
             if (changetype.equals("ScoreChange")) {
