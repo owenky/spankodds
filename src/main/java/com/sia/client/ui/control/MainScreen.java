@@ -54,24 +54,29 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public boolean showheaders = true;
     private MainGameTable mainGameTable;
     private MainGameTableModel tableModel;
+    private final int windowIndex;
     private final Map<GameGroupHeader, LinesTableData> headerMap = new HashMap<>();
 
 
-    MainScreen(SportType sportType) {
+    MainScreen(SportType sportType,int windowIndex) {
+        this.windowIndex = windowIndex;
         cleartime = new java.util.Date().getTime();
         this.sportType = sportType;
         final String name = sportType.getSportName();
         setName(name);
     }
 
-    MainScreen(SportType sportType,boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
-        this(sportType);
+    MainScreen(SportType sportType,int windowIndex,boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+        this(sportType,windowIndex);
         this.showheaders = showheaders;
         sportType.setShowseries(showseries);
         sportType.setShowingame(showingame);
         sportType.setShowAdded(showadded);
         sportType.setShowExtra(showextra);
         sportType.setShowProps(showprops);
+    }
+    public int getWindowIndex() {
+        return windowIndex;
     }
     public void setCustomheaders(List<String> customheaders) {
         this.sportType.setCustomheaders(customheaders);
@@ -90,7 +95,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     private MainGameTableModel buildModel() {
 
-        MainGameTableModel model = new MainGameTableModel(sportType, allColumns);
+        MainGameTableModel model = new MainGameTableModel(sportType, windowIndex,allColumns);
         Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
         List<Bookie> hiddencols = AppController.getHiddenCols();
         allColumns.clear();
