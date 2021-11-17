@@ -30,6 +30,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private boolean toConfigHeaderRow = false;
+    private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
     private final String name;
@@ -45,6 +46,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
+    }
+    public void setDetroyed(boolean isDetroyed) {
+        this.isDetroyed = isDetroyed;
+    }
+    public boolean isDetroyed() {
+        return isDetroyed;
     }
     public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
         this.toConfigHeaderRow = toConfigHeaderRow;

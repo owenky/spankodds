@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sia.client.config.Logger.consoleLogPeek;
+
 public class ColumnAdjusterManager {
 
     private final ColumnCustomizableTable<?> mainTable;
@@ -33,6 +35,9 @@ public class ColumnAdjusterManager {
         this.mainTablePreparer = new ColumnAdjustPreparer(mainTable);
         this.rowHeaderTablePreparer = new ColumnAdjustPreparer(mainTable.getRowHeaderTable());
         COLUMN_ADJUSTER_FLUSHER.addColumnAdjusterManager(this);
+    }
+    public void removeFromScheduler() {
+        COLUMN_ADJUSTER_FLUSHER.rmColumnAdjusterManager(this);
     }
     public void clear() {
         this.getMainTableColumnAdjuster().clear();
@@ -61,7 +66,7 @@ public class ColumnAdjusterManager {
                 rowHeaderTable.optimizeSize();
             }
             long timeConsumed = System.currentTimeMillis()-now;
-//            consoleLogPeek("TableColumnAdjuster::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
+            consoleLogPeek("TableColumnAdjuster::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
             lastAdjustingTime = now;
             accumulatedCnt = 0;
             clearAdjustRegions();
@@ -101,11 +106,17 @@ public class ColumnAdjusterManager {
         @Override
         public void actionPerformed(final ActionEvent e) {
             for(ColumnAdjusterManager manager:columnAdjusterManagerList ) {
-                manager.adjustColumns();
+                if ( manager.mainTable.isShowing()) {
+                    manager.adjustColumns();
+                }
             }
         }
         public void addColumnAdjusterManager(ColumnAdjusterManager manager) {
             columnAdjusterManagerList.add(manager);
+        }
+        public void rmColumnAdjusterManager(ColumnAdjusterManager manager) {
+            columnAdjusterManagerList.remove(manager);
+            consoleLogPeek("remove manager "+manager+" from ColumnAdjusterFlusher");
         }
     }
 }

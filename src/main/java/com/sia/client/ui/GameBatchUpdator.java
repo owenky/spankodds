@@ -49,7 +49,9 @@ public class GameBatchUpdator {
         if ( SiaConst.DataRefreshRate< (now-lastUpdateTime) || forcing) {
             for (TableModelEvent e : pendingUpdateEvents) {
                 ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>)e.getSource();
-                model.fireTableChanged(e);
+                if ( ! model.isDetroyed()) {
+                    model.fireTableChanged(e);
+                }
             }
 Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
             pendingUpdateEvents.clear();
