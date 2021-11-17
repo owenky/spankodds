@@ -210,7 +210,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         log("done drawing");
     }
 
-    public void createData() {
+    private void createData() {
         headerMap.clear();
         int maxlength;
         currentmaxlength = 0;

@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
@@ -59,7 +58,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public ImageIcon loadgif = null;
     public JLabel loadlabel;
     public SportsTabPane thispane;
-    private int currentTabIndex = 0, previousTabIndex = 0;
+    private int previousTabIndex = -1;
     private Image tabImage = null;
     private Point currentMouseLocation = null;
     private boolean dragging = false;
@@ -90,8 +89,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             }
         }
 
-        Vector<String> customtabs = AppController.getCustomTabsVec();
-        //adding=|851 07/03|851 07/04|852 07/04|853 07/04*new1*true*false*false*true*true?
+        List<String> customtabs = AppController.getCustomTabsVec();
         for (int i = 0; i < customtabs.size(); i++) {
             String name = "";
             boolean showheaders = true;
@@ -100,7 +98,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             boolean showadded = true;
             boolean showextra = true;
             boolean showprops = true;
-            String msstring = customtabs.elementAt(i);
+            String msstring = customtabs.get(i);
             log("customtab=" + msstring);
             String[] items = msstring.split("\\*");
             List<String> customheaders = new ArrayList<>();
@@ -139,10 +137,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
         addTab("+", null, null, "+");
 
-        //plus.setPreferredSize(new Dimension(30, 20));
-        //setTabComponentAt(getTabCount() - 1, p);
-        //setSelectedIndex(getTabCount() - 1);
-
         log("initializing SportTabPane instance:"+ windowIndex);
         doTest();
     }
@@ -178,8 +172,14 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             @Override
             public void stateChanged(ChangeEvent ce) {
 
-                previousTabIndex = currentTabIndex;
-                currentTabIndex = thispane.getSelectedIndex();
+                if ( previousTabIndex >=0 && previousTabIndex != thispane.getTabCount() - 1) {
+                    Component previousComp = getComponentAt(previousTabIndex);
+                    if ( previousComp instanceof MainScreen) {
+                        MainScreen oldms = (MainScreen) previousComp;
+                        oldms.destroyMe();
+                    }
+                }
+                int currentTabIndex = thispane.getSelectedIndex();
 
                 log(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
                 log(" Previous tab is:" + previousTabIndex);
@@ -190,11 +190,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 } else if (getTabCount() > 1 && previousTabIndex == getTabCount() - 1) {
                     // do nothing
                 } else {
-                    Component previousComp = getComponentAt(previousTabIndex);
-                    if ( previousComp instanceof MainScreen) {
-                        MainScreen oldms = (MainScreen) previousComp;
-                        oldms.destroyMe();
-                    }
+
                     Component currentComp = getComponentAt(currentTabIndex);
                     if ( currentComp instanceof MainScreen) {
                         MainScreen newms = (MainScreen) currentComp;
@@ -204,6 +200,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                     }
                 }
 
+                previousTabIndex = currentTabIndex;
             }
         });
 
@@ -231,7 +228,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         jPopupMenu.add(editItem);
                         jPopupMenu.add(removeItem);
                         editItem.addActionListener(e1 -> checkAndRunInEDT(() -> {
-                            log(currentTabIndex + "mouseClicked" + (currentTabIndex == getTabCount() - 1));
                             new CustomTab2(getWindowIndex(),thispane.getTitleAt(tabindex), tabindex);
 
                         }));
@@ -318,14 +314,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
             if (ms.shouldAddToScreen(g) ) {
-                Runnable r = () -> ms.addGame(g);
-                Utils.checkAndRunInEDT(() -> {
-                    try {
-                        r.run();
-                    }catch (Exception e) {
-                        log(e);
-                    }
-                });
+                ms.addGame(g);
             }
         }
     }
@@ -439,7 +428,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     }
 
     public void refreshCurrentTab() {
-        MainScreen thisms = (MainScreen) getComponentAt(currentTabIndex);
+        MainScreen thisms = (MainScreen) getComponentAt(getSelectedIndex());
         refreshMainScreen(thisms);
     }
     public void refreshMainScreen(MainScreen thisms) {
@@ -452,7 +441,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     }
 
     public void cleanup() {
-        Component comp = getComponentAt(currentTabIndex);
+        Component comp = getComponentAt(getSelectedIndex());
         if ( comp instanceof MainScreen) {
             MainScreen thisms = (MainScreen) comp;
             thisms.destroyMe();

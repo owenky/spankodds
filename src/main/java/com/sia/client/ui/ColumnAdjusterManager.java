@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sia.client.config.Logger.consoleLogPeek;
-
 public class ColumnAdjusterManager {
 
     private final ColumnCustomizableTable<?> mainTable;
@@ -63,7 +61,7 @@ public class ColumnAdjusterManager {
                 rowHeaderTable.optimizeSize();
             }
             long timeConsumed = System.currentTimeMillis()-now;
-            consoleLogPeek("TableColumnAdjuster::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
+//            consoleLogPeek("TableColumnAdjuster::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
             lastAdjustingTime = now;
             accumulatedCnt = 0;
             clearAdjustRegions();

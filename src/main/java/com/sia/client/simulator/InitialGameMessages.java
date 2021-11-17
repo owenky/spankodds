@@ -30,6 +30,7 @@ public abstract class InitialGameMessages {
     public static boolean shouldLogMesg = false;
     public static boolean shouldRunSimulator; //set by System Property
     public static boolean getMessagesFromLog = false;
+    public static boolean Debug;
     public static String [] filters;
     public static String MesgDir;
     public static Set<MessageType> interestedMessageTypes;
@@ -37,6 +38,12 @@ public abstract class InitialGameMessages {
     private static String InitialLoadingFilePath;
 
     public static void initMsgLoggingProps() {
+        String debugStr = System.getProperty("Debug");
+        if ( null == debugStr) {
+            Debug = false;
+        } else {
+            Debug = ! Boolean.parseBoolean(debugStr);
+        }
         String mesgDir = System.getProperty("MesgDir");
         MesgDir = null==mesgDir?TestProperties.DefaultMesgDir:mesgDir;
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));

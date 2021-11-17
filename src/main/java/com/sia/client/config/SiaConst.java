@@ -34,6 +34,7 @@ public abstract class SiaConst {
     public static final double DefaultSpread = -99999d;
     public static final double DefaultOver = 99999d;
     public static final int ColumnWidthRefreshRate = 2500;
+    public static final int DataRefreshRate = 500;
 
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;
