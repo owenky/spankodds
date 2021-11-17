@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
@@ -309,109 +310,14 @@ public class GamesConsumer implements MessageListener {
             {
 
                 String data = textMessage.getText();
-                String[] items = data.split("~");
-                int x = 0;
-                String eventnumber = items[x++];
-                String visitorgamenumber = items[x++];
-                String homegamenumber = items[x++];
-                String gamedatelong = items[x++];
-                String gametimelong = items[x++];
-                String visitorteamname = items[x++];
-                String hometeamname = items[x++];
-                String visitorabbr = items[x++];
-                String homeabbr = items[x++];
-                String league_id = items[x++];
-                String visitscore = items[x++];
-                String homescore = items[x++];
-                String eventnumberalso = items[x++];
-                String subleague_id = items[x++];
-                String addedgamebool = items[x++];
-                String extragamebool = items[x++];
-                String tba = items[x++];
-                String visitornickname = items[x++];
-                String homenickname = items[x++];
-                String visitorcity = items[x++];
-                String homecity = items[x++];
-                String visitorteamid = items[x++];
-                String hometeamid = items[x++];
-                String visitorpitcher = items[x++];
-                String homepitcher = items[x++];
-                String visitorlefthandedbool = items[x++];
-                String homelefthandedbool = items[x++];
-                String status = items[x++];
-                String timeremaining = items[x++];
-
-                String injurynotes = items[x++];
-                String refsumpires = items[x++];
-                String lineups = items[x++];
-                String weather = items[x++];
-                String specialnotes = items[x++];
-                String forprop = items[x++];
-                String circled = items[x++];
-                String started = items[x++];
-                String neutrallocation = items[x++];
-                String ingame = items[x++];
-                String seriesprice = items[x++];
-                String gamestatusts = items[x++];
-                String scorets = items[x++];
-
-                int gameid = Integer.parseInt(eventnumber);
-                Game g = AppController.getGame(gameid);
-                if (g == null) {
-                    g = new Game();
+                Game g = new Game();
+                GameUtils.setGameProperty(g,data);
+                Game oldGame = AppController.getGame(g.getGame_id());
+                boolean changed = g.equals(oldGame);
+Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2, changed="+changed, g.getGame_id());
+                if ( changed) {
+                    AppController.addOrUpdateGame(g);
                 }
-//                log("GamesConsumer::processMessage for NEWORUPDATE2: gameid="+gameid);
-                Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2", gameid);
-                g.setGame_id(gameid);
-                g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
-                g.setHomegamenumber(Integer.parseInt(homegamenumber));
-                g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
-                g.setGametime(new java.sql.Time(Long.parseLong(gametimelong)));
-                g.setVisitorteam(visitorteamname);
-                g.setHometeam(hometeamname);
-                g.setShortvisitorteam(visitorabbr);
-                g.setShorthometeam(homeabbr);
-                g.setLeague_id(Integer.parseInt(league_id));
-
-                // owen reput these 2 scores in
-                g.setCurrentvisitorscore(Integer.parseInt(visitscore));
-                g.setCurrenthomescore(Integer.parseInt(homescore));
-
-                g.setSubleague_id(Integer.parseInt(subleague_id));
-                g.setAddedgame(Boolean.parseBoolean(addedgamebool));
-                g.setExtragame(Boolean.parseBoolean(extragamebool));
-                g.setTba(Boolean.parseBoolean(tba));
-                g.setVisitornickname(visitornickname);
-                g.setHomenickname(homenickname);
-                g.setVisitorcity(visitorcity);
-                g.setHomecity(homecity);
-                g.setVisitor_id(Integer.parseInt(visitorteamid));
-                g.setHome_id(Integer.parseInt(hometeamid));
-                g.setVisitorpitcher(visitorpitcher);
-                g.setHomepitcher(homepitcher);
-                g.setVisitorlefthanded(Boolean.parseBoolean(visitorlefthandedbool));
-                g.setHomelefthanded(Boolean.parseBoolean(homelefthandedbool));
-
-                g.setStatus(status);
-                g.setTimeremaining(timeremaining);
-
-
-                g.setInjurynotes(injurynotes);
-                g.setRefsumpires(refsumpires);
-                g.setLineups(lineups);
-                g.setWeather(weather);
-                g.setSpecialnotes(specialnotes);
-                g.setForprop(Boolean.parseBoolean(forprop));
-                g.setCircled(Boolean.parseBoolean(circled));
-                g.setStarted(Boolean.parseBoolean(started));
-                g.setNeutrallocation(Boolean.parseBoolean(neutrallocation));
-                g.setIngame(Boolean.parseBoolean(ingame));
-                g.setSeriesprice(Boolean.parseBoolean(seriesprice));
-
-                g.setGamestatusts(Long.parseLong(gamestatusts));
-                g.setScorets(Long.parseLong(scorets));
-
-                AppController.addOrUpdateGame(g);
             } else if (messagetype.equals("REMOVE")) {
                 String data = textMessage.getText(); // this is gamenumber
                 String[] gameidarr = data.split("~");
