@@ -82,7 +82,7 @@ public abstract class GameUtils {
         String[] array = text.split(SiaConst.MessageDelimiter);
         //log("gametext="+text);
         // here in 1st entry i made game_id visitorgamenumber
-        return new Game(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), Integer.parseInt(array[3]),
+        Game g = new Game(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), Integer.parseInt(array[3]),
                 Integer.parseInt(array[4]), new java.sql.Date(Long.parseLong(array[5])), new java.sql.Time(Long.parseLong(array[6])),
                 array[7], array[8], array[9], array[10], Integer.parseInt(array[11]), Integer.parseInt(array[12]), Integer.parseInt(array[13]),
                 Integer.parseInt(array[14]), Integer.parseInt(array[15]), array[16], array[17], array[18], array[19], array[20], array[21],
@@ -114,6 +114,9 @@ public abstract class GameUtils {
                 array[50],
                 Long.parseLong(array[51]),
                 Long.parseLong(array[52]));
+
+        GameUtils.validateGame(g);
+        return g;
     }
     public static String getGameDebugInfo(Game game) {
         Sport sport = AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
@@ -122,6 +125,11 @@ public abstract class GameUtils {
                 + ", header=" + createGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
                 + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
+    }
+    public static void validateGame(Game g) {
+        if ( "WIN".equalsIgnoreCase(g.getTimeremaining())){
+            g.setStatus(SiaConst.FinalStr);
+        }
     }
     private static final int GameBasicFieldCnt = 29;
     public static void setGameProperty(Game g,String data) {
@@ -192,6 +200,7 @@ public abstract class GameUtils {
             g.setStatus(status);
             g.setTimeremaining(timeremaining);
 
+
         }
         //for optional fields -- 2021-11-17
         for(int x=GameBasicFieldCnt;x<items.length;){
@@ -226,5 +235,6 @@ public abstract class GameUtils {
             g.setGamestatusts(Long.parseLong(gamestatusts));
             g.setScorets(Long.parseLong(scorets));
         }
+        validateGame(g);
     }
 }
