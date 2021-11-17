@@ -42,7 +42,7 @@ public abstract class InitialGameMessages {
         if ( null == debugStr) {
             Debug = false;
         } else {
-            Debug = ! Boolean.parseBoolean(debugStr);
+            Debug = Boolean.parseBoolean(debugStr);
         }
         String mesgDir = System.getProperty("MesgDir");
         MesgDir = null==mesgDir?TestProperties.DefaultMesgDir:mesgDir;
