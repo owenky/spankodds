@@ -81,8 +81,6 @@ public class SoccerSpreadTotalView extends ViewValue {
         bookie = AppController.getBookie(bid);
         sp = AppController.getSportByLeagueId(game.getLeague_id());
         this.getCurrentBoxes();
-        //this.setAndGetPriorBoxes(bid,gid);
-        //this.setAndGetOpenerBoxes(bid,gid);
         clearts = cleartime;
         id = new Random().nextInt();
         this.ltd = ltd;
@@ -964,7 +962,7 @@ public class SoccerSpreadTotalView extends ViewValue {
                 String tot1 = tl.getShortPrintedOpenerTotal();
                 String tot2 = tl.getOtherPrintedOpenerTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     drawboxS = tot1;
                     totalboxS = tot2;
                 } else {
@@ -976,11 +974,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         } else if (display.equals("totalmoney") || display.equals("totalbothmoney")) {
 
             //totalcolor = drawcolor = Color.WHITE;
-            if (display.equals("totalbothmoney")) {
-                showcomebacks = true;
-            } else {
-                showcomebacks = false;
-            }
+            showcomebacks = display.equals("totalbothmoney");
             if (visitmljuice == 99999) {
                 //log("x0");
                 topboxS = "";
@@ -1074,7 +1068,7 @@ public class SoccerSpreadTotalView extends ViewValue {
                 String tot1 = tl.getShortPrintedOpenerTotal();
                 String tot2 = tl.getOtherPrintedOpenerTotal();
 
-                if (tot1.indexOf("o") != -1) {
+                if (tot1.contains("o")) {
                     topboxS = tot1;
                     bottomboxS = tot2;
                 } else {
@@ -1215,25 +1209,6 @@ public class SoccerSpreadTotalView extends ViewValue {
         this.openerboxes = boxes;
     }
 
-    public boolean isshowcomebacks() {
-        return showcomebacks;
-    }
-
-    public void setShowComebacks(boolean b) {
-        showcomebacks = b;
-    }
-
-    public void firechange() {
-
-        new FireThread(ltd).start();
-
-
-    }
-
-    public String getDisplayType() {
-        return display;
-    }
-
     public void setDisplayType(String d) {
         display = d;
         boxes[0].setBackgroundColor(Color.WHITE);
@@ -1241,22 +1216,6 @@ public class SoccerSpreadTotalView extends ViewValue {
         boxes[2].setBackgroundColor(Color.WHITE);
         boxes[3].setBackgroundColor(Color.WHITE);
     }
-
-    public int getPeriodType() {
-        return period;
-    }
-	/*
-		public void clearColors()
-	{
-		priorspreadcolor = Color.WHITE;
-		priortotalcolor = Color.WHITE;
-		boxes[0].setBackgroundColor(Color.WHITE);
-		boxes[1].setBackgroundColor(Color.WHITE);
-
-
-	}
-	*/
-
     public void setPeriodType(int d) {
         period = d;
         boxes[0].setBackgroundColor(Color.WHITE);
@@ -1265,25 +1224,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         boxes[3].setBackgroundColor(Color.WHITE);
     }
 
-    public LineData gettopbox() {
-        return topbox;
-    }
-
-    public LineData getbottombox() {
-        return bottombox;
-    }
-
-    public LineData getdrawbox() {
-        return drawbox;
-    }
-
-    public LineData gettotalbox() {
-        return totalbox;
-    }
-
     public String toString() {
-        //getCurrentBoxes();
-
         return boxes[0].getData();
     }
 

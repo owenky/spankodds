@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class GameBatchUpdatorTest {
 
@@ -131,5 +132,37 @@ public class GameBatchUpdatorTest {
 
         assertEquals(12,result.get(1)[0]);
         assertEquals(20,result.get(1)[1]);
+    }
+    @Test
+    public void testGetNewUpdateRegions9() {
+
+        Set<Integer> set = new HashSet<>();
+        set.add(10);
+        set.add(11);
+
+        List<int[]> result = GameBatchUpdator.getNewUpdateRegions(-1,20,set);
+        assertNull(result);
+    }
+    @Test
+    public void testGetNewUpdateRegions10() {
+
+        Set<Integer> set = new HashSet<>();
+        set.add(0);
+        set.add(-1);
+        set.add(-2);
+
+        List<int[]> result = GameBatchUpdator.getNewUpdateRegions(0,-5,set);
+        assertNull(result);
+    }
+    @Test
+    public void testGetNewUpdateRegions11() {
+
+        Set<Integer> set = new HashSet<>();
+        set.add(0);
+        set.add(1);
+        set.add(2);
+
+        List<int[]> result = GameBatchUpdator.getNewUpdateRegions(0,Integer.MAX_VALUE,set);
+        assertNull(result);
     }
 }

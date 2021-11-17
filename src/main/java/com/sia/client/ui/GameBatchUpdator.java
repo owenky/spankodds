@@ -68,31 +68,33 @@ Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", upd
      * this method is called only when TableUtils.toRebuildCache(event) is false, so no need to check TableUtils.toRebuildCache(event) condition. -- 2021-11-16
      */
     public void addUpdateEvent(TableModelEvent event) {
-        if ( event.getFirstRow() < 0 || event.getFirstRow() <0 ) {
-            addToPendingUpdateEvents(event);
-            flush();
-        }
-        addToPendingUpdateEvents(event);
-    }
-    private void addToPendingUpdateEvents(TableModelEvent event) {
         accumulateCnt++;
         int firstRow = event.getFirstRow();
         int lastRow = event.getLastRow();
         List<int[]> newUpdateRegions = getNewUpdateRegions(firstRow,lastRow,pendingUpdatedRowModelIndexSet);
-        for(int [] newRegion: newUpdateRegions) {
-            TableModelEvent e = new TableModelEvent((TableModel)event.getSource(),newRegion[0],newRegion[1],event.getColumn(),event.getType());
-            pendingUpdateEvents.add(e);
-            updatedRowCnt += newRegion[1]-newRegion[0]+1;
-        }
-        for(int index=firstRow;index<=lastRow;index++) {
-            pendingUpdatedRowModelIndexSet.add(index);
+        if ( null != newUpdateRegions ) {
+            for (int[] newRegion : newUpdateRegions) {
+                TableModelEvent e = new TableModelEvent((TableModel) event.getSource(), newRegion[0], newRegion[1], event.getColumn(), event.getType());
+                pendingUpdateEvents.add(e);
+                updatedRowCnt += newRegion[1] - newRegion[0] + 1;
+            }
+            for (int index = firstRow; index <= lastRow; index++) {
+                pendingUpdatedRowModelIndexSet.add(index);
+            }
+        } else {
+            pendingUpdateEvents.add(event);
+            updatedRowCnt++;
         }
     }
-    static List<int[]> getNewUpdateRegions(int firstRow,int LastRow,Set<Integer>pendingUpdatedRowModelIndexSet) {
+    static List<int[]> getNewUpdateRegions(int firstRow,int lastRow,Set<Integer>pendingUpdatedRowModelIndexSet) {
 
         List<int[]> result = new ArrayList<>();
+        if ( firstRow < 0 || lastRow < 0 || Integer.MAX_VALUE == lastRow) {
+           return null;
+        }
+
         int[] region = createNewRegion();
-        for (int index=firstRow; index<=LastRow; index++) {
+        for (int index=firstRow; index<=lastRow; index++) {
             if ( pendingUpdatedRowModelIndexSet.contains(index)) {
                 if ( 0 <= region[0]) {
                     region[1]=index-1;
