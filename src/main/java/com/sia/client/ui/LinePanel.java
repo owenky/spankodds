@@ -145,8 +145,7 @@ public class LinePanel extends JPanel {
             String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
             String bookieid = AppController.getBookieId(bookie);
-            Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
-            //log("bookie-color="+bookie+".."+bookieid+".."+colcolor);
+            Color colcolor = AppController.getColor(bookieid);
 
             Color bgcolor = ld.getBackgroundColor();
             Color fgcolor = Color.BLACK;
@@ -222,7 +221,7 @@ public class LinePanel extends JPanel {
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
         String bookieid = AppController.getBookieId(bookie);
-        Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
+        Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
         Color fgcolor = Color.BLACK;
@@ -289,7 +288,7 @@ public class LinePanel extends JPanel {
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
         String bookieid = AppController.getBookieId(bookie);
-        Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
+        Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
         Color fgcolor = Color.BLACK;
@@ -358,7 +357,7 @@ public class LinePanel extends JPanel {
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
         String bookieid = AppController.getBookieId(bookie);
-        Color colcolor = (Color) AppController.getBookieColors().get(bookieid);
+        Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
         Color fgcolor = Color.BLACK;

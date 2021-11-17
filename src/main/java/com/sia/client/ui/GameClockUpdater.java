@@ -54,7 +54,7 @@ public class GameClockUpdater {
             int firstRow = model.mapToRowModelIndex(ts,1); //index 0 is group header row
             int lastRow = model.mapToRowModelIndex(ts,ts.size()-1);
             TableModelEvent me = new TableModelEvent(model,firstRow,lastRow);
-            model.fireTableChanged(me);
+            model.fireTableChanged(me);  //don't use processTableModelEvent which delays firing.
         }
     }
 }

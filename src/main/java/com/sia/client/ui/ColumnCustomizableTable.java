@@ -159,8 +159,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void adjustColumns() {
         getColumnAdjusterManager().adjustColumns();
     }
-    public void adjustColumnsOnRows(Integer ... gameIds) {
-        getColumnAdjusterManager().adjustColumnsOnRows(gameIds);
+    public void adjustColumnsOnRows(Integer ... rowViewIndice) {
+        getColumnAdjusterManager().adjustColumnsOnRows(rowViewIndice);
     }
     @Override
     public void setRowHeight(int rowHeight) {

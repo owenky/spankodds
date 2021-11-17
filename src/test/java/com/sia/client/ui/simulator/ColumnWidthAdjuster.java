@@ -19,7 +19,7 @@ public class ColumnWidthAdjuster implements EventGenerator{
         updateTestGame(tblProp.testGameCache.getGame(tesgGameId1));
         updateTestGame(tblProp.testGameCache.getGame(testGameid2));
 
-        tblProp.table.getModel().fireTableChanged(new TableModelEvent(tblProp.table.getModel()));
+        tblProp.table.getModel().processTableModelEvent(new TableModelEvent(tblProp.table.getModel()));
 //        COLUMN_ADJUST_SCHEDULER.addRowData(new TestRowData(tblProp.table, updatedRow));
     }
     private void updateTestGame(TestGame game) {

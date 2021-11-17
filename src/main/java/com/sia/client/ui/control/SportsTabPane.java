@@ -437,7 +437,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         reCreateMainScreen(thisms);
         MainGameTableModel model = thisms.getDataModels();
         AppController.addDataModels(model);
-        model.fireTableChanged(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+        model.processTableModelEvent(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
     }
 
     public void cleanup() {

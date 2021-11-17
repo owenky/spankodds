@@ -220,7 +220,7 @@ public abstract class OngoingGameMessages {
         String timeStamp = strs[0];
         String type = strs[1];
         String messageText = strs[2];
-        pause(5L);
+        pause(50L);
 
         toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));
         if ( ! toContinue){

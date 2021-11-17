@@ -309,7 +309,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 }
                 if (0 < v.size()) {
                     ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
-                    tm.fireTableChanged(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+                    tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
                 }
 
             }
@@ -343,7 +343,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 }
                 if (0 < v.size()) {
                     ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
-                    tm.fireTableChanged(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+                    tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
                 }
             }
         };
@@ -425,7 +425,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 v.get(j).setDisplayType(display[cb.getSelectedIndex()]);
             }
             if ( 0 < v.size()) {
-                TableUtils.fireTableModelChanged(v.get(0).getContainingTableModel());
+                TableUtils.processTableModelEvent(v.get(0).getContainingTableModel());
             }
             stb.setDisplay(display[cb.getSelectedIndex()]);
             stb.requestFocusInWindow();
@@ -436,7 +436,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 v.get(j).setPeriodType(perioddisplay[periodcb.getSelectedIndex()]);
             }
             if ( 0 < v.size()) {
-                TableUtils.fireTableModelChanged(v.get(0).getContainingTableModel());
+                TableUtils.processTableModelEvent(v.get(0).getContainingTableModel());
             }
             stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
             stb.requestFocusInWindow();

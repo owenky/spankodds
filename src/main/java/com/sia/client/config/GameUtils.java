@@ -123,4 +123,108 @@ public abstract class GameUtils {
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
                 + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
     }
+    private static final int GameBasicFieldCnt = 29;
+    public static void setGameProperty(Game g,String data) {
+        String[] items = data.split("~");
+
+        for(int x=0;x<GameBasicFieldCnt;) {
+            String eventnumber = items[x++];
+            String visitorgamenumber = items[x++];
+            String homegamenumber = items[x++];
+            String gamedatelong = items[x++];
+            String gametimelong = items[x++];
+            String visitorteamname = items[x++];
+            String hometeamname = items[x++];
+            String visitorabbr = items[x++];
+            String homeabbr = items[x++];
+            String league_id = items[x++];
+            String visitscore = items[x++];
+            String homescore = items[x++];
+            String eventnumberalso = items[x++];
+            String subleague_id = items[x++];
+            String addedgamebool = items[x++];
+            String extragamebool = items[x++];
+            String tba = items[x++];
+            String visitornickname = items[x++];
+            String homenickname = items[x++];
+            String visitorcity = items[x++];
+            String homecity = items[x++];
+            String visitorteamid = items[x++];
+            String hometeamid = items[x++];
+            String visitorpitcher = items[x++];
+            String homepitcher = items[x++];
+            String visitorlefthandedbool = items[x++];
+            String homelefthandedbool = items[x++];
+            String status = items[x++];
+            String timeremaining = items[x++];
+
+            int gameid = Integer.parseInt(eventnumber);
+            g.setGame_id(gameid);
+            g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
+            g.setHomegamenumber(Integer.parseInt(homegamenumber));
+            g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
+            g.setGametime(new java.sql.Time(Long.parseLong(gametimelong)));
+            g.setVisitorteam(visitorteamname);
+            g.setHometeam(hometeamname);
+            g.setShortvisitorteam(visitorabbr);
+            g.setShorthometeam(homeabbr);
+            g.setLeague_id(Integer.parseInt(league_id));
+
+            // owen reput these 2 scores in
+            g.setCurrentvisitorscore(Integer.parseInt(visitscore));
+            g.setCurrenthomescore(Integer.parseInt(homescore));
+
+            g.setSubleague_id(Integer.parseInt(subleague_id));
+            g.setAddedgame(Boolean.parseBoolean(addedgamebool));
+            g.setExtragame(Boolean.parseBoolean(extragamebool));
+            g.setTba(Boolean.parseBoolean(tba));
+            g.setVisitornickname(visitornickname);
+            g.setHomenickname(homenickname);
+            g.setVisitorcity(visitorcity);
+            g.setHomecity(homecity);
+            g.setVisitor_id(Integer.parseInt(visitorteamid));
+            g.setHome_id(Integer.parseInt(hometeamid));
+            g.setVisitorpitcher(visitorpitcher);
+            g.setHomepitcher(homepitcher);
+            g.setVisitorlefthanded(Boolean.parseBoolean(visitorlefthandedbool));
+            g.setHomelefthanded(Boolean.parseBoolean(homelefthandedbool));
+
+            g.setStatus(status);
+            g.setTimeremaining(timeremaining);
+
+        }
+        //for optional fields -- 2021-11-17
+        for(int x=GameBasicFieldCnt;x<items.length;){
+
+            String injurynotes = items[x++];
+            String refsumpires = items[x++];
+            String lineups = items[x++];
+            String weather = items[x++];
+            String specialnotes = items[x++];
+            String forprop = items[x++];
+            String circled = items[x++];
+            String started = items[x++];
+            String neutrallocation = items[x++];
+            String ingame = items[x++];
+            String seriesprice = items[x++];
+            String gamestatusts = items[x++];
+            String scorets = items[x++];
+
+
+            g.setInjurynotes(injurynotes);
+            g.setRefsumpires(refsumpires);
+            g.setLineups(lineups);
+            g.setWeather(weather);
+            g.setSpecialnotes(specialnotes);
+            g.setForprop(Boolean.parseBoolean(forprop));
+            g.setCircled(Boolean.parseBoolean(circled));
+            g.setStarted(Boolean.parseBoolean(started));
+            g.setNeutrallocation(Boolean.parseBoolean(neutrallocation));
+            g.setIngame(Boolean.parseBoolean(ingame));
+            g.setSeriesprice(Boolean.parseBoolean(seriesprice));
+
+            g.setGamestatusts(Long.parseLong(gamestatusts));
+            g.setScorets(Long.parseLong(scorets));
+        }
+    }
 }

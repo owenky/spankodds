@@ -86,88 +86,23 @@ public class GamesConsumer implements MessageListener {
             if ("NEWORUPDATE".equals(messagetype)) {
 
                 String data = textMessage.getText();
-                log("new game! " + data);
-                String[] items = data.split("~");
-                int x = 0;
+                Game g = new Game();
+                GameUtils.setGameProperty(g,data);
 
-                String eventnumber = items[x++];
-                String visitorgamenumber = items[x++];
-                String homegamenumber = items[x++];
-                String gamedatelong = items[x++];
-                String gametimelong = items[x++];
-                String visitorteamname = items[x++];
-                String hometeamname = items[x++];
-                String visitorabbr = items[x++];
-                String homeabbr = items[x++];
-                String league_id = items[x++];
-                String visitscore = items[x++];
-                String homescore = items[x++];
-                String eventnumberalso = items[x++];
-                String subleague_id = items[x++];
-                String addedgamebool = items[x++];
-                String extragamebool = items[x++];
-                String tba = items[x++];
-                String visitornickname = items[x++];
-                String homenickname = items[x++];
-                String visitorcity = items[x++];
-                String homecity = items[x++];
-                String visitorteamid = items[x++];
-                String hometeamid = items[x++];
-                String visitorpitcher = items[x++];
-                String homepitcher = items[x++];
-                String visitorlefthandedbool = items[x++];
-                String homelefthandedbool = items[x++];
-                String status = items[x++];
-                String timeremaining = items[x++];
-
-                int gameid = Integer.parseInt(eventnumber);
-                Game g = AppController.getGame(gameid);
-                if (g == null) {
-                    g = new Game();
-                } else {
-                    oldvpitcher = g.getVisitorpitcher();
-                    oldhpitcher = g.getHomepitcher();
-                    oldgametime = g.getGametime();
+                int gameid = g.getGame_id();
+                Game oldGame = AppController.getGame(gameid);
+                if ( null != oldGame ) {
+                    oldvpitcher = oldGame.getVisitorpitcher();
+                    oldhpitcher = oldGame.getHomepitcher();
+                    oldgametime = oldGame.getGametime();
 
                 }
 //                log("GamesConsumer::processMessage for NEWORUPDATE: gameid="+gameid);
-                Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE", gameid);
-                g.setGame_id(gameid);
-                g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
-                g.setHomegamenumber(Integer.parseInt(homegamenumber));
-                g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
-                g.setGametime(new java.sql.Time(Long.parseLong(gametimelong)));
-                g.setVisitorteam(visitorteamname);
-                g.setHometeam(hometeamname);
-                g.setShortvisitorteam(visitorabbr);
-                g.setShorthometeam(homeabbr);
-                g.setLeague_id(Integer.parseInt(league_id));
-
-                // owen reput these 2 scores in
-                g.setCurrentvisitorscore(Integer.parseInt(visitscore));
-                g.setCurrenthomescore(Integer.parseInt(homescore));
-
-                g.setSubleague_id(Integer.parseInt(subleague_id));
-                g.setAddedgame(Boolean.parseBoolean(addedgamebool));
-                g.setExtragame(Boolean.parseBoolean(extragamebool));
-                g.setTba(Boolean.parseBoolean(tba));
-                g.setVisitornickname(visitornickname);
-                g.setHomenickname(homenickname);
-                g.setVisitorcity(visitorcity);
-                g.setHomecity(homecity);
-                g.setVisitor_id(Integer.parseInt(visitorteamid));
-                g.setHome_id(Integer.parseInt(hometeamid));
-                g.setVisitorpitcher(visitorpitcher);
-                g.setHomepitcher(homepitcher);
-                g.setVisitorlefthanded(Boolean.parseBoolean(visitorlefthandedbool));
-                g.setHomelefthanded(Boolean.parseBoolean(homelefthandedbool));
-
-                g.setStatus(status);
-                g.setTimeremaining(timeremaining);
+                log("new game! " + data);
+//                Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE", gameid);
 
                 AppController.addOrUpdateGame(g);
                 Sport s = AppController.getSportByLeagueId(g.getLeague_id());
-
 
                 boolean seriesprice = false;
                 try {

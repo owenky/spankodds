@@ -78,9 +78,9 @@ public class ColumnAdjusterManager {
         mainTableAdjustRegions.clear();
         rowHeaderTableAdjustRegions.clear();
     }
-    public void adjustColumnsOnRows(Integer ... gameIds) {
-        getMainTableColumnAdjuster().adjustColumnsOnRow(gameIds);
-        getRowHeaderTableColumnAdjuster().adjustColumnsOnRow(gameIds);
+    public void adjustColumnsOnRows(Integer ... rowViewIndice) {
+        getMainTableColumnAdjuster().adjustColumnsOnRow(rowViewIndice);
+        getRowHeaderTableColumnAdjuster().adjustColumnsOnRow(rowViewIndice);
     }
     public TableColumnAdjuster getMainTableColumnAdjuster() {
         if ( null == mainTableColumnAdjuster) {

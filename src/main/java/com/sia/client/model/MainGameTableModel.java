@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
@@ -33,7 +34,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
     public MainGameTableModel(SportType sportType,int windowIndex,Vector<TableColumn> allColumns) {
-        super(allColumns);
+        super(allColumns,sportType.getSportName()+"@"+windowIndex);
         this.windowIndex = windowIndex;
         this.sportType = sportType;
         List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
@@ -84,21 +85,23 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     }
     public void addGameToGameGroup(GameGroupHeader gameGroupHeader,Game game, Function<GameGroupHeader,LinesTableData> function) {
-        LinesTableData ltd = computeIfNeeded(gameGroupHeader,game,function);
-        if ( null != ltd) {
-            int rowIndex = ltd.getRowIndex(game.getGame_id());
-            if ( 0 <= rowIndex) {
-                updateRow(ltd,rowIndex);
-            } else {
-                //check if this game is in other table section, if yes, then do move, else do add -- 2021-11-07
-                TableSection<Game> oldTableSection = this.findTableSectionByGameid(game.getGame_id());
-                if ( null != oldTableSection) {
-                    this.moveGameFromSourceToTarget(oldTableSection,game,gameGroupHeader);
+        Utils.checkAndRunInEDT(()-> {
+            LinesTableData ltd = computeIfNeeded(gameGroupHeader,game,function);
+            if ( null != ltd) {
+                int rowIndex = ltd.getRowIndex(game.getGame_id());
+                if ( 0 <= rowIndex) {
+                    updateRow(ltd,rowIndex);
                 } else {
-                    addGameToTableSection(ltd, game);
+                    //check if this game is in other table section, if yes, then do move, else do add -- 2021-11-07
+                    TableSection<Game> oldTableSection = this.findTableSectionByGameid(game.getGame_id());
+                    if ( null != oldTableSection) {
+                        this.moveGameFromSourceToTarget(oldTableSection,game,gameGroupHeader);
+                    } else {
+                        addGameToTableSection(ltd, game);
+                    }
                 }
             }
-        }
+        });
     }
     private LinesTableData computeIfNeeded(GameGroupHeader gameGroupHeader, Game game, Function<GameGroupHeader,LinesTableData> function) {
         LinesTableData ltd = findTableSectionByHeaderValue(gameGroupHeader);
@@ -122,7 +125,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         for (TableSection<Game> linesTableData : gameLines) {
             ((LinesTableData)linesTableData).clearColors();
         }
-        TableUtils.fireTableModelChanged(this);
+        TableUtils.processTableModelEvent(this);
     }
     public SportType getSportType() {
         return this.sportType;

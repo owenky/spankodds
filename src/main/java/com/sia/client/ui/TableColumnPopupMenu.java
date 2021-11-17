@@ -154,7 +154,7 @@ public class TableColumnPopupMenu{
         if (color != null) {
             log("color chosen was " + color);
             String bookieid = AppController.getBookieId(headerValue.toString());
-            AppController.getBookieColors().put(bookieid, color);
+            AppController.putColor(bookieid, color);
             List<LinesTableData> dm = AppController.getDataModels();
             dm.get(0).fire(null);
         }

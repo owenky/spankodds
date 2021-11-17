@@ -193,7 +193,7 @@ public abstract class TableSection<V extends KeyedObject> {
                 } else {
                     evt = e;
                 }
-                containingTableModel.fireTableChanged(evt);
+                containingTableModel.processTableModelEvent(evt);
             });
         }
     }

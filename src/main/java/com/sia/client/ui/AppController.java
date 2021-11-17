@@ -47,7 +47,7 @@ import static com.sia.client.config.Utils.log;
 public class AppController {
 
     public final static AlertVector alertsVector = new AlertVector();
-    public static Hashtable customTabsHash = new Hashtable();
+    private static Map<String,String> customTabsHash = new ConcurrentHashMap<>();
     public static Vector<String> customTabsVec = new Vector<>();
     public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
@@ -62,38 +62,38 @@ public class AppController {
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
     public final static Set<Integer> BadGameIds = new HashSet<>();
-    public static Hashtable<String, Spreadline> spreads = new Hashtable();
-    public static Hashtable<String, Totalline> totals = new Hashtable();
-    public static Hashtable<String, Moneyline> moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> h1spreads = new Hashtable();
-    public static Hashtable<String, Totalline> h1totals = new Hashtable();
-    public static Hashtable<String, Moneyline> h1moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> h1teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> h2spreads = new Hashtable();
-    public static Hashtable<String, Totalline> h2totals = new Hashtable();
-    public static Hashtable<String, Moneyline> h2moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> h2teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> q1spreads = new Hashtable();
-    public static Hashtable<String, Totalline> q1totals = new Hashtable();
-    public static Hashtable<String, Moneyline> q1moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> q1teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> q2spreads = new Hashtable();
-    public static Hashtable<String, Totalline> q2totals = new Hashtable();
-    public static Hashtable<String, Moneyline> q2moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> q2teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> q3spreads = new Hashtable();
-    public static Hashtable<String, Totalline> q3totals = new Hashtable();
-    public static Hashtable<String, Moneyline> q3moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> q3teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> q4spreads = new Hashtable();
-    public static Hashtable<String, Totalline> q4totals = new Hashtable();
-    public static Hashtable<String, Moneyline> q4moneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> q4teamtotals = new Hashtable();
-    public static Hashtable<String, Spreadline> livespreads = new Hashtable();
-    public static Hashtable<String, Totalline> livetotals = new Hashtable();
-    public static Hashtable<String, Moneyline> livemoneylines = new Hashtable();
-    public static Hashtable<String, TeamTotalline> liveteamtotals = new Hashtable();
+    private static Map<String, Spreadline> spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> h1spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> h1totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> h1moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> h1teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> h2spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> h2totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> h2moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> h2teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> q1spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> q1totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> q1moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> q1teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> q2spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> q2totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> q2moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> q2teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> q3spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> q3totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> q3moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> q3teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> q4spreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> q4totals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> q4moneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> q4teamtotals = new ConcurrentHashMap<>();
+    private static Map<String, Spreadline> livespreads = new ConcurrentHashMap<>();
+    private static Map<String, Totalline> livetotals = new ConcurrentHashMap<>();
+    private static Map<String, Moneyline> livemoneylines = new ConcurrentHashMap<>();
+    private static Map<String, TeamTotalline> liveteamtotals = new ConcurrentHashMap<>();
     public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
@@ -112,7 +112,7 @@ public class AppController {
     public static UrgentsConsumer urgentsConsumer;
     public static UserPrefsProducer userPrefsProducer;
     public static ChartChecker chartchecker;
-    public static Hashtable<String, Color> bookiecolors = new Hashtable();
+    private static Map<String, Color> bookiecolors = new ConcurrentHashMap<>();
     public static int numfixedcols;
     public static long clearalltime;
     public static DefaultTableColumnModel columnmodel;
@@ -451,34 +451,8 @@ public class AppController {
 
 
     public static SportsTabPane getMainTabPane() {
-//
-//        return tabpanes.get(0);
         return SpankyWindow.getSpankyWindow(0).getSportsTabPane();
     }
-//
-//    public static Vector<SportsTabPane> getTabPanes() {
-//
-//        return tabpanes;
-//    }
-//
-//    public static SportsMenuBar getMainMenuBar() {
-//
-//        return menubars.get(0);
-//    }
-//
-//    public static Vector getMenuBars() {
-//
-//        return menubars;
-//    }
-//
-//    public static void disableTabs() {
-//        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-//        //game need to populated to each window. -- 08/22/2021
-//        for (SportsTabPane tp : tabpanes) {
-//            tp.disableTabs();
-//        }
-//    }
-
     public static void enableTabs() {
 //        for (SportsTabPane tp : tabpanes) {
 //            tp.enableTabs();
@@ -512,13 +486,8 @@ public class AppController {
         menubars.remove(smb);
 
     }
-//
-//    public static void removeTabPane(SportsTabPane stb) {
-//        tabpanes.remove(stb);
-//    }
-
     public static void removeCustomTab(String key) {
-        String val = (String) customTabsHash.get(key);
+        String val = customTabsHash.get(key);
         if (val != null) {
             int index = customTabsVec.indexOf(val);
             if (index != -1) {
@@ -540,7 +509,7 @@ public class AppController {
     }
 
     public static String getTabInfo(String tabname) {
-        return (String) customTabsHash.get(tabname);
+        return customTabsHash.get(tabname);
     }
 
     public static void refreshTabs3() {
@@ -700,7 +669,7 @@ public class AppController {
     }
 
     public static String getBookieId(String sn) {
-        return "" + bookieshortnameids.get(sn);
+        return bookieshortnameids.get(sn);
     }
 
     public static User getUser() {
@@ -749,7 +718,7 @@ public class AppController {
     }
 
     public static void addCustomTab(String key, String s) {
-        String val = (String) customTabsHash.get(key);
+        String val = customTabsHash.get(key);
         if (val != null) {
             int index = customTabsVec.indexOf(val);
             if (index != -1) {
@@ -758,8 +727,6 @@ public class AppController {
         } else {
             customTabsVec.add(s);
         }
-
-
         customTabsHash.put(key, s);
         repaintmenubars();
     }
@@ -949,10 +916,6 @@ public class AppController {
     }
 
     public static void moveGameToThisHeader(Game g, GameGroupHeader header) {
-//        for(int i=0;i<SpankyWindow.openWindowCount();i++){
-//            SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
-//            stb.moveGameToThisHeader(g, header);
-//        }
         SpankyWindow.applyToAllWindows((stp)->stp.moveGameToThisHeader(g, header));
     }
 
@@ -972,15 +935,15 @@ public class AppController {
     public static Games getGames() {
         return games;
     }
-
-    public static Map<Integer,Bookie> getBookieCache() {
-        return bookieCache;
+    public static Color getColor(String bookieid) {
+        return bookiecolors.get(bookieid);
     }
-
-    public static Hashtable getBookieColors() {
-        return bookiecolors;
+    public static void putColor(String bookieid,Color color) {
+        bookiecolors.put(bookieid,color);
     }
-
+    public static Set<String> getColorBookieIds() {
+        return bookiecolors.keySet();
+    }
     public static Vector getSportsVec() {
         return sportsVec;
     }

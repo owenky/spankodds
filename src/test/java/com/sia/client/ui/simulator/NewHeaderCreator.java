@@ -19,6 +19,6 @@ public class NewHeaderCreator implements EventGenerator{
 
         model.addGameLine(1,section);
         TableModelEvent e = new TableModelEvent(tblProp.table.getModel(), insertedRow, insertedRow, ALL_COLUMNS, TableModelEvent.INSERT);
-        tblProp.table.getModel().fireTableChanged(e);
+        tblProp.table.getModel().processTableModelEvent(e);
     }
 }
