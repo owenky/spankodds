@@ -68,6 +68,9 @@ Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", upd
      * this method is called only when TableUtils.toRebuildCache(event) is false, so no need to check TableUtils.toRebuildCache(event) condition. -- 2021-11-16
      */
     public void addUpdateEvent(TableModelEvent event) {
+        if ( null == event) {
+            return;
+        }
         accumulateCnt++;
         int firstRow = event.getFirstRow();
         int lastRow = event.getLastRow();

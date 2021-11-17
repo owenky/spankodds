@@ -57,6 +57,9 @@ public abstract class TableUtils {
         tm.processTableModelEvent(new TableModelEvent(tm,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
     }
     public static boolean toRebuildCache(TableModelEvent e) {
+        if ( null == e) {
+            return true;
+        }
         //when update for lastrow=Integer.MAX_VALUE, all row heights are rest to table row height,
         return e.getType() == TableModelEvent.INSERT || e.getType() == TableModelEvent.DELETE
                 || (e.getType() == TableModelEvent.UPDATE && e.getLastRow() == Integer.MAX_VALUE)
