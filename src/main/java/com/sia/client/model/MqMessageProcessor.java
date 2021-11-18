@@ -56,7 +56,7 @@ public class MqMessageProcessor implements TableModelListener {
     @Override
     public void tableChanged(final TableModelEvent e) {
         long now = System.currentTimeMillis();
-        log("Last table update ago="+(now - lastTableUpdateTime));
+        log("MqMessageProcessor: Last table update ago="+(now - lastTableUpdateTime));
         lastTableUpdateTime = now;
 
     }
