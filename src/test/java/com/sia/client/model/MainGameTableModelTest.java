@@ -22,7 +22,7 @@ public class MainGameTableModelTest {
         gameCache = new TestGameCache();
         Vector<TableColumn> allColumn = new Vector<>();
         allColumn.add(new TableColumn());
-        model = new ColumnCustomizableDataModel<>(allColumn,"Test");
+        model = new ColumnCustomizableDataModel<>(allColumn);
     }
     @Test
     public void testAddGameLine() {

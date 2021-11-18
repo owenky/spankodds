@@ -8,7 +8,7 @@ import java.util.Vector;
 public class TestDataModel extends ColumnCustomizableDataModel<TestGame> {
 
     public TestDataModel( Vector<TableColumn> allColumns) {
-        super(allColumns,"TestModel");
+        super(allColumns);
     }
 
 }

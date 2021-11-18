@@ -33,11 +33,9 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
-    private final String name;
 
-    public ColumnCustomizableDataModel(List<TableColumn> allColumns,String name) {
+    public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
         this.allColumns = allColumns;
-        this.name = name;
         validateAndFixColumnModelIndex(allColumns);
         gameBatchUpdator = GameBatchUpdator.instance();
     }
@@ -237,7 +235,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         checkAndRunInEDT(()-> {
             flushUpdate();
             ltd.addOrUpdate(game);
-            ltd.sort(getDefaultGameComparator());
+            ltd.sort(getGameComparator());
             fireTableSectionChangeEvent();
 //        this.buildIndexMappingCache(false); //to be executed by  fireTableChanged(e) -- 2021-11-06
             int affectedRowModelIndex = getRowModelIndexByGameId(ltd, game.getGame_id());
@@ -294,7 +292,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         tableSections.add(index,gameLine);
         fireTableSectionChangeEvent();
         if ( toSort) {
-            this.sortTableSection(getdefaultTableSectionComparator());
+            this.sortTableSection(getTableSectionComparator());
         }
 //        resetSectionIndex(index);
     }
@@ -359,18 +357,19 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             return null;
         }
     }
-    protected Comparator<TableSection<V>> getdefaultTableSectionComparator() {
-        return null;
+    protected Comparator<TableSection<V>> getTableSectionComparator() {
+        throw new IllegalStateException("getTableSectionComparator must be implemented");
     }
-    protected Comparator<? super V> getDefaultGameComparator() {
-        return null;
+    protected Comparator<V> getGameComparator() {
+        throw new IllegalStateException("getGameComparator must be implemented");
     }
     public final void sort() {
-        flushUpdate();
-        sortTableSection(getdefaultTableSectionComparator());
-        sortGamesForAllTableSections(getDefaultGameComparator());
+        sortTableSection(getTableSectionComparator());
+        sortGamesForAllTableSections(getGameComparator());
     }
-
+    public final void sortGamesForAllTableSections() {
+        sortGamesForAllTableSections(getGameComparator());
+    }
     public void sortGamesForAllTableSections(Comparator<? super V> gameComparator) {
         if ( null != gameComparator) {
             flushUpdate();

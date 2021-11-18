@@ -2,7 +2,7 @@ package com.sia.client.model;
 
 import java.util.Comparator;
 
-public class GameSorter implements Comparator<Game> {
+public class GameTimeSorter implements Comparator<Game> {
 	@Override
     public int compare(Game g1, Game g2) {
 
@@ -14,6 +14,13 @@ public class GameSorter implements Comparator<Game> {
 			return 0;
 		}
 
-		return g1.getGame_id() - g2.getGame_id();
+		long diff = g1.getGametime().getTime() - g2.getGametime().getTime();
+		if ( diff > 0L) {
+			return 1;
+		} else if ( diff < 0) {
+			return -1;
+		} else {
+			return 0;
+		}
     }
 }

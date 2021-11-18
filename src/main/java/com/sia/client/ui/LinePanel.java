@@ -3,7 +3,8 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
-import com.sia.client.model.LinesTableDataSupplier;
+import com.sia.client.model.MainGameTableModel;
+import com.sia.client.model.SpankyWindowConfig;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -98,38 +99,24 @@ public class LinePanel extends JPanel {
     }
     public void setSoccerLines(JTable table,SoccerSpreadTotalView stv, int row, int col) {
 
+        SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
         LineData[] boxes;
         try {
+            stv.setDisplayType(spankyWindowConfig.getDisplay());
+            stv.setPeriodType(spankyWindowConfig.getPeriod());
 
-            LinesTableData ltd = ((LinesTableDataSupplier) table).getLinesTableData(row);
-
-            stv.setDisplayType(ltd.getDisplayType());
-            stv.setPeriodType(ltd.getPeriodType());
-
-            if (ltd.isShowingPrior()) {
+            if (spankyWindowConfig.isShowingPrior()) {
                 boxes = stv.getPriorBoxes();
                 testprint = stv.gid == 6829 && stv.bid == 204;
-            } else if (ltd.isShowingOpener()) {
+            } else if (spankyWindowConfig.isShowingOpener()) {
                 boxes = stv.getOpenerBoxes();
 
             } else {
-
                 boxes = stv.getCurrentBoxes();
-
             }
-//            String tooltip = stv.getToolTip();
-//
-//            if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
-//                this.setToolTipText(tooltip);
-//            } else {
-//                this.setToolTipText(null);
-//            }
             setTop(table,boxes[0], row, col);
-
             setBottom(table,boxes[1], row, col);
-
             setDraw(table,boxes[2], row, col);
-
             setTotal(table,boxes[3], row, col);
 
         } catch (Exception ex) {
@@ -420,29 +407,18 @@ public class LinePanel extends JPanel {
     public void setLines(JTable table,SpreadTotalView stv, int row, int col) {
         LineData[] boxes;
         try {
+            SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
+            stv.setDisplayType(spankyWindowConfig.getDisplay());
+            stv.setPeriodType(spankyWindowConfig.getPeriod());
 
-            LinesTableData ltd = ((LinesTableDataSupplier) table).getLinesTableData(row);
-
-            stv.setDisplayType(ltd.getDisplayType());
-            stv.setPeriodType(ltd.getPeriodType());
-
-            if (ltd.isShowingPrior()) {
+            if (spankyWindowConfig.isShowingPrior()) {
                 boxes = stv.getPriorBoxes();
                 testprint = stv.gid == 6829 && stv.bid == 204;
-            } else if (ltd.isShowingOpener()) {
+            } else if (spankyWindowConfig.isShowingOpener()) {
                 boxes = stv.getOpenerBoxes();
             } else {
                 boxes = stv.getCurrentBoxes();
             }
-
-
-//            String tooltip = stv.getToolTip();
-//            if (tooltip != null && !tooltip.equals("") && !tooltip.equalsIgnoreCase("null")) {
-//                this.setToolTipText(tooltip);
-//            } else {
-//                this.setToolTipText(null);
-//            }
-
             setTop(table,boxes[0], row, col);
             setBottom(table,boxes[1], row, col);
         } catch (Exception ex) {
@@ -460,8 +436,8 @@ public class LinePanel extends JPanel {
         String display = "";
         if (isSoccer()) {
             try {
-                LinesTableData ltd = ((LinesTableDataSupplier) table).getLinesTableData(row);
-                display = ltd.getDisplayType();
+                SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
+                display = spankyWindowConfig.getDisplay();
             } catch (Exception ex) {
                 log(ex);
             }
@@ -505,10 +481,9 @@ public class LinePanel extends JPanel {
 
     public void setChart(JTable table,ChartView stv, int row, int col) {
         try {
-            LinesTableData ltd = ((LinesTableDataSupplier) table).getLinesTableData(row);
-
-            stv.setDisplayType(ltd.getDisplayType());
-            stv.setPeriodType(ltd.getPeriodType());
+            SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
+            stv.setDisplayType(spankyWindowConfig.getDisplay());
+            stv.setPeriodType(spankyWindowConfig.getPeriod());
         } catch (Exception ex) {
             log(ex);
         }
@@ -526,9 +501,9 @@ public class LinePanel extends JPanel {
 
     public void setSoccerChart(JTable table,SoccerChartView stv, int row, int col) {
         try {
-            LinesTableData ltd = ((LinesTableDataSupplier) table).getLinesTableData(row);
-            stv.setDisplayType(ltd.getDisplayType());
-            stv.setPeriodType(ltd.getPeriodType());
+            SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
+            stv.setDisplayType(spankyWindowConfig.getDisplay());
+            stv.setPeriodType(spankyWindowConfig.getPeriod());
         } catch (Exception ex) {
             log(ex);
         }

@@ -2,13 +2,12 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
-import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
 
 import javax.swing.table.TableCellRenderer;
 
-public class MainGameTable extends ColumnCustomizableTable<Game> implements LinesTableDataSupplier {
+public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
     private final LineRenderer soccerLineRenderer = new LineRenderer(SiaConst.SoccerStr);
     private final LineRenderer lineRenderer = new LineRenderer();
@@ -19,7 +18,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         sporetType = tm.getSportType();
     }
     public int getWindowIndex() {
-        return getModel().getWindowIndex();
+        return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
     }
     @Override
     public void setName(String name) {

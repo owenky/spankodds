@@ -79,6 +79,7 @@ public class SportType {
     private boolean showAdded = true;
     private boolean showExtra = true;
     private boolean showProps = true;
+    private boolean isTimeSort;
     private Function<Game,Boolean> myTypeSelector;
     private List<String> customheaders = new ArrayList<>();
 
@@ -184,6 +185,13 @@ public class SportType {
 
     public void setShowingame(final boolean showingame) {
         this.showingame = showingame;
+    }
+    public boolean isTimeSort() {
+        return isTimeSort;
+    }
+
+    public void setTimeSort(final boolean timeSort) {
+        isTimeSort = timeSort;
     }
     public boolean isMyType(Game game) {
 

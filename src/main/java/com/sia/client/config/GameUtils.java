@@ -237,4 +237,7 @@ public abstract class GameUtils {
         }
         validateGame(g);
     }
+    public static boolean isTimeSort(Boolean windowConfigTimeSort, boolean userDefinedTimesort) {
+        return null == windowConfigTimeSort? userDefinedTimesort:windowConfigTimeSort;
+    }
 }

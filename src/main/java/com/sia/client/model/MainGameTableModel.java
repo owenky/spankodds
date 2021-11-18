@@ -23,9 +23,9 @@ import static com.sia.client.config.Utils.log;
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     private final SportType sportType;
+    private final ScreenProperty screenProperty;
     private static final Set<String> stageStrs = new HashSet<>();
     private final Map<String,Integer> customizedTabGameGroupHeaderIndex = new HashMap<>();
-    private final int windowIndex;
 
     static {
         stageStrs.add(SiaConst.FinalStr);
@@ -33,9 +33,9 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.InGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
-    public MainGameTableModel(SportType sportType,int windowIndex,Vector<TableColumn> allColumns) {
-        super(allColumns,sportType.getSportName()+"@"+windowIndex);
-        this.windowIndex = windowIndex;
+    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,Vector<TableColumn> allColumns) {
+        super(allColumns);
+        this.screenProperty = screenProperty;
         this.sportType = sportType;
         List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
         if ( 0 <customerizedGameGroupHeader.size()) {
@@ -49,11 +49,14 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             }
         }
     }
-    public int getWindowIndex() {
-        return windowIndex;
+    public SpankyWindowConfig getSpankyWindowConfig() {
+        return screenProperty.getSpankyWindowConfig();
+    }
+    public ScreenProperty getScreenProperty() {
+        return screenProperty;
     }
     @Override
-    public Comparator<TableSection<Game>> getdefaultTableSectionComparator() {
+    protected Comparator<TableSection<Game>> getTableSectionComparator() {
         final GameGroupDateSorter gameGroupDateSorter = new GameGroupDateSorter();
         final GameGroupLeagueSorter gameGroupLeagueSorter = new GameGroupLeagueSorter();
         return (l1,l2)-> {
@@ -74,8 +77,8 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         };
     }
     @Override
-    protected Comparator<? super Game> getDefaultGameComparator() {
-        return new GameSorter();
+    protected Comparator<Game> getGameComparator() {
+        return screenProperty.getSpankyWindowConfig().getGameComparator();
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -173,8 +176,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
-            rtn = new LinesTableData(sportType,section0.getDisplayType(), section0.getPeriodType(), section0.getClearTime(), new Vector<>(), section0.getTimesort(), section0.getShortteam(), section0.getOpener()
-                    , section0.getLast(),gameGroupHeader,getAllColumns());
+            rtn = new LinesTableData(sportType,screenProperty, new Vector<>(),gameGroupHeader,getAllColumns());
             sections.add(rtn);
         } else {
             rtn = null;

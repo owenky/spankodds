@@ -45,7 +45,7 @@ public class TableProperties {
         return rtn;
     }
     public void rebuild() {
-        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(makeColumns(colCount),"testName");
+        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(makeColumns(colCount));
         table = new ColumnCustomizableTable<TestGame>(false,tm) {
 
             @Override

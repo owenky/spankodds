@@ -1,8 +1,6 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.AlertStruct;
-import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.model.Game;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
@@ -13,14 +11,12 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.event.TableModelEvent;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -282,26 +278,27 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 log("last button pressed");
-                List<LinesTableData> v = getAllDataModels();
+//                List<LinesTableData> v = getAllDataModels();
                 if (lastBut.getText().equals("Current")) {
                     lastBut.setText("Last");
                     stb.setLast(false);
-                    for (int j = 0; j < v.size(); j++) {
-                        v.get(j).showCurrent();
-                    }
+//                    for (int j = 0; j < v.size(); j++) {
+//                        v.get(j).showCurrent();
+//                    }
 
                 } else {
                     lastBut.setText("Current");
                     openerBut.setText("Opener");
                     stb.setLast(true);
-                    for (LinesTableData linesTableData : v) {
-                        linesTableData.showPrior();
-                    }
+//                    for (LinesTableData linesTableData : v) {
+//                        linesTableData.showPrior();
+//                    }
                 }
-                if (0 < v.size()) {
-                    ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
-                    tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
-                }
+//                if (0 < v.size()) {
+//                    ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
+//                    tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+//                }
+                stb.refreshCurrentTab();
 
             }
         };
@@ -317,25 +314,28 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 log("opener button pressed");
-                List<LinesTableData> v = getAllDataModels();
+//                List<LinesTableData> v = getAllDataModels();
                 if (openerBut.getText().equals("Current")) {
                     openerBut.setText("Opener");
                     stb.setOpener(false);
-                    for (int j = 0; j < v.size(); j++) {
-                        v.get(j).showCurrent();
-                    }
+//                    for (int j = 0; j < v.size(); j++) {
+//                        v.get(j).showCurrent();
+//                    }
+                    stb.showCurrent();
                 } else {
                     openerBut.setText("Current");
                     lastBut.setText("Last");
                     stb.setOpener(true);
-                    for (int j = 0; j < v.size(); j++) {
-                        v.get(j).showOpener();
-                    }
+//                    for (int j = 0; j < v.size(); j++) {
+//                        v.get(j).showOpener();
+//                    }
+                    // stb.setOpener(true) execute old  v.get(j).showOpener(); -- 2021-11-18
                 }
-                if (0 < v.size()) {
-                    ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
-                    tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
-                }
+//                if (0 < v.size()) {
+//                    ColumnCustomizableDataModel<Game> tm = v.get(0).getContainingTableModel();
+//                    tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+//                }
+                stb.refreshCurrentTab();
             }
         };
         openerBut = new JButton(openeraction);
@@ -349,19 +349,20 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             if (sortBut.getText().equals("Time sort")) {
                 stb.setSort(true);
                 sortBut.setText("Gm# sort");
-                List<LinesTableData> v = getAllDataModels();
-                for (LinesTableData linesTableData : v) {
-                    linesTableData.timesort();
-                }
+//                List<LinesTableData> v = getAllDataModels();
+//                for (LinesTableData linesTableData : v) {
+//                    linesTableData.timesort();
+//                }
             } else {
                 stb.setSort(false);
                 sortBut.setText("Time sort");
-                List<LinesTableData> v = getAllDataModels();
-                for (LinesTableData linesTableData : v) {
-                    linesTableData.gmnumsort();
-                }
+//                List<LinesTableData> v = getAllDataModels();
+//                for (LinesTableData linesTableData : v) {
+//                    linesTableData.gmnumsort();
+//                }
 
             }
+            ((MainScreen)stb.getSelectedComponent()).getDataModels().sortGamesForAllTableSections();
         });
 
         addBookieBut.addActionListener(ae -> {
@@ -388,40 +389,41 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         });
 
 
-        alertBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
-            }
+        alertBut.addActionListener(ae -> {
+            UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
         });
 
     }
-
-    public List<LinesTableData> getAllDataModels() {
-        return stb.getAllDataModels();
-    }
-
+//
+//    public List<LinesTableData> getAllDataModels() {
+//        return stb.getAllDataModels();
+//    }
+    @Override
     public void itemStateChanged(ItemEvent e) {
         // if the state combobox is changed
         if (e.getSource() == cb) {
-            List<LinesTableData> v = getAllDataModels();
-            for (LinesTableData linesTableData : v) {
-                linesTableData.setDisplayType(display[cb.getSelectedIndex()]);
-            }
-            if ( 0 < v.size()) {
-                TableUtils.processTableModelEvent(v.get(0).getContainingTableModel());
-            }
+//            List<LinesTableData> v = getAllDataModels();
+//            for (LinesTableData linesTableData : v) {
+//                linesTableData.setDisplayType(display[cb.getSelectedIndex()]);
+//            }
             stb.setDisplay(display[cb.getSelectedIndex()]);
+//            if ( 0 < v.size()) {
+//                TableUtils.processTableModelEvent(v.get(0).getContainingTableModel());
+//            }
+            stb.setDisplay(display[cb.getSelectedIndex()]);
+            stb.refreshCurrentTab();
             stb.requestFocusInWindow();
-
         } else if (e.getSource() == periodcb) {
-            List<LinesTableData> v = getAllDataModels();
-            for (LinesTableData linesTableData : v) {
-                linesTableData.setPeriodType(perioddisplay[periodcb.getSelectedIndex()]);
-            }
-            if ( 0 < v.size()) {
-                TableUtils.processTableModelEvent(v.get(0).getContainingTableModel());
-            }
+//            List<LinesTableData> v = getAllDataModels();
+//            for (LinesTableData linesTableData : v) {
+//                linesTableData.setPeriodType(perioddisplay[periodcb.getSelectedIndex()]);
+//            }
             stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
+//            if ( 0 < v.size()) {
+//                TableUtils.processTableModelEvent(v.get(0).getContainingTableModel());
+//            }
+            stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
+            stb.refreshCurrentTab();
             stb.requestFocusInWindow();
             //owen took out getting period and siaplay from ltd
             //	com.sia.client.ui.ChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);

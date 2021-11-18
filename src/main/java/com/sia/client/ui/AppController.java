@@ -6,7 +6,6 @@ import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Games;
-import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
@@ -49,7 +48,7 @@ public class AppController {
     public final static AlertVector alertsVector = new AlertVector();
     private static Map<String,String> customTabsHash = new ConcurrentHashMap<>();
     public static Vector<String> customTabsVec = new Vector<>();
-    public static List<LinesTableData> dataModels = new ArrayList<>();
+//    public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
@@ -438,16 +437,16 @@ public class AppController {
         return linealertnodes;
     }
 
-    public static List<LinesTableData> getDataModels() {
-        return dataModels;
-    }
-
-    public synchronized static void addDataModels(MainGameTableModel model) {
-        //remove the sport type from dataModels to prevent memory leaks
-        dataModels.removeIf(ltd -> ltd.getSportType().equals(model.getSportType()));
-        model.copyTo(dataModels);
-
-    }
+//    public static List<LinesTableData> getDataModels() {
+//        return dataModels;
+//    }
+//
+//    public synchronized static void addDataModels(MainGameTableModel model) {
+//        //remove the sport type from dataModels to prevent memory leaks
+//        dataModels.removeIf(ltd -> ltd.getSportType().equals(model.getSportType()));
+//        model.copyTo(dataModels);
+//
+//    }
 
 
     public static SportsTabPane getMainTabPane() {
