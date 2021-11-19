@@ -94,6 +94,11 @@ public class SpankyWindowConfig {
 
     public void setLast(final boolean last) {
         this.last = last;
+        if ( last) {
+            showPrior();
+        } else {
+            showCurrent();
+        }
     }
 
     public boolean isShowingOpener() {
