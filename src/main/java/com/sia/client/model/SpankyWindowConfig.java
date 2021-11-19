@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.GameTimeSorter;
+
 import java.util.Comparator;
 
 public class SpankyWindowConfig {
@@ -23,11 +25,6 @@ public class SpankyWindowConfig {
     public Comparator<Game> getGameComparator() {
         return gameComparator;
     }
-
-    public void setGameComparator(final Comparator<Game> gameComparator) {
-        this.gameComparator = gameComparator;
-    }
-
     public int getWindowIndex() {
         return windowIndex;
     }
@@ -65,6 +62,11 @@ public class SpankyWindowConfig {
 
     public void setTimesort(final boolean timesort) {
         this.timesort = timesort;
+        if ( timesort) {
+            gameComparator = new GameTimeSorter();
+        } else {
+            gameComparator = new GameIdSorter();
+        }
     }
 
     public boolean isShortteam() {

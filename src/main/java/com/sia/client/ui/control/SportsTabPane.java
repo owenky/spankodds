@@ -5,7 +5,6 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.GameIdSorter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.model.SportType;
@@ -62,7 +61,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         loadlabel = new JLabel("loading...", loadgif, JLabel.CENTER);
         loadlabel.setOpaque(true);
         spankyWindowConfig = new SpankyWindowConfig(windowIndex,false,false);
-        spankyWindowConfig.setGameComparator(new GameIdSorter());
+        spankyWindowConfig.setTimesort(false);
         addListeners();
     }
     public void showCurrent() {
