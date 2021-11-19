@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -107,12 +108,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         alertBut = new JButton("Alert");
         adjustcolsBut = new JButton("Adj Cols");
         chartBut = new JButton("Chart");
-        chartBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new ChartHome().setVisible(true);
-
-            }
-        });
+        chartBut.addActionListener(e -> new ChartHome().setVisible(true));
 
         alertsComp = new UrgentMesgHistComp();
         AppController.alertsVector.bind(alertsComp);
@@ -237,8 +233,10 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 log("clear button pressed");
-                MainScreen ms = (MainScreen) stb.getSelectedComponent();
-                ms.setClearTime(new java.util.Date().getTime());
+                Component comp = stb.getSelectedComponent();
+                if ( comp instanceof MainScreen) {
+                    ((MainScreen)comp).setClearTime(new java.util.Date().getTime());
+                }
             }
         };
         clearaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));

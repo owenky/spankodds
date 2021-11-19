@@ -170,21 +170,26 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
         this.addChangeListener(ce -> {
 
-            if ( previousTabIndex >=0 && previousTabIndex != thispane.getTabCount() - 1) {
+            int currentTabIndex = thispane.getSelectedIndex();
+            boolean isPlusTab = currentTabIndex == thispane.getTabCount() - 1;
+            if ( previousTabIndex >=0 && previousTabIndex < thispane.getTabCount() - 1 && ! isPlusTab) {
                 Component previousComp = getComponentAt(previousTabIndex);
                 if ( previousComp instanceof MainScreen) {
                     MainScreen oldms = (MainScreen) previousComp;
                     oldms.destroyMe();
                 }
             }
-            int currentTabIndex = thispane.getSelectedIndex();
 
+            int restoredIdex = previousTabIndex;
+            //previousTabIndex must be set before restore to previouse index
+            previousTabIndex = currentTabIndex;
             log(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
             log(" Previous tab is:" + previousTabIndex);
-            if (thispane.getTabCount() > 1 && currentTabIndex == thispane.getTabCount() - 1) {
+            if (thispane.getTabCount() > 1 && isPlusTab) {
                 log(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
                 new CustomTab2(getWindowIndex());
-                setSelectedIndex(previousTabIndex);
+                //restore to previouse index -- 2021-11-18
+                setSelectedIndex(restoredIdex);
             } else if (getTabCount() > 1 && previousTabIndex == getTabCount() - 1) {
                 // do nothing
             } else {
@@ -196,8 +201,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                     reCreateMainScreen(newms);
                 }
             }
-
-            previousTabIndex = currentTabIndex;
         });
 
 
