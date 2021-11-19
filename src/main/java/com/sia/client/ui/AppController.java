@@ -15,7 +15,6 @@ import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
-import javax.swing.JFrame;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -48,7 +47,6 @@ public class AppController {
     public final static AlertVector alertsVector = new AlertVector();
     private static Map<String,String> customTabsHash = new ConcurrentHashMap<>();
     public static Vector<String> customTabsVec = new Vector<>();
-//    public static List<LinesTableData> dataModels = new ArrayList<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
 
@@ -436,31 +434,14 @@ public class AppController {
     public static Vector getLineAlertNodes() {
         return linealertnodes;
     }
-
-//    public static List<LinesTableData> getDataModels() {
-//        return dataModels;
-//    }
-//
-//    public synchronized static void addDataModels(MainGameTableModel model) {
-//        //remove the sport type from dataModels to prevent memory leaks
-//        dataModels.removeIf(ltd -> ltd.getSportType().equals(model.getSportType()));
-//        model.copyTo(dataModels);
-//
-//    }
-
-
     public static SportsTabPane getMainTabPane() {
         return SpankyWindow.getSpankyWindow(0).getSportsTabPane();
     }
     public static void enableTabs() {
-//        for (SportsTabPane tp : tabpanes) {
-//            tp.enableTabs();
-//        }
         SpankyWindow.applyToAllWindows(SportsTabPane::enableTabs);
     }
 
-    public static void addFrame(JFrame f) {
-//        frames.put(f, stb);
+    public static void addFrame(SpankyWindow f) {
         addMenuBar((SportsMenuBar) f.getJMenuBar());
     }
 

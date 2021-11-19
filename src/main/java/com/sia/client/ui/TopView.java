@@ -23,6 +23,7 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class TopView extends JPanel implements ItemListener, Cloneable {
+    private final SportsTabPane stb;
     JButton clearBut;
     JButton clearAllBut;
     JButton lastBut;
@@ -34,19 +35,19 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     JButton alertBut;
     JButton adjustcolsBut;
     JButton chartBut;
-    private MutableItemContainer<AlertStruct> alertsComp;
     JComboBox cb;
     JComboBox periodcb;
     String[] display = new String[9];
     String[] display2 = new String[9];
     int[] perioddisplay = new int[8];
     String[] perioddisplay2 = new String[8];
-    private final SportsTabPane stb;
+    private MutableItemContainer<AlertStruct> alertsComp;
 
     public TopView(SportsTabPane stb) {
         super(new FlowLayout(FlowLayout.LEFT));
         this.stb = stb;
     }
+
     public void initComponents() {
         display[0] = "default";
         display[1] = "spreadtotal";
@@ -115,28 +116,21 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
 
         // this.getChildren().addAll(cb,clearBut,clearAllBut,lastBut,openerBut,addBookieBut,remBookieBut,newWindowBut,alertBut);
-        checkAndRunInEDT(() -> {
-            initEvents();
-            add(cb);
-            add(periodcb);
-            add(clearBut);
-            add(clearAllBut);
-            add(lastBut);
-            add(openerBut);
-            add(sortBut);
-            add(shrinkTeamBut);
-            add(adjustcolsBut);
-            add(chartBut);
-            add(alertsComp.getComponent());
-
-        });
+        initEvents();
+        add(cb);
+        add(periodcb);
+        add(clearBut);
+        add(clearAllBut);
+        add(lastBut);
+        add(openerBut);
+        add(sortBut);
+        add(shrinkTeamBut);
+        add(adjustcolsBut);
+        add(chartBut);
+        add(alertsComp.getComponent());
 
     }
-    public void unBindAlertsComp() {
-        if ( null != alertsComp) {
-            AppController.alertsVector.unBind(alertsComp);
-        }
-    }
+
     public void initEvents() {
 
         newWindowBut.addActionListener(AppController.getNewWindowAction());
@@ -234,8 +228,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             public void actionPerformed(ActionEvent e) {
                 log("clear button pressed");
                 Component comp = stb.getSelectedComponent();
-                if ( comp instanceof MainScreen) {
-                    ((MainScreen)comp).setClearTime(new java.util.Date().getTime());
+                if (comp instanceof MainScreen) {
+                    ((MainScreen) comp).setClearTime(new java.util.Date().getTime());
                 }
             }
         };
@@ -360,7 +354,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 //                }
 
             }
-            ((MainScreen)stb.getSelectedComponent()).getDataModels().sortGamesForAllTableSections();
+            ((MainScreen) stb.getSelectedComponent()).getDataModels().sortGamesForAllTableSections();
         });
 
         addBookieBut.addActionListener(ae -> {
@@ -392,7 +386,14 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         });
 
     }
-//
+
+    public void unBindAlertsComp() {
+        if (null != alertsComp) {
+            AppController.alertsVector.unBind(alertsComp);
+        }
+    }
+
+    //
 //    public List<LinesTableData> getAllDataModels() {
 //        return stb.getAllDataModels();
 //    }
