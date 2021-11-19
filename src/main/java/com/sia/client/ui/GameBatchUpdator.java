@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 
@@ -53,7 +52,7 @@ public class GameBatchUpdator {
                     model.fireTableChanged(e);
                 }
             }
-Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
+//Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
             pendingUpdateEvents.clear();
             pendingUpdatedRowModelIndexSet.clear();
             accumulateCnt=0;

@@ -65,8 +65,8 @@ public class ColumnAdjusterManager {
                 RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
                 rowHeaderTable.optimizeSize();
             }
-            long timeConsumed = System.currentTimeMillis()-now;
-            consoleLogPeek("TableColumnAdjuster::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
+//            long timeConsumed = System.currentTimeMillis()-now;
+//            consoleLogPeek("TableColumnAdjuster::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
             lastAdjustingTime = now;
             accumulatedCnt = 0;
             clearAdjustRegions();
