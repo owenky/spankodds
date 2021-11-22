@@ -78,6 +78,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     public ColumnHeaderDrawer<V> getColumnHeaderDrawer() {
         return columnHeaderDrawer;
     }
+    private boolean isAdjusting = false;
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
         if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
@@ -85,7 +86,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             if (source == mainTable && mainTable.isShowing()) {
                 reconfigHeaderRow();
                 debug("TableColumnHeaderManager::hierarchyChanged --Why need configHeaderRow here.");
+                isAdjusting = true;
                 adjustComumns();
+                isAdjusting = false;
             }
         }
     }
@@ -97,7 +100,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         }
     }
     private void invokeDrawColumnHeaders() {
-        mainTable.repaint();
+        if ( isAdjusting ) {
+            mainTable.repaint();
+        }
     }
     private void reconfigHeaderRow() {
        mainTable.reconfigHeaderRow();
