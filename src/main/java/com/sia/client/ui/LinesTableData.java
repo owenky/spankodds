@@ -8,6 +8,7 @@ import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.LineGames;
+import com.sia.client.model.ScreenProperty;
 import com.sia.client.model.SportType;
 import com.sia.client.model.TableSection;
 
@@ -24,37 +25,18 @@ import static com.sia.client.config.Utils.log;
 
 public class LinesTableData extends TableSection<Game> {
 
-    private final boolean shortteam;
     private final SportType sportType;
-    boolean showingOpener = false;
-    boolean showingPrior = false;
-    private String display;
-    private int period;
-    private boolean timesort;
     private final List<TableColumn> columns;
-    private long cleartime;
-    private boolean last;
-    private boolean opener;
+    private final ScreenProperty screenProperty;
 
-    public LinesTableData(SportType sportType,String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, GameGroupHeader gameGroupHeader,List<TableColumn> columns) {
-        this(sportType,display, period, cleartime, gameVec, timesort, shortteam, opener, last, gameGroupHeader, AppController.getGames(), columns);
+    public LinesTableData(SportType sportType, ScreenProperty screenProperty, Vector<Game> gameVec, GameGroupHeader gameGroupHeader, List<TableColumn> columns) {
+        this(sportType,screenProperty, gameVec, gameGroupHeader, AppController.getGames(), columns);
     }
-    public LinesTableData(SportType sportType, String display, int period, long cleartime, Vector<Game> gameVec, boolean timesort, boolean shortteam, boolean opener, boolean last, GameGroupHeader gameGroupHeader, Games gameCache, List<TableColumn> columns) {
+    public LinesTableData(SportType sportType,ScreenProperty screenProperty, Vector<Game> gameVec,GameGroupHeader gameGroupHeader, Games gameCache, List<TableColumn> columns) {
         super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
         this.sportType = sportType;
-        this.cleartime = cleartime;
-        this.timesort = timesort;
-        this.shortteam = shortteam;
-        this.display = display;
-        this.period = period;
+        this.screenProperty = screenProperty;
         this.columns = columns;
-        this.last = last;
-        this.opener = opener;
-        if (opener) {
-            showOpener();
-        } else if (last) {
-            showPrior();
-        }
     }
     @Override
     public boolean equals(final Object o) {
@@ -72,18 +54,6 @@ public class LinesTableData extends TableSection<Game> {
     public int hashCode() {
         return Objects.hash(sportType, gameGroupHeader);
     }
-    public SportType getSportType() {
-        return sportType;
-    }
-    public void showOpener() {
-        showingOpener = true;
-        showingPrior = false;
-    }
-
-    public void showPrior() {
-        showingOpener = false;
-        showingPrior = true;
-    }
     @Override
     protected void setHowHeighIfAbsent(Game g) {
         if ( ! containsDataRow() ) {
@@ -95,7 +65,7 @@ public class LinesTableData extends TableSection<Game> {
     }
     @Override
     protected void prepareLineGamesForTableModel(LineGames<Game> gamesVec) {
-        if (timesort) {
+        if (screenProperty.getSpankyWindowConfig().isTimesort()) {
             gamesVec.sort(new GameDateSorter().thenComparing(new GameTimeSorter()).thenComparing(new GameNumSorter()));
         } else {
             gamesVec.sort(new GameDateSorter().thenComparing(new GameNumSorter()));
@@ -158,7 +128,7 @@ public class LinesTableData extends TableSection<Game> {
             }
 
         } else if (bookieid == 993) {
-            value = new TeamView(gameid, shortteam);
+            value = new TeamView(gameid, screenProperty.getSpankyWindowConfig().isShortteam());
         } else if (bookieid == 994) {
             if (leagueID == 9) {
                 value = new SoccerChartView(gameid);
@@ -167,57 +137,16 @@ public class LinesTableData extends TableSection<Game> {
             }
         } else {
             if (leagueID == SiaConst.SoccerLeagueId) {
-                value = new SoccerSpreadTotalView(bookieid, gameid, cleartime, this);
+                value = new SoccerSpreadTotalView(bookieid, gameid, screenProperty.getCleartime(), this);
             } else {
-                value = new SpreadTotalView(bookieid, gameid, cleartime, this);
+                value = new SpreadTotalView(bookieid, gameid, screenProperty.getCleartime(), this);
             }
 
         }
         return value;
     }
-    public long getClearTime() {
-        return cleartime;
-    }
-
-    public boolean isShowingPrior() {
-        return showingPrior;
-    }
-
-    public boolean isShowingOpener() {
-        return showingOpener;
-    }
-
-    public void showCurrent() {
-        showingOpener = false;
-        showingPrior = false;
-    }
-
-    public String getDisplayType() {
-        return display;
-
-    }
-
-    public void setDisplayType(String d) {
-        display = d;
-        //call fire() outside loop -- 07/03/2021
-//        log("suspecious fire() call in setDisplayType()");
-//        fire(null);
-    }
-
-    public int getPeriodType() {
-        return period;
-
-    }
-
-    public void setPeriodType(int d) {
-        period = d;
-//        log("suspecious fire() call in setPeriodType");
-//        fire(null);
-    }
-
     public void clearColors() {
-        log("=============cleared at " + new java.util.Date() + "..cols=" + getColumnCount());
-        cleartime = new java.util.Date().getTime();
+        log("=============cleared cols=" + getColumnCount());
         for (int i = 0; i < getRowCount(); i++) {
 
             for (int j = 0; j < getColumnCount(); j++) {
@@ -225,7 +154,7 @@ public class LinesTableData extends TableSection<Game> {
                 if (obj instanceof SpreadTotalView) {
                     SpreadTotalView stv = (SpreadTotalView) obj;
                     try {
-                        stv.clearColors(cleartime);
+                        stv.clearColors(screenProperty.getCleartime());
                     } catch (Exception ex) {
                         log("clear exception row=" + i + "..col=" + j + ".." + ex);
                     }
@@ -233,7 +162,7 @@ public class LinesTableData extends TableSection<Game> {
                 if (obj instanceof SoccerSpreadTotalView) {
                     SoccerSpreadTotalView stv = (SoccerSpreadTotalView) obj;
                     try {
-                        stv.clearColors(cleartime);
+                        stv.clearColors(screenProperty.getCleartime());
                     } catch (Exception ex) {
                         log("clear exception row=" + i + "..col=" + j + ".." + ex);
                     }
@@ -262,19 +191,18 @@ public class LinesTableData extends TableSection<Game> {
             }
         }
 //        fire(null);
-
     }
-
-    public void timesort() {
-        timesort = true;
-        resetDataVector(); //including sorting gamesVec
-
-    }
-
-    public void gmnumsort() {
-        timesort = false;
-        resetDataVector(); //including sorting gamesVec
-    }
+//
+//    public void timesort() {
+//        timesort = true;
+//        resetDataVector(); //including sorting gamesVec
+//
+//    }
+//
+//    public void gmnumsort() {
+//        timesort = false;
+//        resetDataVector(); //including sorting gamesVec
+//    }
     @Override
     public void removeGameIdsAndCleanup(Collection<Integer> gameidstoremove){
         if ( 1 == gameidstoremove.size()  && gameidstoremove.iterator().next().equals(-1)) {
@@ -311,17 +239,5 @@ log("WARNING: In LinesTableData::removeYesterdaysGames, skip AppController.disab
             fire(null);
         }
         AppController.enableTabs();
-    }
-    public boolean getTimesort() {
-        return timesort;
-    }
-    public boolean getShortteam() {
-        return shortteam;
-    }
-    public boolean getOpener() {
-        return opener;
-    }
-    public boolean getLast() {
-        return last;
     }
 }

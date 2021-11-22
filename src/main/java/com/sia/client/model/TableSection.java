@@ -124,7 +124,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
     public V removeGameId(Integer gameidtoremove) {
 
-        int gameModelIndex = containingTableModel.getRowModelIndex(this, gameidtoremove);
+        int gameModelIndex = containingTableModel.getRowModelIndexByGameId(this, gameidtoremove);
         V g;
         if ( 0 <= gameModelIndex) {
             g = gamesVec.removeGame(gameidtoremove);
@@ -152,7 +152,9 @@ public abstract class TableSection<V extends KeyedObject> {
             }
         }
     }
-
+    public void addOnInit(V g) {
+        gamesVec.addIfAbsent(g);
+    }
     public int addOrUpdate(V g) {
         setHowHeighIfAbsent(g);
         int index = gamesVec.addIfAbsent(g);
@@ -191,7 +193,7 @@ public abstract class TableSection<V extends KeyedObject> {
                 } else {
                     evt = e;
                 }
-                containingTableModel.fireTableChanged(evt);
+                containingTableModel.processTableModelEvent(evt);
             });
         }
     }

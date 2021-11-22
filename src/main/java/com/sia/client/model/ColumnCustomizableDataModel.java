@@ -4,6 +4,7 @@ package com.sia.client.model;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.GameBatchUpdator;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
@@ -29,17 +30,26 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private boolean toConfigHeaderRow = false;
+    private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
+    private final GameBatchUpdator gameBatchUpdator;
 
     public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
         this.allColumns = allColumns;
         validateAndFixColumnModelIndex(allColumns);
+        gameBatchUpdator = GameBatchUpdator.instance();
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
             columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
+    }
+    public void setDetroyed(boolean isDetroyed) {
+        this.isDetroyed = isDetroyed;
+    }
+    public boolean isDetroyed() {
+        return isDetroyed;
     }
     public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
         this.toConfigHeaderRow = toConfigHeaderRow;
@@ -103,6 +113,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         throw new IllegalStateException("Pending implementation");
     }
     public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
+        flushUpdate();
         List<TableSection<V>> gameLines = getTableSections();
         for (TableSection<V> linesTableData : gameLines) {
             try {
@@ -113,14 +124,23 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         }
         fireTableSectionChangeEvent();
 //        this.buildIndexMappingCache(false); //moved to be exceuted by this.fireTableChanged -- 2021-11-06
-        this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
+        this.processTableModelEvent(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
-    public void fireTableChanged(TableModelEvent e) {
+    public void flushUpdate() {
+        this.gameBatchUpdator.flush();
+    }
+    public void processTableModelEvent(TableModelEvent e) {
         if (TableUtils.toRebuildCache(e) || toConfigHeaderRow()) {
             long begin = System.currentTimeMillis();
             buildIndexMappingCache(false);
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
+            this.gameBatchUpdator.flush(e);
+        } else {
+            this.gameBatchUpdator.addUpdateEvent(e);
         }
+
+    }
+    public void fireTableChanged(TableModelEvent e) {
         delegator.fireTableChanged(e);
     }
     public TableSection<V> findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
@@ -196,6 +216,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     }
     public void moveGameFromSourceToTarget(TableSection<V> sourceSection, V game,GameGroupHeader targetGameGroupHeader) {
 
+        flushUpdate();
         sourceSection.removeGameId(game.getGame_id());
         fireTableSectionChangeEvent();
         log("MOVING GAME, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been removed from secion "+sourceSection.getGameGroupHeader());
@@ -211,19 +232,24 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     }
     protected void addGameToTableSection(TableSection<V> ltd, V game) {
 
-        ltd.addOrUpdate(game);
-        ltd.sort(getDefaultGameComparator());
-        fireTableSectionChangeEvent();
+        checkAndRunInEDT(()-> {
+            flushUpdate();
+            ltd.addOrUpdate(game);
+            ltd.sort(getGameComparator());
+            fireTableSectionChangeEvent();
 //        this.buildIndexMappingCache(false); //to be executed by  fireTableChanged(e) -- 2021-11-06
-        int affectedRowModelIndex = getRowModelIndex(ltd, ltd.getRowIndex(game.getGame_id()));
-        TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
-        checkAndRunInEDT(() -> fireTableChanged(e));
-
+            int affectedRowModelIndex = getRowModelIndexByGameId(ltd, game.getGame_id());
+            TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
+            processTableModelEvent(e);
+        });
     }
     public void updateRow(TableSection<V> tableSection, int rowIndexInTableSection) {
-        int affectedRowModelIndex = getRowModelIndex(tableSection, rowIndexInTableSection);
-        TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
-        checkAndRunInEDT(() -> fireTableChanged(e));
+        checkAndRunInEDT(() -> {
+            int affectedRowModelIndex = mapToRowModelIndex(tableSection, rowIndexInTableSection);
+            TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
+//            checkAndRunInEDT(() -> fireTableChanged(e));
+            gameBatchUpdator.addUpdateEvent(e);
+        });
     }
     public TableSection<V> checktofire(V game,boolean repaint) {
         List<TableSection<V>> gameLines = getTableSections();
@@ -240,7 +266,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     public List<TableSection<V>> getTableSections() {
         return tableSections;
     }
-    public int getRowModelIndex(TableSection<V> ltd, Integer gameId) {
+    public int getRowModelIndexByGameId(TableSection<V> ltd, Integer gameId) {
         int gameIndex = ltd.getRowIndex(gameId);
         return mapToRowModelIndex(ltd,gameIndex);
     }
@@ -259,9 +285,15 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         addGameLine(tableSections.size(),gameLine);
     }
     public void addGameLine(int index,TableSection<V> gameLine) {
+        addGameLine(index,gameLine,true);
+    }
+    public void addGameLine(int index,TableSection<V> gameLine,boolean toSort) {
         gameLine.setContainingTableModel(this);
         tableSections.add(index,gameLine);
         fireTableSectionChangeEvent();
+        if ( toSort) {
+            this.sortTableSection(getTableSectionComparator());
+        }
 //        resetSectionIndex(index);
     }
     private void resetSectionIndex(int startIndex) {
@@ -325,19 +357,22 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             return null;
         }
     }
-    protected Comparator<TableSection<V>> getdefaultTableSectionComparator() {
-        return null;
+    protected Comparator<TableSection<V>> getTableSectionComparator() {
+        throw new IllegalStateException("getTableSectionComparator must be implemented");
     }
-    protected Comparator<? super V> getDefaultGameComparator() {
-        return null;
+    protected Comparator<V> getGameComparator() {
+        throw new IllegalStateException("getGameComparator must be implemented");
     }
     public final void sort() {
-        sortTableSection(getdefaultTableSectionComparator());
-        sortGamesForAllTableSections(getDefaultGameComparator());
+        sortTableSection(getTableSectionComparator());
+        sortGamesForAllTableSections(getGameComparator());
     }
-
+    public final void sortGamesForAllTableSections() {
+        sortGamesForAllTableSections(getGameComparator());
+    }
     public void sortGamesForAllTableSections(Comparator<? super V> gameComparator) {
         if ( null != gameComparator) {
+            flushUpdate();
             for (TableSection<V> ts : tableSections) {
                 ts.sort(gameComparator);
             }
@@ -345,6 +380,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     }
     public void sortTableSection(Comparator<TableSection<V>> tableSectionComparator) {
         if ( null != tableSectionComparator) {
+            flushUpdate();
             tableSections.sort(tableSectionComparator);
             resetSectionIndex(0);
             fireTableSectionChangeEvent();

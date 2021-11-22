@@ -56,6 +56,6 @@ public class MoveToFinal extends TestExecutor{
                 break;
             }
         }
-        model.fireTableChanged(new TableModelEvent(model,0,model.getRowCount()-1, 1,TableModelEvent.INSERT));
+        model.processTableModelEvent(new TableModelEvent(model,0,model.getRowCount()-1, 1,TableModelEvent.INSERT));
     }
 }

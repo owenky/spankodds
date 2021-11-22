@@ -86,18 +86,20 @@ public class ColumnHeaderDrawer<V extends KeyedObject> {
             x2 = x1;
             isInMainTable = true;
         }
-
+        mainTable.getRowHeaderTable().remove(header);
+        mainTable.remove(header);
+        int xDelta;
         if ( isInMainTable ) {
-            mainTable.getRowHeaderTable().remove(header);
             mainTable.add(header);
+            xDelta = diffByScroll;
         } else {
-            mainTable.remove(header);
             mainTable.getRowHeaderTable().add(header);
+            xDelta = 0;
         }
 
         int y1 = (int) (r1.getY() + r1.getHeight());
         int width = (int)header.getPreferredSize().getWidth();
-        header.setBounds(x2+diffByScroll, y1, width, headerHeight);
+        header.setBounds(x2+xDelta, y1, width, headerHeight);
     }
     private static int getStringWidth(JComponent jComponent,Font font, String text) {
         FontMetrics fm = jComponent.getFontMetrics(font);

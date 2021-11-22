@@ -122,7 +122,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
 
     public static void main(String[] args) throws Exception {
         //set CheckThreadViolationRepaintManager 
-        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+//        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
         //Valid code  
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {

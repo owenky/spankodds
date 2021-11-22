@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class GameSorterTest {
+public class GameIdSorterTest {
 
     @Test
     public void testGameSorter() {
@@ -30,7 +30,7 @@ public class GameSorterTest {
         game.setGame_id(1);
         gameList.add(game);
 
-        gameList.sort(new GameSorter() );
+        gameList.sort(new GameIdSorter() );
 
         assertTrue(SiaConst.BlankGameId==gameList.get(0).getGame_id());
         assertTrue(1==gameList.get(1).getGame_id());

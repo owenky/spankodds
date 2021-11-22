@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
+import com.sia.client.model.MainGameTableModel;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.Color;
@@ -22,7 +24,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.log;
@@ -154,9 +155,13 @@ public class TableColumnPopupMenu{
         if (color != null) {
             log("color chosen was " + color);
             String bookieid = AppController.getBookieId(headerValue.toString());
-            AppController.getBookieColors().put(bookieid, color);
-            List<LinesTableData> dm = AppController.getDataModels();
-            dm.get(0).fire(null);
+            AppController.putColor(bookieid, color);
+//            List<LinesTableData> dm = AppController.getDataModels();
+//            dm.get(0).fire(null);
+
+            MainGameTableModel model = ((MainGameTable)table).getModel();
+            TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
+            model.fireTableChanged(tme);
         }
     }
     public void hideMenu() {

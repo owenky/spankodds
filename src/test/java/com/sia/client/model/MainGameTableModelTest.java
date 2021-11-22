@@ -46,7 +46,7 @@ public class MainGameTableModelTest {
         model.addGameLine(l3);
         model.addGameLine(l4);
 
-        int rowModelIndex = model.getRowModelIndex(l3,31);
+        int rowModelIndex = model.getRowModelIndexByGameId(l3,31);
         assertEquals(12,rowModelIndex);
     }
     @Test

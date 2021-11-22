@@ -1,35 +1,42 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.SpankyWindow;
-import com.sia.client.ui.control.MainScreen;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static com.sia.client.config.Utils.log;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
-    public static SportType Football = new SportType(1,"Football","FB","football.png",-1);
-    public static SportType Basketball = new SportType(2,"Basketball","BK","basketball.png",-1);
-    public static SportType Baseball = new SportType(3,"Baseball","BB","baseball.png",-1);
-    public static SportType Hockey = new SportType(4,"Hockey","HK","hockey.png",-1);
-    public static SportType Fighting = new SportType(5,"Fighting","FI","boxing.png",10);
-    public static SportType Soccer = new SportType(5,SiaConst.SoccerStr,"OT","soccer.png",9);
-    public static SportType AutoRacing = new SportType(5,"Auto Racing","AU","flag.png",14);
-    public static SportType Golf = new SportType(5,"Golf","GO","golf.png",11);
+    public static SportType Football = new SportType(1,"Football","FB","football.png",-1,()-> AppController.getUser().getFootballPref(),null);
+    public static SportType Basketball = new SportType(2,"Basketball","BK","basketball.png",-1,()->AppController.getUser().getBasketballPref(),null);
+    public static SportType Baseball = new SportType(3,"Baseball","BB","baseball.png",-1,()->AppController.getUser().getBaseballPref(),null);
+    public static SportType Hockey = new SportType(4,"Hockey","HK","hockey.png",-1,()->AppController.getUser().getHockeyPref(),null);
+    public static SportType Fighting = new SportType(5,"Fighting","FI","boxing.png",10,()->AppController.getUser().getFightingPref(),null);
+    public static SportType Soccer = new SportType(5,SiaConst.SoccerStr,"OT","soccer.png",9,()->AppController.getUser().getSoccerPref(),null);
+    public static SportType AutoRacing = new SportType(5,"Auto Racing","AU","flag.png",14,()->AppController.getUser().getAutoracingPref(),null);
+    public static SportType Golf = new SportType(5,"Golf","GO","golf.png",11,()->AppController.getUser().getGolfPref(),null);
     //TODO what is abbr for tennis
-    public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12);
-    public static SportType Today = new SportType(-100,"Today","Today","today.png",-1);
+    public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12,()->AppController.getUser().getTennisPref(),null);
+    public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,null,getTodayMyTypeSelector());
 
     public static boolean isPredefinedSport(String sportName) {
         SportType st = findBySportName(sportName);
@@ -50,8 +57,10 @@ public class SportType {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
         return stOpt.orElse(null);
     }
-    public static SportType createCustomizedSportType(String name) {
-        return new SportType(-200,name,name,null,-1);
+    public static SportType createCustomizedSportType(String name,List<String> customizedHeaders) {
+        SportType rtn = new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaders));
+        rtn.customheaders = customizedHeaders;
+        return rtn;
     }
     public static SportType findBySportName(String sportName) {
         return instanceMap.get(normalizeName(sportName));
@@ -60,6 +69,7 @@ public class SportType {
     private final int sportId;
     private final String icon;
     private final String abbr;
+    private final Supplier<String> perfSupplier;
     //if identityLeagueId > 0, SportType is identified by leagueId, not by sportId ( when sportId >=5, SportType is identified by leagueId)
     private final int identityLeagueId;
     private int comingDays;
@@ -69,16 +79,31 @@ public class SportType {
     private boolean showAdded = true;
     private boolean showExtra = true;
     private boolean showProps = true;
+    private boolean isTimeSort;
+    private Function<Game,Boolean> myTypeSelector;
+    private List<String> customheaders = new ArrayList<>();
 
-    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId) {
+    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId,Supplier<String> perfSupplier,Function<Game,Boolean> myTypeSelector) {
         this.sportName = sportName;
         this.sportId = sportId;
         this.icon = icon;
         this.abbr = abbr;
         this.identityLeagueId = identityLeagueId;
+        this.perfSupplier = perfSupplier;
+        this.myTypeSelector = null == myTypeSelector?getDefaultMyTypeSelector():myTypeSelector;
         instanceMap.put(normalizeName(sportName),this);
     }
-
+    public void setCustomheaders(List<String> customheaders) {
+        this.customheaders = customheaders;
+        setMyTypeSelector(this.customheaders);
+    }
+    private void setMyTypeSelector(Collection<String> customizedHeaders) {
+        Function<Game,Boolean> selector = getCustomizedHeaderMyTypeSelector(customizedHeaders);
+        this.myTypeSelector = null==selector?getDefaultMyTypeSelector():selector;
+    }
+    public List<String> getCustomheaders() {
+        return this.customheaders;
+    }
     public String getSportName() {
         return sportName;
     }
@@ -161,24 +186,32 @@ public class SportType {
     public void setShowingame(final boolean showingame) {
         this.showingame = showingame;
     }
+    public boolean isTimeSort() {
+        return isTimeSort;
+    }
+
+    public void setTimeSort(final boolean timeSort) {
+        isTimeSort = timeSort;
+    }
     public boolean isMyType(Game game) {
 
-        if ( sportId < 0 && identityLeagueId < 0 ) {
-            //for customized sport type, use containsGameLeague to check -- 2021-10-26
-            return containsGameLeague(game);
-        }
-        int identifyingLeagueId = game.getSportIdentifyingLeagueId();
-        if ( identityLeagueId > 0) {
-            //this condition is for sport id == 5 which is shared by many different sports
-            return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
-        } else {
-            Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
-            if (null == sp){
-                return false;
-            } else {
-                return sportId==sp.getSport_id();
-            }
-        }
+//        if ( sportId < 0 && identityLeagueId < 0 ) {
+//            //for customized sport type, use containsGameLeague to check -- 2021-10-26
+//            return containsGameLeague(game);
+//        }
+//        int identifyingLeagueId = game.getSportIdentifyingLeagueId();
+//        if ( identityLeagueId > 0) {
+//            //this condition is for sport id == 5 which is shared by many different sports
+//            return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
+//        } else {
+//            Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
+//            if (null == sp){
+//                return false;
+//            } else {
+//                return sportId==sp.getSport_id();
+//            }
+//        }
+        return myTypeSelector.apply(game);
     }
     private static final int PurgeOldGameCutOffTime = 10;
     public boolean isGameNear(Game game) {
@@ -196,8 +229,8 @@ public class SportType {
         Calendar c = Calendar.getInstance();
         LocalDate today = LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,c.get(Calendar.DAY_OF_MONTH));
         if ( gmDate.isBefore(today) ) {
-           LocalDateTime now = LocalDateTime.now();
-           return PurgeOldGameCutOffTime > now.getHour();
+            LocalDateTime now = LocalDateTime.now();
+            return PurgeOldGameCutOffTime > now.getHour();
         }
 
         LocalDate upperEndDate = today.plusDays(getComingDays());
@@ -210,7 +243,43 @@ public class SportType {
         return  null == leagueFilter || leagueFilter.isSelected(game.getLeague_id());
     }
     public boolean shouldSelect(Game game) {
+        if ( null == game ) {
+            log("skipping  null game");
+            return false;
+        }
+        if ( null == game.getGamedate()) {
+            log("skipping gameid=" + game.getGame_id() + "...cuz of null game date");
+            return false;
+        }
+
+        if ( null == game.getVisitorteam() ) {
+            log("skipping gameid=" + game.getGame_id() + "...cuz of null visitor team");
+            return false;
+        }
+
+        if ( null == game.getHometeam() ) {
+            log("skipping gameid=" + game.getGame_id() + "...cuz of null home team");
+            return false;
+        }
+
+        int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
+        Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
+        if ( null == sport) {
+            log("skipping " + GameUtils.getGameDebugInfo(game) + "...cuz of null sport");
+            return false;
+        }
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);
+    }
+    @Override
+    public String toString() {
+        return sportName+"/"+sportId+":"+identityLeagueId;
+    }
+    public String getUserPerf() {
+        if ( null != perfSupplier) {
+            return this.perfSupplier.get();
+        } else {
+            return null;
+        }
     }
     private boolean isFilteredByConfig(Game g) {
         if ( seriesPriceConfig(g) || addedConfig(g) || extraConfig(g) || forPropConfig(g)) {
@@ -234,8 +303,43 @@ public class SportType {
     private static String normalizeName(String name) {
         return name.replaceAll("\\s","").toLowerCase();
     }
-    private boolean containsGameLeague(Game g ) {
-        MainScreen ms = SpankyWindow.getSpankyWindow(0).getSportsTabPane().findMainScreen(this.getSportName());
-        return null != ms.getDataModels().findLeagueSection(g);
+    private Function<Game,Boolean> getDefaultMyTypeSelector() {
+        return (game)-> {
+            int identifyingLeagueId = game.getSportIdentifyingLeagueId();
+            if ( identityLeagueId > 0) {
+                //this condition is for sport id == 5 which is shared by many different sports
+                return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
+            } else {
+                Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
+                if (null == sp){
+                    return false;
+                } else {
+                    return sportId==sp.getSport_id();
+                }
+            }
+        };
+    }
+    private static Function<Game,Boolean> getTodayMyTypeSelector() {
+        return (game)-> {
+            if ( null == game.getGamedate()) {
+                return false;
+            }
+            LocalDate today = LocalDate.now();
+            LocalDate gameDate = game.getGamedate().toLocalDate();
+            return gameDate.compareTo(today) <= 0;
+        };
+    }
+    private static Function<Game,Boolean> getCustomizedHeaderMyTypeSelector(Collection<String> customHeaders) {
+        if ( null == customHeaders || 0 == customHeaders.size()) {
+            return null;
+        }
+        Set<String> headerSet = new HashSet<>(customHeaders);
+        return (game)-> {
+            GameGroupHeader gameGroupHeader = GameUtils.createGameGroupHeader(game);
+            if ( null == gameGroupHeader) {
+                return false;
+            }
+            return headerSet.contains(gameGroupHeader.getGameGroupHeaderStr());
+        };
     }
 }

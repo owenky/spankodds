@@ -2,13 +2,12 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
-import com.sia.client.model.LinesTableDataSupplier;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
 
 import javax.swing.table.TableCellRenderer;
 
-public class MainGameTable extends ColumnCustomizableTable<Game> implements LinesTableDataSupplier {
+public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
     private final LineRenderer soccerLineRenderer = new LineRenderer(SiaConst.SoccerStr);
     private final LineRenderer lineRenderer = new LineRenderer();
@@ -18,10 +17,13 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         super(false,tm);
         sporetType = tm.getSportType();
     }
-//    @Override
-//    public void reset() {
-//        super.reset();
-//    }
+    public int getWindowIndex() {
+        return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
+    }
+    @Override
+    public void setName(String name) {
+        super.setName(name+"@"+getWindowIndex());
+    }
     @Override
     protected RowHeaderGameTable createNewRowHeaderTable() {
         return new RowHeaderGameTable(this,hasRowNumber());
@@ -39,25 +41,24 @@ public class MainGameTable extends ColumnCustomizableTable<Game> implements Line
         return (LinesTableData)super.getLinesTableData(row);
     }
     @Override
-    public void setName(String name) {
-        super.setName(name);
-    }
-    @Override
-    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight,boolean forceGameGroupHeaderDraw) {
-        super.configHeaderRow(firstRow,lastRow,toSetRowHeight,forceGameGroupHeaderDraw);
+    protected int computeRowHeight(int rowModelIndex) {
+        int rowHeight;
         if ( ! getModel().getSportType().isPredifined()) {
             //for customized sport, stage table section contains mixed sport type games.
             //row height has to be calculated per row rather than per section -- 2021-11-09
-            for(int rowViewIndex=firstRow;rowViewIndex <=lastRow;rowViewIndex++) {
-                if ( isSoccer(rowViewIndex)) {
-                    setRowHeight(rowViewIndex,SiaConst.SoccerRowheight);
-                }
+            Game g  = getModel().getGame(rowModelIndex);
+            boolean isSoccer = SiaConst.SoccerLeagueId == g.getLeague_id();
+            if ( isSoccer) {
+                rowHeight = SiaConst.SoccerRowheight;
+            } else {
+                rowHeight = SiaConst.NormalRowheight;
             }
+
+        } else {
+            rowHeight = super.computeRowHeight(rowModelIndex);
         }
+        return rowHeight;
     }
-//    public LinesTableData findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
-//        return getModel().findTableSectionByHeaderValue(gameGroupHeader);
-//    }
     private boolean isSoccer(int rowViewIndex) {
         if ( sporetType.equals(SportType.Soccer)) {
             return true;

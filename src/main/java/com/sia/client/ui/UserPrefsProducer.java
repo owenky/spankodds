@@ -9,8 +9,9 @@ import javax.jms.MapMessage;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import java.awt.Color;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Set;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -51,11 +52,9 @@ public class UserPrefsProducer {
 
         try {
             String colorprefs = "";
-            Hashtable bookiecolors = AppController.getBookieColors();
-            Enumeration enumcolors = bookiecolors.keys();
-            while (enumcolors.hasMoreElements()) {
-                String bookieid = "" + enumcolors.nextElement();
-                java.awt.Color color = (java.awt.Color) bookiecolors.get(bookieid);
+            Set<String> colorBookieIds = AppController.getColorBookieIds();
+            for (String bookieid: colorBookieIds) {
+                Color color = AppController.getColor(bookieid);
                 int rgb = color.getRGB();
                 String hex = String.format("#%06X", (0xFFFFFF & rgb));
                 colorprefs = colorprefs + bookieid + "=" + hex + ",";

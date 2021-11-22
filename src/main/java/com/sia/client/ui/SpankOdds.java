@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
@@ -23,7 +24,7 @@ import static com.sia.client.config.Utils.log;
 public class SpankOdds {
 
     private static final String version = "20210601001";
-//    private SportsTabPane stb;
+    //    private SportsTabPane stb;
 //    private TopView tv;
 //    private SportsMenuBar smb;
 //    private OddsFrame of;
@@ -47,19 +48,21 @@ public class SpankOdds {
 
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog());
     }
+
     private static void initSystemProperties() {
-        if ( Boolean.parseBoolean(System.getProperty("LogToFile")) ) {
+        if (Boolean.parseBoolean(System.getProperty("LogToFile"))) {
             try {
-                Utils.logPs = new PrintStream(new FileOutputStream(SiaConst.logFileName));
-                Utils.errPs = new PrintStream(new FileOutputStream(SiaConst.errFileName));
+                Logger.logPs = new PrintStream(new FileOutputStream(SiaConst.logFileName));
+                Logger.errPs = new PrintStream(new FileOutputStream(SiaConst.errFileName));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
-            Utils.logPs = System.out;
-            Utils.errPs = System.err;
+            Logger.logPs = System.out;
+            Logger.errPs = System.err;
         }
     }
+
     private void showLoginDialog() {
 
 //        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
@@ -94,7 +97,7 @@ public class SpankOdds {
             public boolean authenticate(String name, char[] password, String server) throws Exception {
 
 
-                log("data:"+new java.util.Date());
+                log("data:" + new java.util.Date());
                 try {
                     //Platform.runLater(new Runnable() { @Override public void run() {lbllogin.setText("Processing...");}});
                     //
@@ -102,7 +105,7 @@ public class SpankOdds {
                     Thread.sleep(1000);
 
                 } catch (Exception ex) {
-                    log( ex);
+                    log(ex);
                 }
                 int i = 0;
                 while (!client.getLoginResultBack()) //wait for login
@@ -116,7 +119,7 @@ public class SpankOdds {
                 }
                 log("out of the while loop " + client.loginresultback);
                 log("result " + client.isloggedin());
-                log("date:"+new java.util.Date());
+                log("date:" + new java.util.Date());
                 boolean loggedin = client.isloggedin();
                 if (loggedin) {
                     userName = name;
@@ -148,57 +151,19 @@ public class SpankOdds {
     }
 
     private void showGui() {
-        //frame = new OddsFrame(stb,tv);
-        //frame.setVisible(true);
-        checkAndRunInEDT(
-                () -> {
-                    try {
-                        frame.setTitle(userName + " Logged In "+ SiaConst.Version);
-                        frame.populateTabPane();
-//                        createGui();
-//                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//                        frame.addWindowListener(new WindowAdapter() {
-//                            @Override
-//                            public void windowClosing(WindowEvent e) {
-//                                log("Window Closing! ");
-//                                AppController.getUserPrefsProducer().sendUserPrefs();
-//                                AppController.removeFrame(frame);
-//
-//                            }
-//                        });
-//                        tv.initComponents();
-//                        frame.setLayout(new BorderLayout(1, 1));
-//                        frame.getContentPane().add(tv, BorderLayout.PAGE_START);
-//                        frame.getContentPane().add(stb, BorderLayout.CENTER);
-//                        frame.setJMenuBar(smb);
-                        AppController.addFrame(frame);
 
-                        frame.setSize(950, 800);
+        try {
+            frame.setTitle(userName + " Logged In " + SiaConst.Version);
+            frame.populateTabPane();
+            AppController.addFrame(frame);
+            frame.setSize(950, 800);
+            frame.setVisible(true);
+            AppController.notifyUIComplete();
 
-                        frame.setVisible(true);
-                        AppController.notifyUIComplete();
-
-                    } catch (Exception e) {
-                        log(e);
-                        JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);
-                        System.exit(-1);
-                    }
-
-                }
-        );
-
-
+        } catch (Exception e) {
+            log(e);
+            JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);
+            System.exit(-1);
+        }
     }
-//
-//    private void createGui() {
-//
-//        checkAndRunInEDT(() -> {
-//
-//            // owen took out 7/11/2020
-//            log("creating gui");
-//            stb = new SportsTabPane();
-//            tv = new TopView(stb);
-//            smb = new SportsMenuBar(stb, tv);
-//        });
-//    }
 }

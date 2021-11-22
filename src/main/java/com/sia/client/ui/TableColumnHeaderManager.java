@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
+import com.sia.client.model.MqMessageProcessor;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -55,7 +56,8 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.getRowHeaderTable().getColumnModel().addColumnModelListener(this);
         mainTable.getColumnModel().addColumnModelListener(this);
         mainTable.getParent().addComponentListener(this);
-        mainTable.setTableChangedListener(this);
+        mainTable.addTableChangedListener(this);
+        mainTable.addTableChangedListener(MqMessageProcessor.getInstance());
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
         mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
         //after sorting, rowModel is set to null, need to re-configure row height
@@ -170,6 +172,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
             }
         }
     }
+    private int horizontalScrollBarAdjustmentValue_old = -10000;
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
         if ( mainTable.isShowing() ) {
@@ -182,8 +185,11 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
                 if ( topWindowResized()) {
                     reconfigHeaderRow();
                 } else {
-                    drawHeaderinVisibleRegion();
+                    if ( 2 <  Math.abs(horizontalScrollBarAdjustmentValue-horizontalScrollBarAdjustmentValue_old)) {
+                        drawHeaderinVisibleRegion();
+                    }
                 }
+                horizontalScrollBarAdjustmentValue_old = horizontalScrollBarAdjustmentValue;
             }
 
         }
@@ -216,7 +222,12 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         if ( 0 > firstRow) {
             firstRow = 0;
         }
-        reconfigHeaderRow(firstRow,lastRow);
+//        reconfigHeaderRow(firstRow,lastRow);
+        for(int rowViewIndex=firstRow;rowViewIndex<=lastRow;rowViewIndex++) {
+            int rowModelIndex=mainTable.convertRowIndexToModel(rowViewIndex);
+            String headerValue = mainTable.getModel().getGameGroupHeader(rowModelIndex);
+            drawColumnHeaderOnViewIndex(mainTable, rowViewIndex, headerValue);
+        }
     }
     private void adjustColumnOnColumnDraging(ColumnAdjuster columnAdjuster,Point mouseLocation,boolean adjustOnWidening){
         JTable table = columnAdjuster.table();

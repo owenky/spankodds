@@ -23,7 +23,7 @@ public abstract class GameTableAdjustScheduler {
 
         @Override
         public Integer getRowModelIndex() {
-            return mainGameTable.getModel().getRowModelIndex(ltd,gameid);
+            return mainGameTable.getModel().getRowModelIndexByGameId(ltd,gameid);
         }
 
         @Override

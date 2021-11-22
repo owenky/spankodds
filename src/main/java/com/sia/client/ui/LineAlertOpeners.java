@@ -1241,7 +1241,7 @@ class LineAlertOpeners implements ItemListener {
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
         String visitorTeam = game.getVisitorteam();
-        Bookie bk = AppController.getBookie(bid + "");
+        Bookie bk = AppController.getBookie(bid);
         String bookiename = bk.getName();
         int lid = game.getLeague_id();
         String sportname = getSportName(lid);
@@ -1378,7 +1378,7 @@ class LineAlertOpeners implements ItemListener {
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
         String visitorTeam = game.getVisitorteam();
-        Bookie bk = AppController.getBookie(bid + "");
+        Bookie bk = AppController.getBookie(bid);
         String bookiename = bk.getName();
         int lid = game.getLeague_id();
         String sportname = getSportName(lid);
@@ -1397,15 +1397,15 @@ class LineAlertOpeners implements ItemListener {
                 double selectedwaitTime = AppController.LineOpenerAlertNodeList.get(i).renotifyvalue;
                 if (timeDiff >= selectedwaitTime) {
 
-                    ArrayList periods = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).periods;
-                    ArrayList bookeis = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).bookies;
-                    ArrayList leagues = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).leagues;
-                    boolean isAudioChecks = (boolean) AppController.LineOpenerAlertNodeList.get(i).isAudioChecks;
-                    boolean isShowpopChecks = (boolean) AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks;
-                    String audiovalue = (String) AppController.LineOpenerAlertNodeList.get(i).audiovalue;
-                    int popupsec = (int) AppController.LineOpenerAlertNodeList.get(i).popupsec;
-                    String sn = (String) AppController.LineOpenerAlertNodeList.get(i).SportName;
-                    boolean istotalcheck = (boolean) AppController.LineOpenerAlertNodeList.get(i).isTotalCheck;
+                    List periods = AppController.LineOpenerAlertNodeList.get(i).periods;
+                    List bookeis = AppController.LineOpenerAlertNodeList.get(i).bookies;
+                    List leagues = AppController.LineOpenerAlertNodeList.get(i).leagues;
+                    boolean isAudioChecks = AppController.LineOpenerAlertNodeList.get(i).isAudioChecks;
+                    boolean isShowpopChecks = AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks;
+                    String audiovalue = AppController.LineOpenerAlertNodeList.get(i).audiovalue;
+                    int popupsec = AppController.LineOpenerAlertNodeList.get(i).popupsec;
+                    String sn = AppController.LineOpenerAlertNodeList.get(i).SportName;
+                    boolean istotalcheck = AppController.LineOpenerAlertNodeList.get(i).isTotalCheck;
                     boolean isAllBookiesSelected = AppController.LineOpenerAlertNodeList.get(i).isAllBookiesSelected;
                     boolean isAllLeaguesSelected = AppController.LineOpenerAlertNodeList.get(i).isAllLeaguesSelected;
 
@@ -1464,7 +1464,11 @@ class LineAlertOpeners implements ItemListener {
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
         String visitorTeam = game.getVisitorteam();
-        Bookie bk = AppController.getBookie(bid + "");
+        Bookie bk = AppController.getBookie(bid);
+       if ( null == bk) {
+           log(new Exception("WARNING: null Bookie is detected, bid="+bid));
+           return;
+       }
         String bookiename = bk.getName();
         int lid = game.getLeague_id();
 
@@ -1484,23 +1488,23 @@ class LineAlertOpeners implements ItemListener {
                 double selectedwaitTime = AppController.LineOpenerAlertNodeList.get(i).renotifyvalue;
                 if (timeDiff >= selectedwaitTime) {
 
-                    ArrayList periods = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).periods;
-                    ArrayList bookeis = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).bookies;
-                    ArrayList leagues = (ArrayList) AppController.LineOpenerAlertNodeList.get(i).leagues;
-                    boolean isAudioChecks = (boolean) AppController.LineOpenerAlertNodeList.get(i).isAudioChecks;
-                    boolean isShowpopChecks = (boolean) AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks;
-                    String audiovalue = (String) AppController.LineOpenerAlertNodeList.get(i).audiovalue;
-                    int popupsec = (int) AppController.LineOpenerAlertNodeList.get(i).popupsec;
-                    String sn = (String) AppController.LineOpenerAlertNodeList.get(i).SportName;
-                    boolean ismoneycheck = (boolean) AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck;
+                    List periods = AppController.LineOpenerAlertNodeList.get(i).periods;
+                    List bookeis = AppController.LineOpenerAlertNodeList.get(i).bookies;
+                    List leagues = AppController.LineOpenerAlertNodeList.get(i).leagues;
+                    boolean isAudioChecks = AppController.LineOpenerAlertNodeList.get(i).isAudioChecks;
+                    boolean isShowpopChecks = AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks;
+                    String audiovalue = AppController.LineOpenerAlertNodeList.get(i).audiovalue;
+                    int popupsec = AppController.LineOpenerAlertNodeList.get(i).popupsec;
+                    String sn = AppController.LineOpenerAlertNodeList.get(i).SportName;
+                    boolean ismoneycheck = AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck;
                     boolean isAllBookiesSelected = AppController.LineOpenerAlertNodeList.get(i).isAllBookiesSelected;
                     boolean isAllLeaguesSelected = AppController.LineOpenerAlertNodeList.get(i).isAllLeaguesSelected;
 
                     int popupsecs = AppController.LineOpenerAlertNodeList.get(i).showpopvalue;
                     int popuplocationint = AppController.LineOpenerAlertNodeList.get(i).popuplocationint;
 
-                    int sport_id = (int) AppController.LineOpenerAlertNodeList.get(i).sports_id;
-                    String soundfile = (String) AppController.LineOpenerAlertNodeList.get(i).soundfile;
+                    int sport_id = AppController.LineOpenerAlertNodeList.get(i).sports_id;
+                    String soundfile = AppController.LineOpenerAlertNodeList.get(i).soundfile;
                     if (sportname.equalsIgnoreCase(sn)) {
                         if ((leagues.contains(lid) || isAllLeaguesSelected) && (bookeis.contains(bid) || isAllBookiesSelected) && periods.contains(per) && ismoneycheck) {
                             if (isAudioChecks) {
@@ -1544,7 +1548,7 @@ class LineAlertOpeners implements ItemListener {
         int visitotteamgamenumber = game.getVisitorgamenumber();
         String homeTeam = game.getHometeam();
         String visitorTeam = game.getVisitorteam();
-        Bookie bk = AppController.getBookie(bid + "");
+        Bookie bk = AppController.getBookie(bid);
         String bookiename = bk.getName();
         int lid = game.getLeague_id();
 
@@ -1925,8 +1929,8 @@ class LineAlertOpeners implements ItemListener {
         try {
 
             Vector bookieVec = AppController.getBookiesVec();
-            Vector checkedbookies = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
-            Vector hiddenBookies = AppController.getHiddenCols();
+            Vector checkedbookies = AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
+            List<Bookie> hiddenBookies = AppController.getHiddenCols();
 
             for (int i = 0; i < bookieVec.size(); i++) {
                 Bookie bookie;
@@ -1970,10 +1974,10 @@ class LineAlertOpeners implements ItemListener {
         try {
 
             Vector newBookiesVec = AppController.getBookiesVec();
-            Vector hiddencols = AppController.getHiddenCols();
+            List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
-            for (int k = 0; k < newBookiesVec.size(); k++) {
-                Bookie b = (Bookie) newBookiesVec.get(k);
+            for (Object o : newBookiesVec) {
+                Bookie b = (Bookie) o;
 
                 if (hiddencols.contains(b) || b.getBookie_id() >= 990) {
                     continue;

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public interface AbstractScreen<T extends KeyedObject> {
 
@@ -23,18 +22,20 @@ public interface AbstractScreen<T extends KeyedObject> {
             if ( shouldAddToScreen(game)) {
                 TableSection<T> ts = model.checktofire(game, table.isShowing());
                 if (null != ts) {
-                    int rowModelIndex = model.getRowModelIndex(ts, game.getGame_id());
+                    int rowModelIndex = model.getRowModelIndexByGameId(ts, game.getGame_id());
                     rowModelIndexList.add(rowModelIndex);
                 }
             }
         }
-        List<Integer> sortedRowModelIndexList = rowModelIndexList.stream().sorted().collect(Collectors.toList());
-        Integer [] rowViewIndexArr = rowModelIndexList.stream().map(table::convertRowIndexToView).sorted().toArray(Integer[]::new);
-        if ( 0 <sortedRowModelIndexList.size() ) {
+//        List<Integer> sortedRowModelIndexList = rowModelIndexList.stream().sorted().collect(Collectors.toList());
+        Integer [] rowViewIndexArr = rowModelIndexList.stream().map(table::convertRowIndexToView).toArray(Integer[]::new);
+        if ( 0 <rowViewIndexArr.length ) {
             Utils.checkAndRunInEDT(()-> {
-                table.adjustColumnsOnRows(rowViewIndexArr);
-                TableModelEvent e = new TableModelEvent(model, sortedRowModelIndexList.get(0), sortedRowModelIndexList.get(sortedRowModelIndexList.size()-1), TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
-                model.fireTableChanged(e);
+                for( int rowViewIndex: rowViewIndexArr) {
+                    table.adjustColumnsOnRows(rowViewIndex);
+                    TableModelEvent e = new TableModelEvent(model, rowViewIndex, rowViewIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE);
+                    model.processTableModelEvent(e);
+                }
             });
         }
     }

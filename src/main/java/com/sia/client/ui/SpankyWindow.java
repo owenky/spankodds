@@ -32,9 +32,10 @@ public class SpankyWindow extends JFrame {
         return create(AppController.getUser().getUsername() + " Logged In"+ SiaConst.Version);
     }
     public synchronized static SpankyWindow create(String title) {
-        SportsTabPane stp = new SportsTabPane();
+        int windowIndex = counter.getAndAdd(1);
+        SportsTabPane stp = new SportsTabPane(windowIndex);
         SpankyWindow instance = new SpankyWindow(title,stp);
-        instance.setName(String.valueOf(counter.getAndAdd(1)));
+        instance.setName(String.valueOf(windowIndex));
         winList.add(instance);
         try {
             URL imgResource = Utils.getMediaResource(spankoddsicon);

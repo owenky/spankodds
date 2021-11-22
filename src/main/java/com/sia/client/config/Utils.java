@@ -1,7 +1,6 @@
 package com.sia.client.config;
 
 import com.sia.client.model.ViewValue;
-import com.sia.client.simulator.InitialGameMessages;
 
 import javax.jms.MapMessage;
 import javax.swing.AbstractButton;
@@ -21,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
-import java.io.PrintStream;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.time.Instant;
@@ -41,8 +39,7 @@ public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
-    public static PrintStream logPs=System.out;
-    public static PrintStream errPs=System.err;
+
 
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
@@ -86,25 +83,17 @@ public abstract class Utils {
         }
         return url;
     }
-    public static void consoleLogPeekGameId(String keyword, int gameid) {
-        if (InitialGameMessages.PeekGameId == gameid) {
-            System.out.println(logHeader()+"game id "+gameid+" received at "+keyword);
-        }
-    }
     public static void log(Throwable e) {
-        errPs.println(logHeader());e.printStackTrace(errPs);
-    }
-    public static String logHeader() {
-        return nowShortString()+", Thread="+Thread.currentThread().getName()+" |";
+        Logger.log(e);
     }
     public static void debug(String mesg) {
-        logPs.println(logHeader()+" DEBUG:"+mesg);
+        Logger.debug(mesg);
     }
     public static void log(String mesg) {
-        logPs.println(logHeader()+mesg);
+        Logger.log(mesg);
     }
     public static void log(Object mesg) {
-        logPs.println(logHeader()+mesg);
+        Logger.log(mesg);
     }
     private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
     public static String nowShortString() {

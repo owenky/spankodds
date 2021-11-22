@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -434,7 +435,7 @@ public class BookieColumnController2 extends JPanel {
 
 
         AppController.reorderBookiesVec();
-        Vector hidden = AppController.getHiddenCols();
+        List<Bookie> hidden = AppController.getHiddenCols();
         Comparator<Bookie> byName = Comparator.comparing(Bookie::getName);
         Collections.sort(hidden, byName);
         Vector shown = AppController.getShownCols();

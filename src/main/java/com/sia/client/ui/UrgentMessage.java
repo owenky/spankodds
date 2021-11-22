@@ -86,30 +86,11 @@ public class UrgentMessage {
         alert.setTimeout(ms);
         alert.setPopupBorder(BorderFactory.createLineBorder(new Color(10, 30, 106)));
 
-/*
-                CustomAnimation showAnimation = new CustomAnimation();
-				showAnimation.setEffect(CustomAnimation.EFFECT_FLY);
-				showAnimation.setSpeed(CustomAnimation.SPEED_VERY_FAST);
-				showAnimation.setSmoothness(CustomAnimation.SMOOTHNESS_MEDIUM);
-				showAnimation.setFunctionX(CustomAnimation.FUNC_LINEAR);
-				showAnimation.setFunctionY(CustomAnimation.FUNC_LINEAR);
-				showAnimation.setDirection(CustomAnimation.TOP_LEFT);
-                showAnimation.setVisibleBounds(PortingUtils.getLocalScreenBounds());
-                alert.setShowAnimation(showAnimation);
-*/
         CustomAnimation hideAnimation = new CustomAnimation();
         hideAnimation.setVisibleBounds(PortingUtils.getLocalScreenBounds());
-        //	hideAnimation.setFunctionFade(CustomAnimation.FUNC_LINEAR);
         hideAnimation.setFunctionFade(CustomAnimation.FUNC_POW_HALF);
-
         alert.setHideAnimation(hideAnimation);
-        //   SwingUtilities.invokeLater(new Runnable() {
-        //      public void run() {
         alert.showPopup(where);
-        //	  }
-        //});
-
-
     }
 
     private static JideButton createButton(Icon icon) {

@@ -44,7 +44,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     private int userDefinedRowMargin;
     private MarginProvider marginProvider;
     private boolean needToCreateColumnModel = true;
-    private TableModelListener tableChangedListener;
+    private final List<TableModelListener> tableChangedListenerList = new ArrayList<>();
 
     abstract public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colDataModelIndex);
     public ColumnCustomizableTable(boolean hasRowNumber, ColumnCustomizableDataModel<V> tm) {
@@ -74,22 +74,22 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
         getModel().setToConfigHeaderRow(toConfigHeaderRow);
     }
-    public void reconfigHeaderRow() {
+    public final void reconfigHeaderRow() {
         getTableColumnHeaderManager().getColumnHeaderDrawer().reset();
         configHeaderRow(0,getRowCount()-1,true,true);
     }
-    public void reconfigHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
+    public final void reconfigHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
         getTableColumnHeaderManager().getColumnHeaderDrawer().reset();
         configHeaderRow(firstRow,lastRow,toSetRowHeight,true);
     }
-    public void configHeaderRow() {
+    public final void configHeaderRow() {
         configHeaderRow(0,getRowCount()-1,true);
     }
-    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
+    public final void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight) {
 
         configHeaderRow(firstRow,lastRow,toSetRowHeight,false);
     }
-    public void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight,boolean forceGameGroupHeaderDraw) {
+    public final void configHeaderRow(int firstRow,int lastRow,boolean toSetRowHeight,boolean forceGameGroupHeaderDraw) {
 
         setToConfigHeaderRow(false);
         ColumnCustomizableDataModel<V> model = getModel();
@@ -107,13 +107,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 this.getRowHeaderTable().remove(oldHeaderComp);
             }
             if ( null == headerValue) {
-//                rowHeight = getRowHeight();
-                LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
-                if ( null != section && null != section.linesTableData) {
-                    rowHeight = section.linesTableData.getRowHeight();
-                } else {
-                    rowHeight = SiaConst.NormalRowheight;
-                }
+                rowHeight = computeRowHeight(rowModelIndex);
             } else {
                 rowHeight = columnHeaderProperty.getColumnHeaderHeight();
                 if ( groupGameHeaderChanged) {
@@ -124,6 +118,16 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 setRowHeight(rowViewIndex, rowHeight);
             }
         }
+    }
+    protected int computeRowHeight(int rowModelIndex) {
+        int rowHeight;
+        LtdSrhStruct<V> section = getModel().getLinesTableData(rowModelIndex);
+        if ( null != section && null != section.linesTableData) {
+            rowHeight = section.linesTableData.getRowHeight();
+        } else {
+            rowHeight = SiaConst.NormalRowheight;
+        }
+        return rowHeight;
     }
     private static boolean isGameGroupHeaderChanged(String newHeaderValue, Component oldHeaderComp) {
         if ( null == newHeaderValue && null == oldHeaderComp) {
@@ -155,8 +159,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public void adjustColumns() {
         getColumnAdjusterManager().adjustColumns();
     }
-    public void adjustColumnsOnRows(Integer ... gameIds) {
-        getColumnAdjusterManager().adjustColumnsOnRows(gameIds);
+    public void adjustColumnsOnRows(Integer ... rowViewIndice) {
+        getColumnAdjusterManager().adjustColumnsOnRows(rowViewIndice);
     }
     @Override
     public void setRowHeight(int rowHeight) {
@@ -243,8 +247,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         removeLockedColumnIndex(arr);
     }
-    public void setTableChangedListener(TableModelListener tableChangedListener) {
-        this.tableChangedListener = tableChangedListener;
+    public void addTableChangedListener(TableModelListener tableChangedListener) {
+        this.tableChangedListenerList.add(tableChangedListener);
     }
     public TableColumn getColumnFromDataModel(int colModelIndex) {
         return getModel().getAllColumns().get(colModelIndex);
@@ -253,12 +257,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 
         lockedColumnIndex = new ImmutableObservableList<>(lockedColumnIndexArr);
         needToCreateColumnModel = true;
-    }
-    public void addGameLine(TableSection<V> gameLine) {
-        getModel().addGameLine(gameLine);
-    }
-    public void addGameLine(int index,TableSection<V> gameLine) {
-        getModel().addGameLine(index,gameLine);
     }
     public TableSection<V> getLinesTableData(int row) {
         return getModel().getLinesTableData(row).linesTableData;
@@ -308,8 +306,11 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 configHeaderRow();
             }
         }
-        if (null != tableChangedListener) {
-            tableChangedListener.tableChanged(e);
+        //this method is called from constructor when tableChangedListenerList has not been initialized -- 2-21-11-15
+        if ( null != tableChangedListenerList) {
+            for (TableModelListener tableChangedListener : tableChangedListenerList) {
+                tableChangedListener.tableChanged(e);
+            }
         }
     }
     @Override
