@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.CheckThreadViolationRepaintManager;
 import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
@@ -12,6 +13,7 @@ import org.jdesktop.swingx.auth.LoginService;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.RepaintManager;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -65,7 +67,9 @@ public class SpankOdds {
 
     private void showLoginDialog() {
 
-//        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
+        if ( InitialGameMessages.Debug) {
+            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
+        }
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
