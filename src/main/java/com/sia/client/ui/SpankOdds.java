@@ -158,9 +158,9 @@ public class SpankOdds {
 
         try {
             frame.setTitle(userName + " Logged In " + SiaConst.Version);
-            frame.populateTabPane();
             AppController.addFrame(frame);
             frame.setSize(950, 800);
+            frame.populateTabPane();
             frame.setVisible(true);
             AppController.notifyUIComplete();
 
