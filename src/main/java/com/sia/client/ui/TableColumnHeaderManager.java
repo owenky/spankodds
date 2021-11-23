@@ -58,6 +58,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         mainTable.getParent().addComponentListener(this);
         mainTable.addTableChangedListener(this);
         mainTable.addTableChangedListener(MqMessageProcessor.getInstance());
+        mainTable.addTableChangedListener(GameBatchUpdator.instance());
         mainTable.getTableScrollPane().getHorizontalScrollBar().addAdjustmentListener(this);
         mainTable.getTableScrollPane().getVerticalScrollBar().addAdjustmentListener(this);
         //after sorting, rowModel is set to null, need to re-configure row height

@@ -33,8 +33,10 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
+    private final ScreenProperty screenProperty;
 
-    public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
+    public ColumnCustomizableDataModel(ScreenProperty screenProperty,List<TableColumn> allColumns) {
+        this.screenProperty = screenProperty;
         this.allColumns = allColumns;
         validateAndFixColumnModelIndex(allColumns);
         gameBatchUpdator = GameBatchUpdator.instance();
@@ -44,6 +46,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
+    }
+    public SpankyWindowConfig getSpankyWindowConfig() {
+        return screenProperty.getSpankyWindowConfig();
+    }
+    public ScreenProperty getScreenProperty() {
+        return screenProperty;
     }
     public void setDetroyed(boolean isDetroyed) {
         this.isDetroyed = isDetroyed;

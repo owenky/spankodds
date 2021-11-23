@@ -23,7 +23,7 @@ public class SpankyWindow extends JFrame {
 
     public static final List<SpankyWindow> winList = new ArrayList<>();
     private static final String spankoddsicon = "spanky.jpg";
-    private static final AtomicInteger counter = new AtomicInteger(1);
+    private static final AtomicInteger counter = new AtomicInteger(0);
     private final SportsTabPane stp;
     private final TopView tv;
     private static GameClockUpdater gameClockUpdater;
