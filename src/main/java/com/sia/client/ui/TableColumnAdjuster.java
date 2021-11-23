@@ -187,7 +187,7 @@ public class TableColumnAdjuster {
 //        tableColumn.setMinWidth(width); //set min width to width disable manually dragging column narrower -- 06/01/2021
         tableColumn.setPreferredWidth(width);
     }
-
+    private long lastUpdateTime=0;
     /*
      *  Adjust the widths of all the columns in the table
      */
@@ -202,6 +202,9 @@ public class TableColumnAdjuster {
         for (int i = firstCol; i <= lastCol; i++) {
             adjustColumn(i);
         }
+        long now = System.currentTimeMillis();
+        lastUpdateTime = now;
+//        Logger.consoleLogPeek("adjust region (firstRow="+firstRow+",lastRow="+lastRow+", firstCol="+firstCol+", lastCol="+lastCol+", ago="+(now-lastUpdateTime+", time="+(now-begin)));
     }
     /*
      *  Adjust the width of the specified column in the table
