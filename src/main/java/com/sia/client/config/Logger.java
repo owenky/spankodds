@@ -37,6 +37,11 @@ public class Logger {
             System.out.println(logHeader() + mesg);
         }
     }
+    public static void consoleLogPeek(Exception e) {
+        if ( InitialGameMessages.Debug) {
+            e.printStackTrace();
+        }
+    }
     public static void log(Object mesg) {
         log(logHeader()+mesg);
     }
