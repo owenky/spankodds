@@ -37,7 +37,8 @@ public class GameBatchUpdator {
         if ( null != e) {
             addUpdateEvent(e);
         }
-        forcing = true;
+        //TODO watch for following disable
+//        forcing = true;
         checkToUpdate();
     }
     /**

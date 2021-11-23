@@ -879,20 +879,12 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
-    public static boolean pushGameToCash(Game g) {
-        return games.updateOrAdd(g);
+    public static void pushGameToCache(Game g) {
+        games.updateOrAdd(g);
     }
     public static void addOrUpdateGame(Game g) {
-        boolean isAdd = pushGameToCash(g);
-        //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
-        //game need to populated to each window. -- 08/22/2021
-//        if (isAdd) {  -- remove if clause for updating game 2021-11-08
-//            for(int i=0;i<SpankyWindow.openWindowCount();i++){
-//                SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
-//                stb.addGame(g, repaint);
-//            }
-            SpankyWindow.applyToAllWindows((stp)->stp.addGame(g));
-//        }
+        pushGameToCache(g);
+        SpankyWindow.applyToAllWindows((stp)->stp.addGame(g));
     }
 
     public static void moveGameToThisHeader(Game g, GameGroupHeader header) {

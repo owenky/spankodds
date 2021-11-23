@@ -5,6 +5,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.MessageConsumingScheduler;
+import com.sia.client.model.MqMessageProcessor;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
@@ -184,7 +185,8 @@ public class ScoresConsumer implements MessageListener {
 
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
-                    AppController.addOrUpdateGame(g);
+//                    AppController.addOrUpdateGame(g);
+                    MqMessageProcessor.getInstance().addGame(g);
 
                 } else {
                     g = new Game();

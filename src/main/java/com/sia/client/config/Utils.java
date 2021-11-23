@@ -175,6 +175,26 @@ public abstract class Utils {
             r.run();
         }
     }
+    public static boolean parse(String str, boolean defaultValue) {
+        Boolean b;
+        try {
+            b = Boolean.parseBoolean(str);
+        } catch( Exception e) {
+            log(e);
+            b = null;
+        }
+        return null==b?defaultValue:b;
+    }
+    public static int parse(String str, int defaultValue) {
+        Integer b;
+        try {
+            b = Integer.parseInt(str);
+        } catch( Exception e) {
+            log(e);
+            b = null;
+        }
+        return null==b?defaultValue:b;
+    }
     public static void resizeAndCenterComponent(Component component){
 
         Dimension effectiveScreenSize_ = getEffectiveScreenDimension();

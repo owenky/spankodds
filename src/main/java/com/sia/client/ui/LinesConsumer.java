@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.Moneyline;
@@ -72,7 +71,7 @@ public class LinesConsumer implements MessageListener {
                 return;
             }
 //            log("LinesConsumer::processMessage: gameid="+gameid);
-            Logger.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
+//            Logger.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
             int bookieid = mapMessage.getInt("bookieid");
             int period = mapMessage.getInt("period");
             String isopenerS = mapMessage.getString("isopener");

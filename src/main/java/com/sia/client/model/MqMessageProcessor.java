@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 
@@ -34,6 +35,7 @@ public class MqMessageProcessor implements TableModelListener {
     }
     public void addGame(Game game) {
         if ( null  != game) {
+            AppController. pushGameToCache(game);
             gameConsumingScheculer.addMessage(game);
         }
     }
@@ -46,7 +48,7 @@ public class MqMessageProcessor implements TableModelListener {
                 Utils.checkAndRunInEDT(() -> AppController.fireAllTableDataChanged(distinctSet));
                 if (doStats) {
                     long now = System.currentTimeMillis();
-                    log("MqMessageProcessor, " + ", buffer size=" + buffer.size() + ", uniq size=" + distinctSet.size() + ", time since last process:" + (now - lastUpdate));
+                    Logger.consoleLogPeek("MqMessageProcessor, " + ", buffer size=" + buffer.size() + ", uniq size=" + distinctSet.size() + ", time since last process:" + (now - lastUpdate));
                     lastUpdate = now;
                 }
             }
@@ -56,7 +58,10 @@ public class MqMessageProcessor implements TableModelListener {
     @Override
     public void tableChanged(final TableModelEvent e) {
         long now = System.currentTimeMillis();
-        log("MqMessageProcessor: Last table update ago="+(now - lastTableUpdateTime));
+        long diff = now - lastTableUpdateTime;
+        if ( diff < 50) {
+            log(new Exception("MqMessageProcessor: Abnormal table update -- ago is too short. Last table update ago=" + diff));
+        }
         lastTableUpdateTime = now;
 
     }
