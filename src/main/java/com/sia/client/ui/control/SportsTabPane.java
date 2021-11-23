@@ -85,12 +85,12 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 URL imgResource = Utils.getMediaResource(st.getIcon());
                 MainScreen ms = new MainScreen(st,spankyWindowConfig);
                 addMainScreenToCache(ms);
-                addTab(title, new ImageIcon(imgResource),ms , title);
+                addTab(title, new ImageIcon(imgResource), ms, title);
             }
         }
 
         List<String> customtabs = AppController.getCustomTabsVec();
-        for (int i = 0; i < customtabs.size(); i++) {
+        for (String customtab : customtabs) {
             String name = "";
             boolean showheaders = true;
             boolean showingame = true;
@@ -98,8 +98,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             boolean showadded = true;
             boolean showextra = true;
             boolean showprops = true;
-            String msstring = customtabs.get(i);
-            log("customtab=" + msstring);
+            String msstring = customtab;
             String[] items = msstring.split("\\*");
             List<String> customheaders = new ArrayList<>();
             for (int j = 0; j < items.length; j++) {
@@ -107,7 +106,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 if (j == 0) {
                     String[] headers = items[j].split("\\|");
                     for (String header : headers) {
-                        if ( ! "".equals(header)) {
+                        if (!"".equals(header)) {
                             customheaders.add(header);
                             log("adding header=" + header);
                         }
@@ -130,8 +129,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
             }
             List<String> customheaderStrList = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
-            SportType customerizedSportType =  SportType.createCustomizedSportType(name,customheaderStrList);
-            MainScreen msnew = new MainScreen(customerizedSportType,spankyWindowConfig,showheaders, showseries, showingame, showadded, showextra, showprops);
+            SportType customerizedSportType = SportType.createCustomizedSportType(name, customheaderStrList);
+            MainScreen msnew = new MainScreen(customerizedSportType, spankyWindowConfig, showheaders, showseries, showingame, showadded, showextra, showprops);
             addMainScreenToCache(msnew);
             addTab(name, null, msnew, name);
         }
