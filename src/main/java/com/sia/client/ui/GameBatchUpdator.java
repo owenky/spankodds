@@ -48,26 +48,28 @@ public class GameBatchUpdator implements TableModelListener {
      * this method must be run in EDT -- 2021-11-16
      */
     private void checkToUpdate() {
-        long now = System.currentTimeMillis();
-        if ( SiaConst.DataRefreshRate< (now-lastUpdateTime) || forcing) {
-            for (TableModelEvent e : pendingUpdateEvents) {
-                ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>)e.getSource();
-                SpankyWindow spankyWindow = SpankyWindow.getSpankyWindow(model.getSpankyWindowConfig().getWindowIndex());
-                Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
-                if ( selectedComp instanceof MainScreen) {
-                    if ( (selectedComp).isShowing() ) {
-                        model.fireTableChanged(e);
+        if ( AppController.isReadyForMessageProcessing()) {
+            long now = System.currentTimeMillis();
+            if (SiaConst.DataRefreshRate < (now - lastUpdateTime) || forcing) {
+                for (TableModelEvent e : pendingUpdateEvents) {
+                    ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>) e.getSource();
+                    SpankyWindow spankyWindow = SpankyWindow.getSpankyWindow(model.getSpankyWindowConfig().getWindowIndex());
+                    Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
+                    if (selectedComp instanceof MainScreen) {
+                        if ((selectedComp).isShowing()) {
+                            model.fireTableChanged(e);
+                        }
                     }
                 }
-            }
 //Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
-            pendingUpdateEvents.clear();
-            pendingUpdatedRowModelIndexSet.clear();
-            accumulateCnt=0;
-            updatedRowCnt = 0;
+                pendingUpdateEvents.clear();
+                pendingUpdatedRowModelIndexSet.clear();
+                accumulateCnt = 0;
+                updatedRowCnt = 0;
 
-            lastUpdateTime = now;
-            forcing = false;
+                lastUpdateTime = now;
+                forcing = false;
+            }
         }
     }
 

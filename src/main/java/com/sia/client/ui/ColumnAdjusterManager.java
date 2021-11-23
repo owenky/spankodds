@@ -105,9 +105,11 @@ public class ColumnAdjusterManager {
         private final List<ColumnAdjusterManager> columnAdjusterManagerList = new ArrayList<>();
         @Override
         public void actionPerformed(final ActionEvent e) {
-            for(ColumnAdjusterManager manager:columnAdjusterManagerList ) {
-                if ( manager.mainTable.isShowing()) {
-                    manager.adjustColumns();
+            if ( AppController.isReadyForMessageProcessing()) {
+                for (ColumnAdjusterManager manager : columnAdjusterManagerList) {
+                    if (manager.mainTable.isShowing()) {
+                        manager.adjustColumns();
+                    }
                 }
             }
         }

@@ -56,10 +56,10 @@ public class MqMessageProcessor implements TableModelListener {
     @Override
     public void tableChanged(final TableModelEvent e) {
         long now = System.currentTimeMillis();
-        long diff = now - lastTableUpdateTime;
-        if ( diff < 50) {
-            Logger.consoleLogPeek(new Exception("MqMessageProcessor: Abnormal table update -- ago is too short. Last table update ago=" + diff));
-        }
+//        long diff = now - lastTableUpdateTime;
+//        if ( diff < 50) {
+//            Logger.consoleLogPeek(new Exception("MqMessageProcessor: Abnormal table update -- ago is too short. Last table update ago=" + diff));
+//        }
         lastTableUpdateTime = now;
 
     }

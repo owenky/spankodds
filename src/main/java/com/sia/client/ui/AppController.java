@@ -140,6 +140,9 @@ public class AppController {
 
         }
     }
+    public static boolean isReadyForMessageProcessing() {
+        return 0==messageProcessingLatch.getCount();
+    }
     public static void notifyUIComplete() {
         messageProcessingLatch.countDown();
     }
