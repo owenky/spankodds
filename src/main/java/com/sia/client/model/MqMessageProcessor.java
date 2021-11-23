@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.sia.client.config.Utils.log;
-
 public class MqMessageProcessor implements TableModelListener {
 
 
@@ -60,7 +58,7 @@ public class MqMessageProcessor implements TableModelListener {
         long now = System.currentTimeMillis();
         long diff = now - lastTableUpdateTime;
         if ( diff < 50) {
-            log(new Exception("MqMessageProcessor: Abnormal table update -- ago is too short. Last table update ago=" + diff));
+            Logger.consoleLogPeek(new Exception("MqMessageProcessor: Abnormal table update -- ago is too short. Last table update ago=" + diff));
         }
         lastTableUpdateTime = now;
 
