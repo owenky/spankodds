@@ -2,6 +2,7 @@ package com.sia.client.config;
 
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
+import com.sia.client.model.GameStatus;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
@@ -129,6 +130,11 @@ public abstract class GameUtils {
     public static void validateGame(Game g) {
         if ( "WIN".equalsIgnoreCase(g.getTimeremaining())){
             g.setStatus(SiaConst.FinalStr);
+        } else if ( g.getGame_id() > SiaConst.InGameFlagId) {
+            //for a in-progress game, if its game id > SiaConst.InGameFlagId, the game should have in-game status -- 2021-11-24
+            if (GameStatus.InProgress.isSame(g.getStatus())) {
+                g.setStatus(SiaConst.InGamePricesStr);
+            }
         }
     }
     private static final int GameBasicFieldCnt = 29;

@@ -189,9 +189,9 @@ public class ScoresConsumer implements MessageListener {
                     MqMessageProcessor.getInstance().addGame(g);
 
                 } else {
-                    g = new Game();
-                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
-                            scorets, currenthomescore, homescoresupplemental);
+//                    g = new Game();
+//                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
+//                            scorets, currenthomescore, homescoresupplemental);
 //                    AppController.addGame(g);
 //                    scoreMessageProcessor.addMessage(g);
                     //should not add if game id not found from cache, because new Game() does not give game critical game info like date, and league -- 2021-10-30

@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.8.9)";
+    public static final String Version="(v21.20.8.11)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -23,6 +23,7 @@ public abstract class SiaConst {
     public static final String SoccerInProgressStr = SoccerStr+ " "+InProgresStr;
     public static final String SoccerInFinalStr = SoccerStr+ " "+FinalStr;
     public static final int SoccerLeagueId = 9;
+    public static final int InGameFlagId = 9000;
     public static final Integer BlankGameId = -10000000; //Integer.MIN_VALUE does not work in sorting
     public static final Integer SoccerRowheight = 60;
     public static final Integer NormalRowheight = 30;
