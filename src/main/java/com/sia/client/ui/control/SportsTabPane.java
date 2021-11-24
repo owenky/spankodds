@@ -421,7 +421,12 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             g.drawImage(tabImage, currentMouseLocation.x, currentMouseLocation.y, this);
         }
     }
-
+    public void resetCurrentScreenStates() {
+        Component comp = getSelectedComponent();
+        if ( comp instanceof MainScreen) {
+            ((MainScreen)comp).getDataModels().resetGameStatesForAllTableSections();
+        }
+    }
     public void refreshCurrentTab() {
         Component comp = getSelectedComponent();
         if ( comp instanceof MainScreen) {

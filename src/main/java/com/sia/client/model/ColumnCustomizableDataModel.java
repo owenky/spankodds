@@ -365,6 +365,12 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             return null;
         }
     }
+    public void resetGameStatesForAllTableSections() {
+        List<TableSection<V>> tableSectionList = this.getTableSections();
+        for(TableSection<V> tableSection: tableSectionList) {
+            tableSection.resetDataVector();
+        }
+    }
     protected Comparator<TableSection<V>> getTableSectionComparator() {
         throw new IllegalStateException("getTableSectionComparator must be implemented");
     }
