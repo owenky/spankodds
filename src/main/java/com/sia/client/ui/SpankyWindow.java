@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -64,15 +65,28 @@ public class SpankyWindow extends JFrame {
     }
     public static void applyToAllWindows(Consumer<SportsTabPane> method) {
         for(int i=0;i<SpankyWindow.openWindowCount();i++){
-            SportsTabPane stb = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+            SportsTabPane stb = winList.get(i).getSportsTabPane();
             method.accept(stb);
         }
     }
     public static int openWindowCount() {
         return winList.size();
     }
-    public static SpankyWindow getSpankyWindow(int index) {
-        return winList.get(index);
+    public static SpankyWindow findSpankyWindow(int windowIndex) {
+        SpankyWindow result = null;
+        for(SpankyWindow window: winList) {
+            if ( window.getSportsTabPane().getWindowIndex() == windowIndex) {
+                result = window;
+                break;
+            }
+        }
+        return result;
+    }
+    public static SpankyWindow getFirstSpankyWindow() {
+        return winList.get(0);
+    }
+    public static Iterator<SpankyWindow> getAllSpankyWindows() {
+        return winList.iterator();
     }
     public static void removeWindow(SpankyWindow frame) {
         winList.remove(frame);

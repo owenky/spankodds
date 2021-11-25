@@ -1,7 +1,6 @@
 package com.sia.client.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -13,24 +12,22 @@ public class GameGroupHeader {
     private final int subLeagueId;
     private final int leagueId;
     private final int anchorPos;
-    private final LocalDateTime gameTime;
     private final LocalDate gameDate;
     private final String gameDateStr;
 
-    public static GameGroupHeader create(String leagueName,LocalDateTime gameTime,int subLeagueId,int leagueId) {
-        return new GameGroupHeader(gameTime,leagueName,subLeagueId,leagueId,0);
+    public static GameGroupHeader create(String leagueName,LocalDate gameDate,int subLeagueId,int leagueId) {
+        return new GameGroupHeader(gameDate,leagueName,subLeagueId,leagueId,0);
     }
     public static GameGroupHeader createStageGroupHeader(String stageName,int anchorPos) {
         return new GameGroupHeader(null,stageName,0,0,anchorPos);
     }
-    public GameGroupHeader(LocalDateTime gameTime, String leagueName, int subLeagueId, int leagueId,int anchorPos) {
+    public GameGroupHeader(LocalDate gameDate, String leagueName, int subLeagueId, int leagueId,int anchorPos) {
         this.subLeagueId = subLeagueId;
         this.leagueId = leagueId;
         this.anchorPos = anchorPos;
         this.leagueName = leagueName;
-        this.gameTime = gameTime;
-        this.gameDate = null==gameTime?LocalDate.now():LocalDate.of(gameTime.getYear(), gameTime.getMonth(),gameTime.getDayOfMonth());
-        this.gameDateStr = null==gameTime?"":gameDateFormatter.format(gameTime);
+        this.gameDate = gameDate;
+        this.gameDateStr = null==gameDate?"":gameDateFormatter.format(this.gameDate);
         this.gameGroupHeaderStr = constructGameGroupHeaderString(leagueName,gameDateStr);
     }
     public static String constructGameGroupHeaderString(String leagueName,String gameDateStr) {
@@ -53,9 +50,6 @@ public class GameGroupHeader {
     }
     public String getGameDateStr() {
         return gameDateStr;
-    }
-    public LocalDateTime getGameTime() {
-        return gameTime;
     }
     public LocalDate getGameDate() {
         return gameDate;

@@ -7,8 +7,13 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -60,9 +65,8 @@ public abstract class GameUtils {
         return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getLeague_id(),game.getGamedate());
     }
     public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,Date gameDate) {
-
-        LocalDateTime ldt = new Date(gameDate.getTime()).toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
-        return GameGroupHeader.create(leagueName,ldt,subLeagueId,leagueId);
+        LocalDate ld = Instant.ofEpochMilli(gameDate.getTime()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDate(); //atOffset(ZoneOffset.UTC).toLocalDate();
+        return GameGroupHeader.create(leagueName,ld,subLeagueId,leagueId);
     }
     public static boolean isGameNear(Game game) {
         SportType sportType = SportType.findPredefinedByGame(game);
@@ -245,5 +249,17 @@ public abstract class GameUtils {
     }
     public static boolean isTimeSort(Boolean windowConfigTimeSort, boolean userDefinedTimesort) {
         return null == windowConfigTimeSort? userDefinedTimesort:windowConfigTimeSort;
+    }
+    public static void main(String [] argv) throws ParseException {
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String dateStr = "2021-11-24 14:08:01";
+        final Date date = sdf.parse(dateStr);
+        final long dateVaue = date.getTime();
+        String timeZoneName = "US/Eastern";
+//        timeZoneName = "US/Pacific";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of(timeZoneName));
+        ZonedDateTime lt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(timeZoneName));
+        System.out.println("date timer="+lt+", local time="+lt.toLocalDateTime());
+
     }
 }

@@ -53,11 +53,13 @@ public class GameBatchUpdator implements TableModelListener {
             if (SiaConst.DataRefreshRate < (now - lastUpdateTime) || forcing) {
                 for (TableModelEvent e : pendingUpdateEvents) {
                     ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>) e.getSource();
-                    SpankyWindow spankyWindow = SpankyWindow.getSpankyWindow(model.getSpankyWindowConfig().getWindowIndex());
-                    Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
-                    if (selectedComp instanceof MainScreen) {
-                        if ((selectedComp).isShowing()) {
-                            model.fireTableChanged(e);
+                    SpankyWindow spankyWindow = SpankyWindow.findSpankyWindow(model.getSpankyWindowConfig().getWindowIndex());
+                    if ( null != spankyWindow && null != spankyWindow.getSportsTabPane()) { //when user close a window, null scenario might happen -- 2021-11-25
+                        Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
+                        if (selectedComp instanceof MainScreen) {
+                            if ((selectedComp).isShowing()) {
+                                model.fireTableChanged(e);
+                            }
                         }
                     }
                 }

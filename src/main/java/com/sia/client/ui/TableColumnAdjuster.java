@@ -158,8 +158,7 @@ public class TableColumnAdjuster {
         if (c != null) {
             initial = c.getPreferredSize().width;
         }
-        int width = initial + (int) marginProvider.get().getWidth() * 2;
-        return width;
+        return initial + (int) marginProvider.get().getWidth() * 2;
 
     }
 

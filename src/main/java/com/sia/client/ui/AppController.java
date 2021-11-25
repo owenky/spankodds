@@ -438,7 +438,7 @@ public class AppController {
         return linealertnodes;
     }
     public static SportsTabPane getMainTabPane() {
-        return SpankyWindow.getSpankyWindow(0).getSportsTabPane();
+        return SpankyWindow.getFirstSpankyWindow().getSportsTabPane();
     }
     public static void enableTabs() {
         SpankyWindow.applyToAllWindows(SportsTabPane::enableTabs);
@@ -796,8 +796,9 @@ public class AppController {
         //game need to populated to each window. -- 08/22/2021
         Set<Integer> gameIdRemovedSet = Arrays.stream(gameidarr).map(Integer::parseInt).collect(Collectors.toSet());
         List<CountDownLatch> latches = new ArrayList<>(SpankyWindow.openWindowCount());
-        for (int i=0;i<SpankyWindow.openWindowCount();i++) {
-            SportsTabPane stb  = SpankyWindow.getSpankyWindow(i).getSportsTabPane();
+        Iterator<SpankyWindow> spankyWindowIterator = SpankyWindow.getAllSpankyWindows();
+        while ( spankyWindowIterator.hasNext()){
+            SportsTabPane stb  = spankyWindowIterator.next().getSportsTabPane();
             CountDownLatch latch = new CountDownLatch(1);
             latches.add(latch);
             stb.removeGamesAndCleanup(gameIdRemovedSet,latch);

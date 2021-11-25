@@ -1,6 +1,5 @@
 package com.sia.client.model;
 
-import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 
@@ -44,11 +43,11 @@ public class MqMessageProcessor implements TableModelListener {
             if ( uiUpdateInterval < (System.currentTimeMillis()-lastTableUpdateTime)) {
                 Set<Game> distinctSet = new HashSet<>(buffer);
                 Utils.checkAndRunInEDT(() -> AppController.fireAllTableDataChanged(distinctSet));
-                if (doStats) {
-                    long now = System.currentTimeMillis();
-                    Logger.consoleLogPeek("MqMessageProcessor, " + ", buffer size=" + buffer.size() + ", uniq size=" + distinctSet.size() + ", time since last process:" + (now - lastUpdate));
-                    lastUpdate = now;
-                }
+//                if (doStats) {
+//                    long now = System.currentTimeMillis();
+//                    Logger.consoleLogPeek("MqMessageProcessor, " + ", buffer size=" + buffer.size() + ", uniq size=" + distinctSet.size() + ", time since last process:" + (now - lastUpdate));
+//                    lastUpdate = now;
+//                }
             }
         };
     }
