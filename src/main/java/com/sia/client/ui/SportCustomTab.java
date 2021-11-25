@@ -47,6 +47,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -580,12 +581,12 @@ public class SportCustomTab {
 
         try {
 
-            Vector sportsVec = AppController.getSportsVec();
+            List<Sport> sportsVec = AppController.getSportsVec();
 
-            for (int i = 0; i < sportsVec.size(); i++) {
+            for (Sport value : sportsVec) {
                 Sport sport;
                 DefaultMutableTreeNode tempnode;
-                sport = (Sport) sportsVec.elementAt(i);
+                sport = value;
                 if (sport.getSportname().equals(tabname)) {
                     tempnode = sportnode;
                     DefaultMutableTreeNode child = new DefaultMutableTreeNode(sport.getLeaguename());

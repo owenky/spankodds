@@ -437,25 +437,22 @@ public class BookieColumnController2 extends JPanel {
         AppController.reorderBookiesVec();
         List<Bookie> hidden = AppController.getHiddenCols();
         Comparator<Bookie> byName = Comparator.comparing(Bookie::getName);
-        Collections.sort(hidden, byName);
-        Vector shown = AppController.getShownCols();
-        Vector fixed = AppController.getFixedCols();
+        hidden.sort(byName);
+        List<Bookie> shown = AppController.getShownCols();
+        List<Bookie> fixed = AppController.getFixedCols();
 
 
-        for (int i = 0; i < fixed.size(); i++) {
-            Bookie b = (Bookie) fixed.get(i);
+        for (Bookie b : fixed) {
             log("fixed adding " + b);
             this.addDestinationElements(new Object[]{b});
         }
         this.addDestinationElements(new Object[]{new Bookie(999, "<<<<FIXED COLUMN DIVIDER>>>>", "<<<<FIXED COLUMN DIVIDER>>>>", "", "")});
 
-        for (int i = 0; i < shown.size(); i++) {
-            Bookie b = (Bookie) shown.get(i);
+        for (Bookie b : shown) {
             log("shown adding " + b);
             this.addDestinationElements(new Object[]{b});
         }
-        for (int i = 0; i < hidden.size(); i++) {
-            Bookie b = (Bookie) hidden.get(i);
+        for (Bookie b : hidden) {
             log("hidden adding " + b);
             if (b.getName().contains("OPEN")) {
                 if (showopen.isSelected()) {

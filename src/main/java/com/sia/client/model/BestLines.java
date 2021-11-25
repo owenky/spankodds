@@ -4,7 +4,8 @@ import com.sia.client.ui.AppController;
 import com.sia.client.ui.TeamTotalline;
 import com.sia.client.ui.Totalline;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.sia.client.config.Utils.log;
 
@@ -12,10 +13,10 @@ import static com.sia.client.config.Utils.log;
 public class BestLines {
 
     public static void calculatebestspread(int gameid, int period) {
-        Vector shownbookies = AppController.getShownCols();
-        Vector fixedbookies = AppController.getFixedCols();
+		List<Bookie> shownbookies = AppController.getShownCols();
+		List<Bookie> fixedbookies = AppController.getFixedCols();
 
-        Vector allcols = new Vector();
+		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
         allcols.addAll(shownbookies);
         allcols.addAll(fixedbookies);
 
@@ -76,10 +77,10 @@ public class BestLines {
     }
 
     public static void calculatebesttotal(int gameid, int period) {
-        Vector shownbookies = AppController.getShownCols();
-        Vector fixedbookies = AppController.getFixedCols();
+		List<Bookie> shownbookies = AppController.getShownCols();
+		List<Bookie> fixedbookies = AppController.getFixedCols();
 
-        Vector allcols = new Vector();
+		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
         allcols.addAll(shownbookies);
         allcols.addAll(fixedbookies);
 
@@ -139,10 +140,10 @@ public class BestLines {
 
 
     public static void calculatebestteamtotal(int gameid, int period) {
-        Vector shownbookies = AppController.getShownCols();
-        Vector fixedbookies = AppController.getFixedCols();
+		List<Bookie> shownbookies = AppController.getShownCols();
+		List<Bookie> fixedbookies = AppController.getFixedCols();
 
-        Vector allcols = new Vector();
+		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
         allcols.addAll(shownbookies);
         allcols.addAll(fixedbookies);
         TeamTotalline bvo = null;
@@ -235,10 +236,10 @@ public class BestLines {
     }
 
     public static void calculatebestmoney(int gameid, int period) {
-        Vector shownbookies = AppController.getShownCols();
-        Vector fixedbookies = AppController.getFixedCols();
+		List<Bookie> shownbookies = AppController.getShownCols();
+		List<Bookie> fixedbookies = AppController.getFixedCols();
 
-        Vector allcols = new Vector();
+		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
         allcols.addAll(shownbookies);
         allcols.addAll(fixedbookies);
 
@@ -299,10 +300,10 @@ public class BestLines {
 
 
     public static void calculatebestall(int gameid, int period) {
-        Vector shownbookies = AppController.getShownCols();
-        Vector fixedbookies = AppController.getFixedCols();
+		List<Bookie> shownbookies = AppController.getShownCols();
+		List<Bookie> fixedbookies = AppController.getFixedCols();
 
-        Vector allcols = new Vector();
+		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
         allcols.addAll(shownbookies);
         allcols.addAll(fixedbookies);
 

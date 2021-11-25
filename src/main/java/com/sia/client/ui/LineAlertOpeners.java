@@ -1316,10 +1316,9 @@ class LineAlertOpeners implements ItemListener {
     }
 
     public static String getSportName(int lid) {
-        Vector Sports = AppController.getSportsVec();
+        List<Sport> Sports = AppController.getSportsVec();
         String sportname = "";
-        for (int i = 0; i < Sports.size(); i++) {
-            Sport sp = (Sport) Sports.get(i);
+        for (Sport sp : Sports) {
             int LeagueId = sp.getLeague_id();
             if (LeagueId == lid) {
                 sportname = sp.getSportname();
@@ -1332,10 +1331,10 @@ class LineAlertOpeners implements ItemListener {
     }
 
     public static String getLeagueName(int lid) {
-        Vector Sports = AppController.getSportsVec();
+        List<Sport> Sports = AppController.getSportsVec();
         String leaguename = "";
         for (int i = 0; i < Sports.size(); i++) {
-            Sport sp = (Sport) Sports.get(i);
+            Sport sp = Sports.get(i);
             int LeagueId = sp.getLeague_id();
             if (LeagueId == lid) {
                 leaguename = sp.getLeaguename();
@@ -1348,10 +1347,10 @@ class LineAlertOpeners implements ItemListener {
     }
 
     public static String getLeagueAbbr(int lid) {
-        Vector Sports = AppController.getSportsVec();
+        List<Sport> Sports = AppController.getSportsVec();
         String leagueabbr = "";
         for (int i = 0; i < Sports.size(); i++) {
-            Sport sp = (Sport) Sports.get(i);
+            Sport sp = Sports.get(i);
             int LeagueId = sp.getLeague_id();
             if (LeagueId == lid) {
                 leagueabbr = sp.getLeagueabbr();
@@ -1888,14 +1887,14 @@ class LineAlertOpeners implements ItemListener {
 
         try {
 
-            Vector sportsVec = AppController.getSportsVec();
-            Vector checkedsports = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes;
+            List<Sport> sportsVec = AppController.getSportsVec();
+            Vector checkedsports = AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes;
 
 
-            for (int i = 0; i < sportsVec.size(); i++) {
+            for (Sport value : sportsVec) {
                 Sport sport;
                 DefaultMutableTreeNode tempnode;
-                sport = (Sport) sportsVec.elementAt(i);
+                sport = value;
                 if (sport.getSportname().equals(tabname)) {
                     tempnode = sportnode;
                     DefaultMutableTreeNode child = new DefaultMutableTreeNode(sport.getLeaguename());
@@ -1903,9 +1902,9 @@ class LineAlertOpeners implements ItemListener {
                     tempnode.add(child);
                     leaguenameidhash.put(sport.getLeaguename(), "" + sport.getLeague_id());
 
-                    for (int j = 0; j < checkedsports.size(); j++) {
-                        if ((checkedsports.get(j) + "").equalsIgnoreCase("" + sport.getLeaguename()) || (checkedsports.get(j) + "").equalsIgnoreCase(tabname)) {
-                            log("Checked Sports araay  " + checkedsports.get(j));
+                    for (Object checkedsport : checkedsports) {
+                        if ((checkedsport + "").equalsIgnoreCase("" + sport.getLeaguename()) || (checkedsport + "").equalsIgnoreCase(tabname)) {
+                            log("Checked Sports araay  " + checkedsport);
                             checkednodes2.add(child);
                         }
 
@@ -2032,10 +2031,8 @@ class LineAlertOpeners implements ItemListener {
 
             try {
                 String allsports = "";
-                Vector sportsVec = AppController.getSportsVec();
-                for (int i = 0; i < sportsVec.size(); i++) {
-                    DefaultMutableTreeNode tempnode;
-                    Sport sport = (Sport) sportsVec.elementAt(i);
+                List<Sport> sportsVec = AppController.getSportsVec();
+                for (Sport sport : sportsVec) {
                     if (sport.getSportname().equals(thissport)) {
 
                     } else {
