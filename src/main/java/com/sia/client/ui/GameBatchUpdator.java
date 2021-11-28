@@ -47,7 +47,7 @@ public class GameBatchUpdator implements TableModelListener {
     /**
      * this method must be run in EDT -- 2021-11-16
      */
-    private void checkToUpdate() {
+    private synchronized void checkToUpdate() {
         if ( AppController.isReadyForMessageProcessing()) {
             long now = System.currentTimeMillis();
             if (SiaConst.DataRefreshRate < (now - lastUpdateTime) || forcing) {
@@ -78,7 +78,7 @@ public class GameBatchUpdator implements TableModelListener {
     /**
      * this method is called only when TableUtils.toRebuildCache(event) is false, so no need to check TableUtils.toRebuildCache(event) condition. -- 2021-11-16
      */
-    public void addUpdateEvent(TableModelEvent event) {
+    public synchronized void addUpdateEvent(TableModelEvent event) {
         if ( null == event) {
             return;
         }

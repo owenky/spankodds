@@ -46,7 +46,7 @@ public class ColumnAdjusterManager {
         rowHeaderTablePreparer.clear();
         clearAdjustRegions();
     }
-    public void adjustColumns() {
+    public synchronized void adjustColumns() {
         long now = System.currentTimeMillis();
         if (SiaConst.ColumnWidthRefreshRate <= (now-lastAdjustingTime)) {
             if ( 0 == mainTableAdjustRegions.size()) {
@@ -79,13 +79,20 @@ public class ColumnAdjusterManager {
         rowHeaderTableAdjustRegions.addAll(rowHeaderTablePreparer.getAdjustRegions());
         accumulatedCnt++;
     }
-    private void clearAdjustRegions() {
+    private synchronized void clearAdjustRegions() {
         mainTableAdjustRegions.clear();
         rowHeaderTableAdjustRegions.clear();
     }
-    public void adjustColumnsOnRows(Integer ... rowViewIndice) {
-        getMainTableColumnAdjuster().adjustColumnsOnRow(rowViewIndice);
-        getRowHeaderTableColumnAdjuster().adjustColumnsOnRow(rowViewIndice);
+    public synchronized void adjustColumnsOnRows(Integer ... rowViewIndice) {
+        for(int ind: rowViewIndice) {
+            AdjustRegion mainTableAdjustRegion = new AdjustRegion(ind,ind,0,mainTable.getColumnCount()-1);
+            AdjustRegion rowHeaderTableAdjustRegion = new AdjustRegion(ind,ind,0,mainTable.getRowHeaderTable().getColumnCount()-1);
+            mainTableAdjustRegions.add(mainTableAdjustRegion);
+            rowHeaderTableAdjustRegions.add(rowHeaderTableAdjustRegion);
+            accumulatedCnt++;
+        }
+//        getMainTableColumnAdjuster().adjustColumnsOnRow(rowViewIndice);
+//        getRowHeaderTableColumnAdjuster().adjustColumnsOnRow(rowViewIndice);
     }
     public TableColumnAdjuster getMainTableColumnAdjuster() {
         if ( null == mainTableColumnAdjuster) {
