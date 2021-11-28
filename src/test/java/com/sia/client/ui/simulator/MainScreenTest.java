@@ -14,7 +14,7 @@ public class MainScreenTest extends JPanel implements AbstractScreen<TestGame> {
     }
     @Override
     public void destroyMe() {
-
+        new Exception("need implementation....").printStackTrace();
     }
 
     @Override
@@ -29,5 +29,10 @@ public class MainScreenTest extends JPanel implements AbstractScreen<TestGame> {
     @Override
     public ColumnCustomizableTable<TestGame> getColumnCustomizableTable() {
         return tblProp.table;
+    }
+
+    @Override
+    public void addGame(final TestGame game) {
+        new Exception("need implementation....").printStackTrace();
     }
 }

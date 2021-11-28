@@ -48,7 +48,7 @@ public class SpankOdds {
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
 
-        checkAndRunInEDT(() -> new SpankOdds().showLoginDialog());
+        checkAndRunInEDT(() -> new SpankOdds().showLoginDialog(),true);
     }
 
     private static void initSystemProperties() {

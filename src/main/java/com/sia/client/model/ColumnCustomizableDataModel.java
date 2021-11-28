@@ -259,11 +259,11 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             gameBatchUpdator.addUpdateEvent(e);
         });
     }
-    public TableSection<V> checktofire(V game,boolean repaint) {
+    public TableSection<V> checktofire(V game) {
         List<TableSection<V>> gameLines = getTableSections();
         TableSection<V> rtn = null;
         for (final TableSection<V> ltd : gameLines) {
-            boolean status = ltd.checktofire(game,repaint);
+            boolean status = ltd.checktofire(game);
             if (status) {
                 rtn  = ltd;
                 break;

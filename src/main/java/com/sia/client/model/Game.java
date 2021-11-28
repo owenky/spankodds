@@ -8,7 +8,7 @@ import java.util.Set;
 
 import static com.sia.client.config.Utils.log;
 
-public class Game implements KeyedObject {
+public class Game implements KeyedObject,Cloneable {
 
     //TODO remove StatusSet
     private static final Set<String> StatusSet = new HashSet<>();
@@ -40,7 +40,15 @@ public class Game implements KeyedObject {
         final Game game = (Game) o;
         return league_id == game.league_id && game_id == game.game_id && visitorgamenumber == game.visitorgamenumber && homegamenumber == game.homegamenumber && visitoraltgamenumber == game.visitoraltgamenumber && homealtgamenumber == game.homealtgamenumber && currentvisitorscore == game.currentvisitorscore && currenthomescore == game.currenthomescore && finalvisitorscore == game.finalvisitorscore && finalhomescore == game.finalhomescore && eventnumber == game.eventnumber && subleague_id == game.subleague_id && forprop == game.forprop && circled == game.circled && started == game.started && neutrallocation == game.neutrallocation && ingame == game.ingame && seriesprice == game.seriesprice && addedgame == game.addedgame && extragame == game.extragame && tba == game.tba && visitor_id == game.visitor_id && home_id == game.home_id && visitorlefthanded == game.visitorlefthanded && homelefthanded == game.homelefthanded && visitorscheduled == game.visitorscheduled && homescheduled == game.homescheduled && gamestatusts == game.gamestatusts && scorets == game.scorets && Objects.equals(gamedate, game.gamedate) && Objects.equals(gametime, game.gametime) && Objects.equals(visitorteam, game.visitorteam) && Objects.equals(hometeam, game.hometeam) && Objects.equals(shortvisitorteam, game.shortvisitorteam) && Objects.equals(shorthometeam, game.shorthometeam) && Objects.equals(injurynotes, game.injurynotes) && Objects.equals(refsumpires, game.refsumpires) && Objects.equals(lineups, game.lineups) && Objects.equals(weather, game.weather) && Objects.equals(location, game.location) && Objects.equals(status, game.status) && Objects.equals(period, game.period) && Objects.equals(specialnotes, game.specialnotes) && Objects.equals(description, game.description) && Objects.equals(visitornickname, game.visitornickname) && Objects.equals(homenickname, game.homenickname) && Objects.equals(visitorcity, game.visitorcity) && Objects.equals(homecity, game.homecity) && Objects.equals(visitorscoresupplemental, game.visitorscoresupplemental) && Objects.equals(homescoresupplemental, game.homescoresupplemental) && Objects.equals(visitorpitcher, game.visitorpitcher) && Objects.equals(homepitcher, game.homepitcher) && Objects.equals(timeremaining, game.timeremaining) && Objects.equals(tvstations, game.tvstations);
     }
-
+    @Override
+    public Game clone() {
+        try {
+            return (Game)super.clone();
+        } catch (CloneNotSupportedException e) {
+            log(e);
+            return null;
+        }
+    }
     @Override
     public int hashCode() {
         return Objects.hash(league_id, game_id, visitorgamenumber, homegamenumber, visitoraltgamenumber, homealtgamenumber, gamedate, gametime, visitorteam, hometeam, shortvisitorteam, shorthometeam, currentvisitorscore, currenthomescore, finalvisitorscore, finalhomescore, injurynotes, refsumpires, lineups, weather, location, status, period, specialnotes, eventnumber, subleague_id, description, forprop, circled, started, neutrallocation, ingame, seriesprice, addedgame, extragame, tba, visitornickname, homenickname, visitorcity, homecity, visitor_id, home_id, visitorscoresupplemental, homescoresupplemental, visitorpitcher, homepitcher, visitorlefthanded, homelefthanded, visitorscheduled, homescheduled, timeremaining, tvstations, gamestatusts, scorets);
@@ -150,7 +158,7 @@ public class Game implements KeyedObject {
         this.circled = circled;
         this.started = started;
         this.neutrallocation = neutrallocation;
-        this.ingame = ingame;
+        setIngame(ingame);
         this.seriesprice = seriesprice;
         this.addedgame = addedgame;
         this.extragame = extragame;

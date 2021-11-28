@@ -385,7 +385,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
             if ( ms.containsGame(g)) {
-                Utils.checkAndRunInEDT(() -> ms.moveGameToThisHeader(g, header));
+                Utils.checkAndRunInEDT(() -> ms.moveGameToThisHeader(g, header),true);
             }
         }
     }
@@ -394,23 +394,18 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     }
     public void setSort(boolean sort) {
         spankyWindowConfig.setTimesort(sort);
-//        timesort = sort;
     }
     public void setShort(boolean shortteam) {
         spankyWindowConfig.setShortteam(shortteam);
-//        this.shortteam = shortteam;
     }
     public void setLast(boolean b) {
         spankyWindowConfig.setLast(b);
-//        last = b;
     }
     public void setDisplay(String b) {
         spankyWindowConfig.setDisplay(b);
-//        display = b;
     }
     public void setPeriod(int b) {
         spankyWindowConfig.setPeriod(b);
-//        period = b;
     }
 
     protected void paintComponent(Graphics g) {
@@ -440,10 +435,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         log("refreshing MainScreen "+thisms.getName()+" !");
         reCreateMainScreen(thisms);
         MainGameTableModel model = thisms.getDataModels();
-//        AppController.addDataModels(model);
         model.processTableModelEvent(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
     }
-
     public void cleanup() {
         Component comp = getSelectedComponent();
         if ( comp instanceof MainScreen) {
@@ -452,22 +445,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
 
     }
-//
-//    public List<LinesTableData> getAllDataModels() {
-//        int totalTabs = getTabCount();
-//        List<LinesTableData> v = new ArrayList<>();
-//        for (int i = 0; i < totalTabs; i++) {
-//            Component c = getComponentAt(i);
-//            if (c instanceof MainScreen) {
-//                MainScreen ms = (MainScreen) c;
-//                MainGameTableModel model = ms.getDataModels();
-//                if ( null != model) {
-//                    model.copyTo(v);
-//                }
-//            }
-//        }
-//        return v;
-//    }
+
 
     public void clearAll() {
         Component comp = getSelectedComponent();

@@ -141,10 +141,11 @@ public abstract class GameUtils {
             }
         }
     }
+    public static String [] parseString(String data) {
+        return data.split("~");
+    }
     private static final int GameBasicFieldCnt = 29;
-    public static void setGameProperty(Game g,String data) {
-        String[] items = data.split("~");
-
+    public static void setGameProperty(Game g,String[] items) {
         for(int x=0;x<GameBasicFieldCnt;) {
             String eventnumber = items[x++];
             String visitorgamenumber = items[x++];

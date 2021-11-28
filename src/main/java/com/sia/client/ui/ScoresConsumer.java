@@ -171,7 +171,7 @@ public class ScoresConsumer implements MessageListener {
                     log(ex);
                 }
 
-                Game g = AppController.getGame(gameid);
+                final Game g = AppController.getGame(gameid);
                 if (g != null) {
                     GameStatus newGameStatus = GameStatus.find(status);
                     GameStatus oldGameStatus = GameStatus.getGameStatus(g);

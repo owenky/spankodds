@@ -32,7 +32,6 @@ public class MqMessageProcessor implements TableModelListener {
     }
     public void addGame(Game game) {
         if ( null  != game) {
-            AppController. pushGameToCache(game);
             gameConsumingScheculer.addMessage(game);
         }
     }

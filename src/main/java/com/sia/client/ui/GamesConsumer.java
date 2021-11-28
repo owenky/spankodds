@@ -1,10 +1,11 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Game;
+import com.sia.client.model.GameGroupHeader;
+import com.sia.client.model.GameStatus;
 import com.sia.client.model.MqMessageProcessor;
 import com.sia.client.model.Sport;
 import com.sia.client.simulator.GameMessageSimulator;
@@ -24,6 +25,7 @@ import javax.jms.TextMessage;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.sql.Time;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sia.client.config.Utils.log;
@@ -87,11 +89,17 @@ public class GamesConsumer implements MessageListener {
             if ("NEWORUPDATE".equals(messagetype)) {
 
                 String data = textMessage.getText();
-                Game game = new Game();
-                GameUtils.setGameProperty(game,data);
-
-                int gameid = game.getGame_id();
+                String [] fields = GameUtils.parseString(data);
+                int gameid = Integer.parseInt(fields[0]);
                 Game oldGame = AppController.getGame(gameid);
+                Game game;
+                if ( null != oldGame) {
+                    game = oldGame.clone();
+                } else {
+                    game = new Game();
+                }
+                GameUtils.setGameProperty(game,fields);
+
                 if ( null != oldGame ) {
                     oldvpitcher = oldGame.getVisitorpitcher();
                     oldhpitcher = oldGame.getHomepitcher();
@@ -99,7 +107,7 @@ public class GamesConsumer implements MessageListener {
 
                 }
                 log("new game! " + data);
-//                AppController.addOrUpdateGame(game);
+                AppController.pushGameToCache(game);
                 MqMessageProcessor.getInstance().addGame(game);
                 Sport s = AppController.getSportByLeagueId(game.getLeague_id());
 
@@ -220,13 +228,14 @@ public class GamesConsumer implements MessageListener {
             {
 
                 String data = textMessage.getText();
+                String [] fields = GameUtils.parseString(data);
                 Game g = new Game();
-                GameUtils.setGameProperty(g,data);
+                GameUtils.setGameProperty(g,fields);
                 Game oldGame = AppController.getGame(g.getGame_id());
-                boolean changed = g.equals(oldGame);
-Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2, changed="+changed, g.getGame_id());
+                boolean changed = ! g.equals(oldGame);
                 if ( changed) {
-//                    AppController.addOrUpdateGame(g);
+                    moveIfGameGroupChanged(oldGame,g);
+                    AppController.pushGameToCache(g);
                     MqMessageProcessor.getInstance().addGame(g);
                 }
             } else if (messagetype.equals("REMOVE")) {
@@ -248,7 +257,16 @@ Logger.consoleLogPeekGameId("GamesConsumer::processMessage for NEWORUPDATE2, cha
             log(ex);
         }
     }
-
+    private void moveIfGameGroupChanged(Game oldGame,Game newGame) {
+        //check if game status changes
+        GameStatus oldStatus = GameStatus.getGameStatus(oldGame);
+        GameStatus newStatus = GameStatus.getGameStatus(newGame);
+        if ( ! Objects.equals(oldStatus,newStatus)) {
+            GameGroupHeader newGameGroupHeader = null == newStatus?GameUtils.createGameGroupHeader(newGame):newStatus.getGroupHeader();
+            AppController.pushGameToCache(newGame);
+            AppController.moveGameToThisHeader(newGame,newGameGroupHeader);
+        }
+    }
     public static void writeToFile(String fileName, String data, boolean append) {
         DataOutputStream out = null;
 

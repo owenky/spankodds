@@ -517,16 +517,10 @@ public class AppController {
     }
 
     public static void clearAll() {
-//        for (SportsTabPane stb : tabpanes) {
-//            stb.clearAll();
-//        }
         SpankyWindow.applyToAllWindows(SportsTabPane::clearAll);
     }
 
     public static void fireAllTableDataChanged(Collection<Game> games) {
-//        for (SportsTabPane stb : tabpanes) {
-//            stb.fireAllTableDataChanged(games);
-//        }
         SpankyWindow.applyToAllWindows((stp)->stp.fireAllTableDataChanged(games));
     }
 
@@ -835,10 +829,6 @@ public class AppController {
     public static void pushGameToCache(Game g) {
         games.updateOrAdd(g);
     }
-//    public static void addOrUpdateGame(Game g) {
-//        pushGameToCache(g);
-//        SpankyWindow.applyToAllWindows((stp)->stp.addGame(g));
-//    }
 
     public static void moveGameToThisHeader(Game g, GameGroupHeader header) {
         SpankyWindow.applyToAllWindows((stp)->stp.moveGameToThisHeader(g, header));
