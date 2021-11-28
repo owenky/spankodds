@@ -58,7 +58,7 @@ public class SpankyWindow extends JFrame {
             }
         });
         if ( null == gameClockUpdater) {
-            gameClockUpdater = new GameClockUpdater();
+            gameClockUpdater = GameClockUpdater.instance();
             gameClockUpdater.start();
         }
         return instance;
