@@ -2,10 +2,10 @@ package com.sia.client.config;
 
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.GameStatus;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -129,15 +129,14 @@ public abstract class GameUtils {
         return  "DEBUGING Game, sport=" + sportName
                 + ", header=" + createGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
-                + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
+                + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isIngame();
     }
     public static void validateGame(Game g) {
         if ( "WIN".equalsIgnoreCase(g.getTimeremaining())){
             g.setStatus(SiaConst.FinalStr);
-        } else if ( g.getGame_id() > SiaConst.InGameFlagId) {
-            //for a in-progress game, if its game id > SiaConst.InGameFlagId, the game should have in-game status -- 2021-11-24
-            if (GameStatus.InProgress.isSame(g.getStatus())) {
-                g.setStatus(SiaConst.InGamePricesStr);
+        } else if ( ! StringUtils.isEmpty(g.getStatus())){
+            if (g.getStatus().replaceAll(" ","").equalsIgnoreCase(SiaConst.InGamePricesStr) || (null != g.getDescription() && g.getDescription().contains("In-Game"))) {
+                g.setIngame(true);
             }
         }
     }

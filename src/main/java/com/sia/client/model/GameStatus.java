@@ -24,7 +24,7 @@ public enum GameStatus {
             null,SiaConst.FinalStr,"WIN","TIE","CNCLD","PONED");
 
     public static GameStatus getGameStatus(Game game) {
-        if ( game.isInGame2()) {
+        if ( game.isIngame()) {
             return InGamePrices;
         } else if ( game.isSeriesprice()) {
             return SeriesPrice;

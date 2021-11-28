@@ -676,10 +676,7 @@ public class Game implements KeyedObject,Cloneable {
         String status = getStatus();
         return  GameStatus.InProgress.isSame(status);
     }
-    public boolean isInGame2() {
-        return  isIngame() || (null != description && description.contains("In-Game"));
-    }
     public boolean isInStage() {
-        return isInFinal() || isHalfTime() || isInProgress() || isSeriesprice() ||  isInGame2();
+        return isInFinal() || isHalfTime() || isInProgress() || isSeriesprice() ||  isIngame();
     }
 }

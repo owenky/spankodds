@@ -286,7 +286,7 @@ public class SportType {
             return true;
         }
 
-        return g.isInGame2() && ! isShowingame();
+        return g.isIngame() && ! isShowingame();
     }
     private boolean seriesPriceConfig(Game g) {
         return g.isSeriesprice() && ! isShowseries();

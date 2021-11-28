@@ -174,10 +174,10 @@ public class ScoresConsumer implements MessageListener {
                 final Game g = AppController.getGame(gameid);
                 if (g != null) {
                     GameStatus newGameStatus = GameStatus.find(status);
-                    GameStatus oldGameStatus = GameStatus.getGameStatus(g);
-                    if ( oldGameStatus == GameStatus.InGamePrices && newGameStatus != GameStatus.Final) {
-                        newGameStatus = GameStatus.InGamePrices;
-                    }
+//                    GameStatus oldGameStatus = GameStatus.getGameStatus(g);
+//                    if ( oldGameStatus == GameStatus.InGamePrices && newGameStatus != GameStatus.Final) {
+//                        newGameStatus = GameStatus.InGamePrices;
+//                    }
                     if (null != newGameStatus) {
                         ScoreChangedProcessor.process(newGameStatus, g, currentvisitorscore, currenthomescore);
                     } else {

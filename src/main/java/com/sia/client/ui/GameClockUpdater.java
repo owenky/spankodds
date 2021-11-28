@@ -20,7 +20,10 @@ public class GameClockUpdater {
     private final Timer timer;
     private final int delay = 1000;
 
-    public GameClockUpdater() {
+    public static GameClockUpdater instance() {
+        return LazyInitHolder.instance;
+    }
+    private GameClockUpdater() {
         timer = new Timer(delay,createActionListener());
     }
     public void start() {
@@ -28,9 +31,7 @@ public class GameClockUpdater {
     }
     private ActionListener createActionListener() {
         return (event)-> {
-            Consumer<SportsTabPane> updater = (stp) -> {
-                updateStageSectionClocks(stp);
-            };
+            Consumer<SportsTabPane> updater = this::updateStageSectionClocks;
             SpankyWindow.applyToAllWindows(updater);
         };
     }
@@ -58,5 +59,9 @@ public class GameClockUpdater {
             TableModelEvent me = new TableModelEvent(model,firstRow,lastRow);
             model.fireTableChanged(me);  //don't use processTableModelEvent which delays firing.
         }
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static abstract class LazyInitHolder {
+        private static final GameClockUpdater instance = new GameClockUpdater();
     }
 }
