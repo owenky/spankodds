@@ -89,7 +89,7 @@ public class GamesConsumer implements MessageListener {
             if ("NEWORUPDATE".equals(messagetype)) {
 
                 String data = textMessage.getText();
-                String [] fields = GameUtils.parseString(data);
+                String [] fields = GameUtils.parseGameString(data);
                 int gameid = Integer.parseInt(fields[0]);
                 Game oldGame = AppController.getGame(gameid);
                 Game game;
@@ -228,7 +228,7 @@ public class GamesConsumer implements MessageListener {
             {
 
                 String data = textMessage.getText();
-                String [] fields = GameUtils.parseString(data);
+                String [] fields = GameUtils.parseGameString(data);
                 Game g = new Game();
                 GameUtils.setGameProperty(g,fields);
                 Game oldGame = AppController.getGame(g.getGame_id());

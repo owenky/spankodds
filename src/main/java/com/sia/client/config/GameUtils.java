@@ -5,7 +5,6 @@ import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -134,13 +133,13 @@ public abstract class GameUtils {
     public static void validateGame(Game g) {
         if ( "WIN".equalsIgnoreCase(g.getTimeremaining())){
             g.setStatus(SiaConst.FinalStr);
-        } else if ( ! StringUtils.isEmpty(g.getStatus())){
+        } else if ( null != g.getStatus()){
             if (g.getStatus().replaceAll(" ","").equalsIgnoreCase(SiaConst.InGamePricesStr) || (null != g.getDescription() && g.getDescription().contains("In-Game"))) {
                 g.setIngame(true);
             }
         }
     }
-    public static String [] parseString(String data) {
+    public static String [] parseGameString(String data) {
         return data.split("~");
     }
     private static final int GameBasicFieldCnt = 29;
