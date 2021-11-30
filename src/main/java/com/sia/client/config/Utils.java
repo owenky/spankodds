@@ -84,7 +84,10 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        Logger.log(e);
+        log("",e);
+    }
+    public static void log(String errMsg,Throwable e) {
+        Logger.log(errMsg,e);
     }
     public static void debug(String mesg) {
         Logger.debug(mesg);

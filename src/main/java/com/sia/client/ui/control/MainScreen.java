@@ -53,7 +53,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     MainScreen(SportType sportType, SpankyWindowConfig spankyWindowConfig) {
         this.sportType = sportType;
-        screenProperty = new ScreenProperty(spankyWindowConfig);
+        screenProperty = new ScreenProperty(sportType.getSportName(),spankyWindowConfig);
         final String name = sportType.getSportName();
         setName(name);
     }

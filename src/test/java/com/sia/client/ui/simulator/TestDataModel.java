@@ -10,7 +10,7 @@ import java.util.Vector;
 public class TestDataModel extends ColumnCustomizableDataModel<TestGame> {
 
     public TestDataModel( Vector<TableColumn> allColumns) {
-        super(new ScreenProperty(new SpankyWindowConfig(0,false, false)),allColumns);
+        super(new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false)),allColumns);
     }
 
 }

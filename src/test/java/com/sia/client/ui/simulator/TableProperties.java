@@ -47,7 +47,7 @@ public class TableProperties {
         return rtn;
     }
     public void rebuild() {
-        ScreenProperty screenProperty = new ScreenProperty(new SpankyWindowConfig(0,false, false));
+        ScreenProperty screenProperty = new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false));
         ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(screenProperty,makeColumns(colCount));
         table = new ColumnCustomizableTable<TestGame>(false,tm) {
 

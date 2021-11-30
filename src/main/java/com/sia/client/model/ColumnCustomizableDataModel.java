@@ -149,7 +149,13 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
 
     }
     public void fireTableChanged(TableModelEvent e) {
-        delegator.fireTableChanged(e);
+        try {
+            delegator.fireTableChanged(e);
+        } catch(Exception ex) {
+            String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getName()+", window index="
+                    +this.getSpankyWindowConfig().getWindowIndex();
+            log(errMs,ex);
+        }
     }
     public TableSection<V> findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
         TableSection<V> rtn = null;

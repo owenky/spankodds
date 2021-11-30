@@ -22,7 +22,7 @@ public class MainGameTableModelTest {
         gameCache = new TestGameCache();
         Vector<TableColumn> allColumn = new Vector<>();
         allColumn.add(new TableColumn());
-        model = new ColumnCustomizableDataModel<>(new ScreenProperty(new SpankyWindowConfig(0,false, false)),allColumn);
+        model = new ColumnCustomizableDataModel<>(new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false)),allColumn);
     }
     @Test
     public void testAddGameLine() {

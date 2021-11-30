@@ -234,7 +234,9 @@ public class GamesConsumer implements MessageListener {
                 Game oldGame = AppController.getGame(g.getGame_id());
                 boolean changed = ! g.equals(oldGame);
                 if ( changed) {
-                    moveIfGameGroupChanged(oldGame,g);
+                    if ( null != oldGame) {
+                        moveIfGameGroupChanged(oldGame, g);
+                    }
                     AppController.pushGameToCache(g);
                     MqMessageProcessor.getInstance().addGame(g);
                 }
