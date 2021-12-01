@@ -179,8 +179,7 @@ public abstract class GameUtils {
             g.setGame_id(gameid);
             g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
             g.setHomegamenumber(Integer.parseInt(homegamenumber));
-            g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
-            g.setGametime(new java.sql.Time(Long.parseLong(gametimelong)));
+            g.setGameDateTime(new java.sql.Date(Long.parseLong(gamedatelong)),new java.sql.Time(Long.parseLong(gametimelong)));
             g.setVisitorteam(visitorteamname);
             g.setHometeam(hometeamname);
             g.setShortvisitorteam(visitorabbr);

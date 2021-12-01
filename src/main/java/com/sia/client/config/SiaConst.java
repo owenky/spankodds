@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.8.15)";
+    public static final String Version="(v21.20.8.16)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -37,6 +37,7 @@ public abstract class SiaConst {
     public static final int ColumnWidthRefreshRate = 2500;
     public static final int DataRefreshRate = 500;
     public static final String DefaultGameTimeZone = "US/Eastern";
+    public static final long diffBetweenEasternAndUTC = 5*3600*1000L;
 
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;
