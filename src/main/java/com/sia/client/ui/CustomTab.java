@@ -2,8 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameDateSorter;
-import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
 
@@ -23,6 +21,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.BorderLayout;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -79,18 +78,18 @@ public class CustomTab extends JPanel {
         Games allgames = AppController.getGamesVec();
         String lastdate = null;
         int lastleagueid = 0;
-
-
-        try {
-            allgames.sort(new GameDateSorter().thenComparing(new GameNumSorter()));
-        } catch (Exception ex) {
-            log(ex);
-        }
-
-        for (int k = 0; k < allgames.size(); k++) {
+//
+//
+//        try {
+//            allgames.sort(new GameDateSorter().thenComparing(new GameNumSorter()));
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
+        Iterator<Game> ite = allgames.iterator();
+        while(ite.hasNext()) {
 
             int gameid = -1;
-            Game g = (Game) allgames.getByIndex(k);
+            Game g = ite.next();
 
 
             if (g == null) {

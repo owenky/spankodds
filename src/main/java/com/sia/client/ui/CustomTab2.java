@@ -2,8 +2,6 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
-import com.sia.client.model.GameDateSorter;
-import com.sia.client.model.GameNumSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
@@ -220,25 +218,25 @@ public class CustomTab2 extends JPanel {
         Games allgames = AppController.getGamesVec();
         String lastdate = "";
         int lastleagueid = 0;
-
-
-        try {
-
-            allgames.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
-            allgames.sort(new GameDateSorter());
-            log("sorted by gm date");
-            log("sorted by gm num");
-
-        } catch (Exception ex) {
-            log(ex);
-        }
+//
+//
+//        try {
+//
+//            allgames.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
+//            allgames.sort(new GameDateSorter());
+//            log("sorted by gm date");
+//            log("sorted by gm num");
+//
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
         Game g = null;
+        Iterator<Game> ite = allgames.iterator();
         try {
-
-            for (int k = 0; k < allgames.size(); k++) {
+            while(ite.hasNext()){
 
                 int gameid = -1;
-                g = allgames.getByIndex(k);
+                g = ite.next();
 
 
                 if (g == null) {

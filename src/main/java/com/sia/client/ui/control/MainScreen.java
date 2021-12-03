@@ -32,6 +32,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -199,8 +200,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         boolean timesort = GameUtils.isTimeSort(screenProperty.getSpankyWindowConfig().isTimesort(),sportType.isTimeSort());
         log("timesort?=" + timesort + "..allgames size=" + allgames.size());
-        for (int k = 0; k < allgames.size(); k++) {
-            Game g = allgames.getByIndex(k);
+        Iterator<Game> ite = allgames.iterator();
+        while ( ite.hasNext()) {
+            Game g = ite.next();
             if (!sportType.shouldSelect(g)) {
                 continue;
             }
