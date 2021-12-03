@@ -243,7 +243,7 @@ public class LoginClient implements MessageListener {
                 InitialGameMessages.addText(text);
                 //allow reading games from log for test purpose  -- 2021-10-09
                 if (!InitialGameMessages.getMessagesFromLog) {
-                    AppController.pushGameToCash(GameUtils.parseGameText(text));
+                    AppController.pushGameToCache(GameUtils.parseGameText(text));
                 }
             } else if (messageType.equals("Spreadline")) {
                 TextMessage textMessage = (TextMessage) message;

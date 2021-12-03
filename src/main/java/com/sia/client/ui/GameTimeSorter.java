@@ -10,21 +10,37 @@ public class GameTimeSorter implements Comparator<Game> {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
     public int compare(Game g1, Game g2) {
-        //if(g1.getGame_id() == 483)
-        //{
-        //	log("gmtime for 483 ="+g1.getGametime();)
-        //}
-        if (g1 == null || g2 == null || g1.getGametime() == null || g2.getGametime() == null) {
+
+        if ( null == g1 && null == g2) {
             return 0;
+        } else if ( null == g1 && null != g2) {
+            return -1;
+        } else if ( null != g1 && null == g2) {
+            return 1;
         }
+
 		if ( g1.getGame_id() == SiaConst.BlankGameId) {
 			return -1;
 		} else if ( g2.getGame_id() == SiaConst.BlankGameId) {
 			return 1;
 		}
-        String gametime1 = sdf.format(g1.getGametime());
-        String gametime2 = sdf.format(g2.getGametime());
-        return gametime1.compareTo(gametime2);
+
+        if ( null == g1.getGametime() && null == g2.getGametime()) {
+            return 0;
+        } else if ( null == g1.getGametime() && null != g2.getGametime()) {
+            return -1;
+        } else if ( null != g1.getGametime() && null == g2.getGametime()) {
+            return 1;
+        }
+
+        long diff = g1.getGametime().getTime()-g2.getGametime().getTime();
+        if ( diff > 0) {
+            return 1;
+        } else if ( diff < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }
  

@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.CheckThreadViolationRepaintManager;
 import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
@@ -12,6 +13,7 @@ import org.jdesktop.swingx.auth.LoginService;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.RepaintManager;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,7 +48,7 @@ public class SpankOdds {
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
 
-        checkAndRunInEDT(() -> new SpankOdds().showLoginDialog());
+        checkAndRunInEDT(() -> new SpankOdds().showLoginDialog(),true);
     }
 
     private static void initSystemProperties() {
@@ -65,7 +67,9 @@ public class SpankOdds {
 
     private void showLoginDialog() {
 
-//        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
+        if ( InitialGameMessages.Debug) {
+            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(true));
+        }
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
@@ -154,9 +158,9 @@ public class SpankOdds {
 
         try {
             frame.setTitle(userName + " Logged In " + SiaConst.Version);
-            frame.populateTabPane();
             AppController.addFrame(frame);
             frame.setSize(950, 800);
+            frame.populateTabPane();
             frame.setVisible(true);
             AppController.notifyUIComplete();
 

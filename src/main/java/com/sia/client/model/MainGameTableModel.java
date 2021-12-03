@@ -23,7 +23,6 @@ import static com.sia.client.config.Utils.log;
 public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
 
     private final SportType sportType;
-    private final ScreenProperty screenProperty;
     private static final Set<String> stageStrs = new HashSet<>();
     private final Map<String,Integer> customizedTabGameGroupHeaderIndex = new HashMap<>();
 
@@ -34,8 +33,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
     public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,Vector<TableColumn> allColumns) {
-        super(allColumns);
-        this.screenProperty = screenProperty;
+        super(screenProperty,allColumns);
         this.sportType = sportType;
         List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
         if ( 0 <customerizedGameGroupHeader.size()) {
@@ -48,12 +46,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
                 this.customizedTabGameGroupHeaderIndex.put(gs.getGroupHeader().getGameGroupHeaderStr(),gs.getGroupHeader().getAnchorPos());
             }
         }
-    }
-    public SpankyWindowConfig getSpankyWindowConfig() {
-        return screenProperty.getSpankyWindowConfig();
-    }
-    public ScreenProperty getScreenProperty() {
-        return screenProperty;
     }
     @Override
     protected Comparator<TableSection<Game>> getTableSectionComparator() {
@@ -78,7 +70,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     }
     @Override
     protected Comparator<Game> getGameComparator() {
-        return screenProperty.getSpankyWindowConfig().getGameComparator();
+        return getScreenProperty().getSpankyWindowConfig().getGameComparator();
     }
     public void copyTo(Collection<LinesTableData> destCollection) {
         List<TableSection<Game>> gameLines = getTableSections();
@@ -176,7 +168,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
             LinesTableData section0 = (LinesTableData)sections.get(0);
-            rtn = new LinesTableData(sportType,screenProperty, new Vector<>(),gameGroupHeader,getAllColumns());
+            rtn = new LinesTableData(sportType,getScreenProperty(), new Vector<>(),gameGroupHeader,getAllColumns());
             sections.add(rtn);
         } else {
             rtn = null;

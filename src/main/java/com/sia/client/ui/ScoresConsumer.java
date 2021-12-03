@@ -5,6 +5,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.MessageConsumingScheduler;
+import com.sia.client.model.MqMessageProcessor;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
@@ -170,9 +171,13 @@ public class ScoresConsumer implements MessageListener {
                     log(ex);
                 }
 
-                Game g = AppController.getGame(gameid);
+                final Game g = AppController.getGame(gameid);
                 if (g != null) {
                     GameStatus newGameStatus = GameStatus.find(status);
+//                    GameStatus oldGameStatus = GameStatus.getGameStatus(g);
+//                    if ( oldGameStatus == GameStatus.InGamePrices && newGameStatus != GameStatus.Final) {
+//                        newGameStatus = GameStatus.InGamePrices;
+//                    }
                     if (null != newGameStatus) {
                         ScoreChangedProcessor.process(newGameStatus, g, currentvisitorscore, currenthomescore);
                     } else {
@@ -184,12 +189,13 @@ public class ScoresConsumer implements MessageListener {
 
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
-                    AppController.addOrUpdateGame(g);
+//                    AppController.addOrUpdateGame(g);
+                    MqMessageProcessor.getInstance().addGame(g);
 
                 } else {
-                    g = new Game();
-                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
-                            scorets, currenthomescore, homescoresupplemental);
+//                    g = new Game();
+//                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
+//                            scorets, currenthomescore, homescoresupplemental);
 //                    AppController.addGame(g);
 //                    scoreMessageProcessor.addMessage(g);
                     //should not add if game id not found from cache, because new Game() does not give game critical game info like date, and league -- 2021-10-30

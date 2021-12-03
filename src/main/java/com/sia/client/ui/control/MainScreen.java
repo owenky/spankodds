@@ -53,7 +53,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     MainScreen(SportType sportType, SpankyWindowConfig spankyWindowConfig) {
         this.sportType = sportType;
-        screenProperty = new ScreenProperty(spankyWindowConfig);
+        screenProperty = new ScreenProperty(sportType.getSportName(),spankyWindowConfig);
         final String name = sportType.getSportName();
         setName(name);
     }
@@ -147,6 +147,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         return tableSection;
     }
+    @Override
     public void addGame(Game g) { // only gets called when adding new game into system
         Function<GameGroupHeader, LinesTableData> function = (ggh) -> {
             if (isPreDefinedSport()) {
@@ -349,7 +350,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         }
         return containing;
     }
-
     @Override
     public void destroyMe() {
         removeAll();

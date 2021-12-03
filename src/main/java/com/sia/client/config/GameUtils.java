@@ -6,8 +6,13 @@ import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -59,9 +64,8 @@ public abstract class GameUtils {
         return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getLeague_id(),game.getGamedate());
     }
     public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,Date gameDate) {
-
-        LocalDateTime ldt = new Date(gameDate.getTime()).toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
-        return GameGroupHeader.create(leagueName,ldt,subLeagueId,leagueId);
+        LocalDate ld = Instant.ofEpochMilli(gameDate.getTime()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDate(); //atOffset(ZoneOffset.UTC).toLocalDate();
+        return GameGroupHeader.create(leagueName,ld,subLeagueId,leagueId);
     }
     public static boolean isGameNear(Game game) {
         SportType sportType = SportType.findPredefinedByGame(game);
@@ -124,17 +128,22 @@ public abstract class GameUtils {
         return  "DEBUGING Game, sport=" + sportName
                 + ", header=" + createGameGroupHeader(game)+", teams="+game.getVisitorteam()+"/"+game.getHometeam()
                 +", gameid=" + game.getGame_id() + ", leagueId=" + game.getLeague_id() + ", identifyingLeagueId="+game.getSportIdentifyingLeagueId()
-                + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isInGame2();
+                + ", status=" + game.getStatus() + ", isSeriecPrice=" + game.isSeriesprice() + ", isInGame2=" + game.isIngame();
     }
     public static void validateGame(Game g) {
         if ( "WIN".equalsIgnoreCase(g.getTimeremaining())){
             g.setStatus(SiaConst.FinalStr);
+        } else if ( null != g.getStatus()){
+            if (g.getStatus().replaceAll(" ","").equalsIgnoreCase(SiaConst.InGamePricesStr) || (null != g.getDescription() && g.getDescription().contains("In-Game"))) {
+                g.setIngame(true);
+            }
         }
     }
+    public static String [] parseGameString(String data) {
+        return data.split("~");
+    }
     private static final int GameBasicFieldCnt = 29;
-    public static void setGameProperty(Game g,String data) {
-        String[] items = data.split("~");
-
+    public static void setGameProperty(Game g,String[] items) {
         for(int x=0;x<GameBasicFieldCnt;) {
             String eventnumber = items[x++];
             String visitorgamenumber = items[x++];
@@ -170,8 +179,7 @@ public abstract class GameUtils {
             g.setGame_id(gameid);
             g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
             g.setHomegamenumber(Integer.parseInt(homegamenumber));
-            g.setGamedate(new java.sql.Date(Long.parseLong(gamedatelong)));
-            g.setGametime(new java.sql.Time(Long.parseLong(gametimelong)));
+            g.setGameDateTime(new java.sql.Date(Long.parseLong(gamedatelong)),new java.sql.Time(Long.parseLong(gametimelong)));
             g.setVisitorteam(visitorteamname);
             g.setHometeam(hometeamname);
             g.setShortvisitorteam(visitorabbr);
@@ -239,5 +247,17 @@ public abstract class GameUtils {
     }
     public static boolean isTimeSort(Boolean windowConfigTimeSort, boolean userDefinedTimesort) {
         return null == windowConfigTimeSort? userDefinedTimesort:windowConfigTimeSort;
+    }
+    public static void main(String [] argv) throws ParseException {
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String dateStr = "2021-11-24 14:08:01";
+        final Date date = sdf.parse(dateStr);
+        final long dateVaue = date.getTime();
+        String timeZoneName = "US/Eastern";
+//        timeZoneName = "US/Pacific";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of(timeZoneName));
+        ZonedDateTime lt = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(timeZoneName));
+        System.out.println("date timer="+lt+", local time="+lt.toLocalDateTime());
+
     }
 }

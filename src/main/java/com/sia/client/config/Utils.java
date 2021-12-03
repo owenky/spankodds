@@ -84,7 +84,10 @@ public abstract class Utils {
         return url;
     }
     public static void log(Throwable e) {
-        Logger.log(e);
+        log("",e);
+    }
+    public static void log(String errMsg,Throwable e) {
+        Logger.log(errMsg,e);
     }
     public static void debug(String mesg) {
         Logger.debug(mesg);
@@ -139,6 +142,9 @@ public abstract class Utils {
         }
     }
     public static void checkAndRunInEDT(Runnable r) {
+        checkAndRunInEDT(r,false);
+    }
+    public static void checkAndRunInEDT(Runnable r,boolean toBlock) {
         if (SwingUtilities.isEventDispatchThread()) {
             try {
                 r.run();
@@ -147,7 +153,11 @@ public abstract class Utils {
             }
         } else {
             try {
-                SwingUtilities.invokeLater(r);
+                if ( toBlock) {
+                    SwingUtilities.invokeAndWait(r);
+                } else {
+                    SwingUtilities.invokeLater(r);
+                }
             } catch ( Exception e) {
                 log(e);
             }
@@ -174,6 +184,26 @@ public abstract class Utils {
         } else {
             r.run();
         }
+    }
+    public static boolean parse(String str, boolean defaultValue) {
+        Boolean b;
+        try {
+            b = Boolean.parseBoolean(str);
+        } catch( Exception e) {
+            log(e);
+            b = null;
+        }
+        return null==b?defaultValue:b;
+    }
+    public static int parse(String str, int defaultValue) {
+        Integer b;
+        try {
+            b = Integer.parseInt(str);
+        } catch( Exception e) {
+            log(e);
+            b = null;
+        }
+        return null==b?defaultValue:b;
     }
     public static void resizeAndCenterComponent(Component component){
 

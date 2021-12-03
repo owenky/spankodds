@@ -2,17 +2,20 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.ui.control.MainScreen;
 
 import javax.swing.Timer;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GameBatchUpdator {
+public class GameBatchUpdator implements TableModelListener {
 
     private final Timer flushingScheduler;
     private long lastUpdateTime = 0;
@@ -37,36 +40,45 @@ public class GameBatchUpdator {
         if ( null != e) {
             addUpdateEvent(e);
         }
-        forcing = true;
+        //TODO watch for following disable
+//        forcing = true;
         checkToUpdate();
     }
     /**
      * this method must be run in EDT -- 2021-11-16
      */
-    private void checkToUpdate() {
-        long now = System.currentTimeMillis();
-        if ( SiaConst.DataRefreshRate< (now-lastUpdateTime) || forcing) {
-            for (TableModelEvent e : pendingUpdateEvents) {
-                ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>)e.getSource();
-                if ( ! model.isDetroyed()) {
-                    model.fireTableChanged(e);
+    private synchronized void checkToUpdate() {
+        if ( AppController.isReadyForMessageProcessing()) {
+            long now = System.currentTimeMillis();
+            if (SiaConst.DataRefreshRate < (now - lastUpdateTime) || forcing) {
+                for (TableModelEvent e : pendingUpdateEvents) {
+                    ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>) e.getSource();
+                    SpankyWindow spankyWindow = SpankyWindow.findSpankyWindow(model.getSpankyWindowConfig().getWindowIndex());
+                    if ( null != spankyWindow && null != spankyWindow.getSportsTabPane()) { //when user close a window, null scenario might happen -- 2021-11-25
+                        Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
+                        if (selectedComp instanceof MainScreen) {
+                            if ((selectedComp).isShowing()) {
+                                model.fireTableChanged(e);
+                            }
+                        }
+                    }
                 }
-            }
 //Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
-            pendingUpdateEvents.clear();
-            pendingUpdatedRowModelIndexSet.clear();
-            accumulateCnt=0;
-            updatedRowCnt = 0;
+                pendingUpdateEvents.clear();
+                pendingUpdatedRowModelIndexSet.clear();
+                accumulateCnt = 0;
+                updatedRowCnt = 0;
 
-            lastUpdateTime = now;
-            forcing = false;
+                lastUpdateTime = now;
+                forcing = false;
+            }
         }
     }
 
     /**
      * this method is called only when TableUtils.toRebuildCache(event) is false, so no need to check TableUtils.toRebuildCache(event) condition. -- 2021-11-16
      */
-    public void addUpdateEvent(TableModelEvent event) {
+    public synchronized void addUpdateEvent(TableModelEvent event) {
         if ( null == event) {
             return;
         }
@@ -87,6 +99,12 @@ public class GameBatchUpdator {
             pendingUpdateEvents.add(event);
             updatedRowCnt++;
         }
+    }
+
+    @Override
+    public void tableChanged(final TableModelEvent e) {
+        lastUpdateTime = System.currentTimeMillis();
+
     }
     static List<int[]> getNewUpdateRegions(int firstRow,int lastRow,Set<Integer>pendingUpdatedRowModelIndexSet) {
 

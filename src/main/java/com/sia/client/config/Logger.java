@@ -17,9 +17,12 @@ public class Logger {
         String fullMsg = logHeader()+mesg;
         executor.execute(()->logPs.println(fullMsg));
     }
-    public static void log(Throwable e) {
+    public static void log(String errMsg,Throwable e) {
         String logHeader = logHeader();
-        executor.execute(()->{errPs.println(logHeader);e.printStackTrace(Logger.errPs);});
+        executor.execute(()->{errPs.println(logHeader+"| errMsg:"+errMsg);e.printStackTrace(Logger.errPs);});
+    }
+    public static void log(Throwable e) {
+        log("",e);
     }
     public static String logHeader() {
         return Utils.nowShortString()+", Thread="+Thread.currentThread().getName()+" |";
@@ -35,6 +38,11 @@ public class Logger {
     public static void consoleLogPeek(String mesg) {
         if ( InitialGameMessages.Debug) {
             System.out.println(logHeader() + mesg);
+        }
+    }
+    public static void consoleLogPeek(Exception e) {
+        if ( InitialGameMessages.Debug) {
+            e.printStackTrace();
         }
     }
     public static void log(Object mesg) {

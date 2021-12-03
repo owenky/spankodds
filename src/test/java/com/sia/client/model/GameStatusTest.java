@@ -9,24 +9,30 @@ public class GameStatusTest {
 
     @Test
     public void test() {
+        Game g = new Game();
         String str = "1st H";
-        GameStatus  status = GameStatus.find(str);
+        g.setStatus(str);
+        GameStatus  status = GameStatus.getGameStatus(g);
         assertEquals(status,GameStatus.InProgress);
 
         str = "";
-        status = GameStatus.find(str);
+        g.setStatus(str);
+        status = GameStatus.getGameStatus(g);
         assertNull(status);
 
         str = "null";
-        status = GameStatus.find(str);
+        g.setStatus(str);
+        status = GameStatus.getGameStatus(g);
         assertNull(status);
 
         str = "NULL";
-        status = GameStatus.find(str);
+        g.setStatus(str);
+        status = GameStatus.getGameStatus(g);
         assertNull(status);
 
         str = null;
-        status = GameStatus.find(str);
+        g.setStatus(str);
+        status = GameStatus.getGameStatus(g);
         assertNull(status);
     }
 }

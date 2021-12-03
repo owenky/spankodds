@@ -3,12 +3,17 @@ package com.sia.client.model;
 public class ScreenProperty {
 
     private final SpankyWindowConfig spankyWindowConfig;
+    private final String name;
     private int currentmaxlength = 0;
     private long cleartime = System.currentTimeMillis();
     private boolean showheaders = true;
 
-    public ScreenProperty(SpankyWindowConfig spankyWindowConfig) {
+    public ScreenProperty(String name,SpankyWindowConfig spankyWindowConfig) {
         this.spankyWindowConfig = spankyWindowConfig;
+        this.name = name;
+    }
+    public String getName() {
+        return name;
     }
     public int getCurrentmaxlength() {
         return currentmaxlength;

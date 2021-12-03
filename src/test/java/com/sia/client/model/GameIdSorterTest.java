@@ -3,7 +3,7 @@ package com.sia.client.model;
 import com.sia.client.config.SiaConst;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +39,9 @@ public class GameIdSorterTest {
     public void testGameDateSorter() {
 
         GameGroupDateSorter sorter = new GameGroupDateSorter();
-        LocalDateTime ltd1 = LocalDateTime.of(2021, 1, 1, 0, 0);
-        LocalDateTime ltd2 = LocalDateTime.of(2020, 10, 1, 0, 0);
-        LocalDateTime ltd3 = LocalDateTime.of(2020, 1, 1, 0, 0);
+        LocalDate ltd1 = LocalDate.of(2021, 1, 1);
+        LocalDate ltd2 = LocalDate.of(2020, 10, 1);
+        LocalDate ltd3 = LocalDate.of(2020, 1, 1);
         GameGroupHeader ggh1 = GameGroupHeader.create("", ltd1,0,0);
         GameGroupHeader ggh2 = GameGroupHeader.create("", ltd2,0,0);
         GameGroupHeader ggh3 = GameGroupHeader.create("", ltd3,0,0);

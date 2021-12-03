@@ -1,6 +1,8 @@
 package com.sia.client.ui.simulator;
 
 import com.sia.client.model.ColumnCustomizableDataModel;
+import com.sia.client.model.ScreenProperty;
+import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.ui.ColumnCustomizableTable;
 import com.sia.client.ui.RowHeaderTable;
 import com.sia.client.ui.TableUtils;
@@ -45,7 +47,8 @@ public class TableProperties {
         return rtn;
     }
     public void rebuild() {
-        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(makeColumns(colCount));
+        ScreenProperty screenProperty = new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false));
+        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(screenProperty,makeColumns(colCount));
         table = new ColumnCustomizableTable<TestGame>(false,tm) {
 
             @Override

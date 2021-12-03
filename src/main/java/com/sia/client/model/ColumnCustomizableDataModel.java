@@ -33,8 +33,10 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
+    private final ScreenProperty screenProperty;
 
-    public ColumnCustomizableDataModel(List<TableColumn> allColumns) {
+    public ColumnCustomizableDataModel(ScreenProperty screenProperty,List<TableColumn> allColumns) {
+        this.screenProperty = screenProperty;
         this.allColumns = allColumns;
         validateAndFixColumnModelIndex(allColumns);
         gameBatchUpdator = GameBatchUpdator.instance();
@@ -44,6 +46,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
             columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
+    }
+    public SpankyWindowConfig getSpankyWindowConfig() {
+        return screenProperty.getSpankyWindowConfig();
+    }
+    public ScreenProperty getScreenProperty() {
+        return screenProperty;
     }
     public void setDetroyed(boolean isDetroyed) {
         this.isDetroyed = isDetroyed;
@@ -141,7 +149,13 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
 
     }
     public void fireTableChanged(TableModelEvent e) {
-        delegator.fireTableChanged(e);
+        try {
+            delegator.fireTableChanged(e);
+        } catch(Exception ex) {
+            String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getName()+", window index="
+                    +this.getSpankyWindowConfig().getWindowIndex();
+            log(errMs,ex);
+        }
     }
     public TableSection<V> findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
         TableSection<V> rtn = null;
@@ -251,11 +265,11 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             gameBatchUpdator.addUpdateEvent(e);
         });
     }
-    public TableSection<V> checktofire(V game,boolean repaint) {
+    public TableSection<V> checktofire(V game) {
         List<TableSection<V>> gameLines = getTableSections();
         TableSection<V> rtn = null;
         for (final TableSection<V> ltd : gameLines) {
-            boolean status = ltd.checktofire(game,repaint);
+            boolean status = ltd.checktofire(game);
             if (status) {
                 rtn  = ltd;
                 break;
@@ -355,6 +369,12 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             return ((GameGroupHeader)value).getGameGroupHeaderStr();
         } else {
             return null;
+        }
+    }
+    public void resetGameStatesForAllTableSections() {
+        List<TableSection<V>> tableSectionList = this.getTableSections();
+        for(TableSection<V> tableSection: tableSectionList) {
+            tableSection.resetDataVector();
         }
     }
     protected Comparator<TableSection<V>> getTableSectionComparator() {

@@ -43,7 +43,7 @@ public class ScoreChangeProcessorTest extends TestExecutor {
         try {
             int count=0;
             log("START ScoreChangeProcessorTest++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            MainScreen testScreen = SpankyWindow.getSpankyWindow(0).getSportsTabPane().findMainScreen(SportType.Soccer.getSportName());
+            MainScreen testScreen = SpankyWindow.getFirstSpankyWindow().getSportsTabPane().findMainScreen(SportType.Soccer.getSportName());
             Games games = AppController.getGames();
             List<Game> allGames = new ArrayList<>();
             games.iterator().forEachRemaining(allGames::add);

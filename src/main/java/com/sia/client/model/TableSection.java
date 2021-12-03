@@ -204,7 +204,7 @@ public abstract class TableSection<V extends KeyedObject> {
         return gamesVec.size();
     }
 
-    public boolean checktofire(V game, boolean repaint) {
+    public boolean checktofire(V game) {
 
         int rowIndex = gamesVec.getRowIndex(game.getGame_id());
         boolean status = rowIndex >= 0;

@@ -20,7 +20,10 @@ public class GameClockUpdater {
     private final Timer timer;
     private final int delay = 1000;
 
-    public GameClockUpdater() {
+    public static GameClockUpdater instance() {
+        return LazyInitHolder.instance;
+    }
+    private GameClockUpdater() {
         timer = new Timer(delay,createActionListener());
     }
     public void start() {
@@ -28,23 +31,23 @@ public class GameClockUpdater {
     }
     private ActionListener createActionListener() {
         return (event)-> {
-            Consumer<SportsTabPane> updater = (stp) -> {
-                updateStageSectionClocks(stp);
-            };
+            Consumer<SportsTabPane> updater = this::updateStageSectionClocks;
             SpankyWindow.applyToAllWindows(updater);
         };
     }
     private void updateStageSectionClocks(SportsTabPane stp) {
-        Component c = stp.getSelectedComponent();
-        if ( c instanceof MainScreen) {
-            MainGameTableModel model = ((MainScreen)c).getDataModels();
-            List<TableSection<Game>> tsList = model.getTableSections();
-            if ( 0 < tsList.size() ) {
-                //update halftime
-                updateStageSectionClocks(model,GameStatus.HalfTime.getGroupHeader());
-                //upate in progress
-                //but seem In Progress Detl column does not change second by second -- 2021-11-09
+        if ( AppController.isReadyForMessageProcessing()) {
+            Component c = stp.getSelectedComponent();
+            if (c instanceof MainScreen) {
+                MainGameTableModel model = ((MainScreen) c).getDataModels();
+                List<TableSection<Game>> tsList = model.getTableSections();
+                if (0 < tsList.size()) {
+                    //update halftime
+                    updateStageSectionClocks(model, GameStatus.HalfTime.getGroupHeader());
+                    //upate in progress
+                    //but seem In Progress Detl column does not change second by second -- 2021-11-09
 //                updateStageSectionClocks(model,GameStatus.InProgress.getGroupHeader());
+                }
             }
         }
     }
@@ -56,5 +59,9 @@ public class GameClockUpdater {
             TableModelEvent me = new TableModelEvent(model,firstRow,lastRow);
             model.fireTableChanged(me);  //don't use processTableModelEvent which delays firing.
         }
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    private static abstract class LazyInitHolder {
+        private static final GameClockUpdater instance = new GameClockUpdater();
     }
 }

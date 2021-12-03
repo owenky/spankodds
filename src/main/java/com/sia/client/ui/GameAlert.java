@@ -54,6 +54,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -663,45 +664,37 @@ public class GameAlert {
 
         try {
 
-            Vector sportsVec = AppController.getSportsVec();
-            for (int i = 0; i < sportsVec.size(); i++) {
+            List<Sport> sportsVec = AppController.getSportsVec();
+            for (Sport value : sportsVec) {
                 DefaultMutableTreeNode tempnode;
-                Sport sport = (Sport) sportsVec.elementAt(i);
-                if (sport.getSportname().equals("Football")) {
+                if (value.getSportname().equals("Football")) {
                     tempnode = football;
-                } else if (sport.getSportname().equals("Basketball")) {
+                } else if (value.getSportname().equals("Basketball")) {
                     tempnode = basketball;
-                } else if (sport.getSportname().equals("Baseball")) {
+                } else if (value.getSportname().equals("Baseball")) {
                     tempnode = baseball;
-                } else if (sport.getSportname().equals("Hockey")) {
+                } else if (value.getSportname().equals("Hockey")) {
                     tempnode = hockey;
-                } else if (sport.getSportname().equals(SiaConst.SoccerStr)) {
+                } else if (value.getSportname().equals(SiaConst.SoccerStr)) {
                     tempnode = soccer;
-                } else if (sport.getSportname().equals("Fighting")) {
+                } else if (value.getSportname().equals("Fighting")) {
                     tempnode = fighting;
-                } else if (sport.getSportname().equals("Golf")) {
+                } else if (value.getSportname().equals("Golf")) {
                     tempnode = golf;
-                } else if (sport.getSportname().equals("Tennis")) {
+                } else if (value.getSportname().equals("Tennis")) {
                     tempnode = tennis;
-                } else if (sport.getSportname().equals("Auto Racing")) {
+                } else if (value.getSportname().equals("Auto Racing")) {
                     tempnode = autoracing;
-                } else if (sport.getSportname().equals("Horse")) {
+                } else if (value.getSportname().equals("Horse")) {
                     tempnode = horse;
-                }
-				/*
-				else if(sport.getSportname().equals("E-Sport"))
-				{
-					tempnode = esport;
-				}
-				*/
-                else {
+                } else {
                     tempnode = other;
                 }
 
-                DefaultMutableTreeNode child = new DefaultMutableTreeNode(sport.getLeaguename());
+                DefaultMutableTreeNode child = new DefaultMutableTreeNode(value.getLeaguename());
                 tempnode.add(child);
-                leaguenameidhash.put(sport.getLeaguename(), "" + sport.getLeague_id());
-                if (checkedsports.contains("" + sport.getLeague_id()) || checkedsports.contains(sport.getSportname())
+                leaguenameidhash.put(value.getLeaguename(), "" + value.getLeague_id());
+                if (checkedsports.contains("" + value.getLeague_id()) || checkedsports.contains(value.getSportname())
                         || checkedsports.contains("All Sports")) {
                     checkednodes.add(child);
 

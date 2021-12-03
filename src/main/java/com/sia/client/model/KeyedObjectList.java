@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 public abstract class KeyedObjectList<V extends KeyedObject> {
     private final List<Integer> gamesVec = new ArrayList<>();
-    //used to be Hashtable<String, Game> games = new Hashtable() -- 06/11/2021
     private final Map<Integer,V> idToGameMap = new ConcurrentHashMap<>();
     private final Class<V> classType;
 
@@ -43,23 +42,13 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
     public V removeGame(String gameId) {
         return removeGame(Integer.parseInt(gameId));
     }
-    /*
-        return true if it is add
-     */
-    public boolean updateOrAdd(V g) {
-        boolean isAdd;
+
+    public void updateOrAdd(V g) {
         int gameId = g.getGame_id();
         if ( ! idToGameMap.containsKey(gameId)) {
             gamesVec.add(gameId);
-            isAdd = true;
-        } else {
-//            isAdd = false;
-            //even if gameId already exist, game might change, so need to refresh  -- 08/29/2021
-//            log("force isAdd to true to force being added, originally isAdd = false-- 08/29/2021");
-            isAdd = true;
         }
         idToGameMap.put(gameId,g);
-        return isAdd;
     }
     public boolean containsGameId(int gameId) {
         return idToGameMap.containsKey(gameId);
@@ -162,49 +151,10 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
         }
         return status;
     }
-    public boolean addAll(final int index, final Collection<? extends V> games) {
-        List<Integer> gameIds = new ArrayList<>();
-        for(V g:games) {
-            this.idToGameMap.put(g.getGame_id(),g);
-            gameIds.add(g.getGame_id());
-        }
-        return gamesVec.addAll(index,gameIds);
-    }
-    public boolean removeAll(final Collection<?> games) {
-        boolean status = true;
-        for(Object o: games) {
-            if ( o instanceof Game) {
-                Integer gameId = ((Game)o).getGame_id();
-                gamesVec.remove(gameId);
-                this.idToGameMap.remove(gameId);
-            } else {
-                status = false;
-            }
-        }
-        return status;
-    }
-    public boolean retainAll(final Collection<?> c) {
-        clear();
-        boolean status = true;
-        for ( Object obj: c) {
-            if ( null != obj && obj.getClass().isAssignableFrom(classType) ){
-                this.add((V)obj);
-            } else {
-                status = false;
-            }
-        }
-        return status;
-    }
     public void clear() {
         gamesVec.clear();
         idToGameMap.clear();
     }
-//
-//    @Override
-//    public Game get(final int index) {
-//        Integer gameId = gameIdList.get(index);
-//        return gamesIdMap.get(gameId);
-//    }
     public V set(final int index, final V game) {
         Integer oldGameId = gamesVec.set(index,game.getGame_id());
         idToGameMap.put(game.getGame_id(),game);
@@ -214,10 +164,6 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
         gamesVec.add(index,game.getGame_id());
         idToGameMap.put(game.getGame_id(),game);
     }
-//    public Game remove(final int index) {
-//        Integer gameId = gameIdList.remove(index);
-//        return gamesIdMap.remove(gameId);
-//    }
     public int indexOf(final Game g) {
         return gamesVec.indexOf(g.getGame_id());
 

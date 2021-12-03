@@ -2206,10 +2206,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
             try {
                 String allsports = "";
-                Vector sportsVec = AppController.getSportsVec();
-                for (int i = 0; i < sportsVec.size(); i++) {
-                    DefaultMutableTreeNode tempnode;
-                    Sport sport = (Sport) sportsVec.elementAt(i);
+                List<Sport> sportsVec = AppController.getSportsVec();
+                for (Sport sport : sportsVec) {
                     if (sport.getSportname().equals(thissport)) {
 
                     } else {
@@ -2556,10 +2554,8 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
             try {
                 String allsports = "";
-                Vector sportsVec = AppController.getSportsVec();
-                for (int i = 0; i < sportsVec.size(); i++) {
-                    DefaultMutableTreeNode tempnode;
-                    Sport sport = (Sport) sportsVec.elementAt(i);
+                List<Sport> sportsVec = AppController.getSportsVec();
+                for (Sport sport : sportsVec) {
                     if (!sport.getSportname().equals(lan.getSport())) {
                         continue;
                     } else {
