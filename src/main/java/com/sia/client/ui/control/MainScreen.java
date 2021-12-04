@@ -3,18 +3,15 @@ package com.sia.client.ui.control;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.AbstractScreen;
-import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.GameStatus;
-import com.sia.client.model.Games;
-import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
+import com.sia.client.model.ScreenGameModel;
 import com.sia.client.model.ScreenProperty;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.LineRenderer;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
 import com.sia.client.ui.ScrollablePanel;
@@ -27,14 +24,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.function.Function;
@@ -45,11 +39,10 @@ import static java.lang.Boolean.parseBoolean;
 public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     private final SportType sportType;
-    private final Vector<TableColumn> allColumns = new Vector<>();
     private MainGameTable mainGameTable;
     private MainGameTableModel tableModel;
-    private final Map<GameGroupHeader, LinesTableData> headerMap = new HashMap<>();
     private final ScreenProperty screenProperty;
+    private ScreenGameModel screenGameModel;
 
 
     MainScreen(SportType sportType, SpankyWindowConfig spankyWindowConfig) {
@@ -85,50 +78,12 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     private MainGameTableModel buildModel() {
 
-        MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,allColumns);
-        Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
-        List<Bookie> hiddencols = AppController.getHiddenCols();
-        allColumns.clear();
-        for (int k = 0; k < newBookiesVec.size(); k++) {
-            Bookie b = newBookiesVec.get(k);
+        MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,screenGameModel.getAllTableColumns());
 
-            if (hiddencols.contains(b)) {
-                continue;
-            }
-            TableColumn column;
+        Collection<LinesTableData> tableSections = screenGameModel.getTableSections();
+        log("MainScreen: adding "+tableSections.size()+" of game group to data model");
 
-            column = new TableColumn(k, 30, new LineRenderer(), null);
-
-            column.setHeaderValue(b.getShortname());
-            column.setIdentifier(b.getBookie_id());
-            if (b.getBookie_id() == 990) {
-                column.setPreferredWidth(60);
-            } else if (b.getBookie_id() == 994) {
-                column.setPreferredWidth(80);
-            } else if (b.getBookie_id() == 991) {
-                column.setPreferredWidth(40);
-            } else if (b.getBookie_id() == 992) {
-                column.setPreferredWidth(45);
-            } else if (b.getBookie_id() == 993) {
-                if (screenProperty.getSpankyWindowConfig().isShortteam()) {
-                    column.setPreferredWidth(30);
-                } else {
-                    column.setPreferredWidth(screenProperty.getCurrentmaxlength() * 7);
-                }
-
-            } else if (b.getBookie_id() > 1000) {
-                column.setMinWidth(10);
-                column.setPreferredWidth(65);
-            } else {
-                column.setMinWidth(10);
-                column.setPreferredWidth(30);
-            }
-            allColumns.add(column);
-        }
-        log("MainScreen: adding "+headerMap.size()+" of game group to data model");
-
-        headerMap.values().forEach(tableSection->model.addGameLine(model.getTableSections().size(),tableSection,false));
-        headerMap.clear();
+        tableSections.forEach(tableSection->model.addGameLine(model.getTableSections().size(),tableSection,false));
         //add stage sections if absent
         for( GameStatus status: GameStatus.values() ) {
             if ( ! model.containsGroupHeader(status.getGroupHeader())) {
@@ -142,7 +97,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     private LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
-        LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, allColumns);
+        LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, screenGameModel.getAllTableColumns());
         if (sportType.equals(SportType.Soccer)) {
             tableSection.setRowHeight(SiaConst.SoccerRowheight);
         }
@@ -181,64 +136,11 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
         add(loadlabel);
-        createData();
+        screenGameModel = new ScreenGameModel(screenProperty,sportType);
+        screenGameModel.build();
         drawIt();
         log("done drawing");
     }
-
-    private void createData() {
-        headerMap.clear();
-        int maxlength;
-        screenProperty.setCurrentmaxlength(0);
-
-        Games allgames = AppController.getGamesVec();
-        if (sportType.isPredifined()) {
-            enrichSportType();
-        } else {
-            sportType.setComingDays(-1);
-            sportType.setLeagueFilter(null);
-        }
-        boolean timesort = GameUtils.isTimeSort(screenProperty.getSpankyWindowConfig().isTimesort(),sportType.isTimeSort());
-        log("timesort?=" + timesort + "..allgames size=" + allgames.size());
-        Iterator<Game> ite = allgames.iterator();
-        while ( ite.hasNext()) {
-            Game g = ite.next();
-            if (!sportType.shouldSelect(g)) {
-                continue;
-            }
-            if (screenProperty.getSpankyWindowConfig().isShortteam()) {
-                maxlength = calcmaxlength(g.getShortvisitorteam(), g.getShorthometeam());
-            } else {
-                maxlength = calcmaxlength(g.getVisitorteam(), g.getHometeam());
-            }
-            if (maxlength > screenProperty.getCurrentmaxlength()) {
-                screenProperty.setCurrentmaxlength(maxlength);
-            }
-
-            if (null == g.getStatus()) {
-                g.setStatus("");
-            }
-            if (null == g.getTimeremaining()) {
-                g.setTimeremaining("");
-            }
-
-            GameGroupHeader gameGroupHeader;
-            GameStatus status = GameStatus.getGameStatus(g);
-            if ( null != status) {
-                gameGroupHeader = status.getGroupHeader();
-            } else {
-                gameGroupHeader = GameUtils.createGameGroupHeader(g);
-            }
-
-            LinesTableData tableSection = headerMap.computeIfAbsent(gameGroupHeader,(key)-> createLinesTableData(new Vector<>(), key));
-            tableSection.addOnInit(g);
-        }
-        long ct = AppController.getClearAllTime();
-        if (ct > screenProperty.getCleartime()) {
-            screenProperty.setCleartime(ct);
-        }
-    }
-
     private void drawIt() {
         ScrollablePanel tablePanel = new ScrollablePanel();
         tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
@@ -255,40 +157,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         JComponent mainTableContainer = makeMainTableScrollPane(getColumnCustomizableTable());
         add(mainTableContainer, BorderLayout.CENTER);
     }
-
-    private void enrichSportType() {
-        String[] prefs = sportType.getUserPerf().split("\\|");
-        String[] tmp = {};
-        boolean all = false;
-        sportType.setComingDays(Integer.parseInt(prefs[1]));
-        if (parseBoolean(prefs[0])) {
-            sportType.setTimeSort(true);
-//            this.timesort = true;
-        }
-
-        try {
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase(sportType.getSportName())) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-        } catch (Exception ex) {
-            log(ex);
-        }
-        sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-    }
-
-    public int calcmaxlength(String s1, String s2) {
-        return Math.max(s1.length(), s2.length());
-    }
-
-    public boolean isShowIngame() {
-        return sportType.isShowingame();
-    }
-
     public void setShowIngame(boolean b) {
         sportType.setShowingame(b);
     }
