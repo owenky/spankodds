@@ -2,8 +2,11 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
-import com.sia.client.model.Games;
-import com.sia.client.model.Sport;
+import com.sia.client.model.GameGroupAggregator;
+import com.sia.client.model.GameGroupDateSorter;
+import com.sia.client.model.GameGroupHeader;
+import com.sia.client.model.GameGroupLeagueSorter;
+import com.sia.client.model.GameGroupNode;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
@@ -20,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TreeExpansionEvent;
@@ -48,7 +50,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,12 +57,15 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
 public class CustomTab2 extends JPanel {
+
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final String UP_BUTTON_LABEL = "^";
     private static final String DOWN_BUTTON_LABEL = "v";
@@ -76,23 +80,23 @@ public class CustomTab2 extends JPanel {
     Vector customheaders = new Vector();
     Vector<String> illegalnames = new Vector<String>();
     Hashtable pathhash;
-    Hashtable nodehash = new Hashtable();
+//    Hashtable nodehash = new Hashtable();
     JTree jtree;
-    Vector gamegroupvec = new Vector();
-    Vector gamegroupheadervec = new Vector();
-    Vector currentvec = new Vector();
-    Vector gamesVec = new Vector();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+//    Vector gamegroupvec = new Vector();
+//    Vector gamegroupheadervec = new Vector();
+//    Vector currentvec = new Vector();
+//    Vector gamesVec = new Vector();
+//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
     JScrollPane jscrlp = new JScrollPane();
     int tabindex = -1;
     private InvisibleNode root = new InvisibleNode("Games");
-    private Hashtable sporthash = new Hashtable();
-    private Hashtable mainhash = new Hashtable();
+//    private Hashtable sporthash = new Hashtable();
+//    private Hashtable mainhash = new Hashtable();
     private JLabel sourceLabel;
-    private JList sourceList;
+    private JList<GameGroupNode> sourceList;
     private MyListModel2 sourceListModel;
-    private JList destList;
+    private JList<GameGroupNode> destList;
     private MyListModel2 destListModel;
     private JLabel destLabel;
     private JButton addButton;
@@ -154,13 +158,24 @@ public class CustomTab2 extends JPanel {
         initScreen("");
     }
 
+    private void addSportTypes(SportType st) {
+        InvisibleNode node = new InvisibleNode(st.getSportName());
+        root.add(node);
+        GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(st,false);
+        Map<GameGroupHeader, Vector<Game>> headerToGameListMap = gameGroupAggregator.aggregate();
+        List<GameGroupHeader> gameGroupHeaderList = headerToGameListMap.keySet().stream().sorted(new GameGroupDateSorter().thenComparing(new GameGroupLeagueSorter())).collect(Collectors.toList());
+        for(GameGroupHeader header: gameGroupHeaderList) {
+            List<Game> gameList = headerToGameListMap.get(header);
+            InvisibleNode child = new InvisibleNode(new GameGroupNode(header,gameList.size()));
+            node.add(child);
+        }
+    }
+
     public void init(String tabnamestr) {
 
 
         pathhash = new Hashtable();
         jlab = new JLabel();
-
-
         illegalnames.add("football");
         illegalnames.add("basketball");
         illegalnames.add("baseball");
@@ -171,245 +186,72 @@ public class CustomTab2 extends JPanel {
         illegalnames.add("golf");
         illegalnames.add("tennis");
 
+//        InvisibleNode football = new InvisibleNode("Football");
+//        InvisibleNode basketball = new InvisibleNode("Basketball");
+//        InvisibleNode baseball = new InvisibleNode("Baseball");
+//        InvisibleNode hockey = new InvisibleNode("Hockey");
+//        InvisibleNode fighting = new InvisibleNode("Fighting");
+//        InvisibleNode soccer = new InvisibleNode(SiaConst.SoccerStr);
+//        InvisibleNode autoracing = new InvisibleNode("Auto Racing");
+//        InvisibleNode golf = new InvisibleNode("Golf");
+//        InvisibleNode tennis = new InvisibleNode("Tennis");
 
-        InvisibleNode football = new InvisibleNode("Football");
-        InvisibleNode basketball = new InvisibleNode("Basketball");
-        InvisibleNode baseball = new InvisibleNode("Baseball");
-        InvisibleNode hockey = new InvisibleNode("Hockey");
-        InvisibleNode fighting = new InvisibleNode("Fighting");
-        InvisibleNode soccer = new InvisibleNode(SiaConst.SoccerStr);
-        InvisibleNode autoracing = new InvisibleNode("Auto Racing");
-        InvisibleNode golf = new InvisibleNode("Golf");
-        InvisibleNode tennis = new InvisibleNode("Tennis");
-
-
-        if (tabnamestr.equalsIgnoreCase("football")) {
-            root.add(football);
-        } else if (tabnamestr.equalsIgnoreCase("Basketball")) {
-            root.add(basketball);
-        } else if (tabnamestr.equalsIgnoreCase("Baseball")) {
-            root.add(baseball);
-        } else if (tabnamestr.equalsIgnoreCase("hockey")) {
-            root.add(hockey);
-        } else if (tabnamestr.equalsIgnoreCase("fighting")) {
-            root.add(fighting);
-        } else if (tabnamestr.equalsIgnoreCase(SiaConst.SoccerStr)) {
-            root.add(soccer);
-        } else if (tabnamestr.equalsIgnoreCase("Auto racing")) {
-            root.add(autoracing);
-        } else if (tabnamestr.equalsIgnoreCase("golf")) {
-            root.add(golf);
-        } else if (tabnamestr.equalsIgnoreCase("Tennis")) {
-            root.add(tennis);
+        SportType [] selectableTypes;
+        SportType selectedType = SportType.findBySportName(tabnamestr);
+        if ( null != selectedType) {
+            selectableTypes = new SportType[1];
+            selectableTypes[0] = selectedType;
         } else {
-            root.add(football);
-            root.add(basketball);
-            root.add(baseball);
-            root.add(hockey);
-            root.add(fighting);
-            root.add(soccer);
-            root.add(autoracing);
-            root.add(golf);
-            root.add(tennis);
+            selectableTypes = SportType.PreDefined;
+        }
+
+        for(SportType st: selectableTypes) {
+            addSportTypes(st);
         }
 
 
-        InvisibleNode currenttreenode;
-        Games allgames = AppController.getGamesVec();
-        String lastdate = "";
-        int lastleagueid = 0;
+//        for (int j = 0; j < gamegroupvec.size(); j++) {
+//            Vector thisvec = (Vector) gamegroupvec.elementAt(j);
+//            int numgames = thisvec.size();
+//            String title = "" + gamegroupheadervec.elementAt(j);
+//            InvisibleNode currenttreenode2 = (InvisibleNode) sporthash.get(title);
+//
+//            String value = (String) mainhash.get(title);
 //
 //
-//        try {
+//            if (numgames == 1) {
+//                title = title + " (" + numgames + " Event)";
+//            } else if (numgames > 1) {
+//                title = title + " (" + numgames + " Events)";
+//            }
 //
-//            allgames.sort(new GameLeagueSorter().thenComparing(new GameDateSorter().thenComparing(new GameNumSorter())));
-//            allgames.sort(new GameDateSorter());
-//            log("sorted by gm date");
-//            log("sorted by gm num");
+//            InvisibleNode childnode = new InvisibleNode(title);
 //
-//        } catch (Exception ex) {
-//            log(ex);
+//
+//            if (customheaders.contains(value)) {
+//                childnode.setVisible(false);
+//                nodehash.put(value, childnode);
+//                log("adding value=" + value + "..." + childnode.toString());
+//                //addDestinationElements(new Object[] {childnode});
+//            }
+//
+//            currenttreenode2.add(childnode);
+//
 //        }
-        Game g = null;
-        Iterator<Game> ite = allgames.iterator();
-        try {
-            while(ite.hasNext()){
-
-                int gameid = -1;
-                g = ite.next();
-
-
-                if (g == null) {
-                    log("skipping gameid=" + gameid + "...cuz of null game");
-                    continue;
-                } else {
-                    gameid = g.getGame_id();
-                }
-                if (g.getGamedate() == null) {
-                    log("skipping gameid=" + gameid + "...cuz of null game date");
-                    continue;
-                }
-
-                String gamedate = sdf.format(g.getGamedate());
-
-                int leagueid = g.getLeague_id();
-
-                Sport s = AppController.getSportByLeagueId(leagueid);
-
-                Sport s2;
-
-                if (s == null) {
-                    log("skipping " + leagueid + "...cuz of null sport");
-                    continue;
-                }
-
-                if (s.getSportname().equalsIgnoreCase("Football")) {
-                    currenttreenode = football;
-                } else if (s.getSportname().equalsIgnoreCase("Basketball")) {
-                    currenttreenode = basketball;
-                } else if (s.getSportname().equalsIgnoreCase("Baseball")) {
-                    currenttreenode = baseball;
-                } else if (s.getSportname().equalsIgnoreCase("Hockey")) {
-                    currenttreenode = hockey;
-                } else if (s.getSportname().equalsIgnoreCase("Fighting")) {
-                    currenttreenode = fighting;
-                } else if (s.getSportname().equalsIgnoreCase(SiaConst.SoccerStr)) {
-                    currenttreenode = soccer;
-                } else if (s.getSportname().equalsIgnoreCase("Auto Racing")) {
-                    currenttreenode = autoracing;
-                } else if (s.getSportname().equalsIgnoreCase("Golf")) {
-                    currenttreenode = golf;
-                } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
-                    currenttreenode = tennis;
-                } else {
-                    log("should never enter gameid=" + g.getGame_id());
-                    currenttreenode = football;
-
-                }
-
-
-                if (leagueid == SiaConst.SoccerLeagueId) // soccer need to look at subleagueid
-                {
-                    leagueid = g.getSubleague_id();
-                    s2 = AppController.getSportByLeagueId(leagueid);
-                } else {
-                    s2 = s;
-                }
-
-                if (s2 == null) {
-                    log("skipping " + leagueid + "...cuz of null sport2");
-                    continue;
-                }
-                String description = g.getDescription();
-                if (description == null || description.equalsIgnoreCase("null")) {
-                    description = "";
-                }
-
-                if (g.getStatus() == null) {
-                    g.setStatus("");
-                }
-                if (g.getTimeremaining() == null) {
-                    g.setTimeremaining("");
-                }
-
-
-                if (g.getStatus().equalsIgnoreCase("Tie") || g.getStatus().equalsIgnoreCase("Cncld") || g.getStatus().equalsIgnoreCase("Poned") || g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)
-                        || g.getStatus().equalsIgnoreCase("Win") || (g.getTimeremaining().equalsIgnoreCase("Win"))
-
-                ) {
-
-                    //finalgames.add(g);
-                    //log("skipping "+g.getGame_id());
-                    continue;
-
-                }
-                // adding inprogress games to custyom tabs!
-                //else if(!g.getStatus().equalsIgnoreCase("NULL") && !g.getStatus().equals(""))
-                //{
-                //	continue;
-                //inprogressgames.add(g);
-                //}
-                else if (g.isSeriesprice()) {
-                    continue;
-                    //seriesgames.add(g);
-                } else if (g.isForprop()) {
-                    continue;
-                    //seriesgames.add(g);
-                } else if (g.isIngame() || description.indexOf("In-Game") != -1) {
-                    continue;
-                    //ingamegames.add(g);
-                } else if (!lastdate.equals(gamedate) || lastleagueid != leagueid) // new date or new league!
-                {
-                    if (lastleagueid <= 4 || leagueid <= 4) {
-                        //log("new!...lastdate="+lastdate+"..gamedate="+g.getGamedate()+".."+lastleagueid+"..new="+leagueid);
-                    }
-                    lastdate = gamedate;
-                    lastleagueid = leagueid;
-                    gamegroupheadervec.add(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()));
-
-                    //	currenttreenode.add(new InvisibleNode(s2.getLeaguename()+" "+sdf2.format(g.getGamedate())));
-                    sporthash.put(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()), currenttreenode);
-                    mainhash.put(s2.getLeaguename() + " " + sdf2.format(g.getGamedate()), leagueid + " " + sdf2.format(g.getGamedate()));
-                    Vector v2 = new Vector();
-                    //v2.add(gameid);
-                    v2.add(g);
-                    gamegroupvec.add(v2);
-                    currentvec = v2;
-                } else // same date
-                {
-                    //currentvec.add(gameid);
-                    currentvec.add(g);
-
-                }
-
-
-            }
-        } catch (Exception ex) {
-            log("game=" + g.getGame_id() + "...leagueid=" + g.getLeague_id() + "..subleagueid=" + g.getSubleague_id());
-            log(ex);
-        }
-        for (int j = 0; j < gamegroupvec.size(); j++) {
-            Vector thisvec = (Vector) gamegroupvec.elementAt(j);
-            int numgames = thisvec.size();
-            String title = "" + gamegroupheadervec.elementAt(j);
-            InvisibleNode currenttreenode2 = (InvisibleNode) sporthash.get(title);
-
-            String value = (String) mainhash.get(title);
-
-
-            if (numgames == 1) {
-                title = title + " (" + numgames + " Event)";
-            } else if (numgames > 1) {
-                title = title + " (" + numgames + " Events)";
-            }
-
-            InvisibleNode childnode = new InvisibleNode(title);
-
-
-            if (customheaders.contains(value)) {
-                childnode.setVisible(false);
-                nodehash.put(value, childnode);
-                log("adding value=" + value + "..." + childnode.toString());
-                //addDestinationElements(new Object[] {childnode});
-            }
-
-            currenttreenode2.add(childnode);
-
-        }
-
-        for (int z = 0; z < customheaders.size(); z++) {
-            String key = (String) customheaders.elementAt(z);
-            log("key=" + key);
-            InvisibleNode node = (InvisibleNode) nodehash.get(key);
-            if (node != null) {
-                log(" not null");
-                pathhash.put(node.toString(), new TreePath(node.getPath()));
-                node.setVisible(false);
-                addDestinationElements(new Object[]{node});
-            } else {
-                log(" is null");
-            }
-        }
+//
+//        for (int z = 0; z < customheaders.size(); z++) {
+//            String key = (String) customheaders.elementAt(z);
+//            log("key=" + key);
+//            InvisibleNode node = (InvisibleNode) nodehash.get(key);
+//            if (node != null) {
+//                log(" not null");
+//                pathhash.put(node.toString(), new TreePath(node.getPath()));
+//                node.setVisible(false);
+//                addDestinationElements(new Object[]{node});
+//            } else {
+//                log(" is null");
+//            }
+//        }
 
 
         InvisibleTreeModel ml = new InvisibleTreeModel(root);
@@ -530,9 +372,7 @@ public class CustomTab2 extends JPanel {
 
                         if (pathhash.get(node.toString()) == null) // not there already
                         {
-
-
-                            addDestinationElements(new Object[]{selPath.getLastPathComponent()});
+                            addDestinationElements( (GameGroupNode)selPath.getLastPathComponent());
 
                             log("node=" + node.toString() + "..");
                             pathhash.put(node.toString(), selPath);
@@ -677,19 +517,19 @@ public class CustomTab2 extends JPanel {
 
     }
 
-    public void addDestinationElements(Object newValue[]) {
+    public void addDestinationElements(GameGroupNode ... newValue) {
         fillListModel(destListModel, newValue);
     }
 
     private void clearDestinationSelected() {
-        Object selected[] = destList.getSelectedValues();
-        for (int i = selected.length - 1; i >= 0; --i) {
-            destListModel.removeElement(selected[i]);
+        List<GameGroupNode> selected = destList.getSelectedValuesList();
+        for (int i = selected.size() - 1; i >= 0; --i) {
+            destListModel.removeElement(selected.get(i));
         }
         destList.getSelectionModel().clearSelection();
     }
 
-    private void fillListModel(MyListModel2 model, Object newValues[]) {
+    private void fillListModel(MyListModel2 model, GameGroupNode[] newValues) {
         model.addAll(newValues);
     }
 
@@ -812,7 +652,7 @@ public class CustomTab2 extends JPanel {
         destListModel.clear();
     }
 
-    public void setSourceElements(ListModel newValue) {
+    public void setSourceElements(ListModel<GameGroupNode> newValue) {
         clearSourceListModel();
         addSourceElements(newValue);
     }
@@ -821,11 +661,11 @@ public class CustomTab2 extends JPanel {
         sourceListModel.clear();
     }
 
-    public void addSourceElements(ListModel newValue) {
+    public void addSourceElements(ListModel<GameGroupNode> newValue) {
         fillListModel(sourceListModel, newValue);
     }
 
-    private void fillListModel(MyListModel2 model, ListModel newValues) {
+    private void fillListModel(MyListModel2 model, ListModel<GameGroupNode> newValues) {
         int size = newValues.getSize();
         for (int i = 0; i < size; i++) {
             model.add(newValues.getElementAt(i));
@@ -833,97 +673,97 @@ public class CustomTab2 extends JPanel {
         }
     }
 
-    public void addDestinationElements(ListModel newValue) {
+    public void addDestinationElements(ListModel<GameGroupNode> newValue) {
         fillListModel(destListModel, newValue);
     }
 
-    public void setSourceElements(Object newValue[]) {
+    public void setSourceElements(GameGroupNode[] newValue) {
         clearSourceListModel();
         addSourceElements(newValue);
     }
 
-    public void addSourceElements(Object newValue[]) {
+    public void addSourceElements(GameGroupNode[] newValue) {
         fillListModel(sourceListModel, newValue);
     }
 
-    public Iterator sourceIterator() {
-        return sourceListModel.iterator();
-    }
+//    public Iterator<GameGroupNode> sourceIterator() {
+//        return sourceListModel.iterator();
+//    }
+//
+//    public Iterator<GameGroupNode> destinationIterator() {
+//        return destListModel.iterator();
+//    }
+//
+//    public ListCellRenderer<GameGroupNode> getSourceCellRenderer() {
+//        return sourceList.getCellRenderer();
+//    }
 
-    public Iterator destinationIterator() {
-        return destListModel.iterator();
-    }
-
-    public ListCellRenderer getSourceCellRenderer() {
-        return sourceList.getCellRenderer();
-    }
-
-    public void setSourceCellRenderer(ListCellRenderer newValue) {
-        sourceList.setCellRenderer(newValue);
-    }
-
-    public ListCellRenderer getDestinationCellRenderer() {
-        return destList.getCellRenderer();
-    }
-
-    public void setDestinationCellRenderer(ListCellRenderer newValue) {
-        destList.setCellRenderer(newValue);
-    }
-
-    public int getVisibleRowCount() {
-        return sourceList.getVisibleRowCount();
-    }
-
-    public void setVisibleRowCount(int newValue) {
-        sourceList.setVisibleRowCount(newValue);
-        destList.setVisibleRowCount(newValue);
-    }
-
-    public Color getSelectionBackground() {
-        return sourceList.getSelectionBackground();
-    }
-
-    public void setSelectionBackground(Color newValue) {
-        sourceList.setSelectionBackground(newValue);
-        destList.setSelectionBackground(newValue);
-    }
-
-    public Color getSelectionForeground() {
-        return sourceList.getSelectionForeground();
-    }
-
-    public void setSelectionForeground(Color newValue) {
-        sourceList.setSelectionForeground(newValue);
-        destList.setSelectionForeground(newValue);
-    }
-
-    private void clearSourceSelected() {
-        Object selected[] = sourceList.getSelectedValues();
-        for (int i = selected.length - 1; i >= 0; --i) {
-            sourceListModel.removeElement(selected[i]);
-        }
-        sourceList.getSelectionModel().clearSelection();
-    }
+//    public void setSourceCellRenderer(ListCellRenderer newValue) {
+//        sourceList.setCellRenderer(newValue);
+//    }
+//
+//    public ListCellRenderer<GameGroupNode> getDestinationCellRenderer() {
+//        return destList.getCellRenderer();
+//    }
+//
+//    public void setDestinationCellRenderer(ListCellRenderer<GameGroupNode> newValue) {
+//        destList.setCellRenderer(newValue);
+//    }
+//
+//    public int getVisibleRowCount() {
+//        return sourceList.getVisibleRowCount();
+//    }
+//
+//    public void setVisibleRowCount(int newValue) {
+//        sourceList.setVisibleRowCount(newValue);
+//        destList.setVisibleRowCount(newValue);
+//    }
+//
+//    public Color getSelectionBackground() {
+//        return sourceList.getSelectionBackground();
+//    }
+//
+//    public void setSelectionBackground(Color newValue) {
+//        sourceList.setSelectionBackground(newValue);
+//        destList.setSelectionBackground(newValue);
+//    }
+//
+//    public Color getSelectionForeground() {
+//        return sourceList.getSelectionForeground();
+//    }
+//
+//    public void setSelectionForeground(Color newValue) {
+//        sourceList.setSelectionForeground(newValue);
+//        destList.setSelectionForeground(newValue);
+//    }
+//
+//    private void clearSourceSelected() {
+//        Object selected[] = sourceList.getSelectedValues();
+//        for (int i = selected.length - 1; i >= 0; --i) {
+//            sourceListModel.removeElement(selected[i]);
+//        }
+//        sourceList.getSelectionModel().clearSelection();
+//    }
 
     private void clearSourceAll() {
-        Object selected[] = ((MyListModel2) sourceList.getModel()).toArray();
+        Object[] selected = ((MyListModel2) sourceList.getModel()).toArray();
         for (int i = selected.length - 1; i >= 0; --i) {
-            sourceListModel.removeElement(selected[i]);
+            sourceListModel.removeElement((GameGroupNode)selected[i]);
         }
         sourceList.getSelectionModel().clearSelection();
     }
 
     private void clearDestinationAll() {
-        Object selected[] = ((MyListModel2) destList.getModel()).toArray();
+        Object[] selected = ((MyListModel2) destList.getModel()).toArray();
         for (int i = selected.length - 1; i >= 0; --i) {
-            destListModel.removeElement(selected[i]);
+            destListModel.removeElement((GameGroupNode)selected[i]);
         }
         destList.getSelectionModel().clearSelection();
     }
 
     private class MoveUpListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Object selected[] = destList.getSelectedValues();
+            List<GameGroupNode> selected = destList.getSelectedValuesList();
             int[] selectedindices = destList.getSelectedIndices();
 
 
@@ -945,7 +785,7 @@ public class CustomTab2 extends JPanel {
         public void actionPerformed(ActionEvent e) {
             String tab = tabname.getText().trim();
             String tablc = tab.toLowerCase();
-            Vector selectedlist = ((MyListModel2) destList.getModel()).getModelVec();
+            List<GameGroupNode> selectedlist = ((MyListModel2) destList.getModel()).getModelVec();
             if (!AppController.getMainTabPane().isTabNameAvailable(tab) && !editing) {
                 JOptionPane.showMessageDialog(null, tab + " name is taken!");
                 return;
@@ -953,7 +793,7 @@ public class CustomTab2 extends JPanel {
             {
                 JOptionPane.showMessageDialog(null, tab + " name is taken by system! Try something else.");
                 return;
-            } else if (tab.indexOf("~") != -1 || tab.indexOf("|") != -1 || tab.indexOf("*") != -1 || tab.indexOf(",") != -1 || tab.indexOf("!") != -1 || tab.indexOf("?") != -1) {
+            } else if (tab.contains("~") || tab.contains("|") || tab.contains("*") || tab.contains(",") || tab.contains("!") || tab.contains("?")) {
                 JOptionPane.showMessageDialog(null, "Illegal character(s) used!");
                 return;
             } else if (tab.equals("")) {
@@ -965,12 +805,9 @@ public class CustomTab2 extends JPanel {
             }
             List<String> customvec = new ArrayList<>();
             StringBuilder msstring = new StringBuilder();
-            for (Object o : selectedlist) {
-                String s = o.toString();
-                s = s.substring(0, s.indexOf("("));
-                s = s.trim();
-                customvec.add(s);
-                msstring.append("|").append(mainhash.get(s));
+            for (GameGroupNode ggn : selectedlist) {
+                customvec.add(ggn.getGameGroupHeader());
+                msstring.append("|").append(ggn.getLeagueId()).append(" ").append(ggn.getDateString());
 
             }
 
@@ -1017,7 +854,7 @@ public class CustomTab2 extends JPanel {
     }
     private class MoveDownListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Object[] selected = destList.getSelectedValues();
+            List<GameGroupNode> selected = destList.getSelectedValuesList();
             int[] selectedindices = destList.getSelectedIndices();
 
 
@@ -1046,9 +883,8 @@ public class CustomTab2 extends JPanel {
                     InvisibleNode node = (InvisibleNode) selPath.getLastPathComponent();
                     if (pathhash.get(node.toString()) == null) // not there already
                     {
-
-
-                        addDestinationElements(new Object[]{selPath.getLastPathComponent()});
+                        DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode)selPath.getLastPathComponent();
+                        addDestinationElements((GameGroupNode) lastPathComponent.getUserObject());
 
                         log("node=" + node.toString() + "..");
                         pathhash.put(node.toString(), selPath);
@@ -1069,7 +905,7 @@ public class CustomTab2 extends JPanel {
 
     private class AddAllListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Object selected[] = ((MyListModel2) sourceList.getModel()).toArray();
+            GameGroupNode[] selected = ((MyListModel2) sourceList.getModel()).toArray();
             addDestinationElements(selected);
             clearSourceAll();
         }
@@ -1077,18 +913,17 @@ public class CustomTab2 extends JPanel {
 
     private class RemoveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Object selected[] = destList.getSelectedValues();
+            List<GameGroupNode> selected = destList.getSelectedValuesList();
 
-            for (int i = 0; i < selected.length; i++) {
+            for (final GameGroupNode o : selected) {
 
-                TreePath tp = (TreePath) pathhash.get(selected[i] + "");
+                TreePath tp = (TreePath) pathhash.get(o + "");
                 log("treepath=" + tp);
                 InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
                 node.setVisible(true);
                 ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
-                pathhash.remove(selected[i] + "");
+                pathhash.remove(o + "");
             }
-
 
             clearDestinationSelected();
         }
@@ -1096,16 +931,16 @@ public class CustomTab2 extends JPanel {
 
     private class RemoveAllListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Object selected[] = ((MyListModel2) destList.getModel()).toArray();
+            GameGroupNode[] selected = ((MyListModel2) destList.getModel()).toArray();
             addSourceElements(selected);
-            for (int i = 0; i < selected.length; i++) {
+            for (final Object o : selected) {
 
-                TreePath tp = (TreePath) pathhash.get(selected[i] + "");
+                TreePath tp = (TreePath) pathhash.get(o + "");
                 log("treepath=" + tp);
                 InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
                 node.setVisible(true);
                 ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
-                pathhash.remove(selected[i] + "");
+                pathhash.remove(o + "");
             }
             clearDestinationAll();
         }
@@ -1114,28 +949,27 @@ public class CustomTab2 extends JPanel {
 
 }
 
-class MyListModel2 extends AbstractListModel {
+class MyListModel2 extends AbstractListModel<GameGroupNode> {
 
-    Vector model;
+    Vector<GameGroupNode> model;
 
     public MyListModel2() {
-        model = new Vector();
+        model = new Vector<>();
     }
-
-    public Vector getModelVec() {
+    public Vector<GameGroupNode> getModelVec() {
         return model;
     }
 
-    public void moveUp(Object[] values) {
+    public void moveUp(List<GameGroupNode> values) {
 
-        for (int i = 0; i < values.length; i++) {
-            int firstindex = model.indexOf(values[i]);
-            Object selected = values[i];
+        for (final GameGroupNode value : values) {
+            int firstindex = model.indexOf(value);
+//            GameGroupNode selected = value;
             if (firstindex == 0) {
                 break;
             } else {
-                Object tempobj = model.get(firstindex - 1);
-                model.set(firstindex - 1, selected);
+                GameGroupNode tempobj = model.get(firstindex - 1);
+                model.set(firstindex - 1, value);
                 model.set(firstindex, tempobj);
                 fireContentsChanged(this, 0, getSize());
             }
@@ -1147,21 +981,20 @@ class MyListModel2 extends AbstractListModel {
     public int getSize() {
         return model.size();
     }
-
-    public Object getElementAt(int index) {
-        return model.toArray()[index];
+    @Override
+    public GameGroupNode getElementAt(int index) {
+        return model.get(index);
     }
 
-    public void moveDown(Object[] values) {
+    public void moveDown(List<GameGroupNode> values) {
 
-        //  for(int i=0; i <values.length; i++)
-        for (int i = values.length - 1; i >= 0; i--) {
-            int firstindex = model.indexOf(values[i]);
-            Object selected = values[i];
+        for (int i = values.size() - 1; i >= 0; i--) {
+            int firstindex = model.indexOf(values.get(i));
+            GameGroupNode selected = values.get(i);
             if (firstindex == model.size() - 1) {
                 break;
             } else {
-                Object tempobj = model.get(firstindex + 1);
+                GameGroupNode tempobj = model.get(firstindex + 1);
                 model.set(firstindex + 1, selected);
                 model.set(firstindex, tempobj);
                 fireContentsChanged(this, 0, getSize());
@@ -1172,14 +1005,13 @@ class MyListModel2 extends AbstractListModel {
 
     }
 
-    public void add(Object element) {
+    public void add(GameGroupNode element) {
         if (model.add(element)) {
             fireContentsChanged(this, 0, getSize());
         }
     }
-
-    public void addAll(Object elements[]) {
-        Collection c = Arrays.asList(elements);
+    public void addAll(GameGroupNode[] elements) {
+        Collection<GameGroupNode> c = Arrays.asList(elements);
         model.addAll(c);
         fireContentsChanged(this, 0, getSize());
     }
@@ -1189,21 +1021,19 @@ class MyListModel2 extends AbstractListModel {
         fireContentsChanged(this, 0, getSize());
     }
 
-    public boolean contains(Object element) {
+    public boolean contains(GameGroupNode element) {
         return model.contains(element);
     }
 
-
-    public Iterator iterator() {
+    public Iterator<GameGroupNode> iterator() {
         return model.iterator();
     }
 
-
-    public Object[] toArray() {
-        return model.toArray();
+    public GameGroupNode[] toArray() {
+        return model.toArray(new GameGroupNode[0]);
     }
 
-    public boolean removeElement(Object element) {
+    public boolean removeElement(GameGroupNode element) {
         boolean removed = model.remove(element);
         if (removed) {
             fireContentsChanged(this, 0, getSize());

@@ -9,7 +9,6 @@ import com.sia.client.ui.LinesTableData;
 import javax.swing.table.TableColumn;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -30,56 +29,47 @@ public class ScreenGameModel {
         this.sportType = sportType;
     }
     public void build() {
+
+        GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(sportType,true);
+        Map<GameGroupHeader, Vector<Game>> headerListMap = gameGroupAggregator.aggregate();
+        updateCurrentMaxLength(headerListMap);
         allColumns = createColumns();
-        headerMap = new HashMap<>();
-        screenProperty.setCurrentmaxlength(0);
+        headerMap = new HashMap<>(headerListMap.size());
 
-        Games allgames = AppController.getGamesVec();
-        if (sportType.isPredifined()) {
-            enrichSportType();
-        } else {
-            sportType.setComingDays(-1);
-            sportType.setLeagueFilter(null);
-        }
         boolean timesort = GameUtils.isTimeSort(screenProperty.getSpankyWindowConfig().isTimesort(),sportType.isTimeSort());
-        log("timesort?=" + timesort + "..allgames size=" + allgames.size());
-        Iterator<Game> ite = allgames.iterator();
-        while ( ite.hasNext()) {
-            Game g = ite.next();
-            if (!sportType.shouldSelect(g)) {
-                continue;
-            }
-            if (screenProperty.getSpankyWindowConfig().isShortteam()) {
-                maxlength = calcmaxlength(g.getShortvisitorteam(), g.getShorthometeam());
-            } else {
-                maxlength = calcmaxlength(g.getVisitorteam(), g.getHometeam());
-            }
-            if (maxlength > screenProperty.getCurrentmaxlength()) {
-                screenProperty.setCurrentmaxlength(maxlength);
-            }
+        log("timesort?=" + timesort + "..allgames size=" + headerListMap.size());
 
-            if (null == g.getStatus()) {
-                g.setStatus("");
-            }
-            if (null == g.getTimeremaining()) {
-                g.setTimeremaining("");
-            }
+        headerListMap.keySet().forEach(gameGroupHeader-> {
+            Vector<Game> games = headerListMap.get(gameGroupHeader);
+            LinesTableData tableSection = createLinesTableData(games, gameGroupHeader);
+            headerMap.put(gameGroupHeader,tableSection);
+        });
 
-            GameGroupHeader gameGroupHeader;
-            GameStatus status = GameStatus.getGameStatus(g);
-            if ( null != status) {
-                gameGroupHeader = status.getGroupHeader();
-            } else {
-                gameGroupHeader = GameUtils.createGameGroupHeader(g);
-            }
-
-            LinesTableData tableSection = headerMap.computeIfAbsent(gameGroupHeader,(key)-> createLinesTableData(new Vector<>(), key));
-            tableSection.addOnInit(g);
-        }
         long ct = AppController.getClearAllTime();
         if (ct > screenProperty.getCleartime()) {
             screenProperty.setCleartime(ct);
         }
+    }
+    private void updateCurrentMaxLength(Map<GameGroupHeader, Vector<Game>> headerMap) {
+        screenProperty.setCurrentmaxlength(0);
+        headerMap.values().stream().flatMap(Collection::stream)
+                .forEach(g-> {
+                    if (screenProperty.getSpankyWindowConfig().isShortteam()) {
+                        maxlength = calcmaxlength(g.getShortvisitorteam(), g.getShorthometeam());
+                    } else {
+                        maxlength = calcmaxlength(g.getVisitorteam(), g.getHometeam());
+                    }
+                    if (maxlength > screenProperty.getCurrentmaxlength()) {
+                        screenProperty.setCurrentmaxlength(maxlength);
+                    }
+
+                    if (null == g.getStatus()) {
+                        g.setStatus("");
+                    }
+                    if (null == g.getTimeremaining()) {
+                        g.setTimeremaining("");
+                    }
+                });
     }
     private Vector<TableColumn> createColumns() {
         Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
@@ -130,30 +120,6 @@ public class ScreenGameModel {
     }
     public Vector<TableColumn> getAllTableColumns() {
         return allColumns;
-    }
-    private void enrichSportType() {
-        String[] prefs = sportType.getUserPerf().split("\\|");
-        String[] tmp = {};
-        boolean all = false;
-        sportType.setComingDays(Integer.parseInt(prefs[1]));
-        if (parseBoolean(prefs[0])) {
-            sportType.setTimeSort(true);
-//            this.timesort = true;
-        }
-
-        try {
-            if (prefs.length > 2) {
-                tmp = prefs[2].split(",");
-                if (tmp[0].equalsIgnoreCase(sportType.getSportName())) {
-                    all = true;
-                }
-                setShowProperties(prefs);
-            }
-
-        } catch (Exception ex) {
-            log(ex);
-        }
-        sportType.setLeagueFilter(new LeagueFilter(tmp, all));
     }
     private void setShowProperties(String[] prefs) {
         screenProperty.setShowheaders(parseBoolean(prefs[3]));

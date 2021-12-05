@@ -128,11 +128,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 }
 
             }
-            List<String> customheaderStrList = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
-            SportType customerizedSportType = SportType.createCustomizedSportType(name, customheaderStrList);
-            MainScreen msnew = new MainScreen(customerizedSportType, spankyWindowConfig, showheaders, showseries, showingame, showadded, showextra, showprops);
-            addMainScreenToCache(msnew);
-            addTab(name, null, msnew, name);
+            try {
+                List<String> customheaderStrList = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
+                SportType customerizedSportType = SportType.createCustomizedSportType(name, customheaderStrList);
+                MainScreen msnew = new MainScreen(customerizedSportType, spankyWindowConfig, showheaders, showseries, showingame, showadded, showextra, showprops);
+                addMainScreenToCache(msnew);
+                addTab(name, null, msnew, name);
+            } catch ( Exception e) {
+                log("Error parsing custom tab:"+customheaders+"|",e);
+            }
         }
         addTab("+", null, null, "+");
 

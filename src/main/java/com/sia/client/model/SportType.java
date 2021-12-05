@@ -37,6 +37,7 @@ public class SportType {
     //TODO what is abbr for tennis
     public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12,()->AppController.getUser().getTennisPref(),null);
     public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,null,getTodayMyTypeSelector());
+    public static final SportType [] PreDefined = {SportType.Football,SportType.Basketball,SportType.Baseball,SportType.Hockey,SportType.Fighting,SportType.Soccer,SportType.AutoRacing,SportType.Golf,SportType.Tennis};
 
     public static boolean isPredefinedSport(String sportName) {
         SportType st = findBySportName(sportName);
