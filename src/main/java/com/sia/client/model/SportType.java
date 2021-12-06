@@ -55,7 +55,7 @@ public class SportType {
         return instanceMap.values().stream().filter(st->st.isMyType(game)).collect(Collectors.toList());
     }
     public static SportType findPredefinedByGame(Game game) {
-        Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).findFirst();
+        Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).filter(SportType::isPredifined).findFirst();
         return stOpt.orElse(null);
     }
     public static SportType createCustomizedSportType(String name,List<String> customizedHeaders) {
@@ -94,6 +94,22 @@ public class SportType {
         this.myTypeSelector = null == myTypeSelector?getDefaultMyTypeSelector():myTypeSelector;
         instanceMap.put(normalizeName(sportName),this);
     }
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final SportType sportType = (SportType) o;
+        return Objects.equals(sportName, sportType.sportName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sportName);
+    }
     public void setCustomheaders(List<String> customheaders) {
         this.customheaders = customheaders;
         setMyTypeSelector(this.customheaders);
@@ -111,22 +127,6 @@ public class SportType {
 
     public int getSportId() {
         return sportId;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final SportType sportType = (SportType) o;
-        return Objects.equals(sportName, sportType.sportName);
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(sportName);
     }
 
     public String getIcon() {
@@ -283,6 +283,11 @@ public class SportType {
         }
     }
     private boolean isFilteredByConfig(Game g) {
+        if (!  isPredifined()) {
+            SportType preDefinedSt = SportType.findPredefinedByGame(g);
+            return preDefinedSt.isFilteredByConfig(g);
+        }
+        //predefined sport type filter
         if ( seriesPriceConfig(g) || addedConfig(g) || extraConfig(g) || forPropConfig(g)) {
             return true;
         }

@@ -79,6 +79,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     private MainGameTableModel buildModel() {
 
+        screenGameModel = new ScreenGameModel(screenProperty,sportType);
+        screenGameModel.build();
         MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,screenGameModel.getAllTableColumns());
 
         Collection<LinesTableData> tableSections = screenGameModel.getTableSections();
@@ -138,8 +140,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.setOpaque(true);
         add(loadlabel);
         enrichSportType();
-        screenGameModel = new ScreenGameModel(screenProperty,sportType);
-        screenGameModel.build();
         drawIt();
         log("done drawing");
     }
