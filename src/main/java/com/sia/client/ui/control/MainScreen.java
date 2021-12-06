@@ -6,7 +6,6 @@ import com.sia.client.model.AbstractScreen;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.GameStatus;
-import com.sia.client.model.LeagueFilter;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.ScreenGameModel;
 import com.sia.client.model.ScreenProperty;
@@ -35,7 +34,6 @@ import java.util.Vector;
 import java.util.function.Function;
 
 import static com.sia.client.config.Utils.log;
-import static java.lang.Boolean.parseBoolean;
 
 public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
@@ -139,7 +137,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
         add(loadlabel);
-        enrichSportType();
+        sportType.enrichSportType();
+        screenProperty.setShowheaders(sportType.isShowHeaders());
         drawIt();
         log("done drawing");
     }
@@ -166,44 +165,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     private JComponent makeMainTableScrollPane(MainGameTable table) {
         return TableUtils.configTableLockColumns(table, AppController.getNumFixedCols());
     }
-    private void enrichSportType() {
-        String userPrefStr = sportType.getUserPerf();
-        if ( null != userPrefStr) { // predefined sport type
-            String[] prefs = userPrefStr.split("\\|");
-            String[] tmp = {};
-            boolean all = false;
-            sportType.setComingDays(Integer.parseInt(prefs[1]));
-            if (parseBoolean(prefs[0])) {
-                sportType.setTimeSort(true);
-            }
-
-            try {
-                if (prefs.length > 2) {
-                    tmp = prefs[2].split(",");
-                    if (tmp[0].equalsIgnoreCase(sportType.getSportName())) {
-                        all = true;
-                    }
-                    setShowProperties(prefs);
-                }
-
-            } catch (Exception ex) {
-                log(ex);
-            }
-            sportType.setLeagueFilter(new LeagueFilter(tmp, all));
-        } else { // customized sport type
-            sportType.setComingDays(-1);
-            sportType.setLeagueFilter(null);
-        }
-    }
-    private void setShowProperties(String[] prefs) {
-        screenProperty.setShowheaders(parseBoolean(prefs[3]));
-        sportType.setShowseries(parseBoolean(prefs[4]));
-        sportType.setShowingame(parseBoolean(prefs[5]));
-        sportType.setShowAdded(parseBoolean(prefs[6]));
-        sportType.setShowExtra(parseBoolean(prefs[7]));
-        sportType.setShowProps(parseBoolean(prefs[8]));
-    }
-
     private static MainGameTable createMainGameTable(MainGameTableModel model, String name) {
         MainGameTable table = new MainGameTable(model);
         table.setIntercellSpacing(new Dimension(4, 2));

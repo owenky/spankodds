@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
+import static java.lang.Boolean.parseBoolean;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
@@ -80,6 +81,7 @@ public class SportType {
     private boolean showAdded = true;
     private boolean showExtra = true;
     private boolean showProps = true;
+    private boolean showHeaders = true;
     private boolean isTimeSort;
     private Function<Game,Boolean> myTypeSelector;
     private List<String> customheaders = new ArrayList<>();
@@ -93,6 +95,7 @@ public class SportType {
         this.perfSupplier = perfSupplier;
         this.myTypeSelector = null == myTypeSelector?getDefaultMyTypeSelector():myTypeSelector;
         instanceMap.put(normalizeName(sportName),this);
+        enrichSportType();
     }
     @Override
     public boolean equals(final Object o) {
@@ -150,6 +153,12 @@ public class SportType {
 
     public boolean isShowseries() {
         return showseries;
+    }
+    public boolean isShowHeaders() {
+        return showHeaders;
+    }
+    public void setShowheaders(final boolean showHeader) {
+        this.showHeaders = showHeader;
     }
     public void setShowseries(final boolean showseries) {
         this.showseries = showseries;
@@ -275,7 +284,44 @@ public class SportType {
     public String toString() {
         return sportName+"/"+sportId+":"+identityLeagueId;
     }
-    public String getUserPerf() {
+    public void enrichSportType() {
+        String userPrefStr = getUserPerf();
+        if ( null != userPrefStr) { // predefined sport type
+            String[] prefs = userPrefStr.split("\\|");
+            String[] tmp = {};
+            boolean all = false;
+            setComingDays(Integer.parseInt(prefs[1]));
+            if (parseBoolean(prefs[0])) {
+                setTimeSort(true);
+            }
+
+            try {
+                if (prefs.length > 2) {
+                    tmp = prefs[2].split(",");
+                    if (tmp[0].equalsIgnoreCase(getSportName())) {
+                        all = true;
+                    }
+                    setShowProperties(prefs);
+                }
+
+            } catch (Exception ex) {
+                log(ex);
+            }
+            setLeagueFilter(new LeagueFilter(tmp, all));
+        } else { // customized sport type
+            setComingDays(-1);
+            setLeagueFilter(null);
+        }
+    }
+    private void setShowProperties(String[] prefs) {
+        setShowheaders(parseBoolean(prefs[3]));
+        setShowseries(parseBoolean(prefs[4]));
+        setShowingame(parseBoolean(prefs[5]));
+        setShowAdded(parseBoolean(prefs[6]));
+        setShowExtra(parseBoolean(prefs[7]));
+        setShowProps(parseBoolean(prefs[8]));
+    }
+    private String getUserPerf() {
         if ( null != perfSupplier) {
             return this.perfSupplier.get();
         } else {
