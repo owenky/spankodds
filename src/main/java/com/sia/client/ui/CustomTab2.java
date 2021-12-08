@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -158,7 +159,7 @@ public class CustomTab2 extends JPanel {
         initScreen("");
     }
 
-    private void addSportTypes(SportType st) {
+    private void addSportTypes(SportType st,Map<String,GameGroupNode> gameGroupNodeMap) {
         InvisibleNode node = new InvisibleNode(st.getSportName());
         root.add(node);
         GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(st,false);
@@ -166,7 +167,9 @@ public class CustomTab2 extends JPanel {
         List<GameGroupHeader> gameGroupHeaderList = headerToGameListMap.keySet().stream().sorted(new GameGroupDateSorter().thenComparing(new GameGroupLeagueSorter())).collect(Collectors.toList());
         for(GameGroupHeader header: gameGroupHeaderList) {
             List<Game> gameList = headerToGameListMap.get(header);
-            InvisibleNode child = new InvisibleNode(new GameGroupNode(header,gameList.size()));
+            GameGroupNode ggn = new GameGroupNode(header,gameList.size());
+            InvisibleNode child = new InvisibleNode(ggn);
+            gameGroupNodeMap.put(header.getGameGroupHeaderStr(),ggn);
             node.add(child);
         }
     }
@@ -186,72 +189,36 @@ public class CustomTab2 extends JPanel {
         illegalnames.add("golf");
         illegalnames.add("tennis");
 
-//        InvisibleNode football = new InvisibleNode("Football");
-//        InvisibleNode basketball = new InvisibleNode("Basketball");
-//        InvisibleNode baseball = new InvisibleNode("Baseball");
-//        InvisibleNode hockey = new InvisibleNode("Hockey");
-//        InvisibleNode fighting = new InvisibleNode("Fighting");
-//        InvisibleNode soccer = new InvisibleNode(SiaConst.SoccerStr);
-//        InvisibleNode autoracing = new InvisibleNode("Auto Racing");
-//        InvisibleNode golf = new InvisibleNode("Golf");
-//        InvisibleNode tennis = new InvisibleNode("Tennis");
 
         SportType [] selectableTypes;
-        SportType selectedType = SportType.findBySportName(tabnamestr);
-        if ( null != selectedType) {
+        final SportType selectedType = SportType.findBySportName(tabnamestr);
+        if ( null != selectedType && selectedType.isPredifined()) {
             selectableTypes = new SportType[1];
             selectableTypes[0] = selectedType;
         } else {
-            selectableTypes = SportType.PreDefined;
+            selectableTypes = SportType.PreDefinedSports;
         }
 
+        Map<String,GameGroupNode> gameGroupNodeMap = new HashMap<>();
         for(SportType st: selectableTypes) {
-            addSportTypes(st);
+            addSportTypes(st,gameGroupNodeMap);
         }
-
-
-//        for (int j = 0; j < gamegroupvec.size(); j++) {
-//            Vector thisvec = (Vector) gamegroupvec.elementAt(j);
-//            int numgames = thisvec.size();
-//            String title = "" + gamegroupheadervec.elementAt(j);
-//            InvisibleNode currenttreenode2 = (InvisibleNode) sporthash.get(title);
-//
-//            String value = (String) mainhash.get(title);
-//
-//
-//            if (numgames == 1) {
-//                title = title + " (" + numgames + " Event)";
-//            } else if (numgames > 1) {
-//                title = title + " (" + numgames + " Events)";
-//            }
-//
-//            InvisibleNode childnode = new InvisibleNode(title);
-//
-//
-//            if (customheaders.contains(value)) {
-//                childnode.setVisible(false);
-//                nodehash.put(value, childnode);
-//                log("adding value=" + value + "..." + childnode.toString());
-//                //addDestinationElements(new Object[] {childnode});
-//            }
-//
-//            currenttreenode2.add(childnode);
-//
-//        }
-//
-//        for (int z = 0; z < customheaders.size(); z++) {
-//            String key = (String) customheaders.elementAt(z);
-//            log("key=" + key);
-//            InvisibleNode node = (InvisibleNode) nodehash.get(key);
-//            if (node != null) {
-//                log(" not null");
-//                pathhash.put(node.toString(), new TreePath(node.getPath()));
-//                node.setVisible(false);
-//                addDestinationElements(new Object[]{node});
-//            } else {
-//                log(" is null");
-//            }
-//        }
+        if ( null != selectedType &&  null != selectedType.getCustomheaders()) {
+            GameGroupNode []  gameGroupNodes = new GameGroupNode [selectedType.getCustomheaders().size()];
+            int index = 0;
+            for(String header: selectedType.getCustomheaders()) {
+                InvisibleNode sourceNode = findSourceNode(root,header);
+                if ( null != sourceNode) {
+                    gameGroupNodes[index++] = (GameGroupNode) sourceNode.getUserObject();
+                    sourceNode.setVisible(false);
+                } else {
+                    GameGroupHeader ggh = GameGroupHeader.createStageGroupHeader(header,index);
+                    gameGroupNodes[index++] = new GameGroupNode(ggh,0);
+                }
+            }
+//            GameGroupNode []  gameGroupNodes = selectedType.getCustomheaders().stream().map(gameGroupNodeMap::get).toArray(GameGroupNode[]::new);
+            addDestinationElements(gameGroupNodes);
+        }
 
 
         InvisibleTreeModel ml = new InvisibleTreeModel(root);
@@ -335,10 +302,6 @@ public class CustomTab2 extends JPanel {
                 // Display the path
                 jlab.setText("Model change path: " + tp);
             }
-
-            // Empty implementations of the remaing TreeModelEvent
-            // methods. Implement these if your application
-            // needs to handle these actions.
             public void treeNodesInserted(TreeModelEvent tse) {
             }
 
@@ -372,7 +335,7 @@ public class CustomTab2 extends JPanel {
 
                         if (pathhash.get(node.toString()) == null) // not there already
                         {
-                            addDestinationElements( (GameGroupNode)selPath.getLastPathComponent());
+                            addDestinationElements( (GameGroupNode)((InvisibleNode) selPath.getLastPathComponent()).getUserObject());
 
                             log("node=" + node.toString() + "..");
                             pathhash.put(node.toString(), selPath);
@@ -391,7 +354,27 @@ public class CustomTab2 extends JPanel {
 
 
     }
+    private InvisibleNode findSourceNode(InvisibleNode node,String header) {
+        if ( nodeContainsHeader(node,header)) {
+            return node;
+        }
 
+        for(int i=0;i<node.getChildCount();i++) {
+            InvisibleNode child = (InvisibleNode)node.getChildAt(i);
+            InvisibleNode target = findSourceNode(child,header);
+            if ( null != target) {
+                return target;
+            }
+        }
+        return null;
+    }
+    private boolean nodeContainsHeader(InvisibleNode node, String header) {
+        if ( node.getUserObject() instanceof GameGroupNode) {
+            GameGroupNode gameGroupNode = (GameGroupNode)node.getUserObject();
+            return header.equals(gameGroupNode.getGameGroupHeader());
+        }
+        return false;
+    }
     private void initScreen(String tabnamestr) {
 
         setBorder(BorderFactory.createEtchedBorder());
