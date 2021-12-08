@@ -11,7 +11,6 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
-import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
 
 import javax.sound.sampled.AudioInputStream;
@@ -124,7 +123,6 @@ class LineAlertOpeners implements ItemListener {
     int popuplocationint = 0;
     Vector bookeis;
     List<Sport> sports;
-    Games games;
     private Vector checkednodes2 = new Vector();
     private Vector checkednodes3 = new Vector();
     private CheckBoxTree _tree;
@@ -1099,9 +1097,7 @@ class LineAlertOpeners implements ItemListener {
                         }
                     }
                     log("***********selectedbookies Arrays are prepared********");
-                    int game_id = 0;
                     bookeis = AppController.getBookiesVec();
-                    games = AppController.getGames();
                     sports = AppController.getSportsVec();
                     int sport_id = 0;
                     ArrayList selectedbookieids = new ArrayList();
