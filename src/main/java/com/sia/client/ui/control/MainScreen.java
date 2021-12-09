@@ -93,7 +93,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
             }
         }
         model.buildIndexMappingCache(true);
-//        AppController.addDataModels(model);
         return model;
     }
 
