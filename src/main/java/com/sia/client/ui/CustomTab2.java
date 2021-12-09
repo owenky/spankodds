@@ -102,7 +102,6 @@ public class CustomTab2 extends JPanel {
     private JLabel destLabel;
     private JButton addButton;
     private JButton removeButton;
-    private JButton addAllButton;
     private JButton removeAllButton;
     private JButton upButton;
     private JButton downButton;
@@ -204,27 +203,20 @@ public class CustomTab2 extends JPanel {
             addSportTypes(st,gameGroupNodeMap);
         }
         if ( null != selectedType &&  null != selectedType.getCustomheaders()) {
-            GameGroupNode []  gameGroupNodes = new GameGroupNode [selectedType.getCustomheaders().size()];
-            int index = 0;
+            List<GameGroupNode> gameGroupNodes = new ArrayList<>(selectedType.getCustomheaders().size());
+
             for(String header: selectedType.getCustomheaders()) {
                 InvisibleNode sourceNode = findSourceNode(root,header);
                 if ( null != sourceNode) {
-                    gameGroupNodes[index++] = (GameGroupNode) sourceNode.getUserObject();
+                    gameGroupNodes.add((GameGroupNode) sourceNode.getUserObject());
                     sourceNode.setVisible(false);
-                } else {
-                    GameGroupHeader ggh = GameGroupHeader.createStageGroupHeader(header,index);
-                    gameGroupNodes[index++] = new GameGroupNode(ggh,0);
                 }
             }
-//            GameGroupNode []  gameGroupNodes = selectedType.getCustomheaders().stream().map(gameGroupNodeMap::get).toArray(GameGroupNode[]::new);
-            addDestinationElements(gameGroupNodes);
+            addDestinationElements(gameGroupNodes.toArray(new GameGroupNode[0]));
         }
 
 
         InvisibleTreeModel ml = new InvisibleTreeModel(root);
-        //ml.activateFilter(true);
-
-        //jtree = new JTree(root);
         jtree = new JTree(ml);
 
 
@@ -399,8 +391,6 @@ public class CustomTab2 extends JPanel {
                 EMPTY_INSETS, 0, 0));
         addButton.addActionListener(new AddListener());
 
-
-        addAllButton = new JButton(ADD_ALL_BUTTON_LABEL);
 	/*
     add(addAllButton, new GridBagConstraints(1, 2, 1, 1, 0, .1,
         GridBagConstraints.CENTER, GridBagConstraints.NONE,
@@ -546,8 +536,7 @@ public class CustomTab2 extends JPanel {
                 log(j + " item=" + items[j]);
                 if (j == 0) {
                     String[] headers = items[j].split("\\|");
-                    for (int k = 0; k < headers.length; k++) {
-                        String header = headers[k];
+                    for (String header : headers) {
                         if (header.equals("")) {
                             continue;
                         } else {
@@ -557,7 +546,6 @@ public class CustomTab2 extends JPanel {
                     }
                 } else if (j == 1) {
                     tabname.setText(items[j]);
-                    //tabname.setEditable(false);
                     tabname.setEnabled(false);
                 } else if (j == 2) {
                     includeheaders.setSelected(Boolean.parseBoolean(items[j]));
@@ -577,7 +565,6 @@ public class CustomTab2 extends JPanel {
 
         }
 
-
         destListModel = new MyListModel2();
         destList = new JList(destListModel);
         destList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -586,67 +573,11 @@ public class CustomTab2 extends JPanel {
         init(tabnamestr);
         initScreen(tabnamestr);
 
-
         f.getContentPane().add(this, BorderLayout.CENTER);
         f.setSize(1000, 400);
-        //f.pack();
         f.setVisible(true);
-        //	revalidate();
-        //	repaint();
-
     }
 
-    private void setNodeVisible(final JTree tree, boolean isVisible) {
-        DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-        TreePath[] path = tree.getSelectionPaths();
-        InvisibleNode node = null;
-        for (int i = 0; i < path.length; i++) {
-            node = (InvisibleNode) path[i].getLastPathComponent();
-            if (!(node == model.getRoot())) {
-                node.setVisible(isVisible);
-            } else {
-                log("refused: root node");
-            }
-        }
-        if (path.length == 1) {
-            model.nodeChanged(node);
-        } else {
-            model.reload();
-        }
-    }
-
-    public String getSourceChoicesTitle() {
-        return sourceLabel.getText();
-    }
-
-    public void setSourceChoicesTitle(String newValue) {
-        sourceLabel.setText(newValue);
-    }
-
-    public String getDestinationChoicesTitle() {
-        return destLabel.getText();
-    }
-
-    public void setDestinationChoicesTitle(String newValue) {
-        destLabel.setText(newValue);
-    }
-
-    public void clearDestinationListModel() {
-        destListModel.clear();
-    }
-
-    public void setSourceElements(ListModel<GameGroupNode> newValue) {
-        clearSourceListModel();
-        addSourceElements(newValue);
-    }
-
-    public void clearSourceListModel() {
-        sourceListModel.clear();
-    }
-
-    public void addSourceElements(ListModel<GameGroupNode> newValue) {
-        fillListModel(sourceListModel, newValue);
-    }
 
     private void fillListModel(MyListModel2 model, ListModel<GameGroupNode> newValues) {
         int size = newValues.getSize();
@@ -655,78 +586,9 @@ public class CustomTab2 extends JPanel {
             log("adding .." + newValues.getElementAt(i));
         }
     }
-
-    public void addDestinationElements(ListModel<GameGroupNode> newValue) {
-        fillListModel(destListModel, newValue);
-    }
-
-    public void setSourceElements(GameGroupNode[] newValue) {
-        clearSourceListModel();
-        addSourceElements(newValue);
-    }
-
     public void addSourceElements(GameGroupNode[] newValue) {
         fillListModel(sourceListModel, newValue);
     }
-
-//    public Iterator<GameGroupNode> sourceIterator() {
-//        return sourceListModel.iterator();
-//    }
-//
-//    public Iterator<GameGroupNode> destinationIterator() {
-//        return destListModel.iterator();
-//    }
-//
-//    public ListCellRenderer<GameGroupNode> getSourceCellRenderer() {
-//        return sourceList.getCellRenderer();
-//    }
-
-//    public void setSourceCellRenderer(ListCellRenderer newValue) {
-//        sourceList.setCellRenderer(newValue);
-//    }
-//
-//    public ListCellRenderer<GameGroupNode> getDestinationCellRenderer() {
-//        return destList.getCellRenderer();
-//    }
-//
-//    public void setDestinationCellRenderer(ListCellRenderer<GameGroupNode> newValue) {
-//        destList.setCellRenderer(newValue);
-//    }
-//
-//    public int getVisibleRowCount() {
-//        return sourceList.getVisibleRowCount();
-//    }
-//
-//    public void setVisibleRowCount(int newValue) {
-//        sourceList.setVisibleRowCount(newValue);
-//        destList.setVisibleRowCount(newValue);
-//    }
-//
-//    public Color getSelectionBackground() {
-//        return sourceList.getSelectionBackground();
-//    }
-//
-//    public void setSelectionBackground(Color newValue) {
-//        sourceList.setSelectionBackground(newValue);
-//        destList.setSelectionBackground(newValue);
-//    }
-//
-//    public Color getSelectionForeground() {
-//        return sourceList.getSelectionForeground();
-//    }
-//
-//    public void setSelectionForeground(Color newValue) {
-//        sourceList.setSelectionForeground(newValue);
-//        destList.setSelectionForeground(newValue);
-//    }
-//
-//    private void clearSourceSelected() {
-//        Object selected[] = sourceList.getSelectedValues();
-//        for (int i = selected.length - 1; i >= 0; --i) {
-//            sourceListModel.removeElement(selected[i]);
-//        }
-//        sourceList.getSelectionModel().clearSelection();
-//    }
 
     private void clearSourceAll() {
         Object[] selected = ((MyListModel2) sourceList.getModel()).toArray();
@@ -884,16 +746,6 @@ public class CustomTab2 extends JPanel {
 
         }
     }
-
-
-    private class AddAllListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            GameGroupNode[] selected = ((MyListModel2) sourceList.getModel()).toArray();
-            addDestinationElements(selected);
-            clearSourceAll();
-        }
-    }
-
     private class RemoveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             List<GameGroupNode> selected = destList.getSelectedValuesList();
