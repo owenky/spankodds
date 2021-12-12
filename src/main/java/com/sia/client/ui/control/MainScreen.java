@@ -11,20 +11,12 @@ import com.sia.client.model.ScreenGameModel;
 import com.sia.client.model.ScreenProperty;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.model.SportType;
-import com.sia.client.ui.AppController;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
-import com.sia.client.ui.ScrollablePanel;
-import com.sia.client.ui.TableUtils;
+import com.sia.client.ui.MainScreenLoader;
 
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.table.JTableHeader;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Collection;
@@ -132,38 +124,15 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getDataModels().moveGameToThisHeader(g, header);
     }
 
-    public void createMe(JLabel loadlabel) {
-        setLayout(new BorderLayout(0, 0));
-        this.setOpaque(true);
-        add(loadlabel);
+    public void createMe() {
         sportType.enrichSportType();
         screenProperty.setShowheaders(sportType.isShowHeaders());
-        drawIt();
-        log("done drawing");
-    }
-    private void drawIt() {
-        ScrollablePanel tablePanel = new ScrollablePanel();
-        tablePanel.setScrollableWidth(ScrollablePanel.ScrollableSizeHint.FIT);
-        //changed this to stretch for Vertical Scroll Bar to appear if frame is resized and data can not fit in viewport
-        tablePanel.setScrollableHeight(ScrollablePanel.ScrollableSizeHint.STRETCH);
-
-        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(tablePanel);
-        scrollPane.getViewport().putClientProperty("EnableWindowBlit", Boolean.TRUE);
-        scrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-
-        removeAll();
-        revalidate();
-        JComponent mainTableContainer = makeMainTableScrollPane(getColumnCustomizableTable());
-        add(mainTableContainer, BorderLayout.CENTER);
+        new MainScreenLoader(this).load();
     }
     public void setShowIngame(boolean b) {
         sportType.setShowingame(b);
     }
 
-    private JComponent makeMainTableScrollPane(MainGameTable table) {
-        return TableUtils.configTableLockColumns(table, AppController.getNumFixedCols());
-    }
     private static MainGameTable createMainGameTable(MainGameTableModel model, String name) {
         MainGameTable table = new MainGameTable(model);
         table.setIntercellSpacing(new Dimension(4, 2));

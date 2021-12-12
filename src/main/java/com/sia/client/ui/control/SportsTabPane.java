@@ -18,7 +18,6 @@ import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.SportCustomTab;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
@@ -46,8 +45,6 @@ import static com.sia.client.config.Utils.log;
 public class SportsTabPane extends JTabbedPane implements Cloneable {
 
 //    public long cleartime = 1000;
-    private ImageIcon loadgif = null;
-    private JLabel loadlabel;
     private SportsTabPane thispane;
     private int previousTabIndex = -1;
     private Image tabImage = null;
@@ -58,8 +55,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
 
     public SportsTabPane(int windowIndex) {
         thispane = this;
-        loadlabel = new JLabel("loading...", loadgif, JLabel.CENTER);
-        loadlabel.setOpaque(true);
         spankyWindowConfig = new SpankyWindowConfig(windowIndex,false,false);
         spankyWindowConfig.setTimesort(false);
         addListeners();
@@ -467,6 +462,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         }
     }
     private void reCreateMainScreen(MainScreen ms) {
-        ms.createMe(loadlabel);
+        ms.createMe();
     }
 }
