@@ -195,7 +195,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 if ( currentComp instanceof MainScreen) {
                     MainScreen newms = (MainScreen) currentComp;
                     log("changelistener create!");
-                    reCreateMainScreen(newms);
+                    reCreateMainScreen(newms,null);
                 }
             }
         });
@@ -432,9 +432,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
     public void refreshMainScreen(MainScreen thisms) {
         thisms.destroyMe();
         log("refreshing MainScreen "+thisms.getName()+" !");
-        reCreateMainScreen(thisms);
-        MainGameTableModel model = thisms.getDataModels();
-        model.processTableModelEvent(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+        Runnable listener = () ->{
+            MainGameTableModel model = thisms.getDataModels();
+            model.processTableModelEvent(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+        };
+        reCreateMainScreen(thisms,listener);
     }
     public void cleanup() {
         Component comp = getSelectedComponent();
@@ -461,7 +463,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             ms.checktofire(games);
         }
     }
-    private void reCreateMainScreen(MainScreen ms) {
-        ms.createMe();
+    private void reCreateMainScreen(MainScreen ms,Runnable listener) {
+        ms.createMe(listener);
     }
 }

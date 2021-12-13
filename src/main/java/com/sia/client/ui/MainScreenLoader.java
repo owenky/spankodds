@@ -20,6 +20,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     private final MainScreen mainScreen;
     private MainGameTableModel mainGameTableModel;
     private static MainScreenLoader activeLoader;
+    private Runnable listener;
 
     public MainScreenLoader(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
@@ -35,6 +36,9 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
                 this.execute();
             });
         }
+    }
+    public void setListener(Runnable listener) {
+        this.listener = listener;
     }
     @Override
     protected Void doInBackground()  {
@@ -62,6 +66,9 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
                 JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
                 mainScreen.add(mainTableContainer, BorderLayout.CENTER);
                 mainScreen.validate();
+                if ( null != listener) {
+                    listener.run();
+                }
                 log("done drawing");
             } else {
                 log("loading "+mainScreen.getSportType().getSportName()+" has been cancelled.");

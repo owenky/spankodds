@@ -118,11 +118,12 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public void moveGameToThisHeader(Game g, GameGroupHeader header) {
         getDataModels().moveGameToThisHeader(g, header);
     }
-
-    public void createMe() {
+    public void createMe(Runnable listener) {
         sportType.enrichSportType();
         screenProperty.setShowheaders(sportType.isShowHeaders());
-        new MainScreenLoader(this).load();
+        MainScreenLoader loader = new MainScreenLoader(this);
+        loader.setListener(listener);
+        loader.load();
     }
     public void setShowIngame(boolean b) {
         sportType.setShowingame(b);
