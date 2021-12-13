@@ -37,6 +37,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -45,12 +46,12 @@ import static com.sia.client.config.Utils.log;
 public class AppController {
 
     public final static AlertVector alertsVector = new AlertVector();
-    private static Map<String,String> customTabsHash = new ConcurrentHashMap<>();
+    public final static Set<Integer> BadGameIds = new HashSet<>();
+    private static final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
+    private static final AtomicReference<CountDownLatch> messageProcessingLatchRef = new AtomicReference<>(new CountDownLatch(1));
     public static Vector<String> customTabsVec = new Vector<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector();
     public static Vector<SportsMenuBar> menubars = new Vector();
-
-    private static final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
     public static Hashtable<String, String> bookieshortnameids = new Hashtable();
     public static Vector<Bookie> openerbookiesVec = new Vector();
     public static Vector<Bookie> bookiesVec = new Vector();
@@ -58,7 +59,42 @@ public class AppController {
     public static Vector<Bookie> hiddenCols = new Vector();
     public static Vector<Bookie> shownCols = new Vector();
     public static Vector<Bookie> fixedCols = new Vector();
-    public final static Set<Integer> BadGameIds = new HashSet<>();
+    public static User u;
+    public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
+    public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
+    public static Connection guestConnection;
+    public static Connection loggedInConnection;
+    public static String loginQueue = "spankodds.LOGIN";
+    public static String userPrefsQueue = "spankodds.USERPREFS";
+    public static String linechangesQueue = "spankoddsin.LINECHANGE";
+    public static String gamechangesQueue = "spankoddsin.GAMECHANGE";
+    public static String scorechangesQueue = "spankoddsin.SCORECHANGE";
+    public static String urgentQueue = "spankoddsin.URGENT";
+    public static String displaytype = "default";
+    public static LinesConsumer linesConsumer;
+    public static GamesConsumer gamesConsumer;
+    public static ScoresConsumer scoresConsumer;
+    public static UrgentsConsumer urgentsConsumer;
+    public static UserPrefsProducer userPrefsProducer;
+    public static ChartChecker chartchecker;
+    public static int numfixedcols;
+    public static long clearalltime;
+    public static DefaultTableColumnModel columnmodel;
+    public static DefaultTableColumnModel fixedcolumnmodel;
+    public static NewWindowAction nwa;
+    public static LineOpenerAlertNode football = new LineOpenerAlertNode("Football");
+    public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
+    public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
+    public static LineOpenerAlertNode hockey = new LineOpenerAlertNode("Hockey");
+    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode(SiaConst.SoccerStr);
+    public static LineOpenerAlertNode fighting = new LineOpenerAlertNode("Fighting");
+    public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
+    public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
+    public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode("Auto Racing");
+    public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
+    public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
+    public static Vector<String> SportsTabPaneVector = new Vector<>();
+    private static Map<String, String> customTabsHash = new ConcurrentHashMap<>();
     private static Map<String, Spreadline> spreads = new ConcurrentHashMap<>();
     private static Map<String, Totalline> totals = new ConcurrentHashMap<>();
     private static Map<String, Moneyline> moneylines = new ConcurrentHashMap<>();
@@ -91,45 +127,9 @@ public class AppController {
     private static Map<String, Totalline> livetotals = new ConcurrentHashMap<>();
     private static Map<String, Moneyline> livemoneylines = new ConcurrentHashMap<>();
     private static Map<String, TeamTotalline> liveteamtotals = new ConcurrentHashMap<>();
-    public static User u;
-    public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
-    public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
-    public static Connection guestConnection;
-    public static Connection loggedInConnection;
-    public static String loginQueue = "spankodds.LOGIN";
-    public static String userPrefsQueue = "spankodds.USERPREFS";
-    public static String linechangesQueue = "spankoddsin.LINECHANGE";
-    public static String gamechangesQueue = "spankoddsin.GAMECHANGE";
-    public static String scorechangesQueue = "spankoddsin.SCORECHANGE";
-    public static String urgentQueue = "spankoddsin.URGENT";
-    public static String displaytype = "default";
-    public static LinesConsumer linesConsumer;
-    public static GamesConsumer gamesConsumer;
-    public static ScoresConsumer scoresConsumer;
-    public static UrgentsConsumer urgentsConsumer;
-    public static UserPrefsProducer userPrefsProducer;
-    public static ChartChecker chartchecker;
     private static Map<String, Color> bookiecolors = new ConcurrentHashMap<>();
-    public static int numfixedcols;
-    public static long clearalltime;
-    public static DefaultTableColumnModel columnmodel;
-    public static DefaultTableColumnModel fixedcolumnmodel;
-    public static NewWindowAction nwa;
-    public static LineOpenerAlertNode football = new LineOpenerAlertNode("Football");
-    public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
-    public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
-    public static LineOpenerAlertNode hockey = new LineOpenerAlertNode("Hockey");
-    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode(SiaConst.SoccerStr);
-    public static LineOpenerAlertNode fighting = new LineOpenerAlertNode("Fighting");
-    public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
-    public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
-    public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode("Auto Racing");
-    public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
-    public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
-    public static Vector<String> SportsTabPaneVector = new Vector<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
     private static Games games = new Games();
-    private static final CountDownLatch messageProcessingLatch = new CountDownLatch(1);
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = u.getTabsIndex().split(",");
@@ -140,13 +140,32 @@ public class AppController {
 
         }
     }
+
+    public static void signalWindowLoading() {
+        synchronized (messageProcessingLatchRef) {
+            CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
+            if (0 == messageProcessingLatch.getCount()) {
+                messageProcessingLatchRef.set(new CountDownLatch(1));
+            }
+        }
+    }
+
     public static boolean isReadyForMessageProcessing() {
-        return 0==messageProcessingLatch.getCount();
+        CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
+        return 0 == messageProcessingLatch.getCount();
+
     }
-    public static void notifyUIComplete() {
-        messageProcessingLatch.countDown();
+
+    public static void notifyWindowLoadingComplete() {
+        synchronized (messageProcessingLatchRef) {
+            CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
+            messageProcessingLatch.countDown();
+        }
+
     }
+
     public static void waitForSpankyWindowLoaded() {
+        CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
         try {
             messageProcessingLatch.await();
 //            Thread.sleep(1000*3600*5);
@@ -154,6 +173,7 @@ public class AppController {
             log(e);
         }
     }
+
     public static boolean existLeagueId(Integer leagueId) {
         return leagueIdToSportMap.containsKey(leagueId);
     }
@@ -437,9 +457,11 @@ public class AppController {
     public static Vector getLineAlertNodes() {
         return linealertnodes;
     }
+
     public static SportsTabPane getMainTabPane() {
         return SpankyWindow.getFirstSpankyWindow().getSportsTabPane();
     }
+
     public static void enableTabs() {
         SpankyWindow.applyToAllWindows(SportsTabPane::enableTabs);
     }
@@ -469,6 +491,7 @@ public class AppController {
         menubars.remove(smb);
 
     }
+
     public static void removeCustomTab(String key) {
         String val = customTabsHash.get(key);
         if (val != null) {
@@ -498,19 +521,10 @@ public class AppController {
     public static void refreshTabs3() {
         //when multiple windows opened, there are multiple tabpanes, each window has one tabpane.
         //game need to populated to each window. -- 08/22/2021
-//        for (SportsTabPane tp : tabpanes) {
-//            if (tp != null) {
-//                try {
-//                    tp.refreshCurrentTab();
-//                } catch (Exception ex) {
-//                    log(ex);
-//                }
-//            }
-//        }
-        SpankyWindow.applyToAllWindows((stp)-> {
+        SpankyWindow.applyToAllWindows((stp) -> {
             try {
                 stp.refreshCurrentTab();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 log(e);
             }
         });
@@ -521,7 +535,7 @@ public class AppController {
     }
 
     public static void fireAllTableDataChanged(Collection<Game> games) {
-        SpankyWindow.applyToAllWindows((stp)->stp.fireAllTableDataChanged(games));
+        SpankyWindow.applyToAllWindows((stp) -> stp.fireAllTableDataChanged(games));
     }
 
     public static String getLoginQueue() {
@@ -726,6 +740,7 @@ public class AppController {
         leagueIdToSportMap.put(s.getLeague_id(), s);
         sportsVec.add(s);
     }
+
     public static void removeGameDate(String date, String leagueid) {
         //here i will get all teh game ids for a given date and leagueid and
         // then make an array out of it and call removegames
@@ -739,16 +754,16 @@ public class AppController {
         Set<Integer> gameIdRemovedSet = Arrays.stream(gameidarr).map(Integer::parseInt).collect(Collectors.toSet());
         List<CountDownLatch> latches = new ArrayList<>(SpankyWindow.openWindowCount());
         Iterator<SpankyWindow> spankyWindowIterator = SpankyWindow.getAllSpankyWindows();
-        while ( spankyWindowIterator.hasNext()){
-            SportsTabPane stb  = spankyWindowIterator.next().getSportsTabPane();
+        while (spankyWindowIterator.hasNext()) {
+            SportsTabPane stb = spankyWindowIterator.next().getSportsTabPane();
             CountDownLatch latch = new CountDownLatch(1);
             latches.add(latch);
-            stb.removeGamesAndCleanup(gameIdRemovedSet,latch);
+            stb.removeGamesAndCleanup(gameIdRemovedSet, latch);
         }
         if (gameidarr.length == 1 && gameidarr[0].equals("-1")) {
             return;
         }
-        for(CountDownLatch latch: latches) {
+        for (CountDownLatch latch : latches) {
             try {
                 latch.await();
             } catch (InterruptedException e) {
@@ -760,7 +775,7 @@ public class AppController {
                 games.removeGame(gameIdStr);
                 for (Bookie b : bookiesVec) {
                     int bid = b.getBookie_id();
-                    final String key = bid +"-"+gameIdStr;
+                    final String key = bid + "-" + gameIdStr;
                     spreads.remove(key);
                     totals.remove(key);
                     moneylines.remove(key);
@@ -826,12 +841,13 @@ public class AppController {
         return (gameidstodelete.toArray(new String[gameidstodelete.size()]));
 
     }
+
     public static void pushGameToCache(Game g) {
         games.updateOrAdd(g);
     }
 
     public static void moveGameToThisHeader(Game g, GameGroupHeader header) {
-        SpankyWindow.applyToAllWindows((stp)->stp.moveGameToThisHeader(g, header));
+        SpankyWindow.applyToAllWindows((stp) -> stp.moveGameToThisHeader(g, header));
     }
 
     public static Bookie getBookie(int bid) {
@@ -850,15 +866,19 @@ public class AppController {
     public static Games getGames() {
         return games;
     }
+
     public static Color getColor(String bookieid) {
         return bookiecolors.get(bookieid);
     }
-    public static void putColor(String bookieid,Color color) {
-        bookiecolors.put(bookieid,color);
+
+    public static void putColor(String bookieid, Color color) {
+        bookiecolors.put(bookieid, color);
     }
+
     public static Set<String> getColorBookieIds() {
         return bookiecolors.keySet();
     }
+
     public static List<Sport> getSportsVec() {
         return sportsVec;
     }

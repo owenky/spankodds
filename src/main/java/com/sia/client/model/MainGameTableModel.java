@@ -35,17 +35,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,Vector<TableColumn> allColumns) {
         super(screenProperty,allColumns);
         this.sportType = sportType;
-        List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
-        if ( 0 <customerizedGameGroupHeader.size()) {
-            int offset = StageGroupAnchorOffset-1000;
-            for(String header: customerizedGameGroupHeader) {
-                this.customizedTabGameGroupHeaderIndex.put(header,offset++);
-            }
-            //add GameStatus
-            for(GameStatus gs: GameStatus.values()) {
-                this.customizedTabGameGroupHeaderIndex.put(gs.getGroupHeader().getGameGroupHeaderStr(),gs.getGroupHeader().getAnchorPos());
-            }
-        }
     }
     @Override
     protected Comparator<TableSection<Game>> getTableSectionComparator() {
@@ -152,6 +141,19 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
             return null;
         }
     }
+    public void buildCustomTabGameGroupHeader() {
+        List<String> customerizedGameGroupHeader = sportType.getCustomheaders();
+        if ( 0 <customerizedGameGroupHeader.size()) {
+            int offset = StageGroupAnchorOffset-1000;
+            for(String header: customerizedGameGroupHeader) {
+                this.customizedTabGameGroupHeaderIndex.put(header,offset++);
+            }
+            //add GameStatus
+            for(GameStatus gs: GameStatus.values()) {
+                this.customizedTabGameGroupHeaderIndex.put(gs.getGroupHeader().getGameGroupHeaderStr(),gs.getGroupHeader().getAnchorPos());
+            }
+        }
+    }
     private LinesTableData findOrCreateStageSectionByHeaderValue(GameGroupHeader gameGroupHeader) {
         TableSection<Game> ltd;
         ltd = createStageSection(gameGroupHeader);
@@ -167,7 +169,6 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
         String header = gameGroupHeader.getGameGroupHeaderStr();
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
-            LinesTableData section0 = (LinesTableData)sections.get(0);
             rtn = new LinesTableData(sportType,getScreenProperty(), new Vector<>(),gameGroupHeader,getAllColumns());
             sections.add(rtn);
         } else {
