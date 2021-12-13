@@ -33,8 +33,6 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
             Utils.checkAndRunInEDT(()-> {
                 showLoadingPrompt();
                 this.execute();
-//            doInBackground();
-//            done();
             });
         }
     }
