@@ -18,7 +18,14 @@ public interface AbstractScreen<T extends KeyedObject> {
     void addGame(T game);
     default void checktofire(Collection<T> games) {
         ColumnCustomizableTable<T> table = getColumnCustomizableTable();
+        if ( null == table) {
+            return;
+        }
         ColumnCustomizableDataModel<T> model = table.getModel();
+        if ( null == model ) {
+            return;
+
+        }
         List<UpdateGameStruct<T>> updateList = new ArrayList<>(games.size());
         List<T> insertList = new ArrayList<>(5);
         for(T game:games) {

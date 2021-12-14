@@ -162,7 +162,7 @@ public class SpankOdds {
             frame.setSize(950, 800);
             frame.populateTabPane();
             frame.setVisible(true);
-            AppController.notifyUIComplete();
+//            AppController.notifyUIComplete();
 
         } catch (Exception e) {
             log(e);

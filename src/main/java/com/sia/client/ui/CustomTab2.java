@@ -751,13 +751,11 @@ public class CustomTab2 extends JPanel {
             List<GameGroupNode> selected = destList.getSelectedValuesList();
 
             for (final GameGroupNode o : selected) {
-
-                TreePath tp = (TreePath) pathhash.get(o + "");
-                log("treepath=" + tp);
-                InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
-                node.setVisible(true);
-                ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
-                pathhash.remove(o + "");
+                InvisibleNode node = findSourceNode(root,o.getGameGroupHeader());
+                if ( null != node) {
+                    node.setVisible(true);
+                    ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
+                }
             }
 
             clearDestinationSelected();
