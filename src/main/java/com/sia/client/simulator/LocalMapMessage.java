@@ -7,16 +7,12 @@ import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.Map;
 
-public class LocalMapMessage implements MapMessage {
+public class LocalMapMessage extends LocalMessage implements MapMessage {
 
     private final Map<String,String> content;
-    private final LocalDateTime messageTime;
     public LocalMapMessage(Map<String,String> content,LocalDateTime messageTime) {
+        super(messageTime);
         this.content = content;
-        this.messageTime = messageTime;
-    }
-    public LocalDateTime getMessageTime() {
-        return messageTime;
     }
     @Override
     public boolean getBoolean(final String s) throws JMSException {

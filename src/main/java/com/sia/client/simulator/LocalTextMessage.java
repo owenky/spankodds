@@ -7,19 +7,15 @@ import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.Map;
 
-public class LocalTextMessage implements TextMessage {
+public class LocalTextMessage extends LocalMessage implements TextMessage {
 
     private final Map<String,String> content;
     private String text;
-    private final LocalDateTime messageTime;
 
     public LocalTextMessage(Map<String,String> content, LocalDateTime messageTime) {
+        super(messageTime);
         this.content = content;
         text = this.content.remove(OngoingGameMessages.TextPropertyName);
-        this.messageTime = messageTime;
-    }
-    public LocalDateTime getMessageTime() {
-        return messageTime;
     }
     @Override
     public void setText(final String s) throws JMSException {
