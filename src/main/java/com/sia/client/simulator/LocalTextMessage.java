@@ -3,6 +3,7 @@ package com.sia.client.simulator;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -10,11 +11,15 @@ public class LocalTextMessage implements TextMessage {
 
     private final Map<String,String> content;
     private String text;
+    private final LocalDateTime messageTime;
 
-    public LocalTextMessage(Map<String,String> content) {
+    public LocalTextMessage(Map<String,String> content, LocalDateTime messageTime) {
         this.content = content;
         text = this.content.remove(OngoingGameMessages.TextPropertyName);
-
+        this.messageTime = messageTime;
+    }
+    public LocalDateTime getMessageTime() {
+        return messageTime;
     }
     @Override
     public void setText(final String s) throws JMSException {

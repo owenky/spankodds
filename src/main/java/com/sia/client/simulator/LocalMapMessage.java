@@ -3,14 +3,20 @@ package com.sia.client.simulator;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.Map;
 
 public class LocalMapMessage implements MapMessage {
 
     private final Map<String,String> content;
-    public LocalMapMessage(Map<String,String> content) {
+    private final LocalDateTime messageTime;
+    public LocalMapMessage(Map<String,String> content,LocalDateTime messageTime) {
         this.content = content;
+        this.messageTime = messageTime;
+    }
+    public LocalDateTime getMessageTime() {
+        return messageTime;
     }
     @Override
     public boolean getBoolean(final String s) throws JMSException {

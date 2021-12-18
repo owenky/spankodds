@@ -12,9 +12,13 @@ import javax.jms.TextMessage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.IllegalCharsetNameException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,22 +163,9 @@ public abstract class OngoingGameMessages {
         }
     }
     public static void main(String[] argv) throws InterruptedException {
-//        InitialGameMessages.shouldLogMesg = true;
-//        InitialGameMessages.getMessagesFromLog = true;
-//        InitialGameMessages.backupTempDir();
-//        for (int i = 0; i < 10; i++) {
-//            addText(MessageType.Game, "game line " + i);
-//            addText(MessageType.Score, "score line " + i);
-//            addText(MessageType.Line, "Line line " + i);
-//        }
-//        Thread.sleep(5000L);
-//        loadMessagesFromLog();
-        String test="{abcd}";
-        log(rmSpecialCharacters(test));
-
-        test="1234";
-        log(rmSpecialCharacters(test));
-        System.exit(0);
+        long now = System.currentTimeMillis();
+        LocalDateTime ldt = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        System.out.println(ldt);
     }
 
     public static void loadMessagesFromLog() {
@@ -218,6 +209,7 @@ public abstract class OngoingGameMessages {
             return;
         }
         String timeStamp = strs[0];
+        LocalDateTime ltd = new Date(Long.parseLong(timeStamp)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         String type = strs[1];
         String messageText = strs[2];
         pause(50L);
@@ -227,21 +219,24 @@ public abstract class OngoingGameMessages {
             return;
         }
 
+        MessageDispatcher messageDispatcher;
+        Message message;
         if (MessageType.Line.name().equals(type)) {
-            MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            toLinesMessageConsumer().dispatch(mapMessgage);
+            message = new LocalMapMessage(parseText(messageText),ltd);
+            messageDispatcher = toLinesMessageConsumer();
             linesMesgCnt++;
         } else if (MessageType.Score.name().equals(type)) {
-            MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            toScoreMessageConsumer().dispatch(mapMessgage);
+            message = new LocalMapMessage(parseText(messageText),ltd);
+            messageDispatcher = toScoreMessageConsumer();
             scoresMesgCnt++;
         } else if (MessageType.Game.name().equals(type)) {
-            TextMessage txtMessgage = new LocalTextMessage(parseText(messageText));
-            toGameMessageConsumer().dispatch(txtMessgage);
+            message = new LocalTextMessage(parseText(messageText),ltd);
+            messageDispatcher = toGameMessageConsumer();
             gamesMesgCnt++;
         } else {
-            log("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
+            throw new IllegalCharsetNameException("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
         }
+        messageDispatcher.dispatch(message);
     }
     private static int messageCount=0;
     static void pause(long time) {
