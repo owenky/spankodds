@@ -15,9 +15,14 @@ public class LocalMessageLogger extends Logger {
         String timeStampStr;
         LocalDateTime timeStamp = localMessageTimeStamp.get();
         if ( null == timeStamp ) {
-            timeStampStr =  Utils.nowShortString();
+            timeStamp = localMessageClock.get();
+            if ( null != timeStamp) {
+                timeStampStr = timeStamp.format(Utils.sdf);
+            } else {
+                timeStampStr = Utils.nowShortString();
+            }
         } else {
-            timeStampStr = localMessageClock.get().format(Utils.sdf);
+            timeStampStr = timeStamp.format(Utils.sdf);
         }
         return timeStampStr+", Thread="+Thread.currentThread().getName()+" |";
     }

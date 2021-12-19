@@ -15,6 +15,10 @@ public class LocalMapMessage extends LocalMessage implements MapMessage {
         this.content = content;
     }
     @Override
+    public String toString() {
+        return String.valueOf(content);
+    }
+    @Override
     public boolean getBoolean(final String s) throws JMSException {
         return Boolean.parseBoolean(content.get(s));
     }

@@ -52,6 +52,6 @@ public class Logger {
         }
     }
     public void log(Object mesg) {
-        log(logHeader()+mesg);
+        log(String.valueOf(mesg));
     }
 }

@@ -1,5 +1,7 @@
 package com.sia.client.simulator;
 
+import com.sia.client.config.Utils;
+
 import javax.jms.Message;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -24,6 +26,7 @@ public class MessageDispatcher {
             if ( message instanceof LocalMessage) {
                 LocalMessageLogger.localMessageTimeStamp.set( ((LocalMessage)message).getMessageTime());
             }
+            Utils.log("consumer="+name+", "+message);
             messageProcessor.accept(message);
         });
     }
