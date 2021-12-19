@@ -1,7 +1,5 @@
 package com.sia.client.simulator;
 
-import com.sia.client.config.Utils;
-
 import javax.jms.Message;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
