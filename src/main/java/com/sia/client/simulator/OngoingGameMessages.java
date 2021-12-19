@@ -57,19 +57,19 @@ public abstract class OngoingGameMessages {
     }
     private static MessageDispatcher toLinesMessageConsumer() {
         if ( null == toLinesMessageConsumer) {
-            toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m));
+            toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m),"LinesConsumer");
         }
         return toLinesMessageConsumer;
     }
     private static MessageDispatcher toScoreMessageConsumer() {
         if ( null == toScoreMessageConsumer) {
-            toScoreMessageConsumer =  new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m));
+            toScoreMessageConsumer =  new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m),"ScoresConsumer");
         }
         return toScoreMessageConsumer;
     }
     private static MessageDispatcher toGameMessageConsumer() {
         if ( null == toGameMessageConsumer) {
-            toGameMessageConsumer =  new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m));
+            toGameMessageConsumer =  new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m),"GamesConsumer");
         }
         return toGameMessageConsumer;
     }
