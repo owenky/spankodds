@@ -18,6 +18,10 @@ public class LocalTextMessage extends LocalMessage implements TextMessage {
         text = this.content.remove(OngoingGameMessages.TextPropertyName);
     }
     @Override
+    public String toString() {
+        return text;
+    }
+    @Override
     public void setText(final String s) throws JMSException {
         this.text = s;
     }
