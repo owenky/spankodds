@@ -98,7 +98,7 @@ public abstract class Utils {
     public static void log(Object mesg) {
         Logger.log(mesg);
     }
-    private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+    public static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
     public static String nowShortString() {
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         Instant instant = date.toInstant();

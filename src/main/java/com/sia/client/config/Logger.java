@@ -3,11 +3,13 @@ package com.sia.client.config;
 import com.sia.client.simulator.InitialGameMessages;
 
 import java.io.PrintStream;
+import java.time.LocalDateTime;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class Logger {
 
+    public static final ThreadLocal<LocalDateTime> logTimeStamp = new ThreadLocal<>();
     public static PrintStream logPs=System.out;
     public static PrintStream errPs=System.err;
 
@@ -25,7 +27,14 @@ public class Logger {
         log("",e);
     }
     public static String logHeader() {
-        return Utils.nowShortString()+", Thread="+Thread.currentThread().getName()+" |";
+        String timeStampStr;
+        LocalDateTime timeStamp = logTimeStamp.get();
+        if ( null == timeStamp ) {
+            timeStampStr =  Utils.nowShortString();
+        } else {
+            timeStampStr = timeStamp.format(Utils.sdf);
+        }
+        return timeStampStr+", Thread="+Thread.currentThread().getName()+" |";
     }
     public static void debug(String mesg) {
         log(logHeader()+" DEBUG:"+mesg);

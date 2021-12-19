@@ -1,5 +1,6 @@
 package com.sia.client.simulator;
 
+import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
@@ -192,6 +193,15 @@ public abstract class OngoingGameMessages {
     private static int scoresMesgCnt = 0;
     private static void processMessage(String text) {
 
+        String[] strs = text.split(MessageTypeDelimiter);
+        if (3 > strs.length) {
+            return;
+        }
+        String timeStamp = strs[0];
+        LocalDateTime ltd = new Date(Long.parseLong(timeStamp)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        Logger.logTimeStamp.set(ltd);
+        String type = strs[1];
+        String messageText = strs[2];
         boolean toContinue=false;
         for(String keyword: InitialGameMessages.filters) {
             if ( text.contains(keyword)) {
@@ -204,14 +214,6 @@ public abstract class OngoingGameMessages {
             return;
         }
 
-        String[] strs = text.split(MessageTypeDelimiter);
-        if (3 > strs.length) {
-            return;
-        }
-        String timeStamp = strs[0];
-        LocalDateTime ltd = new Date(Long.parseLong(timeStamp)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        String type = strs[1];
-        String messageText = strs[2];
         pause(50L);
 
         toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));

@@ -1,5 +1,7 @@
 package com.sia.client.simulator;
 
+import com.sia.client.config.Logger;
+
 import javax.jms.Message;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -14,6 +16,11 @@ public class MessageDispatcher {
         this.messageProcessor = messageProcessor;
     }
     public void dispatch(Message message) {
-        executor.execute(()->messageProcessor.accept(message));
+        executor.execute(()->{
+            messageProcessor.accept(message);
+            if ( message instanceof LocalMessage) {
+                Logger.logTimeStamp.set( ((LocalMessage)message).getMessageTime());
+            }
+        });
     }
 }
