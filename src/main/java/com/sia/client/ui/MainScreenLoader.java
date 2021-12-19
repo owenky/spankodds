@@ -21,6 +21,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     private MainGameTableModel mainGameTableModel;
     private static MainScreenLoader activeLoader;
     private Runnable listener;
+    private String err;
 
     public MainScreenLoader(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
@@ -32,6 +33,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
             }
             activeLoader = this;
             Utils.checkAndRunInEDT(()-> {
+                err = null;
                 showLoadingPrompt();
                 this.execute();
             });
@@ -42,14 +44,21 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     }
     @Override
     protected Void doInBackground()  {
-        AppController.signalWindowLoading();
-        mainGameTableModel = mainScreen.buildModel();
+        try {
+            AppController.signalWindowLoading();
+            mainGameTableModel = mainScreen.buildModel();
+        }catch(Exception e) {
+            log(e);
+            err = e.getMessage();
+        }
         return null;
     }
     @Override
     public void done() {
         try {
-            if ( ! isCancelled()) {
+            if ( null != err) {
+                showLoadingPrompt();
+            } else if ( ! isCancelled()) {
                 mainScreen.createColumnCustomizableTable(mainGameTableModel);
                 MainGameTable mainGameTable = mainScreen.getColumnCustomizableTable();
                 ScrollablePanel tablePanel = new ScrollablePanel();
@@ -75,7 +84,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
             }
         } catch(Exception e) {
             log(e);
-            showLoadingError("Error occurred, Please try again");
+            showLoadingError();
         }
         finally {
             AppController.notifyWindowLoadingComplete();
@@ -87,8 +96,8 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     private void showLoadingPrompt() {
         showPrompt("loading...");
     }
-    private void showLoadingError(String err) {
-        showPrompt(err);
+    private void showLoadingError() {
+        showPrompt("Error occurred, Please try again");
     }
     private void showPrompt(String prompt) {
         mainScreen.removeAll();
