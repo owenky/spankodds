@@ -23,8 +23,13 @@ public class MessageDispatcher {
         executor.execute(()->{
             if ( message instanceof LocalMessage) {
                 LocalMessageLogger.localMessageTimeStamp.set( ((LocalMessage)message).getMessageTime());
+                //debug
+//                LocalDateTime thredhold = LocalDateTime.of(2021, 12, 17, 19, 05);
+//                if ( ((LocalMessage)message).getMessageTime().isAfter(thredhold)) {
+//                    Utils.log("consumer=" + name + ", " + message);
+//                }
+                //end of debug
             }
-//            Utils.log("consumer="+name+", "+message);
             messageProcessor.accept(message);
         });
     }
