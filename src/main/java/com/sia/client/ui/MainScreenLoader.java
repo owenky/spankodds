@@ -73,7 +73,11 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
             } else {
                 log("loading "+mainScreen.getSportType().getSportName()+" has been cancelled.");
             }
-        } finally {
+        } catch(Exception e) {
+            log(e);
+            showLoadingError("Error occurred, Please try again");
+        }
+        finally {
             AppController.notifyWindowLoadingComplete();
         }
     }
@@ -81,12 +85,19 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
         return TableUtils.configTableLockColumns(table, AppController.getNumFixedCols());
     }
     private void showLoadingPrompt() {
+        showPrompt("loading...");
+    }
+    private void showLoadingError(String err) {
+        showPrompt(err);
+    }
+    private void showPrompt(String prompt) {
+        mainScreen.removeAll();
         ImageIcon loadgif = null;
-        JLabel loadlabel = new JLabel("loading...", loadgif, JLabel.CENTER);
+        JLabel loadlabel = new JLabel(prompt, loadgif, JLabel.CENTER);
         loadlabel.setOpaque(true);
         mainScreen.setLayout(new BorderLayout(0, 0));
         mainScreen.setOpaque(true);
         mainScreen.add(loadlabel);
+        mainScreen.validate();
     }
-
 }
