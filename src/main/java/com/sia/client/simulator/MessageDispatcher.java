@@ -21,10 +21,10 @@ public class MessageDispatcher {
     }
     public void dispatch(Message message) {
         executor.execute(()->{
-            messageProcessor.accept(message);
             if ( message instanceof LocalMessage) {
                 LocalMessageLogger.localMessageTimeStamp.set( ((LocalMessage)message).getMessageTime());
             }
+            messageProcessor.accept(message);
         });
     }
 }
