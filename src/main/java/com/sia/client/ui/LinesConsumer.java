@@ -48,7 +48,7 @@ public class LinesConsumer implements MessageListener {
     @Override
     public void onMessage(Message message) {
 
-        if (!InitialGameMessages.getMessagesFromLog) {
+        if (!SpankOdds.getMessagesFromLog) {
             AppController.waitForSpankyWindowLoaded();
             Utils.ensureNotEdtThread();
             processMessage((MapMessage) message);

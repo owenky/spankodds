@@ -19,7 +19,7 @@ public class MessageDispatcher {
         executor.execute(()->{
             messageProcessor.accept(message);
             if ( message instanceof LocalMessage) {
-                Logger.logTimeStamp.set( ((LocalMessage)message).getMessageTime());
+                LocalMessageLogger.localMessageTimeStamp.set( ((LocalMessage)message).getMessageTime());
             }
         });
     }

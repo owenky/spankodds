@@ -1,12 +1,10 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Logger;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameStatus;
 import com.sia.client.model.MessageConsumingScheduler;
 import com.sia.client.model.MqMessageProcessor;
-import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import com.sia.client.simulator.ScoreChangeProcessorTest;
@@ -92,7 +90,7 @@ public class ScoresConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        if (!InitialGameMessages.getMessagesFromLog) {
+        if (!SpankOdds.getMessagesFromLog) {
             if (toSimulateMQ) {
                 if (simulateStatus.compareAndSet(false, true)) {
                     new ScoreChangeProcessorTest(this).start();
@@ -112,7 +110,7 @@ public class ScoresConsumer implements MessageListener {
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
                 log("ScoreConsumer::processMessage: gameid=" + gameid);
-                Logger.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
+                Utils.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
 
                 String period = "";
                 String timer = "";

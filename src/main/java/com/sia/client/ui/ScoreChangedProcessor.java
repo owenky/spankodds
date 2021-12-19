@@ -70,7 +70,7 @@ public abstract class ScoreChangedProcessor {
                 log(ex);
             }
 
-            if (goodsport &&  ! InitialGameMessages.getMessagesFromLog) {
+            if (goodsport &&  ! SpankOdds.getMessagesFromLog) {
                 if (popup) {
                     String hrmin = AppController.getCurrentHoursMinutes();
                     String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "-" + currentvisitorscore + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam() + "-" + currenthomescore;

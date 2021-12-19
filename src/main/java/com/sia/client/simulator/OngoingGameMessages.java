@@ -1,9 +1,9 @@
 package com.sia.client.simulator;
 
-import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.SpankOdds;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
@@ -171,13 +171,13 @@ public abstract class OngoingGameMessages {
 
     public static void loadMessagesFromLog() {
         AppController.waitForSpankyWindowLoaded();
-        if (InitialGameMessages.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
+        if (SpankOdds.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
             File tempDir = new File(InitialGameMessages.MesgDir);
             String[] files = tempDir.list();
             if (null != files) {
                 for (int i = 0; i < (files.length-1); i++) {  //skip initGameMesgs.txt
                     String filePath = InitialGameMessages.MesgDir + File.separator + i + ".txt";
-                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
+//                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
                         stream.forEach(OngoingGameMessages::processMessage);
                     } catch (Exception e) {
@@ -199,7 +199,8 @@ public abstract class OngoingGameMessages {
         }
         String timeStamp = strs[0];
         LocalDateTime ltd = new Date(Long.parseLong(timeStamp)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        Logger.logTimeStamp.set(ltd);
+        LocalMessageLogger.localMessageTimeStamp.set(ltd);
+        LocalMessageLogger.localMessageClock.set(ltd);
         String type = strs[1];
         String messageText = strs[2];
         boolean toContinue=false;

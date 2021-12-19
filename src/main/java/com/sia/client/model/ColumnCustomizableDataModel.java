@@ -330,7 +330,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
                 ltdSrhStructCache.put(modelIndex++,new LtdSrhStruct<>(sec,offset));
             }
         }
-        debug("resetDataVector Disabled in buildIndexMappingCache");
     }
     public LtdSrhStruct<V> getLinesTableData(int rowModelIndex) {
 
