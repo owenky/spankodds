@@ -26,7 +26,7 @@ public class MessageDispatcher {
             if ( message instanceof LocalMessage) {
                 LocalMessageLogger.localMessageTimeStamp.set( ((LocalMessage)message).getMessageTime());
             }
-            Utils.log("consumer="+name+", "+message);
+//            Utils.log("consumer="+name+", "+message);
             messageProcessor.accept(message);
         });
     }
