@@ -766,14 +766,21 @@ public class CustomTab2 extends JPanel {
         public void actionPerformed(ActionEvent e) {
             GameGroupNode[] selected = ((MyListModel2) destList.getModel()).toArray();
             addSourceElements(selected);
-            for (final Object o : selected) {
-
-                TreePath tp = (TreePath) pathhash.get(o + "");
-                log("treepath=" + tp);
-                InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
-                node.setVisible(true);
-                ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
-                pathhash.remove(o + "");
+            for (final GameGroupNode selectedNode : selected) {
+                InvisibleNode sourceNode = findSourceNode(root,selectedNode.getGameGroupHeader());
+                sourceNode.setVisible(true);
+                ((DefaultTreeModel) jtree.getModel()).nodeChanged(sourceNode);
+//                String nodeString = String.valueOf(selectedNode); //differs from selectedNode.getGameGroupHeader()
+//                TreePath tp = (TreePath) pathhash.get(nodeString);1
+//                if ( null != tp ) {
+//                    log("treepath=" + tp);
+//                    InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
+//                    node.setVisible(true);
+//                    ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
+//                    pathhash.remove(nodeString);
+//                } else {
+//                    log(new Exception("nodeString is not found in pathhash"));1
+//                }
             }
             clearDestinationAll();
         }
