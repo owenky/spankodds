@@ -14,6 +14,7 @@ import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.CustomTab2;
+import com.sia.client.ui.SpankOdds;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.SportCustomTab;
 
@@ -148,7 +149,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 testExecutor.start();
             }
         }
-        if (InitialGameMessages.getMessagesFromLog) {
+        if (SpankOdds.getMessagesFromLog) {
             Executors.newFixedThreadPool(1).submit(OngoingGameMessages::loadMessagesFromLog);
         }
     }

@@ -5,6 +5,7 @@ import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
+import com.sia.client.simulator.LocalMessageLogger;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;
@@ -25,17 +26,17 @@ import static com.sia.client.config.Utils.log;
 
 public class SpankOdds {
 
-    private static final String version = "20210601001";
-    //    private SportsTabPane stb;
-//    private TopView tv;
-//    private SportsMenuBar smb;
-//    private OddsFrame of;
-//    private JPanel mainpanel;
+    public static boolean getMessagesFromLog = false;
     private SpankyWindow frame;
     private String userName;
-//    private int failedAttemptsCount = 0;
 
     public static void main(String[] args) {
+        getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
+        if ( getMessagesFromLog) {
+            Utils.logger = new LocalMessageLogger();
+        } else {
+            Utils.logger = new Logger();
+        }
         initSystemProperties();
         com.jidesoft.utils.Lm.verifyLicense("Spank Odds", "Spank Odds",
                 "gJGsTI2f4lYzPcskZ7OHWXN7iPvWAbO2");
@@ -52,16 +53,17 @@ public class SpankOdds {
     }
 
     private static void initSystemProperties() {
+        Logger logger = Utils.logger;
         if (Boolean.parseBoolean(System.getProperty("LogToFile"))) {
             try {
-                Logger.logPs = new PrintStream(new FileOutputStream(SiaConst.logFileName));
-                Logger.errPs = new PrintStream(new FileOutputStream(SiaConst.errFileName));
+                logger.setlogPs(new PrintStream(new FileOutputStream(SiaConst.logFileName)));
+                logger.setErrPs(new PrintStream(new FileOutputStream(SiaConst.errFileName)));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
-            Logger.logPs = System.out;
-            Logger.errPs = System.err;
+            logger.setlogPs(System.out);
+            logger.setErrPs(System.err);
         }
     }
 
@@ -81,7 +83,7 @@ public class SpankOdds {
         LoginListener loginListener = new LoginAdapter() {
             @Override
             public void loginSucceeded(LoginEvent source) {
-                frame = SpankyWindow.create("Spank Odds (" + version + ")");
+                frame = SpankyWindow.create("Spank Odds (" + SiaConst.Version + ")");
                 SpankOdds.this.userName = loginPane.getUserName();
                 InitialGameMessages.postDataLoading();
                 SpankOdds.this.showGui();

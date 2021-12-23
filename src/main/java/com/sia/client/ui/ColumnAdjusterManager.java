@@ -9,7 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sia.client.config.Logger.consoleLogPeek;
+import static com.sia.client.config.Utils.consoleLogPeek;
+
 
 public class ColumnAdjusterManager {
 

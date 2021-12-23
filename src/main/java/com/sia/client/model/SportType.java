@@ -2,8 +2,8 @@ package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.SpankOdds;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -204,28 +204,11 @@ public class SportType {
         isTimeSort = timeSort;
     }
     public boolean isMyType(Game game) {
-
-//        if ( sportId < 0 && identityLeagueId < 0 ) {
-//            //for customized sport type, use containsGameLeague to check -- 2021-10-26
-//            return containsGameLeague(game);
-//        }
-//        int identifyingLeagueId = game.getSportIdentifyingLeagueId();
-//        if ( identityLeagueId > 0) {
-//            //this condition is for sport id == 5 which is shared by many different sports
-//            return identityLeagueId == identifyingLeagueId || identityLeagueId == game.getLeague_id(); //fsecond condition is for soccer
-//        } else {
-//            Sport sp = AppController.getSportByLeagueId(identifyingLeagueId);
-//            if (null == sp){
-//                return false;
-//            } else {
-//                return sportId==sp.getSport_id();
-//            }
-//        }
         return myTypeSelector.apply(game);
     }
     private static final int PurgeOldGameCutOffTime = 10;
     public boolean isGameNear(Game game) {
-        if (InitialGameMessages.getMessagesFromLog) {
+        if (SpankOdds.getMessagesFromLog) {
             //if messages come from local, then all messages should be processed and added to table -- 2021-10-11
             return true;
         }

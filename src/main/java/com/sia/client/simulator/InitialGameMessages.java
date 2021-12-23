@@ -4,6 +4,7 @@ import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.SpankOdds;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,7 +30,6 @@ public abstract class InitialGameMessages {
     public static final int PeekGameId = 214217;
     public static boolean shouldLogMesg = false;
     public static boolean shouldRunSimulator; //set by System Property
-    public static boolean getMessagesFromLog = false;
     public static boolean Debug;
     public static String [] filters;
     public static String MesgDir;
@@ -48,7 +48,6 @@ public abstract class InitialGameMessages {
         MesgDir = null==mesgDir?TestProperties.DefaultMesgDir:mesgDir;
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
         shouldRunSimulator = Boolean.parseBoolean(System.getProperty("RunSimulator"));
-        getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
         String filterStr = System.getProperty("Filter");
         if ( null == filterStr) {
             filters = new String [0];
@@ -59,7 +58,7 @@ public abstract class InitialGameMessages {
 
         interestedMessageTypes = configInterestedMessageTypes(interestedMesgTypeStr);
 
-        if ( getMessagesFromLog) {
+        if ( SpankOdds.getMessagesFromLog) {
             shouldLogMesg = false;
             String msgDir = System.getProperty("MessageLoadingFolder");
             if ( null != msgDir) {
@@ -114,7 +113,7 @@ public abstract class InitialGameMessages {
         loadGamesFromLog();
     }
     private static void loadGamesFromLog() {
-        if (getMessagesFromLog) {
+        if (SpankOdds.getMessagesFromLog) {
             try (Stream<String> stream = Files.lines(Paths.get(InitialLoadingFilePath))) {
                 stream.forEach(text->AppController.pushGameToCache(GameUtils.parseGameText(text)));
             } catch ( Exception e) {

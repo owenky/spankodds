@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +29,19 @@ public abstract class GameUtils {
         soccerSpecialGroups.add("Soccer Halftime");
         soccerSpecialGroups.add("Soccer Final");
         soccerSpecialGroups.add("Soccer In Progress");
+    }
+    public static LocalDateTime getGameDateTime(Game game, ZoneId zoneId) {
+        if ( null == game.getGamedate() || null == game.getGametime()) {
+            return null;
+        }
+        LocalDate gameDate = Instant.ofEpochMilli(game.getGamedate().getTime()).atZone(zoneId).toLocalDate();
+        LocalTime gameTime = Instant.ofEpochMilli(game.getGametime().getTime()).atZone(zoneId).toLocalTime();
+        return LocalDateTime.of(gameDate,gameTime);
+    }
+    public static boolean isGameStarted(Game game) {
+        LocalDateTime now = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDateTime();
+        LocalDateTime gameDateTime = getGameDateTime(game,ZoneId.of(SiaConst.DefaultGameTimeZone));
+        return null != gameDateTime && ! gameDateTime.isAfter(now);
     }
     public static Sport getSport(Game game) {
         return AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());

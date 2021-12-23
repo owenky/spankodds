@@ -39,6 +39,7 @@ public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
+    public static Logger logger;
 
 
     public static URL getMediaResource(String resourceName) {
@@ -83,22 +84,31 @@ public abstract class Utils {
         }
         return url;
     }
+    public static void consoleLogPeek(String mesg) {
+        logger.consoleLogPeek(mesg);
+    }
+    public static void consoleLogPeek(Exception e) {
+        logger.consoleLogPeek(e);
+    }
+    public static void consoleLogPeekGameId(String keyword,int gameId) {
+        logger.consoleLogPeekGameId(keyword,gameId);
+    }
     public static void log(Throwable e) {
         log("",e);
     }
     public static void log(String errMsg,Throwable e) {
-        Logger.log(errMsg,e);
+        logger.log(errMsg,e);
     }
     public static void debug(String mesg) {
-        Logger.debug(mesg);
+        logger.debug(mesg);
     }
     public static void log(String mesg) {
-        Logger.log(mesg);
+        logger.log(mesg);
     }
     public static void log(Object mesg) {
-        Logger.log(mesg);
+        logger.log(mesg);
     }
-    private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+    public static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
     public static String nowShortString() {
         java.util.Date date = new java.util.Date(System.currentTimeMillis());
         Instant instant = date.toInstant();

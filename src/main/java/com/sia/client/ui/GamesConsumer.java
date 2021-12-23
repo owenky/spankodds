@@ -57,7 +57,7 @@ public class GamesConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        if (!InitialGameMessages.getMessagesFromLog) {
+        if (!SpankOdds.getMessagesFromLog) {
             if (toSimulateMQ) {
                 if (simulateStatus.compareAndSet(false, true)) {
                     new GameMessageSimulator(this).start();

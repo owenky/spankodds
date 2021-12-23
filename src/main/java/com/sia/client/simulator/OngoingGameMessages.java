@@ -3,6 +3,7 @@ package com.sia.client.simulator;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.SpankOdds;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
@@ -12,9 +13,13 @@ import javax.jms.TextMessage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.IllegalCharsetNameException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,19 +57,19 @@ public abstract class OngoingGameMessages {
     }
     private static MessageDispatcher toLinesMessageConsumer() {
         if ( null == toLinesMessageConsumer) {
-            toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m));
+            toLinesMessageConsumer = new MessageDispatcher(m-> AppController.linesConsumer.processMessage((MapMessage)m),"LinesConsumer");
         }
         return toLinesMessageConsumer;
     }
     private static MessageDispatcher toScoreMessageConsumer() {
         if ( null == toScoreMessageConsumer) {
-            toScoreMessageConsumer =  new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m));
+            toScoreMessageConsumer =  new MessageDispatcher(m->  AppController.scoresConsumer.processMessage((MapMessage)m),"ScoresConsumer");
         }
         return toScoreMessageConsumer;
     }
     private static MessageDispatcher toGameMessageConsumer() {
         if ( null == toGameMessageConsumer) {
-            toGameMessageConsumer =  new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m));
+            toGameMessageConsumer =  new MessageDispatcher(m->  AppController.gamesConsumer.processMessage((TextMessage)m),"GamesConsumer");
         }
         return toGameMessageConsumer;
     }
@@ -159,33 +164,20 @@ public abstract class OngoingGameMessages {
         }
     }
     public static void main(String[] argv) throws InterruptedException {
-//        InitialGameMessages.shouldLogMesg = true;
-//        InitialGameMessages.getMessagesFromLog = true;
-//        InitialGameMessages.backupTempDir();
-//        for (int i = 0; i < 10; i++) {
-//            addText(MessageType.Game, "game line " + i);
-//            addText(MessageType.Score, "score line " + i);
-//            addText(MessageType.Line, "Line line " + i);
-//        }
-//        Thread.sleep(5000L);
-//        loadMessagesFromLog();
-        String test="{abcd}";
-        log(rmSpecialCharacters(test));
-
-        test="1234";
-        log(rmSpecialCharacters(test));
-        System.exit(0);
+        long now = System.currentTimeMillis();
+        LocalDateTime ldt = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        System.out.println(ldt);
     }
 
     public static void loadMessagesFromLog() {
         AppController.waitForSpankyWindowLoaded();
-        if (InitialGameMessages.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
+        if (SpankOdds.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
             File tempDir = new File(InitialGameMessages.MesgDir);
             String[] files = tempDir.list();
             if (null != files) {
                 for (int i = 0; i < (files.length-1); i++) {  //skip initGameMesgs.txt
                     String filePath = InitialGameMessages.MesgDir + File.separator + i + ".txt";
-                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
+//                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
                         stream.forEach(OngoingGameMessages::processMessage);
                     } catch (Exception e) {
@@ -201,6 +193,16 @@ public abstract class OngoingGameMessages {
     private static int scoresMesgCnt = 0;
     private static void processMessage(String text) {
 
+        String[] strs = text.split(MessageTypeDelimiter);
+        if (3 > strs.length) {
+            return;
+        }
+        String timeStamp = strs[0];
+        LocalDateTime ltd = new Date(Long.parseLong(timeStamp)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalMessageLogger.localMessageTimeStamp.set(ltd);
+        LocalMessageLogger.localMessageClock.set(ltd);
+        String type = strs[1];
+        String messageText = strs[2];
         boolean toContinue=false;
         for(String keyword: InitialGameMessages.filters) {
             if ( text.contains(keyword)) {
@@ -213,13 +215,6 @@ public abstract class OngoingGameMessages {
             return;
         }
 
-        String[] strs = text.split(MessageTypeDelimiter);
-        if (3 > strs.length) {
-            return;
-        }
-        String timeStamp = strs[0];
-        String type = strs[1];
-        String messageText = strs[2];
         pause(50L);
 
         toContinue = interestedMessageTypes.stream().anyMatch(mt->mt.name().equals(type));
@@ -227,21 +222,24 @@ public abstract class OngoingGameMessages {
             return;
         }
 
+        MessageDispatcher messageDispatcher;
+        Message message;
         if (MessageType.Line.name().equals(type)) {
-            MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            toLinesMessageConsumer().dispatch(mapMessgage);
+            message = new LocalMapMessage(parseText(messageText),ltd);
+            messageDispatcher = toLinesMessageConsumer();
             linesMesgCnt++;
         } else if (MessageType.Score.name().equals(type)) {
-            MapMessage mapMessgage = new LocalMapMessage(parseText(messageText));
-            toScoreMessageConsumer().dispatch(mapMessgage);
+            message = new LocalMapMessage(parseText(messageText),ltd);
+            messageDispatcher = toScoreMessageConsumer();
             scoresMesgCnt++;
         } else if (MessageType.Game.name().equals(type)) {
-            TextMessage txtMessgage = new LocalTextMessage(parseText(messageText));
-            toGameMessageConsumer().dispatch(txtMessgage);
+            message = new LocalTextMessage(parseText(messageText),ltd);
+            messageDispatcher = toGameMessageConsumer();
             gamesMesgCnt++;
         } else {
-            log("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
+            throw new IllegalCharsetNameException("OnGoingGameMessage::processMessage -- ERROR! Unknown message type:" + type);
         }
+        messageDispatcher.dispatch(message);
     }
     private static int messageCount=0;
     static void pause(long time) {

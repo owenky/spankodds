@@ -8,44 +8,50 @@ import java.util.concurrent.Executors;
 
 public class Logger {
 
-    public static PrintStream logPs=System.out;
-    public static PrintStream errPs=System.err;
+    private PrintStream logPs=System.out;
+    private PrintStream errPs=System.err;
 
-    private static final Executor executor = Executors.newSingleThreadExecutor();
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
-    public static void log(String mesg) {
+    public void setErrPs(PrintStream errPs) {
+        this.errPs = errPs;
+    }
+    public void setlogPs(PrintStream logPs) {
+        this.logPs = logPs;
+    }
+    public void log(String mesg) {
         String fullMsg = logHeader()+mesg;
         executor.execute(()->logPs.println(fullMsg));
     }
-    public static void log(String errMsg,Throwable e) {
+    public void log(String errMsg,Throwable e) {
         String logHeader = logHeader();
-        executor.execute(()->{errPs.println(logHeader+"| errMsg:"+errMsg);e.printStackTrace(Logger.errPs);});
+        executor.execute(()->{errPs.println(logHeader+"| errMsg:"+errMsg);e.printStackTrace(errPs);});
     }
-    public static void log(Throwable e) {
+    public void log(Throwable e) {
         log("",e);
     }
-    public static String logHeader() {
+    public String logHeader() {
         return Utils.nowShortString()+", Thread="+Thread.currentThread().getName()+" |";
     }
-    public static void debug(String mesg) {
+    public void debug(String mesg) {
         log(logHeader()+" DEBUG:"+mesg);
     }
-    public static void consoleLogPeekGameId(String keyword, int gameid) {
+    public void consoleLogPeekGameId(String keyword, int gameid) {
         if (InitialGameMessages.PeekGameId == gameid) {
             consoleLogPeek("game id "+gameid+" received at "+keyword);
         }
     }
-    public static void consoleLogPeek(String mesg) {
+    public void consoleLogPeek(String mesg) {
         if ( InitialGameMessages.Debug) {
             System.out.println(logHeader() + mesg);
         }
     }
-    public static void consoleLogPeek(Exception e) {
+    public void consoleLogPeek(Exception e) {
         if ( InitialGameMessages.Debug) {
             e.printStackTrace();
         }
     }
-    public static void log(Object mesg) {
-        log(logHeader()+mesg);
+    public void log(Object mesg) {
+        log(String.valueOf(mesg));
     }
 }

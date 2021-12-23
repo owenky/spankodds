@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
 
@@ -24,7 +25,8 @@ public enum GameStatus {
             null,SiaConst.FinalStr,"WIN","TIE","CNCLD","PONED");
 
     public static GameStatus getGameStatus(Game game) {
-        if ( game.isIngame()) {
+        if ( game.isIngame() && GameUtils.isGameStarted(game)) {
+            //A good rule to check Frank is a game should never be under in game if it hasn’t started yet -- 12/19/2021
             return InGamePrices;
         } else if ( game.isSeriesprice()) {
             return SeriesPrice;
