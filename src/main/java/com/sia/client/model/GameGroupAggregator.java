@@ -7,15 +7,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.Function;
 
 public class GameGroupAggregator {
 
     private final SportType sportType;
     private final boolean toIncludeStatusHeader;
+    private final Function<Game,Boolean> gameFilter;
 
-    public GameGroupAggregator(SportType sportType,boolean toIncludeStatusHeader) {
+    public GameGroupAggregator(SportType sportType,Function<Game,Boolean> gameFilter,boolean toIncludeStatusHeader) {
         this.sportType = sportType;
         this.toIncludeStatusHeader = toIncludeStatusHeader;
+        this.gameFilter = gameFilter;
     }
     public Map<GameGroupHeader, Vector<Game>> aggregate() {
         Map<GameGroupHeader, Vector<Game>> headerMap = new HashMap<>();
@@ -23,10 +26,7 @@ public class GameGroupAggregator {
         Iterator<Game> ite = allgames.iterator();
         while ( ite.hasNext()) {
             Game g = ite.next();
-            if (!sportType.shouldSelect(g)) {
-//if ( sportType.equals(SportType.Fighting) && null != g.getGamedate() && "2021-12-05".equals(g.getGamedate().toString())) {
-//    System.out.println("skiped game id:"+g.getGame_id());
-//}
+            if (!gameFilter.apply(g)) {
                 continue;
             }
             if (null == g.getStatus()) {

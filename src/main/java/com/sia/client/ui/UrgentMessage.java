@@ -11,7 +11,6 @@ import com.sia.client.config.Utils;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -20,8 +19,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class UrgentMessage {
 
@@ -53,17 +50,13 @@ public class UrgentMessage {
         panel.add(message, BorderLayout.CENTER);
         panel.setOpaque(true);
         panel.setBackgroundPaint(new GradientPaint(0, 0, new Color(231, 229, 224), 0, panel.getPreferredSize().height, new Color(212, 208, 200)));
+        //https://docs.oracle.com/javase/tutorial/uiswing/misc/modality.html+
         Alert alert = new Alert();
-
 
         JPanel rightPanel = new JPanel(new GridLayout(1, 2, 0, 0));
 //        JideButton closeButton = createButton(IconsFactory.getImageIcon(UrgentMessage.class, "close.png"));
-        JideButton closeButton = createButton(new ImageIcon(Utils.getMediaResource("close.png")));
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                alert.hidePopupImmediately();
-            }
-        });
+        JideButton closeButton = createButton(Utils.getImageIcon(("close.png")));
+        closeButton.addActionListener(e -> alert.hidePopupImmediately());
         rightPanel.add(closeButton);
 
         JPanel topPanel = JideSwingUtilities.createTopPanel(rightPanel);

@@ -236,31 +236,11 @@ public class SportType {
         return  null == leagueFilter || leagueFilter.isSelected(game.getLeague_id());
     }
     public boolean shouldSelect(Game game) {
-        if ( null == game ) {
-            log("skipping  null game");
-            return false;
-        }
-        if ( null == game.getGamedate()) {
-            log("skipping gameid=" + game.getGame_id() + "...cuz of null game date");
-            return false;
-        }
-
-        if ( null == game.getVisitorteam() ) {
-            log("skipping gameid=" + game.getGame_id() + "...cuz of null visitor team");
-            return false;
-        }
-
-        if ( null == game.getHometeam() ) {
-            log("skipping gameid=" + game.getGame_id() + "...cuz of null home team");
-            return false;
-        }
-
-        int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
-        Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
-        if ( null == sport) {
-            log("skipping " + GameUtils.getGameDebugInfo(game) + "...cuz of null sport");
-            return false;
-        }
+       String err = GameUtils.checkError(game);
+       if ( null != err) {
+           log(err);
+           return false;
+       }
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);
     }
     @Override

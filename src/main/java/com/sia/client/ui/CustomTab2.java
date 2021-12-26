@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupAggregator;
@@ -61,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
@@ -161,7 +163,8 @@ public class CustomTab2 extends JPanel {
     private void addSportTypes(SportType st,Map<String,GameGroupNode> gameGroupNodeMap) {
         InvisibleNode node = new InvisibleNode(st.getSportName());
         root.add(node);
-        GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(st,false);
+        Function<Game,Boolean> gameFilter = (game)-> null == GameUtils.checkError(game) && st.isGameNear(game) && st.isMyType(game);
+        GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(st,gameFilter,false);
         Map<GameGroupHeader, Vector<Game>> headerToGameListMap = gameGroupAggregator.aggregate();
         List<GameGroupHeader> gameGroupHeaderList = headerToGameListMap.keySet().stream().sorted(new GameGroupDateSorter().thenComparing(new GameGroupLeagueSorter())).collect(Collectors.toList());
         for(GameGroupHeader header: gameGroupHeaderList) {
