@@ -83,19 +83,10 @@ public class CustomTab2 extends JPanel {
     Vector customheaders = new Vector();
     Vector<String> illegalnames = new Vector<String>();
     Hashtable pathhash;
-//    Hashtable nodehash = new Hashtable();
     JTree jtree;
-//    Vector gamegroupvec = new Vector();
-//    Vector gamegroupheadervec = new Vector();
-//    Vector currentvec = new Vector();
-//    Vector gamesVec = new Vector();
-//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//    SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
     JScrollPane jscrlp = new JScrollPane();
     int tabindex = -1;
     private InvisibleNode root = new InvisibleNode("Games");
-//    private Hashtable sporthash = new Hashtable();
-//    private Hashtable mainhash = new Hashtable();
     private JLabel sourceLabel;
     private JList<GameGroupNode> sourceList;
     private MyListModel2 sourceListModel;
@@ -126,7 +117,6 @@ public class CustomTab2 extends JPanel {
         TextPrompt tp7 = new TextPrompt("Name Your Tab", tabname);
         tp7.setForeground(Color.RED);
         tp7.setShow(TextPrompt.Show.FOCUS_LOST);
-        //tp7.changeAlpha(0.5f);
         tp7.changeStyle(Font.BOLD + Font.ITALIC);
 
         tabname.setMinimumSize(new Dimension(100, 20));
@@ -668,7 +658,7 @@ public class CustomTab2 extends JPanel {
             if (!editing) {
                 consumer = (tp) -> {
                     int numtabs = tp.getTabCount();
-                    SportType st = SportType.createCustomizedSportType(tab, customvec);
+                    SportType st = SportType.createCustomizedSportType(tab, customvec,includeheaders.isSelected(), includeseries.isSelected(), includeingame.isSelected(), includeadded.isSelected(), includeextra.isSelected(),includeprops.isSelected());
                     MainScreen ms = tp.createMainScreen(st);
                     setMainScreenProperties(ms);
                     tp.insertTab(ms.getName(), null, ms, ms.getName(), numtabs - 1);
@@ -680,6 +670,12 @@ public class CustomTab2 extends JPanel {
                 //editing existing tab
                 consumer = (tp) -> {
                     SportType editedSportType = SportType.findBySportName(tab);
+                    editedSportType.setShowheaders(includeheaders.isSelected());
+                    editedSportType.setShowseries(includeseries.isSelected());
+                    editedSportType.setShowingame(includeingame.isSelected());
+                    editedSportType.setShowAdded(includeadded.isSelected());
+                    editedSportType.setShowExtra(includeextra.isSelected());
+                    editedSportType.setShowProps(includeprops.isSelected());
                     MainScreen editedMs = tp.findMainScreen(editedSportType.getSportName());
                     editedMs.setCustomheaders(customvec);
                     setMainScreenProperties(editedMs);

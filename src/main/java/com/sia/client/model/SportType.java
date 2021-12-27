@@ -59,8 +59,14 @@ public class SportType {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).filter(SportType::isPredifined).findFirst();
         return stOpt.orElse(null);
     }
-    public static SportType createCustomizedSportType(String name,List<String> customizedHeaders) {
+    public static SportType createCustomizedSportType(String name,List<String> customizedHeaders,boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
         SportType rtn = new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaders));
+        rtn.setShowheaders(showheaders);
+        rtn.setShowseries(showseries);
+        rtn.setShowingame(showingame);
+        rtn.setShowAdded(showadded);
+        rtn.setShowExtra(showextra);
+        rtn.setShowProps(showprops);
         rtn.customheaders = customizedHeaders;
         return rtn;
     }
@@ -292,10 +298,10 @@ public class SportType {
         }
     }
     private boolean isFilteredByConfig(Game g) {
-        if (!  isPredifined()) {
-            SportType preDefinedSt = SportType.findPredefinedByGame(g);
-            return preDefinedSt.isFilteredByConfig(g);
-        }
+//        if (!  isPredifined()) {
+//            SportType preDefinedSt = SportType.findPredefinedByGame(g);
+//            return preDefinedSt.isFilteredByConfig(g);
+//        }
         //predefined sport type filter
         if ( seriesPriceConfig(g) || addedConfig(g) || extraConfig(g) || forPropConfig(g)) {
             return true;

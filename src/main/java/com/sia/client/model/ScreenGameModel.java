@@ -16,7 +16,6 @@ import java.util.Vector;
 import java.util.function.Function;
 
 import static com.sia.client.config.Utils.log;
-import static java.lang.Boolean.parseBoolean;
 
 public class ScreenGameModel {
 
@@ -151,16 +150,6 @@ public class ScreenGameModel {
     public Vector<TableColumn> getAllTableColumns() {
         return allColumns;
     }
-
-    private void setShowProperties(String[] prefs) {
-        screenProperty.setShowheaders(parseBoolean(prefs[3]));
-        sportType.setShowseries(parseBoolean(prefs[4]));
-        sportType.setShowingame(parseBoolean(prefs[5]));
-        sportType.setShowAdded(parseBoolean(prefs[6]));
-        sportType.setShowExtra(parseBoolean(prefs[7]));
-        sportType.setShowProps(parseBoolean(prefs[8]));
-    }
-
     public Map<GameGroupHeader, LinesTableData> getHeaderMap() {
         return this.headerMap;
     }
