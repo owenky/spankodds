@@ -126,8 +126,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             }
             try {
                 List<String> customheaderStrList = GameUtils.convertLeagueIdHeaderToGameGroupHeaderStr(customheaders);
-                SportType customerizedSportType = SportType.createCustomizedSportType(name, customheaderStrList);
-                MainScreen msnew = new MainScreen(customerizedSportType, spankyWindowConfig, showheaders, showseries, showingame, showadded, showextra, showprops);
+                SportType customerizedSportType = SportType.createCustomizedSportType(name, customheaderStrList,showheaders, showseries, showingame, showadded, showextra, showprops);
+                MainScreen msnew = new MainScreen(customerizedSportType, spankyWindowConfig);
                 addMainScreenToCache(msnew);
                 addTab(name, null, msnew, name);
             } catch ( Exception e) {

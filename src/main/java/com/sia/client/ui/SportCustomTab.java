@@ -253,7 +253,7 @@ public class SportCustomTab {
         // Make the labels.
         JLabel jlabOne = new JLabel("Button Group One");
         JLabel jlabpopup = new JLabel("Popup Notification");
-        JLabel jlabpopupsecs = new JLabel("Till how many days games should  should show up  ");
+        JLabel jlabpopupsecs = new JLabel("Till how many days games should show up  ");
         JLabel jlabsound = new JLabel("Sound Notification");
         JLabel popuplocationlabel = new JLabel("Popup Location");
 

@@ -43,14 +43,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         screenGameModel = new ScreenGameModel(screenProperty,sportType);
     }
 
-    MainScreen(SportType sportType,SpankyWindowConfig spankyWindowConfig,boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
+    MainScreen(SportType sportType,SpankyWindowConfig spankyWindowConfig,boolean showheaders) {
         this(sportType,spankyWindowConfig);
-        screenProperty.setShowheaders(showheaders);
-        sportType.setShowseries(showseries);
-        sportType.setShowingame(showingame);
-        sportType.setShowAdded(showadded);
-        sportType.setShowExtra(showextra);
-        sportType.setShowProps(showprops);
     }
     public MainGameTableModel buildModel() {
 
@@ -120,7 +114,6 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     public void createMe(Runnable listener) {
         sportType.enrichSportType();
-        screenProperty.setShowheaders(sportType.isShowHeaders());
         MainScreenLoader loader = new MainScreenLoader(this);
         loader.setListener(listener);
         loader.load();
@@ -158,7 +151,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
 
     public void setShowHeaders(boolean b) {
-        screenProperty.setShowheaders(b);
+        sportType.setShowheaders(b);
     }
 
     public void adjustcols() {

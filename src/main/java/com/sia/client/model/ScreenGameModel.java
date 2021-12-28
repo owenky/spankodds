@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.Function;
 
 import static com.sia.client.config.Utils.log;
-import static java.lang.Boolean.parseBoolean;
 
 public class ScreenGameModel {
 
@@ -32,7 +32,8 @@ public class ScreenGameModel {
 
     public void build() {
 
-        GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(sportType, true);
+        Function<Game,Boolean> gameFilter = sportType::shouldSelect;
+        GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(sportType, gameFilter,true);
         Map<GameGroupHeader, Vector<Game>> headerListMap = gameGroupAggregator.aggregate();
         updateCurrentMaxLength(headerListMap);
         allColumns = createColumns();
@@ -149,16 +150,6 @@ public class ScreenGameModel {
     public Vector<TableColumn> getAllTableColumns() {
         return allColumns;
     }
-
-    private void setShowProperties(String[] prefs) {
-        screenProperty.setShowheaders(parseBoolean(prefs[3]));
-        sportType.setShowseries(parseBoolean(prefs[4]));
-        sportType.setShowingame(parseBoolean(prefs[5]));
-        sportType.setShowAdded(parseBoolean(prefs[6]));
-        sportType.setShowExtra(parseBoolean(prefs[7]));
-        sportType.setShowProps(parseBoolean(prefs[8]));
-    }
-
     public Map<GameGroupHeader, LinesTableData> getHeaderMap() {
         return this.headerMap;
     }

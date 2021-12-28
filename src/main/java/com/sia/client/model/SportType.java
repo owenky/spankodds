@@ -59,8 +59,14 @@ public class SportType {
         Optional<SportType> stOpt = instanceMap.values().stream().filter(st->st.isMyType(game)).filter(SportType::isPredifined).findFirst();
         return stOpt.orElse(null);
     }
-    public static SportType createCustomizedSportType(String name,List<String> customizedHeaders) {
+    public static SportType createCustomizedSportType(String name,List<String> customizedHeaders,boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
         SportType rtn = new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaders));
+        rtn.setShowheaders(showheaders);
+        rtn.setShowseries(showseries);
+        rtn.setShowingame(showingame);
+        rtn.setShowAdded(showadded);
+        rtn.setShowExtra(showextra);
+        rtn.setShowProps(showprops);
         rtn.customheaders = customizedHeaders;
         return rtn;
     }
@@ -236,31 +242,11 @@ public class SportType {
         return  null == leagueFilter || leagueFilter.isSelected(game.getLeague_id());
     }
     public boolean shouldSelect(Game game) {
-        if ( null == game ) {
-            log("skipping  null game");
-            return false;
-        }
-        if ( null == game.getGamedate()) {
-            log("skipping gameid=" + game.getGame_id() + "...cuz of null game date");
-            return false;
-        }
-
-        if ( null == game.getVisitorteam() ) {
-            log("skipping gameid=" + game.getGame_id() + "...cuz of null visitor team");
-            return false;
-        }
-
-        if ( null == game.getHometeam() ) {
-            log("skipping gameid=" + game.getGame_id() + "...cuz of null home team");
-            return false;
-        }
-
-        int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
-        Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
-        if ( null == sport) {
-            log("skipping " + GameUtils.getGameDebugInfo(game) + "...cuz of null sport");
-            return false;
-        }
+       String err = GameUtils.checkError(game);
+       if ( null != err) {
+           log(err);
+           return false;
+       }
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);
     }
     @Override
@@ -312,10 +298,10 @@ public class SportType {
         }
     }
     private boolean isFilteredByConfig(Game g) {
-        if (!  isPredifined()) {
-            SportType preDefinedSt = SportType.findPredefinedByGame(g);
-            return preDefinedSt.isFilteredByConfig(g);
-        }
+//        if (!  isPredifined()) {
+//            SportType preDefinedSt = SportType.findPredefinedByGame(g);
+//            return preDefinedSt.isFilteredByConfig(g);
+//        }
         //predefined sport type filter
         if ( seriesPriceConfig(g) || addedConfig(g) || extraConfig(g) || forPropConfig(g)) {
             return true;

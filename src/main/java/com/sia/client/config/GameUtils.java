@@ -91,11 +91,32 @@ public abstract class GameUtils {
         }
     }
     public static String checkError(Game game) {
+
+        if ( null == game ) {
+            return("skipping null game");
+        }
+
         if ( ! AppController.existLeagueId(game.getSportIdentifyingLeagueId()) ) {
             return "League id:"+game.getLeague_id()+", identifyingLeagueId:"+game.getSportIdentifyingLeagueId()+" does not exist...";
-        } else {
-            return null;
         }
+        if ( null == game.getGamedate()) {
+            return ("skipping gameid=" + game.getGame_id() + "...cuz of null game date");
+        }
+
+        if ( null == game.getVisitorteam() ) {
+            return ("skipping gameid=" + game.getGame_id() + "...cuz of null visitor team");
+        }
+
+        if ( null == game.getHometeam() ) {
+            return ("skipping gameid=" + game.getGame_id() + "...cuz of null home team");
+        }
+
+        int sportIdentifyingLeagueId = game.getSportIdentifyingLeagueId();
+        Sport sport = AppController.getSportByLeagueId(sportIdentifyingLeagueId);
+        if ( null == sport) {
+            return("skipping " + GameUtils.getGameDebugInfo(game) + "...cuz of null sport");
+        }
+        return null;
     }
     public static Game parseGameText(String text) {
         String[] array = text.split(SiaConst.MessageDelimiter);
