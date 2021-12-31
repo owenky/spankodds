@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.Games;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,38 +54,34 @@ public class CustomTab extends JPanel {
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Games");
 
-        DefaultMutableTreeNode football = new DefaultMutableTreeNode("Football");
-        DefaultMutableTreeNode basketball = new DefaultMutableTreeNode("Basketball");
-        DefaultMutableTreeNode baseball = new DefaultMutableTreeNode("Baseball");
-        DefaultMutableTreeNode hockey = new DefaultMutableTreeNode("Hockey");
-        DefaultMutableTreeNode fighting = new DefaultMutableTreeNode("Fighting");
-        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SiaConst.SoccerStr);
-        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode("Auto Racing");
-        DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf");
-        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis");
+//        DefaultMutableTreeNode football = new DefaultMutableTreeNode(SportName.Football);
+//        DefaultMutableTreeNode basketball = new DefaultMutableTreeNode(SportName.Basketball);
+//        DefaultMutableTreeNode baseball = new DefaultMutableTreeNode(SportName.Baseball);
+//        DefaultMutableTreeNode hockey = new DefaultMutableTreeNode(SportName.Hockey);
+//        DefaultMutableTreeNode fighting = new DefaultMutableTreeNode(SportName.Fighting);
+//        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SportName.Soccer);
+//        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode(SportName.Auto_Racing);
+//        DefaultMutableTreeNode golf = new DefaultMutableTreeNode(SportName.Golf);
+//        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode(SportName.Tennis);
+        for(SportType st: SportType.PreDefinedSports) {
+            root.add(new DefaultMutableTreeNode(st.getSportName()));
+        }
+//
+//
+//        root.add(football);
+//        root.add(basketball);
+//        root.add(baseball);
+//        root.add(hockey);
+//        root.add(fighting);
+//        root.add(soccer);
+//        root.add(autoracing);
+//        root.add(golf);
+//        root.add(tennis);
 
-
-        root.add(football);
-        root.add(basketball);
-        root.add(baseball);
-        root.add(hockey);
-        root.add(fighting);
-        root.add(soccer);
-        root.add(autoracing);
-        root.add(golf);
-        root.add(tennis);
-
-        DefaultMutableTreeNode currenttreenode;
         Games allgames = AppController.getGamesVec();
         String lastdate = null;
         int lastleagueid = 0;
-//
-//
-//        try {
-//            allgames.sort(new GameDateSorter().thenComparing(new GameNumSorter()));
-//        } catch (Exception ex) {
-//            log(ex);
-//        }
+
         Iterator<Game> ite = allgames.iterator();
         while(ite.hasNext()) {
 
@@ -115,30 +112,38 @@ public class CustomTab extends JPanel {
                 log("skipping " + leagueid + "...cuz of null sport");
                 continue;
             }
-
-            if (s.getSportname().equalsIgnoreCase("Football")) {
-                currenttreenode = football;
-            } else if (s.getSportname().equalsIgnoreCase("Basketball")) {
-                currenttreenode = basketball;
-            } else if (s.getSportname().equalsIgnoreCase("Baseball")) {
-                currenttreenode = baseball;
-            } else if (s.getSportname().equalsIgnoreCase("Hockey")) {
-                currenttreenode = hockey;
-            } else if (s.getSportname().equalsIgnoreCase("Fighting")) {
-                currenttreenode = fighting;
-            } else if (s.getSportname().equalsIgnoreCase(SiaConst.SoccerStr)) {
-                currenttreenode = soccer;
-            } else if (s.getSportname().equalsIgnoreCase("Auto Racing")) {
-                currenttreenode = autoracing;
-            } else if (s.getSportname().equalsIgnoreCase("Golf")) {
-                currenttreenode = golf;
-            } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
-                currenttreenode = tennis;
-            } else {
-                log("should never enter gameid=" + g.getGame_id());
-                currenttreenode = football;
-
+            int childCount = root.getChildCount();
+            DefaultMutableTreeNode currenttreenode = (DefaultMutableTreeNode)root.getChildAt(0);
+            for(int i=0;i<childCount;i++) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode)root.getChildAt(i);
+                if ( s.getSportname().equals(node.getUserObject())) {
+                    currenttreenode = node;
+                    break;
+                }
             }
+//            if (s.getSportname().equalsIgnoreCase("Football")) {
+//                currenttreenode = football;
+//            } else if (s.getSportname().equalsIgnoreCase("Basketball")) {
+//                currenttreenode = basketball;
+//            } else if (s.getSportname().equalsIgnoreCase("Baseball")) {
+//                currenttreenode = baseball;
+//            } else if (s.getSportname().equalsIgnoreCase("Hockey")) {
+//                currenttreenode = hockey;
+//            } else if (s.getSportname().equalsIgnoreCase("Fighting")) {
+//                currenttreenode = fighting;
+//            } else if (s.getSportname().equalsIgnoreCase(SiaConst.SoccerStr)) {
+//                currenttreenode = soccer;
+//            } else if (s.getSportname().equalsIgnoreCase("Auto Racing")) {
+//                currenttreenode = autoracing;
+//            } else if (s.getSportname().equalsIgnoreCase("Golf")) {
+//                currenttreenode = golf;
+//            } else if (s.getSportname().equalsIgnoreCase("Tennis")) {
+//                currenttreenode = tennis;
+//            } else {
+//                log("should never enter gameid=" + g.getGame_id());
+//                currenttreenode = football;
+//
+//            }
 
 
             if (leagueid == 9) // soccer need to look at subleagueid

@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.SportType;
 import com.sia.client.model.TabUnhideListener;
 import com.sia.client.ui.control.SportsTabPane;
@@ -477,7 +478,7 @@ public class SportsMenuBar extends JMenuBar {
 
 
         //*****************soccer*************************
-        JMenu soccer = new JMenu(SiaConst.SoccerStr);
+        JMenu soccer = new JMenu(SportName.Soccer);
         tabsmenu.add(soccer);
         soccer.addMenuListener(new MenuListener() {
 
@@ -491,19 +492,19 @@ public class SportsMenuBar extends JMenuBar {
                 int tp = 0;
                 int j;
                 for (j = 0; j < tc; j++) {
-                    if (stb.getTitleAt(j).equalsIgnoreCase(SiaConst.SoccerStr)) {
+                    if (stb.getTitleAt(j).equalsIgnoreCase(SportName.Soccer)) {
                         tp = 1;
                         break;
                     }
                 }
                 soccer.add(go);
-                go.addActionListener(ae -> stb.setSelectedIndex(stb.indexOfTab(SiaConst.SoccerStr)));
+                go.addActionListener(ae -> stb.setSelectedIndex(stb.indexOfTab(SportName.Soccer)));
                 soccer.add(manage);
-                manage.addActionListener(ae -> new SportCustomTab(SiaConst.SoccerStr, stb.indexOfTab(SiaConst.SoccerStr)));
+                manage.addActionListener(ae -> new SportCustomTab(SportName.Soccer, stb.indexOfTab(SportName.Soccer)));
                 if (tp == 1) {
                     soccer.add(hide);
                     hide.addActionListener(ae -> {
-                        int idx = stb.indexOfTab(SiaConst.SoccerStr);
+                        int idx = stb.indexOfTab(SportName.Soccer);
                         AppController.SpotsTabPaneVector.remove(5);
                         SpankyWindow.applyToAllWindows((tp14)-> {
                             tp14.setSelectedIndex(0);

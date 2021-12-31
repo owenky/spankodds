@@ -47,67 +47,24 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.log;
 
 
-public class SportCustomTab {
+public class SportCustomPanel {
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
-    String soundfile = "";
-//    JFileChooser fc = new JFileChooser();
     String[] prefs;
     JList selectedList = new JList();
     private JList<String> eventsList = new JList<>();
     private DefaultListModel<String> eventsModel = new DefaultListModel<>();
     int popupsecs = 5;
-//    ;
-//    int popuplocationint = 0;
-//    String defaultsoundfile = "";
-//    String defaultsoundfileplay = "";
-//    JLabel soundlabel = new JLabel("DEFAULT");
     private Vector checkedsports = new Vector();
     private Vector checkednodes = new Vector();
     private CheckBoxTree _tree;
     private Hashtable leaguenameidhash = new Hashtable();
-    private String alerttype = "";
-//    private int tabindex = 0;
 
-    public SportCustomTab(String atype, int tabindex) {
-        alerttype = atype;
-        SportType st = SportType.findBySportName(atype);
-        String userpref = st.getPerference();
-        log("userprefs =" + userpref);
-        prefs = userpref.split("\\|");
-
-        try {
-            popupsecs = Integer.parseInt(prefs[1]);
-        } catch (Exception ex) {
-            log(ex);
-        }
-
-
-        String[] checkedsportsarr = prefs[2].split(",");
-        for (final String s : checkedsportsarr) {
-            try {
-                checkedsports.add("" + s);
-            } catch (Exception ex) {
-                log(ex);
-            }
-        }
-        for (int j = 0; j < prefs.length; j++) {
-            log(j + "=" + prefs[j]);
-        }
-
-
-        // owen still needs prefs4 which is sound file
-  /*
-  checkedsports.add("1");
- checkedsports.add("3");
- checkedsports.add("Hockey");
- checkedsports.add("11");
- */
-
+    public SportCustomPanel(final SportType st) {
 
         //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
         LookAndFeelFactory.installJideExtension();
         // Create a new JFrame container.
-        JFrame jfrm = new JFrame(alerttype + " Preferences");
+        JFrame jfrm = new JFrame(st.getSportName() + " Preferences");
 
         // *** Use FlowLayout for the content pane. ***
         jfrm.getContentPane().setLayout(new FlowLayout());
@@ -120,10 +77,10 @@ public class SportCustomTab {
 
 
         //checkboxtree
-        final TreeModel treeModel = createSportTreeModel(atype);
+        final TreeModel treeModel = createSportTreeModel(st.getSportName());
 
         JPanel treePanel = new JPanel(new BorderLayout(2, 2));
-        treePanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), alerttype + " Alerts", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
+        treePanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), st.getSportName() + " Alerts", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
                 BorderFactory.createEmptyBorder(6, 0, 0, 0)));
         _tree = new CheckBoxTree(treeModel) {
             @Override
@@ -351,57 +308,14 @@ public class SportCustomTab {
 
                 //sportselected = sportselected.substring(1);
                 String newuserprefs = dateRadioButton.isSelected() + "|" + popupsecs + "|" + sportselected + "|" + includeheaders.isSelected() + "|" + includeseries.isSelected() + "|" + includeingame.isSelected() + "|" + includeadded.isSelected() + "|" + includeextra.isSelected() + "|" + includeprops.isSelected();
+
+                log("newprefs=" + newuserprefs);
                 st.setPerference(newuserprefs);
-//                log("newprefs=" + newuserprefs);
-//                if (alerttype.equalsIgnoreCase("football")) {
-//                    tabVal = 0;
-//                    AppController.getUser().setFootballPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Basketball")) {
-//                    tabVal = 1;
-//                    AppController.getUser().setBasketballPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Baseball")) {
-//                    tabVal = 2;
-//                    AppController.getUser().setBaseballPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Hockey")) {
-//                    tabVal = 3;
-//                    AppController.getUser().setHockeyPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Fighting")) {
-//                    tabVal = 4;
-//                    AppController.getUser().setFightingPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase(SiaConst.SoccerStr)) {
-//                    tabVal = 5;
-//                    AppController.getUser().setSoccerPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Auto racing")) {
-//                    tabVal = 6;
-//                    AppController.getUser().setAutoracingPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Golf")) {
-//                    tabVal = 7;
-//                    AppController.getUser().setGolfPref(newuserprefs);
-//                } else if (alerttype.equalsIgnoreCase("Tennis")) {
-//                    tabVal = 8;
-//                    AppController.getUser().setTennisPref(newuserprefs);
-//                }
 
                 jfrm.dispose();
-//                Vector<SportsTabPane> tabpanes = AppController.getTabPanes();
-//                for (SportsTabPane tp : tabpanes) {
-//                    MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
-//                    oldms.destroyMe();
-//                    SportType st = SportType.findBySportName(alerttype);
-//                    MainScreen ms = tp.createMainScreen(st);
-//                    ms.setShowHeaders(includeheaders.isSelected());
-//                    ms.setShowSeries(includeseries.isSelected());
-//                    ms.setShowIngame(includeingame.isSelected());
-//                    ms.setShowAdded(includeadded.isSelected());
-//                    ms.setShowExtra(includeextra.isSelected());
-//                    ms.setShowProps(includeprops.isSelected());
-//                    tp.setComponentAt(tabVal, ms);
-//                    tp.refreshCurrentTab();
-//                }
                 SpankyWindow.applyToAllWindows((tp)-> {
                     MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
                     oldms.destroyMe();
-                    SportType st = SportType.findBySportName(alerttype);
                     MainScreen ms = tp.createMainScreen(st);
                     ms.setShowHeaders(includeheaders.isSelected());
                     ms.setShowSeries(includeseries.isSelected());
@@ -415,9 +329,6 @@ public class SportCustomTab {
 
             }
         });
-
-
-        // Create three vertical boxes.
         Box box1 = Box.createVerticalBox();
         Box box2 = Box.createVerticalBox();
         Box box3 = Box.createVerticalBox();
@@ -430,14 +341,7 @@ public class SportCustomTab {
         box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Add the components to the boxes.
-	/*
-    box1.add(jlabOne); 
-    box1.add(Box.createRigidArea(new Dimension(0, 4))); 
-    box1.add(jbtnOne); 
-    box1.add(Box.createRigidArea(new Dimension(0, 4))); 
-    box1.add(jbtnTwo); 
-*/
+
         box1.add(treePanel);
 
         box2.add(selectedPanel);
@@ -476,12 +380,6 @@ public class SportCustomTab {
         box2.add(saveBut);
         box2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
-        // box3.add(jlabOne);
-        // box3.add(jcbOne);
-        //  box3.add(jcbTwo);
-
-
         //initialize tree
         for (int j = 0; j < checkednodes.size(); j++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes.elementAt(j);
@@ -506,7 +404,7 @@ public class SportCustomTab {
     }
 
 
-    public TreeModel createSportTreeModel(String tabname) {
+    private TreeModel createSportTreeModel(String tabname) {
         DefaultMutableTreeNode sportnode = new DefaultMutableTreeNode(tabname);
         DefaultTreeModel treeModel = new DefaultTreeModel(sportnode);
 
@@ -534,7 +432,6 @@ public class SportCustomTab {
 
             return treeModel;
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
             log(e);
         }
         return null;

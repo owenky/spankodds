@@ -6,11 +6,12 @@ import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -454,16 +455,20 @@ public class LineAlert implements ItemListener {
         soccerptslist[8] = "2.00";
 
 
-        sportlist[0] = "Please Select a Sport...";
-        sportlist[1] = "Football";
-        sportlist[2] = "Basketball";
-        sportlist[3] = "Baseball";
-        sportlist[4] = "Hockey";
-        sportlist[5] = SiaConst.SoccerStr;
-        sportlist[6] = "Fighting";
-        sportlist[7] = "Golf";
-        sportlist[8] = "Tennis";
-        sportlist[9] = "Auto Racing";
+        int index = 0;
+        sportlist[index++] = "Please Select a Sport...";
+        for(SportType st: SportType.PreDefinedSports) {
+            sportlist[index++] = st.getSportName();
+        }
+//        sportlist[1] = SportName.Football;
+//        sportlist[2] = SportName.Basketball;
+//        sportlist[3] = SportName.Baseball;
+//        sportlist[4] = SportName.Hockey;
+//        sportlist[5] = SiaConst.SoccerStr;
+//        sportlist[6] = SportName.Fighting;
+//        sportlist[7] = "Golf";
+//        sportlist[8] = "Tennis";
+//        sportlist[9] = "Auto Racing";
         sportComboBox = new JComboBox(sportlist);
         sportComboBox.setMaximumRowCount(sportlist.length);
 
@@ -2327,7 +2332,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             editing = true;
             lan = (LineAlertNode) AppController.getLineAlertNodes().elementAt(lanComboBox.getSelectedIndex());
             sport = lan.getSport();
-            if (lan.getSport().equals(SiaConst.SoccerStr)) {
+            if (lan.getSport().equals(SportName.Soccer)) {
                 DefaultComboBoxModel model = new DefaultComboBoxModel(soccerptslist);
                 spreadptsComboBox.setModel(model);
                 DefaultComboBoxModel model2 = new DefaultComboBoxModel(soccerptslist);

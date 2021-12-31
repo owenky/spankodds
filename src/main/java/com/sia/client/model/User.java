@@ -1,61 +1,48 @@
 package com.sia.client.model;
 
-import java.util.Vector;
+import com.sia.client.config.SiaConst.SportName;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     private String bookieTitles;
-    String email;
-    String password;
-    String username;
-    String address;
-    String city;
-    String state;
-    String country;
-    String phoneumber;
-    String timezone;
-    String oddstype;
-    String notificationmethod;
-    String subscriptiontype;
-    boolean isloggedin;
-    String bookiecolumnprefs;
-    String fixedcolumnprefs;
+    private final Map<String,String> sportPreference = new HashMap<>();
+    private String email;
+    private String password;
+    private String username;
+    private String address;
+    private String city;
+    private  String state;
+    private String country;
+    private String phoneumber;
+    private String timezone;
+    private String oddstype;
+    private String notificationmethod;
+    private String subscriptiontype;
+    private boolean isloggedin;
+    private String bookiecolumnprefs;
+    private String fixedcolumnprefs;
+    private String columncolors;
+    private String customtabs;
+    private String finalalert;
+    private String startedalert;
+    private String halftimealert;
+    private String lineupalert;
+    private String officialalert;
+    private String injuryalert;
+    private String timechangealert;
+    private String limitchangealert;
+    private String bigearnalert;
+    private long logintime;
+    private String chartfilename;
+    private int chartminamtnotify;
+    private int chartsecsrefresh;
 
+    private String tabsindex;
+    private String linealerts;
 
-    String columncolors;
-    String customtabs;
-    String finalalert;
-    String startedalert;
-    String halftimealert;
-    String lineupalert;
-    String officialalert;
-    String injuryalert;
-    String timechangealert;
-    String limitchangealert;
-    String bigearnalert;
-
-    String footballpref;
-    String basketballpref;
-    String baseballpref;
-    String hockeypref;
-    String fightingpref;
-    String soccerpref;
-    String autoracingpref;
-    String golfpref;
-    String tennispref;
-
-
-    Vector bookiecolumnsvector;
-    Vector colorcolumnvector;
-    long logintime;
-
-
-    String chartfilename;
-    int chartminamtnotify = 25;
-    int chartsecsrefresh = 30;
-
-    String tabsindex;
-    String linealerts;
-    public User(String username, String password, String email, String address, String city, String state, String country, String phoenumber,
+    public User(String username, String password, String email, String address, String city, String state, String country, String phoneumber,
                 String timezone, String oddstype, String notificationmethod, String subscriptiontype, boolean isloggedin,
                 String bookiecolumnprefs, String fixedcolumnprefs,
                 String columncolors,
@@ -113,16 +100,16 @@ public class User {
         this.limitchangealert = limitchangealert;
         this.bigearnalert = bigearnalert;
 
+        setSportPerference(SportName.Football,footballpref);
+        setSportPerference(SportName.Basketball,basketballpref);
+        setSportPerference(SportName.Baseball,baseballpref);
+        setSportPerference(SportName.Hockey,hockeypref);
+        setSportPerference(SportName.Fighting,fightingpref);
+        setSportPerference(SportName.Soccer,soccerpref);
+        setSportPerference(SportName.Auto_Racing,autoracingpref);
+        setSportPerference(SportName.Golf,golfpref);
+        setSportPerference(SportName.Tennis,tennispref);
 
-        this.footballpref = footballpref;
-        this.basketballpref = basketballpref;
-        this.baseballpref = baseballpref;
-        this.hockeypref = hockeypref;
-        this.fightingpref = fightingpref;
-        this.soccerpref = soccerpref;
-        this.autoracingpref = autoracingpref;
-        this.golfpref = golfpref;
-        this.tennispref = tennispref;
         this.chartfilename = chartfilename;
         this.chartminamtnotify = chartminamtnotify;
         this.chartsecsrefresh = chartsecsrefresh;
@@ -179,79 +166,13 @@ public class User {
         chartfilename = s;
     }
 
-    public String getFootballPref() {
-        return footballpref;
+
+    public void setSportPerference(String sportName, String pref) {
+        sportPreference.put(sportName,pref);
     }
-
-    public void setFootballPref(String s) {
-        footballpref = s;
+    public String getSportPerference(String sportName) {
+        return sportPreference.get(sportName);
     }
-
-    public String getBasketballPref() {
-        return basketballpref;
-    }
-
-    public void setBasketballPref(String s) {
-        basketballpref = s;
-    }
-
-    public String getBaseballPref() {
-        return baseballpref;
-    }
-
-    public void setBaseballPref(String s) {
-        baseballpref = s;
-    }
-
-    public String getHockeyPref() {
-        return hockeypref;
-    }
-
-    public void setHockeyPref(String s) {
-        hockeypref = s;
-    }
-
-    public String getFightingPref() {
-        return fightingpref;
-    }
-
-    public void setFightingPref(String s) {
-        fightingpref = s;
-    }
-
-    public String getSoccerPref() {
-        return soccerpref;
-    }
-
-    public void setSoccerPref(String s) {
-        soccerpref = s;
-    }
-
-    public String getAutoracingPref() {
-        return autoracingpref;
-    }
-
-    public void setAutoracingPref(String s) {
-        autoracingpref = s;
-    }
-
-    public String getGolfPref() {
-        return golfpref;
-    }
-
-    public void setGolfPref(String s) {
-        golfpref = s;
-    }
-
-    public String getTennisPref() {
-        return tennispref;
-    }
-
-    public void setTennisPref(String s) {
-        tennispref = s;
-    }
-
-
     public long getLoginTime() {
 
         return logintime;
