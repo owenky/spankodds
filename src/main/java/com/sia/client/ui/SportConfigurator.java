@@ -34,6 +34,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.Hashtable;
@@ -68,10 +69,26 @@ public class SportConfigurator {
         return configPanel;
     }
     private JPanel getTitlePanel() {
+
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BorderLayout());
         JLabel title = new JLabel(sportType.getSportName() + " Preferences");
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        Font defaultFont = title.getFont();
+        Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+2);
+        title.setFont(titleFont);
+
+        JButton closeBtn = new JButton("X");
+        closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4));
+        closeBtn.setOpaque(true);
+        closeBtn.setBorder(BorderFactory.createEmptyBorder());
+        titlePanel.add(closeBtn,BorderLayout.EAST);
         titlePanel.add(title,BorderLayout.CENTER);
+
+        closeBtn.addActionListener(event-> {
+            close();
+        });
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
         return titlePanel;
     }
     private JPanel getMainPanel() {
@@ -94,13 +111,6 @@ public class SportConfigurator {
                 log(ex);
             }
         }
-//        for (int j = 0; j < prefs.length; j++) {
-//            log(j + "=" + prefs[j]);
-//        }
-
-
-
-        //
         JPanel mainPanel = new JPanel();
         // *** Use FlowLayout for the content pane. ***
         mainPanel.setLayout(new FlowLayout());
@@ -261,8 +271,6 @@ public class SportConfigurator {
                         id = "" + path.getLastPathComponent();
                     }
                     sportselected = sportselected + id + ",";
-
-
                 }
             }
 
@@ -287,7 +295,7 @@ public class SportConfigurator {
                 tp.setComponentAt(tabVal, ms);
                 tp.refreshCurrentTab();
             });
-
+            close();
         });
         Box box1 = Box.createVerticalBox();
         Box box2 = Box.createVerticalBox();
@@ -392,5 +400,7 @@ public class SportConfigurator {
         }
         return null;
     }
-
+    private void close() {
+        System.out.println("Close Configuration Window....");
+    }
 }
