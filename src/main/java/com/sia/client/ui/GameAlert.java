@@ -646,7 +646,8 @@ public class GameAlert {
 //        DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf");
 //        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis");
 //        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode("Auto Racing");
-        for(SportType st: SportType.PreDefinedSports) {
+        SportType [] preDefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: preDefinedSportTypes) {
             root.add(new DefaultMutableTreeNode(st.getSportName()));
         }
         DefaultMutableTreeNode horse = new DefaultMutableTreeNode("Horse");

@@ -63,7 +63,8 @@ public class CustomTab extends JPanel {
 //        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode(SportName.Auto_Racing);
 //        DefaultMutableTreeNode golf = new DefaultMutableTreeNode(SportName.Golf);
 //        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode(SportName.Tennis);
-        for(SportType st: SportType.PreDefinedSports) {
+        SportType [] predefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: predefinedSportTypes) {
             root.add(new DefaultMutableTreeNode(st.getSportName()));
         }
 //

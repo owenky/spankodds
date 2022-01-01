@@ -50,15 +50,15 @@ public class AppController {
     private static final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
     private static final AtomicReference<CountDownLatch> messageProcessingLatchRef = new AtomicReference<>(new CountDownLatch(1));
     public static Vector<String> customTabsVec = new Vector<>();
-    public static Vector<LineAlertNode> linealertnodes = new Vector();
-    public static Vector<SportsMenuBar> menubars = new Vector();
-    public static Hashtable<String, String> bookieshortnameids = new Hashtable();
-    public static Vector<Bookie> openerbookiesVec = new Vector();
-    public static Vector<Bookie> bookiesVec = new Vector();
-    public static Vector<Sport> sportsVec = new Vector();
-    public static Vector<Bookie> hiddenCols = new Vector();
-    public static Vector<Bookie> shownCols = new Vector();
-    public static Vector<Bookie> fixedCols = new Vector();
+    public static Vector<LineAlertNode> linealertnodes = new Vector<>();
+    public static Vector<SportsMenuBar> menubars = new Vector<>();
+    public static Map<String, String> bookieshortnameids = new Hashtable<>();
+    public static Vector<Bookie> openerbookiesVec = new Vector<>();
+    public static Vector<Bookie> bookiesVec = new Vector<>();
+    public static Vector<Sport> sportsVec = new Vector<>();
+    public static Vector<Bookie> hiddenCols = new Vector<>();
+    public static Vector<Bookie> shownCols = new Vector<>();
+    public static Vector<Bookie> fixedCols = new Vector<>();
     public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
@@ -454,7 +454,7 @@ public class AppController {
         return customTabsVec;
     }
 
-    public static Vector getLineAlertNodes() {
+    public static Vector<LineAlertNode> getLineAlertNodes() {
         return linealertnodes;
     }
 

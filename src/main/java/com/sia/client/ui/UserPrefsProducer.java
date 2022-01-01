@@ -136,7 +136,7 @@ public class UserPrefsProducer {
             mapMessage.setString("fixedcolumnprefs", u.getFixedColumnPrefs());
             mapMessage.setString("columncolors", u.getColumnColors());
 
-            Arrays.stream(SportType.PreDefinedSports).forEach(st -> {
+            Arrays.stream(SportType.getPreDefinedSports()).forEach(st -> {
                 try {
                     mapMessage.setString(st.getPerfName(), st.getPerference());
                 } catch (JMSException e) {

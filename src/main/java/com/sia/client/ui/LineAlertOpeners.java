@@ -170,7 +170,8 @@ class LineAlertOpeners implements ItemListener {
 
         int index=0;
         sportlist[index++] = "Please Select a Sport...";
-        for(SportType st: SportType.PreDefinedSports) {
+        SportType [] predefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: predefinedSportTypes) {
             sportlist[index++] = st.getSportName();
         }
 //        sportlist[1] = "Football";

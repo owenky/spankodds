@@ -215,11 +215,11 @@ public class LineAlert implements ItemListener {
     String[] percentagelist = new String[100];
     String[] audiolist = new String[8];
    // String[] audiofile = new String[5];
-   Vector<String> audiofilevec = new Vector<String>();
+   Vector<String> audiofilevec = new Vector<>();
     JComboBox sportComboBox;
     JComboBox lanComboBox;
     JComboBox gameperiodComboBox;
-    private Vector checkedsports = new Vector();
+//    private Vector checkedsports = new Vector();
     private Vector checkednodes = new Vector();
     private CheckBoxTree _tree;
     private CheckBoxTree sportsbooktree;
@@ -457,7 +457,8 @@ public class LineAlert implements ItemListener {
 
         int index = 0;
         sportlist[index++] = "Please Select a Sport...";
-        for(SportType st: SportType.PreDefinedSports) {
+        SportType [] preDefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: preDefinedSportTypes) {
             sportlist[index++] = st.getSportName();
         }
 //        sportlist[1] = SportName.Football;
@@ -469,20 +470,17 @@ public class LineAlert implements ItemListener {
 //        sportlist[7] = "Golf";
 //        sportlist[8] = "Tennis";
 //        sportlist[9] = "Auto Racing";
-        sportComboBox = new JComboBox(sportlist);
+        sportComboBox = new JComboBox<>(sportlist);
         sportComboBox.setMaximumRowCount(sportlist.length);
 
 
-        if(AppController.getLineAlertNodes().size() == 0)
-        {
-            Vector deflan = new Vector();
+        if(AppController.getLineAlertNodes().size() == 0) {
+            Vector<String> deflan = new Vector<>();
             deflan.add("No Line Alerts Stored");
-            lanComboBox = new JComboBox(deflan);
+            lanComboBox = new JComboBox<>(deflan);
             lanComboBox.setSelectedIndex(0);
-        }
-        else
-        {
-            lanComboBox = new JComboBox(AppController.getLineAlertNodes());
+        } else {
+            lanComboBox = new JComboBox<>(AppController.getLineAlertNodes());
             lanComboBox.setSelectedIndex(-1);
         }
 
@@ -2152,12 +2150,10 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
         try {
 
-            Vector newBookiesVec = AppController.getBookiesVec();
+            Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
             List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
-            for (int k = 0; k < newBookiesVec.size(); k++) {
-                Bookie b = (Bookie) newBookiesVec.get(k);
-
+            for (Bookie b : newBookiesVec) {
                 if (hiddencols.contains(b) || b.getBookie_id() >= 990) {
                     continue;
                 }

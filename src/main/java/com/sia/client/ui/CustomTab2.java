@@ -169,7 +169,8 @@ public class CustomTab2 extends JPanel {
 
         pathhash = new Hashtable();
         jlab = new JLabel();
-        for(SportType st: SportType.PreDefinedSports) {
+        SportType [] predefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: predefinedSportTypes) {
             illegalnames.add(st.getSportName().toLowerCase());
         }
 //        illegalnames.add("football");
@@ -189,7 +190,7 @@ public class CustomTab2 extends JPanel {
             selectableTypes = new SportType[1];
             selectableTypes[0] = selectedType;
         } else {
-            selectableTypes = SportType.PreDefinedSports;
+            selectableTypes = SportType.getPreDefinedSports();
         }
 
         Map<String,GameGroupNode> gameGroupNodeMap = new HashMap<>();

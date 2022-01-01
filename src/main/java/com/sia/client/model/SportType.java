@@ -38,8 +38,21 @@ public class SportType {
 
     public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,getTodayMyTypeSelector());
     //array is in the same order as the sport's tab position in SportTabPane -- 2012-12-31
-    public static final SportType [] PreDefinedSports = {SportType.Football,SportType.Basketball,SportType.Baseball,SportType.Hockey,SportType.Fighting,SportType.Soccer,SportType.AutoRacing,SportType.Golf,SportType.Tennis};
+    private static final SportType [] PreDefinedSports = {SportType.Football,SportType.Basketball,SportType.Baseball,SportType.Hockey,SportType.Fighting,SportType.Soccer,SportType.AutoRacing,SportType.Golf,SportType.Tennis};
 
+    public static SportType [] getPreDefinedSports() {
+        return PreDefinedSports.clone();
+    }
+    public static int getPreDefinedSportTabIndex(SportType st) {
+        int index = -1;
+        for(int i=0;i<PreDefinedSports.length;i++) {
+            if ( PreDefinedSports[i].equals(st)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
     public static boolean isPredefinedSport(String sportName) {
         SportType st = findBySportName(sportName);
         if ( null == st) {
@@ -48,7 +61,6 @@ public class SportType {
             return st.isPredifined();
         }
     }
-
     /**
      * customized sport tab pane might also include the game, so return result is a list
      */

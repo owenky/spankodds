@@ -1,6 +1,5 @@
 package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
-import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.CheckBoxTree;
 import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.PartialEtchedBorder;
@@ -17,7 +16,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -38,8 +36,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -47,7 +43,7 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.log;
 
 
-public class SportCustomPanel {
+public class SportConfigurator {
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     String[] prefs;
     JList selectedList = new JList();
@@ -58,29 +54,61 @@ public class SportCustomPanel {
     private Vector checkednodes = new Vector();
     private CheckBoxTree _tree;
     private Hashtable leaguenameidhash = new Hashtable();
+    private final SportType sportType;
 
-    public SportCustomPanel(final SportType st) {
+    public SportConfigurator(SportType sportType) {
+        this.sportType = sportType;
+    }
+    public JPanel getConfigurationPanel() {
+        JPanel configPanel = new JPanel();
+        configPanel.setSize(840, 840);
+        configPanel.setLayout(new BorderLayout());
+        configPanel.add(getTitlePanel(),BorderLayout.NORTH);
+        configPanel.add(getMainPanel(),BorderLayout.CENTER);
+        return configPanel;
+    }
+    private JPanel getTitlePanel() {
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BorderLayout());
+        JLabel title = new JLabel(sportType.getSportName() + " Preferences");
+        titlePanel.add(title,BorderLayout.CENTER);
+        return titlePanel;
+    }
+    private JPanel getMainPanel() {
 
-        //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
-        LookAndFeelFactory.installJideExtension();
-        // Create a new JFrame container.
-        JFrame jfrm = new JFrame(st.getSportName() + " Preferences");
+        String userpref = sportType.getPerference();
+        prefs = userpref.split("\\|");
 
+        try {
+            popupsecs = Integer.parseInt(prefs[1]);
+        } catch (Exception ex) {
+            log(ex);
+        }
+
+
+        String[] checkedsportsarr = prefs[2].split(",");
+        for (final String s : checkedsportsarr) {
+            try {
+                checkedsports.add("" + s);
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+//        for (int j = 0; j < prefs.length; j++) {
+//            log(j + "=" + prefs[j]);
+//        }
+
+
+
+        //
+        JPanel mainPanel = new JPanel();
         // *** Use FlowLayout for the content pane. ***
-        jfrm.getContentPane().setLayout(new FlowLayout());
-
-        // Give the frame an initial size.
-        jfrm.setSize(840, 840);
-
-        // Terminate the program when the user closes the application.
-        //jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
+        mainPanel.setLayout(new FlowLayout());
         //checkboxtree
-        final TreeModel treeModel = createSportTreeModel(st.getSportName());
+        final TreeModel treeModel = createSportTreeModel(sportType.getSportName());
 
         JPanel treePanel = new JPanel(new BorderLayout(2, 2));
-        treePanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), st.getSportName() + " Alerts", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
+        treePanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), sportType.getSportName() + " Alerts", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
                 BorderFactory.createEmptyBorder(6, 0, 0, 0)));
         _tree = new CheckBoxTree(treeModel) {
             @Override
@@ -98,12 +126,6 @@ public class SportCustomPanel {
         renderer.setLeafIcon(null);
         renderer.setOpenIcon(null);
         renderer.setClosedIcon(null);
-        //	renderer.setOpenIcon(new IconUIResource(new NodeIcon('-')));
-        //	renderer.setClosedIcon(new IconUIResource(new NodeIcon('+')));
-        //   renderer.setLeafIcon(IconsFactory.getImageIcon(QuickFilterTreeDemo.class, "/icons/song.png"));
-        //   renderer.setClosedIcon(IconsFactory.getImageIcon(QuickFilterTreeDemo.class, "/icons/album.png"));
-        //   renderer.setOpenIcon(IconsFactory.getImageIcon(QuickFilterTreeDemo.class, "/icons/album.png"));
-
 
         _tree.getCheckBoxTreeSelectionModel().addTreeSelectionListener(e -> {
             TreePath[] paths = e.getPaths();
@@ -113,10 +135,8 @@ public class SportCustomPanel {
             eventsModel.addElement("---------------");
             eventsList.ensureIndexIsVisible(eventsModel.size() - 1);
             DefaultListModel selectedModel = new DefaultListModel();
-//                TreePath[] treePaths = _tree.getCheckBoxTreeSelectionModel().getSelectionPaths();
 
             int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-            log("treerows=" + treeRows);
             if (treeRows != null) {
                 java.util.Arrays.sort(treeRows);
                 for (final int treeRow : treeRows) {
@@ -124,19 +144,6 @@ public class SportCustomPanel {
                     selectedModel.addElement(path.getLastPathComponent());
                 }
             }
-
-            /*
-            if (treePaths != null)
-            {
-                for (TreePath path : treePaths)
-                {
-                    selectedModel.addElement(path.getLastPathComponent());
-
-                }
-
-            }
-            */
-            log("-------------------------");
             selectedList.setModel(selectedModel);
         });
         eventsList.setModel(eventsModel);
@@ -159,16 +166,7 @@ public class SportCustomPanel {
         TreeUtils.expandAll(_tree, true);
 
         treePanel.add(new JScrollPane(_tree));
-        //end checkboxtree
-
-
-        // Make the labels.
-//        JLabel jlabOne = new JLabel("Button Group One");
-//        JLabel jlabpopup = new JLabel("Popup Notification");
         JLabel jlabpopupsecs = new JLabel("Till how many days games should show up  ");
-        JLabel jlabsound = new JLabel("Sound Notification");
-//        JLabel popuplocationlabel = new JLabel("Popup Location");
-
 
         // Make the buttons.
         JButton jbtnOne = new JButton("One");
@@ -177,14 +175,8 @@ public class SportCustomPanel {
         JButton jbtnFour = new JButton("Four");
         Dimension btnDim = new Dimension(100, 25);
 
-//        JButton testsoundBut = new JButton("Test Sound");
-//        JButton testpopupBut = new JButton("Test Popup");
         JButton saveBut = new JButton("Save");
 
-//        JButton defaultsoundBut = new JButton("Use Default Sound");
-//        JButton customsoundBut = new JButton("Use Custom Sound");
-
-        // Set minimum and maximum sizes for the buttons.
         jbtnOne.setMinimumSize(btnDim);
         jbtnOne.setMaximumSize(btnDim);
         jbtnTwo.setMinimumSize(btnDim);
@@ -194,19 +186,11 @@ public class SportCustomPanel {
         jbtnFour.setMinimumSize(btnDim);
         jbtnFour.setMaximumSize(btnDim);
 
-//        // Make the checkboxes.
-//        JCheckBox jcbOne = new JCheckBox("Option One");
-//        JCheckBox jcbTwo = new JCheckBox("Option Two");
-//
-//        JCheckBox enablepopup = new JCheckBox("Enable Popup Notification");
-//        JCheckBox enablesound = new JCheckBox("Enable Sound Notification");
-
         JRadioButton dateRadioButton = new JRadioButton("Sort by Date");
         JRadioButton leagueRadioButton = new JRadioButton("Sort by League");
         ButtonGroup sortgroup = new ButtonGroup();
         sortgroup.add(dateRadioButton);
         sortgroup.add(leagueRadioButton);
-
 
         try {
 
@@ -256,7 +240,6 @@ public class SportCustomPanel {
         popupsecsslider.setPaintLabels(true);
         popupsecsslider.addChangeListener(e -> {
             JSlider source = (JSlider) e.getSource();
-//                int value = source.getValue();
             if (!source.getValueIsAdjusting()) {
                 popupsecs = source.getValue();
                 log("secs=" + popupsecs);
@@ -264,70 +247,47 @@ public class SportCustomPanel {
         });
 
 
-        saveBut.addActionListener(new ActionListener() {
-            int tabVal = 0;
+        saveBut.addActionListener(ae -> {
 
-            public void actionPerformed(ActionEvent ae) {
-
-                String sportselected = "";
-					/*
-					Enumeration enum00 = leaguenameidhash.keys();
-					int z = 0;
-					while(enum00.hasMoreElements())
-					{
-						z++;
-						String key = (String)enum00.nextElement();
-						String value = (String)leaguenameidhash.get(key);
-						log("key="+key+"..value="+value);
-						if(z > 20) {break;}
-					}
-					*/
-
-
-                int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                log("treerows=" + treeRows);
-                if (treeRows != null) {
-                    java.util.Arrays.sort(treeRows);
-                    for (final int treeRow : treeRows) {
-                        TreePath path = _tree.getPathForRow(treeRow);
-                        log(path.getLastPathComponent());
-                        String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
-                        if ( "null".equals(id)) {
-                            id = "" + path.getLastPathComponent();
-                        }
-                        sportselected = sportselected + id + ",";
-
-
+            String sportselected = "";
+            int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
+            if (treeRows != null) {
+                java.util.Arrays.sort(treeRows);
+                for (final int treeRow : treeRows) {
+                    TreePath path = _tree.getPathForRow(treeRow);
+                    log(path.getLastPathComponent());
+                    String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
+                    if ( "null".equals(id)) {
+                        id = "" + path.getLastPathComponent();
                     }
+                    sportselected = sportselected + id + ",";
+
+
                 }
-
-                if (sportselected.length() == 0) {
-                    sportselected = "null";
-                }
-
-
-                //sportselected = sportselected.substring(1);
-                String newuserprefs = dateRadioButton.isSelected() + "|" + popupsecs + "|" + sportselected + "|" + includeheaders.isSelected() + "|" + includeseries.isSelected() + "|" + includeingame.isSelected() + "|" + includeadded.isSelected() + "|" + includeextra.isSelected() + "|" + includeprops.isSelected();
-
-                log("newprefs=" + newuserprefs);
-                st.setPerference(newuserprefs);
-
-                jfrm.dispose();
-                SpankyWindow.applyToAllWindows((tp)-> {
-                    MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
-                    oldms.destroyMe();
-                    MainScreen ms = tp.createMainScreen(st);
-                    ms.setShowHeaders(includeheaders.isSelected());
-                    ms.setShowSeries(includeseries.isSelected());
-                    ms.setShowIngame(includeingame.isSelected());
-                    ms.setShowAdded(includeadded.isSelected());
-                    ms.setShowExtra(includeextra.isSelected());
-                    ms.setShowProps(includeprops.isSelected());
-                    tp.setComponentAt(tabVal, ms);
-                    tp.refreshCurrentTab();
-                });
-
             }
+
+            if (sportselected.length() == 0) {
+                sportselected = "null";
+            }
+
+            String newuserprefs = dateRadioButton.isSelected() + "|" + popupsecs + "|" + sportselected + "|" + includeheaders.isSelected() + "|" + includeseries.isSelected() + "|" + includeingame.isSelected() + "|" + includeadded.isSelected() + "|" + includeextra.isSelected() + "|" + includeprops.isSelected();
+
+            sportType.setPerference(newuserprefs);
+            int tabVal = SportType.getPreDefinedSportTabIndex(sportType);
+            SpankyWindow.applyToAllWindows((tp)-> {
+                MainScreen oldms = (MainScreen) tp.getComponentAt(tabVal);
+                oldms.destroyMe();
+                MainScreen ms = tp.createMainScreen(sportType);
+                ms.setShowHeaders(includeheaders.isSelected());
+                ms.setShowSeries(includeseries.isSelected());
+                ms.setShowIngame(includeingame.isSelected());
+                ms.setShowAdded(includeadded.isSelected());
+                ms.setShowExtra(includeextra.isSelected());
+                ms.setShowProps(includeprops.isSelected());
+                tp.setComponentAt(tabVal, ms);
+                tp.refreshCurrentTab();
+            });
+
         });
         Box box1 = Box.createVerticalBox();
         Box box2 = Box.createVerticalBox();
@@ -395,15 +355,11 @@ public class SportCustomPanel {
         selectedList.setEnabled(false);
 
         // Add the boxes to the content pane.
-        jfrm.getContentPane().add(box1);
-        jfrm.getContentPane().add(box2);
-        //jfrm.getContentPane().add(box3);
+        mainPanel.add(box1);
+        mainPanel.add(box2);
 
-        // Display the frame.
-        jfrm.setVisible(true);
+        return mainPanel;
     }
-
-
     private TreeModel createSportTreeModel(String tabname) {
         DefaultMutableTreeNode sportnode = new DefaultMutableTreeNode(tabname);
         DefaultTreeModel treeModel = new DefaultTreeModel(sportnode);
