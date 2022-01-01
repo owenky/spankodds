@@ -263,14 +263,14 @@ public class SportType {
     public String toString() {
         return sportName+"/"+sportId+":"+identityLeagueId;
     }
-    public String getPerfName() {
+    public String getPrefName() {
         return getSportName().toLowerCase().replaceAll("\\s+","")+"pref";
     }
     public String getPerference() {
-        return AppController.getUser().getSportPerference(this.getSportName());
+        return AppController.getUser().getSportPreference(this.getSportName());
     }
     public void setPerference(String pref) {
-        AppController.getUser().setSportPerference(this.getSportName(),pref);
+        AppController.getUser().setSportPreference(this.getSportName(),pref);
     }
     public void enrichSportType() {
         String userPrefStr = getPerference();

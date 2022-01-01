@@ -45,7 +45,7 @@ public class SportTypeTest {
     }
     @Test
     public void testGameSorter() {
-       assertEquals("autoracingpref",SportType.AutoRacing.getPerfName());
-       assertEquals("footballpref",SportType.Football.getPerfName());
+       assertEquals("autoracingpref",SportType.AutoRacing.getPrefName());
+       assertEquals("footballpref",SportType.Football.getPrefName());
     }
 }

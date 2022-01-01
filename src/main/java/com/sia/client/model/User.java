@@ -100,15 +100,15 @@ public class User {
         this.limitchangealert = limitchangealert;
         this.bigearnalert = bigearnalert;
 
-        setSportPerference(SportName.Football,footballpref);
-        setSportPerference(SportName.Basketball,basketballpref);
-        setSportPerference(SportName.Baseball,baseballpref);
-        setSportPerference(SportName.Hockey,hockeypref);
-        setSportPerference(SportName.Fighting,fightingpref);
-        setSportPerference(SportName.Soccer,soccerpref);
-        setSportPerference(SportName.Auto_Racing,autoracingpref);
-        setSportPerference(SportName.Golf,golfpref);
-        setSportPerference(SportName.Tennis,tennispref);
+        setSportPreference(SportName.Football,footballpref);
+        setSportPreference(SportName.Basketball,basketballpref);
+        setSportPreference(SportName.Baseball,baseballpref);
+        setSportPreference(SportName.Hockey,hockeypref);
+        setSportPreference(SportName.Fighting,fightingpref);
+        setSportPreference(SportName.Soccer,soccerpref);
+        setSportPreference(SportName.Auto_Racing,autoracingpref);
+        setSportPreference(SportName.Golf,golfpref);
+        setSportPreference(SportName.Tennis,tennispref);
 
         this.chartfilename = chartfilename;
         this.chartminamtnotify = chartminamtnotify;
@@ -167,10 +167,10 @@ public class User {
     }
 
 
-    public void setSportPerference(String sportName, String pref) {
+    public void setSportPreference(String sportName, String pref) {
         sportPreference.put(sportName,pref);
     }
-    public String getSportPerference(String sportName) {
+    public String getSportPreference(String sportName) {
         return sportPreference.get(sportName);
     }
     public long getLoginTime() {

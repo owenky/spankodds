@@ -138,7 +138,7 @@ public class UserPrefsProducer {
 
             Arrays.stream(SportType.getPreDefinedSports()).forEach(st -> {
                 try {
-                    mapMessage.setString(st.getPerfName(), st.getPerference());
+                    mapMessage.setString(st.getPrefName(), st.getPerference());
                 } catch (JMSException e) {
                     log(e);
                 }
