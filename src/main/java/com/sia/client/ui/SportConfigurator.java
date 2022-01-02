@@ -80,7 +80,7 @@ public class SportConfigurator {
 
         JButton closeBtn = new JButton("X");
         closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4));
-        closeBtn.setOpaque(true);
+        closeBtn.setOpaque(false);
         closeBtn.setBorder(BorderFactory.createEmptyBorder());
         titlePanel.add(closeBtn,BorderLayout.EAST);
         titlePanel.add(title,BorderLayout.CENTER);
