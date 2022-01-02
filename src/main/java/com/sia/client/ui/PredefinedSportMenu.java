@@ -40,7 +40,7 @@ public class PredefinedSportMenu {
                     menu.add(go);
                     go.addActionListener(ae -> stp.setSelectedIndex(index));
                     menu.add(manage);
-                    manage.addActionListener(ae -> new SportCustomTab(sportName));
+                    manage.addActionListener(ae -> new SportCustomTab(stp,sportName).show());
 
                     if (0<=index) {
                         menu.add(hide);

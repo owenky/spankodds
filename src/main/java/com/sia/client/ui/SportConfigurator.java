@@ -37,6 +37,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -56,6 +58,7 @@ public class SportConfigurator {
     private CheckBoxTree _tree;
     private Hashtable leaguenameidhash = new Hashtable();
     private final SportType sportType;
+    private ActionListener closeActionListener;
 
     public SportConfigurator(SportType sportType) {
         this.sportType = sportType;
@@ -67,6 +70,9 @@ public class SportConfigurator {
         configPanel.add(getTitlePanel(),BorderLayout.NORTH);
         configPanel.add(getMainPanel(),BorderLayout.CENTER);
         return configPanel;
+    }
+    public void setCloseActionListener(ActionListener closeActionListener) {
+        this.closeActionListener = closeActionListener;
     }
     private JPanel getTitlePanel() {
 
@@ -401,6 +407,9 @@ public class SportConfigurator {
         return null;
     }
     private void close() {
-        System.out.println("Close Configuration Window....");
+        if ( null != closeActionListener) {
+            ActionEvent ac = new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "close");
+            closeActionListener.actionPerformed(ac);
+        }
     }
 }

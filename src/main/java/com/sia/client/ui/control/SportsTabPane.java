@@ -246,7 +246,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         JMenuItem hideItem = new JMenuItem("Hide " + thispane.getTitleAt(tabindex));
                         jPopupMenu.add(manageItem);
                         jPopupMenu.add(hideItem);
-                        manageItem.addActionListener(e13 -> new SportCustomTab(thispane.getTitleAt(tabindex)));
+                        manageItem.addActionListener(e13 -> new SportCustomTab(SportsTabPane.this,thispane.getTitleAt(tabindex)).show());
 
                         hideItem.addActionListener(e14 -> checkAndRunInEDT(() -> {
                             AppController.SpotsTabPaneVector.remove(tabindex);
