@@ -76,6 +76,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         Point anchor_loc_ = anchorLocSupplier.get();
         final int x_ = anchor_loc_.x - layeredPaneLoc.x;
         final int y_ = anchor_loc_.y - layeredPaneLoc.y;
+System.out.println("anchor_loc_.x ="+anchor_loc_.x+" - layeredPaneLoc.x="+layeredPaneLoc.x+", anchor_loc_.y="+anchor_loc_.y+", layeredPaneLoc.y="+layeredPaneLoc.y)       ;
         userComponent.setBounds(x_, y_, userComponent.getWidth(), userComponent.getHeight());
         isOpened = true;
         prepareListening();

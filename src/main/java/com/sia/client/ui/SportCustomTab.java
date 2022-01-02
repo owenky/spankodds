@@ -8,6 +8,7 @@ import com.sia.client.ui.control.SportsTabPane;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.function.Supplier;
 
 
@@ -39,8 +40,12 @@ public class SportCustomTab {
         anchoredLayeredPane.openAndAnchoredAt(getLocationSuppr());
     }
     private Supplier<Point> getLocationSuppr() {
-        Point p = new Point(0,0);
-        return ()->p;
+
+        int tabIndex = stp.indexOfTab(sportName);
+        Rectangle r = stp.getUI().getTabBounds(stp,tabIndex);
+        Point tabPaneAnchor = stp.getLocationOnScreen();
+        Point loc = new Point(tabPaneAnchor.x+ (int)r.getX()+(int)(r.getWidth()/2), tabPaneAnchor.y+ (int)r.getHeight()+2);
+        return ()->loc;
     }
     private void doFrame(SportConfigurator sportConfigurator,SportType st) {
         //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
