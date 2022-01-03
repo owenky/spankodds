@@ -31,6 +31,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -63,18 +64,10 @@ public class SportConfigurator {
     public SportConfigurator(SportType sportType) {
         this.sportType = sportType;
     }
-    public JPanel getConfigurationPanel() {
-        JPanel configPanel = new JPanel();
-        configPanel.setSize(840, 840);
-        configPanel.setLayout(new BorderLayout());
-        configPanel.add(getTitlePanel(),BorderLayout.NORTH);
-        configPanel.add(getMainPanel(),BorderLayout.CENTER);
-        return configPanel;
-    }
     public void setCloseActionListener(ActionListener closeActionListener) {
         this.closeActionListener = closeActionListener;
     }
-    private JPanel getTitlePanel() {
+    public JPanel getTitlePanel() {
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BorderLayout());
@@ -97,7 +90,7 @@ public class SportConfigurator {
         titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
         return titlePanel;
     }
-    private JPanel getMainPanel() {
+    public JPanel getMainPanel() {
 
         String userpref = sportType.getPerference();
         prefs = userpref.split("\\|");
@@ -118,6 +111,7 @@ public class SportConfigurator {
             }
         }
         JPanel mainPanel = new JPanel();
+        mainPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         // *** Use FlowLayout for the content pane. ***
         mainPanel.setLayout(new FlowLayout());
         //checkboxtree
@@ -305,14 +299,11 @@ public class SportConfigurator {
         });
         Box box1 = Box.createVerticalBox();
         Box box2 = Box.createVerticalBox();
-        Box box3 = Box.createVerticalBox();
 
         // Create invisible borders around the boxes.
         box1.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
         box2.setBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 
