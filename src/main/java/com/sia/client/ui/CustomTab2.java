@@ -1,7 +1,6 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupAggregator;
 import com.sia.client.model.GameGroupDateSorter;
@@ -38,7 +37,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -171,15 +169,19 @@ public class CustomTab2 extends JPanel {
 
         pathhash = new Hashtable();
         jlab = new JLabel();
-        illegalnames.add("football");
-        illegalnames.add("basketball");
-        illegalnames.add("baseball");
-        illegalnames.add("hockey");
-        illegalnames.add("fighting");
-        illegalnames.add(SiaConst.SoccerStr.toLowerCase());
-        illegalnames.add("auto racing");
-        illegalnames.add("golf");
-        illegalnames.add("tennis");
+        SportType [] predefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: predefinedSportTypes) {
+            illegalnames.add(st.getSportName().toLowerCase());
+        }
+//        illegalnames.add("football");
+//        illegalnames.add("basketball");
+//        illegalnames.add("baseball");
+//        illegalnames.add("hockey");
+//        illegalnames.add("fighting");
+//        illegalnames.add(SiaConst.SoccerStr.toLowerCase());
+//        illegalnames.add("auto racing");
+//        illegalnames.add("golf");
+//        illegalnames.add("tennis");
 
 
         SportType [] selectableTypes;
@@ -188,7 +190,7 @@ public class CustomTab2 extends JPanel {
             selectableTypes = new SportType[1];
             selectableTypes[0] = selectedType;
         } else {
-            selectableTypes = SportType.PreDefinedSports;
+            selectableTypes = SportType.getPreDefinedSports();
         }
 
         Map<String,GameGroupNode> gameGroupNodeMap = new HashMap<>();
@@ -238,7 +240,7 @@ public class CustomTab2 extends JPanel {
         jtree.setRootVisible(false);
 
 
-        TreeSelectionModel tsm = jtree.getSelectionModel();
+//        TreeSelectionModel tsm = jtree.getSelectionModel();
         //tsm.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 

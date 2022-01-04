@@ -6,11 +6,12 @@ import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -214,11 +215,11 @@ public class LineAlert implements ItemListener {
     String[] percentagelist = new String[100];
     String[] audiolist = new String[8];
    // String[] audiofile = new String[5];
-   Vector<String> audiofilevec = new Vector<String>();
+   Vector<String> audiofilevec = new Vector<>();
     JComboBox sportComboBox;
     JComboBox lanComboBox;
     JComboBox gameperiodComboBox;
-    private Vector checkedsports = new Vector();
+//    private Vector checkedsports = new Vector();
     private Vector checkednodes = new Vector();
     private CheckBoxTree _tree;
     private CheckBoxTree sportsbooktree;
@@ -454,30 +455,32 @@ public class LineAlert implements ItemListener {
         soccerptslist[8] = "2.00";
 
 
-        sportlist[0] = "Please Select a Sport...";
-        sportlist[1] = "Football";
-        sportlist[2] = "Basketball";
-        sportlist[3] = "Baseball";
-        sportlist[4] = "Hockey";
-        sportlist[5] = SiaConst.SoccerStr;
-        sportlist[6] = "Fighting";
-        sportlist[7] = "Golf";
-        sportlist[8] = "Tennis";
-        sportlist[9] = "Auto Racing";
-        sportComboBox = new JComboBox(sportlist);
+        int index = 0;
+        sportlist[index++] = "Please Select a Sport...";
+        SportType [] preDefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: preDefinedSportTypes) {
+            sportlist[index++] = st.getSportName();
+        }
+//        sportlist[1] = SportName.Football;
+//        sportlist[2] = SportName.Basketball;
+//        sportlist[3] = SportName.Baseball;
+//        sportlist[4] = SportName.Hockey;
+//        sportlist[5] = SiaConst.SoccerStr;
+//        sportlist[6] = SportName.Fighting;
+//        sportlist[7] = "Golf";
+//        sportlist[8] = "Tennis";
+//        sportlist[9] = "Auto Racing";
+        sportComboBox = new JComboBox<>(sportlist);
         sportComboBox.setMaximumRowCount(sportlist.length);
 
 
-        if(AppController.getLineAlertNodes().size() == 0)
-        {
-            Vector deflan = new Vector();
+        if(AppController.getLineAlertNodes().size() == 0) {
+            Vector<String> deflan = new Vector<>();
             deflan.add("No Line Alerts Stored");
-            lanComboBox = new JComboBox(deflan);
+            lanComboBox = new JComboBox<>(deflan);
             lanComboBox.setSelectedIndex(0);
-        }
-        else
-        {
-            lanComboBox = new JComboBox(AppController.getLineAlertNodes());
+        } else {
+            lanComboBox = new JComboBox<>(AppController.getLineAlertNodes());
             lanComboBox.setSelectedIndex(-1);
         }
 
@@ -2147,12 +2150,10 @@ else if(alerttype.equalsIgnoreCase("Injury"))
 
         try {
 
-            Vector newBookiesVec = AppController.getBookiesVec();
+            Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
             List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
-            for (int k = 0; k < newBookiesVec.size(); k++) {
-                Bookie b = (Bookie) newBookiesVec.get(k);
-
+            for (Bookie b : newBookiesVec) {
                 if (hiddencols.contains(b) || b.getBookie_id() >= 990) {
                     continue;
                 }
@@ -2327,7 +2328,7 @@ else if(alerttype.equalsIgnoreCase("Injury"))
             editing = true;
             lan = (LineAlertNode) AppController.getLineAlertNodes().elementAt(lanComboBox.getSelectedIndex());
             sport = lan.getSport();
-            if (lan.getSport().equals(SiaConst.SoccerStr)) {
+            if (lan.getSport().equals(SportName.Soccer)) {
                 DefaultComboBoxModel model = new DefaultComboBoxModel(soccerptslist);
                 spreadptsComboBox.setModel(model);
                 DefaultComboBoxModel model2 = new DefaultComboBoxModel(soccerptslist);

@@ -15,9 +15,9 @@ public enum GameStatus {
     HalfTime(GameGroupHeader.createStageGroupHeader(SiaConst.HalfTimeStr,-1000000),"halftime.wav", ()->AppController.getUser().getHalftimeAlert()
             ,null,"TIME"),
     SeriesPrice(GameGroupHeader.createStageGroupHeader(SiaConst.SeriesPricesStr,StageGroupAnchorOffset+100),null, null
-            , null,SiaConst.SeriesPricesStr,SiaConst.SoccerSeriesPricesStr),
+            , null,SiaConst.SeriesPricesStr),
     InGamePrices(GameGroupHeader.createStageGroupHeader(SiaConst.InGamePricesStr,StageGroupAnchorOffset+110),null, null
-            , null,SiaConst.InGamePricesStr,SiaConst.SoccerInGamePricesStr),
+            , null,SiaConst.InGamePricesStr),
     //    the keywords for inprogress is wrong, it is opposite to "NULL" and "", check out Game.StatusSet to find out possible keywords for in progress
     InProgress(GameGroupHeader.createStageGroupHeader(SiaConst.InProgresStr,StageGroupAnchorOffset+130),"started.wav", ()->AppController.getUser().getStartedAlert()
             , GameStatus::isInProgress),

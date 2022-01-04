@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.AlertVector;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
@@ -50,15 +50,15 @@ public class AppController {
     private static final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
     private static final AtomicReference<CountDownLatch> messageProcessingLatchRef = new AtomicReference<>(new CountDownLatch(1));
     public static Vector<String> customTabsVec = new Vector<>();
-    public static Vector<LineAlertNode> linealertnodes = new Vector();
-    public static Vector<SportsMenuBar> menubars = new Vector();
-    public static Hashtable<String, String> bookieshortnameids = new Hashtable();
-    public static Vector<Bookie> openerbookiesVec = new Vector();
-    public static Vector<Bookie> bookiesVec = new Vector();
-    public static Vector<Sport> sportsVec = new Vector();
-    public static Vector<Bookie> hiddenCols = new Vector();
-    public static Vector<Bookie> shownCols = new Vector();
-    public static Vector<Bookie> fixedCols = new Vector();
+    public static Vector<LineAlertNode> linealertnodes = new Vector<>();
+    public static Vector<SportsMenuBar> menubars = new Vector<>();
+    public static Map<String, String> bookieshortnameids = new Hashtable<>();
+    public static Vector<Bookie> openerbookiesVec = new Vector<>();
+    public static Vector<Bookie> bookiesVec = new Vector<>();
+    public static Vector<Sport> sportsVec = new Vector<>();
+    public static Vector<Bookie> hiddenCols = new Vector<>();
+    public static Vector<Bookie> shownCols = new Vector<>();
+    public static Vector<Bookie> fixedCols = new Vector<>();
     public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
@@ -82,15 +82,15 @@ public class AppController {
     public static DefaultTableColumnModel columnmodel;
     public static DefaultTableColumnModel fixedcolumnmodel;
     public static NewWindowAction nwa;
-    public static LineOpenerAlertNode football = new LineOpenerAlertNode("Football");
-    public static LineOpenerAlertNode basketball = new LineOpenerAlertNode("Basketball");
-    public static LineOpenerAlertNode baseball = new LineOpenerAlertNode("Baseball");
-    public static LineOpenerAlertNode hockey = new LineOpenerAlertNode("Hockey");
-    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode(SiaConst.SoccerStr);
-    public static LineOpenerAlertNode fighting = new LineOpenerAlertNode("Fighting");
-    public static LineOpenerAlertNode golf = new LineOpenerAlertNode("Golf");
-    public static LineOpenerAlertNode tennis = new LineOpenerAlertNode("Tennis");
-    public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode("Auto Racing");
+    public static LineOpenerAlertNode football = new LineOpenerAlertNode(SportName.Football);
+    public static LineOpenerAlertNode basketball = new LineOpenerAlertNode(SportName.Basketball);
+    public static LineOpenerAlertNode baseball = new LineOpenerAlertNode(SportName.Baseball);
+    public static LineOpenerAlertNode hockey = new LineOpenerAlertNode(SportName.Hockey);
+    public static LineOpenerAlertNode soccer = new LineOpenerAlertNode(SportName.Soccer);
+    public static LineOpenerAlertNode fighting = new LineOpenerAlertNode(SportName.Fighting);
+    public static LineOpenerAlertNode golf = new LineOpenerAlertNode(SportName.Golf);
+    public static LineOpenerAlertNode tennis = new LineOpenerAlertNode(SportName.Tennis);
+    public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode(SportName.Auto_Racing);
     public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
     public static Vector<String> SportsTabPaneVector = new Vector<>();
@@ -454,7 +454,7 @@ public class AppController {
         return customTabsVec;
     }
 
-    public static Vector getLineAlertNodes() {
+    public static Vector<LineAlertNode> getLineAlertNodes() {
         return linealertnodes;
     }
 
@@ -674,9 +674,8 @@ public class AppController {
         String columncolors = u.getColumnColors();
 
         String[] colcolorsarray = columncolors.split(",");
-        for (int i = 0; i < colcolorsarray.length; i++) {
-            String colcolor = colcolorsarray[i];
-            if (colcolor.indexOf("=") != -1) {
+        for (String colcolor : colcolorsarray) {
+            if (colcolor.contains("=")) {
                 String id = colcolor.substring(0, colcolor.indexOf("="));
                 String color = colcolor.substring(colcolor.indexOf("=") + 1);
                 try {
@@ -694,11 +693,10 @@ public class AppController {
         String customtabs = u.getCustomTabs();
 
         String[] customtabsarray = customtabs.split("\\?");
-        for (int i = 0; i < customtabsarray.length; i++) {
+        for (final String s : customtabsarray) {
             try {
-                String customtab = customtabsarray[i];
-                String[] tabelements = customtab.split("\\*");
-                addCustomTab(tabelements[1], customtab);
+                String[] tabelements = s.split("\\*");
+                addCustomTab(tabelements[1], s);
             } catch (Exception ex) {
                 log(ex);
             }

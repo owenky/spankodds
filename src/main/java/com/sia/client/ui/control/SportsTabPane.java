@@ -1,7 +1,7 @@
 package com.sia.client.ui.control;
 
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
@@ -214,18 +214,18 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                     TabbedPaneUI ui = thispane.getUI();
                     int tabindex = ui.tabForCoordinate(thispane, e.getX(), e.getY());
                     log("button 3 clicked " + tabindex);
-                    String TabName = thispane.getTitleAt(tabindex);
+                    String tabName = thispane.getTitleAt(tabindex);
 
 
-                    if (!(TabName.equals("Football") || TabName.equals("Basketball") || TabName.equals("Baseball") || TabName.equals("Hockey") || TabName.equals("Fighting") || TabName.equals(SiaConst.SoccerStr) || TabName.equals("Auto Racing") || TabName.equals("Golf") || TabName.equals("Tennis")) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals("Today")) {
-                        log("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
+                    if (!SportType.isPredefinedSport(tabName) && ! "+".equals(tabName) && !SportName.Today.equals(tabName)) {
+                        log("tab clicked is " + tabindex + "src/main" + tabName);
                         JPopupMenu jPopupMenu = new JPopupMenu();
-                        JMenuItem editItem = new JMenuItem("Edit " + thispane.getTitleAt(tabindex));
-                        JMenuItem removeItem = new JMenuItem("Remove " + thispane.getTitleAt(tabindex));
+                        JMenuItem editItem = new JMenuItem("Edit " + tabName);
+                        JMenuItem removeItem = new JMenuItem("Remove " + tabName);
                         jPopupMenu.add(editItem);
                         jPopupMenu.add(removeItem);
                         editItem.addActionListener(e1 -> checkAndRunInEDT(() -> {
-                            new CustomTab2(getWindowIndex(),thispane.getTitleAt(tabindex), tabindex);
+                            new CustomTab2(getWindowIndex(),tabName, tabindex);
 
                         }));
                         removeItem.addActionListener(e12 -> checkAndRunInEDT(() -> {
@@ -239,27 +239,17 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         jPopupMenu.show(thispane, e.getX(), e.getY());
 
 
-                    }
-                    if (( SportType.isPredefinedSport(TabName)) && !thispane.getTitleAt(tabindex).equals("+") && !thispane.getTitleAt(tabindex).equals(SportType.Today.getSportName())) {
+                    } else if (SportType.isPredefinedSport(tabName) ) {
                         log("tab clicked is " + tabindex + "src/main" + thispane.getTitleAt(tabindex));
                         JPopupMenu jPopupMenu = new JPopupMenu();
                         JMenuItem manageItem = new JMenuItem("Manage " + thispane.getTitleAt(tabindex));
                         JMenuItem hideItem = new JMenuItem("Hide " + thispane.getTitleAt(tabindex));
                         jPopupMenu.add(manageItem);
                         jPopupMenu.add(hideItem);
-                        manageItem.addActionListener(e13 -> checkAndRunInEDT(() -> new SportCustomTab(thispane.getTitleAt(tabindex), tabindex)));
+                        manageItem.addActionListener(e13 -> new SportCustomTab(SportsTabPane.this,thispane.getTitleAt(tabindex)).show());
 
                         hideItem.addActionListener(e14 -> checkAndRunInEDT(() -> {
-                            //new SportCustomTab(thispane.getTitleAt(tabindex),tabindex);
                             AppController.SpotsTabPaneVector.remove(tabindex);
-                            //AppController.SportsTabPaneVector.remove(TabName);
-
-//                            Vector tabpanes = AppController.getTabPanes();
-//                            for (Object tabpane : tabpanes) {
-//                                SportsTabPane tp = (SportsTabPane) tabpane;
-//                                tp.setSelectedIndex(0);
-//                                tp.remove(tabindex);
-//                            }
                             SpankyWindow.applyToAllWindows((tp)-> {
                                 tp.setSelectedIndex(0);
                                 tp.remove(tabindex);

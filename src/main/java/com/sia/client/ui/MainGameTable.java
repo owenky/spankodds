@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.Game;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
@@ -9,7 +10,7 @@ import javax.swing.table.TableCellRenderer;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
-    private final LineRenderer soccerLineRenderer = new LineRenderer(SiaConst.SoccerStr);
+    private final LineRenderer soccerLineRenderer = new LineRenderer(SportName.Soccer);
     private final LineRenderer lineRenderer = new LineRenderer();
     private final SportType sporetType;
 

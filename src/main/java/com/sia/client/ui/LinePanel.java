@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.MainGameTableModel;
@@ -465,7 +465,7 @@ public class LinePanel extends JPanel {
     }
 
     private boolean isSoccer() {
-        return SiaConst.SoccerStr.equalsIgnoreCase(getName());
+        return SportName.Soccer.equalsIgnoreCase(getName());
     }
 
     public void setTime(JTable table,TimeView stv, int row, int col) {

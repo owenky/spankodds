@@ -1,7 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankOdds;
 
@@ -19,7 +19,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
@@ -27,19 +26,33 @@ import static java.lang.Boolean.parseBoolean;
 
 public class SportType {
     private static final Map<String,SportType> instanceMap = new HashMap<>();
-    public static SportType Football = new SportType(1,"Football","FB","football.png",-1,()-> AppController.getUser().getFootballPref(),null);
-    public static SportType Basketball = new SportType(2,"Basketball","BK","basketball.png",-1,()->AppController.getUser().getBasketballPref(),null);
-    public static SportType Baseball = new SportType(3,"Baseball","BB","baseball.png",-1,()->AppController.getUser().getBaseballPref(),null);
-    public static SportType Hockey = new SportType(4,"Hockey","HK","hockey.png",-1,()->AppController.getUser().getHockeyPref(),null);
-    public static SportType Fighting = new SportType(5,"Fighting","FI","boxing.png",10,()->AppController.getUser().getFightingPref(),null);
-    public static SportType Soccer = new SportType(5,SiaConst.SoccerStr,"OT","soccer.png",9,()->AppController.getUser().getSoccerPref(),null);
-    public static SportType AutoRacing = new SportType(5,"Auto Racing","AU","flag.png",14,()->AppController.getUser().getAutoracingPref(),null);
-    public static SportType Golf = new SportType(5,"Golf","GO","golf.png",11,()->AppController.getUser().getGolfPref(),null);
-    //TODO what is abbr for tennis
-    public static SportType Tennis = new SportType(5,"Tennis","TE","tennis.png",12,()->AppController.getUser().getTennisPref(),null);
-    public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,null,getTodayMyTypeSelector());
-    public static final SportType [] PreDefinedSports = {SportType.Football,SportType.Basketball,SportType.Baseball,SportType.Hockey,SportType.Fighting,SportType.Soccer,SportType.AutoRacing,SportType.Golf,SportType.Tennis};
+    public static SportType Football = new SportType(1, SportName.Football,"FB","football.png",-1,null);
+    public static SportType Basketball = new SportType(2,SportName.Basketball,"BK","basketball.png",-1,null);
+    public static SportType Baseball = new SportType(3,SportName.Baseball,"BB","baseball.png",-1,null);
+    public static SportType Hockey = new SportType(4,SportName.Hockey,"HK","hockey.png",-1,null);
+    public static SportType Fighting = new SportType(5,SportName.Fighting,"FI","boxing.png",10,null);
+    public static SportType Soccer = new SportType(5,SportName.Soccer,"OT","soccer.png",9,null);
+    public static SportType AutoRacing = new SportType(5,SportName.Auto_Racing,"AU","flag.png",14,null);
+    public static SportType Golf = new SportType(5,SportName.Golf,"GO","golf.png",11,null);
+    public static SportType Tennis = new SportType(5,SportName.Tennis,"TE","tennis.png",12,null);
 
+    public static SportType Today = new SportType(-100,"Today","Today","today.png",-1,getTodayMyTypeSelector());
+    //array is in the same order as the sport's tab position in SportTabPane -- 2012-12-31
+    private static final SportType [] PreDefinedSports = {SportType.Football,SportType.Basketball,SportType.Baseball,SportType.Hockey,SportType.Fighting,SportType.Soccer,SportType.AutoRacing,SportType.Golf,SportType.Tennis};
+
+    public static SportType [] getPreDefinedSports() {
+        return PreDefinedSports.clone();
+    }
+    public static int getPreDefinedSportTabIndex(SportType st) {
+        int index = -1;
+        for(int i=0;i<PreDefinedSports.length;i++) {
+            if ( PreDefinedSports[i].equals(st)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
     public static boolean isPredefinedSport(String sportName) {
         SportType st = findBySportName(sportName);
         if ( null == st) {
@@ -48,7 +61,6 @@ public class SportType {
             return st.isPredifined();
         }
     }
-
     /**
      * customized sport tab pane might also include the game, so return result is a list
      */
@@ -60,7 +72,7 @@ public class SportType {
         return stOpt.orElse(null);
     }
     public static SportType createCustomizedSportType(String name,List<String> customizedHeaders,boolean showheaders, boolean showseries, boolean showingame, boolean showadded, boolean showextra, boolean showprops) {
-        SportType rtn = new SportType(-200,name,name,null,-1,null,getCustomizedHeaderMyTypeSelector(customizedHeaders));
+        SportType rtn = new SportType(-200,name,name,null,-1,getCustomizedHeaderMyTypeSelector(customizedHeaders));
         rtn.setShowheaders(showheaders);
         rtn.setShowseries(showseries);
         rtn.setShowingame(showingame);
@@ -77,7 +89,6 @@ public class SportType {
     private final int sportId;
     private final String icon;
     private final String abbr;
-    private final Supplier<String> perfSupplier;
     //if identityLeagueId > 0, SportType is identified by leagueId, not by sportId ( when sportId >=5, SportType is identified by leagueId)
     private final int identityLeagueId;
     private int comingDays;
@@ -92,13 +103,12 @@ public class SportType {
     private Function<Game,Boolean> myTypeSelector;
     private List<String> customheaders = new ArrayList<>();
 
-    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId,Supplier<String> perfSupplier,Function<Game,Boolean> myTypeSelector) {
+    private SportType(int sportId,String sportName,String abbr,String icon,int identityLeagueId,Function<Game,Boolean> myTypeSelector) {
         this.sportName = sportName;
         this.sportId = sportId;
         this.icon = icon;
         this.abbr = abbr;
         this.identityLeagueId = identityLeagueId;
-        this.perfSupplier = perfSupplier;
         this.myTypeSelector = null == myTypeSelector?getDefaultMyTypeSelector():myTypeSelector;
         instanceMap.put(normalizeName(sportName),this);
         enrichSportType();
@@ -253,10 +263,22 @@ public class SportType {
     public String toString() {
         return sportName+"/"+sportId+":"+identityLeagueId;
     }
+    public String getPrefName() {
+        return getSportName().toLowerCase().replaceAll("\\s+","")+"pref";
+    }
+    public String getPerference() {
+        return AppController.getUser().getSportPreference(this.getSportName());
+    }
+    public void setPerference(String pref) {
+        AppController.getUser().setSportPreference(this.getSportName(),pref);
+    }
     public void enrichSportType() {
-        String userPrefStr = getUserPerf();
+        String userPrefStr = getPerference();
         if ( null != userPrefStr) { // predefined sport type
             String[] prefs = userPrefStr.split("\\|");
+            if ( prefs.length < 2) {
+                return;
+            }
             String[] tmp = {};
             boolean all = false;
             setComingDays(Integer.parseInt(prefs[1]));
@@ -289,13 +311,6 @@ public class SportType {
         setShowAdded(parseBoolean(prefs[6]));
         setShowExtra(parseBoolean(prefs[7]));
         setShowProps(parseBoolean(prefs[8]));
-    }
-    private String getUserPerf() {
-        if ( null != perfSupplier) {
-            return this.perfSupplier.get();
-        } else {
-            return null;
-        }
     }
     private boolean isFilteredByConfig(Game g) {
 //        if (!  isPredifined()) {

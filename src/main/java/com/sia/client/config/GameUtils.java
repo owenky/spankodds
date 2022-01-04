@@ -1,5 +1,6 @@
 package com.sia.client.config;
 
+import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Sport;
@@ -61,7 +62,7 @@ public abstract class GameUtils {
     }
     public static String normalizeGameHeader(String gameGroupHeader) {
         if ( null != gameGroupHeader) {
-            gameGroupHeader = gameGroupHeader.replace(SiaConst.SoccerStr,"").trim();
+            gameGroupHeader = gameGroupHeader.replace(SportName.Soccer,"").trim();
             gameGroupHeader = Utils.replaceIgnoreCase(gameGroupHeader,SiaConst.FinalStr);
             gameGroupHeader = Utils.replaceIgnoreCase(gameGroupHeader,SiaConst.InProgresStr);
             gameGroupHeader = gameGroupHeader.replaceAll("\\s+"," ");

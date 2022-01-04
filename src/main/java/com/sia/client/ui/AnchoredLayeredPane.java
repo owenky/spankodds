@@ -1,10 +1,12 @@
 package com.sia.client.ui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
@@ -27,23 +29,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     public AnchoredLayeredPane(JComponent current_screen, int layer_index_) {
         this.layer_index = layer_index_;
 		this.current_screen = current_screen;
-        mouseListener = new MouseAdapter() {
-            private boolean hasMouseEntered = false;
-            @Override
-            public void mouseExited(MouseEvent e) {
-                JComponent source = (JComponent)e.getSource();
-                if ( ! source.contains(e.getPoint()) ) {
-                    if (hasMouseEntered) {
-                        hide();
-                    }
-                    hasMouseEntered = false;
-                }
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                hasMouseEntered = true;
-            }
-        };
+        mouseListener = new HideOnMouseOutListener();
         layeredPane = getJLayeredPane();
     }
 
@@ -51,19 +37,21 @@ public class AnchoredLayeredPane implements ComponentListener {
 		current_screen.addComponentListener(this);
     }
 
-    public void setUserPane(JComponent userComponent_) {
+    public void setUserPane(JComponent userComponent_,boolean toHideOnMouseOut) {
         if ( null != this.userComponent ) {
             userComponent.removeMouseListener(mouseListener);
         }
         this.userComponent = userComponent_;
-        userComponent.addMouseListener(mouseListener);
+        if ( toHideOnMouseOut) {
+            userComponent.addMouseListener(mouseListener);
+        }
     }
     public JComponent getUserComponent() {
         return this.userComponent;
     }
 
     public void openAndAnchoredAt(Supplier<Point> anchorLocSupplier) {
-
+// userComponent.setName("usercomponent");
         this.anchorLocSupplier = anchorLocSupplier;
         if (null == userComponent) {
             return;
@@ -117,7 +105,6 @@ public class AnchoredLayeredPane implements ComponentListener {
     @Override
     public void componentResized(ComponentEvent e) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -150,4 +137,24 @@ public class AnchoredLayeredPane implements ComponentListener {
     protected boolean isOpened() {
         return isOpened;
     }
+ /////////////////////////////////////////////////////////////////////////////////////////////////////
+     private class HideOnMouseOutListener extends MouseAdapter{
+         private boolean hasMouseEntered = false;
+         @Override
+         public void mouseExited(MouseEvent e) {
+             JComponent source = (JComponent)e.getSource();
+             source.setBorder(BorderFactory.createLineBorder(Color.RED));
+//System.out.println("source="+ ((JComponent)e.getSource()).getName()+", rec="+source.getVisibleRect()+",e point="+e.getPoint()+", contains="+source.contains(e.getPoint()));
+             if (  null != source && ! source.contains(e.getPoint()) ) {
+                 if (hasMouseEntered) {
+                     hide();
+                 }
+                 hasMouseEntered = false;
+             }
+         }
+         @Override
+         public void mouseEntered(MouseEvent e) {
+             hasMouseEntered = true;
+         }
+     }
 }

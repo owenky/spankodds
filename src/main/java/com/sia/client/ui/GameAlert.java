@@ -12,6 +12,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportType;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -636,27 +637,31 @@ public class GameAlert {
         DefaultTreeModel treeModel = new DefaultTreeModel(root);
 
 
-        DefaultMutableTreeNode football = new DefaultMutableTreeNode("Football");
-        DefaultMutableTreeNode basketball = new DefaultMutableTreeNode("Basketball");
-        DefaultMutableTreeNode baseball = new DefaultMutableTreeNode("Baseball");
-        DefaultMutableTreeNode hockey = new DefaultMutableTreeNode("Hockey");
-        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SiaConst.SoccerStr);
-        DefaultMutableTreeNode fighting = new DefaultMutableTreeNode("Fighting");
-        DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf");
-        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis");
-        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode("Auto Racing");
+//        DefaultMutableTreeNode football = new DefaultMutableTreeNode("Football");
+//        DefaultMutableTreeNode basketball = new DefaultMutableTreeNode("Basketball");
+//        DefaultMutableTreeNode baseball = new DefaultMutableTreeNode("Baseball");
+//        DefaultMutableTreeNode hockey = new DefaultMutableTreeNode("Hockey");
+//        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SiaConst.SoccerStr);
+//        DefaultMutableTreeNode fighting = new DefaultMutableTreeNode("Fighting");
+//        DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf");
+//        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis");
+//        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode("Auto Racing");
+        SportType [] preDefinedSportTypes = SportType.getPreDefinedSports();
+        for(SportType st: preDefinedSportTypes) {
+            root.add(new DefaultMutableTreeNode(st.getSportName()));
+        }
         DefaultMutableTreeNode horse = new DefaultMutableTreeNode("Horse");
         DefaultMutableTreeNode esport = new DefaultMutableTreeNode("E-Sport");
         DefaultMutableTreeNode other = new DefaultMutableTreeNode("Other");
-        root.add(football);
-        root.add(basketball);
-        root.add(baseball);
-        root.add(hockey);
-        root.add(soccer);
-        root.add(fighting);
-        root.add(golf);
-        root.add(tennis);
-        root.add(autoracing);
+//        root.add(football);
+//        root.add(basketball);
+//        root.add(baseball);
+//        root.add(hockey);
+//        root.add(soccer);
+//        root.add(fighting);
+//        root.add(golf);
+//        root.add(tennis);
+//        root.add(autoracing);
         root.add(horse);
         //root.add(esport);
         //root.add(other);
@@ -666,30 +671,38 @@ public class GameAlert {
 
             List<Sport> sportsVec = AppController.getSportsVec();
             for (Sport value : sportsVec) {
-                DefaultMutableTreeNode tempnode;
-                if (value.getSportname().equals("Football")) {
-                    tempnode = football;
-                } else if (value.getSportname().equals("Basketball")) {
-                    tempnode = basketball;
-                } else if (value.getSportname().equals("Baseball")) {
-                    tempnode = baseball;
-                } else if (value.getSportname().equals("Hockey")) {
-                    tempnode = hockey;
-                } else if (value.getSportname().equals(SiaConst.SoccerStr)) {
-                    tempnode = soccer;
-                } else if (value.getSportname().equals("Fighting")) {
-                    tempnode = fighting;
-                } else if (value.getSportname().equals("Golf")) {
-                    tempnode = golf;
-                } else if (value.getSportname().equals("Tennis")) {
-                    tempnode = tennis;
-                } else if (value.getSportname().equals("Auto Racing")) {
-                    tempnode = autoracing;
-                } else if (value.getSportname().equals("Horse")) {
-                    tempnode = horse;
-                } else {
-                    tempnode = other;
+                DefaultMutableTreeNode tempnode = other;
+                int count = root.getChildCount();
+                for(int i=0;i<count;i++) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)root.getChildAt(i);
+                    if ( value.getSportname().equals(node.getUserObject())) {
+                        tempnode = node;
+                        break;
+                    }
                 }
+//                if (value.getSportname().equals("Football")) {
+//                    tempnode = football;
+//                } else if (value.getSportname().equals("Basketball")) {
+//                    tempnode = basketball;
+//                } else if (value.getSportname().equals("Baseball")) {
+//                    tempnode = baseball;
+//                } else if (value.getSportname().equals("Hockey")) {
+//                    tempnode = hockey;
+//                } else if (value.getSportname().equals(SiaConst.SoccerStr)) {
+//                    tempnode = soccer;
+//                } else if (value.getSportname().equals("Fighting")) {
+//                    tempnode = fighting;
+//                } else if (value.getSportname().equals("Golf")) {
+//                    tempnode = golf;
+//                } else if (value.getSportname().equals("Tennis")) {
+//                    tempnode = tennis;
+//                } else if (value.getSportname().equals("Auto Racing")) {
+//                    tempnode = autoracing;
+//                } else if (value.getSportname().equals("Horse")) {
+//                    tempnode = horse;
+//                } else {
+//                    tempnode = other;
+//                }
 
                 DefaultMutableTreeNode child = new DefaultMutableTreeNode(value.getLeaguename());
                 tempnode.add(child);
