@@ -68,7 +68,7 @@ public class RenameColumnPopupMenu {
         inputPanel.add(getInputField());
         inputPanel.add(getButtonPanel());
 
-        anchoredLayeredPane.setUserPane(inputPanel);
+        anchoredLayeredPane.setUserPane(inputPanel,true);
         Supplier<Point> anchorPointSupl = ()-> {
             JTableHeader header = table.getTableHeader();
             Point headerAtScreen = header.getLocationOnScreen();

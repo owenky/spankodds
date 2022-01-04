@@ -21,13 +21,17 @@ public class SportCustomTab {
 
     private final SportsTabPane stp;
     private final String sportName;
-    private AnchoredLayeredPane anchoredLayeredPane;
-    private static final int DefaultConfigPanelHeight=840;
-    private static final int DefaultConfigPanelWidth=840;
+    private static AnchoredLayeredPane anchoredLayeredPane;
+    private static final int DefaultConfigPanelHeight=730;
+    private static final int DefaultConfigPanelWidth=800;
+    private static final Color ConfigPanelBck = Color.DARK_GRAY;
     public SportCustomTab(SportsTabPane stp, String sportName) {
 
         this.stp = stp;
         this.sportName = sportName;
+        if ( null != anchoredLayeredPane) {
+            anchoredLayeredPane.close();
+        }
     }
     public void show() {
         SportType st = SportType.findBySportName(sportName);
@@ -39,20 +43,21 @@ public class SportCustomTab {
     private void doLayerPane(SportConfigurator sportConfigurator,SportType st) {
         sportConfigurator.setCloseActionListener((ae)->{
             if ( null != anchoredLayeredPane) {
-                anchoredLayeredPane.hide();
+                anchoredLayeredPane.close();
             }
         });
         anchoredLayeredPane = new AnchoredLayeredPane(stp, LayedPaneIndex.SportConfigIndex);
         JPanel configPanel = new JPanel();
         configPanel.setLayout(new BorderLayout());
         JPanel mainPanel = sportConfigurator.getMainPanel();
-        mainPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        configPanel.add(sportConfigurator.getTitlePanel(),BorderLayout.NORTH);
+        JPanel titlePanel = sportConfigurator.getTitlePanel();
+//        mainPanel.setBackground(ConfigPanelBck);
+//        titlePanel.setBackground(ConfigPanelBck);
+        configPanel.add(titlePanel,BorderLayout.NORTH);
         configPanel.add(mainPanel,BorderLayout.CENTER);
         JScrollPane jScrollPane = new JScrollPane(configPanel);
-        configPanel.setBackground(Color.DARK_GRAY);
         jScrollPane.setBorder(BorderFactory.createEtchedBorder());
-        anchoredLayeredPane.setUserPane(jScrollPane);
+        anchoredLayeredPane.setUserPane(jScrollPane,false);
         anchoredLayeredPane.openAndAnchoredAt(getLocationSuppr());
     }
     private Supplier<Point> getLocationSuppr() {
@@ -69,7 +74,7 @@ public class SportCustomTab {
             int tabIndex = stp.indexOfTab(sportName);
             Rectangle r = stp.getUI().getTabBounds(stp,tabIndex);
             Point tabPaneAnchor = stp.getLocationOnScreen();
-            return new Point( tabPaneAnchor.x+ (int)((selectedPaneDim.getWidth()-userCompWidth)/2), tabPaneAnchor.y+ (int)r.getHeight()+10);
+            return new Point( tabPaneAnchor.x+ (int)((selectedPaneDim.getWidth()-userCompWidth)/2), tabPaneAnchor.y+ (int)r.getHeight()+30);
 
         };
     }

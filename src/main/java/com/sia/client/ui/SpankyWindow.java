@@ -8,7 +8,10 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
@@ -117,5 +120,12 @@ public class SpankyWindow extends JFrame {
     }
     private void unBindAlertsComp() {
         tv.unBindAlertsComp();
+    }
+    public static void setLocationaAndSize(JFrame frame,int screenXmargin,int screenYmargin) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = (int)screenSize.getWidth();
+        int screenHeight = (int)screenSize.getHeight();
+        frame.setSize(screenWidth - 2* screenXmargin, screenHeight - 2* screenYmargin);
+        frame.setLocation(new Point(screenXmargin,screenYmargin));
     }
 }

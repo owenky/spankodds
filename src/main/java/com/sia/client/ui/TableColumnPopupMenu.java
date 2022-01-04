@@ -61,7 +61,7 @@ public class TableColumnPopupMenu{
         menuBar.add(getDeleteItem());
 //        menuBar.add(getCloseItem());
 
-        anchoredLayeredPane.setUserPane(menuBar);
+        anchoredLayeredPane.setUserPane(menuBar,true);
         Supplier<Point> anchorPointSupl = ()-> {
             JTableHeader header = table.getTableHeader();
             Point headerAtScreen = header.getLocationOnScreen();

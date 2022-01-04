@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.CheckThreadViolationRepaintManager;
 import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.LocalMessageLogger;
@@ -161,7 +162,8 @@ public class SpankOdds {
         try {
             frame.setTitle(userName + " Logged In " + SiaConst.Version);
             AppController.addFrame(frame);
-            frame.setSize(950, 800);
+//            frame.setSize(950, 800);
+            SpankyWindow.setLocationaAndSize(frame,UIProperties.screenXmargin,UIProperties.screenYmargin);
             frame.populateTabPane();
             frame.setVisible(true);
 //            AppController.notifyUIComplete();
