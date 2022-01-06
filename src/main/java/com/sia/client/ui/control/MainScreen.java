@@ -46,6 +46,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     MainScreen(SportType sportType,SpankyWindowConfig spankyWindowConfig,boolean showheaders) {
         this(sportType,spankyWindowConfig);
     }
+    public int getWindowIndex() {
+        return screenProperty.getSpankyWindowConfig().getWindowIndex();
+    }
     public MainGameTableModel buildModel() {
 
         screenGameModel.build();
@@ -158,6 +161,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         getColumnCustomizableTable().adjustColumns();
     }
 
+    public boolean isTableReday() {
+        return null != mainGameTable;
+    }
     public boolean containsGame(Game g) {
         boolean containing;
         if (getSportType().isPredifined() && getSportType().isMyType(g)) {

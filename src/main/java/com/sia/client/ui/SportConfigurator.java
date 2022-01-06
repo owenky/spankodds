@@ -40,24 +40,24 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.Map;
 
 import static com.sia.client.config.Utils.log;
 
 
 public class SportConfigurator {
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
-    String[] prefs;
-    JList selectedList = new JList();
-    private JList<String> eventsList = new JList<>();
-    private DefaultListModel<String> eventsModel = new DefaultListModel<>();
-    int popupsecs = 5;
-    private Vector checkedsports = new Vector();
-    private Vector checkednodes = new Vector();
+    private final JList<Object> selectedList = new JList<>();
+    private final JList<String> eventsList = new JList<>();
+    private final DefaultListModel<String> eventsModel = new DefaultListModel<>();
+    private int popupsecs = 5;
+    private final List<String> checkedsports = new ArrayList<>();
+    private final List<DefaultMutableTreeNode> checkednodes = new ArrayList<>();
     private CheckBoxTree _tree;
-    private Hashtable leaguenameidhash = new Hashtable();
+    private final Map<String,String> leaguenameidhash = new HashMap<>();
     private final SportType sportType;
     private ActionListener closeActionListener;
 
@@ -84,16 +84,14 @@ public class SportConfigurator {
         titlePanel.add(closeBtn,BorderLayout.EAST);
         titlePanel.add(title,BorderLayout.CENTER);
 
-        closeBtn.addActionListener(event-> {
-            close();
-        });
+        closeBtn.addActionListener(event-> close());
         titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
         return titlePanel;
     }
     public JPanel getMainPanel() {
 
         String userpref = sportType.getPerference();
-        prefs = userpref.split("\\|");
+        final String[] prefs = userpref.split("\\|");
 
         try {
             popupsecs = Integer.parseInt(prefs[1]);
@@ -144,7 +142,7 @@ public class SportConfigurator {
             }
             eventsModel.addElement("---------------");
             eventsList.ensureIndexIsVisible(eventsModel.size() - 1);
-            DefaultListModel selectedModel = new DefaultListModel();
+            DefaultListModel<Object> selectedModel = new DefaultListModel<>();
 
             int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
             if (treeRows != null) {
@@ -346,11 +344,10 @@ public class SportConfigurator {
         box2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //initialize tree
-        for (int j = 0; j < checkednodes.size(); j++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes.elementAt(j);
+        for (DefaultMutableTreeNode node : checkednodes) {
             //log("its"+node);
-            TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-            log(checkednodes.elementAt(j) + "its" + path);
+            TreePath path = new TreePath(node.getPath());
+            log(node + "its" + path);
             _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
         }
 

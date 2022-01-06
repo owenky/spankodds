@@ -51,8 +51,8 @@ public class SportCustomTab {
         configPanel.setLayout(new BorderLayout());
         JPanel mainPanel = sportConfigurator.getMainPanel();
         JPanel titlePanel = sportConfigurator.getTitlePanel();
-//        mainPanel.setBackground(ConfigPanelBck);
-//        titlePanel.setBackground(ConfigPanelBck);
+        mainPanel.setBackground(ConfigPanelBck);
+        titlePanel.setBackground(ConfigPanelBck);
         configPanel.add(titlePanel,BorderLayout.NORTH);
         configPanel.add(mainPanel,BorderLayout.CENTER);
         JScrollPane jScrollPane = new JScrollPane(configPanel);
