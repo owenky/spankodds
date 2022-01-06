@@ -342,12 +342,9 @@ public class SportConfigurator {
                 EMPTY_INSETS, 0, 0));
         box2.add(saveBut);
         box2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         //initialize tree
         for (DefaultMutableTreeNode node : checkednodes) {
-            //log("its"+node);
             TreePath path = new TreePath(node.getPath());
-            log(node + "its" + path);
             _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
         }
 

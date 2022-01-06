@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EtchedBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -51,12 +52,12 @@ public class SportCustomTab {
         configPanel.setLayout(new BorderLayout());
         JPanel mainPanel = sportConfigurator.getMainPanel();
         JPanel titlePanel = sportConfigurator.getTitlePanel();
-        mainPanel.setBackground(ConfigPanelBck);
-        titlePanel.setBackground(ConfigPanelBck);
+//        mainPanel.setBackground(ConfigPanelBck);
+//        titlePanel.setBackground(ConfigPanelBck);
         configPanel.add(titlePanel,BorderLayout.NORTH);
         configPanel.add(mainPanel,BorderLayout.CENTER);
         JScrollPane jScrollPane = new JScrollPane(configPanel);
-        jScrollPane.setBorder(BorderFactory.createEtchedBorder());
+        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         anchoredLayeredPane.setUserPane(jScrollPane,false);
         anchoredLayeredPane.openAndAnchoredAt(getLocationSuppr());
     }
