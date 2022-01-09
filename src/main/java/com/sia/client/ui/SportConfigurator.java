@@ -38,8 +38,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,13 +57,11 @@ public class SportConfigurator {
     private CheckBoxTree _tree;
     private final Map<String,String> leaguenameidhash = new HashMap<>();
     private final SportType sportType;
-    private ActionListener closeActionListener;
+    private final AnchoredLayeredPane anchoredLayeredPane;
 
-    public SportConfigurator(SportType sportType) {
+    public SportConfigurator(AnchoredLayeredPane anchoredLayeredPane,SportType sportType) {
         this.sportType = sportType;
-    }
-    public void setCloseActionListener(ActionListener closeActionListener) {
-        this.closeActionListener = closeActionListener;
+        this.anchoredLayeredPane = anchoredLayeredPane;
     }
     public JPanel getTitlePanel() {
 
@@ -291,7 +287,7 @@ public class SportConfigurator {
                 ms.setShowExtra(includeextra.isSelected());
                 ms.setShowProps(includeprops.isSelected());
                 tp.setComponentAt(tabVal, ms);
-                tp.refreshCurrentTab();
+                tp.refreshSport(sportType);
             });
             close();
         });
@@ -392,9 +388,8 @@ public class SportConfigurator {
         return null;
     }
     private void close() {
-        if ( null != closeActionListener) {
-            ActionEvent ac = new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "close");
-            closeActionListener.actionPerformed(ac);
+        if ( null != anchoredLayeredPane) {
+            anchoredLayeredPane.close();
         }
     }
 }

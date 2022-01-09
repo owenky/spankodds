@@ -10,15 +10,14 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
 public class SportsMenuBar extends JMenuBar {
 
-    SportsTabPane stb;
+    private final SportsTabPane stb;
     TopView tv;
     JMenu filemenu = new JMenu("File");
     JMenu bookiemenu = new JMenu("Columns");
@@ -27,19 +26,19 @@ public class SportsMenuBar extends JMenuBar {
     JMenu tabsmenu = new JMenu("Tabs");
     JMenu windowmenu = new JMenu("Window");
 
-    public SportsMenuBar() {
+    public SportsMenuBar(SportsTabPane stb, TopView tv) {
         super();
+        this.stb = stb;
+        this.tv = tv;
         this.init();
+        AppController.addMenuBar(this);
     }
-
     public void init() {
 
         add(filemenu);
 
         JMenuItem storeprefs = new JMenuItem("Store User Prefs");
-        storeprefs.addActionListener(ev -> {
-            AppController.getUserPrefsProducer().sendUserPrefs();
-        });
+        storeprefs.addActionListener(ev -> AppController.getUserPrefsProducer().sendUserPrefs());
         filemenu.add(storeprefs);
 
         JMenuItem logout = new JMenuItem("Exit...");
@@ -54,28 +53,14 @@ public class SportsMenuBar extends JMenuBar {
         add(bookiemenu);
 
         JMenuItem bookiecolumn = new JMenuItem("Manage");
-        bookiecolumn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                // AudioClip clipfinal = new AudioClip("c:\\spankoddsclient\\final.wav");
-                //  clipfinal.play();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        BookieColumnController2 bcc2 = new BookieColumnController2();
-
-
-                    }
-                });
-
-
-            }
-        });
+        bookiecolumn.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
+            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
+            BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
+            bcc2.setPreferredSize(new Dimension(700, 700));
+            bcc2.openAndCenter(false);
+        }));
         JMenuItem bookiecolumn1 = new JMenuItem("Chart");
-        bookiecolumn1.addActionListener(ae -> {
-            checkAndRunInEDT(() -> new ChartHome().setVisible(true));
-
-
-        });
+        bookiecolumn1.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome().setVisible(true)));
         bookiemenu.add(bookiecolumn);
         bookiemenu.add(bookiecolumn1);
 
@@ -88,10 +73,8 @@ public class SportsMenuBar extends JMenuBar {
         });
         JMenuItem majorlinemove = new JMenuItem("Line Seekers");
         JMenuItem openers = new JMenuItem("Openers");
-        openers.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                LineAlertOpeners la = new LineAlertOpeners();
-            }
+        openers.addActionListener(ae -> {
+            LineAlertOpeners la = new LineAlertOpeners();
         });
         linealertsmenu.add(generallinealert);
         linealertsmenu.add(majorlinemove);
@@ -101,80 +84,56 @@ public class SportsMenuBar extends JMenuBar {
         add(gamealertsmenu);
 
         JMenuItem started = new JMenuItem("Started");
-        started.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Started");
-            }
+        started.addActionListener(ae -> {
+            GameAlert ga = new GameAlert("Started");
         });
         JMenuItem finals = new JMenuItem("Finals");
-        finals.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert(SiaConst.FinalStr);
-            }
+        finals.addActionListener(ae -> {
+            GameAlert ga = new GameAlert(SiaConst.FinalStr);
         });
         JMenuItem halftimes = new JMenuItem("Halftimes");
-        halftimes.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert(SiaConst.HalfTimeStr);
-            }
+        halftimes.addActionListener(ae -> {
+            GameAlert ga = new GameAlert(SiaConst.HalfTimeStr);
         });
 
         JMenuItem lineups = new JMenuItem("Lineups");
-        lineups.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Lineup");
-            }
+        lineups.addActionListener(ae -> {
+            GameAlert ga = new GameAlert("Lineup");
         });
         JMenuItem officials = new JMenuItem("Officials");
-        officials.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Official");
-            }
+        officials.addActionListener(ae -> {
+            GameAlert ga = new GameAlert("Official");
         });
         JMenuItem injuries = new JMenuItem("Injuries");
-        injuries.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Injury");
-            }
+        injuries.addActionListener(ae -> {
+            GameAlert ga = new GameAlert("Injury");
         });
         JMenuItem timechange = new JMenuItem("Time Changes");
-        timechange.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Time Change");
-            }
+        timechange.addActionListener(ae -> {
+            GameAlert ga = new GameAlert("Time Change");
         });
         JMenuItem limitchange = new JMenuItem("Limit Changes");
-        limitchange.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                GameAlert ga = new GameAlert("Limit Change");
-            }
+        limitchange.addActionListener(ae -> {
+            GameAlert ga = new GameAlert("Limit Change");
         });
 
 
         JMenuItem test = new JMenuItem("Test");
-        test.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
-            }
+        test.addActionListener(ae -> {
+            UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
         });
 
         JMenuItem test2 = new JMenuItem("Test NW");
-        test2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!", 10000, SwingConstants.NORTH_WEST, AppController.getMainTabPane());
-            }
+        test2.addActionListener(ae -> {
+            UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!", 10000, SwingConstants.NORTH_WEST, AppController.getMainTabPane());
         });
         JMenuItem test3 = new JMenuItem("Test SW");
-        test3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!", 10000, SwingConstants.SOUTH_WEST, AppController.getMainTabPane());
-            }
+        test3.addActionListener(ae -> {
+            UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!", 10000, SwingConstants.SOUTH_WEST, AppController.getMainTabPane());
         });
         JMenuItem test4 = new JMenuItem("Test SE");
-        test4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!", 10000, SwingConstants.SOUTH_EAST, AppController.getMainTabPane());
-            }
+        test4.addActionListener(ae -> {
+            UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!", 10000, SwingConstants.SOUTH_EAST, AppController.getMainTabPane());
         });
         gamealertsmenu.add(started);
         gamealertsmenu.add(finals);
@@ -246,13 +205,5 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem addnew = new JMenuItem("Add New...");
         tabsmenu.add(addnew);
         addnew.addActionListener(ae -> SwingUtilities.invokeLater(() -> new CustomTab2(stb.getWindowIndex())));
-    }
-
-    public SportsMenuBar(SportsTabPane stb, TopView tv) {
-        super();
-        this.stb = stb;
-        this.tv = tv;
-        this.init();
-        AppController.addMenuBar(this);
     }
 }

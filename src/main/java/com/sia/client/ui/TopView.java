@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
@@ -326,7 +327,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
         addBookieBut.addActionListener(ae -> {
             checkAndRunInEDT(() -> {
-                BookieColumnController2 bcc2 = new BookieColumnController2();
+                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
+                BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
             });
         });
 

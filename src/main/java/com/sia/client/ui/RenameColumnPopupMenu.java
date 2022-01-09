@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.control.SportsTabPane;
 import org.codehaus.plexus.util.StringUtils;
 
 import javax.swing.BorderFactory;
@@ -40,17 +41,17 @@ public class RenameColumnPopupMenu {
     private ActionListener cancelAction;
     private static RenameColumnPopupMenu oldTableColumnPopupMenu=null;
 
-    public static RenameColumnPopupMenu of(JTable table,ActionListener cancelAction) {
+    public static RenameColumnPopupMenu of(SportsTabPane stp, JTable table, ActionListener cancelAction) {
         if ( null != oldTableColumnPopupMenu) {
             oldTableColumnPopupMenu.hideMenu();
         }
-        oldTableColumnPopupMenu = new RenameColumnPopupMenu(table);
+        oldTableColumnPopupMenu = new RenameColumnPopupMenu(stp,table);
         oldTableColumnPopupMenu.cancelAction = cancelAction;
         return oldTableColumnPopupMenu;
     }
-    private RenameColumnPopupMenu(JTable table) {
+    private RenameColumnPopupMenu(SportsTabPane stp, JTable table) {
         this.table = table;
-        anchoredLayeredPane = new AnchoredLayeredPane(table, LayedPaneIndex.TableColumnMenuIndex);
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
         this.tableColumnIndex = tableColumnIndex;
@@ -68,7 +69,6 @@ public class RenameColumnPopupMenu {
         inputPanel.add(getInputField());
         inputPanel.add(getButtonPanel());
 
-        anchoredLayeredPane.setUserPane(inputPanel,true);
         Supplier<Point> anchorPointSupl = ()-> {
             JTableHeader header = table.getTableHeader();
             Point headerAtScreen = header.getLocationOnScreen();
@@ -76,7 +76,7 @@ public class RenameColumnPopupMenu {
             return new Point((int)(r.getX()+headerAtScreen.getX()),(int)(r.getHeight()+headerAtScreen.getY()));
         };
 
-        anchoredLayeredPane.openAndAnchoredAt(anchorPointSupl);
+        anchoredLayeredPane.openAndAnchoredAt(inputPanel,true,anchorPointSupl);
     }
     private JComponent getTitle() {
         if ( null == title) {

@@ -414,6 +414,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             model.fireTableChanged(new TableModelEvent(model,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
         }
     }
+    public void refreshSport(SportType st) {
+        Component comp = getSelectedComponent();
+        if ( comp instanceof MainScreen) {
+            MainScreen ms = (MainScreen)comp;
+            if ( ms.getSportType().equals(st)) {
+                refreshMainScreen(ms);
+            }
+        }
+    }
     public void refreshCurrentTab() {
         Component comp = getSelectedComponent();
         if ( comp instanceof MainScreen) {

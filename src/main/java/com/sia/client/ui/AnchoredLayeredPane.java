@@ -1,5 +1,8 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst.LayedPaneIndex;
+import com.sia.client.ui.control.SportsTabPane;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -8,7 +11,9 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -19,43 +24,63 @@ import java.util.function.Supplier;
 public class AnchoredLayeredPane implements ComponentListener {
 
     private final Integer layer_index;
-	private final JComponent current_screen;
+	private final JComponent anchoredParentComp;
     private final JLayeredPane layeredPane;
 	private final MouseAdapter mouseListener;
-    protected JComponent userComponent;
+    private JComponent userComponent;
+    private boolean toHideOnMouseOut;
     private boolean isOpened = false;
     private Supplier<Point> anchorLocSupplier;
+    private final SportsTabPane stp;
 
-    public AnchoredLayeredPane(JComponent current_screen, int layer_index_) {
+    public AnchoredLayeredPane(SportsTabPane stp) {
+        this(stp, (JComponent)stp.getSelectedComponent(), LayedPaneIndex.SportConfigIndex);
+    }
+    public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,int layer_index_) {
+        this.stp = stp;
         this.layer_index = layer_index_;
-		this.current_screen = current_screen;
+		this.anchoredParentComp = anchoredParentComp;
         mouseListener = new HideOnMouseOutListener();
         layeredPane = getJLayeredPane();
     }
 
     private void prepareListening() {
-		current_screen.addComponentListener(this);
-    }
-
-    public void setUserPane(JComponent userComponent_,boolean toHideOnMouseOut) {
-        if ( null != this.userComponent ) {
-            userComponent.removeMouseListener(mouseListener);
-        }
-        this.userComponent = userComponent_;
-        if ( toHideOnMouseOut) {
-            userComponent.addMouseListener(mouseListener);
-        }
+		anchoredParentComp.addComponentListener(this);
     }
     public JComponent getUserComponent() {
         return this.userComponent;
     }
+    public void openAndCenter(JComponent userComponent,boolean toHideOnMouseOut) {
+        Supplier<Point> anchorLocSupplier = ()->{
+            Dimension selectedPaneDim = stp.getSelectedComponent().getSize();
+            int maxUserCompWidth = (int)selectedPaneDim.getWidth()-30;
+            int maxUserCompHeight = (int)selectedPaneDim.getHeight()-30;
 
-    public void openAndAnchoredAt(Supplier<Point> anchorLocSupplier) {
-// userComponent.setName("usercomponent");
-        this.anchorLocSupplier = anchorLocSupplier;
+            Dimension prefDim = userComponent.getPreferredSize();
+
+            int preferredWidth = (int)prefDim.getWidth();
+            preferredWidth = preferredWidth<=0?Integer.MAX_VALUE:preferredWidth;
+
+            int preferredHeight = (int)prefDim.getHeight();
+            preferredHeight = preferredHeight<=0?Integer.MAX_VALUE:preferredHeight;
+
+            int userCompWidth= Math.min(maxUserCompWidth, preferredWidth);
+            int userCompHeight= Math.min(maxUserCompHeight, preferredHeight);
+            userComponent.setSize(userCompWidth,userCompHeight);
+
+            Rectangle r = stp.getUI().getTabBounds(stp,0);
+            Point tabPaneAnchor = stp.getLocationOnScreen();
+            return new Point( tabPaneAnchor.x+ (int)((selectedPaneDim.getWidth()-userCompWidth)/2), tabPaneAnchor.y+ (int)r.getHeight()+30);
+
+        };
+        openAndAnchoredAt(userComponent, toHideOnMouseOut,anchorLocSupplier);
+    }
+    public void openAndAnchoredAt(JComponent userComponent,boolean toHideOnMouseOut,Supplier<Point> anchorLocSupplier) {
         if (null == userComponent) {
             return;
         }
+        setUserPane(userComponent,toHideOnMouseOut);
+        this.anchorLocSupplier = anchorLocSupplier;
         userComponent.setVisible(true);
         layeredPane.add(userComponent, layer_index);
 
@@ -68,11 +93,20 @@ public class AnchoredLayeredPane implements ComponentListener {
         isOpened = true;
         prepareListening();
     }
-
+    private void setUserPane(JComponent userComponent_,boolean toHideOnMouseOut) {
+        if ( null != this.userComponent ) {
+            userComponent.removeMouseListener(mouseListener);
+        }
+        this.toHideOnMouseOut = toHideOnMouseOut;
+        this.userComponent = userComponent_;
+        if ( toHideOnMouseOut) {
+            userComponent.addMouseListener(mouseListener);
+        }
+    }
     public void close() {
         hide();
         isOpened = false;
-		current_screen.removeComponentListener(this);
+		anchoredParentComp.removeComponentListener(this);
     }
     protected final void hide() {
         if ( null == userComponent) {
@@ -86,7 +120,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     }
 
     private JLayeredPane getJLayeredPane() {
-        Component root_comp_ = SwingUtilities.getRoot(current_screen);
+        Component root_comp_ = SwingUtilities.getRoot(anchoredParentComp);
         if (root_comp_ == null) {
             root_comp_ = getTopContainer();
         }
@@ -95,7 +129,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     }
     private Component getTopContainer() {
 
-        Component topContainer = current_screen.getParent();
+        Component topContainer = anchoredParentComp.getParent();
         while (!(topContainer instanceof JFrame)) {
             topContainer = topContainer.getParent();
         }
@@ -117,9 +151,9 @@ public class AnchoredLayeredPane implements ComponentListener {
     public void componentShown(ComponentEvent e) {
 
         Component comp_ = e.getComponent();
-		if ( current_screen == comp_) {
+		if ( anchoredParentComp == comp_) {
             if (isOpened()) {
-                openAndAnchoredAt(anchorLocSupplier);
+                openAndAnchoredAt(userComponent,toHideOnMouseOut,anchorLocSupplier);
             }
         }
     }
@@ -127,7 +161,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     @Override
     public void componentHidden(ComponentEvent e) {
         Component comp_ = e.getComponent();
-		if ( current_screen == comp_) {
+		if ( anchoredParentComp == comp_) {
             if (isOpened()) {
                 hide();
             }
