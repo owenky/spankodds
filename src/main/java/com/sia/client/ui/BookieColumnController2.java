@@ -62,7 +62,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
 
     private MyListModel destListModel;
 
-//    private JList openerList;
     private MyListModel openerListModel;
 
     private JLabel destLabel;
@@ -97,86 +96,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
     public AnchoredLayeredPane getAnchoredLayeredPane() {
         return anchoredLayeredPane;
     }
-//    public String getSourceChoicesTitle() {
-//        return sourceLabel.getText();
-//    }
-//
-//    public void setSourceChoicesTitle(String newValue) {
-//        sourceLabel.setText(newValue);
-//    }
-//
-//    public String getDestinationChoicesTitle() {
-//        return destLabel.getText();
-//    }
-//
-//    public void setDestinationChoicesTitle(String newValue) {
-//        destLabel.setText(newValue);
-//    }
-//
-//    public void clearDestinationListModel() {
-//        destListModel.clear();
-//    }
-//
-//    public void setOpenerElements(ListModel newValue) {
-//        clearOpenerListModel();
-//        addOpenerElements(newValue);
-//    }
-
-    public void clearOpenerListModel() {
-        openerListModel.clear();
-    }
-//
-//    public void addOpenerElements(ListModel newValue) {
-//        fillListModel(openerListModel, newValue);
-//    }
-
-    private void fillListModel(MyListModel model, ListModel newValues) {
-        for (int i = 0; i < newValues.getSize(); i++) {
-            model.add(newValues.getElementAt(i));
-            log("adding .." + newValues.getElementAt(i));
-        }
-    }
-//
-//    public void setSourceElements(ListModel newValue) {
-//        clearSourceListModel();
-//        addSourceElements(newValue);
-//    }
-
-    public void clearSourceListModel() {
-        sourceListModel.clear();
-    }
-
-    public void addSourceElements(ListModel newValue) {
-        fillListModel(sourceListModel, newValue);
-
-    }
-//
-//    public void addDestinationElements(ListModel newValue) {
-//        int destlistindex = destList.getSelectedIndex();
-//        log("DEST LIST INDEX IS " + destlistindex);
-//        if (destlistindex == -1) {
-//            fillListModel(destListModel, newValue);
-//        } else {
-//            fillListModel(destListModel, newValue, destlistindex);
-//            destList.setSelectedIndex(destlistindex + 1);
-//        }
-//    }
-//
-//    private void fillListModel(MyListModel model, ListModel newValues, int atindex) {
-//
-//
-//        for (int i = 0; i < newValues.getSize(); i++) {
-//            // add the items at the dest selected 	 position if something is selected in dest list
-//            model.add(newValues.getElementAt(i), atindex);
-//            log("adding .." + newValues.getElementAt(i) + "..at index =" + atindex);
-//        }
-//    }
-//
-//    public void setOpenerElements(Object[] newValue) {
-//        clearOpenerListModel();
-//        addOpenerElements(newValue);
-//    }
-
     public void addOpenerElements(Object[] newValue) {
         fillListModel(openerListModel, newValue);
     }
@@ -184,11 +103,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
     private void fillListModel(MyListModel model, Object[] newValues) {
         model.addAll(newValues);
     }
-//
-//    public void setSourceElements(Object[] newValue) {
-//        clearSourceListModel();
-//        addSourceElements(newValue);
-//    }
 
     public void addSourceElements(Object[] newValue) {
         fillListModel(sourceListModel, newValue);
@@ -209,70 +123,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
     private void fillListModel(MyListModel model, Object[] newValues, int atindex) {
         model.addAll(newValues, atindex);
     }
-//
-//    public Iterator sourceIterator() {
-//        return sourceListModel.iterator();
-//    }
-//
-//    public Iterator destinationIterator() {
-//        return destListModel.iterator();
-//    }
-//
-//    public Iterator openerIterator() {
-//        return openerListModel.iterator();
-//    }
-//
-//    public ListCellRenderer getOpenerCellRenderer() {
-//        return openerList.getCellRenderer();
-//    }
-//
-//    public void setOpenerCellRenderer(ListCellRenderer newValue) {
-//        openerList.setCellRenderer(newValue);
-//    }
-//
-//    public ListCellRenderer getSourceCellRenderer() {
-//        return sourceList.getCellRenderer();
-//    }
-//
-//    public void setSourceCellRenderer(ListCellRenderer newValue) {
-//        sourceList.setCellRenderer(newValue);
-//    }
-//
-//    public ListCellRenderer getDestinationCellRenderer() {
-//        return destList.getCellRenderer();
-//    }
-//
-//    public void setDestinationCellRenderer(ListCellRenderer newValue) {
-//        destList.setCellRenderer(newValue);
-//    }
-//
-//    public int getVisibleRowCount() {
-//        return sourceList.getVisibleRowCount();
-//    }
-//
-//    public void setVisibleRowCount(int newValue) {
-//        sourceList.setVisibleRowCount(newValue);
-//        destList.setVisibleRowCount(newValue);
-//    }
-//
-//    public Color getSelectionBackground() {
-//        return sourceList.getSelectionBackground();
-//    }
-//
-//    public void setSelectionBackground(Color newValue) {
-//        sourceList.setSelectionBackground(newValue);
-//        destList.setSelectionBackground(newValue);
-//    }
-//
-//    public Color getSelectionForeground() {
-//        return sourceList.getSelectionForeground();
-//    }
-//
-//    public void setSelectionForeground(Color newValue) {
-//        sourceList.setSelectionForeground(newValue);
-//        destList.setSelectionForeground(newValue);
-//    }
-
     private void clearSourceSelected() {
         Object[] selected = sourceList.getSelectedValues();
         for (int i = selected.length - 1; i >= 0; --i) {
@@ -307,12 +157,10 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
 
 
     private void initScreen() {
-        setBorder(BorderFactory.createEtchedBorder());
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(),BorderFactory.createEmptyBorder(10,10,10,10)));
         setLayout(new GridBagLayout());
         sourceLabel = new JLabel(DEFAULT_SOURCE_CHOICE_LABEL);
         openerListModel = new MyListModel();
-//        openerList = new JList(openerListModel);
-
 
         sourceListModel = new MyListModel();
 
@@ -465,13 +313,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
                 this.addSourceElements(new Object[]{b});
             }
         }
-//
-//        if ( toShow) {
-//            //owen kyrollos need to think about filtering opener bookie in list
-//            f.getContentPane().add(this, BorderLayout.CENTER);
-//            f.setSize(700, 700);
-//            f.setVisible(true);
-//        }
     }
 
     public void moveItUp() {
@@ -727,9 +568,9 @@ class MyListModel extends AbstractListModel {
 
     public void moveUp(Object[] values) {
 
-        for (int i = 0; i < values.length; i++) {
-            int firstindex = model.indexOf(values[i]);
-            Object selected = values[i];
+        for (final Object value : values) {
+            int firstindex = model.indexOf(value);
+            Object selected = value;
             if (firstindex == 0) {
                 break;
             } else {
