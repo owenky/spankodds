@@ -51,7 +51,7 @@ public class RenameColumnPopupMenu {
     }
     private RenameColumnPopupMenu(SportsTabPane stp, JTable table) {
         this.table = table;
-        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, null,LayedPaneIndex.TableColumnMenuIndex);
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,table,LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
         this.tableColumnIndex = tableColumnIndex;

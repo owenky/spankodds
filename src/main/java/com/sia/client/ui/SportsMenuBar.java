@@ -54,7 +54,8 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenuItem bookiecolumn = new JMenuItem("Manage");
         bookiecolumn.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
-            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb,"Bookie Management");
+            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
+            anchoredLayeredPane.setTitle("Bookie Management");
             BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
             bcc2.openAndCenter(new Dimension(700,700),false);
         }));

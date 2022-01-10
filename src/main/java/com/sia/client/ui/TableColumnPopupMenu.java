@@ -8,6 +8,7 @@ import com.sia.client.ui.control.SportsTabPane;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -51,14 +52,13 @@ public class TableColumnPopupMenu{
     private TableColumnPopupMenu(SportsTabPane stp,JTable table) {
         this.table = table;
         this.stp = stp;
-        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, null,LayedPaneIndex.TableColumnMenuIndex);
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,(JComponent)stp.getSelectedComponent(),LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
         Dimension menuBarSize = new Dimension(130,110);
         this.tableColumnIndex = tableColumnIndex;
         menuBar = new JPanel();
         menuBar.setLayout(new GridLayout(0, 1, 0, 1));
-//        menuBar.setSize(menuBarSize);
         menuBar.setBorder(BorderFactory.createEtchedBorder());
         menuBar.add(getRenmeItem());
         menuBar.add(getChoseColorItem());

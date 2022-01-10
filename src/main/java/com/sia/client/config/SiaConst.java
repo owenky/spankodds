@@ -51,7 +51,7 @@ public abstract class SiaConst {
     }
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;
-        int SportConfigIndex = 5;
+        int SportConfigIndex = TableColumnMenuIndex; //so that Sports Config Pane will hide Table Column Menu Pane, and vice visa. 2022-01-09
     }
     public interface ImageFile {
         String ICON_BLANK = "blank.gif";

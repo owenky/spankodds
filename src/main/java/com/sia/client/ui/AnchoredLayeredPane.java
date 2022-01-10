@@ -26,6 +26,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 
@@ -40,14 +42,17 @@ public class AnchoredLayeredPane implements ComponentListener {
     private boolean isOpened = false;
     private Supplier<Point> anchorLocSupplier;
     private final SportsTabPane stp;
-    private final String title;
+    private String title;
+    private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
-    public AnchoredLayeredPane(SportsTabPane stp,String title) {
-        this(stp, (JComponent)stp.getSelectedComponent(), title, LayedPaneIndex.SportConfigIndex);
+    public AnchoredLayeredPane(SportsTabPane stp) {
+        this(stp, stp,  LayedPaneIndex.SportConfigIndex);
     }
-    public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,String title,int layer_index) {
-        this.stp = stp;
+    public void setTitle(String title) {
         this.title = title;
+    }
+    public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,int layer_index) {
+        this.stp = stp;
         this.layer_index = layer_index;
 		this.anchoredParentComp = anchoredParentComp;
         mouseListener = new HideOnMouseOutListener();
@@ -78,6 +83,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         return new Dimension(Math.min(maxUserCompWidth, width),Math.min(maxUserCompHeight, height));
     }
     public void openAndAnchoredAt(JComponent userComponent, Dimension size,boolean toHideOnMouseOut,Supplier<Point> anchorLocSupplier) {
+        updateActiveLayerPaneMap();
         if (null == userComponent) {
             return;
         }
@@ -88,6 +94,19 @@ public class AnchoredLayeredPane implements ComponentListener {
         }
         this.anchorLocSupplier = anchorLocSupplier;
         showLayeredPane();
+    }
+
+    private void updateActiveLayerPaneMap() {
+        //one AnchoredLayerPane per SpankyWindow and layer_index
+        String key = getActiveMapKey();
+        AnchoredLayeredPane oldPane = activeLayeredPaneMap.get(key);
+        if ( null != oldPane) {
+            oldPane.close();
+        }
+        activeLayeredPaneMap.put(key,this);
+    }
+    private String getActiveMapKey(){
+        return stp.getWindowIndex() +"_"+this.layer_index;
     }
     private void showLayeredPane() {
         if (null == userComponentScrollPane) {
@@ -145,6 +164,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         hide();
         isOpened = false;
 		anchoredParentComp.removeComponentListener(this);
+        activeLayeredPaneMap.remove(this.getActiveMapKey(),this);
     }
     protected final void hide() {
         if ( null == userComponentScrollPane) {
