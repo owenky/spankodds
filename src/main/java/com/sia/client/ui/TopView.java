@@ -327,7 +327,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
         addBookieBut.addActionListener(ae -> {
             checkAndRunInEDT(() -> {
-                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
+                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,null,LayedPaneIndex.SportConfigIndex);
                 BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
             });
         });

@@ -54,10 +54,9 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenuItem bookiecolumn = new JMenuItem("Manage");
         bookiecolumn.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
-            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
+            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb,"Bookie Management");
             BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
-            bcc2.setPreferredSize(new Dimension(700, 700));
-            bcc2.openAndCenter(false);
+            bcc2.openAndCenter(new Dimension(700,700),false);
         }));
         JMenuItem bookiecolumn1 = new JMenuItem("Chart");
         bookiecolumn1.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome().setVisible(true)));

@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -85,7 +84,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
     private JButton saveButton;
     private JCheckBox showopen;
     private final AnchoredLayeredPane anchoredLayeredPane;
-    private static final Dimension DefaultDim = new Dimension(700,700);
 
     public BookieColumnController2(AnchoredLayeredPane anchoredLayeredPane) {
         this.anchoredLayeredPane = anchoredLayeredPane;
@@ -266,10 +264,6 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
         add(downdownButton, new GridBagConstraints(3, 4, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-
-
-        setPreferredSize(DefaultDim);
-        setSize(DefaultDim);
     }
 
     public void doRemove() {

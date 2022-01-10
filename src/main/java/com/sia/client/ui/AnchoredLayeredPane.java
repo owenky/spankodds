@@ -4,14 +4,22 @@ import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
@@ -27,18 +35,20 @@ public class AnchoredLayeredPane implements ComponentListener {
 	private final JComponent anchoredParentComp;
     private final JLayeredPane layeredPane;
 	private final MouseAdapter mouseListener;
-    private JComponent userComponent;
+    private JScrollPane userComponentScrollPane;
     private boolean toHideOnMouseOut;
     private boolean isOpened = false;
     private Supplier<Point> anchorLocSupplier;
     private final SportsTabPane stp;
+    private final String title;
 
-    public AnchoredLayeredPane(SportsTabPane stp) {
-        this(stp, (JComponent)stp.getSelectedComponent(), LayedPaneIndex.SportConfigIndex);
+    public AnchoredLayeredPane(SportsTabPane stp,String title) {
+        this(stp, (JComponent)stp.getSelectedComponent(), title, LayedPaneIndex.SportConfigIndex);
     }
-    public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,int layer_index_) {
+    public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,String title,int layer_index) {
         this.stp = stp;
-        this.layer_index = layer_index_;
+        this.title = title;
+        this.layer_index = layer_index;
 		this.anchoredParentComp = anchoredParentComp;
         mouseListener = new HideOnMouseOutListener();
         layeredPane = getJLayeredPane();
@@ -47,61 +57,89 @@ public class AnchoredLayeredPane implements ComponentListener {
     private void prepareListening() {
 		anchoredParentComp.addComponentListener(this);
     }
-    public JComponent getUserComponent() {
-        return this.userComponent;
-    }
-    public void openAndCenter(JComponent userComponent,boolean toHideOnMouseOut) {
+    public void openAndCenter(JComponent userComponent, Dimension totalSize,boolean toHideOnMouseOut) {
+
+        Dimension selectedPaneDim = stp.getSelectedComponent().getSize();
+        Dimension actualSize = calculateActualSize(selectedPaneDim,totalSize);
         Supplier<Point> anchorLocSupplier = ()->{
-            Dimension selectedPaneDim = stp.getSelectedComponent().getSize();
-            int maxUserCompWidth = (int)selectedPaneDim.getWidth()-30;
-            int maxUserCompHeight = (int)selectedPaneDim.getHeight()-30;
-
-            Dimension prefDim = userComponent.getPreferredSize();
-
-            int preferredWidth = (int)prefDim.getWidth();
-            preferredWidth = preferredWidth<=0?Integer.MAX_VALUE:preferredWidth;
-
-            int preferredHeight = (int)prefDim.getHeight();
-            preferredHeight = preferredHeight<=0?Integer.MAX_VALUE:preferredHeight;
-
-            int userCompWidth= Math.min(maxUserCompWidth, preferredWidth);
-            int userCompHeight= Math.min(maxUserCompHeight, preferredHeight);
-            userComponent.setSize(userCompWidth,userCompHeight);
-
             Rectangle r = stp.getUI().getTabBounds(stp,0);
             Point tabPaneAnchor = stp.getLocationOnScreen();
-            return new Point( tabPaneAnchor.x+ (int)((selectedPaneDim.getWidth()-userCompWidth)/2), tabPaneAnchor.y+ (int)r.getHeight()+30);
+            return new Point( tabPaneAnchor.x+ (int)((selectedPaneDim.getWidth()-actualSize.getWidth())/2), tabPaneAnchor.y+ (int)r.getHeight()+30);
 
         };
-        openAndAnchoredAt(userComponent, toHideOnMouseOut,anchorLocSupplier);
+        openAndAnchoredAt(userComponent, actualSize,toHideOnMouseOut,anchorLocSupplier);
     }
-    public void openAndAnchoredAt(JComponent userComponent,boolean toHideOnMouseOut,Supplier<Point> anchorLocSupplier) {
+    private Dimension calculateActualSize(Dimension selectedPaneDim,Dimension userDefinedSize) {
+        int width = userDefinedSize.getWidth()<=0?Integer.MAX_VALUE:(int)userDefinedSize.getWidth();
+        int height = userDefinedSize.getHeight()<=0?Integer.MAX_VALUE:(int)userDefinedSize.getHeight();
+        int maxUserCompWidth = (int)selectedPaneDim.getWidth()-30;
+        int maxUserCompHeight = (int)selectedPaneDim.getHeight()-30;
+
+        return new Dimension(Math.min(maxUserCompWidth, width),Math.min(maxUserCompHeight, height));
+    }
+    public void openAndAnchoredAt(JComponent userComponent, Dimension size,boolean toHideOnMouseOut,Supplier<Point> anchorLocSupplier) {
         if (null == userComponent) {
             return;
         }
-        setUserPane(userComponent,toHideOnMouseOut);
+        this.toHideOnMouseOut = toHideOnMouseOut;
+        this.userComponentScrollPane = makeUserComponetScrollPane(userComponent);
+        if ( null != size) {
+            userComponentScrollPane.setSize(size);
+        }
         this.anchorLocSupplier = anchorLocSupplier;
-        userComponent.setVisible(true);
-        layeredPane.add(userComponent, layer_index);
+        showLayeredPane();
+    }
+    private void showLayeredPane() {
+        if (null == userComponentScrollPane) {
+            return;
+        }
+        userComponentScrollPane.removeMouseListener(mouseListener);
+        if ( toHideOnMouseOut) {
+            userComponentScrollPane.addMouseListener(mouseListener);
+        }
+        userComponentScrollPane.setVisible(true);
+        layeredPane.add(userComponentScrollPane, layer_index);
 
         Point layeredPaneLoc = layeredPane.getLocationOnScreen();
 
         Point anchor_loc_ = anchorLocSupplier.get();
         final int x_ = anchor_loc_.x - layeredPaneLoc.x;
         final int y_ = anchor_loc_.y - layeredPaneLoc.y;
-        userComponent.setBounds(x_, y_, userComponent.getWidth(), userComponent.getHeight());
+        userComponentScrollPane.setBounds(x_, y_, userComponentScrollPane.getWidth(), userComponentScrollPane.getHeight());
         isOpened = true;
         prepareListening();
     }
-    private void setUserPane(JComponent userComponent_,boolean toHideOnMouseOut) {
-        if ( null != this.userComponent ) {
-            userComponent.removeMouseListener(mouseListener);
+    private JScrollPane makeUserComponetScrollPane(JComponent userComponent) {
+        JComponent containingComp;
+        if ( null == title) {
+            containingComp = userComponent;
+        } else {
+            JPanel titlePanel = new JPanel();
+            titlePanel.setLayout(new BorderLayout());
+            JLabel titleLabel = new JLabel(title);
+            titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            Font defaultFont = titleLabel.getFont();
+            Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+2);
+            titleLabel.setFont(titleFont);
+
+            JButton closeBtn = new JButton("X");
+            closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4));
+            closeBtn.setOpaque(false);
+            closeBtn.setBorder(BorderFactory.createEmptyBorder());
+            titlePanel.add(closeBtn,BorderLayout.EAST);
+            titlePanel.add(titleLabel,BorderLayout.CENTER);
+
+            closeBtn.addActionListener(event-> close());
+            titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
+
+            containingComp = new JPanel();
+            containingComp.setLayout(new BorderLayout());
+            containingComp.add(titlePanel,BorderLayout.NORTH);
+            containingComp.add(userComponent,BorderLayout.CENTER);
         }
-        this.toHideOnMouseOut = toHideOnMouseOut;
-        this.userComponent = userComponent_;
-        if ( toHideOnMouseOut) {
-            userComponent.addMouseListener(mouseListener);
-        }
+        JScrollPane jScrollPane = new JScrollPane(containingComp);
+        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
+        return jScrollPane;
     }
     public void close() {
         hide();
@@ -109,12 +147,12 @@ public class AnchoredLayeredPane implements ComponentListener {
 		anchoredParentComp.removeComponentListener(this);
     }
     protected final void hide() {
-        if ( null == userComponent) {
+        if ( null == userComponentScrollPane) {
             return;
         }
-        userComponent.removeMouseListener(mouseListener);
-        userComponent.setVisible(false);
-        layeredPane.remove(userComponent);
+        userComponentScrollPane.removeMouseListener(mouseListener);
+        userComponentScrollPane.setVisible(false);
+        layeredPane.remove(userComponentScrollPane);
         layeredPane.revalidate();
         layeredPane.repaint();
     }
@@ -153,7 +191,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         Component comp_ = e.getComponent();
 		if ( anchoredParentComp == comp_) {
             if (isOpened()) {
-                openAndAnchoredAt(userComponent,toHideOnMouseOut,anchorLocSupplier);
+                showLayeredPane();
             }
         }
     }

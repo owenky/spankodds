@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
@@ -50,12 +51,14 @@ public class TableColumnPopupMenu{
     private TableColumnPopupMenu(SportsTabPane stp,JTable table) {
         this.table = table;
         this.stp = stp;
-        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, LayedPaneIndex.TableColumnMenuIndex);
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, null,LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
+        Dimension menuBarSize = new Dimension(130,110);
         this.tableColumnIndex = tableColumnIndex;
         menuBar = new JPanel();
-        menuBar.setSize(new Dimension(110,80));
+        menuBar.setLayout(new GridLayout(0, 1, 0, 1));
+//        menuBar.setSize(menuBarSize);
         menuBar.setBorder(BorderFactory.createEtchedBorder());
         menuBar.add(getRenmeItem());
         menuBar.add(getChoseColorItem());
@@ -68,7 +71,7 @@ public class TableColumnPopupMenu{
             return new Point((int)(r.getX()+headerAtScreen.getX()),(int)(r.getHeight()+headerAtScreen.getY()));
         };
 
-        anchoredLayeredPane.openAndAnchoredAt(menuBar,true,anchorPointSupl);
+        anchoredLayeredPane.openAndAnchoredAt(menuBar,menuBarSize,true,anchorPointSupl);
     }
     private JMenuItem getCloseItem() {
         if ( null == closeItem) {

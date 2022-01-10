@@ -51,7 +51,7 @@ public class RenameColumnPopupMenu {
     }
     private RenameColumnPopupMenu(SportsTabPane stp, JTable table) {
         this.table = table;
-        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, LayedPaneIndex.TableColumnMenuIndex);
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,table, null,LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
         this.tableColumnIndex = tableColumnIndex;
@@ -76,7 +76,7 @@ public class RenameColumnPopupMenu {
             return new Point((int)(r.getX()+headerAtScreen.getX()),(int)(r.getHeight()+headerAtScreen.getY()));
         };
 
-        anchoredLayeredPane.openAndAnchoredAt(inputPanel,true,anchorPointSupl);
+        anchoredLayeredPane.openAndAnchoredAt(inputPanel,null,true,anchorPointSupl);
     }
     private JComponent getTitle() {
         if ( null == title) {

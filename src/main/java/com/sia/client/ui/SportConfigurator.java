@@ -35,7 +35,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -62,27 +61,6 @@ public class SportConfigurator {
     public SportConfigurator(AnchoredLayeredPane anchoredLayeredPane,SportType sportType) {
         this.sportType = sportType;
         this.anchoredLayeredPane = anchoredLayeredPane;
-    }
-    public JPanel getTitlePanel() {
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BorderLayout());
-        JLabel title = new JLabel(sportType.getSportName() + " Preferences");
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        Font defaultFont = title.getFont();
-        Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+2);
-        title.setFont(titleFont);
-
-        JButton closeBtn = new JButton("X");
-        closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4));
-        closeBtn.setOpaque(false);
-        closeBtn.setBorder(BorderFactory.createEmptyBorder());
-        titlePanel.add(closeBtn,BorderLayout.EAST);
-        titlePanel.add(title,BorderLayout.CENTER);
-
-        closeBtn.addActionListener(event-> close());
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
-        return titlePanel;
     }
     public JPanel getMainPanel() {
 
