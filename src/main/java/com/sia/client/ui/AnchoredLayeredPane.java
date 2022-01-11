@@ -51,6 +51,9 @@ public class AnchoredLayeredPane implements ComponentListener {
     public void setTitle(String title) {
         this.title = title;
     }
+    public SportsTabPane getSportsTabPane() {
+        return stp;
+    }
     public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,int layer_index) {
         this.stp = stp;
         this.layer_index = layer_index;

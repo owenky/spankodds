@@ -64,7 +64,7 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.log;
 
 
-public class LineAlert implements ItemListener {
+public class LineAlert extends AbstractLayeredDialog implements ItemListener {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     boolean editing = false;
@@ -204,18 +204,15 @@ public class LineAlert implements ItemListener {
     private Hashtable leaguenameidhash = new Hashtable();
     private Hashtable bookienameidhash = new Hashtable();
     private String alerttype = "Line Alert";
-    private final AnchoredLayeredPane anchoredLayeredPane;
+
 
     public LineAlert(SportsTabPane stp) {
-        anchoredLayeredPane = new AnchoredLayeredPane(stp);
-        anchoredLayeredPane.setTitle("Line Alerts");
+       super(stp,"Line Alerts");
     }
-    public void show() {
-        anchoredLayeredPane.openAndCenter(getUserComponent(),new Dimension(600,180),false);
-    }
-    private JComponent getUserComponent() {
+    @Override
+    protected JComponent getUserComponent() {
         JPanel userComp = new JPanel();
-        JFrame jfrm1 = null;
+        JFrame jfrm1 = SpankyWindow.findSpankyWindow(getAnchoredLayeredPane().getSportsTabPane().getWindowIndex());
         linealertname.setDocument(new JTextFieldLimit(20));
         TextPrompt tp7 = new TextPrompt("Name Your Line Alert", linealertname);
         tp7.setForeground(Color.RED);
@@ -241,11 +238,6 @@ public class LineAlert implements ItemListener {
         audiofilevec.add("horn.wav");
         audiofilevec.add("doublehorn.wav");
         audiofilevec.add("scream.wav");
-
-
-
-        //audiolist[4] = "Choose Custom Audio";
-
 
         gameperiodlist[0] = "Full Game";
         gameperiodlist[1] = "1st Half";
@@ -928,7 +920,7 @@ public class LineAlert implements ItemListener {
 
         JLabel ifwithin = new JLabel("If within ");
         JLabel seconds = new JLabel(" seconds, >= ");
-        JLabel greaterthanorequal = new JLabel(">= ");
+//        JLabel greaterthanorequal = new JLabel(">= ");
         JLabel bookieslab = new JLabel(" bookies ");
 
         JLabel pts = new JLabel(" pts or move juice >=");
@@ -1272,9 +1264,7 @@ public class LineAlert implements ItemListener {
         moneylineradioPanel.add(moneylineupperright);
         moneylineradioPanel.add(moneylinelowerleft);
         moneylineradioPanel.add(moneylinelowerright);
-// end moneyline
 
-//teamtotal
         teamtotalupperright.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -1329,16 +1319,12 @@ public class LineAlert implements ItemListener {
         teamtotalradioPanel.add(teamtotalupperright);
         teamtotalradioPanel.add(teamtotallowerleft);
         teamtotalradioPanel.add(teamtotallowerright);
-// end teamtotal
-
 
         spreadPanel.setBorder(BorderFactory.createEtchedBorder());
         spreadPanel.setLayout(new GridBagLayout());
 
 
         GridBagConstraints c = new GridBagConstraints();
-        //GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill,
-        //Insets insets, int ipadx, int ipady)
 
         c.gridx = 0;
         c.gridy = 0;
@@ -1353,19 +1339,6 @@ public class LineAlert implements ItemListener {
         c.ipady = 0;
         spreadPanel.add(spreadcheckbox, c);
         c.gridheight = 1;
-	/*
-	c.gridx = 7;
-	c.gridwidth = 1;
-	c.anchor = GridBagConstraints.EAST;
-	spreadPanel.add(gameperiodlabel,c);
-
-	c.anchor = GridBagConstraints.WEST;
-	c.gridx = 8;
-	c.gridwidth = 2;
-	spreadPanel.add(gameperiodComboBox,c);
-	*/
-
-
         c.gridwidth = 1;
         c.gridy = 1;
 
@@ -1456,17 +1429,13 @@ public class LineAlert implements ItemListener {
         c.gridwidth = 3;
         spreadPanel.add(renotifyme2, c);
 
-        // end spreadpanel
-
-        // totalpanel
-
         totalPanel.setBorder(BorderFactory.createEtchedBorder());
         totalPanel.setLayout(new GridBagLayout());
         c = new GridBagConstraints();
 
         ifwithin = new JLabel("If within ");
         seconds = new JLabel(" seconds, >= ");
-        greaterthanorequal = new JLabel(">= ");
+//        greaterthanorequal = new JLabel(">= ");
         bookieslab = new JLabel(" bookies ");
 
         pts = new JLabel(" pts or move juice >=");
@@ -1475,11 +1444,6 @@ public class LineAlert implements ItemListener {
         secondslab = new JLabel("seconds");
         renotifyme = new JLabel("Renotify me on same side only after");
         renotifyme2 = new JLabel(" minutes have elapsed");
-
-
-        //GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill,
-        //Insets insets, int ipadx, int ipady)
-
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 10;
@@ -1585,29 +1549,21 @@ public class LineAlert implements ItemListener {
         c.gridwidth = 3;
         totalPanel.add(renotifyme2, c);
 
-        // end totalpanel
-
-        // moneylinepanel
-
         moneylinePanel.setBorder(BorderFactory.createEtchedBorder());
         moneylinePanel.setLayout(new GridBagLayout());
         c = new GridBagConstraints();
 
         ifwithin = new JLabel("If within ");
         seconds = new JLabel(" seconds, >= ");
-        greaterthanorequal = new JLabel(">= ");
+//        greaterthanorequal = new JLabel(">= ");
         bookieslab = new JLabel(" bookies ");
 
-        pts = new JLabel(" pts or move juice >=");
+//        pts = new JLabel(" pts or move juice >=");
         centslab = new JLabel(" cents");
         forlab = new JLabel("for ");
         secondslab = new JLabel("seconds");
         renotifyme = new JLabel("Renotify me on same side only after");
         renotifyme2 = new JLabel(" minutes have elapsed");
-
-
-        //GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill,
-        //Insets insets, int ipadx, int ipady)
 
         c.gridx = 0;
         c.gridy = 0;
@@ -1650,10 +1606,6 @@ public class LineAlert implements ItemListener {
         c.gridx = 5;
 
         moneylinePanel.add(moneylinemovelinejuiceButton, c);
-        //c.gridx= 6;
-        //moneylinePanel.add(moneylineptsComboBox,c);
-        //c.gridx= 7;
-        //moneylinePanel.add(pts,c);
         c.gridx = 6;
 
         moneylinePanel.add(moneylinejuiceComboBox, c);
@@ -1726,16 +1678,13 @@ public class LineAlert implements ItemListener {
         c.gridwidth = 3;
         moneylinePanel.add(renotifyme2, c);
 
-        // end moneylinepanel
-        // teamtotalpanel
-
         teamtotalPanel.setBorder(BorderFactory.createEtchedBorder());
         teamtotalPanel.setLayout(new GridBagLayout());
         c = new GridBagConstraints();
 
         ifwithin = new JLabel("If within ");
         seconds = new JLabel(" seconds, >= ");
-        greaterthanorequal = new JLabel(">= ");
+//        greaterthanorequal = new JLabel(">= ");
         bookieslab = new JLabel(" bookies ");
 
         pts = new JLabel(" pts or move juice >=");
@@ -1870,14 +1819,6 @@ public class LineAlert implements ItemListener {
         box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Add the components to the boxes.
-	/*
-    box1.add(jlabOne);
-    box1.add(Box.createRigidArea(new Dimension(0, 4)));
-    box1.add(jbtnOne);
-    box1.add(Box.createRigidArea(new Dimension(0, 4)));
-    box1.add(jbtnTwo);
-*/
 
         box2.add(new JLabel("Add New Line Alert"));
         box2.add(sportComboBox);
@@ -2238,63 +2179,6 @@ public class LineAlert implements ItemListener {
             moneylinepopupsecsComboBox.setSelectedItem("" + lan.getMoneylinePopupSecs());
             renotifymoneylineComboBox.setSelectedItem("" + lan.getMoneylineMinsRenotify());
 
-
-
-
-
-
-
-
-
-/*
-						LineAlertNode lan = new LineAlertNode(name,sport,gameperiodComboBox.getSelectedIndex(),sportselectedvec,bookieselectedvec,
-					spreadcheckbox.isSelected(),
-					Integer.parseInt(secslist[spreadsecsComboBox.getSelectedIndex()]),
-					Integer.parseInt(numbookieslist[spreadbookiesComboBox.getSelectedIndex()]),
-					moveatallButton.isSelected(),movelinejuiceButton.isSelected(),movepercentagebutton.isSelected(),
-					Double.parseDouble(spreadptsComboBox.getModel().getSelectedItem().toString()),
-					Integer.parseInt(centslist[spreadjuiceComboBox.getSelectedIndex()]),
-					Double.parseDouble(percentagelist[spreadpercentageComboBox.getSelectedIndex()]),
-					spreadaudiocheckbox.isSelected(),audiolist[spreadaudioComboBox.getSelectedIndex()],
-					spreadpopupcheckbox.isSelected(),spreadpopuplocationint,Integer.parseInt(secslist[spreadpopupsecsComboBox.getSelectedIndex()]),
-					Double.parseDouble(minslist[renotifyComboBox.getSelectedIndex()]),
-
-					totalcheckbox.isSelected(),
-					Integer.parseInt(secslist[totalsecsComboBox.getSelectedIndex()]),
-					Integer.parseInt(numbookieslist[totalbookiesComboBox.getSelectedIndex()]),
-					totalmoveatallButton.isSelected(),totalmovelinejuiceButton.isSelected(),totalmovepercentagebutton.isSelected(),
-					Double.parseDouble(totalptsComboBox.getModel().getSelectedItem().toString()),
-					Integer.parseInt(centslist[totaljuiceComboBox.getSelectedIndex()]),
-					Double.parseDouble(percentagelist[totalpercentageComboBox.getSelectedIndex()]),
-					totalaudiocheckbox.isSelected(),audiolist[totalaudioComboBox.getSelectedIndex()],
-					totalpopupcheckbox.isSelected(),totalpopuplocationint,Integer.parseInt(secslist[totalpopupsecsComboBox.getSelectedIndex()]),
-					Double.parseDouble(minslist[renotifytotalComboBox.getSelectedIndex()]),
-
-					moneylinecheckbox.isSelected(),
-					Integer.parseInt(secslist[moneylinesecsComboBox.getSelectedIndex()]),
-					Integer.parseInt(numbookieslist[moneylinebookiesComboBox.getSelectedIndex()]),
-					moneylinemoveatallButton.isSelected(),moneylinemovelinejuiceButton.isSelected(),moneylinemovepercentagebutton.isSelected(),
-					Integer.parseInt(centslist[moneylinejuiceComboBox.getSelectedIndex()]),
-					Double.parseDouble(percentagelist[moneylinepercentageComboBox.getSelectedIndex()]),
-					moneylineaudiocheckbox.isSelected(),audiolist[moneylineaudioComboBox.getSelectedIndex()],
-					moneylinepopupcheckbox.isSelected(),moneylinepopuplocationint,Integer.parseInt(secslist[moneylinepopupsecsComboBox.getSelectedIndex()]),
-					Double.parseDouble(minslist[renotifymoneylineComboBox.getSelectedIndex()]),
-
-
-					teamtotalcheckbox.isSelected(),
-					Integer.parseInt(secslist[teamtotalsecsComboBox.getSelectedIndex()]),
-					Integer.parseInt(numbookieslist[teamtotalbookiesComboBox.getSelectedIndex()]),
-					teamtotalmoveatallButton.isSelected(),teamtotalmovelinejuiceButton.isSelected(),teamtotalmovepercentagebutton.isSelected(),
-					Double.parseDouble(teamtotalptsComboBox.getModel().getSelectedItem().toString()),
-					Integer.parseInt(centslist[teamtotaljuiceComboBox.getSelectedIndex()]),
-					Double.parseDouble(percentagelist[teamtotalpercentageComboBox.getSelectedIndex()]),
-					teamtotalaudiocheckbox.isSelected(),audiolist[teamtotalaudioComboBox.getSelectedIndex()],
-					teamtotalpopupcheckbox.isSelected(),teamtotalpopuplocationint,Integer.parseInt(secslist[teamtotalpopupsecsComboBox.getSelectedIndex()]),
-					Double.parseDouble(minslist[renotifyteamtotalComboBox.getSelectedIndex()])
-					);
-*/
-
-
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(lan.getSport());
             DefaultTreeModel treeModel = new DefaultTreeModel(root);
             _tree = new CheckBoxTree(treeModel) {
@@ -2460,16 +2344,12 @@ public class LineAlert implements ItemListener {
 
 
     }
-
-    public int gamePeriodIndex(int z) {
+    private int gamePeriodIndex(int z) {
         for (int i = 0; i < gameperiodintlist.length; i++) {
             if (z == gameperiodintlist[i]) {
                 return i;
             }
         }
         return -1;
-    }
-    private void close() {
-        this.anchoredLayeredPane.close();
     }
 }

@@ -12,6 +12,7 @@ import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -23,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -64,11 +66,10 @@ import java.util.Vector;
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
 
-class LineAlertOpeners implements ItemListener {
+public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListener {
 
     public static String[] gameperiod = new String[]{"Full Game", "1st Half", "2nd Half", "All Halfs", " ", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Live", "All Periods"};
     static int idx;
-    static JFrame jfrm;
     JLabel welcome = new JLabel("LINE ALERT");
     JideToggleButton upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
     JideToggleButton upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
@@ -131,9 +132,11 @@ class LineAlertOpeners implements ItemListener {
     private Hashtable bookienameidhash = new Hashtable();
     private String alerttype = "";
 
-
-    //******************************************************************************
-    LineAlertOpeners() {
+    public LineAlertOpeners(SportsTabPane stp) {
+        super(stp,"Openers Line Alerts");
+    }
+    @Override
+    protected JComponent getUserComponent() {
         linealertname.setDocument(new JTextFieldLimit(20));
         TextPrompt tp7 = new TextPrompt("Name Your Line Alert", linealertname);
         tp7.setForeground(Color.RED);
@@ -174,58 +177,15 @@ class LineAlertOpeners implements ItemListener {
         for(SportType st: predefinedSportTypes) {
             sportlist[index++] = st.getSportName();
         }
-//        sportlist[1] = "Football";
-//        sportlist[2] = "Basketball";
-//        sportlist[3] = "Baseball";
-//        sportlist[4] = "Hockey";
-//        sportlist[5] = SiaConst.SoccerStr;
-//        sportlist[6] = "Fighting";
-//        sportlist[7] = "Golf";
-//        sportlist[8] = "Tennis";
         sportlist[9] = "Auto Racing";
         sportComboBox = new JComboBox(sportlist);
         sportComboBox.setMaximumRowCount(sportlist.length);
 
-        //lanComboBox = new JComboBox(com.sia.client.ui.AppController.getLineAlertNodes());
-
-        //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
         LookAndFeelFactory.installJideExtension();
         // Create a new JFrame container.
-        jfrm = new JFrame("Openers Line Alerts");
-
-        // *** Use FlowLayout for the content pane. ***
-        jfrm.getContentPane().setLayout(new FlowLayout());
-
-        // Give the frame an initial size.
-        jfrm.setSize(1100, 850);
-
-        // Terminate the program when the user closes the application.
-        //jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        //checkboxtree
-        // final TreeModel treeModel = createSportTreeModel();
-
-       /* createSportTreeModel();
-        treePanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH),"", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
-                BorderFactory.createEmptyBorder(6, 0, 0, 0)));
-
-		sportsbooktreePanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), "Bookies", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
-                BorderFactory.createEmptyBorder(6, 0, 0, 0)));
-
- eventsList.setModel(eventsModel);
-
-        selectedList.setVisibleRowCount(15);
-        eventsList.setVisibleRowCount(15);
-        JPanel selectedPanel = new JPanel(new BorderLayout());
-        selectedPanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), "Selected Sports", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
-                BorderFactory.createEmptyBorder(6, 0, 0, 0)));
-        selectedPanel.add(new JScrollPane(selectedList));
-
-        JPanel eventsPanel = new JPanel(new BorderLayout());
-        eventsPanel.setBorder(BorderFactory.createCompoundBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), "Event Fired", JideTitledBorder.LEADING, JideTitledBorder.ABOVE_TOP),
-                BorderFactory.createEmptyBorder(6, 0, 0, 0)));
-        eventsPanel.add(new JScrollPane(eventsList));		*/
+        JFrame jfrm1 = SpankyWindow.findSpankyWindow(getAnchoredLayeredPane().getSportsTabPane().getWindowIndex());
+        JPanel userComponent = new JPanel();
+        userComponent.setLayout(new FlowLayout());
 
         int FPS_MIN = 5;
         int FPS_MAX = 60;
@@ -244,9 +204,9 @@ class LineAlertOpeners implements ItemListener {
         popupsecsslider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider) e.getSource();
-                int value = source.getValue();
+//                int value = source.getValue();
                 if (!source.getValueIsAdjusting()) {
-                    popupsecs = (int) source.getValue();
+                    popupsecs = source.getValue();
                     log("secs=" + popupsecs);
                 }
             }
@@ -256,7 +216,7 @@ class LineAlertOpeners implements ItemListener {
         display2[1] = "Bottom Left";
         display2[2] = "Top Right";
         display2[3] = "Bottom Right";
-        JComboBox popuplocation = new JComboBox(display2);
+//        JComboBox popuplocation = new JComboBox(display2);
         AppController.LineOpenerAlertNodeList.get(LineAlertOpeners.idx).popuplocationint = popuplocationint;
         upperright.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -270,41 +230,35 @@ class LineAlertOpeners implements ItemListener {
                 }
             }
         });
-        upperleft.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.NORTH_WEST;
-                    AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = true;
-                    AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = true;
-                }
+        upperleft.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.NORTH_WEST;
+                AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = true;
+                AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = true;
             }
         });
-        lowerright.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.SOUTH_EAST;
-                    AppController.LineOpenerAlertNodeList.get(i).isLowerRight = true;
-                    AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isLowerRight = false;
-                }
+        lowerright.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.SOUTH_EAST;
+                AppController.LineOpenerAlertNodeList.get(i).isLowerRight = true;
+                AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isLowerRight = false;
             }
         });
-        lowerleft.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.SOUTH_WEST;
-                    AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
-                    AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
+        lowerleft.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.SOUTH_WEST;
+                AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
+                AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
 
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
-                }
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
             }
         });
 
@@ -334,58 +288,40 @@ class LineAlertOpeners implements ItemListener {
 
         sportComboBox.setSelectedIndex(0);
         sportComboBox.addItemListener(this);
-        //lanComboBox.setSelectedIndex(0);
-        //lanComboBox.addItemListener(this);
 
         audiocheckbox = new JCheckBox("Play Audio");
-        audiocheckbox.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    AppController.LineOpenerAlertNodeList.get(i).isAudioChecks = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isAudioChecks = true;
-                }
+        audiocheckbox.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                AppController.LineOpenerAlertNodeList.get(i).isAudioChecks = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isAudioChecks = true;
             }
         });
 
 
         popupcheckbox = new JCheckBox("Show Popup");
-        popupcheckbox.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
-                }
+        popupcheckbox.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
             }
         });
         popupsecsComboBox = new JComboBox(secslist);
-        popupsecsComboBox.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                AppController.LineOpenerAlertNodeList.get(i).showpopvalue = Integer.parseInt((String) popupsecsComboBox.getSelectedItem());
-            }
+        popupsecsComboBox.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            AppController.LineOpenerAlertNodeList.get(i).showpopvalue = Integer.parseInt((String) popupsecsComboBox.getSelectedItem());
         });
 
 
         renotifyComboBox = new JComboBox(minslist);
-        renotifyComboBox.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                AppController.LineOpenerAlertNodeList.get(i).renotifyvalue = Double.parseDouble((String) renotifyComboBox.getSelectedItem());
+        renotifyComboBox.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            AppController.LineOpenerAlertNodeList.get(i).renotifyvalue = Double.parseDouble((String) renotifyComboBox.getSelectedItem());
 
 
-            }
         });
 
         panel1.setBorder(BorderFactory.createEtchedBorder());
@@ -401,468 +337,407 @@ class LineAlertOpeners implements ItemListener {
         JLabel renotifyme2 = new JLabel(" minutes have elapsed");
 
 
-        spreadcheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (spreadcheckbox.isSelected()) {
-                    if (totalcheckbox.isSelected() && moneylinecheckbox.isSelected() && teamtotalcheckbox.isSelected()) {
-                        alllinescheckbox.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
-                    }
-
-                    AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = false;
-                    alllinescheckbox.setSelected(false);
+        spreadcheckbox.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (spreadcheckbox.isSelected()) {
+                if (totalcheckbox.isSelected() && moneylinecheckbox.isSelected() && teamtotalcheckbox.isSelected()) {
+                    alllinescheckbox.setSelected(true);
                     AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
                 }
+
+                AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = false;
+                alllinescheckbox.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
             }
         });
 
-        totalcheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (totalcheckbox.isSelected()) {
-                    if (spreadcheckbox.isSelected() && moneylinecheckbox.isSelected() && teamtotalcheckbox.isSelected()) {
-                        alllinescheckbox.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
-                    }
-
-
-                    AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = false;
-                    alllinescheckbox.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
-                }
-            }
-        });
-
-        moneylinecheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (moneylinecheckbox.isSelected()) {
-                    if (spreadcheckbox.isSelected() && totalcheckbox.isSelected() && teamtotalcheckbox.isSelected()) {
-                        alllinescheckbox.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
-                    }
-
-                    AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = false;
-                    alllinescheckbox.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
-                }
-            }
-        });
-
-        teamtotalcheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (teamtotalcheckbox.isSelected()) {
-                    if (spreadcheckbox.isSelected() && totalcheckbox.isSelected() && moneylinecheckbox.isSelected()) {
-                        alllinescheckbox.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
-                    }
-
-                    AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = false;
-                    alllinescheckbox.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
-                }
-            }
-        });
-
-        alllinescheckbox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (alllinescheckbox.isSelected()) {
-                    spreadcheckbox.setSelected(true);
-                    totalcheckbox.setSelected(true);
-                    moneylinecheckbox.setSelected(true);
-                    teamtotalcheckbox.setSelected(true);
-                    AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = true;
+        totalcheckbox.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (totalcheckbox.isSelected()) {
+                if (spreadcheckbox.isSelected() && moneylinecheckbox.isSelected() && teamtotalcheckbox.isSelected()) {
+                    alllinescheckbox.setSelected(true);
                     AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
-
-                } else {
-                    spreadcheckbox.setSelected(false);
-                    totalcheckbox.setSelected(false);
-                    moneylinecheckbox.setSelected(false);
-                    teamtotalcheckbox.setSelected(false);
-                    alllinescheckbox.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
                 }
-            }
-
-        });
 
 
-        fullgame.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-
-
-                    }
-
-
-                    AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(0);
-
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = false;
-                    allperiods.setSelected(false);
-
-                    Integer I = 0;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
-                }
+                AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = false;
+                alllinescheckbox.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
             }
         });
 
-        firstquarter.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (fullgame.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-
-                    }
-                    if (secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected()) {
-                        allquarters.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                    }
-
-                    AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(5);
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = false;
-                    allperiods.setSelected(false);
-                    allquarters.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
-                    Integer I = 5;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+        moneylinecheckbox.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (moneylinecheckbox.isSelected()) {
+                if (spreadcheckbox.isSelected() && totalcheckbox.isSelected() && teamtotalcheckbox.isSelected()) {
+                    alllinescheckbox.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
                 }
+
+                AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = false;
+                alllinescheckbox.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
             }
         });
 
-        secondquarter.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (fullgame.isSelected() && firstquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-
-                    }
-                    if (firstquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected()) {
-                        allquarters.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                    }
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(6);
-
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = false;
-                    allperiods.setSelected(false);
-                    allquarters.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
-                    Integer I = 6;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+        teamtotalcheckbox.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (teamtotalcheckbox.isSelected()) {
+                if (spreadcheckbox.isSelected() && totalcheckbox.isSelected() && moneylinecheckbox.isSelected()) {
+                    alllinescheckbox.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
                 }
+
+                AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = false;
+                alllinescheckbox.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
+            }
+        });
+
+        alllinescheckbox.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (alllinescheckbox.isSelected()) {
+                spreadcheckbox.setSelected(true);
+                totalcheckbox.setSelected(true);
+                moneylinecheckbox.setSelected(true);
+                teamtotalcheckbox.setSelected(true);
+                AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = true;
+
+            } else {
+                spreadcheckbox.setSelected(false);
+                totalcheckbox.setSelected(false);
+                moneylinecheckbox.setSelected(false);
+                teamtotalcheckbox.setSelected(false);
+                alllinescheckbox.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isTotalCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck = false;
             }
         });
 
 
-        thirdquarter.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-
-                    }
-                    if (firstquarter.isSelected() && secondquarter.isSelected() && fourthtquarter.isSelected()) {
-                        allquarters.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                    }
-
-
-                    AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(7);
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = false;
-                    allperiods.setSelected(false);
-                    allquarters.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
-                    Integer I = 7;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
-                }
-            }
-        });
-
-        fourthtquarter.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-
-                    }
-                    if (firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected()) {
-                        allquarters.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                    }
-
-                    AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(8);
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = false;
-                    Integer I = 8;
-                    allperiods.setSelected(false);
-                    allquarters.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
-                }
-            }
-        });
-
-
-        firsthalf.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && secondhalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-
-
-                    }
-                    if (secondhalf.isSelected()) {
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-                    }
-
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(1);
-                    AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
-                    allperiods.setSelected(false);
-                    allhafs.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
-
-                    Integer I = 1;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
-                }
-            }
-        });
-
-
-        secondhalf.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected()) {
-                        allperiods.setSelected(true);
-                        allquarters.setSelected(true);
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-                        AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-
-                    }
-                    if (firsthalf.isSelected()) {
-                        allhafs.setSelected(true);
-                        AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-                    }
-                    AppController.LineOpenerAlertNodeList.get(i).periods.add(2);
-
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
-                    allperiods.setSelected(false);
-                    allhafs.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-                    Integer I = 2;
-                    AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
-                }
-            }
-        });
-
-        allhafs.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (allhafs.isSelected()) {
-                    firsthalf.setSelected(true);
-                    secondhalf.setSelected(true);
-                    AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-
-
-                } else {
-                    firsthalf.setSelected(false);
-                    secondhalf.setSelected(false);
-                    allperiods.setSelected(false);
-
-
-                    AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
-                }
-            }
-        });
-        allquarters.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (allquarters.isSelected()) {
-                    firstquarter.setSelected(true);
-                    secondquarter.setSelected(true);
-                    thirdquarter.setSelected(true);
-                    fourthtquarter.setSelected(true);
-                    AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                } else {
-                    firstquarter.setSelected(false);
-                    secondquarter.setSelected(false);
-                    thirdquarter.setSelected(false);
-                    fourthtquarter.setSelected(false);
-                    allperiods.setSelected(false);
-                    AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
-
-                }
-            }
-        });
-        allperiods.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (allperiods.isSelected()) {
-                    fullgame.setSelected(true);
-                    firsthalf.setSelected(true);
-                    secondhalf.setSelected(true);
-                    allhafs.setSelected(true);
+        fullgame.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
+                    allperiods.setSelected(true);
                     allquarters.setSelected(true);
-                    firstquarter.setSelected(true);
-                    secondquarter.setSelected(true);
-                    thirdquarter.setSelected(true);
-                    fourthtquarter.setSelected(true);
-                    AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
-                    AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = true;
+                    allhafs.setSelected(true);
                     AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
-                } else {
-                    fullgame.setSelected(false);
-                    firsthalf.setSelected(false);
-                    secondhalf.setSelected(false);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
 
-                    allhafs.setSelected(false);
-                    allquarters.setSelected(false);
-                    firstquarter.setSelected(false);
-
-                    secondquarter.setSelected(false);
-                    log("iam after 2nd");
-                    thirdquarter.setSelected(false);
-                    log("iam after 3rd");
-                    fourthtquarter.setSelected(false);
-                    log("iam after 4rt");
-                    AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = false;
-                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
 
                 }
+
+
+                AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(0);
+
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = false;
+                allperiods.setSelected(false);
+
+                Integer I = 0;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+        firstquarter.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (fullgame.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
+                    allperiods.setSelected(true);
+                    allquarters.setSelected(true);
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+
+                }
+                if (secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected()) {
+                    allquarters.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                }
+
+                AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(5);
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = false;
+                allperiods.setSelected(false);
+                allquarters.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
+                Integer I = 5;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+        secondquarter.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (fullgame.isSelected() && firstquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
+                    allperiods.setSelected(true);
+                    allquarters.setSelected(true);
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+
+                }
+                if (firstquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected()) {
+                    allquarters.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                }
+                AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(6);
+
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = false;
+                allperiods.setSelected(false);
+                allquarters.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
+                Integer I = 6;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+
+        thirdquarter.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
+                    allperiods.setSelected(true);
+                    allquarters.setSelected(true);
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+
+                }
+                if (firstquarter.isSelected() && secondquarter.isSelected() && fourthtquarter.isSelected()) {
+                    allquarters.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                }
+
+
+                AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(7);
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = false;
+                allperiods.setSelected(false);
+                allquarters.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
+                Integer I = 7;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+        fourthtquarter.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && firsthalf.isSelected() && secondhalf.isSelected()) {
+                    allperiods.setSelected(true);
+                    allquarters.setSelected(true);
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+
+                }
+                if (firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected()) {
+                    allquarters.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                }
+
+                AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(8);
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = false;
+                Integer I = 8;
+                allperiods.setSelected(false);
+                allquarters.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+
+        firsthalf.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && secondhalf.isSelected()) {
+                    allperiods.setSelected(true);
+                    allquarters.setSelected(true);
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+
+
+                }
+                if (secondhalf.isSelected()) {
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+                }
+
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(1);
+                AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
+                allperiods.setSelected(false);
+                allhafs.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
+
+                Integer I = 1;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+
+        secondhalf.addItemListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (fullgame.isSelected() && firstquarter.isSelected() && secondquarter.isSelected() && thirdquarter.isSelected() && fourthtquarter.isSelected() && firsthalf.isSelected()) {
+                    allperiods.setSelected(true);
+                    allquarters.setSelected(true);
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+                    AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+
+                }
+                if (firsthalf.isSelected()) {
+                    allhafs.setSelected(true);
+                    AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+                }
+                AppController.LineOpenerAlertNodeList.get(i).periods.add(2);
+
+                AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
+            } else {
+                AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
+                allperiods.setSelected(false);
+                allhafs.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+                Integer I = 2;
+                AppController.LineOpenerAlertNodeList.get(i).periods.remove(I);
+            }
+        });
+
+        allhafs.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (allhafs.isSelected()) {
+                firsthalf.setSelected(true);
+                secondhalf.setSelected(true);
+                AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+
+
+            } else {
+                firsthalf.setSelected(false);
+                secondhalf.setSelected(false);
+                allperiods.setSelected(false);
+
+
+                AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
+            }
+        });
+        allquarters.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (allquarters.isSelected()) {
+                firstquarter.setSelected(true);
+                secondquarter.setSelected(true);
+                thirdquarter.setSelected(true);
+                fourthtquarter.setSelected(true);
+                AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+            } else {
+                firstquarter.setSelected(false);
+                secondquarter.setSelected(false);
+                thirdquarter.setSelected(false);
+                fourthtquarter.setSelected(false);
+                allperiods.setSelected(false);
+                AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
+
+            }
+        });
+        allperiods.addActionListener(e -> {
+            int i = LineAlertOpeners.idx;
+            if (allperiods.isSelected()) {
+                fullgame.setSelected(true);
+                firsthalf.setSelected(true);
+                secondhalf.setSelected(true);
+                allhafs.setSelected(true);
+                allquarters.setSelected(true);
+                firstquarter.setSelected(true);
+                secondquarter.setSelected(true);
+                thirdquarter.setSelected(true);
+                fourthtquarter.setSelected(true);
+                AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = true;
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = true;
+            } else {
+                fullgame.setSelected(false);
+                firsthalf.setSelected(false);
+                secondhalf.setSelected(false);
+
+                allhafs.setSelected(false);
+                allquarters.setSelected(false);
+                firstquarter.setSelected(false);
+
+                secondquarter.setSelected(false);
+                log("iam after 2nd");
+                thirdquarter.setSelected(false);
+                log("iam after 3rd");
+                fourthtquarter.setSelected(false);
+                log("iam after 4rt");
+                AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllQutCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck = false;
+                AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck = false;
+
             }
         });
 
@@ -874,18 +749,16 @@ class LineAlertOpeners implements ItemListener {
                 soundlabel.setText("DEFAULT");
             }
         });
-        usecustomsound.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                int i = LineAlertOpeners.idx;
-                JFileChooser jfc = new JFileChooser();
-                log("hai iam from filechooser");
-                jfc.showOpenDialog(jfrm);
-                File f1 = jfc.getSelectedFile();
+        usecustomsound.addActionListener(ae -> {
+            int i = LineAlertOpeners.idx;
+            JFileChooser jfc = new JFileChooser();
+            log("hai iam from filechooser");
+            jfc.showOpenDialog(jfrm1);
+            File f1 = jfc.getSelectedFile();
 
-                AppController.LineOpenerAlertNodeList.get(i).soundfile = f1.getPath();
-                AppController.LineOpenerAlertNodeList.get(i).soundlabel = f1.getPath();
-                soundlabel.setText(f1.getPath());
-            }
+            AppController.LineOpenerAlertNodeList.get(i).soundfile = f1.getPath();
+            AppController.LineOpenerAlertNodeList.get(i).soundlabel = f1.getPath();
+            soundlabel.setText(f1.getPath());
         });
 
 
@@ -904,7 +777,7 @@ class LineAlertOpeners implements ItemListener {
 
                     "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
                     "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
-                    "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm);
+                    "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm1);
             log("popupsecs=" + popupsecs);
 
         });
@@ -1107,11 +980,11 @@ class LineAlertOpeners implements ItemListener {
                     ArrayList selectedbookieids = new ArrayList();
                     if (treeRows != null) {
 
-                        for (int i = 0; i < selectedbookies.length; i++) {
-                            for (int j = 0; j < bookeis.size(); j++) {
-                                Bookie bk = (Bookie) bookeis.get(j);
+                        for (final String selectedbooky : selectedbookies) {
+                            for (Object bookei : bookeis) {
+                                Bookie bk = (Bookie) bookei;
                                 String bookiename = bk.getName();
-                                if (bookiename.equalsIgnoreCase(selectedbookies[i])) {
+                                if (bookiename.equalsIgnoreCase(selectedbooky)) {
                                     selectedbookieids.add(bk.getBookie_id());
                                 }
                             }
@@ -1163,9 +1036,9 @@ class LineAlertOpeners implements ItemListener {
                         log("selectedleagueids=" + selectedleagueids.get(i) + "  selectedleagues=" + selectedleagues[i]);
                     }
                     log("*****************Selected Periods************************");
-                    ArrayList per = AppController.LineOpenerAlertNodeList.get(idx).periods;
-                    for (int i = 0; i < per.size(); i++) {
-                        log("per=" + per.get(i));
+                    List<?> per = AppController.LineOpenerAlertNodeList.get(idx).periods;
+                    for (Object o : per) {
+                        log("per=" + o);
                     }
                     log("*****************Selected Periods************************");
                 } catch (Exception e) {
@@ -1173,9 +1046,7 @@ class LineAlertOpeners implements ItemListener {
                     checkednodes3.clear();
 
                 }
-                jfrm.dispose();
-
-
+                close();
             }
         });
 
@@ -1198,20 +1069,14 @@ class LineAlertOpeners implements ItemListener {
 
 
         selectedList.revalidate();
-//	 selectedPanel.revalidate();
 
         selectedList.setEnabled(false);
 
         // Add the boxes to the content pane.
-        jfrm.getContentPane().add(box2);
-        jfrm.getContentPane().add(box1);
+        userComponent.add(box2);
+        userComponent.add(box1);
 
-        //jfrm.getContentPane().add(box3);
-
-        // Display the frame.
-        jfrm.setVisible(true);
-
-
+        return userComponent;
 //*******end of cons***********
     }
 
@@ -1275,11 +1140,9 @@ class LineAlertOpeners implements ItemListener {
                     int popupsecs = AppController.LineOpenerAlertNodeList.get(i).showpopvalue;
                     int popuplocationint = AppController.LineOpenerAlertNodeList.get(i).popuplocationint;
 
-                    int sport_id = (int) AppController.LineOpenerAlertNodeList.get(i).sports_id;
+//                    int sport_id = (int) AppController.LineOpenerAlertNodeList.get(i).sports_id;
 
-                    String soundfile = (String) AppController.LineOpenerAlertNodeList.get(i).soundfile;
-			/*Sport sp=com.sia.client.ui.AppController.getSport(sport_id+"");
-			String leaguename=sp.getLeagueabbr();*/
+                    String soundfile = AppController.LineOpenerAlertNodeList.get(i).soundfile;
                     if (sportname.equalsIgnoreCase(sn)) {
                         if ((leagues.contains(lid) || isAllLeaguesSelected) && (bookeis.contains(bid) || isAllBookiesSelected) && periods.contains(per) && isspreadcheck) {
                             if (isAudioChecks) {
