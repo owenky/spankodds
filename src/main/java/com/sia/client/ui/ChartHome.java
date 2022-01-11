@@ -1,60 +1,28 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.User;
+import com.sia.client.ui.control.SportsTabPane;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.io.File;
 
 import static com.sia.client.config.Utils.log;
 
-public class ChartHome extends javax.swing.JFrame {
+public class ChartHome  {
     static int fileinit;
     static String filename = "No File Selected";
     static int warnamount = 1;
     static int updatetime = 10;
-    //static ChartThread ct;
-    static String url = "";
-    static String uname = "";
-    static String password = "";
     static File f1;
     static int fileCount = 0;
     User u = AppController.getUser();
-    /**
-     * @param args the command line arguments
-     */
-  /*  public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-     */
-    /*    try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(com.sia.client.ui.ChartHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-      /*  java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new com.sia.client.ui.ChartHome().setVisible(true);
-            }
-        });
-    }*/
-
-    // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -67,71 +35,44 @@ public class ChartHome extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JButton jButton4;
-    public ChartHome() {
-        setTitle("Chart");
-        initComponents();
+    private final AnchoredLayeredPane anchoredLayeredPane;
+    public ChartHome(SportsTabPane stp) {
+        anchoredLayeredPane = new AnchoredLayeredPane(stp);
+        anchoredLayeredPane.setTitle("Chart");
     }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
+    public void show() {
+        anchoredLayeredPane.openAndCenter(getUserComponent(),new Dimension(600,350),false);
+    }
+    private JComponent getUserComponent() {
+        JPanel userComp = new JPanel();
         filename = u.getChartFileName();
         String[] WarnValues = {"1", "25", "50", "100", "250", "500", "1000", "2000", "3000", "4000", "5000", "10000", "15000", "20000", "30000", "40000", "50000", "100000", "150000", "200000", "300000", "400000", "500000"};
         String[] updatetimevalues = {"5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"};
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox(WarnValues);
+        jButton1 = new JButton();
+        jButton2 = new JButton();
+        jButton3 = new JButton();
+        jComboBox1 = new JComboBox(WarnValues);
         jComboBox1.setSelectedItem(u.getChartMinAmtNotify() + "");
-        jComboBox2 = new javax.swing.JComboBox(updatetimevalues);
+        jComboBox2 = new JComboBox(updatetimevalues);
         jComboBox2.setSelectedItem(u.getChartSecsRefresh() + "");
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        //  setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        jLabel3 = new JLabel();
+        jLabel4 = new JLabel();
+        jLabel5 = new JLabel();
+        jLabel6 = new JLabel();
+        jLabel7 = new JLabel();
 
         jButton1.setText("Choose File");
         jButton1.setActionCommand("Choose");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("Cancel");
         jButton2.setActionCommand("cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         jButton3.setText("Ok");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-		/*jButton4.setText("Choose File from URL");
-        jButton4.setActionCommand("ChooseURL");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-				DownloadAuth.loadFile();
-				ChartHome.filename=DownloadAuth.filename;
-               jLabel1.setText(ChartHome.filename);
-			   jButton3.setEnabled(true);
-            }
-        });
-		jButton4.setBounds(330,2,170,30);
-
-		add(jButton4);*/
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText(u.getChartFileName());
@@ -157,20 +98,12 @@ public class ChartHome extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel7.setText("Sec");
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
-            }
-        });
+        jComboBox2.addActionListener(this::jComboBox2ActionPerformed);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(userComp);
+        userComp.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -233,9 +166,8 @@ public class ChartHome extends javax.swing.JFrame {
                                 .addGap(42, 42, 42))
         );
 
-        pack();
-    }// </editor-fold>
-
+        return userComp;
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         JFileChooser jfc = new JFileChooser();
         jfc.showOpenDialog(null);
@@ -267,26 +199,22 @@ public class ChartHome extends javax.swing.JFrame {
 
     }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
+    private void jButton2ActionPerformed(ActionEvent evt) {
+        close();
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-
-
+    private void jButton3ActionPerformed(ActionEvent evt) {
         u.setChartMinAmtNotify(ChartHome.warnamount);
         u.setChartSecsRefresh(ChartHome.updatetime);
         u.setChartFileName(ChartHome.filename);
 
-
-        //ct=new ChartThread();
-        //ct.start();
-        // here we tell chartchecker to start over with new info!!!
         AppController.getChartChecker().startOver();
 
-        dispose();
+        close();
     }
-
+    private void close() {
+        anchoredLayeredPane.close();
+    }
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         if (jComboBox1.getSelectedItem().toString().equals("Select")) {
@@ -307,6 +235,4 @@ public class ChartHome extends javax.swing.JFrame {
         jLabel6.setText(ChartHome.updatetime + "");
 
     }
-
-    // End of variables declaration                   
 }

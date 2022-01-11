@@ -60,7 +60,7 @@ public class SportsMenuBar extends JMenuBar {
             bcc2.openAndCenter(new Dimension(700,700),false);
         }));
         JMenuItem bookiecolumn1 = new JMenuItem("Chart");
-        bookiecolumn1.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome().setVisible(true)));
+        bookiecolumn1.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
         bookiemenu.add(bookiecolumn);
         bookiemenu.add(bookiecolumn1);
 

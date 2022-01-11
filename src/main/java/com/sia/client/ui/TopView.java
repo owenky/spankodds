@@ -110,7 +110,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         alertBut = new JButton("Alert");
         adjustcolsBut = new JButton("Adj Cols");
         chartBut = new JButton("Chart");
-        chartBut.addActionListener(e -> new ChartHome().setVisible(true));
+        chartBut.addActionListener(e -> new ChartHome(stb).show());
 
         alertsComp = new UrgentMesgHistComp();
         AppController.alertsVector.bind(alertsComp);
