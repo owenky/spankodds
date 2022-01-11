@@ -69,7 +69,7 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenuItem generallinealert = new JMenuItem("Line Moves");
         generallinealert.addActionListener(ae -> {
-            LineAlert la = new LineAlert("Started");
+            new LineAlert(stb).show();
         });
         JMenuItem majorlinemove = new JMenuItem("Line Seekers");
         JMenuItem openers = new JMenuItem("Openers");
