@@ -13,10 +13,8 @@ import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+import com.sia.client.ui.control.SportsTabPane;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -24,7 +22,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,8 +35,6 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -49,10 +45,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.List;
@@ -62,9 +55,9 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 
-public class GameAlert {
+public class GameAlert  extends AbstractLayeredDialog {
     String soundfile = "";
-    JFileChooser fc = new JFileChooser();
+    private final JFileChooser fc = new JFileChooser();
     String prefs[];
     JList selectedList = new JList();
     JList eventsList = new JList();
@@ -74,15 +67,21 @@ public class GameAlert {
     int popuplocationint = 0;
     String defaultsoundfile = "";
     String defaultsoundfileplay = "";
-    JLabel soundlabel = new JLabel("DEFAULT");
+    private final JLabel soundlabel = new JLabel("DEFAULT");
     private Vector checkedsports = new Vector();
     private Vector checkednodes = new Vector();
     private CheckBoxTree _tree;
     private Hashtable leaguenameidhash = new Hashtable();
-    private String alerttype = "";
+    private final String alerttype;
 
-    public GameAlert(String atype) {
+    public GameAlert(SportsTabPane stp,String atype) {
+        super(stp, atype + " Alerts");
         alerttype = atype;
+    }
+    @Override
+    protected JComponent getUserComponent() {
+        JPanel userComponent = new JPanel();
+        JFrame jfrm1 = SpankyWindow.findSpankyWindow(getAnchoredLayeredPane().getSportsTabPane().getWindowIndex());
         String userpref = "";
 
         if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
@@ -150,10 +149,10 @@ public class GameAlert {
 
         try {
             if (!prefs[5].equals("")) {
-                String checkedsportsarr[] = prefs[5].split(",");
-                for (int i = 0; i < checkedsportsarr.length; i++) {
+                String[] checkedsportsarr = prefs[5].split(",");
+                for (final String s : checkedsportsarr) {
                     try {
-                        checkedsports.add("" + checkedsportsarr[i]);
+                        checkedsports.add("" + s);
                     } catch (Exception ex) {
                         log(ex);
                     }
@@ -165,33 +164,11 @@ public class GameAlert {
         catch(Exception ex) {
             log(ex);
         }
-
-
-        // owen still needs prefs4 which is sound file
-  /*
-  checkedsports.add("1");
- checkedsports.add("3");
- checkedsports.add("Hockey");
- checkedsports.add("11");
- */
-
-
         //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
         LookAndFeelFactory.installJideExtension();
-        // Create a new JFrame container.
-        JFrame jfrm = new JFrame(alerttype + " Alerts");
 
         // *** Use FlowLayout for the content pane. ***
-        jfrm.getContentPane().setLayout(new FlowLayout());
-
-        // Give the frame an initial size.
-        jfrm.setSize(840, 840);
-
-        // Terminate the program when the user closes the application.
-        //jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        //checkboxtree
+        userComponent.setLayout(new FlowLayout());
         final TreeModel treeModel = createSportTreeModel();
 
         JPanel treePanel = new JPanel(new BorderLayout(2, 2));
@@ -213,50 +190,30 @@ public class GameAlert {
         renderer.setLeafIcon(null);
         renderer.setOpenIcon(null);
         renderer.setClosedIcon(null);
-        //	renderer.setOpenIcon(new IconUIResource(new NodeIcon('-')));
-        //	renderer.setClosedIcon(new IconUIResource(new NodeIcon('+')));
-        //   renderer.setLeafIcon(IconsFactory.getImageIcon(QuickFilterTreeDemo.class, "/icons/song.png"));
-        //   renderer.setClosedIcon(IconsFactory.getImageIcon(QuickFilterTreeDemo.class, "/icons/album.png"));
-        //   renderer.setOpenIcon(IconsFactory.getImageIcon(QuickFilterTreeDemo.class, "/icons/album.png"));
 
-
-        _tree.getCheckBoxTreeSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent e) {
-                TreePath[] paths = e.getPaths();
-                for (TreePath path : paths) {
-                    eventsModel.addElement((e.isAddedPath(path) ? "Added - " : "Removed - ") + path);
-                }
-                eventsModel.addElement("---------------");
-                eventsList.ensureIndexIsVisible(eventsModel.size() - 1);
-                DefaultListModel selectedModel = new DefaultListModel();
-                TreePath[] treePaths = _tree.getCheckBoxTreeSelectionModel().getSelectionPaths();
-
-                int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                log("treerows=" + treeRows);
-                if (treeRows != null) {
-                    java.util.Arrays.sort(treeRows);
-                    for (int i = 0; i < treeRows.length; i++) {
-                        TreePath path = _tree.getPathForRow(treeRows[i]);
-                        selectedModel.addElement(path.getLastPathComponent());
-                        //log("selected="+path.getLastPathComponent());
-
-                    }
-                }
-				
-				/*
-                if (treePaths != null) 
-				{
-                    for (TreePath path : treePaths) 
-					{
-                        selectedModel.addElement(path.getLastPathComponent());
-						
-                    }
-					
-                }
-				*/
-                log("-------------------------");
-                selectedList.setModel(selectedModel);
+        _tree.getCheckBoxTreeSelectionModel().addTreeSelectionListener(e -> {
+            TreePath[] paths = e.getPaths();
+            for (TreePath path : paths) {
+                eventsModel.addElement((e.isAddedPath(path) ? "Added - " : "Removed - ") + path);
             }
+            eventsModel.addElement("---------------");
+            eventsList.ensureIndexIsVisible(eventsModel.size() - 1);
+            DefaultListModel selectedModel = new DefaultListModel();
+//            TreePath[] treePaths = _tree.getCheckBoxTreeSelectionModel().getSelectionPaths();
+
+            int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
+            log("treerows=" + treeRows);
+            if (treeRows != null) {
+                java.util.Arrays.sort(treeRows);
+                for (final int treeRow : treeRows) {
+                    TreePath path = _tree.getPathForRow(treeRow);
+                    selectedModel.addElement(path.getLastPathComponent());
+                    //log("selected="+path.getLastPathComponent());
+
+                }
+            }
+            log("-------------------------");
+            selectedList.setModel(selectedModel);
         });
         eventsList.setModel(eventsModel);
 
@@ -278,14 +235,10 @@ public class GameAlert {
         TreeUtils.expandAll(_tree, true);
 
         treePanel.add(new JScrollPane(_tree));
-        //end checkboxtree
-
-
-        // Make the labels.
         JLabel jlabOne = new JLabel("Button Group One");
-        JLabel jlabpopup = new JLabel("Popup Notification");
+//        JLabel jlabpopup = new JLabel("Popup Notification");
         JLabel jlabpopupsecs = new JLabel("Number of Seconds Before Popup Disappears        ");
-        JLabel jlabsound = new JLabel("Sound Notification");
+//        JLabel jlabsound = new JLabel("Sound Notification");
         JLabel popuplocationlabel = new JLabel("Popup Location");
 
 
@@ -360,7 +313,7 @@ public class GameAlert {
         display2[1] = "Bottom Left";
         display2[2] = "Top Right";
         display2[3] = "Bottom Right";
-        JComboBox popuplocation = new JComboBox(display2);
+//        JComboBox popuplocation = new JComboBox(display2);
 
 
         JideToggleButton upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
@@ -368,32 +321,24 @@ public class GameAlert {
         JideToggleButton lowerright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerright.png")));
         JideToggleButton lowerleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerleft.png")));
 
-        upperright.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.NORTH_EAST;
-                }
+        upperright.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.NORTH_EAST;
             }
         });
-        upperleft.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.NORTH_WEST;
-                }
+        upperleft.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.NORTH_WEST;
             }
         });
-        lowerright.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.SOUTH_EAST;
-                }
+        lowerright.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.SOUTH_EAST;
             }
         });
-        lowerleft.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.SOUTH_WEST;
-                }
+        lowerleft.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                popuplocationint = SwingConstants.SOUTH_WEST;
             }
         });
 
@@ -424,13 +369,11 @@ public class GameAlert {
         radioPanel.add(lowerright);
 
 
-        testsoundBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+        testsoundBut.addActionListener(ae -> {
 
-                //playSound(defaultsoundfileplay);
-                new SoundPlayer(defaultsoundfileplay, true);
+            //playSound(defaultsoundfileplay);
+            new SoundPlayer(defaultsoundfileplay, true);
 
-            }
         });
 
         testpopupBut.addActionListener(ae -> {
@@ -440,14 +383,14 @@ public class GameAlert {
 
                     "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
                     "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
-                    "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm);
+                    "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, jfrm1);
             log("popupsecs=" + popupsecs);
         });
 
         customsoundBut.addActionListener(ae -> {
 
             checkAndRunInEDT(() -> {
-                int returnVal = fc.showOpenDialog(jfrm);
+                int returnVal = fc.showOpenDialog(jfrm1);
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
@@ -472,75 +415,57 @@ public class GameAlert {
         });
 
 
-        defaultsoundBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                defaultsoundfileplay = defaultsoundfile;
-                soundfile = "";
-                soundlabel.setText("DEFAULT");
+        defaultsoundBut.addActionListener(ae -> {
+            defaultsoundfileplay = defaultsoundfile;
+            soundfile = "";
+            soundlabel.setText("DEFAULT");
 
-            }
         });
-        saveBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+        saveBut.addActionListener(ae -> {
 
-                String sportselected = "";
-					/*
-					Enumeration enum00 = leaguenameidhash.keys();
-					int z = 0;
-					while(enum00.hasMoreElements())
-					{
-						z++;
-						String key = (String)enum00.nextElement();
-						String value = (String)leaguenameidhash.get(key);
-						log("key="+key+"..value="+value);
-						if(z > 20) {break;}
-					}
-					*/
+            String sportselected = "";
+            int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
+            log("treerows=" + treeRows);
+            if (treeRows != null) {
+                java.util.Arrays.sort(treeRows);
+                for (final int treeRow : treeRows) {
+                    TreePath path = _tree.getPathForRow(treeRow);
+                    log(path.getLastPathComponent());
+                    String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
 
-
-                int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                log("treerows=" + treeRows);
-                if (treeRows != null) {
-                    java.util.Arrays.sort(treeRows);
-                    for (int i = 0; i < treeRows.length; i++) {
-                        TreePath path = _tree.getPathForRow(treeRows[i]);
-                        log(path.getLastPathComponent());
-                        String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
-
-                        if (id == null || id.equals("null")) {
-                            id = "" + path.getLastPathComponent();
-                        }
-                        sportselected = sportselected + id + ",";
-
-
+                    if (id.equals("null")) {
+                        id = "" + path.getLastPathComponent();
                     }
+                    sportselected = sportselected + id + ",";
+
+
                 }
-
-
-                //sportselected = sportselected.substring(1);
-                String newuserprefs = enablepopup.isSelected() + "|" + enablesound.isSelected() + "|" + popupsecs + "|" + popuplocationint + "|" +
-                        soundfile + "|" + sportselected;
-
-                log("newprefs=" + newuserprefs);
-                if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
-                    AppController.getUser().setFinalAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Started")) {
-                    AppController.getUser().setStartedAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Halftime")) {
-                    AppController.getUser().setHalftimeAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Lineup")) {
-                    AppController.getUser().setLineupAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Official")) {
-                    AppController.getUser().setOfficialAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Injury")) {
-                    AppController.getUser().setInjuryAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Time Change")) {
-                    AppController.getUser().setTimechangeAlert(newuserprefs);
-                } else if (alerttype.equalsIgnoreCase("Limit Change")) {
-                    AppController.getUser().setLimitchangeAlert(newuserprefs);
-                }
-                jfrm.dispose();
             }
+
+
+            //sportselected = sportselected.substring(1);
+            String newuserprefs = enablepopup.isSelected() + "|" + enablesound.isSelected() + "|" + popupsecs + "|" + popuplocationint + "|" +
+                    soundfile + "|" + sportselected;
+
+            log("newprefs=" + newuserprefs);
+            if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
+                AppController.getUser().setFinalAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Started")) {
+                AppController.getUser().setStartedAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Halftime")) {
+                AppController.getUser().setHalftimeAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Lineup")) {
+                AppController.getUser().setLineupAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Official")) {
+                AppController.getUser().setOfficialAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Injury")) {
+                AppController.getUser().setInjuryAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Time Change")) {
+                AppController.getUser().setTimechangeAlert(newuserprefs);
+            } else if (alerttype.equalsIgnoreCase("Limit Change")) {
+                AppController.getUser().setLimitchangeAlert(newuserprefs);
+            }
+            close();
         });
 
         JPanel testbutPanel = new JPanel(new GridLayout(0, 2, 2, 2));
@@ -567,14 +492,6 @@ public class GameAlert {
         box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Add the components to the boxes.
-	/*
-    box1.add(jlabOne); 
-    box1.add(Box.createRigidArea(new Dimension(0, 4))); 
-    box1.add(jbtnOne); 
-    box1.add(Box.createRigidArea(new Dimension(0, 4))); 
-    box1.add(jbtnTwo); 
-*/
         box1.add(treePanel);
 
         box2.add(selectedPanel);
@@ -623,12 +540,9 @@ public class GameAlert {
         selectedList.setEnabled(false);
 
         // Add the boxes to the content pane.
-        jfrm.getContentPane().add(box1);
-        jfrm.getContentPane().add(box2);
-        //jfrm.getContentPane().add(box3);
-
-        // Display the frame.
-        jfrm.setVisible(true);
+        userComponent.add(box1);
+        userComponent.add(box2);
+        return userComponent;
     }
 
 
@@ -636,37 +550,14 @@ public class GameAlert {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("All Sports");
         DefaultTreeModel treeModel = new DefaultTreeModel(root);
 
-
-//        DefaultMutableTreeNode football = new DefaultMutableTreeNode("Football");
-//        DefaultMutableTreeNode basketball = new DefaultMutableTreeNode("Basketball");
-//        DefaultMutableTreeNode baseball = new DefaultMutableTreeNode("Baseball");
-//        DefaultMutableTreeNode hockey = new DefaultMutableTreeNode("Hockey");
-//        DefaultMutableTreeNode soccer = new DefaultMutableTreeNode(SiaConst.SoccerStr);
-//        DefaultMutableTreeNode fighting = new DefaultMutableTreeNode("Fighting");
-//        DefaultMutableTreeNode golf = new DefaultMutableTreeNode("Golf");
-//        DefaultMutableTreeNode tennis = new DefaultMutableTreeNode("Tennis");
-//        DefaultMutableTreeNode autoracing = new DefaultMutableTreeNode("Auto Racing");
         SportType [] preDefinedSportTypes = SportType.getPreDefinedSports();
         for(SportType st: preDefinedSportTypes) {
             root.add(new DefaultMutableTreeNode(st.getSportName()));
         }
         DefaultMutableTreeNode horse = new DefaultMutableTreeNode("Horse");
-        DefaultMutableTreeNode esport = new DefaultMutableTreeNode("E-Sport");
+//        DefaultMutableTreeNode esport = new DefaultMutableTreeNode("E-Sport");
         DefaultMutableTreeNode other = new DefaultMutableTreeNode("Other");
-//        root.add(football);
-//        root.add(basketball);
-//        root.add(baseball);
-//        root.add(hockey);
-//        root.add(soccer);
-//        root.add(fighting);
-//        root.add(golf);
-//        root.add(tennis);
-//        root.add(autoracing);
         root.add(horse);
-        //root.add(esport);
-        //root.add(other);
-
-
         try {
 
             List<Sport> sportsVec = AppController.getSportsVec();
@@ -680,30 +571,6 @@ public class GameAlert {
                         break;
                     }
                 }
-//                if (value.getSportname().equals("Football")) {
-//                    tempnode = football;
-//                } else if (value.getSportname().equals("Basketball")) {
-//                    tempnode = basketball;
-//                } else if (value.getSportname().equals("Baseball")) {
-//                    tempnode = baseball;
-//                } else if (value.getSportname().equals("Hockey")) {
-//                    tempnode = hockey;
-//                } else if (value.getSportname().equals(SiaConst.SoccerStr)) {
-//                    tempnode = soccer;
-//                } else if (value.getSportname().equals("Fighting")) {
-//                    tempnode = fighting;
-//                } else if (value.getSportname().equals("Golf")) {
-//                    tempnode = golf;
-//                } else if (value.getSportname().equals("Tennis")) {
-//                    tempnode = tennis;
-//                } else if (value.getSportname().equals("Auto Racing")) {
-//                    tempnode = autoracing;
-//                } else if (value.getSportname().equals("Horse")) {
-//                    tempnode = horse;
-//                } else {
-//                    tempnode = other;
-//                }
-
                 DefaultMutableTreeNode child = new DefaultMutableTreeNode(value.getLeaguename());
                 tempnode.add(child);
                 leaguenameidhash.put(value.getLeaguename(), "" + value.getLeague_id());
@@ -712,23 +579,6 @@ public class GameAlert {
                     checkednodes.add(child);
 
                 }
-                //CheckBoxTreeSelectionModel#addSelectionPaths()
-			/*
-			
-
-        final JButton selectAll = new JButton(new AbstractAction("Select The Second Leaf Node") {
-            private static final long serialVersionUID = -5580913906799074020L;
-
-            public void actionPerformed(ActionEvent e) {
-                TreeModel treeModel = _tree.getModel();
-                Object child = treeModel.getChild(treeModel.getChild(treeModel.getRoot(), 0), 2);
-                if (child instanceof DefaultMutableTreeNode) {
-                    TreePath path = new TreePath(((DefaultMutableTreeNode) child).getPath());
-                    _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
-                }
-            }
-        });
-		*/
             }
 
 
@@ -738,16 +588,16 @@ public class GameAlert {
         }
         return null;
     }
-
-    public void playSound(String file) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            log(ex);
-            JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
-        }
-    }
+//
+//    public void playSound(String file) {
+//        try {
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
+//            Clip clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.start();
+//        } catch (Exception ex) {
+//            log(ex);
+//            JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
+//        }
+//    }
 }

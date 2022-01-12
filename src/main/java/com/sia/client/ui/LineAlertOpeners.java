@@ -908,146 +908,144 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         //************************end of panel*******************
 
         //set Buttong actions
-        set.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                try {
-                    String sport = (String) sportComboBox.getSelectedItem();
+        set.addActionListener(ae -> {
+            try {
+                String sport = (String) sportComboBox.getSelectedItem();
 
-                    int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                    String selectedleagues[] = new String[treeRows.length];
+                int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
+                String selectedleagues[] = new String[treeRows.length];
 
-                    //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).leagues=treeRows;
-                    log("********treerows length*****=" + treeRows.length);
-                    if (treeRows != null) {
-                        AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes.clear();
-                        java.util.Arrays.sort(treeRows);
-                        for (int i = 0; i < treeRows.length; i++) {
-                            TreePath path = _tree.getPathForRow(treeRows[i]);
-                            //log("treerows="+treeRows[0]);
-                            selectedleagues[i] = "" + path.getLastPathComponent();
-                            DefaultMutableTreeNode child = new DefaultMutableTreeNode(selectedleagues[i]);
-                            //tempnode.add(child);
-                            //	leaguenameidhash.put(sport.getLeaguename(),""+sport.getLeague_id());
+                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).leagues=treeRows;
+                log("********treerows length*****=" + treeRows.length);
+                if (treeRows != null) {
+                    AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes.clear();
+                    java.util.Arrays.sort(treeRows);
+                    for (int i = 0; i < treeRows.length; i++) {
+                        TreePath path = _tree.getPathForRow(treeRows[i]);
+                        //log("treerows="+treeRows[0]);
+                        selectedleagues[i] = "" + path.getLastPathComponent();
+                        DefaultMutableTreeNode child = new DefaultMutableTreeNode(selectedleagues[i]);
+                        //tempnode.add(child);
+                        //	leaguenameidhash.put(sport.getLeaguename(),""+sport.getLeague_id());
 
-                            AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes.add(child);
+                        AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes.add(child);
 
 
-                        }
                     }
-                    log("********kkk length*****=" + treeRows.length);
-                    if (treeRows.length != 0) {
-                        if (selectedleagues[0].equalsIgnoreCase(sport)) {
-                            AppController.LineOpenerAlertNodeList.get(idx).isAllLeaguesSelected = true;
-                        } else {
-                            AppController.LineOpenerAlertNodeList.get(idx).isAllLeaguesSelected = false;
-                        }
+                }
+                log("********kkk length*****=" + treeRows.length);
+                if (treeRows.length != 0) {
+                    if (selectedleagues[0].equalsIgnoreCase(sport)) {
+                        AppController.LineOpenerAlertNodeList.get(idx).isAllLeaguesSelected = true;
+                    } else {
+                        AppController.LineOpenerAlertNodeList.get(idx).isAllLeaguesSelected = false;
                     }
-                    log("***********selectedleagues Arrays are prepared********");
-                    //log("treerows="+treeRows[0]);
-                    int[] treeRows1 = sportsbooktree.getCheckBoxTreeSelectionModel().getSelectionRows();
-                    String selectedbookies[] = new String[treeRows1.length];
-                    log("********abc length*****=" + treeRows.length);
-                    //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).bookies=treeRows1;
-                    //log("treerows="+treeRows[0]);
-                    if (treeRows1 != null) {
-                        AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes.clear();
-                        java.util.Arrays.sort(treeRows1);
-                        for (int i = 0; i < treeRows1.length; i++) {
-                            TreePath path = sportsbooktree.getPathForRow(treeRows1[i]);
-                            log("treerows=" + treeRows1[0]);
-                            selectedbookies[i] = "" + path.getLastPathComponent();
-                            DefaultMutableTreeNode child = new DefaultMutableTreeNode(selectedbookies[i]);
-                            //tempnode.add(child);
-                            //	leaguenameidhash.put(sport.getLeaguename(),""+sport.getLeague_id());
+                }
+                log("***********selectedleagues Arrays are prepared********");
+                //log("treerows="+treeRows[0]);
+                int[] treeRows1 = sportsbooktree.getCheckBoxTreeSelectionModel().getSelectionRows();
+                String selectedbookies[] = new String[treeRows1.length];
+                log("********abc length*****=" + treeRows.length);
+                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).bookies=treeRows1;
+                //log("treerows="+treeRows[0]);
+                if (treeRows1 != null) {
+                    AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes.clear();
+                    java.util.Arrays.sort(treeRows1);
+                    for (int i = 0; i < treeRows1.length; i++) {
+                        TreePath path = sportsbooktree.getPathForRow(treeRows1[i]);
+                        log("treerows=" + treeRows1[0]);
+                        selectedbookies[i] = "" + path.getLastPathComponent();
+                        DefaultMutableTreeNode child = new DefaultMutableTreeNode(selectedbookies[i]);
+                        //tempnode.add(child);
+                        //	leaguenameidhash.put(sport.getLeaguename(),""+sport.getLeague_id());
 
-                            AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes.add(child);
+                        AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes.add(child);
 
 
-                        }
                     }
-                    log("********xyz length*****=" + treeRows.length);
-                    if (treeRows1.length != 0) {
-                        if (selectedbookies[0].equalsIgnoreCase("All Bookies")) {
-                            AppController.LineOpenerAlertNodeList.get(idx).isAllBookiesSelected = true;
-                        } else {
-                            AppController.LineOpenerAlertNodeList.get(idx).isAllBookiesSelected = false;
-                        }
+                }
+                log("********xyz length*****=" + treeRows.length);
+                if (treeRows1.length != 0) {
+                    if (selectedbookies[0].equalsIgnoreCase("All Bookies")) {
+                        AppController.LineOpenerAlertNodeList.get(idx).isAllBookiesSelected = true;
+                    } else {
+                        AppController.LineOpenerAlertNodeList.get(idx).isAllBookiesSelected = false;
                     }
-                    log("***********selectedbookies Arrays are prepared********");
-                    bookeis = AppController.getBookiesVec();
-                    sports = AppController.getSportsVec();
-                    int sport_id = 0;
-                    ArrayList selectedbookieids = new ArrayList();
-                    if (treeRows != null) {
+                }
+                log("***********selectedbookies Arrays are prepared********");
+                bookeis = AppController.getBookiesVec();
+                sports = AppController.getSportsVec();
+                int sport_id = 0;
+                ArrayList selectedbookieids = new ArrayList();
+                if (treeRows != null) {
 
-                        for (final String selectedbooky : selectedbookies) {
-                            for (Object bookei : bookeis) {
-                                Bookie bk = (Bookie) bookei;
-                                String bookiename = bk.getName();
-                                if (bookiename.equalsIgnoreCase(selectedbooky)) {
-                                    selectedbookieids.add(bk.getBookie_id());
-                                }
+                    for (final String selectedbooky : selectedbookies) {
+                        for (Object bookei : bookeis) {
+                            Bookie bk = (Bookie) bookei;
+                            String bookiename = bk.getName();
+                            if (bookiename.equalsIgnoreCase(selectedbooky)) {
+                                selectedbookieids.add(bk.getBookie_id());
                             }
-
-                        }
-                    }
-                    log("***********selectedbookieids added ********");
-                    for (Sport s : sports) {
-                        if (s.getSportname().equalsIgnoreCase(sport)) {
-                            sport_id = s.getSport_id();
-                            break;
                         }
 
                     }
-                    log("***********sport id added ********");
-
-                    List<Integer> selectedleagueids = new ArrayList<>();
-                    if (treeRows1 != null) {
-                        for (final String selectedleague : selectedleagues) {
-                            for (Sport s : sports) {
-                                String leaguename = s.getLeaguename();
-                                int sid = s.getSport_id();
-                                if (selectedleague.equalsIgnoreCase(leaguename) && sport_id == sid) {
-                                    selectedleagueids.add(s.getLeague_id());
-                                }
-
-                            }
-
-                        }
+                }
+                log("***********selectedbookieids added ********");
+                for (Sport s : sports) {
+                    if (s.getSportname().equalsIgnoreCase(sport)) {
+                        sport_id = s.getSport_id();
+                        break;
                     }
-                    log("***********selectedleagueids added ********");
-                    log("selectedleagueidssize=" + selectedleagueids.size());
-                    AppController.LineOpenerAlertNodeList.get(idx).sports_id = sport_id;
-                    AppController.LineOpenerAlertNodeList.get(idx).leagues = selectedleagueids;
-                    AppController.LineOpenerAlertNodeList.get(idx).bookies = selectedbookieids;
-                    //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).renotifyvalue=(String)renotifyComboBox.getSelectedItem();
-                    //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).showpopvalue=(String)popupsecsComboBox.getSelectedItem();
-                    //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).audiovalue=(String)audioComboBox.getSelectedItem();
-                    String popsec = (String) popupsecsComboBox.getSelectedItem();
-                    AppController.LineOpenerAlertNodeList.get(idx).popupsec = Integer.parseInt(popsec);
-
-                    log("*****************BOOOOOOOOOOOOKIES************************");
-                    for (int i = 0; i < selectedbookieids.size(); i++) {
-                        log("selectedbookieids=" + selectedbookieids.get(i) + "  selectedbookies=" + selectedbookies[i]);
-                    }
-
-                    log("*****************LEAGuEEEEEEEEEEEEEEEEEEEEEE************************");
-                    for (int i = 0; i < selectedleagueids.size(); i++) {
-                        log("selectedleagueids=" + selectedleagueids.get(i) + "  selectedleagues=" + selectedleagues[i]);
-                    }
-                    log("*****************Selected Periods************************");
-                    List<?> per = AppController.LineOpenerAlertNodeList.get(idx).periods;
-                    for (Object o : per) {
-                        log("per=" + o);
-                    }
-                    log("*****************Selected Periods************************");
-                } catch (Exception e) {
-                    checkednodes2.clear();
-                    checkednodes3.clear();
 
                 }
-                close();
+                log("***********sport id added ********");
+
+                List<Integer> selectedleagueids = new ArrayList<>();
+                if (treeRows1 != null) {
+                    for (final String selectedleague : selectedleagues) {
+                        for (Sport s : sports) {
+                            String leaguename = s.getLeaguename();
+                            int sid = s.getSport_id();
+                            if (selectedleague.equalsIgnoreCase(leaguename) && sport_id == sid) {
+                                selectedleagueids.add(s.getLeague_id());
+                            }
+
+                        }
+
+                    }
+                }
+                log("***********selectedleagueids added ********");
+                log("selectedleagueidssize=" + selectedleagueids.size());
+                AppController.LineOpenerAlertNodeList.get(idx).sports_id = sport_id;
+                AppController.LineOpenerAlertNodeList.get(idx).leagues = selectedleagueids;
+                AppController.LineOpenerAlertNodeList.get(idx).bookies = selectedbookieids;
+                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).renotifyvalue=(String)renotifyComboBox.getSelectedItem();
+                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).showpopvalue=(String)popupsecsComboBox.getSelectedItem();
+                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).audiovalue=(String)audioComboBox.getSelectedItem();
+                String popsec = (String) popupsecsComboBox.getSelectedItem();
+                AppController.LineOpenerAlertNodeList.get(idx).popupsec = Integer.parseInt(popsec);
+
+                log("*****************BOOOOOOOOOOOOKIES************************");
+                for (int i = 0; i < selectedbookieids.size(); i++) {
+                    log("selectedbookieids=" + selectedbookieids.get(i) + "  selectedbookies=" + selectedbookies[i]);
+                }
+
+                log("*****************LEAGuEEEEEEEEEEEEEEEEEEEEEE************************");
+                for (int i = 0; i < selectedleagueids.size(); i++) {
+                    log("selectedleagueids=" + selectedleagueids.get(i) + "  selectedleagues=" + selectedleagues[i]);
+                }
+                log("*****************Selected Periods************************");
+                List<?> per = AppController.LineOpenerAlertNodeList.get(idx).periods;
+                for (Object o : per) {
+                    log("per=" + o);
+                }
+                log("*****************Selected Periods************************");
+            } catch (Exception e) {
+                checkednodes2.clear();
+                checkednodes3.clear();
+
             }
+            close();
         });
 
         // Create three vertical boxes.

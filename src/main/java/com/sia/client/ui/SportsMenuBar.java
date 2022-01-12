@@ -25,6 +25,7 @@ public class SportsMenuBar extends JMenuBar {
     JMenu gamealertsmenu = new JMenu("Game Alerts");
     JMenu tabsmenu = new JMenu("Tabs");
     JMenu windowmenu = new JMenu("Window");
+    private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
         super();
@@ -80,40 +81,14 @@ public class SportsMenuBar extends JMenuBar {
 
         add(gamealertsmenu);
 
-        JMenuItem started = new JMenuItem("Started");
-        started.addActionListener(ae -> {
-            GameAlert ga = new GameAlert("Started");
-        });
-        JMenuItem finals = new JMenuItem("Finals");
-        finals.addActionListener(ae -> {
-            GameAlert ga = new GameAlert(SiaConst.FinalStr);
-        });
-        JMenuItem halftimes = new JMenuItem("Halftimes");
-        halftimes.addActionListener(ae -> {
-            GameAlert ga = new GameAlert(SiaConst.HalfTimeStr);
-        });
-
-        JMenuItem lineups = new JMenuItem("Lineups");
-        lineups.addActionListener(ae -> {
-            GameAlert ga = new GameAlert("Lineup");
-        });
-        JMenuItem officials = new JMenuItem("Officials");
-        officials.addActionListener(ae -> {
-            GameAlert ga = new GameAlert("Official");
-        });
-        JMenuItem injuries = new JMenuItem("Injuries");
-        injuries.addActionListener(ae -> {
-            GameAlert ga = new GameAlert("Injury");
-        });
-        JMenuItem timechange = new JMenuItem("Time Changes");
-        timechange.addActionListener(ae -> {
-            GameAlert ga = new GameAlert("Time Change");
-        });
-        JMenuItem limitchange = new JMenuItem("Limit Changes");
-        limitchange.addActionListener(ae -> {
-            GameAlert ga = new GameAlert("Limit Change");
-        });
-
+        JMenuItem started = createGameAlertMenuItem("Started");
+        JMenuItem finals = createGameAlertMenuItem(SiaConst.FinalStr);
+        JMenuItem halftimes = createGameAlertMenuItem(SiaConst.HalfTimeStr);
+        JMenuItem lineups = createGameAlertMenuItem("Lineups");
+        JMenuItem officials = createGameAlertMenuItem("Officials");
+        JMenuItem injuries = createGameAlertMenuItem("Injuries");
+        JMenuItem timechange = createGameAlertMenuItem("Time Changes");
+        JMenuItem limitchange = createGameAlertMenuItem("Limit Changes");
 
         JMenuItem test = new JMenuItem("Test");
         test.addActionListener(ae -> {
@@ -150,10 +125,14 @@ public class SportsMenuBar extends JMenuBar {
         newwindow.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0)); // 0 means no modifiers
         newwindow.addActionListener(AppController.getNewWindowAction());
         windowmenu.add(newwindow);
-
-
     }
-
+    private JMenuItem createGameAlertMenuItem(String command) {
+        JMenuItem menuItem = new JMenuItem(command);
+        menuItem.addActionListener(ae -> {
+            new GameAlert(stb,command).show(defaultDialogSize);
+        });
+        return menuItem;
+    }
     public void populateTabsMenu() {
         tabsmenu.removeAll();
         /*
