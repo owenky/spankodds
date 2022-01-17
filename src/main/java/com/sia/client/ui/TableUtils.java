@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
 import com.sia.client.model.KeyedObject;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -21,6 +22,8 @@ public abstract class TableUtils {
 
     public static <V extends KeyedObject> JComponent configTableLockColumns(ColumnCustomizableTable<V> mainTable, int lockedColumnBoundaryIndex) {
 
+        int windowIndex = mainTable.getModel().getSpankyWindowConfig().getWindowIndex();
+        SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
         mainTable.removeLockedColumnIndex(lockedColumnBoundaryIndex);
         mainTable.createUnlockedColumns();
 //        mainTable.setPreferredScrollableViewportSize(mainTable.getPreferredSize());
@@ -49,8 +52,8 @@ public abstract class TableUtils {
 
         mainTable.getTableColumnHeaderManager().installListeners();
         //add table column header listeners
-        new TableColumnManager(mainTable,"");
-        new TableColumnManager(mainTable.getRowHeaderTable(),"fixed");
+        new TableColumnManager(stp,mainTable,"");
+        new TableColumnManager(stp,mainTable.getRowHeaderTable(),"fixed");
         return container;
     }
     public static void processTableModelEvent(ColumnCustomizableDataModel<?> tm) {

@@ -35,65 +35,37 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.Map;
 
 import static com.sia.client.config.Utils.log;
 
 
 public class SportConfigurator {
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
-    String[] prefs;
-    JList selectedList = new JList();
-    private JList<String> eventsList = new JList<>();
-    private DefaultListModel<String> eventsModel = new DefaultListModel<>();
-    int popupsecs = 5;
-    private Vector checkedsports = new Vector();
-    private Vector checkednodes = new Vector();
+    private final JList<Object> selectedList = new JList<>();
+    private final JList<String> eventsList = new JList<>();
+    private final DefaultListModel<String> eventsModel = new DefaultListModel<>();
+    private int popupsecs = 5;
+    private final List<String> checkedsports = new ArrayList<>();
+    private final List<DefaultMutableTreeNode> checkednodes = new ArrayList<>();
     private CheckBoxTree _tree;
-    private Hashtable leaguenameidhash = new Hashtable();
+    private final Map<String,String> leaguenameidhash = new HashMap<>();
     private final SportType sportType;
-    private ActionListener closeActionListener;
+    private final AnchoredLayeredPane anchoredLayeredPane;
 
-    public SportConfigurator(SportType sportType) {
+    public SportConfigurator(AnchoredLayeredPane anchoredLayeredPane,SportType sportType) {
         this.sportType = sportType;
-    }
-    public void setCloseActionListener(ActionListener closeActionListener) {
-        this.closeActionListener = closeActionListener;
-    }
-    public JPanel getTitlePanel() {
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BorderLayout());
-        JLabel title = new JLabel(sportType.getSportName() + " Preferences");
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        Font defaultFont = title.getFont();
-        Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+2);
-        title.setFont(titleFont);
-
-        JButton closeBtn = new JButton("X");
-        closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4));
-        closeBtn.setOpaque(false);
-        closeBtn.setBorder(BorderFactory.createEmptyBorder());
-        titlePanel.add(closeBtn,BorderLayout.EAST);
-        titlePanel.add(title,BorderLayout.CENTER);
-
-        closeBtn.addActionListener(event-> {
-            close();
-        });
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
-        return titlePanel;
+        this.anchoredLayeredPane = anchoredLayeredPane;
     }
     public JPanel getMainPanel() {
 
         String userpref = sportType.getPerference();
-        prefs = userpref.split("\\|");
+        final String[] prefs = userpref.split("\\|");
 
         try {
             popupsecs = Integer.parseInt(prefs[1]);
@@ -144,7 +116,7 @@ public class SportConfigurator {
             }
             eventsModel.addElement("---------------");
             eventsList.ensureIndexIsVisible(eventsModel.size() - 1);
-            DefaultListModel selectedModel = new DefaultListModel();
+            DefaultListModel<Object> selectedModel = new DefaultListModel<>();
 
             int[] treeRows = _tree.getCheckBoxTreeSelectionModel().getSelectionRows();
             if (treeRows != null) {
@@ -293,7 +265,7 @@ public class SportConfigurator {
                 ms.setShowExtra(includeextra.isSelected());
                 ms.setShowProps(includeprops.isSelected());
                 tp.setComponentAt(tabVal, ms);
-                tp.refreshCurrentTab();
+                tp.refreshSport(sportType);
             });
             close();
         });
@@ -344,13 +316,9 @@ public class SportConfigurator {
                 EMPTY_INSETS, 0, 0));
         box2.add(saveBut);
         box2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         //initialize tree
-        for (int j = 0; j < checkednodes.size(); j++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes.elementAt(j);
-            //log("its"+node);
-            TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-            log(checkednodes.elementAt(j) + "its" + path);
+        for (DefaultMutableTreeNode node : checkednodes) {
+            TreePath path = new TreePath(node.getPath());
             _tree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
         }
 
@@ -398,9 +366,8 @@ public class SportConfigurator {
         return null;
     }
     private void close() {
-        if ( null != closeActionListener) {
-            ActionEvent ac = new ActionEvent(this,ActionEvent.ACTION_PERFORMED, "close");
-            closeActionListener.actionPerformed(ac);
+        if ( null != anchoredLayeredPane) {
+            anchoredLayeredPane.close();
         }
     }
 }

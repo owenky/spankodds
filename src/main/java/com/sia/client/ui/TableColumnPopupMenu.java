@@ -3,17 +3,17 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 import com.sia.client.model.MainGameTableModel;
+import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ import static com.sia.client.config.Utils.log;
 public class TableColumnPopupMenu{
 
     private final JTable table;
+    private final SportsTabPane stp;
     private final AnchoredLayeredPane anchoredLayeredPane;
     private JMenuItem deleteItem;
     private JMenuItem renameItem;
@@ -40,28 +42,28 @@ public class TableColumnPopupMenu{
     private JPanel menuBar;
     private static TableColumnPopupMenu oldTableColumnPopupMenu=null;
 
-    public static TableColumnPopupMenu of(JTable table) {
+    public static TableColumnPopupMenu of(SportsTabPane stp,JTable table) {
         if ( null != oldTableColumnPopupMenu) {
             oldTableColumnPopupMenu.hideMenu();
         }
-        oldTableColumnPopupMenu = new TableColumnPopupMenu(table);
+        oldTableColumnPopupMenu = new TableColumnPopupMenu(stp,table);
         return oldTableColumnPopupMenu;
     }
-    private TableColumnPopupMenu(JTable table) {
+    private TableColumnPopupMenu(SportsTabPane stp,JTable table) {
         this.table = table;
-        anchoredLayeredPane = new AnchoredLayeredPane(table, LayedPaneIndex.TableColumnMenuIndex);
+        this.stp = stp;
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,(JComponent)stp.getSelectedComponent(),LayedPaneIndex.TableColumnMenuIndex);
     }
     public void showMenu(int tableColumnIndex) {
+        Dimension menuBarSize = new Dimension(130,110);
         this.tableColumnIndex = tableColumnIndex;
         menuBar = new JPanel();
-        menuBar.setSize(new Dimension(110,80));
+        menuBar.setLayout(new GridLayout(0, 1, 0, 1));
         menuBar.setBorder(BorderFactory.createEtchedBorder());
         menuBar.add(getRenmeItem());
         menuBar.add(getChoseColorItem());
         menuBar.add(getDeleteItem());
-//        menuBar.add(getCloseItem());
 
-        anchoredLayeredPane.setUserPane(menuBar,true);
         Supplier<Point> anchorPointSupl = ()-> {
             JTableHeader header = table.getTableHeader();
             Point headerAtScreen = header.getLocationOnScreen();
@@ -69,7 +71,7 @@ public class TableColumnPopupMenu{
             return new Point((int)(r.getX()+headerAtScreen.getX()),(int)(r.getHeight()+headerAtScreen.getY()));
         };
 
-        anchoredLayeredPane.openAndAnchoredAt(anchorPointSupl);
+        anchoredLayeredPane.openAndAnchoredAt(menuBar,menuBarSize,true,anchorPointSupl);
     }
     private JMenuItem getCloseItem() {
         if ( null == closeItem) {
@@ -109,7 +111,7 @@ public class TableColumnPopupMenu{
     }
     private void renameColumn() {
         ActionListener cancelAction = (evt)-> this.showMenu(tableColumnIndex);
-        RenameColumnPopupMenu renameColumnPopupMenu = RenameColumnPopupMenu.of(table,cancelAction);
+        RenameColumnPopupMenu renameColumnPopupMenu = RenameColumnPopupMenu.of(stp,table,cancelAction);
         renameColumnPopupMenu.showMenu(tableColumnIndex);
         hideMenu();
     }
@@ -117,7 +119,7 @@ public class TableColumnPopupMenu{
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
         int option = JOptionPane.showConfirmDialog((Component)null, "Do you really want to delete column "+tc.getHeaderValue()+"?", "Confirmation", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE, (Icon)null);
         if ( option == JOptionPane.YES_OPTION) {
-            BookieColumnController2 bookieColumnController2 = new BookieColumnController2(false);
+            BookieColumnController2 bookieColumnController2 = new BookieColumnController2(null);
             bookieColumnController2.setSelectedValueByBookieId(tc.getIdentifier());
             bookieColumnController2.doRemove();
             bookieColumnController2.doSave();
@@ -132,12 +134,9 @@ public class TableColumnPopupMenu{
 
         JColorChooser chooser = new JColorChooser();
 
-        chooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                Color color2 = chooser.getColor();
-                log("change column color, new color:"+color2);
-            }
+        chooser.getSelectionModel().addChangeListener(arg0 -> {
+            Color color2 = chooser.getColor();
+            log("change column color, new color:"+color2);
         });
 
 

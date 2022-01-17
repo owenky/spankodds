@@ -374,7 +374,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         Component c = getSelectedComponent();
         if (c instanceof MainScreen) {
             MainScreen ms = (MainScreen) c;
-            if ( ms.containsGame(g)) {
+            if ( ms.isTableReday() && ms.containsGame(g)) {
                 Utils.checkAndRunInEDT(() -> ms.moveGameToThisHeader(g, header),true);
             }
         }
@@ -412,6 +412,15 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             MainGameTableModel model = ((MainScreen)comp).getDataModels();
             model.resetGameStatesForAllTableSections();
             model.fireTableChanged(new TableModelEvent(model,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
+        }
+    }
+    public void refreshSport(SportType st) {
+        Component comp = getSelectedComponent();
+        if ( comp instanceof MainScreen) {
+            MainScreen ms = (MainScreen)comp;
+            if ( ms.getSportType().equals(st)) {
+                refreshMainScreen(ms);
+            }
         }
     }
     public void refreshCurrentTab() {

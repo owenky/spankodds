@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 import java.awt.BorderLayout;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.sia.client.config.Utils.log;
 
@@ -19,7 +21,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
 
     private final MainScreen mainScreen;
     private MainGameTableModel mainGameTableModel;
-    private static MainScreenLoader activeLoader;
+    private static Map<Integer,MainScreenLoader> activeLoaders = new ConcurrentHashMap<>(4);
     private Runnable listener;
     private String err;
 
@@ -28,10 +30,12 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     }
     public void load() {
         synchronized ( MainScreenLoader.class) {
-            if ( null != activeLoader) {
-                activeLoader.cancel(true);
+            MainScreenLoader activeLoaderOfWindow = activeLoaders.get(mainScreen.getWindowIndex());
+            if ( null != activeLoaderOfWindow ) {
+                log("Cancelling "+activeLoaderOfWindow.mainScreen.getSportType().getSportName()+" loading...");
+                activeLoaderOfWindow.cancel(true);
             }
-            activeLoader = this;
+            activeLoaders.put(mainScreen.getWindowIndex(),this);
             Utils.checkAndRunInEDT(()-> {
                 err = null;
                 showLoadingPrompt();
