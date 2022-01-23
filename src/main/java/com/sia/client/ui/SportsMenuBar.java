@@ -161,8 +161,11 @@ public class SportsMenuBar extends JMenuBar {
             temp.add(manage);
             manage.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
                 int idx = stb.indexOfTab(temp.getText());
-                new CustomTab2(stb.getWindowIndex(),stb.getTitleAt(idx), idx);
-
+//                new CustomTab2(stb.getWindowIndex(),stb.getTitleAt(idx), idx);
+                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
+                anchoredLayeredPane.setTitle("Edit Custom Tab");
+                CustomTab2 customTab2 = new CustomTab2(anchoredLayeredPane,stb.getWindowIndex(),stb.getTitleAt(idx), idx);
+                customTab2.openAndCenter(CustomTab2.size,false);
             }));
 
             temp.add(hide);
@@ -180,6 +183,13 @@ public class SportsMenuBar extends JMenuBar {
         }
         JMenuItem addnew = new JMenuItem("Add New...");
         tabsmenu.add(addnew);
-        addnew.addActionListener(ae -> SwingUtilities.invokeLater(() -> new CustomTab2(stb.getWindowIndex())));
+        addnew.addActionListener(ae ->  {
+//                new CustomTab2(stb.getWindowIndex());
+                    AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
+                    anchoredLayeredPane.setTitle("Custom Tab");
+                    CustomTab2 customTab2 = new CustomTab2(anchoredLayeredPane,stb.getWindowIndex());
+                    customTab2.openAndCenter(CustomTab2.size,false);
+             }
+        );
     }
 }

@@ -12,6 +12,7 @@ import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.MainScreenRefresh;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
+import com.sia.client.ui.AnchoredLayeredPane;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.CustomTab2;
 import com.sia.client.ui.SpankOdds;
@@ -20,6 +21,7 @@ import com.sia.client.ui.SportCustomTab;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.event.TableModelEvent;
@@ -134,7 +136,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 log("Error parsing custom tab:"+customheaders+"|",e);
             }
         }
-        addTab("+", null, null, "+");
+        //use JPANEL as dummy component, don't use null otherwise AnchoredLayeredPane::openAndCenter stp.getSelectedComponent() return null when "+" tab is clicked -- 2022-01-22
+        addTab("+", null, new JPanel(), "Add new custom sport");
 
         log("initializing SportTabPane instance:"+ spankyWindowConfig.getWindowIndex());
         doTest();
@@ -184,8 +187,10 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             log(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
             log(" Previous tab is:" + previousTabIndex);
             if (thispane.getTabCount() > 1 && isPlusTab) {
-                log(currentTabIndex + "stateChanged" + (currentTabIndex == getTabCount() - 1));
-                new CustomTab2(getWindowIndex());
+                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(this);
+                anchoredLayeredPane.setTitle("Custom Tab");
+                CustomTab2 customTab2 = new CustomTab2(anchoredLayeredPane,getWindowIndex());
+                customTab2.openAndCenter(CustomTab2.size,false);
                 //restore to previouse index -- 2021-11-18
                 setSelectedIndex(restoredIdex);
             } else if (getTabCount() > 1 && previousTabIndex == getTabCount() - 1) {
@@ -225,7 +230,11 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         jPopupMenu.add(editItem);
                         jPopupMenu.add(removeItem);
                         editItem.addActionListener(e1 -> checkAndRunInEDT(() -> {
-                            new CustomTab2(getWindowIndex(),tabName, tabindex);
+//                            new CustomTab2(getWindowIndex(),tabName, tabindex);
+                            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(SportsTabPane.this);
+                            anchoredLayeredPane.setTitle("Edit Custom Tab");
+                            CustomTab2 customTab2 = new CustomTab2(anchoredLayeredPane,getWindowIndex(),tabName, tabindex);
+                            customTab2.openAndCenter(CustomTab2.size,false);
 
                         }));
                         removeItem.addActionListener(e12 -> checkAndRunInEDT(() -> {

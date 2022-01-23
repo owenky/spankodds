@@ -15,7 +15,6 @@ import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -23,21 +22,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -54,7 +49,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -65,50 +59,41 @@ import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
-public class CustomTab2 extends JPanel {
+public class CustomTab2 extends JPanel implements LayerAnchored {
 
+    public static final Dimension size = new Dimension(1000,650);
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final String UP_BUTTON_LABEL = "^";
     private static final String DOWN_BUTTON_LABEL = "v";
     private static final String ADD_BUTTON_LABEL = "Add >";
-    private static final String ADD_ALL_BUTTON_LABEL = "Add All >>";
+//    private static final String ADD_ALL_BUTTON_LABEL = "Add All >>";
     private static final String REMOVE_BUTTON_LABEL = "< Remove";
     private static final String REMOVE_ALL_BUTTON_LABEL = "<< Remove All";
     private static final String DEFAULT_SOURCE_CHOICE_LABEL = "Available Sports";
     private static final String DEFAULT_DEST_CHOICE_LABEL = "Selected Sports";
     private static final String SAVE_BUTTON_LABEL = "Save";
-    boolean editing = false;
-    Vector customheaders = new Vector();
-    Vector<String> illegalnames = new Vector<String>();
-    Hashtable pathhash;
-    JTree jtree;
-    JScrollPane jscrlp = new JScrollPane();
-    int tabindex = -1;
-    private InvisibleNode root = new InvisibleNode("Games");
-    private JLabel sourceLabel;
-    private JList<GameGroupNode> sourceList;
+    private boolean editing = false;
+    private final List<String> illegalnames = new ArrayList<>();
+    private Map<String,TreePath> pathhash;
+    private JTree jtree;
+    private JScrollPane jscrlp = new JScrollPane();
+    private final InvisibleNode root = new InvisibleNode("Games");
     private MyListModel2 sourceListModel;
-    private JList<GameGroupNode> destList;
-    private MyListModel2 destListModel;
-    private JLabel destLabel;
-    private JButton addButton;
-    private JButton removeButton;
-    private JButton removeAllButton;
-    private JButton upButton;
-    private JButton downButton;
-    private JButton saveButton;
+    private final JList<GameGroupNode> destList;
+    private final MyListModel2 destListModel;
     private JLabel jlab;
-    private JCheckBox includeheaders;
-    private JCheckBox includeseries;
-    private JCheckBox includeingame;
-    private JCheckBox includeadded;
-    private JCheckBox includeextra;
-    private JCheckBox includeprops;
-    private JTextField tabname;
-    private JFrame f = new JFrame("Custom Tab");
+    private final JCheckBox includeheaders;
+    private final JCheckBox includeseries;
+    private final JCheckBox includeingame;
+    private final JCheckBox includeadded;
+    private final JCheckBox includeextra;
+    private final JCheckBox includeprops;
+    private final JTextField tabname;
     private final int activeSportsTabPaneIndex;
+    private final AnchoredLayeredPane anchoredLayeredPane;
 
-    public CustomTab2(int activeSportsTabPaneIndex) {
+    public CustomTab2(AnchoredLayeredPane anchoredLayeredPane,int activeSportsTabPaneIndex) {
+        this.anchoredLayeredPane = anchoredLayeredPane;
         this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
         tabname = new JTextField(10);
         tabname.setDocument(new JTextFieldLimit(10));
@@ -125,21 +110,95 @@ public class CustomTab2 extends JPanel {
         includeextra = new JCheckBox("Include Extra Games", true);
         includeprops = new JCheckBox("Include Props", true);
         destListModel = new MyListModel2();
-        destList = new JList(destListModel);
+        destList = new JList<>(destListModel);
         destList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         init();
         initScreen();
-
-
-        f.getContentPane().add(this, BorderLayout.CENTER);
-        f.setSize(1000, 400);
-        //f.pack();
-        f.setVisible(true);
-
+//
+//
+//        f.getContentPane().add(this, BorderLayout.CENTER);
+//        f.setSize();
+//        //f.pack();
+//        f.setVisible(true);
+//
 
     }
+    public CustomTab2(AnchoredLayeredPane anchoredLayeredPane,int activeSportsTabPaneIndex, String tabnamestr, int tabindex) {
+        this.anchoredLayeredPane = anchoredLayeredPane;
+        this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
+//        this.tabindex = tabindex;
 
+        tabname = new JTextField(tabnamestr, 10);
+        tabname.setDocument(new JTextFieldLimit(10));
+        TextPrompt tp7 = new TextPrompt("Name Your Tab", tabname);
+        tp7.setForeground(Color.RED);
+        tp7.setShow(TextPrompt.Show.FOCUS_LOST);
+        //tp7.changeAlpha(0.5f);
+        tp7.changeStyle(Font.BOLD + Font.ITALIC);
+        tabname.setMinimumSize(new Dimension(100, 20));
+        includeheaders = new JCheckBox("Include Headers", true);
+        includeseries = new JCheckBox("Include Series Prices", true);
+        includeingame = new JCheckBox("Include In Game", true);
+        includeadded = new JCheckBox("Include Added Games", true);
+        includeextra = new JCheckBox("Include Extra Games", true);
+        includeprops = new JCheckBox("Include Props", true);
+        String msinfo = AppController.getTabInfo(tabnamestr);
+        if (msinfo == null) {
+//            msinfo = "";
+            editing = false;
+        } else {
+            editing = true;
+            String[] items = msinfo.split("\\*");
+
+            for (int j = 0; j < items.length; j++) {
+                log(j + " item=" + items[j]);
+                if (j == 0) {
+                    String[] headers = items[j].split("\\|");
+                    for (String header : headers) {
+                        if ( ! header.equals("")) {
+                            final List<String> customheaders = new ArrayList<>();
+                            customheaders.add(header);
+                            log("adding header=" + header);
+                        }
+                    }
+                } else if (j == 1) {
+                    tabname.setText(items[j]);
+                    tabname.setEnabled(false);
+                } else if (j == 2) {
+                    includeheaders.setSelected(Boolean.parseBoolean(items[j]));
+                } else if (j == 3) {
+                    includeseries.setSelected(Boolean.parseBoolean(items[j]));
+                } else if (j == 4) {
+                    includeingame.setSelected(Boolean.parseBoolean(items[j]));
+                } else if (j == 5) {
+                    includeadded.setSelected(Boolean.parseBoolean(items[j]));
+                } else if (j == 6) {
+                    includeextra.setSelected(Boolean.parseBoolean(items[j]));
+                } else if (j == 7) {
+                    includeprops.setSelected(Boolean.parseBoolean(items[j]));
+                }
+
+            }
+
+        }
+
+        destListModel = new MyListModel2();
+        destList = new JList<>(destListModel);
+        destList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+
+        init(tabnamestr);
+        initScreen(tabnamestr);
+//
+//        f.getContentPane().add(this, BorderLayout.CENTER);
+//        f.setSize(1000, 400);
+//        f.setVisible(true);
+    }
+    @Override
+    public AnchoredLayeredPane getAnchoredLayeredPane() {
+        return this.anchoredLayeredPane;
+    }
     private void init() {
         init("");
     }
@@ -167,22 +226,12 @@ public class CustomTab2 extends JPanel {
     public void init(String tabnamestr) {
 
 
-        pathhash = new Hashtable();
+        pathhash = new HashMap<>();
         jlab = new JLabel();
         SportType [] predefinedSportTypes = SportType.getPreDefinedSports();
         for(SportType st: predefinedSportTypes) {
             illegalnames.add(st.getSportName().toLowerCase());
         }
-//        illegalnames.add("football");
-//        illegalnames.add("basketball");
-//        illegalnames.add("baseball");
-//        illegalnames.add("hockey");
-//        illegalnames.add("fighting");
-//        illegalnames.add(SiaConst.SoccerStr.toLowerCase());
-//        illegalnames.add("auto racing");
-//        illegalnames.add("golf");
-//        illegalnames.add("tennis");
-
 
         SportType [] selectableTypes;
         final SportType selectedType = SportType.findBySportName(tabnamestr);
@@ -268,15 +317,13 @@ public class CustomTab2 extends JPanel {
         });
 
         // Listen for tree selection events.
-        jtree.addTreeSelectionListener(new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent tse) {
-                // Get the path to the selection.
-                TreePath tp = tse.getPath();
+        jtree.addTreeSelectionListener(tse -> {
+            // Get the path to the selection.
+            TreePath tp = tse.getPath();
 
-                // Display the selected node.
-                jlab.setText("Selection event: " +
-                        tp.getLastPathComponent());
-            }
+            // Display the selected node.
+            jlab.setText("Selection event: " +
+                    tp.getLastPathComponent());
         });
 
         // Listen for tree model events. Notice that the
@@ -368,9 +415,9 @@ public class CustomTab2 extends JPanel {
 
 
         setLayout(new GridBagLayout());
-        sourceLabel = new JLabel(DEFAULT_SOURCE_CHOICE_LABEL);
+        final JLabel sourceLabel = new JLabel(DEFAULT_SOURCE_CHOICE_LABEL);
         sourceListModel = new MyListModel2();
-        sourceList = new JList(sourceListModel);
+//        sourceList = new JList(sourceListModel);
 
 
         add(sourceLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
@@ -380,7 +427,7 @@ public class CustomTab2 extends JPanel {
                 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 EMPTY_INSETS, 0, 0));
 
-        addButton = new JButton(ADD_BUTTON_LABEL);
+        final JButton addButton = new JButton(ADD_BUTTON_LABEL);
         add(addButton, new GridBagConstraints(1, 1, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
@@ -394,13 +441,13 @@ public class CustomTab2 extends JPanel {
 	*/
 
 
-        removeButton = new JButton(REMOVE_BUTTON_LABEL);
+        final JButton removeButton = new JButton(REMOVE_BUTTON_LABEL);
         add(removeButton, new GridBagConstraints(1, 2, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
                 0, 5, 0, 5), 0, 0));
         removeButton.addActionListener(new RemoveListener());
 
-        removeAllButton = new JButton(REMOVE_ALL_BUTTON_LABEL);
+        final JButton removeAllButton = new JButton(REMOVE_ALL_BUTTON_LABEL);
         add(removeAllButton, new GridBagConstraints(1, 3, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
                 0, 5, 0, 5), 0, 0));
@@ -416,14 +463,14 @@ public class CustomTab2 extends JPanel {
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
 
-        destLabel = new JLabel(DEFAULT_DEST_CHOICE_LABEL);
+        final JLabel destLabel = new JLabel(DEFAULT_DEST_CHOICE_LABEL);
 
 
         destList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
                     log("Double clicked on.." + destList.getSelectedValue() + "..");
-                    TreePath tp = (TreePath) pathhash.get(destList.getSelectedValue() + "");
+                    TreePath tp = pathhash.get(destList.getSelectedValue() + "");
                     log("treepath=" + tp);
                     InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
                     node.setVisible(true);
@@ -444,9 +491,9 @@ public class CustomTab2 extends JPanel {
                 EMPTY_INSETS, 0, 0));
 
 
-        upButton = new JButton(UP_BUTTON_LABEL);
+        final JButton upButton = new JButton(UP_BUTTON_LABEL);
         upButton.addActionListener(new MoveUpListener());
-        downButton = new JButton(DOWN_BUTTON_LABEL);
+        final JButton downButton = new JButton(DOWN_BUTTON_LABEL);
         downButton.addActionListener(new MoveDownListener());
         add(upButton, new GridBagConstraints(3, 1, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
@@ -456,7 +503,7 @@ public class CustomTab2 extends JPanel {
                 EMPTY_INSETS, 0, 0));
 
 
-        saveButton = new JButton(SAVE_BUTTON_LABEL);
+        final JButton saveButton = new JButton(SAVE_BUTTON_LABEL);
 
         saveButton.addActionListener(new SaveListener());
         add(includeheaders, new GridBagConstraints(3, 4, 1, 1, 0, 0,
@@ -500,99 +547,9 @@ public class CustomTab2 extends JPanel {
     private void fillListModel(MyListModel2 model, GameGroupNode[] newValues) {
         model.addAll(newValues);
     }
-
-    public CustomTab2(int activeSportsTabPaneIndex, String tabnamestr, int tabindex) {
-        this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
-        this.tabindex = tabindex;
-
-        tabname = new JTextField(tabnamestr, 10);
-        tabname.setDocument(new JTextFieldLimit(10));
-        TextPrompt tp7 = new TextPrompt("Name Your Tab", tabname);
-        tp7.setForeground(Color.RED);
-        tp7.setShow(TextPrompt.Show.FOCUS_LOST);
-        //tp7.changeAlpha(0.5f);
-        tp7.changeStyle(Font.BOLD + Font.ITALIC);
-        tabname.setMinimumSize(new Dimension(100, 20));
-        includeheaders = new JCheckBox("Include Headers", true);
-        includeseries = new JCheckBox("Include Series Prices", true);
-        includeingame = new JCheckBox("Include In Game", true);
-        includeadded = new JCheckBox("Include Added Games", true);
-        includeextra = new JCheckBox("Include Extra Games", true);
-        includeprops = new JCheckBox("Include Props", true);
-        String msinfo = AppController.getTabInfo(tabnamestr);
-        if (msinfo == null) {
-            msinfo = "";
-            editing = false;
-        } else {
-            editing = true;
-            String[] items = msinfo.split("\\*");
-
-            for (int j = 0; j < items.length; j++) {
-                log(j + " item=" + items[j]);
-                if (j == 0) {
-                    String[] headers = items[j].split("\\|");
-                    for (String header : headers) {
-                        if (header.equals("")) {
-                            continue;
-                        } else {
-                            customheaders.add(header);
-                            log("adding header=" + header);
-                        }
-                    }
-                } else if (j == 1) {
-                    tabname.setText(items[j]);
-                    tabname.setEnabled(false);
-                } else if (j == 2) {
-                    includeheaders.setSelected(Boolean.parseBoolean(items[j]));
-                } else if (j == 3) {
-                    includeseries.setSelected(Boolean.parseBoolean(items[j]));
-                } else if (j == 4) {
-                    includeingame.setSelected(Boolean.parseBoolean(items[j]));
-                } else if (j == 5) {
-                    includeadded.setSelected(Boolean.parseBoolean(items[j]));
-                } else if (j == 6) {
-                    includeextra.setSelected(Boolean.parseBoolean(items[j]));
-                } else if (j == 7) {
-                    includeprops.setSelected(Boolean.parseBoolean(items[j]));
-                }
-
-            }
-
-        }
-
-        destListModel = new MyListModel2();
-        destList = new JList(destListModel);
-        destList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-
-
-        init(tabnamestr);
-        initScreen(tabnamestr);
-
-        f.getContentPane().add(this, BorderLayout.CENTER);
-        f.setSize(1000, 400);
-        f.setVisible(true);
-    }
-
-
-    private void fillListModel(MyListModel2 model, ListModel<GameGroupNode> newValues) {
-        int size = newValues.getSize();
-        for (int i = 0; i < size; i++) {
-            model.add(newValues.getElementAt(i));
-            log("adding .." + newValues.getElementAt(i));
-        }
-    }
     public void addSourceElements(GameGroupNode[] newValue) {
         fillListModel(sourceListModel, newValue);
     }
-
-    private void clearSourceAll() {
-        Object[] selected = ((MyListModel2) sourceList.getModel()).toArray();
-        for (int i = selected.length - 1; i >= 0; --i) {
-            sourceListModel.removeElement((GameGroupNode)selected[i]);
-        }
-        sourceList.getSelectionModel().clearSelection();
-    }
-
     private void clearDestinationAll() {
         Object[] selected = ((MyListModel2) destList.getModel()).toArray();
         for (int i = selected.length - 1; i >= 0; --i) {
@@ -687,7 +644,7 @@ public class CustomTab2 extends JPanel {
                 };
             }
             SpankyWindow.applyToAllWindows(consumer);
-            f.dispose();
+            anchoredLayeredPane.close();
         }
     }
     private void setMainScreenProperties(MainScreen ms) {
@@ -771,23 +728,10 @@ public class CustomTab2 extends JPanel {
                 InvisibleNode sourceNode = findSourceNode(root,selectedNode.getGameGroupHeader());
                 sourceNode.setVisible(true);
                 ((DefaultTreeModel) jtree.getModel()).nodeChanged(sourceNode);
-//                String nodeString = String.valueOf(selectedNode); //differs from selectedNode.getGameGroupHeader()
-//                TreePath tp = (TreePath) pathhash.get(nodeString);1
-//                if ( null != tp ) {
-//                    log("treepath=" + tp);
-//                    InvisibleNode node = (InvisibleNode) tp.getLastPathComponent();
-//                    node.setVisible(true);
-//                    ((DefaultTreeModel) jtree.getModel()).nodeChanged(node);
-//                    pathhash.remove(nodeString);
-//                } else {
-//                    log(new Exception("nodeString is not found in pathhash"));1
-//                }
             }
             clearDestinationAll();
         }
     }
-
-
 }
 
 class MyListModel2 extends AbstractListModel<GameGroupNode> {
@@ -805,7 +749,6 @@ class MyListModel2 extends AbstractListModel<GameGroupNode> {
 
         for (final GameGroupNode value : values) {
             int firstindex = model.indexOf(value);
-//            GameGroupNode selected = value;
             if (firstindex == 0) {
                 break;
             } else {
@@ -891,10 +834,6 @@ class InvisibleNode extends DefaultMutableTreeNode {
     protected boolean isVisible;
     protected String key;
 
-    public InvisibleNode() {
-        this(null);
-    }
-
     public InvisibleNode(Object userObject) {
         this(userObject, true, true);
     }
@@ -915,9 +854,9 @@ class InvisibleNode extends DefaultMutableTreeNode {
 
         int realIndex = -1;
         int visibleIndex = -1;
-        Enumeration e = children.elements();
+        Enumeration<InvisibleNode> e = children.elements();
         while (e.hasMoreElements()) {
-            InvisibleNode node = (InvisibleNode) e.nextElement();
+            InvisibleNode node =  e.nextElement();
             if (node.isVisible()) {
                 visibleIndex++;
             }
@@ -928,7 +867,6 @@ class InvisibleNode extends DefaultMutableTreeNode {
         }
 
         throw new ArrayIndexOutOfBoundsException("index unmatched");
-        //return (TreeNode)children.elementAt(index);
     }
 
     public boolean isVisible() {
@@ -948,9 +886,9 @@ class InvisibleNode extends DefaultMutableTreeNode {
         }
 
         int count = 0;
-        Enumeration e = children.elements();
+        Enumeration<InvisibleNode> e = children.elements();
         while (e.hasMoreElements()) {
-            InvisibleNode node = (InvisibleNode) e.nextElement();
+            InvisibleNode node = e.nextElement();
             if (node.isVisible()) {
                 count++;
             }
@@ -958,15 +896,6 @@ class InvisibleNode extends DefaultMutableTreeNode {
 
         return count;
     }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
 }
 
 
@@ -987,15 +916,6 @@ class InvisibleTreeModel extends DefaultTreeModel {
         super(root, asksAllowsChildren);
         this.filterIsActive = filterIsActive;
     }
-
-    public void activateFilter(boolean newValue) {
-        filterIsActive = newValue;
-    }
-
-    public boolean isActivatedFilter() {
-        return filterIsActive;
-    }
-
     public Object getChild(Object parent, int index) {
         if (filterIsActive) {
             if (parent instanceof InvisibleNode) {
