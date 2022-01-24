@@ -2,6 +2,7 @@ package com.sia.client.ui.control;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst.SportName;
+import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
@@ -12,7 +13,6 @@ import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.MainScreenRefresh;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
-import com.sia.client.ui.AnchoredLayeredPane;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.CustomTab2;
 import com.sia.client.ui.SpankOdds;
@@ -187,10 +187,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             log(" Current tab is:" + currentTabIndex + "..tabcount=" + thispane.getTabCount());
             log(" Previous tab is:" + previousTabIndex);
             if (thispane.getTabCount() > 1 && isPlusTab) {
-                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(this);
-                anchoredLayeredPane.setTitle("Custom Tab");
-                CustomTab2 customTab2 = new CustomTab2(anchoredLayeredPane,getWindowIndex());
-                customTab2.openAndCenter(CustomTab2.size,false);
+                CustomTab2 customTab2 = new CustomTab2(this,"Custom Tab",getWindowIndex());
+                customTab2.show(UIProperties.CustomTab2Dim);
                 //restore to previouse index -- 2021-11-18
                 setSelectedIndex(restoredIdex);
             } else if (getTabCount() > 1 && previousTabIndex == getTabCount() - 1) {
@@ -230,11 +228,8 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                         jPopupMenu.add(editItem);
                         jPopupMenu.add(removeItem);
                         editItem.addActionListener(e1 -> checkAndRunInEDT(() -> {
-//                            new CustomTab2(getWindowIndex(),tabName, tabindex);
-                            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(SportsTabPane.this);
-                            anchoredLayeredPane.setTitle("Edit Custom Tab");
-                            CustomTab2 customTab2 = new CustomTab2(anchoredLayeredPane,getWindowIndex(),tabName, tabindex);
-                            customTab2.openAndCenter(CustomTab2.size,false);
+                            CustomTab2 customTab2 = new CustomTab2(SportsTabPane.this,"Edit Custom Tab",getWindowIndex(),tabName, tabindex);
+                            customTab2.show(UIProperties.CustomTab2Dim);
 
                         }));
                         removeItem.addActionListener(e12 -> checkAndRunInEDT(() -> {

@@ -520,16 +520,17 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
         JCheckBox enablepopup = new JCheckBox("Enable Popup Notification");
         JCheckBox enablesound = new JCheckBox("Enable Sound Notification");
 
-        try {
-            enablepopup.setSelected(Boolean.parseBoolean(prefs[0]));
-        } catch (Exception ex) {
-            log(ex);
-        }
-        try {
-            enablesound.setSelected(Boolean.parseBoolean(prefs[1]));
-        } catch (Exception ex) {
-            log(ex);
-        }
+        //prefs is always null, disable following setting -- 2022-01-23
+//        try {
+//            enablepopup.setSelected(Boolean.parseBoolean(prefs[0]));
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
+//        try {
+//            enablesound.setSelected(Boolean.parseBoolean(prefs[1]));
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
 
         int FPS_MIN = 5;
         int FPS_MAX = 60;

@@ -15,6 +15,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -59,9 +60,8 @@ import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
-public class CustomTab2 extends JPanel implements LayerAnchored {
+public class CustomTab2 extends AbstractLayeredDialog {
 
-    public static final Dimension size = new Dimension(1000,650);
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final String UP_BUTTON_LABEL = "^";
     private static final String DOWN_BUTTON_LABEL = "v";
@@ -90,10 +90,10 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
     private final JCheckBox includeprops;
     private final JTextField tabname;
     private final int activeSportsTabPaneIndex;
-    private final AnchoredLayeredPane anchoredLayeredPane;
+    private final JPanel panel = new JPanel();
 
-    public CustomTab2(AnchoredLayeredPane anchoredLayeredPane,int activeSportsTabPaneIndex) {
-        this.anchoredLayeredPane = anchoredLayeredPane;
+    public CustomTab2(SportsTabPane stp,String title,int activeSportsTabPaneIndex) {
+        super(stp,title);
         this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
         tabname = new JTextField(10);
         tabname.setDocument(new JTextFieldLimit(10));
@@ -115,17 +115,9 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
 
         init();
         initScreen();
-//
-//
-//        f.getContentPane().add(this, BorderLayout.CENTER);
-//        f.setSize();
-//        //f.pack();
-//        f.setVisible(true);
-//
-
     }
-    public CustomTab2(AnchoredLayeredPane anchoredLayeredPane,int activeSportsTabPaneIndex, String tabnamestr, int tabindex) {
-        this.anchoredLayeredPane = anchoredLayeredPane;
+    public CustomTab2(SportsTabPane stp,String title,int activeSportsTabPaneIndex, String tabnamestr, int tabindex) {
+        super(stp,title);
         this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
 //        this.tabindex = tabindex;
 
@@ -190,14 +182,11 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
 
         init(tabnamestr);
         initScreen(tabnamestr);
-//
-//        f.getContentPane().add(this, BorderLayout.CENTER);
-//        f.setSize(1000, 400);
-//        f.setVisible(true);
+
     }
     @Override
-    public AnchoredLayeredPane getAnchoredLayeredPane() {
-        return this.anchoredLayeredPane;
+    public JComponent getUserComponent() {
+        return panel;
     }
     private void init() {
         init("");
@@ -411,24 +400,24 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
     }
     private void initScreen(String tabnamestr) {
 
-        setBorder(BorderFactory.createEtchedBorder());
+        panel.setBorder(BorderFactory.createEtchedBorder());
 
 
-        setLayout(new GridBagLayout());
+        panel.setLayout(new GridBagLayout());
         final JLabel sourceLabel = new JLabel(DEFAULT_SOURCE_CHOICE_LABEL);
         sourceListModel = new MyListModel2();
 //        sourceList = new JList(sourceListModel);
 
 
-        add(sourceLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
+        panel.add(sourceLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(jscrlp, new GridBagConstraints(0, 1, 1, 4, .5,
+        panel.add(jscrlp, new GridBagConstraints(0, 1, 1, 4, .5,
                 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 EMPTY_INSETS, 0, 0));
 
         final JButton addButton = new JButton(ADD_BUTTON_LABEL);
-        add(addButton, new GridBagConstraints(1, 1, 1, 1, 0, .1,
+        panel.add(addButton, new GridBagConstraints(1, 1, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
         addButton.addActionListener(new AddListener());
@@ -442,13 +431,13 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
 
 
         final JButton removeButton = new JButton(REMOVE_BUTTON_LABEL);
-        add(removeButton, new GridBagConstraints(1, 2, 1, 1, 0, .1,
+        panel.add(removeButton, new GridBagConstraints(1, 2, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
                 0, 5, 0, 5), 0, 0));
         removeButton.addActionListener(new RemoveListener());
 
         final JButton removeAllButton = new JButton(REMOVE_ALL_BUTTON_LABEL);
-        add(removeAllButton, new GridBagConstraints(1, 3, 1, 1, 0, .1,
+        panel.add(removeAllButton, new GridBagConstraints(1, 3, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
                 0, 5, 0, 5), 0, 0));
         removeAllButton.addActionListener(new RemoveAllListener());
@@ -456,10 +445,10 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
 
         JLabel lab = new JLabel("Tab Name");
 
-        add(lab, new GridBagConstraints(1, 4, 1, 1, 0, 0,
+        panel.add(lab, new GridBagConstraints(1, 4, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(tabname, new GridBagConstraints(1, 5, 1, 1, 0, 0,
+        panel.add(tabname, new GridBagConstraints(1, 5, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
 
@@ -483,10 +472,10 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
         });
 
 
-        add(destLabel, new GridBagConstraints(2, 0, 1, 1, 0, 0,
+        panel.add(destLabel, new GridBagConstraints(2, 0, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(new JScrollPane(destList), new GridBagConstraints(2, 1, 1, 4, .5,
+        panel.add(new JScrollPane(destList), new GridBagConstraints(2, 1, 1, 4, .5,
                 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 EMPTY_INSETS, 0, 0));
 
@@ -495,10 +484,10 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
         upButton.addActionListener(new MoveUpListener());
         final JButton downButton = new JButton(DOWN_BUTTON_LABEL);
         downButton.addActionListener(new MoveDownListener());
-        add(upButton, new GridBagConstraints(3, 1, 1, 1, 0, 0,
+        panel.add(upButton, new GridBagConstraints(3, 1, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(downButton, new GridBagConstraints(3, 2, 1, 1, 0, 0,
+        panel.add(downButton, new GridBagConstraints(3, 2, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
 
@@ -506,30 +495,28 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
         final JButton saveButton = new JButton(SAVE_BUTTON_LABEL);
 
         saveButton.addActionListener(new SaveListener());
-        add(includeheaders, new GridBagConstraints(3, 4, 1, 1, 0, 0,
+        panel.add(includeheaders, new GridBagConstraints(3, 4, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(includeseries, new GridBagConstraints(3, 5, 1, 1, 0, 0,
+        panel.add(includeseries, new GridBagConstraints(3, 5, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(includeingame, new GridBagConstraints(3, 6, 1, 1, 0, 0,
+        panel.add(includeingame, new GridBagConstraints(3, 6, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(includeadded, new GridBagConstraints(3, 7, 1, 1, 0, 0,
+        panel.add(includeadded, new GridBagConstraints(3, 7, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(includeextra, new GridBagConstraints(3, 8, 1, 1, 0, 0,
+        panel.add(includeextra, new GridBagConstraints(3, 8, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
-        add(includeprops, new GridBagConstraints(3, 9, 1, 1, 0, 0,
+        panel.add(includeprops, new GridBagConstraints(3, 9, 1, 1, 0, 0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 EMPTY_INSETS, 0, 0));
 
-        add(saveButton, new GridBagConstraints(3, 10, 1, 1, 0, .1,
+        panel.add(saveButton, new GridBagConstraints(3, 10, 1, 1, 0, .1,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
                 0, 5, 0, 5), 0, 0));
-
-
     }
 
     public void addDestinationElements(GameGroupNode ... newValue) {
@@ -644,7 +631,7 @@ public class CustomTab2 extends JPanel implements LayerAnchored {
                 };
             }
             SpankyWindow.applyToAllWindows(consumer);
-            anchoredLayeredPane.close();
+            close();
         }
     }
     private void setMainScreenProperties(MainScreen ms) {
