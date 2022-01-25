@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +51,9 @@ public class AppController {
     public static Vector<String> customTabsVec = new Vector<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector<>();
     public static Vector<SportsMenuBar> menubars = new Vector<>();
-    public static Map<String, String> bookieshortnameids = new Hashtable<>();
+    public static Map<String, Integer> bookieshortnameids = new ConcurrentHashMap<>();
     public static Vector<Bookie> openerbookiesVec = new Vector<>();
-    public static Vector<Bookie> bookiesVec = new Vector<>();
+    public static List<Bookie> bookiesVec = new ArrayList<>();
     public static Vector<Sport> sportsVec = new Vector<>();
     public static Vector<Bookie> hiddenCols = new Vector<>();
     public static Vector<Bookie> shownCols = new Vector<>();
@@ -127,7 +126,7 @@ public class AppController {
     private static Map<String, Totalline> livetotals = new ConcurrentHashMap<>();
     private static Map<String, Moneyline> livemoneylines = new ConcurrentHashMap<>();
     private static Map<String, TeamTotalline> liveteamtotals = new ConcurrentHashMap<>();
-    private static Map<String, Color> bookiecolors = new ConcurrentHashMap<>();
+    private static Map<Integer, Color> bookiecolors = new ConcurrentHashMap<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
     private static Games games = new Games();
 
@@ -334,11 +333,11 @@ public class AppController {
     }
 
     public static void createColumnModel() {
-        Vector newBookiesVec = getBookiesVec();
+        List<Bookie> newBookiesVec = getBookiesVec();
         columnmodel = new DefaultTableColumnModel();
         fixedcolumnmodel = new DefaultTableColumnModel();
         for (int k = 0; k < newBookiesVec.size(); k++) {
-            Bookie b = (Bookie) newBookiesVec.get(k);
+            Bookie b = newBookiesVec.get(k);
             LineRenderer lr = new LineRenderer();
             //renderers.add(lr);
             TableColumn column;
@@ -383,7 +382,7 @@ public class AppController {
 
     }
 
-    public static Vector<Bookie> getBookiesVec() {
+    public static List<Bookie> getBookiesVec() {
         //log("BEFORE bookiesvec size="+bookiesVec.size());
         reorderBookiesVec();
         //log("AFTER bookiesvec size="+bookiesVec.size());
@@ -400,7 +399,7 @@ public class AppController {
 
     public static int reorderBookiesVec() {
         int fixedcolsint = 0;
-        Vector newVec = new Vector();
+        List<Bookie> newVec = new ArrayList<>();
         fixedCols.clear();
         shownCols.clear();
         hiddenCols.clear();
@@ -415,7 +414,10 @@ public class AppController {
             }
 
         }
-        for (String id : cols) {
+        //cols can be in the format of ["17=Pincl", "620=Sp411", "271=Circa", "880=Bax", "42=Hiltn", +46 more] or ["17,620,271,880,42...."]
+        //if column name is rename, id has former format. -- 2021-01-24
+        for (String colStr : cols) {
+            String id = colStr.split("=")[0];
             Bookie b = bookieCache.get(Integer.parseInt(id));
             if (b != null) {
                 shownCols.add(b);
@@ -659,7 +661,7 @@ public class AppController {
         return guestConnection;
     }
 
-    public static String getBookieId(String sn) {
+    public static Integer getBookieId(String sn) {
         return bookieshortnameids.get(sn);
     }
 
@@ -676,7 +678,7 @@ public class AppController {
         String[] colcolorsarray = columncolors.split(",");
         for (String colcolor : colcolorsarray) {
             if (colcolor.contains("=")) {
-                String id = colcolor.substring(0, colcolor.indexOf("="));
+                Integer id = Integer.parseInt(colcolor.substring(0, colcolor.indexOf("=")));
                 String color = colcolor.substring(colcolor.indexOf("=") + 1);
                 try {
                     log("BOOKIECOLORS " + id + "=" + color);
@@ -723,10 +725,17 @@ public class AppController {
     public static void addBookie(Bookie b) {
 
         bookieCache.put(b.getBookie_id(), b);
-        bookieshortnameids.put(b.getShortname(), "" + b.getBookie_id());
+        bookieshortnameids.put(b.getShortname(), b.getBookie_id());
         bookiesVec.add(b);
     }
-
+    public static void changeBookieShortName(String oldShortName,String newShortName) {
+        Integer bookieId = bookieshortnameids.get(oldShortName);
+        if ( null != bookieId) {
+            Bookie b = bookieCache.get(bookieId);
+            b.setShortname(newShortName);
+            bookieshortnameids.put(newShortName,bookieId);
+        }
+    }
     public static void addOpenerBookie(Bookie b) {
 
         bookieCache.put(b.getBookie_id(), b);
@@ -865,15 +874,15 @@ public class AppController {
         return games;
     }
 
-    public static Color getColor(String bookieid) {
+    public static Color getColor(Integer bookieid) {
         return bookiecolors.get(bookieid);
     }
 
-    public static void putColor(String bookieid, Color color) {
+    public static void putColor(Integer bookieid, Color color) {
         bookiecolors.put(bookieid, color);
     }
 
-    public static Set<String> getColorBookieIds() {
+    public static Set<Integer> getColorBookieIds() {
         return bookiecolors.keySet();
     }
 

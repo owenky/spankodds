@@ -131,7 +131,7 @@ public class LinePanel extends JPanel {
             top.setText(ld.getData());
             String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-            String bookieid = AppController.getBookieId(bookie);
+            Integer bookieid = AppController.getBookieId(bookie);
             Color colcolor = AppController.getColor(bookieid);
 
             Color bgcolor = ld.getBackgroundColor();
@@ -207,7 +207,7 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = AppController.getBookieId(bookie);
+        Integer bookieid = AppController.getBookieId(bookie);
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
@@ -274,7 +274,7 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = AppController.getBookieId(bookie);
+        Integer bookieid = AppController.getBookieId(bookie);
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
@@ -343,7 +343,7 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = AppController.getBookieId(bookie);
+        Integer bookieid = AppController.getBookieId(bookie);
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
@@ -424,6 +424,7 @@ public class LinePanel extends JPanel {
         } catch (Exception ex) {
             log("ERROR=..." + stv + "..row=" + row + "...col=" + col);
             log(ex);
+            ex.printStackTrace();
         }
 
     }

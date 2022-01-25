@@ -27,7 +27,7 @@ public class RenameColumnPopupMenu {
 
     private final JTable table;
     private final AnchoredLayeredPane anchoredLayeredPane;
-    private static final Dimension inputPanelSize = new Dimension(200,100);
+    private static final Dimension inputPanelSize = new Dimension(300,150);
     private static final Dimension inputFieldSize = new Dimension(180,30);
     private static final Insets inputPanelInsets = new Insets(5,5,5,5);
     private static final Insets buttonInsets = new Insets(3,2,3,2);
@@ -61,7 +61,7 @@ public class RenameColumnPopupMenu {
                 return inputPanelInsets;
             }
         };
-        inputPanel.setSize(inputPanelSize);
+//        inputPanel.setSize(inputPanelSize);
         inputPanel.setBorder(BorderFactory.createEtchedBorder());
         GridLayout layoutMng =  new GridLayout(0,1);
         inputPanel.setLayout(layoutMng);
@@ -76,7 +76,7 @@ public class RenameColumnPopupMenu {
             return new Point((int)(r.getX()+headerAtScreen.getX()),(int)(r.getHeight()+headerAtScreen.getY()));
         };
 
-        anchoredLayeredPane.openAndAnchoredAt(inputPanel,null,true,anchorPointSupl);
+        anchoredLayeredPane.openAndAnchoredAt(inputPanel,inputPanelSize,true,anchorPointSupl);
     }
     private JComponent getTitle() {
         if ( null == title) {
@@ -144,6 +144,8 @@ public class RenameColumnPopupMenu {
     private void saveColumnName() {
         String text = inputField.getText().trim();
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
+        String oldColumnName=tc.getHeaderValue().toString();
+        AppController.changeBookieShortName(oldColumnName,text);
         tc.setHeaderValue(text);
         TableColumn [] allCols = getAllColumns();
         StringBuilder sb = new StringBuilder();
