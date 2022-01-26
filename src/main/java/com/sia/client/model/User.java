@@ -22,6 +22,7 @@ public class User {
     private String subscriptiontype;
     private boolean isloggedin;
     private String bookiecolumnprefs;
+    private String bookiecolumnchanges;
     private String fixedcolumnprefs;
     private String columncolors;
     private String customtabs;
@@ -187,7 +188,14 @@ public class User {
 
         bookiecolumnprefs = s;
     }
+    public void setBookieColumnChanges(String s) {
 
+        bookiecolumnchanges = s;
+    }
+    public String getBookieColumnChanges() {
+
+        return bookiecolumnchanges;
+    }
     public String getFixedColumnPrefs() {
         return fixedcolumnprefs;
     }

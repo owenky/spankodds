@@ -145,15 +145,18 @@ public class RenameColumnPopupMenu {
         String text = inputField.getText().trim();
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
         String oldColumnName=tc.getHeaderValue().toString();
+        int bookieId = AppController.getBookieId(oldColumnName);
         AppController.changeBookieShortName(oldColumnName,text);
         tc.setHeaderValue(text);
-        TableColumn [] allCols = getAllColumns();
-        StringBuilder sb = new StringBuilder();
-        for(TableColumn tblCol: allCols) {
-            sb.append(tblCol.getIdentifier()).append("=").append(tblCol.getHeaderValue()).append(",");
-        }
-        sb.deleteCharAt(sb.length()-1);
-        AppController.getUser().setBookieColumnPrefs(sb.toString());
+//        TableColumn [] allCols = getAllColumns();
+//        StringBuilder sb = new StringBuilder();
+//        for(TableColumn tblCol: allCols) {
+//            sb.append(tblCol.getIdentifier()).append("=").append(tblCol.getHeaderValue()).append(",");
+//        }
+//        sb.deleteCharAt(sb.length()-1);
+//        AppController.getUser().setBookieColumnChanges(sb.toString());
+        String changeStr = ""+bookieId+"="+text;
+        AppController.getUser().setBookieColumnChanges(changeStr);
         UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
         userPrefs.sendUserPrefs();
     }
