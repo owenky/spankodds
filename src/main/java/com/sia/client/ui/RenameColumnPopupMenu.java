@@ -3,7 +3,6 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
-import org.codehaus.plexus.util.StringUtils;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -132,7 +131,7 @@ public class RenameColumnPopupMenu {
     private String validateInput() {
         String text = inputField.getText();
         String err;
-        if ( StringUtils.isEmpty(text)) {
+        if ( Utils.isEmpty(text)) {
             err = "Column name can't be blank.";
         } else if ( ! Utils.containsOnlyAlphanumeric(text) ) {
             err = "Column name allows only alphanumeric characters.";

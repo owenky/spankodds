@@ -367,4 +367,7 @@ public abstract class Utils {
 
         return toolTipTxt;
     }
+    public static boolean isEmpty(String str) {
+        return ( null == str || 0 ==str.trim().length());
+    }
 }
