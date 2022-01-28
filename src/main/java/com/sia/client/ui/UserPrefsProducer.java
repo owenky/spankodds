@@ -135,6 +135,7 @@ public class UserPrefsProducer {
             mapMessage.setString("bookiecolumnprefs", u.getBookieColumnPrefs());
             mapMessage.setString("fixedcolumnprefs", u.getFixedColumnPrefs());
             mapMessage.setString("columncolors", u.getColumnColors());
+            mapMessage.setString("bookiecolumnchanges", u.getBookieColumnChanges());
 
             Arrays.stream(SportType.getPreDefinedSports()).forEach(st -> {
                 try {

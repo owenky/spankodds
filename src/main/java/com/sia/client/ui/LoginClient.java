@@ -101,19 +101,6 @@ public class LoginClient implements MessageListener {
 
     //called by login button
     public void login(String username, String password) throws JMSException {
-        log("Trying to login with: " + username + "src/main" + password);
-
-		/*
-		TextMessage txtMessage = session.createTextMessage();
-		String request = username+"*^&%#)("+password; // one sec maybe i send an object here instead?!?!?
-		txtMessage.setText(request);
-
-		txtMessage.setJMSReplyTo(tempDest);
-
-		String correlationId = UUID.randomUUID().toString();
-		txtMessage.setJMSCorrelationID(correlationId);
-		this.producer.send(txtMessage);
-		*/
         MapMessage mapMessage = session.createMapMessage();
         mapMessage.setString("username", username);
         mapMessage.setString("password", password);
