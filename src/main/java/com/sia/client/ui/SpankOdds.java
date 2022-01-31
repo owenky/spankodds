@@ -77,7 +77,17 @@ public class SpankOdds {
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
-        final JXLoginPane loginPane = new JXLoginPane(null, new LocalPwdStore(LocalConfig.instance()), new LocalUserStore(LocalConfig.instance()));
+        LocalPwdStore localPwdStore = new LocalPwdStore(LocalConfig.instance());
+        LocalUserStore localUserStore = new LocalUserStore(LocalConfig.instance());
+//        localPwdStore = null;
+//        localUserStore = null;
+        final JXLoginPane loginPane = new JXLoginPane(null, localPwdStore, localUserStore) {
+            @Override
+            public String getUserName() {
+                String userName = super.getUserName();
+                return null==userName?"":userName;
+            }
+        };
         loginPane.setBannerText("Spank Odds");
 
         LoginListener loginListener = new LoginAdapter() {

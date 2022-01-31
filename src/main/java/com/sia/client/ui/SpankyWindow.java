@@ -6,6 +6,7 @@ import com.sia.client.ui.control.SportsTabPane;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -49,15 +50,24 @@ public class SpankyWindow extends JFrame {
             log(ex);
         }
         instance.performLayout();
-        instance.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        instance.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         instance.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                if ( 1==winList.size()) {
+                    int result = JOptionPane.showConfirmDialog(null, "Do you want to exit ?",
+                            "alert", JOptionPane.OK_CANCEL_OPTION);
+                    if (  JOptionPane.CANCEL_OPTION ==  result ) {
+                        return;
+                    }
+
+                    AppController.getUserPrefsProducer().sendUserPrefs();
+                }
                 instance.unBindAlertsComp();
-                AppController.getUserPrefsProducer().sendUserPrefs();
                 log("closing SpankyWindow instance "+instance.getName());
                 AppController.removeFrame(instance);
-
+                instance.setVisible(false);
+                instance.dispose();
             }
         });
         if ( null == gameClockUpdater) {

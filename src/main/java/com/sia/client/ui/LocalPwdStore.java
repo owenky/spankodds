@@ -13,8 +13,8 @@ public class LocalPwdStore extends PasswordStore {
         this.config = config;
     }
     @Override
-    public boolean set(final String s, final String s1, final char[] chars) {
-        config.setProperty(LocalConfig.PwdKey,new String(chars));
+    public boolean set(final String user, final String s1, final char[] chars) {
+        config.updateCredential(user,new String(chars));
         try {
             config.save();
             return true;
@@ -25,13 +25,13 @@ public class LocalPwdStore extends PasswordStore {
     }
 
     @Override
-    public char[] get(final String s, final String s1) {
-        String pwd = config.getProperty(LocalConfig.PwdKey);
+    public char[] get(final String user, final String s1) {
+        String pwd = config.getPassword(user);
         return null==pwd?null:pwd.toCharArray();
     }
 
     @Override
     public void removeUserPassword(final String s) {
-        config.removeKey(LocalConfig.PwdKey);
+        config.removeUser(s);
     }
 }

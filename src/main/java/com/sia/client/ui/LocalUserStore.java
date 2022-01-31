@@ -11,14 +11,12 @@ public class LocalUserStore extends UserNameStore {
     }
     @Override
     public String[] getUserNames() {
-        String [] users = new String[1];
-        users[0]=config.getProperty(LocalConfig.UserNameKey);
-        return users;
+        return config.getUserNames();
     }
 
     @Override
     public void setUserNames(final String[] strings) {
-        config.setProperty(LocalConfig.UserNameKey,strings[0]);
+        config.setUserNames(strings);
     }
 
     @Override
@@ -38,16 +36,16 @@ public class LocalUserStore extends UserNameStore {
 
     @Override
     public boolean containsUserName(final String s) {
-        return s.equals(config.getProperty(LocalConfig.UserNameKey));
+        return config.containsUserName(s);
     }
 
     @Override
     public void addUserName(final String s) {
-        config.setProperty(LocalConfig.UserNameKey,s);
+        config.updateCredential(s,"");
     }
 
     @Override
     public void removeUserName(final String s) {
-        config.removeKey(LocalConfig.UserNameKey);
+        config.removeUser(s);
     }
 }
