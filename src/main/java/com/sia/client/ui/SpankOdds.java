@@ -17,6 +17,7 @@ import org.jdesktop.swingx.auth.LoginService;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RepaintManager;
+import javax.swing.ToolTipManager;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,7 +51,8 @@ public class SpankOdds {
 
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
-
+        ToolTipManager.sharedInstance().setInitialDelay(500);
+        ToolTipManager.sharedInstance().setDismissDelay(5000);
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog(),true);
     }
 
@@ -79,8 +81,6 @@ public class SpankOdds {
         LoginClient client = new LoginClient();
         LocalPwdStore localPwdStore = new LocalPwdStore(LocalConfig.instance());
         LocalUserStore localUserStore = new LocalUserStore(LocalConfig.instance());
-//        localPwdStore = null;
-//        localUserStore = null;
         final JXLoginPane loginPane = new JXLoginPane(null, localPwdStore, localUserStore) {
             @Override
             public String getUserName() {

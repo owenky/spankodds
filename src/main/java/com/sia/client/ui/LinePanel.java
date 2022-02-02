@@ -11,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.ToolTipManager;
 import javax.swing.border.MatteBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -92,10 +91,6 @@ public class LinePanel extends JPanel {
         total.setHorizontalTextPosition(textAlignment);
 
         this.setOpaque(true);
-
-        ToolTipManager.sharedInstance().setInitialDelay(5000);
-        ToolTipManager.sharedInstance().setDismissDelay(60000);
-
     }
     public void setSoccerLines(JTable table,SoccerSpreadTotalView stv, int row, int col) {
 
