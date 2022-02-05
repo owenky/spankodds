@@ -525,7 +525,7 @@ public class AppController {
         //game need to populated to each window. -- 08/22/2021
         SpankyWindow.applyToAllWindows((stp) -> {
             try {
-                stp.refreshCurrentTab();
+                stp.rebuildMainScreen();
             } catch (Exception e) {
                 log(e);
             }

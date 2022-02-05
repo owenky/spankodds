@@ -626,7 +626,7 @@ public class CustomTab2 extends AbstractLayeredDialog {
                     editedMs.setCustomheaders(customvec);
                     setMainScreenProperties(editedMs);
                     if ( tp.getSelectedComponent() == editedMs) {
-                        tp.refreshCurrentTab();
+                        tp.rebuildMainScreen();
                     }
                 };
             }

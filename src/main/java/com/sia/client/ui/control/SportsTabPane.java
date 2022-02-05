@@ -199,7 +199,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
                 if ( currentComp instanceof MainScreen) {
                     MainScreen newms = (MainScreen) currentComp;
                     log("changelistener create!");
-                    reCreateMainScreen(newms,null);
+                    createMainScreen(newms,null);
                 }
             }
         });
@@ -423,24 +423,31 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         if ( comp instanceof MainScreen) {
             MainScreen ms = (MainScreen)comp;
             if ( ms.getSportType().equals(st)) {
-                refreshMainScreen(ms);
+                reCreateMainScreen(ms);
             }
         }
     }
-    public void refreshCurrentTab() {
+    public void updateMainScreen() {
         Component comp = getSelectedComponent();
         if ( comp instanceof MainScreen) {
-            refreshMainScreen((MainScreen)comp);
+            MainGameTableModel model = ((MainScreen)comp).getDataModels();
+            model.processTableModelEvent(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
         }
     }
-    public void refreshMainScreen(MainScreen thisms) {
+    public void rebuildMainScreen() {
+        Component comp = getSelectedComponent();
+        if ( comp instanceof MainScreen) {
+            reCreateMainScreen((MainScreen)comp);
+        }
+    }
+    public void reCreateMainScreen(MainScreen thisms) {
         thisms.destroyMe();
         log("refreshing MainScreen "+thisms.getName()+" !");
         Runnable listener = () ->{
             MainGameTableModel model = thisms.getDataModels();
             model.processTableModelEvent(new TableModelEvent(model, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
         };
-        reCreateMainScreen(thisms,listener);
+        createMainScreen(thisms,listener);
     }
     public void cleanup() {
         Component comp = getSelectedComponent();
@@ -467,7 +474,7 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             ms.checktofire(games);
         }
     }
-    private void reCreateMainScreen(MainScreen ms,Runnable listener) {
+    private static void createMainScreen(MainScreen ms, Runnable listener) {
         ms.createMe(listener);
     }
 }

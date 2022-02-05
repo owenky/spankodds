@@ -339,11 +339,11 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 if (shrinkTeamBut.getText().equals("Short Team")) {
                     stb.setShort(true);
                     shrinkTeamBut.setText("Long Team");
-                    stb.refreshCurrentTab();
+                    stb.rebuildMainScreen();
                 } else {
                     stb.setShort(false);
                     shrinkTeamBut.setText("Short Team");
-                    stb.refreshCurrentTab();
+                    stb.rebuildMainScreen();
 
                 }
             }
@@ -366,13 +366,12 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         // if the state combobox is changed
         if (e.getSource() == cb) {
             stb.setDisplay(display[cb.getSelectedIndex()]);
-            stb.setDisplay(display[cb.getSelectedIndex()]);
-            stb.refreshCurrentTab();
+//            stb.refreshCurrentTab();
+            stb.updateMainScreen();
             stb.requestFocusInWindow();
         } else if (e.getSource() == periodcb) {
             stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
-            stb.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
-            stb.refreshCurrentTab();
+            stb.updateMainScreen();
             stb.requestFocusInWindow();
             //owen took out getting period and siaplay from ltd
             //	com.sia.client.ui.ChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
