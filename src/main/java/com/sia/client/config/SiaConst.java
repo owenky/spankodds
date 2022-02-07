@@ -61,6 +61,7 @@ public abstract class SiaConst {
         String InitialLoadingFileName = "initGameMesgs.txt";
     }
     public static final String MessageDelimiter = "~";
+    public static final String ColumnDelimiter = ",";
     public static final String PropertyDelimiter = "@#_#_#@";
     public static final String logFileName = "c:\\temp\\spankyOddsLog.txt";
     public static final String errFileName = "c:\\temp\\spankyOddsErr.txt";

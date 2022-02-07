@@ -13,7 +13,7 @@ public class SportTypeTest {
     @BeforeClass
     public static void setup() {
         Utils.logger = new LocalMessageLogger();
-        User user = new User("username","password","email","address","city","state","country","phoneumber",
+        User.instance().init("username","password","email","address","city","state","country","phoneumber",
                 "timezone","oddstype","notificationmethod","subscriptiontype",true,
                 "bookiecolumnprefs","fixedcolumnprefs",
                 "columncolors",
@@ -41,7 +41,7 @@ public class SportTypeTest {
                 2,
                 "tabsindex",
                 "linealerts");
-        AppController.setUser(user);
+        AppController.enrichUserProperties(User.instance());
     }
     @Test
     public void testGameSorter() {

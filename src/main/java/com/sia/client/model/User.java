@@ -22,7 +22,7 @@ public class User {
     private String subscriptiontype;
     private boolean isloggedin;
     private String bookiecolumnprefs;
-    private final StringBuilder bookiecolumnschanged = new StringBuilder();
+    private final BookieManager bookiecolumnschanged = BookieManager.instance();
     private String fixedcolumnprefs;
     private String columncolors;
     private String customtabs;
@@ -42,8 +42,15 @@ public class User {
 
     private String tabsindex;
     private String linealerts;
+    private static User instance = new User();
 
-    public User(String username, String password, String email, String address, String city, String state, String country, String phoneumber,
+    public static User instance() {
+        return instance;
+    }
+    private User() {
+
+    }
+    public void init(String username, String password, String email, String address, String city, String state, String country, String phoneumber,
                 String timezone, String oddstype, String notificationmethod, String subscriptiontype, boolean isloggedin,
                 String bookiecolumnprefs, String fixedcolumnprefs,
                 String columncolors,
@@ -188,15 +195,15 @@ public class User {
 
         bookiecolumnprefs = s;
     }
-    public void addBookieColumnChanged(String s) {
-        if ( bookiecolumnschanged.length() > 0) {
-            bookiecolumnschanged.append(",");
-        }
-        bookiecolumnschanged.append(s);
+    public void addBookieColumnChanged(int bookieId,String bookieName) {
+        bookiecolumnschanged.addBookieColumnChanged(bookieId,bookieName);
+    }
+    public void setBookieColumnsChanged(String bookieColumnChangedStr) {
+        bookiecolumnschanged.setChangedBookieStr(bookieColumnChangedStr);
     }
     public String getBookieColumnsChanged() {
 
-        return null==bookiecolumnschanged?"":bookiecolumnschanged.toString();
+        return bookiecolumnschanged.getChangedBookieStr();
     }
     public String getFixedColumnPrefs() {
         return fixedcolumnprefs;

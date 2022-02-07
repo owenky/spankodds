@@ -151,7 +151,7 @@ public class LoginClient implements MessageListener {
                     this.setloggedin(true);
                     String[] array = text.split(SiaConst.MessageDelimiter);
 
-                    User user = new User(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8], array[9], array[10], array[11], Boolean.parseBoolean(array[12]), array[13], array[14],
+                    User.instance().init(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8], array[9], array[10], array[11], Boolean.parseBoolean(array[12]), array[13], array[14],
                             array[15],
                             array[16],
                             array[17],
@@ -179,7 +179,7 @@ public class LoginClient implements MessageListener {
                             array[39]
                     );
                     log("ABOUT TO CALL SETUSER!!!");
-                    AppController.setUser(user);
+                    AppController.enrichUserProperties(User.instance());
 
                     AppController.initializeSportsTabPaneVectorFromUser();
                     try {
@@ -192,7 +192,12 @@ public class LoginClient implements MessageListener {
                 }
 
 
-            } else if (messageType.equals("QueueCredentials")) {
+            } else if ( messageType.equals("bookiecolumnchanges")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                AppController.getUser().setBookieColumnsChanged(text);
+            }
+            else if (messageType.equals("QueueCredentials")) {
                 setLoginResultBack(true);
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
