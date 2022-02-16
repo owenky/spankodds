@@ -5,9 +5,14 @@ import com.sia.client.model.ViewValue;
 import javax.jms.MapMessage;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
@@ -369,5 +374,15 @@ public abstract class Utils {
     }
     public static boolean isEmpty(String str) {
         return ( null == str || 0 ==str.trim().length());
+    }
+    public static JPanel createTitlePanel(String title) {
+        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER);
+        return createCompCenteredPanel(titleLabel);
+    }
+    public static JPanel createCompCenteredPanel(JComponent cmp) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(cmp,BorderLayout.CENTER);
+        return panel;
     }
 }

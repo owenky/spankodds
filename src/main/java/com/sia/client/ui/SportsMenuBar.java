@@ -71,7 +71,7 @@ public class SportsMenuBar extends JMenuBar {
         generallinealert.addActionListener(ae -> new LineAlert(stb).show(UIProperties.LineAlertDim));
 
         JMenuItem majorlinemove = new JMenuItem("Line Seekers");
-        majorlinemove.addActionListener(ae -> new LineSeekersAlert(stb).show(UIProperties.LineAlertDim));
+        majorlinemove.addActionListener(ae -> new LineSeekersAlert(stb).show(LineSeekersAlert.dialogPreferredSize));
 
         JMenuItem openers = new JMenuItem("Openers");
         openers.addActionListener(ae -> new LineAlertOpeners(stb).show(UIProperties.LineAlertDim));
