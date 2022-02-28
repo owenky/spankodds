@@ -7,7 +7,9 @@ import com.sia.client.model.BookieManager;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Games;
+import com.sia.client.model.Line;
 import com.sia.client.model.Moneyline;
+import com.sia.client.model.NewLineListener;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 import com.sia.client.model.UrgentsConsumer;
@@ -122,6 +124,7 @@ public class AppController {
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
     private static final BookieManager bookieManager = BookieManager.instance();
     private static Games games = new Games();
+    private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = User.instance().getTabsIndex().split(",");
@@ -871,6 +874,7 @@ public class AppController {
             livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
             log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
         }
+        newLineNotify(spread);
         //LineAlertOpeners.spreadOpenerAlert(spread);
     }
 
@@ -896,7 +900,7 @@ public class AppController {
             livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
             log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
         }
-
+        newLineNotify(total);
         //LineAlertOpeners.totalOpenerAlert(total);
 
     }
@@ -923,6 +927,7 @@ public class AppController {
             livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
             log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
         }
+        newLineNotify(ml);
 //LineAlertOpeners.moneyOpenerAlert(ml);
     }
 
@@ -947,6 +952,7 @@ public class AppController {
             liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
             log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
         }
+        newLineNotify(teamtotal);
 //LineAlertOpeners.teamTotalOpenerAlert(teamtotal);
     }
 
@@ -1049,5 +1055,22 @@ public class AppController {
     public static void addAlert(String hrmin, String mesg) {
         alertsVector.addAlert(hrmin, mesg);
     }
-
+    public static void addNewLineListener(NewLineListener newLineListener) {
+        NEW_LINE_LISTENERS.add(newLineListener);
+    }
+    public static void rmNewLineListener(NewLineListener newLineListener) {
+        NEW_LINE_LISTENERS.remove(newLineListener);
+    }
+    private static final Set<Integer> gameIdsWithAnyLine = new HashSet<>();
+    private static void newLineNotify(Line newLine) {
+        //since MainGameTableModel is removed from NEW_LINE_LISTENERS when it is switched off , NEW_LINE_LISTENERS only contains one MainGameTableModel that is currently displayed.
+        //So no need to filter for displayed model. 2022-02-27
+        for (NewLineListener newLineListener : NEW_LINE_LISTENERS) {
+            newLineListener.processNewLines(newLine);
+        }
+        gameIdsWithAnyLine.add(newLine.getGameid());
+    }
+    public static boolean containAnyLine(int gameId) {
+        return gameIdsWithAnyLine.contains(gameId);
+    }
 }

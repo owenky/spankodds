@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.sia.client.config.Utils.*;
+import static com.sia.client.config.Utils.checkAndRunInEDT;
+import static com.sia.client.config.Utils.log;
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 
 public class ColumnCustomizableDataModel<V extends KeyedObject> implements TableModel {
@@ -30,7 +31,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private boolean toConfigHeaderRow = false;
-    private boolean isDetroyed = false;
+//    private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
     private final ScreenProperty screenProperty;
@@ -53,12 +54,12 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public ScreenProperty getScreenProperty() {
         return screenProperty;
     }
-    public void setDetroyed(boolean isDetroyed) {
-        this.isDetroyed = isDetroyed;
-    }
-    public boolean isDetroyed() {
-        return isDetroyed;
-    }
+//    public void setDetroyed(boolean isDetroyed) {
+//        this.isDetroyed = isDetroyed;
+//    }
+//    public boolean isDetroyed() {
+//        return isDetroyed;
+//    }
     public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
         this.toConfigHeaderRow = toConfigHeaderRow;
     }
@@ -169,7 +170,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         return rtn;
     }
     public TableSection<V> findTableSectionByGameid(int gameId) {
-        return getTableSections().stream().filter(ts-> 0<=ts.getRowIndex(gameId)).findAny().orElse(null);
+        return getTableSections().stream().filter(ts-> ts.containsGame(gameId)).findAny().orElse(null);
     }
     public List<TableColumn> getAllColumns() {
         return this.allColumns;
@@ -246,16 +247,20 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     }
     protected void addGameToTableSection(TableSection<V> ltd, V game) {
 
-        checkAndRunInEDT(()-> {
-            flushUpdate();
-            ltd.addOrUpdate(game);
-            ltd.sort(getGameComparator());
-            fireTableSectionChangeEvent();
+        if ( ltd.toAddToModel(game)) {
+            checkAndRunInEDT(() -> {
+                flushUpdate();
+                ltd.addOrUpdate(game);
+                ltd.sort(getGameComparator());
+                fireTableSectionChangeEvent();
 //        this.buildIndexMappingCache(false); //to be executed by  fireTableChanged(e) -- 2021-11-06
-            int affectedRowModelIndex = getRowModelIndexByGameId(ltd, game.getGame_id());
-            TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
-            processTableModelEvent(e);
-        });
+                int affectedRowModelIndex = getRowModelIndexByGameId(ltd, game.getGame_id());
+                TableModelEvent e = new TableModelEvent(this, affectedRowModelIndex, affectedRowModelIndex, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
+                processTableModelEvent(e);
+            });
+        } else {
+            ltd.addToHiddenGameIdList(game.getGame_id());
+        }
     }
     public void updateRow(TableSection<V> tableSection, int rowIndexInTableSection) {
         checkAndRunInEDT(() -> {
@@ -308,7 +313,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         if ( toSort) {
             this.sortTableSection(getTableSectionComparator());
         }
-//        resetSectionIndex(index);
     }
     private void resetSectionIndex(int startIndex) {
         for(int i=startIndex;i<tableSections.size();i++) {
@@ -324,7 +328,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         }
         int modelIndex = 0;
         for(TableSection<V> sec: tableSections) {
-//            sec.resetDataVector();  -- Is it safe to disable it? --2021-11-07
             for(int i=0;i<sec.getRowCount();i++) {
                 int offset = modelIndex-i;
                 ltdSrhStructCache.put(modelIndex++,new LtdSrhStruct<>(sec,offset));
@@ -444,15 +447,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         public LtdSrhStruct(TableSection<V> linesTableData,int offset) {
             this.linesTableData = linesTableData;
             this.offset = offset;
-        }
-    }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-    public static class BlankGameStruct<V extends KeyedObject> {
-        public final int tableRowModelIndex;
-        public final TableSection<V> linesTableData;
-        public BlankGameStruct(int tableRowModelIndex, TableSection<V> linesTableData) {
-            this.tableRowModelIndex = tableRowModelIndex;
-            this.linesTableData = linesTableData;
         }
     }
 }

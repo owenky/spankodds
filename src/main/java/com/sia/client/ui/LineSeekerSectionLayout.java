@@ -2,11 +2,11 @@ package com.sia.client.ui;
 
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,7 +20,7 @@ public class LineSeekerSectionLayout {
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
     private final LineSeekerColumnFieldGroup leftColumn;
     private final LineSeekerColumnFieldGroup rightColumn;
-    private final Checkbox useEquivalent;
+    private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
     public LineSeekerSectionLayout(LineSeekerSectionFieldGroup spreadFieldGrp) {

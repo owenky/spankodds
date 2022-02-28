@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -24,6 +25,20 @@ public class LineSeekerColumnFieldGroup {
         input2.setMinimumSize(DefaultFieldDim);
         titleLabel = new JLabel("");
         titleLabel.setPreferredSize(DefaultFieldDim);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(good);
+        group.add(bad);
+        group.add(neutral);
+    }
+    public String getInput1Text() {
+        return input1.getText();
+    }
+    public String getInput2Text() {
+        return input2.getText();
+    }
+    public String get() {
+        return input2.getText();
     }
     public void setTitle(String titleStr) {
         titleLabel.setText(titleStr);

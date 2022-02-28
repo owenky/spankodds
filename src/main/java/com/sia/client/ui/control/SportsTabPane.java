@@ -38,9 +38,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -160,6 +162,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         MainScreen ms = new MainScreen(st,spankyWindowConfig);
         addMainScreenToCache(ms);
         return ms;
+    }
+    public Collection<MainGameTableModel> getAllTableModels() {
+        return mainScreenMap.values().stream().map(MainScreen::getDataModels).filter(Objects::nonNull).collect(Collectors.toList());
     }
     private void addMainScreenToCache(MainScreen ms) {
         mainScreenMap.put(ms.getSportType().getSportName(),ms);

@@ -39,6 +39,10 @@ public class LinesTableData extends TableSection<Game> {
         this.columns = columns;
     }
     @Override
+    protected boolean toAddToModel(Game g) {
+        return AppController.containAnyLine(g.getGame_id());
+    }
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;

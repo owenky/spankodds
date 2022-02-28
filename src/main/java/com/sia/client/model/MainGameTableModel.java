@@ -3,9 +3,11 @@ package com.sia.client.model;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import java.util.Collection;
 import java.util.Comparator;
@@ -20,7 +22,7 @@ import java.util.function.Function;
 import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
 import static com.sia.client.config.Utils.log;
 
-public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
+public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implements NewLineListener {
 
     private final SportType sportType;
     private static final Set<String> stageStrs = new HashSet<>();
@@ -35,6 +37,27 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> {
     public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,Vector<TableColumn> allColumns) {
         super(screenProperty,allColumns);
         this.sportType = sportType;
+        AppController.addNewLineListener(this);
+    }
+    public void destroy() {
+        AppController.rmNewLineListener(this);
+    }
+    @Override
+    public void processNewLines(Line line) {
+
+        Game game = AppController.getGame(line.getGameid());
+        if ( null != game && SportType.findAllTypesByGame(game).contains(sportType) ) {
+            LinesTableData tblSection = (LinesTableData)findTableSectionByGameid(line.getGameid());
+            if (null != tblSection) {
+                if ( tblSection.isGameHidden(line.getGameid())) {
+System.out.println("rebuild modle");
+                    tblSection.activateGame(game);
+                    buildIndexMappingCache(true);
+                    Runnable r = () -> fireTableChanged(new TableModelEvent(this, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+                    Utils.checkAndRunInEDT(r);
+                }
+            }
+        }
     }
     @Override
     protected Comparator<TableSection<Game>> getTableSectionComparator() {

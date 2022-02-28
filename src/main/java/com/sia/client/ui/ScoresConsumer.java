@@ -109,7 +109,7 @@ public class ScoresConsumer implements MessageListener {
             String changetype = mapMessage.getStringProperty("messageType");
             if (changetype.equals("ScoreChange")) {
                 int gameid = mapMessage.getInt("eventnumber");
-                log("ScoreConsumer::processMessage: gameid=" + gameid);
+//                log("ScoreConsumer::processMessage: gameid=" + gameid);
                 Utils.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
 
                 String period = "";
