@@ -379,10 +379,39 @@ public abstract class Utils {
         JLabel titleLabel = new JLabel(title,SwingConstants.CENTER);
         return createCompCenteredPanel(titleLabel);
     }
-    public static JPanel createCompCenteredPanel(JComponent cmp) {
+
+    /**
+     *
+     * @param cmps: up to 3 components.
+     * @return
+     */
+    public static JPanel createCompCenteredPanel(JComponent ... cmps) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(cmp,BorderLayout.CENTER);
+        JComponent left = null;
+        JComponent center = null;
+        JComponent right = null;
+
+        if ( 0 == cmps.length || 3 < cmps.length) {
+            throw new IllegalArgumentException("length of input components should be between 1 and 3");
+        }
+        if ( 1 == cmps.length) {
+            center = cmps[0];
+        } else if ( 2 == cmps.length) {
+            left = cmps[0];
+            center = cmps[1];
+        } else {
+            left = cmps[0];
+            center = cmps[1];
+            right = cmps[2];
+        }
+        panel.add(center,BorderLayout.CENTER);
+        if ( null != left) {
+            panel.add(left,BorderLayout.WEST);
+        }
+        if ( null != right) {
+            panel.add(right,BorderLayout.EAST);
+        }
         return panel;
     }
 }

@@ -36,12 +36,14 @@ public class LineSeekerSectionLayout {
             layoutPane.setLayout(new GridBagLayout());
 
             GridBagConstraints c = createDefaultGridBagConstraints();
+            Insets defualtInsets = c.insets;
 
             //row column title
             c.gridy = 0;
 
             c.gridx = 0;
             c.gridwidth = 2;
+            c.insets = new Insets(defualtInsets.top+5,defualtInsets.left,defualtInsets.bottom,defualtInsets.right);
             c.fill = GridBagConstraints.HORIZONTAL;
             formatColumnTitle(leftColumn.titleLabel);
             layoutPane.add(leftColumn.titleLabel, c);
@@ -52,16 +54,17 @@ public class LineSeekerSectionLayout {
             layoutPane.add(rightColumn.titleLabel, c);
 
             //new row -- input field title
+            c.insets = defualtInsets;
             c.fill = GridBagConstraints.NONE;
             c.gridy++;
 
             c.gridx = 0;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.SOUTH;
-            layoutPane.add(makeInputTitleLabel(leftColumn.input1), c);
+            layoutPane.add(makeInputTitleLabel(leftColumn.lineInput), c);
 
             c.gridx = 1;
-            layoutPane.add(makeInputTitleLabel(leftColumn.input2), c);
+            layoutPane.add(makeInputTitleLabel(leftColumn.juiceInput), c);
 
             //spacing
             c.gridx = 2;
@@ -70,10 +73,10 @@ public class LineSeekerSectionLayout {
             layoutPane.add(spacingComp, c);
 
             c.gridx = 3;
-            layoutPane.add(makeInputTitleLabel(rightColumn.input1), c);
+            layoutPane.add(makeInputTitleLabel(rightColumn.lineInput), c);
 
             c.gridx = 4;
-            layoutPane.add(makeInputTitleLabel(rightColumn.input2), c);
+            layoutPane.add(makeInputTitleLabel(rightColumn.juiceInput), c);
 
             //new row -- input fields
             c.anchor = GridBagConstraints.NORTH;
@@ -81,16 +84,16 @@ public class LineSeekerSectionLayout {
             c.gridx = 0;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
-            layoutPane.add(leftColumn.input1, c);
+            layoutPane.add(leftColumn.lineInput, c);
 
             c.gridx = 1;
-            layoutPane.add(leftColumn.input2, c);
+            layoutPane.add(leftColumn.juiceInput, c);
 
             c.gridx = 3;
-            layoutPane.add(rightColumn.input1, c);
+            layoutPane.add(rightColumn.lineInput, c);
 
             c.gridx = 4;
-            layoutPane.add(rightColumn.input2, c);
+            layoutPane.add(rightColumn.juiceInput, c);
 
             //new row -- radio buttons
             JComponent radioGrpLeft = makeRadioGroup(leftColumn);

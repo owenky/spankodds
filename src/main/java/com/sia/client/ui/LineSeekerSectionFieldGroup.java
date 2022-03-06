@@ -7,13 +7,14 @@ public class LineSeekerSectionFieldGroup {
     public final LineSeekerColumnFieldGroup leftColumn;
     public final LineSeekerColumnFieldGroup rightColumn;
     public final JCheckBox useEquivalent;
+    public final JCheckBox activateStatus;
 
-    public LineSeekerSectionFieldGroup(String input1Name, String input2Name) {
-        leftColumn = new LineSeekerColumnFieldGroup(input1Name,input2Name);
-        rightColumn = new LineSeekerColumnFieldGroup(input1Name,input2Name);
-        useEquivalent = new JCheckBox();
-        useEquivalent.setName("Use Equivalent ???? ");
-leftColumn.titleLabel.setText("Atlanta Hawks");
-rightColumn.titleLabel.setText("Orlando Magic");
+    public LineSeekerSectionFieldGroup(String leftColumnTitle,String rightColumnTitle) {
+        leftColumn = new LineSeekerColumnFieldGroup(leftColumnTitle);
+        rightColumn = new LineSeekerColumnFieldGroup(rightColumnTitle);
+        useEquivalent = new JCheckBox("Use Mathematical Equivalent");
+        activateStatus = new JCheckBox("Activate");
+        activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
+        activateStatus.setSelected(true);
     }
 }
