@@ -42,13 +42,13 @@ public class LineSeekerSectionLayout {
             c.gridy = 0;
 
             c.gridx = 0;
-            c.gridwidth = 2;
+            c.gridwidth = 3;
             c.insets = new Insets(defualtInsets.top+5,defualtInsets.left,defualtInsets.bottom,defualtInsets.right);
             c.fill = GridBagConstraints.HORIZONTAL;
             formatColumnTitle(leftColumn.titleLabel);
             layoutPane.add(leftColumn.titleLabel, c);
 
-            c.gridx = 3;
+            c.gridx = 4;
             c.gridy = 0;
             formatColumnTitle(rightColumn.titleLabel);
             layoutPane.add(rightColumn.titleLabel, c);
@@ -67,15 +67,15 @@ public class LineSeekerSectionLayout {
             layoutPane.add(makeInputTitleLabel(leftColumn.juiceInput), c);
 
             //spacing
-            c.gridx = 2;
+            c.gridx = 3;
             JLabel spacingComp = new JLabel();
             spacingComp.setPreferredSize(DefaultSpacingWidth);
             layoutPane.add(spacingComp, c);
 
-            c.gridx = 3;
+            c.gridx = 4;
             layoutPane.add(makeInputTitleLabel(rightColumn.lineInput), c);
 
-            c.gridx = 4;
+            c.gridx = 5;
             layoutPane.add(makeInputTitleLabel(rightColumn.juiceInput), c);
 
             //new row -- input fields
@@ -89,29 +89,35 @@ public class LineSeekerSectionLayout {
             c.gridx = 1;
             layoutPane.add(leftColumn.juiceInput, c);
 
-            c.gridx = 3;
-            layoutPane.add(rightColumn.lineInput, c);
+            c.gridx = 2;
+            layoutPane.add(leftColumn.clearBtn, c);
 
             c.gridx = 4;
+            layoutPane.add(rightColumn.lineInput, c);
+
+            c.gridx = 5;
             layoutPane.add(rightColumn.juiceInput, c);
+
+            c.gridx = 6;
+            layoutPane.add(rightColumn.clearBtn, c);
 
             //new row -- radio buttons
             JComponent radioGrpLeft = makeRadioGroup(leftColumn);
             c.gridy++;
 
             c.gridx = 0;
-            c.gridwidth = 2;
+            c.gridwidth = 3;
             layoutPane.add(radioGrpLeft, c);
 
             JComponent radioGrpRight = makeRadioGroup(rightColumn);
-            c.gridx = 3;
+            c.gridx = 4;
             layoutPane.add(radioGrpRight, c);
 
             //new row -- check box
             c.gridy++;
 
             c.gridx = 0;
-            c.gridwidth = 5;
+            c.gridwidth = 7;
             c.anchor = GridBagConstraints.CENTER;
             if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
                 useEquivalent.setLabel(useEquivalent.getName());

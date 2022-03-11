@@ -2,15 +2,23 @@ package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
 import com.sia.client.ui.control.SportsTabPane;
 
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
+import javax.swing.border.Border;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 
@@ -19,6 +27,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
     private static final int rowHeight =150;
+    private static final String saveBtnText = "Save";
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
     private final HintTextField gameNumField = new HintTextField("");
     private JComboBox<String> period;
@@ -44,6 +53,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
         userComp.add(moneyLineSec());
         userComp.add(awayTTSec());
         userComp.add(homeTTSec());
+        userComp.add(bottomControlSection());
         return userComp;
     }
     private JComponent controlSec() {
@@ -112,6 +122,51 @@ gameNumField.setText("537");
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Home TT",totalWidth,rowHeight,homeTTFieldGrp.activateStatus);
         titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(homeTTFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
+    }
+    private JComponent bottomControlSection() {
+        JButton clsBtn = new JButton("Close");
+        clsBtn.addActionListener((event)->this.close());
+
+        JButton saveBtn = new JButton(saveBtnText);
+        saveBtn.addActionListener(this::save);
+        JPanel bottomCtrPanel = new JPanel();
+        Border outsideBorder = BorderFactory.createMatteBorder(1,0,0,0, Color.darkGray);
+//        Border insideBorder = new EmptyBorder(10, 10, 10, 10);
+        bottomCtrPanel.setBorder(outsideBorder);
+
+        bottomCtrPanel.add(saveBtn);
+        bottomCtrPanel.add(clsBtn);
+
+        JPanel bottomCrtPanelWrapper = new JPanel();
+        bottomCrtPanelWrapper.setLayout(new BorderLayout());
+        bottomCrtPanelWrapper.add(bottomCtrPanel,BorderLayout.CENTER);
+
+        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",totalWidth,30,null);
+        titledPanelGenerator.setBodyComponent(bottomCrtPanelWrapper);
+        return titledPanelGenerator.getPanel();
+    }
+    private void save(ActionEvent event) {
+        final AbstractButton btn = (AbstractButton)event.getSource();
+        btn.setText("Saving...");
+        btn.setEnabled(false);
+        SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                Thread.sleep(3000L);
+                performSave();
+                return null;
+            }
+            @Override
+            protected void done() {
+                btn.setText(saveBtnText);
+                btn.setEnabled(true);
+            }
+        };
+        saveWorker.execute();
+    }
+    private void performSave() {
+        System.out.println("LineSeekerAlert::save Need Implementation................");
     }
     private Vector<String> getPeriodItems() {
         Vector<String> periodItems = new Vector<>();

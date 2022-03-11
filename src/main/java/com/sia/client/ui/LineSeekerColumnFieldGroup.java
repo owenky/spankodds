@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -15,13 +16,16 @@ public class LineSeekerColumnFieldGroup {
     public final JRadioButton bad = new JRadioButton("Bad");
     public final JRadioButton neutral = new JRadioButton("Neutral");
     public final JLabel titleLabel;
+    public final JButton clearBtn = new JButton("Clear");
+    private static final String defaultJuice = "-110";
+
 
     public LineSeekerColumnFieldGroup(String columnTitle) {
         lineInput.setName("Line");
         lineInput.setPreferredSize(DefaultFieldDim);
         lineInput.setMinimumSize(DefaultFieldDim);
         juiceInput.setName("Juice");
-        juiceInput.setText("-110");
+        juiceInput.setText(defaultJuice);
         juiceInput.setPreferredSize(DefaultFieldDim);
         juiceInput.setMinimumSize(DefaultFieldDim);
         titleLabel = new JLabel(columnTitle);
@@ -32,6 +36,11 @@ public class LineSeekerColumnFieldGroup {
         group.add(bad);
         group.add(neutral);
         good.setSelected(true);
+
+        clearBtn.addActionListener((event)-> {
+            lineInput.setText("");
+            juiceInput.setText(defaultJuice);
+        });
     }
     public String getLineText() {
         return lineInput.getText();
