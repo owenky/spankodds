@@ -19,6 +19,7 @@ public abstract class TableSection<V extends KeyedObject> {
     private final LineGames<V> gamesVec;
     private final Set<Integer> hiddenGameIdSet = new HashSet<>();
     private final Map<Integer, List<Object>> rowDataMap = new ConcurrentHashMap<>();
+    private final boolean toAddBlankGameId;
     private ColumnCustomizableDataModel<V> containingTableModel;
     private int rowHeight;
     private int index;
@@ -30,6 +31,7 @@ public abstract class TableSection<V extends KeyedObject> {
 
     public TableSection(GameGroupHeader gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
         this.gameGroupHeader = gameGroupHeader;
+        this.toAddBlankGameId = toAddBlankGameId;
         gamesVec = new LineGames<>(gameCache, toAddBlankGameId);
         for(V game: gameVec) {
             if ( toAddToModel(game)) {
@@ -80,11 +82,6 @@ public abstract class TableSection<V extends KeyedObject> {
         gamesVec.sort(gameSorter);
         rowDataMap.clear();
     }
-
-//    public boolean hasHeader() {
-//        return ! gameGroupHeader.isEmpty();
-//    }
-
     public GameGroupHeader getGameGroupHeader() {
         return this.gameGroupHeader;
     }
@@ -135,7 +132,12 @@ public abstract class TableSection<V extends KeyedObject> {
         return 0;
     }
     protected boolean containsDataRow() {
-        return 1 < gamesVec.size();
+        if ( toAddBlankGameId) {
+            return  1 < gamesVec.size();
+        } else {
+            return  0 < gamesVec.size();
+        }
+
     }
     public int getRowIndex(final Integer gameId) {
         return gamesVec.getRowIndex(gameId);

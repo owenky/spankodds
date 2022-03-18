@@ -33,7 +33,7 @@ public class LinesTableData extends TableSection<Game> {
         this(sportType,screenProperty, gameVec, gameGroupHeader, AppController.getGames(), columns);
     }
     public LinesTableData(SportType sportType,ScreenProperty screenProperty, Vector<Game> gameVec,GameGroupHeader gameGroupHeader, Games gameCache, List<TableColumn> columns) {
-        super(gameGroupHeader,gameCache, null != gameGroupHeader, gameVec);
+        super(gameGroupHeader,gameCache, sportType.isShowHeaders(), gameVec);
         this.sportType = sportType;
         this.screenProperty = screenProperty;
         this.columns = columns;
