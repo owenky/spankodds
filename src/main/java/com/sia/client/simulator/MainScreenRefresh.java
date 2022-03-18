@@ -25,7 +25,7 @@ public class MainScreenRefresh extends TestExecutor{
             if(0==counter.getAndAdd(1)%5) {
                 log("***** Refreshing MainScreen "+mainScreen.getSportType().getSportName()+", count=" + counter.get());
             }
-            sportTablePane.refreshMainScreen(mainScreen);
+            sportTablePane.reCreateMainScreen(mainScreen);
         } catch(Exception e) {
             log(e);
         }

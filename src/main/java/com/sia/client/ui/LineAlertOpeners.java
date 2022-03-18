@@ -112,20 +112,20 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     String[] secslist = new String[60];
     String[] minslist = new String[20];
     String[] audiolist = new String[8];
-    JComboBox sportComboBox;
+    private JComboBox sportComboBox;
 
-    JLabel linetype = new JLabel("LINE TYPE");
-    JLabel notify = new JLabel("NOTIFY");
-    JList selectedList = new JList();
-    Box box1 = Box.createVerticalBox();
-    Box box2 = Box.createVerticalBox();
-    Box box3 = Box.createVerticalBox();
-    int popupsecs = 5;
-    int popuplocationint = 0;
-    Vector bookeis;
-    List<Sport> sports;
+    private JLabel linetype = new JLabel("LINE TYPE");
+    private JLabel notify = new JLabel("NOTIFY");
+    private JList selectedList = new JList();
+    private Box box1 = Box.createVerticalBox();
+    private Box box2 = Box.createVerticalBox();
+    private Box box3 = Box.createVerticalBox();
+    private int popupsecs = 5;
+    private int popuplocationint = 0;
+    private List<Bookie> bookeis;
+    private List<Sport> sports;
     private Vector checkednodes2 = new Vector();
-    private Vector checkednodes3 = new Vector();
+    private List<DefaultMutableTreeNode> checkednodes3 = new ArrayList<>();
     private CheckBoxTree _tree;
     private CheckBoxTree sportsbooktree;
     private Hashtable leaguenameidhash = new Hashtable();
@@ -1665,7 +1665,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 					*/
 
 
-                Vector checkedLeagueNodes = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes;
+                Vector checkedLeagueNodes = AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes;
                 log("gjhhsizeeeee" + checkednodes2.size());
                 for (int j = 0; j < checkednodes2.size(); j++) {
                     //  ArrayList<TreePath> arrayList;
@@ -1681,11 +1681,10 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                 treePanel.revalidate();
                 selectedList.setEnabled(false);
 
-                Vector checkedBookieNodes = (Vector) AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
-                for (int j = 0; j < checkednodes3.size(); j++) {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) checkednodes3.elementAt(j);
-                    TreePath path = new TreePath(((DefaultMutableTreeNode) node).getPath());
-                    log("its===========================" + checkednodes3.get(j) + "psth" + path);
+//                Vector checkedBookieNodes = AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
+                for (DefaultMutableTreeNode node : checkednodes3) {
+                    TreePath path = new TreePath(node.getPath());
+                    log("its===========================" + node + "psth" + path);
                     sportsbooktree.getCheckBoxTreeSelectionModel().addSelectionPath(path);
                 }
                 selectedList.revalidate();
@@ -1788,14 +1787,14 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 
         try {
 
-            Vector bookieVec = AppController.getBookiesVec();
+            List<Bookie> bookieVec = AppController.getBookiesVec();
             Vector checkedbookies = AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes;
             List<Bookie> hiddenBookies = AppController.getHiddenCols();
 
-            for (int i = 0; i < bookieVec.size(); i++) {
+            for (Bookie value : bookieVec) {
                 Bookie bookie;
                 DefaultMutableTreeNode tempnode;
-                bookie = (Bookie) bookieVec.elementAt(i);
+                bookie = (Bookie) value;
                 if (hiddenBookies.contains(bookie) || bookie.getBookie_id() >= 990) {
                     continue;
                 }
@@ -1805,9 +1804,9 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                     tempnode.add(child);
                     bookienameidhash.put(bookie.getName(), "" + bookie.getBookie_id());
 
-                    for (int j = 0; j < checkedbookies.size(); j++) {
-                        if ((checkedbookies.get(j) + "").equalsIgnoreCase("" + bookie.getName()) || (checkedbookies.get(j) + "").equalsIgnoreCase("All Bookies")) {
-                            log("Checked Sports araay  " + checkedbookies.get(j));
+                    for (Object checkedbooky : checkedbookies) {
+                        if ((checkedbooky + "").equalsIgnoreCase("" + bookie.getName()) || (checkedbooky + "").equalsIgnoreCase("All Bookies")) {
+                            log("Checked Sports araay  " + checkedbooky);
                             checkednodes3.add(child);
                         }
 
@@ -1833,7 +1832,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 
         try {
 
-            Vector newBookiesVec = AppController.getBookiesVec();
+            List<Bookie> newBookiesVec = AppController.getBookiesVec();
             List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
             for (Object o : newBookiesVec) {

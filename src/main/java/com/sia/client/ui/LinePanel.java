@@ -11,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.ToolTipManager;
 import javax.swing.border.MatteBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -92,10 +91,6 @@ public class LinePanel extends JPanel {
         total.setHorizontalTextPosition(textAlignment);
 
         this.setOpaque(true);
-
-        ToolTipManager.sharedInstance().setInitialDelay(5000);
-        ToolTipManager.sharedInstance().setDismissDelay(60000);
-
     }
     public void setSoccerLines(JTable table,SoccerSpreadTotalView stv, int row, int col) {
 
@@ -131,7 +126,7 @@ public class LinePanel extends JPanel {
             top.setText(ld.getData());
             String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-            String bookieid = AppController.getBookieId(bookie);
+            Integer bookieid = AppController.getBookieId(bookie);
             Color colcolor = AppController.getColor(bookieid);
 
             Color bgcolor = ld.getBackgroundColor();
@@ -207,7 +202,7 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = AppController.getBookieId(bookie);
+        Integer bookieid = AppController.getBookieId(bookie);
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
@@ -274,7 +269,7 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = AppController.getBookieId(bookie);
+        Integer bookieid = AppController.getBookieId(bookie);
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
@@ -343,7 +338,7 @@ public class LinePanel extends JPanel {
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
-        String bookieid = AppController.getBookieId(bookie);
+        Integer bookieid = AppController.getBookieId(bookie);
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
@@ -424,6 +419,7 @@ public class LinePanel extends JPanel {
         } catch (Exception ex) {
             log("ERROR=..." + stv + "..row=" + row + "...col=" + col);
             log(ex);
+            ex.printStackTrace();
         }
 
     }

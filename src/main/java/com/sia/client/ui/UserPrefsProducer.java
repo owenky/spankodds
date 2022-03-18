@@ -49,8 +49,8 @@ public class UserPrefsProducer {
 
         try {
             String colorprefs = "";
-            Set<String> colorBookieIds = AppController.getColorBookieIds();
-            for (String bookieid : colorBookieIds) {
+            Set<Integer> colorBookieIds = AppController.getColorBookieIds();
+            for (Integer bookieid : colorBookieIds) {
                 Color color = AppController.getColor(bookieid);
                 int rgb = color.getRGB();
                 String hex = String.format("#%06X", (0xFFFFFF & rgb));
@@ -135,6 +135,7 @@ public class UserPrefsProducer {
             mapMessage.setString("bookiecolumnprefs", u.getBookieColumnPrefs());
             mapMessage.setString("fixedcolumnprefs", u.getFixedColumnPrefs());
             mapMessage.setString("columncolors", u.getColumnColors());
+            mapMessage.setString("bookiecolumnchanges", u.getBookieColumnsChanged());
 
             Arrays.stream(SportType.getPreDefinedSports()).forEach(st -> {
                 try {

@@ -78,7 +78,7 @@ public class ScreenGameModel {
     }
 
     private Vector<TableColumn> createColumns() {
-        Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
+        List<Bookie> newBookiesVec = AppController.getBookiesVec();
         List<Bookie> hiddencols = AppController.getHiddenCols();
         Vector<TableColumn> result = new Vector<>(newBookiesVec.size());
 

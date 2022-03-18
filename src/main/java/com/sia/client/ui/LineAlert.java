@@ -520,16 +520,17 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
         JCheckBox enablepopup = new JCheckBox("Enable Popup Notification");
         JCheckBox enablesound = new JCheckBox("Enable Sound Notification");
 
-        try {
-            enablepopup.setSelected(Boolean.parseBoolean(prefs[0]));
-        } catch (Exception ex) {
-            log(ex);
-        }
-        try {
-            enablesound.setSelected(Boolean.parseBoolean(prefs[1]));
-        } catch (Exception ex) {
-            log(ex);
-        }
+        //prefs is always null, disable following setting -- 2022-01-23
+//        try {
+//            enablepopup.setSelected(Boolean.parseBoolean(prefs[0]));
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
+//        try {
+//            enablesound.setSelected(Boolean.parseBoolean(prefs[1]));
+//        } catch (Exception ex) {
+//            log(ex);
+//        }
 
         int FPS_MIN = 5;
         int FPS_MAX = 60;
@@ -1862,7 +1863,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
 
         try {
 
-            Vector<Bookie> newBookiesVec = AppController.getBookiesVec();
+            List<Bookie> newBookiesVec = AppController.getBookiesVec();
             List<Bookie> hiddencols = AppController.getHiddenCols();
             String allbookies = "";
             for (Bookie b : newBookiesVec) {
@@ -1871,7 +1872,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
                 }
 
 
-                DefaultMutableTreeNode tempnode;
+//                DefaultMutableTreeNode tempnode;
 
 
                 DefaultMutableTreeNode child = new DefaultMutableTreeNode(b.getName());
@@ -2269,10 +2270,8 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
             spsp.setViewportView(sportsbooktree);
             sportsbooktreePanel.add(spsp);
 
-
             try {
-
-                Vector newBookiesVec = AppController.getBookiesVec();
+                List<Bookie> newBookiesVec = AppController.getBookiesVec();
                 List<Bookie> hiddencols = AppController.getHiddenCols();
                 String allbookies = "";
                 for (Object o : newBookiesVec) {
@@ -2285,9 +2284,6 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
                     if (hiddencols.contains(b) && !lanbookies.contains("" + b.getBookie_id())) {
                         continue;
                     }
-//                    DefaultMutableTreeNode tempnode;
-
-
                     DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(b.getName());
                     rootbookie.add(child2);
                     TreePath path2 = new TreePath(( child2).getPath());

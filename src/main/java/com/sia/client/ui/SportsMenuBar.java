@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
 
@@ -18,19 +19,17 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 public class SportsMenuBar extends JMenuBar {
 
     private final SportsTabPane stb;
-    TopView tv;
-    JMenu filemenu = new JMenu("File");
-    JMenu bookiemenu = new JMenu("Columns");
-    JMenu linealertsmenu = new JMenu("Line Alerts");
-    JMenu gamealertsmenu = new JMenu("Game Alerts");
-    JMenu tabsmenu = new JMenu("Tabs");
-    JMenu windowmenu = new JMenu("Window");
+    private final JMenu filemenu = new JMenu("File");
+    private final JMenu bookiemenu = new JMenu("Columns");
+    private final JMenu linealertsmenu = new JMenu("Line Alerts");
+    private final JMenu gamealertsmenu = new JMenu("Game Alerts");
+    private final JMenu tabsmenu = new JMenu("Tabs");
+    private final JMenu windowmenu = new JMenu("Window");
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
         super();
         this.stb = stb;
-        this.tv = tv;
         this.init();
         AppController.addMenuBar(this);
     }
@@ -69,11 +68,11 @@ public class SportsMenuBar extends JMenuBar {
 
 
         JMenuItem generallinealert = new JMenuItem("Line Moves");
-        generallinealert.addActionListener(ae -> new LineAlert(stb).show(new Dimension(600,180)));
+        generallinealert.addActionListener(ae -> new LineAlert(stb).show(UIProperties.LineAlertDim));
 
         JMenuItem majorlinemove = new JMenuItem("Line Seekers");
         JMenuItem openers = new JMenuItem("Openers");
-        openers.addActionListener(ae -> new LineAlertOpeners(stb).show(new Dimension(600,180)));
+        openers.addActionListener(ae -> new LineAlertOpeners(stb).show(UIProperties.LineAlertDim));
         linealertsmenu.add(generallinealert);
         linealertsmenu.add(majorlinemove);
         linealertsmenu.add(openers);
@@ -128,9 +127,7 @@ public class SportsMenuBar extends JMenuBar {
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);
-        menuItem.addActionListener(ae -> {
-            new GameAlert(stb,command).show(defaultDialogSize);
-        });
+        menuItem.addActionListener(ae -> new GameAlert(stb,command).show(defaultDialogSize));
         return menuItem;
     }
     public void populateTabsMenu() {
@@ -161,8 +158,8 @@ public class SportsMenuBar extends JMenuBar {
             temp.add(manage);
             manage.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
                 int idx = stb.indexOfTab(temp.getText());
-                new CustomTab2(stb.getWindowIndex(),stb.getTitleAt(idx), idx);
-
+                CustomTab2 customTab2 = new CustomTab2(stb,"Edit Custom Tab",stb.getWindowIndex(),stb.getTitleAt(idx), idx);
+                customTab2.show(UIProperties.CustomTab2Dim);
             }));
 
             temp.add(hide);
@@ -180,6 +177,10 @@ public class SportsMenuBar extends JMenuBar {
         }
         JMenuItem addnew = new JMenuItem("Add New...");
         tabsmenu.add(addnew);
-        addnew.addActionListener(ae -> SwingUtilities.invokeLater(() -> new CustomTab2(stb.getWindowIndex())));
+        addnew.addActionListener(ae ->  {
+            CustomTab2 customTab2 = new CustomTab2(stb,"Custom Tab",stb.getWindowIndex());
+            customTab2.show(UIProperties.CustomTab2Dim);
+             }
+        );
     }
 }

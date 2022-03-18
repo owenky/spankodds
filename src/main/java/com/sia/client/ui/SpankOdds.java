@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.CheckThreadViolationRepaintManager;
+import com.sia.client.config.LocalConfig;
 import com.sia.client.config.Logger;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
@@ -16,6 +17,7 @@ import org.jdesktop.swingx.auth.LoginService;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RepaintManager;
+import javax.swing.ToolTipManager;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +51,8 @@ public class SpankOdds {
 
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
-
+        ToolTipManager.sharedInstance().setInitialDelay(500);
+        ToolTipManager.sharedInstance().setDismissDelay(5000);
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog(),true);
     }
 
@@ -76,9 +79,15 @@ public class SpankOdds {
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         LoginClient client = new LoginClient();
-
-
-        final JXLoginPane loginPane = new JXLoginPane();
+        LocalPwdStore localPwdStore = new LocalPwdStore(LocalConfig.instance());
+        LocalUserStore localUserStore = new LocalUserStore(LocalConfig.instance());
+        final JXLoginPane loginPane = new JXLoginPane(null, localPwdStore, localUserStore) {
+            @Override
+            public String getUserName() {
+                String userName = super.getUserName();
+                return null==userName?"":userName;
+            }
+        };
         loginPane.setBannerText("Spank Odds");
 
         LoginListener loginListener = new LoginAdapter() {
@@ -103,8 +112,6 @@ public class SpankOdds {
             @Override
             public boolean authenticate(String name, char[] password, String server) throws Exception {
 
-
-                log("data:" + new java.util.Date());
                 try {
                     //Platform.runLater(new Runnable() { @Override public void run() {lbllogin.setText("Processing...");}});
                     //
@@ -126,7 +133,6 @@ public class SpankOdds {
                 }
                 log("out of the while loop " + client.loginresultback);
                 log("result " + client.isloggedin());
-                log("date:" + new java.util.Date());
                 boolean loggedin = client.isloggedin();
                 if (loggedin) {
                     userName = name;
@@ -162,12 +168,9 @@ public class SpankOdds {
         try {
             frame.setTitle(userName + " Logged In " + SiaConst.Version);
             AppController.addFrame(frame);
-//            frame.setSize(950, 800);
             SpankyWindow.setLocationaAndSize(frame,UIProperties.screenXmargin,UIProperties.screenYmargin);
             frame.populateTabPane();
             frame.setVisible(true);
-//            AppController.notifyUIComplete();
-
         } catch (Exception e) {
             log(e);
             JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);

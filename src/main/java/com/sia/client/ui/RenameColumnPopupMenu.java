@@ -3,7 +3,6 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
-import org.codehaus.plexus.util.StringUtils;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,7 +26,7 @@ public class RenameColumnPopupMenu {
 
     private final JTable table;
     private final AnchoredLayeredPane anchoredLayeredPane;
-    private static final Dimension inputPanelSize = new Dimension(200,100);
+    private static final Dimension inputPanelSize = new Dimension(300,150);
     private static final Dimension inputFieldSize = new Dimension(180,30);
     private static final Insets inputPanelInsets = new Insets(5,5,5,5);
     private static final Insets buttonInsets = new Insets(3,2,3,2);
@@ -61,7 +60,7 @@ public class RenameColumnPopupMenu {
                 return inputPanelInsets;
             }
         };
-        inputPanel.setSize(inputPanelSize);
+//        inputPanel.setSize(inputPanelSize);
         inputPanel.setBorder(BorderFactory.createEtchedBorder());
         GridLayout layoutMng =  new GridLayout(0,1);
         inputPanel.setLayout(layoutMng);
@@ -76,7 +75,7 @@ public class RenameColumnPopupMenu {
             return new Point((int)(r.getX()+headerAtScreen.getX()),(int)(r.getHeight()+headerAtScreen.getY()));
         };
 
-        anchoredLayeredPane.openAndAnchoredAt(inputPanel,null,true,anchorPointSupl);
+        anchoredLayeredPane.openAndAnchoredAt(inputPanel,inputPanelSize,true,anchorPointSupl);
     }
     private JComponent getTitle() {
         if ( null == title) {
@@ -132,7 +131,7 @@ public class RenameColumnPopupMenu {
     private String validateInput() {
         String text = inputField.getText();
         String err;
-        if ( StringUtils.isEmpty(text)) {
+        if ( Utils.isEmpty(text)) {
             err = "Column name can't be blank.";
         } else if ( ! Utils.containsOnlyAlphanumeric(text) ) {
             err = "Column name allows only alphanumeric characters.";
@@ -144,16 +143,22 @@ public class RenameColumnPopupMenu {
     private void saveColumnName() {
         String text = inputField.getText().trim();
         TableColumn tc = table.getColumnModel().getColumn(tableColumnIndex);
+        String oldColumnName=tc.getHeaderValue().toString();
+        int bookieId = AppController.getBookieId(oldColumnName);
+        AppController.changeBookieShortName(oldColumnName,text);
         tc.setHeaderValue(text);
-        TableColumn [] allCols = getAllColumns();
-        StringBuilder sb = new StringBuilder();
-        for(TableColumn tblCol: allCols) {
-            sb.append(tblCol.getIdentifier()).append("=").append(tblCol.getHeaderValue()).append(",");
-        }
-        sb.deleteCharAt(sb.length()-1);
-        AppController.getUser().setBookieColumnPrefs(sb.toString());
-        UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
-        userPrefs.sendUserPrefs();
+//        TableColumn [] allCols = getAllColumns();
+//        StringBuilder sb = new StringBuilder();
+//        for(TableColumn tblCol: allCols) {
+//            sb.append(tblCol.getIdentifier()).append("=").append(tblCol.getHeaderValue()).append(",");
+//        }
+//        sb.deleteCharAt(sb.length()-1);
+//        AppController.getUser().setBookieColumnChanges(sb.toString());
+        String changeStr = ""+bookieId+"="+text;
+        AppController.getUser().addBookieColumnChanged(changeStr);
+        //don't send to server every time user renames column. Instead userPrefs.sendUserPrefs() is called when user log out -- 2022-01-30
+//        UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
+//        userPrefs.sendUserPrefs();
     }
     private TableColumn [] getAllColumns() {
         JTable bindedTable;

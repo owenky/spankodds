@@ -110,8 +110,8 @@ public class TableColumnPopupMenu{
         hideMenu();
     }
     private void renameColumn() {
-        ActionListener cancelAction = (evt)-> this.showMenu(tableColumnIndex);
-        RenameColumnPopupMenu renameColumnPopupMenu = RenameColumnPopupMenu.of(stp,table,cancelAction);
+        ActionListener renameAction = (evt)-> this.showMenu(tableColumnIndex);
+        RenameColumnPopupMenu renameColumnPopupMenu = RenameColumnPopupMenu.of(stp,table,renameAction);
         renameColumnPopupMenu.showMenu(tableColumnIndex);
         hideMenu();
     }
@@ -147,17 +147,13 @@ public class TableColumnPopupMenu{
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         Point p = menuBar.getLocationOnScreen();
         dialog.setLocation(p.x, p.y + menuBar.getSize().height);
-        //dialog.setLocationRelativeTo(r);
         dialog.setVisible(true);
 
         Color color = chooser.getColor();
         if (color != null) {
             log("color chosen was " + color);
-            String bookieid = AppController.getBookieId(headerValue.toString());
+            Integer bookieid = AppController.getBookieId(headerValue.toString());
             AppController.putColor(bookieid, color);
-//            List<LinesTableData> dm = AppController.getDataModels();
-//            dm.get(0).fire(null);
-
             MainGameTableModel model = ((MainGameTable)table).getModel();
             TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
             model.fireTableChanged(tme);
