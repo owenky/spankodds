@@ -154,8 +154,7 @@ public class RenameColumnPopupMenu {
 //        }
 //        sb.deleteCharAt(sb.length()-1);
 //        AppController.getUser().setBookieColumnChanges(sb.toString());
-        String changeStr = ""+bookieId+"="+text;
-        AppController.getUser().addBookieColumnChanged(changeStr);
+        AppController.getUser().addBookieColumnChanged(bookieId,text);
         //don't send to server every time user renames column. Instead userPrefs.sendUserPrefs() is called when user log out -- 2022-01-30
 //        UserPrefsProducer userPrefs = AppController.getUserPrefsProducer();
 //        userPrefs.sendUserPrefs();

@@ -9,7 +9,6 @@ import com.sia.client.model.GameStatus;
 import com.sia.client.model.MqMessageProcessor;
 import com.sia.client.model.Sport;
 import com.sia.client.simulator.GameMessageSimulator;
-import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -106,7 +105,7 @@ public class GamesConsumer implements MessageListener {
                     oldgametime = oldGame.getGametime();
 
                 }
-                log("new game! " + data);
+//                log("new game! " + data);
                 AppController.pushGameToCache(game);
                 MqMessageProcessor.getInstance().addGame(game);
                 Sport s = AppController.getSportByLeagueId(game.getLeague_id());

@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.5)";
+    public static final String Version="(v21.20.10.9)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -61,6 +61,7 @@ public abstract class SiaConst {
         String InitialLoadingFileName = "initGameMesgs.txt";
     }
     public static final String MessageDelimiter = "~";
+    public static final String ColumnDelimiter = ",";
     public static final String PropertyDelimiter = "@#_#_#@";
     public static final String logFileName = "c:\\temp\\spankyOddsLog.txt";
     public static final String errFileName = "c:\\temp\\spankyOddsErr.txt";

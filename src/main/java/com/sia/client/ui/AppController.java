@@ -3,10 +3,13 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.AlertVector;
 import com.sia.client.model.Bookie;
+import com.sia.client.model.BookieManager;
 import com.sia.client.model.Game;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.Games;
+import com.sia.client.model.Line;
 import com.sia.client.model.Moneyline;
+import com.sia.client.model.NewLineListener;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 import com.sia.client.model.UrgentsConsumer;
@@ -46,19 +49,11 @@ public class AppController {
 
     public final static AlertVector alertsVector = new AlertVector();
     public final static Set<Integer> BadGameIds = new HashSet<>();
-    private static final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
     private static final AtomicReference<CountDownLatch> messageProcessingLatchRef = new AtomicReference<>(new CountDownLatch(1));
     public static Vector<String> customTabsVec = new Vector<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector<>();
     public static Vector<SportsMenuBar> menubars = new Vector<>();
-    public static Map<String, Integer> bookieshortnameids = new ConcurrentHashMap<>();
-    public static Vector<Bookie> openerbookiesVec = new Vector<>();
-    public static List<Bookie> bookiesVec = new ArrayList<>();
     public static Vector<Sport> sportsVec = new Vector<>();
-    public static Vector<Bookie> hiddenCols = new Vector<>();
-    public static Vector<Bookie> shownCols = new Vector<>();
-    public static Vector<Bookie> fixedCols = new Vector<>();
-    public static User u;
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
@@ -76,7 +71,6 @@ public class AppController {
     public static UrgentsConsumer urgentsConsumer;
     public static UserPrefsProducer userPrefsProducer;
     public static ChartChecker chartchecker;
-    public static int numfixedcols;
     public static long clearalltime;
     public static DefaultTableColumnModel columnmodel;
     public static DefaultTableColumnModel fixedcolumnmodel;
@@ -128,10 +122,12 @@ public class AppController {
     private static Map<String, TeamTotalline> liveteamtotals = new ConcurrentHashMap<>();
     private static Map<Integer, Color> bookiecolors = new ConcurrentHashMap<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
+    private static final BookieManager bookieManager = BookieManager.instance();
     private static Games games = new Games();
+    private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
     public static void initializeSportsTabPaneVectorFromUser() {
-        String[] tabsindex = u.getTabsIndex().split(",");
+        String[] tabsindex = User.instance().getTabsIndex().split(",");
         for (int i = 0; i < tabsindex.length; i++) {
             SpotsTabPaneVector.put(i, tabsindex[i]);
             // will be using this instead
@@ -178,7 +174,7 @@ public class AppController {
     }
 
     public static void initializeLineAlertVectorFromUser() {
-        String[] linealerts = u.getLineAlerts().split("\\?");
+        String[] linealerts = User.instance().getLineAlerts().split("\\?");
         for (final String linealert : linealerts) {
             try {
                 String[] lanitems = linealert.split("!");
@@ -383,59 +379,19 @@ public class AppController {
     }
 
     public static List<Bookie> getBookiesVec() {
-        //log("BEFORE bookiesvec size="+bookiesVec.size());
-        reorderBookiesVec();
-        //log("AFTER bookiesvec size="+bookiesVec.size());
-        return bookiesVec;
+        return bookieManager.getBookiesVec();
     }
 
     public static int getNumFixedCols() {
-        return numfixedcols;
+        return bookieManager.getNumFixedCols();
     }
 
     public static void setNumFixedCols(int x) {
-        numfixedcols = x;
+        bookieManager.setNumFixedCols(x);
     }
 
     public static int reorderBookiesVec() {
-        int fixedcolsint = 0;
-        List<Bookie> newVec = new ArrayList<>();
-        fixedCols.clear();
-        shownCols.clear();
-        hiddenCols.clear();
-        String[] fixedcols = u.getFixedColumnPrefs().split(",");
-        String[] cols = u.getBookieColumnPrefs().split(",");
-        for (String id : fixedcols) {
-            Bookie b = bookieCache.get(Integer.parseInt(id));
-            if (b != null) {
-                newVec.add(b);
-                fixedCols.add(b);
-                fixedcolsint++;
-            }
-
-        }
-        //cols can be in the format of ["17=Pincl", "620=Sp411", "271=Circa", "880=Bax", "42=Hiltn", +46 more] or ["17,620,271,880,42...."]
-        //if column name is rename, id has former format. -- 2021-01-24
-        for (String colStr : cols) {
-            String id = colStr.split("=")[0];
-            Bookie b = bookieCache.get(Integer.parseInt(id));
-            if (b != null) {
-                shownCols.add(b);
-                newVec.add(b);
-
-            }
-        }
-        for (Bookie b : bookiesVec) {
-            if (!newVec.contains(b)) {
-                newVec.add(b);
-                hiddenCols.add(b);
-            }
-
-        }
-        bookiesVec = newVec;
-        numfixedcols = fixedcolsint;
-        return fixedcolsint;
-
+        return bookieManager.reorderBookiesVec();
     }
 
     public static TableColumnModel getFixedColumnModel() {
@@ -662,15 +618,14 @@ public class AppController {
     }
 
     public static Integer getBookieId(String sn) {
-        return bookieshortnameids.get(sn);
+        return bookieManager.getBookieId(sn);
     }
 
     public static User getUser() {
-        return u;
+        return User.instance();
     }
 
-    public static void setUser(User u2) {
-        u = u2;
+    public static void enrichUserProperties(User u) {
 
         //here i will load in all prefs
         String columncolors = u.getColumnColors();
@@ -723,23 +678,13 @@ public class AppController {
     }
 
     public static void addBookie(Bookie b) {
-
-        bookieCache.put(b.getBookie_id(), b);
-        bookieshortnameids.put(b.getShortname(), b.getBookie_id());
-        bookiesVec.add(b);
+        bookieManager.addBookie(b);
     }
     public static void changeBookieShortName(String oldShortName,String newShortName) {
-        Integer bookieId = bookieshortnameids.get(oldShortName);
-        if ( null != bookieId) {
-            Bookie b = bookieCache.get(bookieId);
-            b.setShortname(newShortName);
-            bookieshortnameids.put(newShortName,bookieId);
-        }
+        bookieManager.changeBookieShortName(oldShortName,newShortName);
     }
     public static void addOpenerBookie(Bookie b) {
-
-        bookieCache.put(b.getBookie_id(), b);
-        openerbookiesVec.add(b);
+        bookieManager.addOpenerBookie(b);
     }
 
     public static void addSport(Sport s) {
@@ -780,7 +725,9 @@ public class AppController {
         for (final String gameIdStr : gameidarr) {
             try {
                 games.removeGame(gameIdStr);
-                for (Bookie b : bookiesVec) {
+                Iterator<Bookie> iterator = bookieManager.iterator();
+                while (iterator.hasNext() ) {
+                    Bookie b = iterator.next();
                     int bid = b.getBookie_id();
                     final String key = bid + "-" + gameIdStr;
                     spreads.remove(key);
@@ -858,7 +805,7 @@ public class AppController {
     }
 
     public static Bookie getBookie(int bid) {
-        return bookieCache.get(bid);
+        return bookieManager.getBookie(bid);
     }
 
     public static Sport getSportByLeagueId(int leagueId) {
@@ -891,18 +838,15 @@ public class AppController {
     }
 
     public static List<Bookie> getHiddenCols() {
-        return hiddenCols;
+        return bookieManager.getHiddenCols();
     }
 
     public static List<Bookie> getShownCols() {
-        if (shownCols == null || shownCols.size() == 0) {
-            reorderBookiesVec();
-        }
-        return shownCols;
+        return bookieManager.getShownCols();
     }
 
     public static List<Bookie> getFixedCols() {
-        return fixedCols;
+        return bookieManager.getFixedCols();
     }
 
     public static Games getGamesVec() {
@@ -930,6 +874,7 @@ public class AppController {
             livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
             log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
         }
+        newLineNotify(spread);
         //LineAlertOpeners.spreadOpenerAlert(spread);
     }
 
@@ -955,7 +900,7 @@ public class AppController {
             livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
             log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
         }
-
+        newLineNotify(total);
         //LineAlertOpeners.totalOpenerAlert(total);
 
     }
@@ -982,6 +927,7 @@ public class AppController {
             livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
             log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
         }
+        newLineNotify(ml);
 //LineAlertOpeners.moneyOpenerAlert(ml);
     }
 
@@ -1006,6 +952,7 @@ public class AppController {
             liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
             log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
         }
+        newLineNotify(teamtotal);
 //LineAlertOpeners.teamTotalOpenerAlert(teamtotal);
     }
 
@@ -1108,5 +1055,22 @@ public class AppController {
     public static void addAlert(String hrmin, String mesg) {
         alertsVector.addAlert(hrmin, mesg);
     }
-
+    public static void addNewLineListener(NewLineListener newLineListener) {
+        NEW_LINE_LISTENERS.add(newLineListener);
+    }
+    public static void rmNewLineListener(NewLineListener newLineListener) {
+        NEW_LINE_LISTENERS.remove(newLineListener);
+    }
+    private static final Set<Integer> gameIdsWithAnyLine = new HashSet<>();
+    private static void newLineNotify(Line newLine) {
+        //since MainGameTableModel is removed from NEW_LINE_LISTENERS when it is switched off , NEW_LINE_LISTENERS only contains one MainGameTableModel that is currently displayed.
+        //So no need to filter for displayed model. 2022-02-27
+        for (NewLineListener newLineListener : NEW_LINE_LISTENERS) {
+            newLineListener.processNewLines(newLine);
+        }
+        gameIdsWithAnyLine.add(newLine.getGameid());
+    }
+    public static boolean containAnyLine(int gameId) {
+        return gameIdsWithAnyLine.contains(gameId);
+    }
 }

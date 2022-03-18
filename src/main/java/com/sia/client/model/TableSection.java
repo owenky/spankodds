@@ -5,9 +5,11 @@ import com.sia.client.config.SiaConst;
 import javax.swing.event.TableModelEvent;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -15,21 +17,39 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 public abstract class TableSection<V extends KeyedObject> {
 
     private final LineGames<V> gamesVec;
+    private final Set<Integer> hiddenGameIdSet = new HashSet<>();
     private final Map<Integer, List<Object>> rowDataMap = new ConcurrentHashMap<>();
     private ColumnCustomizableDataModel<V> containingTableModel;
     private int rowHeight;
     private int index;
     protected final GameGroupHeader gameGroupHeader;
 
+    abstract protected void prepareLineGamesForTableModel(LineGames<V> gamesVec);
     abstract protected List<Object> makeRowData(V game);
+    abstract protected boolean toAddToModel(V g);
 
     public TableSection(GameGroupHeader gameGroupHeader,KeyedObjectList<V> gameCache, boolean toAddBlankGameId, List<V> gameVec) {
         this.gameGroupHeader = gameGroupHeader;
         gamesVec = new LineGames<>(gameCache, toAddBlankGameId);
-        gamesVec.addAll(gameVec);
+        for(V game: gameVec) {
+            if ( toAddToModel(game)) {
+                gamesVec.addIfAbsent(game);
+            } else {
+                hiddenGameIdSet.add(game.getGame_id());
+            }
+        }
         rowHeight = SiaConst.NormalRowheight;
     }
-
+    public void activateGame(V g) {
+        hiddenGameIdSet.remove(g.getGame_id());
+        gamesVec.addIfAbsent(g);
+    }
+    public boolean isGameHidden(int gameId) {
+        return hiddenGameIdSet.contains(gameId);
+    }
+    public void addToHiddenGameIdList(int gameId) {
+        hiddenGameIdSet.add(gameId);
+    }
     public ColumnCustomizableDataModel<V> getContainingTableModel() {
         return containingTableModel;
     }
@@ -37,7 +57,6 @@ public abstract class TableSection<V extends KeyedObject> {
     public void setContainingTableModel(ColumnCustomizableDataModel<V> containingTableModel) {
         this.containingTableModel = containingTableModel;
     }
-
     public int getIndex() {
         return index;
     }
@@ -54,7 +73,7 @@ public abstract class TableSection<V extends KeyedObject> {
         this.rowHeight = rowHeight;
     }
 
-    protected Iterator<V> getGamesIterator() {
+    public Iterator<V> getGamesIterator() {
         return gamesVec.iterator();
     }
     public void sort(Comparator<? super V> gameSorter) {
@@ -121,7 +140,9 @@ public abstract class TableSection<V extends KeyedObject> {
     public int getRowIndex(final Integer gameId) {
         return gamesVec.getRowIndex(gameId);
     }
-
+    public boolean containsGame(final Integer gameId) {
+        return hiddenGameIdSet.contains(gameId) || 0 <=gamesVec.getRowIndex(gameId);
+    }
     public V removeGameId(Integer gameidtoremove) {
 
         int gameModelIndex = containingTableModel.getRowModelIndexByGameId(this, gameidtoremove);
@@ -169,15 +190,6 @@ public abstract class TableSection<V extends KeyedObject> {
     protected void setHowHeighIfAbsent(V v) {
         //for sub class to override
     }
-    public void addAllGames(List<V> games) {
-        if ( null != games && games.size() > 0) {
-            setHowHeighIfAbsent(games.get(0));
-            for (V g : games) {
-                gamesVec.addIfAbsent(g.getGame_id());
-            }
-            resetDataVector();
-        }
-    }
     public void resetDataVector() {
         prepareLineGamesForTableModel(gamesVec);
         rowDataMap.clear();
@@ -198,20 +210,21 @@ public abstract class TableSection<V extends KeyedObject> {
         }
     }
 
-    abstract protected void prepareLineGamesForTableModel(LineGames<V> gamesVec);
-
     public int size() {
         return gamesVec.size();
     }
 
     public boolean checktofire(V game) {
 
-        int rowIndex = gamesVec.getRowIndex(game.getGame_id());
+        int rowIndex = getRowModelIndex(game.getGame_id());
         boolean status = rowIndex >= 0;
         if (status) {
             List<Object> rowData = makeRowData(game);
             rowDataMap.put(rowIndex, rowData);
         }
         return status;
+    }
+    protected int getRowModelIndex(int gameId) {
+        return gamesVec.getRowIndex(gameId);
     }
 }

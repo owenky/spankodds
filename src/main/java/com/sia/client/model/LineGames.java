@@ -41,9 +41,6 @@ public class LineGames<V extends KeyedObject> {
     public Integer removeGameIdAt(int index) {
         return gameIdList.remove(index);
     }
-//    public V getGameFromDataSource(String gameId) {
-//        return getGameFromDataSource(Integer.parseInt(gameId));
-//    }
     public V removeGame(Integer gameId) {
         V game;
         if ( gameIdList.remove(gameId) ) {
@@ -53,9 +50,6 @@ public class LineGames<V extends KeyedObject> {
         }
         return game;
     }
-//    public V removeGame(String gameId) {
-//        return removeGame(Integer.parseInt(gameId));
-//    }
     public void addAll(Collection<? extends V> games) {
         games.forEach(this::addIfAbsent);
     }
@@ -76,9 +70,6 @@ public class LineGames<V extends KeyedObject> {
         }
         return index;
     }
-//    public boolean containsGameId(int gameId) {
-//        return gameIdList.contains(gameId);
-//    }
     public void sort(Comparator<? super V> comparator) {
         Comparator<Integer> idComparator = (id1,id2)-> {
             V g1 = gameCache.getGame(id1);
@@ -91,7 +82,7 @@ public class LineGames<V extends KeyedObject> {
         return gameIdList.size();
     }
     public boolean isEmpty() {
-        if ( 1==gameIdList.size() && SiaConst.BlankGameId.equals(gameIdList.get(0))) {
+        if ( 1==size() && SiaConst.BlankGameId.equals(gameIdList.get(0))) {
             return true;
         }
         return gameIdList.isEmpty();

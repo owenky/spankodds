@@ -5,9 +5,14 @@ import com.sia.client.model.ViewValue;
 import javax.jms.MapMessage;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
@@ -369,5 +374,44 @@ public abstract class Utils {
     }
     public static boolean isEmpty(String str) {
         return ( null == str || 0 ==str.trim().length());
+    }
+    public static JPanel createTitlePanel(String title) {
+        JLabel titleLabel = new JLabel(title,SwingConstants.CENTER);
+        return createCompCenteredPanel(titleLabel);
+    }
+
+    /**
+     *
+     * @param cmps: up to 3 components.
+     * @return
+     */
+    public static JPanel createCompCenteredPanel(JComponent ... cmps) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        JComponent left = null;
+        JComponent center = null;
+        JComponent right = null;
+
+        if ( 0 == cmps.length || 3 < cmps.length) {
+            throw new IllegalArgumentException("length of input components should be between 1 and 3");
+        }
+        if ( 1 == cmps.length) {
+            center = cmps[0];
+        } else if ( 2 == cmps.length) {
+            left = cmps[0];
+            center = cmps[1];
+        } else {
+            left = cmps[0];
+            center = cmps[1];
+            right = cmps[2];
+        }
+        panel.add(center,BorderLayout.CENTER);
+        if ( null != left) {
+            panel.add(left,BorderLayout.WEST);
+        }
+        if ( null != right) {
+            panel.add(right,BorderLayout.EAST);
+        }
+        return panel;
     }
 }

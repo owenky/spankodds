@@ -179,7 +179,8 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         removeAll();
         if ( null != mainGameTable) {
             mainGameTable.getColumnAdjusterManager().removeFromScheduler();
-            mainGameTable.getModel().setDetroyed(true);
+//            mainGameTable.getModel().setDetroyed(true);
+            mainGameTable.getModel().destroy();
             mainGameTable = null;
         }
         log("destroyed mainscreen!!!!");

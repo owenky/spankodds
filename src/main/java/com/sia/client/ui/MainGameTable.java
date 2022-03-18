@@ -44,6 +44,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     @Override
     protected int computeRowHeight(int rowModelIndex) {
         int rowHeight;
+
         if ( ! getModel().getSportType().isPredifined()) {
             //for customized sport, stage table section contains mixed sport type games.
             //row height has to be calculated per row rather than per section -- 2021-11-09
