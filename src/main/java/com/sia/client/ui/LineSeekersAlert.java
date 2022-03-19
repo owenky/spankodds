@@ -33,7 +33,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     private JComboBox<String> period;
     private final LineSeekerSectionFieldGroup spreadFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic");
     private final LineSeekerSectionFieldGroup totalsFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
-    private final LineSeekerSectionFieldGroup mlinesFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic");
+    private final LineSeekerSectionFieldGroup mlinesFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic").withShowLineInput(false);
     private final LineSeekerSectionFieldGroup awayTTFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
     private final LineSeekerSectionFieldGroup homeTTFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
 

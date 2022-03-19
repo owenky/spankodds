@@ -42,6 +42,10 @@ public class LineSeekerColumnFieldGroup {
             juiceInput.setText(defaultJuice);
         });
     }
+    public LineSeekerColumnFieldGroup withShowLineInput(boolean toShowLineInput) {
+        lineInput.setVisible(toShowLineInput);
+        return this;
+    }
     public String getLineText() {
         return lineInput.getText();
     }

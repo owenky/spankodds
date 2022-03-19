@@ -17,4 +17,9 @@ public class LineSeekerSectionFieldGroup {
         activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
         activateStatus.setSelected(true);
     }
+    public LineSeekerSectionFieldGroup withShowLineInput(boolean toShowLineInput) {
+        leftColumn.withShowLineInput(toShowLineInput);
+        rightColumn.withShowLineInput(toShowLineInput);
+        return this;
+    }
 }
