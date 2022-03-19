@@ -1,16 +1,9 @@
 package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
 import com.sia.client.ui.control.SportsTabPane;
+import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,7 +22,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     private static final int rowHeight =150;
     private static final String saveBtnText = "Save";
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
-    private final HintTextField gameNumField = new HintTextField("");
+    private final JComboBox<Integer> gameNumBox = new JComboBox();
     private JComboBox<String> period;
     private final LineSeekerSectionFieldGroup spreadFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic");
     private final LineSeekerSectionFieldGroup totalsFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
@@ -45,6 +38,8 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     }
     @Override
     protected JComponent getUserComponent() {
+        ComboBoxModel<Integer> gameNumberModel = new ListComboBoxModel<Integer>(AppController.getGames().toPositiveKeyListSorted());
+        gameNumBox.setModel(gameNumberModel);
         JPanel userComp = createUserComp();
         userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
         userComp.add(controlSec());
@@ -81,11 +76,10 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
 
         //2. input fields
         c.anchor = GridBagConstraints.NORTH;
-gameNumField.setText("537");
-        gameNumField.setPreferredSize(fieldDim);
+        gameNumBox.setPreferredSize(fieldDim);
         c.gridx = 0;
         c.gridy = 1;
-        bodyComp.add(gameNumField,c);
+        bodyComp.add(gameNumBox,c);
 
         c.gridx=1;
         c.gridy=1;
