@@ -1,16 +1,11 @@
 package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
 import com.sia.client.ui.control.SportsTabPane;
-import org.jdesktop.swingx.combobox.ListComboBoxModel;
+import com.sia.client.ui.games.GameComboBox;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
@@ -22,7 +17,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     private static final int rowHeight =150;
     private static final String saveBtnText = "Save";
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
-    private final JComboBox<Integer> gameNumBox = new JComboBox();
+    private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<String> period;
     private final LineSeekerSectionFieldGroup spreadFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic");
     private final LineSeekerSectionFieldGroup totalsFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
@@ -38,8 +33,11 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     }
     @Override
     protected JComponent getUserComponent() {
-        ComboBoxModel<Integer> gameNumberModel = new ListComboBoxModel<Integer>(AppController.getGames().toPositiveKeyListSorted());
-        gameNumBox.setModel(gameNumberModel);
+//        ComboBoxModel<Integer> gameNumberModel = new ListComboBoxModel<Integer>(AppController.getGames().toPositiveKeyListSorted());
+//        gameNumBox.setModel(gameNumberModel);
+        gameNumBox.loadGames();
+        gameNumBox.setEditable(true);
+        gameNumBox.setSelectedItem("");
         JPanel userComp = createUserComp();
         userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
         userComp.add(controlSec());

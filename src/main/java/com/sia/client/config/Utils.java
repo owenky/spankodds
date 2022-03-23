@@ -3,28 +3,9 @@ package com.sia.client.config;
 import com.sia.client.model.ViewValue;
 
 import javax.jms.MapMessage;
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.time.Instant;
@@ -413,5 +394,36 @@ public abstract class Utils {
             panel.add(right,BorderLayout.EAST);
         }
         return panel;
+    }
+    public static boolean isSameObject(Object o1, Object o2){
+        if ( o1 == null && o2 == null){
+            return true;
+        }else if ( o1 == null && o2 != null){
+            return false;
+        }else if ( o1 != null && o2 == null){
+            return false;
+        }else{
+            return o1.equals(o2);
+        }
+    }
+    public static boolean isBlank(Object o_) {
+        if (o_ == null) {
+            return true;
+        }
+        return 0 == o_.toString().length();
+    }
+    public static String replaceStr(String sStr, String oldStr, String newStr){
+        if (sStr != null && oldStr != null && newStr != null){
+            int i1 = 0;
+            String s2 = sStr;
+            int fromIndex_ = 0;
+            while ((i1 = s2.indexOf(oldStr,fromIndex_)) != -1){
+                s2 = s2.substring(0, i1) + newStr + s2.substring(i1 + oldStr.length(), s2.length());
+                fromIndex_ = i1+newStr.length();
+            }
+            return s2;
+        }else{
+            return sStr;
+        }
     }
 }
