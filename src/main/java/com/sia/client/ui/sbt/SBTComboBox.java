@@ -30,6 +30,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	private boolean allowRightClick = false;
 	private SelectionItemComparator.ComparingPart selectionItemComparingPart;
 	private final SelectionConvertor<K,T> selectionConvertor;
+	private static final long serialVersionUID = 20070128L;
 
 	static {
 		UIManager.put(SBTComboBoxUI.uiClassID, SBTComboBoxUI.class.getName());
@@ -72,9 +73,6 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	public void setAllowRightClick(boolean allowRightClick) {
 		this.allowRightClick = allowRightClick;
 	}
-
-	private static final long serialVersionUID = 20070128L;
-
 	public boolean isNewItemAllowed() {
 		return isNewItemAllowed;
 	}
@@ -171,7 +169,6 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		setRenderer(new SBTComboboxRender(this));
 		setHorizontalAlignment(JTextField.LEFT);
 		installAncestorListener();
-//		setFont(GF.UI.SBT_CLIENT_FONT_12);
 		setDefaultStatus();
 		setAlignmentX(0.5f);
 		installListeners(getDefaultListener());

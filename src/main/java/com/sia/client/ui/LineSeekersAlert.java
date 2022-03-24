@@ -34,7 +34,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     @Override
     protected JComponent getUserComponent() {
         gameNumBox.loadGames();
-        gameNumBox.setEditable(true);
+        gameNumBox.setEditable(false);
         gameNumBox.setSelectedItem("");
         JPanel userComp = createUserComp();
         userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));

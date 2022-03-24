@@ -6,14 +6,15 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.SelectionItem;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
+import javax.swing.plaf.metal.MetalComboBoxUI;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
-public class SBTComboBoxUI extends BasicComboBoxUI {
+public class SBTComboBoxUI extends MetalComboBoxUI {
 
 	public static final String uiClassID = "SBTComboBoxUI";
 
@@ -65,12 +66,12 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 	public void triggerPopup() {
 		arrowButton.doClick();
 	}
-	@Override
-	protected SBTButton createArrowButton() {
-		SBTButton theButton = SBTButton.createComboboxDropDownButton();
-		theButton.setVerticalAlignment(SwingConstants.BOTTOM);
-		return theButton;
-	}
+//	@Override
+//	protected SBTButton createArrowButton() {
+//		SBTButton theButton = SBTButton.createComboboxDropDownButton();
+//		theButton.setVerticalAlignment(SwingConstants.BOTTOM);
+//		return theButton;
+//	}
 
 	@Override
 	public void installUI(JComponent c) {
@@ -79,9 +80,9 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 		listBox.setSelectionBackground(new Color(49, 106, 197, 255));
 		if (c instanceof SBTComboBox) {
 			SBTComboBox comboBox = (SBTComboBox) c;
-			comboBox.setBackground(SiaConst.Ui.COLOR_WINDOW_BCK);
-			comboBox.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
-			comboBox.setOpaque(false);
+//			comboBox.setBackground(SiaConst.Ui.COLOR_WINDOW_BCK);
+//			comboBox.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
+//			comboBox.setOpaque(false);
 			if (comboBox.isAllowRightClick()) {
 //				listBox.addMouseListener(getMouseEventListener());
 			}
@@ -250,6 +251,14 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 	public void addComponentToList(Component c) {
 		BasicComboPopup popup = (BasicComboPopup) getPopup();
 		popup.add(c);
+	}
+
+	/**
+	 * this method is needed for Swing to create instance for ui id "SBTComboBoxUI".
+	 * Don't delete it -- 03/23/2022
+	 */
+	public static ComponentUI createUI(JComponent c) {
+		return new SBTComboBoxUI();
 	}
 
 }

@@ -7,6 +7,7 @@ import com.sia.client.model.Games;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.sbt.SBTComboBox;
+import com.sia.client.ui.sbt.SBTComboBoxUI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,9 +18,10 @@ import java.util.stream.Collectors;
 public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 
 	public static final GameSelectionItem promptInput;
-	private static final String myUiClassId = "ComboBoxUI";
+	private static final int maxGameIdLen = 6;
 	//use default ComboBoxUI instead of SBT style UI -- 03/23/2022
-//	private static final String myUiClassId = SBTComboBoxUI.uiClassID;
+//	private static final String myUiClassId = "ComboBoxUI";
+	private static final String myUiClassId = SBTComboBoxUI.uiClassID;
 
 	static {
 		Game dummyGame = new Game();
@@ -32,8 +34,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 	}
 	@Override
 	public String getUIClassID() {
-//		return myUiClassId;
-		return super.getUIClassID();
+		return myUiClassId;
 	}
 	private void init() {
 		withPromptInput(promptInput);
@@ -50,16 +51,14 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 		}
 		gameList.sort(new GameIdSorter());
 		List<GameSelectionItem> gameItemList = gameList.stream().map(GameSelectionItem::new).collect(Collectors.toList());
-		int largestGameId = gameItemList.get(gameItemList.size()-1).getGame().getGame_id();
-		String largestGameIdStr = String.valueOf(largestGameId);
-		int maxGameIdLength = largestGameIdStr.length();
 
 		int maxDisplayLen = 0;
 		GameSelectionItem prototypeDisplayValue = null;
 		for(GameSelectionItem gItem: gameItemList) {
 			Game game = gItem.getGame();
 			int gameId = game.getGame_id();
-			String display = String.format("%"+maxGameIdLength+"d  %s/%s",gameId,game.getShortvisitorteam(),game.getShorthometeam());
+			String gameIdStr = formatGameId(gameId);
+			String display = String.format("%s  %s/%s",gameIdStr,game.getShortvisitorteam(),game.getShorthometeam());
 			gItem.withDisplay(display);
 			if ( display.length() > maxDisplayLen) {
 				maxDisplayLen = display.length();
@@ -69,5 +68,12 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 		}
 		setPrototypeDisplayValue(prototypeDisplayValue);
 		this.addElement(gameItemList);
+	}
+	private static String formatGameId(int gameId) {
+		StringBuilder sb = new StringBuilder(String.valueOf(gameId));
+		for(int i=sb.length();i<maxGameIdLen;i++) {
+			sb.append(" ");
+		}
+		return sb.toString();
 	}
 }
