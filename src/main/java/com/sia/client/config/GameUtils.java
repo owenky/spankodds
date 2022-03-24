@@ -285,6 +285,13 @@ public abstract class GameUtils {
     public static boolean isTimeSort(Boolean windowConfigTimeSort, boolean userDefinedTimesort) {
         return null == windowConfigTimeSort? userDefinedTimesort:windowConfigTimeSort;
     }
+    public static boolean isRealGame(Game game) {
+        if ( game.getGame_id() <=0) {
+            return false;
+        }
+        return ! Utils.isBlank(game.getVisitorteam()) && ! Utils.isBlank(game.getShortvisitorteam())
+                && ! Utils.isBlank(game.getHometeam()) && ! Utils.isBlank(game.getShorthometeam());
+    }
     public static void main(String [] argv) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         final String dateStr = "2021-11-24 14:08:01";

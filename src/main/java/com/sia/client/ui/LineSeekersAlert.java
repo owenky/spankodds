@@ -33,8 +33,6 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     }
     @Override
     protected JComponent getUserComponent() {
-//        ComboBoxModel<Integer> gameNumberModel = new ListComboBoxModel<Integer>(AppController.getGames().toPositiveKeyListSorted());
-//        gameNumBox.setModel(gameNumberModel);
         gameNumBox.loadGames();
         gameNumBox.setEditable(true);
         gameNumBox.setSelectedItem("");
@@ -74,14 +72,15 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
 
         //2. input fields
         c.anchor = GridBagConstraints.NORTH;
-        gameNumBox.setPreferredSize(fieldDim);
+        //let setPrototypeDisplayValue(prototypeDisplayValue); in GameComboBox::loadGames decides the size of combobox -- 03/23/2022
+//        gameNumBox.setPreferredSize(fieldDim);
         c.gridx = 0;
         c.gridy = 1;
         bodyComp.add(gameNumBox,c);
 
         c.gridx=1;
         c.gridy=1;
-        period.setPreferredSize(fieldDim);
+//        period.setPreferredSize(fieldDim);
         bodyComp.add(period,c);
 
         return titledPanelGenerator.getPanel();

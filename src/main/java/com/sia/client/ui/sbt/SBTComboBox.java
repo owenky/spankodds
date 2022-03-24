@@ -1,6 +1,5 @@
 package com.sia.client.ui.sbt;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.SelectionItem;
 
@@ -8,8 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBox<T>  {
 
@@ -23,13 +24,16 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	private boolean shouldFireItemStateChanged = true;
 	private boolean toFireValueChangedEvent = true; // toFireValueChangedEvent==true时，fireValueChangedEvent()才会被调用
 	private final List<ValueChangedListener> valueChangedListeners = new ArrayList<>();
-	private static final String uiClassID = "SBTComboBoxUI";
 	private DefaultComboBoxListener defaultListener;
 	private boolean shouldHaveBlankItem = true;
 	private Map<? extends Serializable, ? extends Serializable> itemMap;
 	private boolean allowRightClick = false;
 	private SelectionItemComparator.ComparingPart selectionItemComparingPart;
 	private final SelectionConvertor<K,T> selectionConvertor;
+
+	static {
+		UIManager.put(SBTComboBoxUI.uiClassID, SBTComboBoxUI.class.getName());
+	}
 
 	public SBTComboBox(SelectionConvertor<K,T> selectionConvertor) {
 		this.selectionConvertor = selectionConvertor;
@@ -70,9 +74,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	}
 
 	private static final long serialVersionUID = 20070128L;
-	static { // 使得显示自定义UI
-		UIManager.put(uiClassID, SBTComboBoxUI.class.getName());
-	}
+
 	public boolean isNewItemAllowed() {
 		return isNewItemAllowed;
 	}
@@ -163,23 +165,15 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	public void setWidth(int length) {
 		this.setSize(length, this.getHeight());
 	}
-	@Override
-	public String getUIClassID() {
-		return uiClassID;
-	}
+
 	private void init() {
 		selectionItemComparingPart = SelectionItemComparator.ComparingPart.KEY;
-		// setPrototypeDisplayValue("");
 		setRenderer(new SBTComboboxRender(this));
-		setMinimumSize(new Dimension(2, getMinimumSize().height));
 		setHorizontalAlignment(JTextField.LEFT);
-		this.setOpaque(false);
 		installAncestorListener();
 //		setFont(GF.UI.SBT_CLIENT_FONT_12);
 		setDefaultStatus();
 		setAlignmentX(0.5f);
-		setBackground(SiaConst.Ui.COLOR_WINDOW_BCK);
-		setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
 		installListeners(getDefaultListener());
 	}
 

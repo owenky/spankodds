@@ -6,7 +6,6 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.SelectionItem;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
@@ -15,20 +14,13 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
 public class SBTComboBoxUI extends BasicComboBoxUI {
-	private JComboBox combo;
 
-	public SBTComboBoxUI(JComboBox combo_) {
+	public static final String uiClassID = "SBTComboBoxUI";
+
+	public SBTComboBoxUI() {
 		super();
-		combo = combo_;
-		combo.setPreferredSize(new Dimension(100, 20));
-
 	}
-
-	/**
-	 * hightLight序号为index的行，但没有选中！(setSelectedIndex()是选中某行) -- XFZ@2010-12-15
-	 * 
-	 * @param index
-	 */
+	//see original comments -- 03/22/2022
 	public void setHighLightIndex(int index) {
 		((MyComboPopup) popup).setHighLightIndex(index);
 	}
@@ -39,32 +31,21 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 		return editor;
 	}
 
-	/**
-	 * 清除选中行！XFZ@2010-12-２５
-	 */
+	//see original comments -- 03/22/2022
 	public void clearHighLightIndex() {
 		((MyComboPopup) popup).clearHighLightIndex();
 	}
-
-	/**
-	 * hightLight序号为index的行，但没有选中！(setSelectedIndex()是选中某行) -- XFZ@2010-12-15
-	 */
+	//see original comments -- 03/22/2022
 	public int getHighLightIndex() {
 		return ((MyComboPopup) popup).getHighLightIndex();
 	}
 
-	/**
-	 * hightLight序号为index的行，但没有选中！(setSelectedIndex()是选中某行) -- XFZ@2010-12-15
-	 * 
-	 */
+	//see original comments -- 03/22/2022
 	public Object getHighLightValue() {
 		return ((MyComboPopup) popup).getHighLightValue();
 	}
 
-	/**
-	 * hightLight序号为index的行，但没有选中！(setSelectedIndex()是选中某行) -- XFZ@2010-12-15
-	 * 
-	 */
+	//see original comments -- 03/22/2022
 	public void setHighLightValue(Object anObject) {
 		((MyComboPopup) popup).setHighLightValue(anObject);
 	}
@@ -80,14 +61,10 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 		return popup;
 	}
 
-	/**
-	 * 模拟点击下拉框的按钮以显示下拉框内容，它与JComboBox.showPopup()类似，但某些情形下不知道何原因
-	 * JComboBox.showPopup()不工作，故用此代替-- XFZ@2011-01-03
-	 */
+    //see original comments -- 03/22/2022
 	public void triggerPopup() {
 		arrowButton.doClick();
 	}
-
 	@Override
 	protected SBTButton createArrowButton() {
 		SBTButton theButton = SBTButton.createComboboxDropDownButton();
@@ -102,6 +79,9 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 		listBox.setSelectionBackground(new Color(49, 106, 197, 255));
 		if (c instanceof SBTComboBox) {
 			SBTComboBox comboBox = (SBTComboBox) c;
+			comboBox.setBackground(SiaConst.Ui.COLOR_WINDOW_BCK);
+			comboBox.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
+			comboBox.setOpaque(false);
 			if (comboBox.isAllowRightClick()) {
 //				listBox.addMouseListener(getMouseEventListener());
 			}
@@ -114,9 +94,6 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 		return listBox;
 	}
 
-	public static ComponentUI createUI(JComponent c) {
-		return new SBTComboBoxUI((JComboBox) c);
-	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////
 	private class MyComboPopup extends BasicComboPopup {
@@ -125,55 +102,31 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 			super(combo);
 		}
 
-		/**
-		 * hightLight序号为index的行，但没有选中！(setSelectedIndex()是选中某行) --
-		 * XFZ@2010-12-15
-		 * 
-		 * @param index
-		 */
+		//see original comments -- 03/22/2022
 		public void setHighLightIndex(int index) {
 			list.setSelectedIndex(index);
 		}
 
-		/**
-		 * hightLight序号为index的行，但没有选中！(setSelectedIndex()是选中某行) --
-		 * XFZ@2010-12-15
-		 */
+		//see original comments -- 03/22/2022
 		public void clearHighLightIndex() {
 			list.clearSelection();
 		}
 
-		/**
-		 * 返回被hightLight的行数
-		 * 
-		 */
+		//see original comments -- 03/22/2022
 		public int getHighLightIndex() {
 			return list.getSelectedIndex();
 		}
 
-		/**
-		 * 返回被hightLight的选项 -- XFZ@2010-12-17
-		 * 
-		 */
+		//see original comments -- 03/22/2022
 		public Object getHighLightValue() {
 			return list.getSelectedValue();
 		}
 
-		/**
-		 * 设置被hightLight的选项 -- PFW@2010-12-17
-		 * 
-		 */
+		//see original comments -- 03/22/2022
 		public void setHighLightValue(Object anObject) {
 			list.setSelectedValue(anObject, true);
 		}
-
-		/**
-		 * Appends the specified menu item to the end of this menu.
-		 * 
-		 * @param menuItem
-		 *            the <code>JMenuItem</code> to add
-		 * @return the <code>JMenuItem</code> added
-		 */
+		//see original comments -- 03/22/2022
 		@Override
 		public JMenuItem add(JMenuItem menuItem) {
 			super.add(menuItem);
@@ -185,9 +138,7 @@ public class SBTComboBoxUI extends BasicComboBoxUI {
 
 			boolean isDisplayable_ = comboBox.isDisplayable();
 			boolean isShowing_ = comboBox.isShowing();
-			// 主要是将滚动条置顶
-			// if(SBTUIManager.getComponentScreenLocation(comboBox)!= null ){
-			// //这里需要判断,否则会找不到comboBox的screenLocation
+			//see original comments -- 03/22/2022
 			if (isDisplayable_ && isShowing_) {
 				// java.awt.IllegalComponentStateException: component must be
 				// showing on the screen to determine its location

@@ -82,12 +82,13 @@ public class ComboBoxInputLineEditor extends BasicComboBoxEditor {
         return newValue;
     }
 	// see original comments -- 03/20/2022
-	@Override
-    protected JTextField createEditorComponent() {
-		final SBTComboBoxInputField theEditField = new SBTComboBoxInputField();
-    	theEditField.setEditable(true);
-    	theEditField.setHorizontalAlignment(SwingConstants.CENTER); 	
-        return theEditField;
-    }
+    //disable override to use JComboBox built-in editor component 03/22/2022
+//	@Override
+//    protected JTextField createEditorComponent() {
+//		final SBTComboBoxInputField theEditField = new SBTComboBoxInputField();
+//    	theEditField.setEditable(true);
+//    	theEditField.setHorizontalAlignment(SwingConstants.CENTER);
+//        return theEditField;
+//    }
 
 }

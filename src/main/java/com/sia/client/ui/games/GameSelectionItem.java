@@ -18,10 +18,9 @@ public class GameSelectionItem extends SelectionItem<Integer> {
 		super(game.getGame_id());
 		this.game = game;
 		Comparable<SelectionItem<Integer>> comparator = (o)-> getKeyValue()-o.getKeyValue();
-		int gameId = game.getGame_id();
-		String display;
-
-		display = gameId+ "  "+this.game.getShortvisitorteam()+"/"+this.game.getShorthometeam();
-		withDisplay(display).withComparator(comparator);
+		withComparator(comparator);
+	}
+	public Game getGame() {
+		return game;
 	}
 }
