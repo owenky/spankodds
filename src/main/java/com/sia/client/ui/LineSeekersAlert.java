@@ -2,6 +2,7 @@ package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
+import com.sia.client.ui.games.GameSelectionItem;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,7 +36,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     protected JComponent getUserComponent() {
         gameNumBox.loadGames();
         gameNumBox.setEditable(false);
-        gameNumBox.setSelectedItem("");
+        gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
         JPanel userComp = createUserComp();
         userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
         userComp.add(controlSec());

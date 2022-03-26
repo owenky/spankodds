@@ -23,4 +23,11 @@ public class GameSelectionItem extends SelectionItem<Integer> {
 	public Game getGame() {
 		return game;
 	}
+	public static String getGameDesc(Game game) {
+		String visitor = game.getShortvisitorteam();
+		if ( null == visitor) visitor ="";
+		String home = game.getShorthometeam();
+		if ( null ==home) home ="";
+		return String.format("%s/%s",visitor,home);
+	}
 }

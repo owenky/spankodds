@@ -50,9 +50,8 @@ public class DefaultComboBoxListener<K,T extends SelectionItem<K>> implements Fo
         if (!UiFunc.isArrowKey(e) && !UiFunc.isEnterKey(e)) {
 
             // see original comments -- 03/20/2022
-            boolean editable_ = ((ComboBoxInputLineEditor) comboBox.getEditor()).isEditable();
+            boolean editable_ = comboBox.isEditable();
             if (!editable_) {
-
                 invokeKeyEvent4Uneditable(e);
             } else {
                 invokeInputEvent4Editable(e);
@@ -134,35 +133,36 @@ public class DefaultComboBoxListener<K,T extends SelectionItem<K>> implements Fo
     }
 
     private void invokeKeyEvent4Uneditable(KeyEvent e) {
-
-        int totalCount = comboBox.getItemCount();
-        if (totalCount == 0) {
-            return;
-        }
-
-        char c = e.getKeyChar();
-        int currentSelect = comboBox.getSelectedIndex();
-
-        if (currentSelect < 0 || currentSelect >= totalCount) {
-            currentSelect = 0;
-        }
-        boolean find = false;
-        int target = (currentSelect + 1) % totalCount;
-        while (target != currentSelect) {
-            T item = comboBox.getItemAt(target);
-            if (item == null) {
-                target = (target + 1) % totalCount;
-                continue;
-            }
-            if (this.getKeyStrokeSelectionItemMatcher().match(item, c)) {
-                find = true;
-                break;
-            }
-            target = (target + 1) % totalCount;
-        }
-        if (find) {
-            comboBox.setSelectedIndex(target);
-        }
+        //implementation moved to GameIdComboKeyManager -- 03/26/2022
+//
+//        int totalCount = comboBox.getItemCount();
+//        if (totalCount == 0) {
+//            return;
+//        }
+//
+//        char c = e.getKeyChar();
+//        int currentSelect = comboBox.getSelectedIndex();
+//
+//        if (currentSelect < 0 || currentSelect >= totalCount) {
+//            currentSelect = 0;
+//        }
+//        boolean find = false;
+//        int target = (currentSelect + 1) % totalCount;
+//        while (target != currentSelect) {
+//            T item = comboBox.getItemAt(target);
+//            if (item == null) {
+//                target = (target + 1) % totalCount;
+//                continue;
+//            }
+//            if (this.getKeyStrokeSelectionItemMatcher().match(item, c)) {
+//                find = true;
+//                break;
+//            }
+//            target = (target + 1) % totalCount;
+//        }
+//        if (find) {
+//            comboBox.setSelectedIndex(target);
+//        }
     }
 
     private void invokeInputEvent4Editable(InputEvent e) {

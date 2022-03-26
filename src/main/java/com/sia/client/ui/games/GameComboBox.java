@@ -6,6 +6,7 @@ import com.sia.client.model.GameIdSorter;
 import com.sia.client.model.Games;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.sbt.GameIdComboKeyManager;
 import com.sia.client.ui.sbt.SBTComboBox;
 import com.sia.client.ui.sbt.SBTComboBoxUI;
 
@@ -26,7 +27,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 	static {
 		Game dummyGame = new Game();
 		dummyGame.setGame_id(SelectionItem.SELECT_BLANK_KEY);
-		promptInput = (GameSelectionItem)(new GameSelectionItem(dummyGame).withDisplay("-- Select Game --"));
+		promptInput = (GameSelectionItem)(new GameSelectionItem(dummyGame).withDisplay(" "));
 	}
 	public GameComboBox() {
 		super(new GameSelectionConvertor());
@@ -38,6 +39,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 	}
 	private void init() {
 		withPromptInput(promptInput);
+		setKeySelectionManager(new GameIdComboKeyManager());
 	}
 	public void loadGames() {
 		Games games = AppController.getGames();
@@ -58,7 +60,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 			Game game = gItem.getGame();
 			int gameId = game.getGame_id();
 			String gameIdStr = formatGameId(gameId);
-			String display = String.format("%s  %s/%s",gameIdStr,game.getShortvisitorteam(),game.getShorthometeam());
+			String display = String.format("%s  %s",gameIdStr,GameSelectionItem.getGameDesc(game));
 			gItem.withDisplay(display);
 			if ( display.length() > maxDisplayLen) {
 				maxDisplayLen = display.length();
@@ -67,6 +69,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 
 		}
 		setPrototypeDisplayValue(prototypeDisplayValue);
+		gameItemList.add(0,promptInput);
 		this.addElement(gameItemList);
 	}
 	private static String formatGameId(int gameId) {
