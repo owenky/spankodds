@@ -214,6 +214,10 @@ public class SportConfigurator {
                         //userObject of root node is String, such as "Soccer", representing sport type -- 03/27/2022
                         int id = ((SportNode)userObject).getLeague_id();
                         sportselected = sportselected + id + ",";
+                    } else if ( userObject.equals(sportType.getSportName())) {
+                        //this scenario is for select all games for this sport type. -- 03/27/2022
+                        sportselected = sportType.getSportName();
+                        break;
                     }
                 }
             }
