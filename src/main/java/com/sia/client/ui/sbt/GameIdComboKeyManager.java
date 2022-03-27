@@ -1,5 +1,7 @@
 package com.sia.client.ui.sbt;
 
+import com.sia.client.config.GameUtils;
+import com.sia.client.model.Game;
 import com.sia.client.ui.games.GameSelectionItem;
 
 import javax.swing.*;
@@ -15,14 +17,22 @@ public class GameIdComboKeyManager implements JComboBox.KeySelectionManager {
     }
     @Override
     public int selectionForKey(char key,ComboBoxModel aModel) {
-        long now = System.currentTimeMillis();
-        if ( maxSequeceTimeInterval < (now - lastKeyStroke))  {
+        GameSelectionItem selectedItem = (GameSelectionItem)aModel.getSelectedItem();
+        Game game = selectedItem.getGame();
+        if ( ! GameUtils.isRealGame(game)) {
             keyStrokeSequence.setLength(0);
             lastIndex = 0;
             toSearchId = Character.isDigit(key);
         }
+//        long now = System.currentTimeMillis();
+//        if ( maxSequeceTimeInterval < (now - lastKeyStroke))  {
+//            keyStrokeSequence.setLength(0);
+//            lastIndex = 0;
+//            toSearchId = Character.isDigit(key);
+//        }
+//        lastKeyStroke = now;
+
         keyStrokeSequence.append(key);
-        lastKeyStroke = now;
         String searchStr = keyStrokeSequence.toString().toUpperCase();
         int i;
         for ( i=lastIndex;i<aModel.getSize();i++ ) {
