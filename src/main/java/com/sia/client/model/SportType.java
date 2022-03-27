@@ -249,7 +249,7 @@ public class SportType {
         if ( isFilteredByConfig(game)) {
             return false;
         }
-        return  null == leagueFilter || leagueFilter.isSelected(game.getLeague_id());
+        return  null == leagueFilter || leagueFilter.isSelected(game.getSportIdentifyingLeagueId());
     }
     public boolean shouldSelect(Game game) {
        String err = GameUtils.checkError(game);
