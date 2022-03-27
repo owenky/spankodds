@@ -19,10 +19,15 @@ public class GameIdComboKeyManager implements JComboBox.KeySelectionManager {
     public int selectionForKey(char key,ComboBoxModel aModel) {
         GameSelectionItem selectedItem = (GameSelectionItem)aModel.getSelectedItem();
         Game game = selectedItem.getGame();
-        if ( ! GameUtils.isRealGame(game)) {
+        boolean isNonGameIdenKey = Character.isISOControl(key) || Character.isWhitespace(key);
+        if ( isNonGameIdenKey || ! GameUtils.isRealGame(game) ) {
             keyStrokeSequence.setLength(0);
             lastIndex = 0;
-            toSearchId = Character.isDigit(key);
+            if ( ! isNonGameIdenKey ) {
+                toSearchId = Character.isDigit(key);
+            } else {
+                return 0;
+            }
         }
 //        long now = System.currentTimeMillis();
 //        if ( maxSequeceTimeInterval < (now - lastKeyStroke))  {
