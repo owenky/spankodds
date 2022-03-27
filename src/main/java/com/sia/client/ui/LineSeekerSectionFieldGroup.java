@@ -22,4 +22,10 @@ public class LineSeekerSectionFieldGroup {
         rightColumn.withShowLineInput(toShowLineInput);
         return this;
     }
+    public void setLeftColumnTitle(String leftColumnTitle) {
+        leftColumn.setTitle(leftColumnTitle);
+    }
+    public void setRightColumnTitle(String leftColumnTitle) {
+        rightColumn.setTitle(leftColumnTitle);
+    }
 }

@@ -314,6 +314,9 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 			}
 		}
 	}
+	public void addValueChangeListener(ValueChangedListener valueChangedListener) {
+		valueChangedListeners.add(valueChangedListener);
+	}
 	public T getOldValue() {
 		FilterComboBoxModel<K,T> theModel = (FilterComboBoxModel<K,T>) this.getModel();
 		Object rtn = theModel.getOldValue();

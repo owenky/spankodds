@@ -1,8 +1,11 @@
 package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
+import com.sia.client.config.GameUtils;
+import com.sia.client.model.Game;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
 import com.sia.client.ui.games.GameSelectionItem;
+import com.sia.client.ui.sbt.ValueChangedEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,9 +23,9 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<String> period;
-    private final LineSeekerSectionFieldGroup spreadFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic");
+    private final LineSeekerSectionFieldGroup spreadFieldGrp = new LineSeekerSectionFieldGroup("","");
     private final LineSeekerSectionFieldGroup totalsFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
-    private final LineSeekerSectionFieldGroup mlinesFieldGrp = new LineSeekerSectionFieldGroup("Atlanta Hawks","Orlando Magic").withShowLineInput(false);
+    private final LineSeekerSectionFieldGroup mlinesFieldGrp = new LineSeekerSectionFieldGroup("","").withShowLineInput(false);
     private final LineSeekerSectionFieldGroup awayTTFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
     private final LineSeekerSectionFieldGroup homeTTFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
 
@@ -46,6 +49,7 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
         userComp.add(awayTTSec());
         userComp.add(homeTTSec());
         userComp.add(bottomControlSection());
+        gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
         return userComp;
     }
     private JComponent controlSec() {
@@ -88,10 +92,6 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     }
     private JComponent spreadSec() {
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Spreads",totalWidth,rowHeight,spreadFieldGrp.activateStatus);
-
-//        spreadFieldGrp.leftColumn.setTitle("Laker");
-//        spreadFieldGrp.rightColumn.setTitle("Knix");
-
         titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(spreadFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
@@ -167,6 +167,19 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
         periodItems.add("Second Half");
 
         return periodItems;
+    }
+    private void updateLineSeekerAlertSection(ValueChangedEvent event) {
+        GameSelectionItem item = (GameSelectionItem)gameNumBox.getSelectedItem();
+        Game game = item.getGame();
+        if (GameUtils.isRealGame(game)) {
+            String visitor = game.getVisitorteam();
+            String home = game.getHometeam();
+            spreadFieldGrp.setLeftColumnTitle(visitor);
+            spreadFieldGrp.setRightColumnTitle(home);
+            mlinesFieldGrp.setLeftColumnTitle(visitor);
+            mlinesFieldGrp.setRightColumnTitle(home);
+
+        }
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();

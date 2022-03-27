@@ -72,6 +72,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 		gameItemList.add(0,promptInput);
 		this.addElement(gameItemList);
 	}
+
 	private static String formatGameId(int gameId) {
 		StringBuilder sb = new StringBuilder(String.valueOf(gameId));
 		for(int i=sb.length();i<maxGameIdLen;i++) {
