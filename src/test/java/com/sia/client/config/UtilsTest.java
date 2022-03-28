@@ -33,4 +33,19 @@ public class UtilsTest {
         assertFalse(Utils.containsOnlyAlphanumeric("+0Aaa09Z"));
         assertFalse(Utils.containsOnlyAlphanumeric("0Aa+a09Z"));
     }
+    @Test
+    public void testIsIntegerString() {
+        assertTrue(Utils.isIntegerString("123"));
+        assertTrue(Utils.isIntegerString(" 123"));
+        assertTrue(Utils.isIntegerString("123 "));
+        assertTrue(Utils.isIntegerString(" 123 "));
+        assertFalse(Utils.isIntegerString("123a1"));
+        assertFalse(Utils.isIntegerString(""));
+        assertFalse(Utils.isIntegerString("1.23"));
+        assertFalse(Utils.isIntegerString("1 23"));
+        assertFalse(Utils.isIntegerString(null));
+        assertFalse(Utils.isIntegerString(""));
+        assertFalse(Utils.isIntegerString(" "));
+        assertFalse(Utils.isIntegerString("abc"));
+    }
 }

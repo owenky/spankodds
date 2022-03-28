@@ -426,4 +426,12 @@ public abstract class Utils {
             return sStr;
         }
     }
+    private static final Pattern integerPattern = Pattern.compile("-?\\d+(\\d+)?");
+    public static boolean isIntegerString(String str) {
+        if ( null == str) {
+            return false;
+        }
+        str = str.trim();
+        return integerPattern.matcher(str).matches();
+    }
 }
