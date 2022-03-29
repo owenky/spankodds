@@ -591,7 +591,7 @@ public class CustomTab2 extends AbstractLayeredDialog {
             StringBuilder msstring = new StringBuilder();
             for (GameGroupNode ggn : selectedlist) {
                 customvec.add(ggn.getGameGroupHeader());
-                msstring.append("|").append(ggn.getLeagueId()).append(" ").append(ggn.getDateString());
+                msstring.append("|").append(ggn.getSportIdentifyingLeagueId()).append(" ").append(ggn.getDateString());
 
             }
 

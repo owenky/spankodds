@@ -1,5 +1,7 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -38,6 +40,10 @@ public class GameGroupHeader {
     }
     public int getLeagueId() {
         return leagueId;
+    }
+    public int getSportIdentifyingLeagueId() {
+        return SiaConst.SoccerLeagueId == leagueId? subLeagueId:leagueId;
+
     }
     public int getAnchorPos() {
         return anchorPos;
