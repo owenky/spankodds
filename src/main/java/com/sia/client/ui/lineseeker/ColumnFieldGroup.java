@@ -7,7 +7,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.Dimension;
 
-public class LineSeekerColumnFieldGroup {
+public class ColumnFieldGroup {
 
     private static final Dimension DefaultFieldDim = new Dimension(100,25);
     public final JTextField lineInput = new JTextField();
@@ -20,7 +20,7 @@ public class LineSeekerColumnFieldGroup {
     private static final String defaultJuice = "-110";
 
 
-    public LineSeekerColumnFieldGroup(String columnTitle) {
+    public ColumnFieldGroup(String columnTitle) {
         lineInput.setName("Line");
         lineInput.setPreferredSize(DefaultFieldDim);
         lineInput.setMinimumSize(DefaultFieldDim);
@@ -42,7 +42,7 @@ public class LineSeekerColumnFieldGroup {
             juiceInput.setText(defaultJuice);
         });
     }
-    public LineSeekerColumnFieldGroup withShowLineInput(boolean toShowLineInput) {
+    public ColumnFieldGroup withShowLineInput(boolean toShowLineInput) {
         lineInput.setVisible(toShowLineInput);
         return this;
     }

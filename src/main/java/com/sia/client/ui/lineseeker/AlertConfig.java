@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 
-public class LineSeekersAlert extends AbstractLayeredDialog {
+public class AlertConfig extends AbstractLayeredDialog {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
@@ -25,13 +25,13 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<String> period;
-    private final LineSeekerSectionFieldGroup spreadFieldGrp = new LineSeekerSectionFieldGroup("","");
-    private final LineSeekerSectionFieldGroup totalsFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
-    private final LineSeekerSectionFieldGroup mlinesFieldGrp = new LineSeekerSectionFieldGroup("","").withShowLineInput(false);
-    private final LineSeekerSectionFieldGroup awayTTFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
-    private final LineSeekerSectionFieldGroup homeTTFieldGrp = new LineSeekerSectionFieldGroup("Over","Under");
+    private final SectionFieldGroup spreadFieldGrp = new SectionFieldGroup("","");
+    private final SectionFieldGroup totalsFieldGrp = new SectionFieldGroup("Over","Under");
+    private final SectionFieldGroup mlinesFieldGrp = new SectionFieldGroup("","").withShowLineInput(false);
+    private final SectionFieldGroup awayTTFieldGrp = new SectionFieldGroup("Over","Under");
+    private final SectionFieldGroup homeTTFieldGrp = new SectionFieldGroup("Over","Under");
 
-    public LineSeekersAlert(SportsTabPane stp) {
+    public AlertConfig(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
     }
     private JPanel createUserComp() {
@@ -94,27 +94,27 @@ public class LineSeekersAlert extends AbstractLayeredDialog {
     }
     private JComponent spreadSec() {
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Spreads",totalWidth,rowHeight,spreadFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(spreadFieldGrp).getLayoutPane());
+        titledPanelGenerator.setBodyComponent(new SectionLayout(spreadFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent totalsSec() {
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Totals",totalWidth,rowHeight,totalsFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(totalsFieldGrp).getLayoutPane());
+        titledPanelGenerator.setBodyComponent(new SectionLayout(totalsFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent moneyLineSec() {
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Money Lines",totalWidth,rowHeight,mlinesFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(mlinesFieldGrp).getLayoutPane());
+        titledPanelGenerator.setBodyComponent(new SectionLayout(mlinesFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent awayTTSec() {
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Away TT",totalWidth,rowHeight,awayTTFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(awayTTFieldGrp).getLayoutPane());
+        titledPanelGenerator.setBodyComponent(new SectionLayout(awayTTFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent homeTTSec() {
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Home TT",totalWidth,rowHeight,homeTTFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new LineSeekerSectionLayout(homeTTFieldGrp).getLayoutPane());
+        titledPanelGenerator.setBodyComponent(new SectionLayout(homeTTFieldGrp).getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent bottomControlSection() {

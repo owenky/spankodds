@@ -14,16 +14,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class LineSeekerSectionLayout {
+public class SectionLayout {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
-    private final LineSeekerColumnFieldGroup leftColumn;
-    private final LineSeekerColumnFieldGroup rightColumn;
+    private final ColumnFieldGroup leftColumn;
+    private final ColumnFieldGroup rightColumn;
     private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
-    public LineSeekerSectionLayout(LineSeekerSectionFieldGroup spreadFieldGrp) {
+    public SectionLayout(SectionFieldGroup spreadFieldGrp) {
 
         this.leftColumn = spreadFieldGrp.leftColumn;
         this.rightColumn = spreadFieldGrp.rightColumn;
@@ -147,7 +147,7 @@ public class LineSeekerSectionLayout {
         fieldTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return fieldTitleLabel;
     }
-    private JComponent makeRadioGroup(LineSeekerColumnFieldGroup columnFieldGroup) {
+    private JComponent makeRadioGroup(ColumnFieldGroup columnFieldGroup) {
 
         JPanel grpPanel = new JPanel();
         grpPanel.setLayout(new FlowLayout());
