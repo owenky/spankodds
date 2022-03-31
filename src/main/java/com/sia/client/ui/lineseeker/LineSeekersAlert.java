@@ -1,7 +1,9 @@
-package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
+package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.model.Game;
+import com.sia.client.ui.AbstractLayeredDialog;
+import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
 import com.sia.client.ui.games.GameSelectionItem;

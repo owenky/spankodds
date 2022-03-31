@@ -1,4 +1,4 @@
-package com.sia.client.ui;
+package com.sia.client.ui.lineseeker;
 
 
 import javax.swing.BorderFactory;

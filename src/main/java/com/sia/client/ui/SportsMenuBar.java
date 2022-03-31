@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.ui.lineseeker.LineSeekersAlert;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;

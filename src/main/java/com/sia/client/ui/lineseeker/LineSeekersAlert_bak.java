@@ -1,4 +1,4 @@
-package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
+package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
 
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.CheckBoxTree;
@@ -11,6 +11,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Sport;
+import com.sia.client.ui.*;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.sound.sampled.AudioInputStream;
