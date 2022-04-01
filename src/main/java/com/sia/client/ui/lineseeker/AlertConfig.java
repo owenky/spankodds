@@ -1,204 +1,46 @@
-package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
+package com.sia.client.ui.lineseeker;
 
-import com.sia.client.config.GameUtils;
-import com.sia.client.model.Game;
-import com.sia.client.ui.AbstractLayeredDialog;
-import com.sia.client.ui.TitledPanelGenerator;
-import com.sia.client.ui.control.SportsTabPane;
-import com.sia.client.ui.games.GameComboBox;
-import com.sia.client.ui.games.GameSelectionItem;
-import com.sia.client.ui.sbt.ValueChangedEvent;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.Vector;
+public class AlertConfig {
 
+    public static final String spreadName = "Spreads";
+    public static final String totalsName = "Totals";
+    public static final String mLineName = "Money Lines";
+    public static final String awayName = "Away TT";
+    public static final String homeTTName = "Home TT";
 
-public class AlertConfig extends AbstractLayeredDialog {
+    private int gameId;
+    private String period;
+    private final Map<String,SectionFieldGroup> sectionMap = new HashMap<>();
 
-    private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
-    private static final int totalWidth = 800;
-    private static final int rowHeight =150;
-    private static final String saveBtnText = "Save";
-    public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
-    private final GameComboBox gameNumBox = new GameComboBox();
-    private JComboBox<String> period;
-    private final SectionFieldGroup spreadFieldGrp = new SectionFieldGroup("","");
-    private final SectionFieldGroup totalsFieldGrp = new SectionFieldGroup("Over","Under");
-    private final SectionFieldGroup mlinesFieldGrp = new SectionFieldGroup("","").withShowLineInput(false);
-    private final SectionFieldGroup awayTTFieldGrp = new SectionFieldGroup("Over","Under");
-    private final SectionFieldGroup homeTTFieldGrp = new SectionFieldGroup("Over","Under");
-
-    public AlertConfig(SportsTabPane stp) {
-       super(stp,"Line Seeker Alerts");
+    public AlertConfig() {
+        addToMap(new SectionFieldGroup(spreadName,"",""));
+        addToMap(new SectionFieldGroup(totalsName,"Over","Under"));
+        addToMap(new SectionFieldGroup(mLineName,"","").withShowLineInput(false));
+        addToMap(new SectionFieldGroup(awayName,"Over","Under"));
+        addToMap(new SectionFieldGroup(homeTTName,"Over","Under"));
     }
-    private JPanel createUserComp() {
-        return new JPanel();
+    public SectionFieldGroup getSectionFieldGroup(String sectionName) {
+        return sectionMap.get(sectionName);
     }
-    @Override
-    protected JComponent getUserComponent() {
-        gameNumBox.loadGames();
-        gameNumBox.setEditable(false);
-        gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
-        JPanel userComp = createUserComp();
-        userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
-        userComp.add(controlSec());
-        userComp.add(spreadSec());
-        userComp.add(totalsSec());
-        userComp.add(moneyLineSec());
-        userComp.add(awayTTSec());
-        userComp.add(homeTTSec());
-        userComp.add(bottomControlSection());
-        gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
-        return userComp;
+    public int getGameId() {
+        return gameId;
     }
-    private JComponent controlSec() {
 
-        final Dimension fieldDim = new Dimension(100,30);
-        period = new JComboBox<>(getPeriodItems());
-
-        JPanel bodyComp = new JPanel();
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(null,totalWidth,80,null);
-        titledPanelGenerator.setBodyComponent(bodyComp);
-
-        bodyComp.setLayout(new GridBagLayout());
-        GridBagConstraints c = createDefaultGridBagConstraints();
-
-        //1. title
-        c.gridx=0;
-        c.gridy=0;
-        c.anchor = GridBagConstraints.SOUTH;
-        JLabel gameNumLabel = new JLabel("Game #");
-        JLabel periodLabel = new JLabel("Period");
-
-        bodyComp.add(gameNumLabel,c);
-        c.gridx = 1;
-        bodyComp.add(periodLabel,c);
-
-        //2. input fields
-        c.anchor = GridBagConstraints.NORTH;
-        //let setPrototypeDisplayValue(prototypeDisplayValue); in GameComboBox::loadGames decides the size of combobox -- 03/23/2022
-//        gameNumBox.setPreferredSize(fieldDim);
-        c.gridx = 0;
-        c.gridy = 1;
-        bodyComp.add(gameNumBox,c);
-
-        c.gridx=1;
-        c.gridy=1;
-//        period.setPreferredSize(fieldDim);
-        bodyComp.add(period,c);
-
-        return titledPanelGenerator.getPanel();
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
     }
-    private JComponent spreadSec() {
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Spreads",totalWidth,rowHeight,spreadFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new SectionLayout(spreadFieldGrp).getLayoutPane());
-        return titledPanelGenerator.getPanel();
-    }
-    private JComponent totalsSec() {
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Totals",totalWidth,rowHeight,totalsFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new SectionLayout(totalsFieldGrp).getLayoutPane());
-        return titledPanelGenerator.getPanel();
-    }
-    private JComponent moneyLineSec() {
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Money Lines",totalWidth,rowHeight,mlinesFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new SectionLayout(mlinesFieldGrp).getLayoutPane());
-        return titledPanelGenerator.getPanel();
-    }
-    private JComponent awayTTSec() {
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Away TT",totalWidth,rowHeight,awayTTFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new SectionLayout(awayTTFieldGrp).getLayoutPane());
-        return titledPanelGenerator.getPanel();
-    }
-    private JComponent homeTTSec() {
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("Home TT",totalWidth,rowHeight,homeTTFieldGrp.activateStatus);
-        titledPanelGenerator.setBodyComponent(new SectionLayout(homeTTFieldGrp).getLayoutPane());
-        return titledPanelGenerator.getPanel();
-    }
-    private JComponent bottomControlSection() {
-        JButton clsBtn = new JButton("Close");
-        clsBtn.addActionListener((event)->this.close());
 
-        JButton saveBtn = new JButton(saveBtnText);
-        saveBtn.addActionListener(this::save);
-        JPanel bottomCtrPanel = new JPanel();
-        Border outsideBorder = BorderFactory.createMatteBorder(1,0,0,0, Color.darkGray);
-//        Border insideBorder = new EmptyBorder(10, 10, 10, 10);
-        bottomCtrPanel.setBorder(outsideBorder);
-
-        bottomCtrPanel.add(saveBtn);
-        bottomCtrPanel.add(clsBtn);
-
-        JPanel bottomCrtPanelWrapper = new JPanel();
-        bottomCrtPanelWrapper.setLayout(new BorderLayout());
-        bottomCrtPanelWrapper.add(bottomCtrPanel,BorderLayout.CENTER);
-
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",totalWidth,30,null);
-        titledPanelGenerator.setBodyComponent(bottomCrtPanelWrapper);
-        return titledPanelGenerator.getPanel();
+    public String getPeriod() {
+        return period;
     }
-    private void save(ActionEvent event) {
-        final AbstractButton btn = (AbstractButton)event.getSource();
-        btn.setText("Saving...");
-        btn.setEnabled(false);
-        SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
 
-            @Override
-            protected Void doInBackground() throws Exception {
-                Thread.sleep(3000L);
-                performSave();
-                return null;
-            }
-            @Override
-            protected void done() {
-                btn.setText(saveBtnText);
-                btn.setEnabled(true);
-            }
-        };
-        saveWorker.execute();
+    public void setPeriod(String period) {
+        this.period = period;
     }
-    private void performSave() {
-        System.out.println("LineSeekerAlert::save Need Implementation................");
+    private void addToMap(SectionFieldGroup sectionGroup) {
+        sectionMap.put(sectionGroup.getSectionName(),sectionGroup);
     }
-    private Vector<String> getPeriodItems() {
-        Vector<String> periodItems = new Vector<>();
-        periodItems.add("Full Game");
-        periodItems.add("First Half");
-        periodItems.add("Second Half");
-
-        return periodItems;
-    }
-    private void updateLineSeekerAlertSection(ValueChangedEvent event) {
-        GameSelectionItem item = (GameSelectionItem)gameNumBox.getSelectedItem();
-        Game game = item.getGame();
-        if (GameUtils.isRealGame(game)) {
-            String visitor = game.getVisitorteam();
-            String home = game.getHometeam();
-            spreadFieldGrp.setLeftColumnTitle(visitor);
-            spreadFieldGrp.setRightColumnTitle(home);
-            mlinesFieldGrp.setLeftColumnTitle(visitor);
-            mlinesFieldGrp.setRightColumnTitle(home);
-
-        }
-    }
-    private static GridBagConstraints createDefaultGridBagConstraints() {
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx=0;
-        c.gridy=0;
-        c.gridwidth = 1;
-        c.gridheight = 1;
-        c.weightx = 1;
-        c.weighty = 1;
-//        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.NONE;
-        c.insets = EMPTY_INSETS;
-        c.ipadx = 0;
-        c.ipady = 0;
-
-        return c;
-    }
-////////////////////////////////////////////////////////////////////////////////////////////
-
 }

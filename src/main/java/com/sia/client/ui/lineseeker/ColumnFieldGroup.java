@@ -46,6 +46,9 @@ public class ColumnFieldGroup {
         lineInput.setVisible(toShowLineInput);
         return this;
     }
+    public String getFieldValues() {
+        return "line="+lineInput.getText()+";juice="+juiceInput.getText();
+    }
     public String getLineText() {
         return lineInput.getText();
     }
