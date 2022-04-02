@@ -5,7 +5,7 @@
 
 	<groupId>com.sia</groupId>
 	<artifactId>common-client-dependency</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2</version>
 	<name>common-client-dependency</name>
 	<packaging>pom</packaging>
 	<description>Common dependency of client applications</description>
@@ -184,5 +184,10 @@
             <artifactId>activemq-core</artifactId>
             <version>5.7.0</version>
         </dependency>
+         <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-json</artifactId>
+                    <version>2.4.17</version>
+                </dependency>
     </dependencies>
 </project>
