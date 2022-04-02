@@ -13,6 +13,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -26,6 +28,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<String> period;
     private AlertConfig alertConfig;
+    private List<SectionFieldGroup> sectionFieldGroupList;
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
@@ -35,10 +38,11 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     public void setAlertConfig(AlertConfig alertConfig) {
         this.alertConfig = alertConfig;
+        sectionFieldGroupList = new ArrayList<>();
     }
     public AlertConfig getAlertConfig() {
         if ( null == alertConfig) {
-            alertConfig = new AlertConfig();
+            setAlertConfig(new AlertConfig());
         }
         return this.alertConfig;
     }
@@ -100,7 +104,9 @@ public class AlertLayout extends AbstractLayeredDialog {
     private JComponent getSectionComponent(String sectionName) {
         SectionFieldGroup sectionFieldGroup = getAlertConfig().getSectionFieldGroup(sectionName);
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sectionFieldGroup.getSectionName(),totalWidth,rowHeight,sectionFieldGroup.activateStatus);
-        titledPanelGenerator.setBodyComponent(new SectionLayout(sectionFieldGroup).getLayoutPane());
+        SectionLayout sectionLayout = new SectionLayout(sectionFieldGroup);
+        sectionFieldGroupList.add(sectionFieldGroup);
+        titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent bottomControlSection() {
@@ -139,6 +145,10 @@ public class AlertLayout extends AbstractLayeredDialog {
             }
             @Override
             protected void done() {
+                for(SectionFieldGroup sfg : sectionFieldGroupList) {
+                    sl.save();
+                }
+                populateControlsToAlertConfig(gameid, period)
                 btn.setText(saveBtnText);
                 btn.setEnabled(true);
             }
