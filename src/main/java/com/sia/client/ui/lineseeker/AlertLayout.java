@@ -54,11 +54,10 @@ public class AlertLayout extends AbstractLayeredDialog {
         JPanel userComp = createUserComp();
         userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
         userComp.add(controlSec());
-        userComp.add(getSectionComponent(AlertConfig.spreadName));
-        userComp.add(getSectionComponent(AlertConfig.totalsName));
-        userComp.add(getSectionComponent(AlertConfig.mLineName));
-        userComp.add(getSectionComponent(AlertConfig.awayName));
-        userComp.add(getSectionComponent(AlertConfig.homeTTName));
+        List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
+        for(AlertSectionName alertSectionName:alertSectionNames ) {
+            userComp.add(getSectionComponent(alertSectionName));
+        }
         userComp.add(bottomControlSection());
         gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
         return userComp;
@@ -101,9 +100,9 @@ public class AlertLayout extends AbstractLayeredDialog {
 
         return titledPanelGenerator.getPanel();
     }
-    private JComponent getSectionComponent(String sectionName) {
+    private JComponent getSectionComponent(AlertSectionName sectionName) {
         SectionFieldGroup sectionFieldGroup = getAlertConfig().getSectionFieldGroup(sectionName);
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sectionFieldGroup.getSectionName(),totalWidth,rowHeight,sectionFieldGroup.activateStatus);
+        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sectionFieldGroup.getSectionName().getDisplay(),totalWidth,rowHeight,sectionFieldGroup.activateStatus);
         SectionLayout sectionLayout = new SectionLayout(sectionFieldGroup);
         sectionFieldGroupList.add(sectionFieldGroup);
         titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
@@ -145,10 +144,10 @@ public class AlertLayout extends AbstractLayeredDialog {
             }
             @Override
             protected void done() {
-                for(SectionFieldGroup sfg : sectionFieldGroupList) {
-                    sl.save();
-                }
-                populateControlsToAlertConfig(gameid, period)
+//                for(SectionFieldGroup sfg : sectionFieldGroupList) {
+//                    sl.save();
+//                }
+//                populateControlsToAlertConfig(gameid, period)
                 btn.setText(saveBtnText);
                 btn.setEnabled(true);
             }
@@ -172,8 +171,8 @@ public class AlertLayout extends AbstractLayeredDialog {
         if (GameUtils.isRealGame(game)) {
             String visitor = game.getVisitorteam();
             String home = game.getHometeam();
-            SectionFieldGroup spreadFieldGrp = getAlertConfig().getSectionFieldGroup(AlertConfig.spreadName);
-            SectionFieldGroup mlinesFieldGrp = getAlertConfig().getSectionFieldGroup(AlertConfig.mLineName);
+            SectionFieldGroup spreadFieldGrp = getAlertConfig().getSectionFieldGroup(AlertSectionName.spreadName);
+            SectionFieldGroup mlinesFieldGrp = getAlertConfig().getSectionFieldGroup(AlertSectionName.mLineName);
             spreadFieldGrp.setLeftColumnTitle(visitor);
             spreadFieldGrp.setRightColumnTitle(home);
             mlinesFieldGrp.setLeftColumnTitle(visitor);

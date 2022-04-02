@@ -1,28 +1,22 @@
 package com.sia.client.ui.lineseeker;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AlertConfig {
 
-    public static final String spreadName = "Spreads";
-    public static final String totalsName = "Totals";
-    public static final String mLineName = "Money Lines";
-    public static final String awayName = "Away TT";
-    public static final String homeTTName = "Home TT";
-
     private int gameId;
     private String period;
-    private final Map<String,SectionFieldGroup> sectionMap = new HashMap<>();
+    private final Map<AlertSectionName,SectionFieldGroup> sectionMap = new HashMap<>();
 
     public AlertConfig() {
-        addToMap(new SectionFieldGroup(spreadName,"",""));
-        addToMap(new SectionFieldGroup(totalsName,"Over","Under"));
-        addToMap(new SectionFieldGroup(mLineName,"","").withShowLineInput(false));
-        addToMap(new SectionFieldGroup(awayName,"Over","Under"));
-        addToMap(new SectionFieldGroup(homeTTName,"Over","Under"));
+        List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
+        for(AlertSectionName alertSectionName: alertSectionNames) {
+            addToMap(new SectionFieldGroup(alertSectionName));
+        }
     }
-    public SectionFieldGroup getSectionFieldGroup(String sectionName) {
+    public SectionFieldGroup getSectionFieldGroup(AlertSectionName sectionName) {
         return sectionMap.get(sectionName);
     }
     public int getGameId() {

@@ -8,23 +8,18 @@ public class SectionFieldGroup {
     public final ColumnFieldGroup rightColumn;
     public final JCheckBox useEquivalent;
     public final JCheckBox activateStatus;
-    public final String sectionName;
+    public final AlertSectionName sectionName;
 
-    public SectionFieldGroup(String sectionName,String leftColumnTitle, String rightColumnTitle) {
+    public SectionFieldGroup(AlertSectionName sectionName) {
         this.sectionName = sectionName;
-        leftColumn = new ColumnFieldGroup(leftColumnTitle);
-        rightColumn = new ColumnFieldGroup(rightColumnTitle);
+        leftColumn = new ColumnFieldGroup(sectionName.getLeftColTitle()).withShowLineInput(sectionName.toShowLineInput());
+        rightColumn = new ColumnFieldGroup(sectionName.getRightColTitle()).withShowLineInput(sectionName.toShowLineInput());
         useEquivalent = new JCheckBox("Use Mathematical Equivalent");
         activateStatus = new JCheckBox("Activate");
         activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
         activateStatus.setSelected(true);
     }
-    public SectionFieldGroup withShowLineInput(boolean toShowLineInput) {
-        leftColumn.withShowLineInput(toShowLineInput);
-        rightColumn.withShowLineInput(toShowLineInput);
-        return this;
-    }
-    public String getSectionName() {
+    public AlertSectionName getSectionName() {
         return sectionName;
     }
     public void setLeftColumnTitle(String leftColumnTitle) {
