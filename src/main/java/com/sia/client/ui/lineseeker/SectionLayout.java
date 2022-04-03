@@ -18,8 +18,8 @@ public class SectionLayout {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
-    private final ColumnFieldGroup leftColumn;
-    private final ColumnFieldGroup rightColumn;
+    private final ColumnComponents leftColumn;
+    private final ColumnComponents rightColumn;
     private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
@@ -147,13 +147,13 @@ public class SectionLayout {
         fieldTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return fieldTitleLabel;
     }
-    private JComponent makeRadioGroup(ColumnFieldGroup columnFieldGroup) {
+    private JComponent makeRadioGroup(ColumnComponents columnComponents) {
 
         JPanel grpPanel = new JPanel();
         grpPanel.setLayout(new FlowLayout());
-        grpPanel.add(columnFieldGroup.good);
-        grpPanel.add(columnFieldGroup.bad);
-        grpPanel.add(columnFieldGroup.neutral);
+        grpPanel.add(columnComponents.getAlertStateButton(AlertState.Good));
+        grpPanel.add(columnComponents.getAlertStateButton(AlertState.Bad));
+        grpPanel.add(columnComponents.getAlertStateButton(AlertState.Neutral));
 
         return grpPanel;
     }

@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class AlertConfig {
 
-    private int gameId;
-    private String period;
+    private final AlertAttributes alertAttributes;
     private final Map<AlertSectionName,SectionFieldGroup> sectionMap = new HashMap<>();
 
-    public AlertConfig() {
+    public AlertConfig(AlertAttributes alertAttributes) {
+        this.alertAttributes = alertAttributes;
         List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
         for(AlertSectionName alertSectionName: alertSectionNames) {
             addToMap(new SectionFieldGroup(alertSectionName));
@@ -20,19 +20,19 @@ public class AlertConfig {
         return sectionMap.get(sectionName);
     }
     public int getGameId() {
-        return gameId;
+        return alertAttributes.getGameId();
     }
 
     public void setGameId(int gameId) {
-        this.gameId = gameId;
+        alertAttributes.setGameId(gameId);
     }
 
     public String getPeriod() {
-        return period;
+        return alertAttributes.getPeriod();
     }
 
     public void setPeriod(String period) {
-        this.period = period;
+        alertAttributes.setPeriod(period);
     }
     private void addToMap(SectionFieldGroup sectionGroup) {
         sectionMap.put(sectionGroup.getSectionName(),sectionGroup);

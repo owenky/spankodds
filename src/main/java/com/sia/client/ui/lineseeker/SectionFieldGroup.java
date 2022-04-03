@@ -4,16 +4,17 @@ import javax.swing.JCheckBox;
 
 public class SectionFieldGroup {
 
-    public final ColumnFieldGroup leftColumn;
-    public final ColumnFieldGroup rightColumn;
+    public final ColumnComponents leftColumn;
+    public final ColumnComponents rightColumn;
     public final JCheckBox useEquivalent;
     public final JCheckBox activateStatus;
     public final AlertSectionName sectionName;
+    private SectionAtrribute sectionAtrribute;
 
     public SectionFieldGroup(AlertSectionName sectionName) {
         this.sectionName = sectionName;
-        leftColumn = new ColumnFieldGroup(sectionName.getLeftColTitle()).withShowLineInput(sectionName.toShowLineInput());
-        rightColumn = new ColumnFieldGroup(sectionName.getRightColTitle()).withShowLineInput(sectionName.toShowLineInput());
+        leftColumn = new ColumnComponents(sectionName.getLeftColTitle()).withShowLineInput(sectionName.toShowLineInput());
+        rightColumn = new ColumnComponents(sectionName.getRightColTitle()).withShowLineInput(sectionName.toShowLineInput());
         useEquivalent = new JCheckBox("Use Mathematical Equivalent");
         activateStatus = new JCheckBox("Activate");
         activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
@@ -28,7 +29,21 @@ public class SectionFieldGroup {
     public void setRightColumnTitle(String leftColumnTitle) {
         rightColumn.setTitle(leftColumnTitle);
     }
-    public String getFieldValues() {
-        return activateStatus.isSelected()+"|"+useEquivalent.isSelected()+"|"+leftColumn.getFieldValues()+"|"+rightColumn.getFieldValues()+"|";
+    public void setSectionAtrribute(SectionAtrribute sectionAtrribute) {
+        this.sectionAtrribute = sectionAtrribute;
+        this.leftColumn.setColumnAttributes(sectionAtrribute.getLeftColumn());
+        this.rightColumn.setColumnAttributes(sectionAtrribute.getRightColumn());
+        this.useEquivalent.setSelected(sectionAtrribute.isUseEquivalent());
+        this.activateStatus.setSelected(sectionAtrribute.isActivateStatus());
+    }
+    public SectionAtrribute getSectionAtrribute() {
+        return this.sectionAtrribute;
+    }
+    public void updateSectionAttribute() {
+        this.leftColumn.updateColumnAttributes();
+        this.rightColumn.updateColumnAttributes();
+        this.sectionAtrribute.setUseEquivalent( this.useEquivalent.isSelected());
+        this.sectionAtrribute.setActivateStatus(activateStatus.isSelected());
+        this.sectionAtrribute.setSectionName(sectionName);
     }
 }

@@ -43,5 +43,6 @@ public enum AlertSectionName {
     public static List<AlertSectionName> getSortedSectionNames() {
         return Arrays.stream(AlertSectionName.values()).sorted(Comparator.comparingInt(a -> a.displayOrder))
                 .collect(Collectors.toList());
+
     }
 }

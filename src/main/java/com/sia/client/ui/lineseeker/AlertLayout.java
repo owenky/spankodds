@@ -1,6 +1,7 @@
 package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.TitledPanelGenerator;
@@ -42,9 +43,12 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     public AlertConfig getAlertConfig() {
         if ( null == alertConfig) {
-            setAlertConfig(new AlertConfig());
+            setAlertConfig(new AlertConfig(new AlertAttributes()));
         }
         return this.alertConfig;
+    }
+    public SportsTabPane getSportsTabPane() {
+        return this.getAnchoredLayeredPane().getSportsTabPane();
     }
     @Override
     protected JComponent getUserComponent() {
@@ -132,13 +136,17 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void save(ActionEvent event) {
         final AbstractButton btn = (AbstractButton)event.getSource();
+        String err = AlertConfigValidator.validate(alertConfig);
+        if ( null != err ) {
+            Utils.showMessageDialog(getSportsTabPane(),err);
+            return;
+        }
         btn.setText("Saving...");
         btn.setEnabled(false);
         SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
 
             @Override
             protected Void doInBackground() throws Exception {
-                Thread.sleep(3000L);
                 performSave();
                 return null;
             }
