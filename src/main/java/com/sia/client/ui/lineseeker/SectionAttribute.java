@@ -1,11 +1,11 @@
 package com.sia.client.ui.lineseeker;
 
-public class SectionAtrribute {
+public class SectionAttribute {
 
     private ColumnAttributes leftColumn;
     private ColumnAttributes rightColumn;
-    private boolean useEquivalent;
-    private boolean activateStatus;
+    private boolean useEquivalent = true;
+    private boolean activateStatus = true;
     private AlertSectionName sectionName;
 
     public synchronized ColumnAttributes getLeftColumn() {

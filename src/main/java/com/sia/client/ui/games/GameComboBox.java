@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// 特征是编辑框为下划线
 public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 
 	public static final GameSelectionItem promptInput;

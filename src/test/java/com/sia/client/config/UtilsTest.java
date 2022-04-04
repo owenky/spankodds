@@ -35,6 +35,7 @@ public class UtilsTest {
     }
     @Test
     public void testIsIntegerString() {
+        assertTrue(Utils.isIntegerString("-123"));
         assertTrue(Utils.isIntegerString("123"));
         assertTrue(Utils.isIntegerString(" 123"));
         assertTrue(Utils.isIntegerString("123 "));
@@ -47,5 +48,31 @@ public class UtilsTest {
         assertFalse(Utils.isIntegerString(""));
         assertFalse(Utils.isIntegerString(" "));
         assertFalse(Utils.isIntegerString("abc"));
+    }
+    @Test
+    public void testIsNumericString() {
+        assertTrue(Utils.isNumericString("123"));
+        assertTrue(Utils.isNumericString(" 123"));
+        assertTrue(Utils.isNumericString("123 "));
+        assertTrue(Utils.isNumericString(" 123 "));
+        assertTrue(Utils.isNumericString("0.1"));
+        assertTrue(Utils.isNumericString("-123"));
+        assertTrue(Utils.isNumericString("-123."));
+        assertTrue(Utils.isNumericString("-123.0"));
+        assertTrue(Utils.isNumericString("-.01"));
+        assertTrue(Utils.isNumericString(".01"));
+        assertTrue(Utils.isNumericString("1."));
+        assertTrue(Utils.isNumericString("-1."));
+        assertTrue(Utils.isNumericString("1.23"));
+        assertTrue(Utils.isNumericString("-1.23"));
+        assertFalse(Utils.isNumericString(""));
+        assertFalse(Utils.isNumericString("1 23"));
+        assertFalse(Utils.isNumericString(null));
+        assertFalse(Utils.isNumericString(""));
+        assertFalse(Utils.isNumericString(" "));
+        assertFalse(Utils.isNumericString("abc"));
+        assertFalse(Utils.isNumericString("."));
+        assertFalse(Utils.isNumericString("1..0"));
+        assertFalse(Utils.isNumericString("123a1"));
     }
 }

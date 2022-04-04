@@ -1,5 +1,8 @@
 package com.sia.client.ui.lineseeker;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +18,12 @@ public class AlertConfig {
         for(AlertSectionName alertSectionName: alertSectionNames) {
             addToMap(new SectionFieldGroup(alertSectionName));
         }
+    }
+    public String getAttributeJSonString() throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(alertAttributes);
+    }
+    public SectionAttribute getSectionAtrribute(AlertSectionName sectionName) {
+        return alertAttributes.getSectionAtrribute(sectionName);
     }
     public SectionFieldGroup getSectionFieldGroup(AlertSectionName sectionName) {
         return sectionMap.get(sectionName);

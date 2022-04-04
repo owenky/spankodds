@@ -2,9 +2,10 @@ package com.sia.client.ui.lineseeker;
 
 public class ColumnAttributes {
 
+    public static final String defaultJuice = "-110";
     private String lineInput;
-    private String juiceInput;
-    private AlertState alertState;
+    private String juiceInput=defaultJuice;
+    private AlertState alertState = AlertState.Good;
 
     public String getLineInput() {
         return lineInput;

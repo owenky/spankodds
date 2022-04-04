@@ -20,9 +20,9 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	protected T promptInput;
 	protected T selectAll;
 	private boolean isRequired = false;
-	private boolean isNewItemAllowed = false; // ÊÇ·ñÔÊĞíÓÃ»§ÔÚÏÂÀ­¿òÖĞµÄ±à¼­À¸ÖĞÊäÈëÓëÏÂÀ­¿òÑ¡Ïî²»Æ¥ÅäµÄÄÚÈİ¡£Ä¬ÈÏÊÇ²»ÔÊĞí¡£
+	private boolean isNewItemAllowed = false;
 	private boolean shouldFireItemStateChanged = true;
-	private boolean toFireValueChangedEvent = true; // toFireValueChangedEvent==trueÊ±£¬fireValueChangedEvent()²Å»á±»µ÷ÓÃ
+	private boolean toFireValueChangedEvent = true; // toFireValueChangedEvent==trueÊ±ï¿½ï¿½fireValueChangedEvent()ï¿½Å»á±»ï¿½ï¿½ï¿½ï¿½
 	private final List<ValueChangedListener> valueChangedListeners = new ArrayList<>();
 	private DefaultComboBoxListener defaultListener;
 	private boolean shouldHaveBlankItem = true;
@@ -51,7 +51,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	/**
 	 * 
 	 * This method is public as an implementation side effect. do not call or
-	 * override. ÖØĞ´¸¸Àà·½·¨µÄÄ¿µÄ: ÒªÄÜ¹»¸ù¾İÕâ¸öÏÂÀ­¿òµÄconvertCase(),¾ö¶¨ÊÇ·ñĞèÒª½«ÓÃ»§ÔÚ ÊäÈë¿òÊäÈëµÄ×Ö·û,È«²¿×ª»»³É´óĞ´
+	 * override. ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½à·½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½: Òªï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½convertCase(),ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½,È«ï¿½ï¿½×ªï¿½ï¿½ï¿½É´ï¿½Ğ´
 	 * -- XFZ@2013-11-27
 	 */
 	@Override
@@ -60,7 +60,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	}
 
 	/**
-	 * hightLightĞòºÅÎªindexµÄĞĞ£¬µ«Ã»ÓĞÑ¡ÖĞ£¡(setSelectedIndex()ÊÇÑ¡ÖĞÄ³ĞĞ) -- XFZ@2010-12-15
+	 * hightLightï¿½ï¿½ï¿½Îªindexï¿½ï¿½ï¿½Ğ£ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ñ¡ï¿½Ğ£ï¿½(setSelectedIndex()ï¿½ï¿½Ñ¡ï¿½ï¿½Ä³ï¿½ï¿½) -- XFZ@2010-12-15
 	 */
 	public Object getHighLightValue() {
 		SBTComboBoxUI theUI_ = (SBTComboBoxUI) this.getUI();
@@ -202,7 +202,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		defaultListener = cbl;
 	}
 	protected void setDefaultInputStatus() {
-		setEditable(false);// ²»ÔÊĞíÊäÈë¿ò±à¼­
+		setEditable(false);// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à¼­
 	}
 
 	@Override
@@ -348,7 +348,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		dm_.setSelectedItem(item);
 		dm_.setChangeContentsTogger(true);
 
-		int firstMatchedSelection; // µÚÒ»¸öÓëÊäÈëÆ¥ÅäµÄĞĞºÅ
+		int firstMatchedSelection; // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½ï¿½Ğºï¿½
 		if (item instanceof SelectionItem) {
 			firstMatchedSelection = dm_.getFirstMatchedItemIndex(((SelectionItem<?>) item).getDisplay());
 		} else {

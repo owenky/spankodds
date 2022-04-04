@@ -164,6 +164,11 @@ public abstract class Utils {
             JOptionPane.showMessageDialog(parentComponent, message);
         });
     }
+    public static void showErrorMessageDialog(Component parentComponent, Object message) throws HeadlessException {
+        checkAndRunInEDT(()-> {
+            JOptionPane.showMessageDialog(parentComponent, message,"ERROR !",JOptionPane.ERROR_MESSAGE);
+        });
+    }
     public static void ensureNotEdtThread() {
         if ( SwingUtilities.isEventDispatchThread()) {
             log(new Exception("Worker Thread Vialation: This action should not happen in EDT"));
@@ -426,12 +431,25 @@ public abstract class Utils {
             return sStr;
         }
     }
-    private static final Pattern integerPattern = Pattern.compile("-?\\d+(\\d+)?");
+    private static final Pattern integerPattern = Pattern.compile("-?\\d+");
     public static boolean isIntegerString(String str) {
         if ( null == str) {
             return false;
         }
         str = str.trim();
         return integerPattern.matcher(str).matches();
+    }
+    private static final Pattern numericPattern = Pattern.compile("-?(\\d+)?(\\.)?(\\d+)?");
+    public static boolean isNumericString(String str) {
+        if ( null == str ) {
+            return false;
+        }
+        str = str.trim();
+        if ( 0 == str.length()) {
+            return false;
+        } else if (".".equals(str)) {
+            return false;
+        }
+        return numericPattern.matcher(str).matches();
     }
 }

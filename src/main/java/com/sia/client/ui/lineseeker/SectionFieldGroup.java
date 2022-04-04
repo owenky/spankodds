@@ -9,7 +9,7 @@ public class SectionFieldGroup {
     public final JCheckBox useEquivalent;
     public final JCheckBox activateStatus;
     public final AlertSectionName sectionName;
-    private SectionAtrribute sectionAtrribute;
+    private SectionAttribute sectionAtrribute;
 
     public SectionFieldGroup(AlertSectionName sectionName) {
         this.sectionName = sectionName;
@@ -29,21 +29,27 @@ public class SectionFieldGroup {
     public void setRightColumnTitle(String leftColumnTitle) {
         rightColumn.setTitle(leftColumnTitle);
     }
-    public void setSectionAtrribute(SectionAtrribute sectionAtrribute) {
+    public void setSectionAtrribute(SectionAttribute sectionAtrribute) {
         this.sectionAtrribute = sectionAtrribute;
         this.leftColumn.setColumnAttributes(sectionAtrribute.getLeftColumn());
         this.rightColumn.setColumnAttributes(sectionAtrribute.getRightColumn());
         this.useEquivalent.setSelected(sectionAtrribute.isUseEquivalent());
         this.activateStatus.setSelected(sectionAtrribute.isActivateStatus());
     }
-    public SectionAtrribute getSectionAtrribute() {
+    public synchronized SectionAttribute getSectionAtrribute() {
+        if ( null == sectionAtrribute) {
+            sectionAtrribute = new SectionAttribute();
+            sectionAtrribute.setSectionName(sectionName);
+            this.leftColumn.setColumnAttributes(sectionAtrribute.getLeftColumn());
+            this.rightColumn.setColumnAttributes(sectionAtrribute.getRightColumn());
+        }
         return this.sectionAtrribute;
     }
     public void updateSectionAttribute() {
         this.leftColumn.updateColumnAttributes();
         this.rightColumn.updateColumnAttributes();
-        this.sectionAtrribute.setUseEquivalent( this.useEquivalent.isSelected());
-        this.sectionAtrribute.setActivateStatus(activateStatus.isSelected());
-        this.sectionAtrribute.setSectionName(sectionName);
+        getSectionAtrribute().setUseEquivalent( this.useEquivalent.isSelected());
+        getSectionAtrribute().setActivateStatus(activateStatus.isSelected());
+        getSectionAtrribute().setSectionName(sectionName);
     }
 }

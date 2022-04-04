@@ -13,15 +13,12 @@ public class ColumnComponents {
     public final JLabel titleLabel;
     public final JButton clearBtn = new JButton("Clear");
     private ColumnAttributes columnAttributes;
-    private static final String defaultJuice = "-110";
-
 
     public ColumnComponents(String columnTitle) {
         lineInput.setName("Line");
         lineInput.setPreferredSize(DefaultFieldDim);
         lineInput.setMinimumSize(DefaultFieldDim);
         juiceInput.setName("Juice");
-        juiceInput.setText(defaultJuice);
         juiceInput.setPreferredSize(DefaultFieldDim);
         juiceInput.setMinimumSize(DefaultFieldDim);
         titleLabel = new JLabel(columnTitle);
@@ -30,13 +27,14 @@ public class ColumnComponents {
         AlertState [] alertStates = AlertState.values();
         for(AlertState state: alertStates) {
             JRadioButton rb = new JRadioButton(state.name());
+            rb.setActionCommand(state.name()); //necessary for alertStateButtons.getSelection().getActionCommand() -- 20220-04-03
             alertStateButtons.add(rb);
         }
-        getAlertStateButton(AlertState.Good).setSelected(true);
+        alertStateButtons.setSelected(getAlertStateButton(AlertState.Good).getModel(),true);
 
         clearBtn.addActionListener((event)-> {
             lineInput.setText("");
-            juiceInput.setText(defaultJuice);
+            juiceInput.setText(ColumnAttributes.defaultJuice);
         });
     }
     public JRadioButton getAlertStateButton(AlertState alertState) {
@@ -84,15 +82,10 @@ public class ColumnComponents {
      * @return error message
      */
     public String updateColumnAttributes() {
-        Object [] selectedBtns = alertStateButtons.getSelection().getSelectedObjects();
-        if ( null == selectedBtns || selectedBtns.length < 1 ) {
-            return "Alert state radio button is not selected.";
-        }
-        JRadioButton selBtn = (JRadioButton)selectedBtns[0];
-
+        String alertStateName = alertStateButtons.getSelection().getActionCommand();
         columnAttributes.setLineInput(lineInput.getText());
         columnAttributes.setJuiceInput(juiceInput.getText());
-        AlertState alertState = Enum.valueOf(AlertState.class,selBtn.getText());
+        AlertState alertState = Enum.valueOf(AlertState.class,alertStateName);
         columnAttributes.setAlertState(alertState);
         return null;
     }

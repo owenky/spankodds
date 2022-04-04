@@ -1,5 +1,6 @@
 package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
@@ -14,6 +15,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -106,6 +109,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private JComponent getSectionComponent(AlertSectionName sectionName) {
         SectionFieldGroup sectionFieldGroup = getAlertConfig().getSectionFieldGroup(sectionName);
+        sectionFieldGroup.setSectionAtrribute(getAlertConfig().getSectionAtrribute(sectionName));
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sectionFieldGroup.getSectionName().getDisplay(),totalWidth,rowHeight,sectionFieldGroup.activateStatus);
         SectionLayout sectionLayout = new SectionLayout(sectionFieldGroup);
         sectionFieldGroupList.add(sectionFieldGroup);
@@ -120,7 +124,6 @@ public class AlertLayout extends AbstractLayeredDialog {
         saveBtn.addActionListener(this::save);
         JPanel bottomCtrPanel = new JPanel();
         Border outsideBorder = BorderFactory.createMatteBorder(1,0,0,0, Color.darkGray);
-//        Border insideBorder = new EmptyBorder(10, 10, 10, 10);
         bottomCtrPanel.setBorder(outsideBorder);
 
         bottomCtrPanel.add(saveBtn);
@@ -135,6 +138,11 @@ public class AlertLayout extends AbstractLayeredDialog {
         return titledPanelGenerator.getPanel();
     }
     private void save(ActionEvent event) {
+        alertConfig.setGameId( ((GameSelectionItem)gameNumBox.getSelectedItem()).getGame().getGame_id());
+        alertConfig.setPeriod(period.getSelectedItem().toString());
+        for(SectionFieldGroup sfg : sectionFieldGroupList) {
+            sfg.updateSectionAttribute();
+        }
         final AbstractButton btn = (AbstractButton)event.getSource();
         String err = AlertConfigValidator.validate(alertConfig);
         if ( null != err ) {
@@ -144,26 +152,34 @@ public class AlertLayout extends AbstractLayeredDialog {
         btn.setText("Saving...");
         btn.setEnabled(false);
         SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
-
+            private Exception e;
             @Override
-            protected Void doInBackground() throws Exception {
-                performSave();
+            protected Void doInBackground()  {
+                e = null;
+                try {
+                    performSave();
+                } catch (JsonProcessingException ex) {
+                    e = ex;
+                }
                 return null;
             }
             @Override
             protected void done() {
-//                for(SectionFieldGroup sfg : sectionFieldGroupList) {
-//                    sl.save();
-//                }
-//                populateControlsToAlertConfig(gameid, period)
+                if ( null != e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    Utils.showErrorMessageDialog(getSportsTabPane(),sw.toString());
+                }
                 btn.setText(saveBtnText);
                 btn.setEnabled(true);
             }
         };
         saveWorker.execute();
     }
-    private void performSave() {
-        System.out.println("LineSeekerAlert::save Need Implementation................");
+    private void performSave() throws JsonProcessingException {
+        String jsonStr = alertConfig.getAttributeJSonString();
+        System.out.println("jsonStr------="+jsonStr);
     }
     private Vector<String> getPeriodItems() {
         Vector<String> periodItems = new Vector<>();
