@@ -1,8 +1,5 @@
 package com.sia.client.ui.lineseeker;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,23 +37,5 @@ public class AlertAttributes {
             sectionAtrribute.setSectionName(alertSectionName);
             return sectionAtrribute;
         });
-    }
-    public static void main(String [] argv) throws JsonProcessingException {
-        AlertAttributes test = new AlertAttributes();
-        test.gameId = 1;
-        test.period = "testPeriod";
-        AlertSectionName [] names = AlertSectionName.values();
-        for(AlertSectionName name: names) {
-            test.sectionMap.put(name, new SectionAttribute());
-//        String json =
-        }
-
-        String json = new ObjectMapper().writeValueAsString(test);
-        System.out.println(json);
-
-        AlertAttributes test2
-                = new ObjectMapper().readValue(json,AlertAttributes.class);
-
-        System.out.println("test2="+test2);
     }
 }

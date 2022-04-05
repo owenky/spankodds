@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.model.SportType;
 import com.sia.client.model.User;
+import com.sia.client.ui.lineseeker.AlertAttrManager;
 
 import javax.jms.*;
 import java.awt.*;
@@ -156,6 +157,10 @@ public class UserPrefsProducer {
 
             mapMessage.setString("linealerts", u.getLineAlerts());
 
+            //send line seeker alert
+            for(Map.Entry<String,String> entry: AlertAttrManager.getAlertAttrbuteMap().entrySet()) {
+                mapMessage.setString(entry.getKey(), entry.getValue());
+            }
             this.producer.send(mapMessage);
         } catch (Exception ex) {
             log(ex);

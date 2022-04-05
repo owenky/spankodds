@@ -1,7 +1,6 @@
 package com.sia.client.ui.lineseeker;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,7 @@ public class AlertConfig {
         }
     }
     public String getAttributeJSonString() throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(alertAttributes);
+        return AlertAttrManager.serializeAlertAttr(alertAttributes);
     }
     public SectionAttribute getSectionAtrribute(AlertSectionName sectionName) {
         return alertAttributes.getSectionAtrribute(sectionName);

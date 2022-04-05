@@ -179,7 +179,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void performSave() throws JsonProcessingException {
         String jsonStr = alertConfig.getAttributeJSonString();
-        System.out.println("jsonStr------="+jsonStr);
+        AlertAttrManager.addSerializationToCache(String.valueOf(alertConfig.getGameId()), alertConfig.getPeriod(),jsonStr);
     }
     private Vector<String> getPeriodItems() {
         Vector<String> periodItems = new Vector<>();
