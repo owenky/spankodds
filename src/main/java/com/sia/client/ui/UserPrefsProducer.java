@@ -158,9 +158,7 @@ public class UserPrefsProducer {
             mapMessage.setString("linealerts", u.getLineAlerts());
 
             //send line seeker alert
-            for(Map.Entry<String,String> entry: AlertAttrManager.getAlertAttrbuteMap().entrySet()) {
-                mapMessage.setString(entry.getKey(), entry.getValue());
-            }
+            mapMessage.setString("lineseekeralert", AlertAttrManager.serializeAlertAlertAttColl());
             this.producer.send(mapMessage);
         } catch (Exception ex) {
             log(ex);

@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="" />
+    <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttColl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" afterDir="false" />
+    </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,13 +78,6 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
   <component name="ProjectId" id="1rWuAcZ6mLOrhak5RRnQkz9RfVD" />
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
@@ -90,11 +90,12 @@
     <property name="JavaMethodFindUsagesOptions.isSearchForTextOccurrences" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JSON&#10;JSON5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../spankodds_jars" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.21289062" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -254,20 +255,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1619104025768</updated>
-    </task>
-    <task id="LOCAL-00530" summary="fine tuning layout">
-      <created>1641744659259</created>
-      <option name="number" value="00530" />
-      <option name="presentableId" value="LOCAL-00530" />
-      <option name="project" value="LOCAL" />
-      <updated>1641744659259</updated>
-    </task>
-    <task id="LOCAL-00531" summary="improved abstraction of AnchoredLayeredPane">
-      <created>1641777973818</created>
-      <option name="number" value="00531" />
-      <option name="presentableId" value="LOCAL-00531" />
-      <option name="project" value="LOCAL" />
-      <updated>1641777973818</updated>
     </task>
     <task id="LOCAL-00532" summary="improved abstraction of AnchoredLayeredPane">
       <created>1641786170666</created>
@@ -598,7 +585,21 @@
       <option name="project" value="LOCAL" />
       <updated>1649295668059</updated>
     </task>
-    <option name="localTasksCounter" value="579" />
+    <task id="LOCAL-00579" summary="LineSeekerAlert: backup project settings">
+      <created>1649296068156</created>
+      <option name="number" value="00579" />
+      <option name="presentableId" value="LOCAL-00579" />
+      <option name="project" value="LOCAL" />
+      <updated>1649296068156</updated>
+    </task>
+    <task id="LOCAL-00580" summary="LineSeekerAlert: fixed NPE when closing window">
+      <created>1649302198672</created>
+      <option name="number" value="00580" />
+      <option name="presentableId" value="LOCAL-00580" />
+      <option name="project" value="LOCAL" />
+      <updated>1649302198672</updated>
+    </task>
+    <option name="localTasksCounter" value="581" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -722,7 +723,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implements auto fill user/pwd" />
     <MESSAGE value="improve tool tip" />
     <MESSAGE value="create update to change display only, not to re-create main screen" />
     <MESSAGE value="refactored to fullfil column name change update from server" />
@@ -746,6 +746,7 @@
     <MESSAGE value="LineSeekerAlert: add jason library" />
     <MESSAGE value="LineSeekerAlert: separate data from layout" />
     <MESSAGE value="LineSeekerAlert: save attribute as jason string" />
+    <MESSAGE value="LineSeekerAlert: backup project settings" />
     <MESSAGE value="LineSeekerAlert: fixed NPE when closing window" />
     <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: fixed NPE when closing window" />
   </component>
@@ -791,9 +792,19 @@
           <option name="timeStamp" value="1380" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/model/User.java</url>
-          <line>252</line>
-          <option name="timeStamp" value="1381" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java</url>
+          <line>161</line>
+          <option name="timeStamp" value="1383" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/AppController.java</url>
+          <line>443</line>
+          <option name="timeStamp" value="1384" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankOdds.java</url>
+          <line>148</line>
+          <option name="timeStamp" value="1385" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-defaults>

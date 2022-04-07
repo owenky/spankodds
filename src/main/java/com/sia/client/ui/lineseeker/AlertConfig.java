@@ -1,7 +1,5 @@
 package com.sia.client.ui.lineseeker;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +16,8 @@ public class AlertConfig {
             addToMap(new SectionFieldGroup(alertSectionName));
         }
     }
-    public String getAttributeJSonString() throws JsonProcessingException {
-        return AlertAttrManager.serializeAlertAttr(alertAttributes);
+    public AlertAttributes getAlertAttributes() {
+        return alertAttributes;
     }
     public SectionAttribute getSectionAtrribute(AlertSectionName sectionName) {
         return alertAttributes.getSectionAtrribute(sectionName);
