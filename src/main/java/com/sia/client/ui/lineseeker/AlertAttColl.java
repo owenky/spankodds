@@ -5,6 +5,7 @@ import java.util.Map;
 public class AlertAttColl {
 
     private Map<String,AlertAttributes> alertAttrMap;
+    //necessary for ObjectMapper serialization.
     public Map<String, AlertAttributes> getAlertAttrMap() {
         return alertAttrMap;
     }

@@ -13,7 +13,7 @@ public class FilterComboBoxModel<K,T extends SelectionItem<K>> extends DefaultCo
 
 	private static final int NOT_SET = -1, NOT_FOUND = -2;
 	private Map<String, T> displayLookupMap;
-	private boolean isDataModelSBTSelectionItemType = true; // modelµÄÊý¾ÝÊÇ·ñÊÇSBTSelectionItem
+	private boolean isDataModelSBTSelectionItemType = true;
 	private int begin_index, end_index;
 	private T oldValue;
 	private boolean isToFireContentsChangedTogger = true;
@@ -233,7 +233,7 @@ public class FilterComboBoxModel<K,T extends SelectionItem<K>> extends DefaultCo
 	}
 
 	/**
-	 * ·µ»ØÏÂÀ­¿òÊý¾ÝÄ£ÐÍÖÐµÚÒ»¸öÓësÆ¥ÅäµÄÎ»ÖÃ -- XFZ@2010-12-25
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ðµï¿½Ò»ï¿½ï¿½ï¿½ï¿½sÆ¥ï¿½ï¿½ï¿½Î»ï¿½ï¿½ -- XFZ@2010-12-25
 	 * 
 	 * @param s
 	 * @return

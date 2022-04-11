@@ -37,6 +37,7 @@ public class GameComboBox extends SBTComboBox<Integer,GameSelectionItem> {
 		return myUiClassId;
 	}
 	private void init() {
+		setEditable(false);
 		withPromptInput(promptInput);
 		setKeySelectionManager(new GameIdComboKeyManager());
 	}

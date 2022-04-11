@@ -7,16 +7,31 @@ import java.util.HashMap;
 
 public class AlertAttrManager {
 
+    private static final String KeyJointer = "@";
     private static AlertAttColl alertAttColl;
 
 
-    public static AlertAttributes getAlertAttr(String gameId, String period) throws JsonProcessingException {
+    public static AlertAttributes getAlertAttr(String gameId, AlertPeriod period)  {
         return getAlertAttColl().getAlertAttrMap().get(makeKey(gameId,period));
-//        String jsonStr = alertAtrributeMap.get();
-//        return new ObjectMapper().readValue(jsonStr,AlertAttributes.class);
     }
-    public static void addSerializationToCache(AlertAttributes alertAttributes) {
-        getAlertAttColl().getAlertAttrMap().put(makeKey(String.valueOf(alertAttributes.getGameId()),alertAttributes.getPeriod()),alertAttributes);
+    public static AlertAttributes getAlertAttr(String atttibuteKey)  {
+        return getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
+    }
+    public static AlertAttributes of(String atttibuteKey) {
+        AlertAttributes rtn = getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
+        if ( null == rtn ) {
+            String [] keyComp = atttibuteKey.split(KeyJointer);
+            AlertPeriod period = AlertPeriod.valueOf(keyComp[1]);
+            rtn = new AlertAttributes(Integer.parseInt(keyComp[0]),period);
+            alertAttColl.getAlertAttrMap().put(atttibuteKey,rtn);
+        }
+        return rtn;
+    }
+    public static AlertAttributes of(int gameId, AlertPeriod period) {
+       return of(makeKey(String.valueOf(gameId),period) );
+    }
+    public static void addToCache(AlertAttributes alertAttributes) {
+        getAlertAttColl().getAlertAttrMap().put(alertAttributes.getKey(),alertAttributes);
     }
     public static String serializeAlertAttr(AlertAttributes attr) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(attr);
@@ -37,7 +52,7 @@ public class AlertAttrManager {
         alertAttColl = new AlertAttColl();
         alertAttColl.setAlertAttrMap(new HashMap<>());
     }
-    private static String makeKey(String gameId, String period) {
-        return gameId+"@"+period;
+    public static String makeKey(String gameId, AlertPeriod period) {
+        return gameId+KeyJointer+period.name();
     }
 }

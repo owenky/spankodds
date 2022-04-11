@@ -43,6 +43,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private Supplier<Point> anchorLocSupplier;
     private final SportsTabPane stp;
     private String title;
+    private JComponent titlePanelLeftComp;
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
     public AnchoredLayeredPane(SportsTabPane stp) {
@@ -141,15 +142,28 @@ public class AnchoredLayeredPane implements ComponentListener {
             JLabel titleLabel = new JLabel(title);
             titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
             Font defaultFont = titleLabel.getFont();
-            Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+2);
+            Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
             titleLabel.setFont(titleFont);
 
             JButton closeBtn = new JButton("X");
-            closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4));
+            closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()));
             closeBtn.setOpaque(false);
             closeBtn.setBorder(BorderFactory.createEmptyBorder());
-            titlePanel.add(closeBtn,BorderLayout.EAST);
+            JPanel btnPanel = new JPanel();
+            btnPanel.setLayout(new BorderLayout());
+            btnPanel.add(closeBtn,BorderLayout.EAST);
+
+            JPanel westPanel = new JPanel();
+            westPanel.setLayout(new BorderLayout());
+
+            titlePanel.add(westPanel,BorderLayout.WEST);
+            titlePanel.add(btnPanel,BorderLayout.EAST);
             titlePanel.add(titleLabel,BorderLayout.CENTER);
+            if ( null != titlePanelLeftComp) {
+                westPanel.add(titlePanelLeftComp,BorderLayout.CENTER);
+                Dimension preSize = titlePanelLeftComp.getPreferredSize();
+                btnPanel.setPreferredSize(preSize);
+            }
 
             closeBtn.addActionListener(event-> close());
             titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
@@ -162,6 +176,9 @@ public class AnchoredLayeredPane implements ComponentListener {
         JScrollPane jScrollPane = new JScrollPane(containingComp);
         jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         return jScrollPane;
+    }
+    public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
+        this.titlePanelLeftComp = titlePanelLeftComp;
     }
     public void close() {
         hide();

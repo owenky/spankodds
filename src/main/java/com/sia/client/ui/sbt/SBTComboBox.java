@@ -51,7 +51,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	/**
 	 * 
 	 * This method is public as an implementation side effect. do not call or
-	 * override. ��д���෽����Ŀ��: Ҫ�ܹ���������������convertCase(),�����Ƿ���Ҫ���û��� �����������ַ�,ȫ��ת���ɴ�д
+	 * override.
 	 * -- XFZ@2013-11-27
 	 */
 	@Override
@@ -59,9 +59,6 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		super.actionPerformed(e);
 	}
 
-	/**
-	 * hightLight���Ϊindex���У���û��ѡ�У�(setSelectedIndex()��ѡ��ĳ��) -- XFZ@2010-12-15
-	 */
 	public Object getHighLightValue() {
 		SBTComboBoxUI theUI_ = (SBTComboBoxUI) this.getUI();
 		return theUI_.getHighLightValue();

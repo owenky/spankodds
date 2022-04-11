@@ -15,6 +15,9 @@ public abstract class AbstractLayeredDialog {
         anchoredLayeredPane = new AnchoredLayeredPane(stp);
         anchoredLayeredPane.setTitle(title);
     }
+    public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
+        anchoredLayeredPane.setTitlePanelLeftComp(titlePanelLeftComp);
+    }
     public void show(Dimension dim) {
         anchoredLayeredPane.openAndCenter(getUserComponent(),dim,false);
     }

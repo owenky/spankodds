@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
+import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.control.SportsTabPane;
@@ -30,12 +31,20 @@ public class AlertLayout extends AbstractLayeredDialog {
     private static final String saveBtnText = "Save";
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
     private final GameComboBox gameNumBox = new GameComboBox();
-    private JComboBox<String> period;
+    private JComboBox<AlertPeriod> period;
     private AlertConfig alertConfig;
+    private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private List<SectionFieldGroup> sectionFieldGroupList;
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
+        this.setTitlePanelLeftComp(makeAlertComboBoxPanel());
+    }
+    private JComponent makeAlertComboBoxPanel() {
+        JPanel panel = new JPanel();
+        panel.add(alertsCombobox);
+        panel.add(new JLabel("Alerts"));
+        return panel;
     }
     private JPanel createUserComp() {
         return new JPanel();
@@ -46,7 +55,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     public AlertConfig getAlertConfig() {
         if ( null == alertConfig) {
-            setAlertConfig(new AlertConfig(new AlertAttributes()));
+            setAlertConfig(new AlertConfig(new AlertAttributes(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full)));
         }
         return this.alertConfig;
     }
@@ -55,8 +64,8 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     @Override
     protected JComponent getUserComponent() {
+        alertsCombobox.loadAlerts();
         gameNumBox.loadGames();
-        gameNumBox.setEditable(false);
         gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
         JPanel userComp = createUserComp();
         userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
@@ -72,7 +81,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private JComponent controlSec() {
 
         final Dimension fieldDim = new Dimension(100,30);
-        period = new JComboBox<>(getPeriodItems());
+        period = new JComboBox<>(new Vector<>(AlertPeriod.getOrderedVec()));
 
         JPanel bodyComp = new JPanel();
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(null,totalWidth,80,null);
@@ -137,9 +146,20 @@ public class AlertLayout extends AbstractLayeredDialog {
         titledPanelGenerator.setBodyComponent(bottomCrtPanelWrapper);
         return titledPanelGenerator.getPanel();
     }
+    private AlertAttributes checkNewAlert() {
+        AlertConfig alertConfig =getAlertConfig();
+        int selectGameId = ((GameSelectionItem)gameNumBox.getSelectedItem()).getGame().getGame_id();
+        AlertPeriod selectPeriod = (AlertPeriod)period.getSelectedItem();
+        AlertAttributes selectedAlertAttr = AlertAttrManager.of(selectGameId, selectPeriod);
+        if ( alertConfig.getGameId()  < 0 ) {
+            selectedAlertAttr.cloneAttributes(alertConfig.getAlertAttributes());
+            setAlertConfig(new AlertConfig(selectedAlertAttr));
+        }
+        return selectedAlertAttr;
+    }
     private void save(ActionEvent event) {
-        alertConfig.setGameId( ((GameSelectionItem)gameNumBox.getSelectedItem()).getGame().getGame_id());
-        alertConfig.setPeriod(period.getSelectedItem().toString());
+
+        final AlertAttributes selectedAlert = checkNewAlert();
         for(SectionFieldGroup sfg : sectionFieldGroupList) {
             sfg.updateSectionAttribute();
         }
@@ -149,6 +169,7 @@ public class AlertLayout extends AbstractLayeredDialog {
             Utils.showMessageDialog(getSportsTabPane(),err);
             return;
         }
+
         btn.setText("Saving...");
         btn.setEnabled(false);
         SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
@@ -170,6 +191,8 @@ public class AlertLayout extends AbstractLayeredDialog {
                     PrintWriter pw = new PrintWriter(sw);
                     e.printStackTrace(pw);
                     Utils.showErrorMessageDialog(getSportsTabPane(),sw.toString());
+                } else {
+                    alertsCombobox.addIfAbsent(selectedAlert,true);
                 }
                 btn.setText(saveBtnText);
                 btn.setEnabled(true);
@@ -178,15 +201,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         saveWorker.execute();
     }
     private void performSave() throws JsonProcessingException {
-        AlertAttrManager.addSerializationToCache(alertConfig.getAlertAttributes());
-    }
-    private Vector<String> getPeriodItems() {
-        Vector<String> periodItems = new Vector<>();
-        periodItems.add("Full Game");
-        periodItems.add("First Half");
-        periodItems.add("Second Half");
-
-        return periodItems;
+        //doing backgroud work.
     }
     private void updateLineSeekerAlertSection(ValueChangedEvent event) {
         GameSelectionItem item = (GameSelectionItem)gameNumBox.getSelectedItem();

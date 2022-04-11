@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class AlertConfig {
 
-    private final AlertAttributes alertAttributes;
+    private AlertAttributes alertAttributes;
     private final Map<AlertSectionName,SectionFieldGroup> sectionMap = new HashMap<>();
 
     public AlertConfig(AlertAttributes alertAttributes) {
@@ -19,6 +19,9 @@ public class AlertConfig {
     public AlertAttributes getAlertAttributes() {
         return alertAttributes;
     }
+    public void setAlertAttributes(AlertAttributes alertAttributes) {
+        this.alertAttributes=alertAttributes;
+    }
     public SectionAttribute getSectionAtrribute(AlertSectionName sectionName) {
         return alertAttributes.getSectionAtrribute(sectionName);
     }
@@ -28,17 +31,8 @@ public class AlertConfig {
     public int getGameId() {
         return alertAttributes.getGameId();
     }
-
-    public void setGameId(int gameId) {
-        alertAttributes.setGameId(gameId);
-    }
-
-    public String getPeriod() {
+    public AlertPeriod getPeriod() {
         return alertAttributes.getPeriod();
-    }
-
-    public void setPeriod(String period) {
-        alertAttributes.setPeriod(period);
     }
     private void addToMap(SectionFieldGroup sectionGroup) {
         sectionMap.put(sectionGroup.getSectionName(),sectionGroup);

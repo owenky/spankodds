@@ -5,12 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttColl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertPeriod.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LineSeekerAlertComboBox.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LineSeekerAlertSelectionItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LinkSeekerAlertSelectionConvertor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/config/SiaConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/config/SiaConst.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/config/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/config/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AbstractLayeredDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AbstractLayeredDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AnchoredLayeredPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AnchoredLayeredPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/games/GameComboBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/games/GameComboBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttColl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttColl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttributes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/sbt/FilterComboBoxModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/sbt/FilterComboBoxModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/sbt/SBTComboBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/sbt/SBTComboBox.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +37,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -115,11 +127,11 @@
       <recent name="com.sia.client.mqsimulator" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.sia.client.ui.lineseeker" />
       <recent name="com.sia.client.ui.sbt" />
       <recent name="com.sia.client.ui" />
       <recent name="com.sia.client.model" />
       <recent name="com.sia.client.simulator" />
-      <recent name="com.sia.client.mqsimulator" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -152,6 +164,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestCls" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.lineseeker.TestCls" />
+      <module name="client" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.sia.client.ui.lineseeker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Utils" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sia.client.config.Utils" />
       <module name="client" />
@@ -161,21 +186,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SportTypeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.ui.games.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.sia.client.model" />
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.model.SportTypeTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -231,18 +241,18 @@
       <item itemvalue="Application.SpankOdds" />
       <item itemvalue="Application.Utils" />
       <item itemvalue="Application.AlertAttributes" />
-      <item itemvalue="JUnit.SportTypeTest" />
+      <item itemvalue="Application.TestCls" />
       <item itemvalue="JUnit.UtilsTest.testIsIntegerString" />
       <item itemvalue="JUnit.UtilsTest.testIsNumericString" />
       <item itemvalue="JUnit.UtilsTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TestCls" />
         <item itemvalue="JUnit.UtilsTest" />
         <item itemvalue="Application.AlertAttributes" />
         <item itemvalue="JUnit.UtilsTest.testIsNumericString" />
         <item itemvalue="JUnit.UtilsTest.testIsIntegerString" />
-        <item itemvalue="JUnit.SportTypeTest" />
       </list>
     </recent_temporary>
   </component>
@@ -255,13 +265,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1619104025768</updated>
-    </task>
-    <task id="LOCAL-00532" summary="improved abstraction of AnchoredLayeredPane">
-      <created>1641786170666</created>
-      <option name="number" value="00532" />
-      <option name="presentableId" value="LOCAL-00532" />
-      <option name="project" value="LOCAL" />
-      <updated>1641786170666</updated>
     </task>
     <task id="LOCAL-00533" summary="implemented chart embeded">
       <created>1641862174528</created>
@@ -599,7 +602,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649302198672</updated>
     </task>
-    <option name="localTasksCounter" value="581" />
+    <task id="LOCAL-00581" summary="LineSeekerAlert: save attribute as jason string">
+      <created>1649302690588</created>
+      <option name="number" value="00581" />
+      <option name="presentableId" value="LOCAL-00581" />
+      <option name="project" value="LOCAL" />
+      <updated>1649302690588</updated>
+    </task>
+    <option name="localTasksCounter" value="582" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -745,10 +755,10 @@
     <MESSAGE value="LineSeekerAlert: use Enum for Alert Section Name" />
     <MESSAGE value="LineSeekerAlert: add jason library" />
     <MESSAGE value="LineSeekerAlert: separate data from layout" />
-    <MESSAGE value="LineSeekerAlert: save attribute as jason string" />
     <MESSAGE value="LineSeekerAlert: backup project settings" />
     <MESSAGE value="LineSeekerAlert: fixed NPE when closing window" />
-    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: fixed NPE when closing window" />
+    <MESSAGE value="LineSeekerAlert: save attribute as jason string" />
+    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: save attribute as jason string" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -790,16 +800,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/sbt/SBTComboBoxUI.java</url>
           <line>70</line>
           <option name="timeStamp" value="1380" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java</url>
-          <line>161</line>
-          <option name="timeStamp" value="1383" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/AppController.java</url>
-          <line>443</line>
-          <option name="timeStamp" value="1384" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankOdds.java</url>

@@ -169,6 +169,10 @@ public abstract class Utils {
             JOptionPane.showMessageDialog(parentComponent, message,"ERROR !",JOptionPane.ERROR_MESSAGE);
         });
     }
+    public static int showOptions(Component parentComponent, Object message) throws HeadlessException {
+
+        return JOptionPane.showConfirmDialog(parentComponent,message,"Confirmation", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null);
+    }
     public static void ensureNotEdtThread() {
         if ( SwingUtilities.isEventDispatchThread()) {
             log(new Exception("Worker Thread Vialation: This action should not happen in EDT"));
