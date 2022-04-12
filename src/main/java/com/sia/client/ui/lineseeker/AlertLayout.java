@@ -33,6 +33,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<AlertPeriod> period;
     private AlertConfig alertConfig;
+    private JLabel editStatusLabel = new JLabel();
     private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private List<SectionFieldGroup> sectionFieldGroupList;
 
@@ -44,6 +45,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         JPanel panel = new JPanel();
         panel.add(alertsCombobox);
         panel.add(new JLabel("Alerts"));
+        panel.add(editStatusLabel);
         return panel;
     }
     private JPanel createUserComp() {
@@ -76,6 +78,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
         userComp.add(bottomControlSection());
         gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
+        alertsCombobox.addValueChangeListener(this::updateAlertAttributes);
         return userComp;
     }
     private JComponent controlSec() {
@@ -91,12 +94,12 @@ public class AlertLayout extends AbstractLayeredDialog {
         GridBagConstraints c = createDefaultGridBagConstraints();
 
         //1. title
-        c.gridx=0;
         c.gridy=0;
         c.anchor = GridBagConstraints.SOUTH;
         JLabel gameNumLabel = new JLabel("Game #");
         JLabel periodLabel = new JLabel("Period");
 
+        c.gridx=0;
         bodyComp.add(gameNumLabel,c);
         c.gridx = 1;
         bodyComp.add(periodLabel,c);
@@ -105,12 +108,11 @@ public class AlertLayout extends AbstractLayeredDialog {
         c.anchor = GridBagConstraints.NORTH;
         //let setPrototypeDisplayValue(prototypeDisplayValue); in GameComboBox::loadGames decides the size of combobox -- 03/23/2022
 //        gameNumBox.setPreferredSize(fieldDim);
-        c.gridx = 0;
-        c.gridy = 1;
-        bodyComp.add(gameNumBox,c);
 
-        c.gridx=1;
-        c.gridy=1;
+        c.gridy = 1;
+        c.gridx = 0;
+        bodyComp.add(gameNumBox,c);
+        c.gridx = 1;
 //        period.setPreferredSize(fieldDim);
         bodyComp.add(period,c);
 
@@ -118,12 +120,17 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private JComponent getSectionComponent(AlertSectionName sectionName) {
         SectionFieldGroup sectionFieldGroup = getAlertConfig().getSectionFieldGroup(sectionName);
+        sectionFieldGroup.addActionListener(this::performAction);
         sectionFieldGroup.setSectionAtrribute(getAlertConfig().getSectionAtrribute(sectionName));
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sectionFieldGroup.getSectionName().getDisplay(),totalWidth,rowHeight,sectionFieldGroup.activateStatus);
         SectionLayout sectionLayout = new SectionLayout(sectionFieldGroup);
         sectionFieldGroupList.add(sectionFieldGroup);
         titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
         return titledPanelGenerator.getPanel();
+    }
+    //called when any input field is changed.
+    private void performAction(ActionEvent e) {
+        setEditStatus(true);
     }
     private JComponent bottomControlSection() {
         JButton clsBtn = new JButton("Close");
@@ -216,6 +223,30 @@ public class AlertLayout extends AbstractLayeredDialog {
             mlinesFieldGrp.setLeftColumnTitle(visitor);
             mlinesFieldGrp.setRightColumnTitle(home);
         }
+    }
+    private void updateAlertAttributes(ValueChangedEvent event) {
+        LineSeekerAlertSelectionItem lineSeekerAlertSelectionItem = (LineSeekerAlertSelectionItem)this.alertsCombobox.getSelectedItem();
+        AlertAttributes alertAttributes = lineSeekerAlertSelectionItem.getAlertAttributes();
+        if ( alertAttributes.getGameId() != alertConfig.getGameId() || alertAttributes.getPeriod() != alertConfig.getPeriod()) {
+            boolean entableControlBoxes =  0 >= alertAttributes.getGameId();
+            this.gameNumBox.setEnabled(entableControlBoxes);
+            this.period.setEnabled(entableControlBoxes);
+        }
+        this.alertConfig.setAlertAttributes(alertAttributes);
+        List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
+        for(AlertSectionName alertSectionName:alertSectionNames ) {
+            SectionFieldGroup sectionFieldGroup = getAlertConfig().getSectionFieldGroup(alertSectionName);
+            sectionFieldGroup.setSectionAtrribute(alertAttributes.getSectionAtrribute(alertSectionName));
+        }
+        setEditStatus(false);
+    }
+    private static final String editIndicator="*";
+    private void setEditStatus(boolean status) {
+        String statusTxt = status?editIndicator:"";
+        this.editStatusLabel.setText(statusTxt);
+    }
+    private boolean isEdited() {
+        return editIndicator.equals(editStatusLabel.getText());
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();

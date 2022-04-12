@@ -1,6 +1,7 @@
 package com.sia.client.ui.lineseeker;
 
-import javax.swing.JCheckBox;
+import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public class SectionFieldGroup {
 
@@ -13,12 +14,18 @@ public class SectionFieldGroup {
 
     public SectionFieldGroup(AlertSectionName sectionName) {
         this.sectionName = sectionName;
-        leftColumn = new ColumnComponents(sectionName.getLeftColTitle()).withShowLineInput(sectionName.toShowLineInput());
-        rightColumn = new ColumnComponents(sectionName.getRightColTitle()).withShowLineInput(sectionName.toShowLineInput());
+        leftColumn = new ColumnComponents(sectionName.getLeftColTitle(),sectionName).withShowLineInput(sectionName.toShowLineInput());
+        rightColumn = new ColumnComponents(sectionName.getRightColTitle(),sectionName).withShowLineInput(sectionName.toShowLineInput());
         useEquivalent = new JCheckBox("Use Mathematical Equivalent");
         activateStatus = new JCheckBox("Activate");
         activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
         activateStatus.setSelected(true);
+    }
+    public void addActionListener(ActionListener l) {
+        leftColumn.addInputListener(l);
+        rightColumn.addInputListener(l);
+        useEquivalent.addActionListener(l);
+        activateStatus.addActionListener(l);
     }
     public AlertSectionName getSectionName() {
         return sectionName;

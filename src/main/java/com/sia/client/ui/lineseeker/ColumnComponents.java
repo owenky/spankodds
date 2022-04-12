@@ -2,6 +2,7 @@ package com.sia.client.ui.lineseeker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 public class ColumnComponents {
@@ -12,9 +13,11 @@ public class ColumnComponents {
     private final ButtonGroup alertStateButtons = new ButtonGroup();
     public final JLabel titleLabel;
     public final JButton clearBtn = new JButton("Clear");
+    public final AlertSectionName sectionName;
     private ColumnAttributes columnAttributes;
 
-    public ColumnComponents(String columnTitle) {
+    public ColumnComponents(String columnTitle,AlertSectionName sectionName) {
+        this.sectionName = sectionName;
         lineInput.setName("Line");
         lineInput.setPreferredSize(DefaultFieldDim);
         lineInput.setMinimumSize(DefaultFieldDim);
@@ -36,6 +39,14 @@ public class ColumnComponents {
             lineInput.setText("");
             juiceInput.setText(ColumnAttributes.defaultJuice);
         });
+    }
+    public void addInputListener(ActionListener l) {
+        lineInput.addActionListener(l);
+        juiceInput.addActionListener(l);
+        Enumeration<AbstractButton> radioBtnEnum = alertStateButtons.getElements();
+        while ( radioBtnEnum.hasMoreElements()) {
+            radioBtnEnum.nextElement().addActionListener(l);
+        }
     }
     public JRadioButton getAlertStateButton(AlertState alertState) {
         Enumeration<AbstractButton> btnEnum = alertStateButtons.getElements();
