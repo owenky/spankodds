@@ -36,18 +36,18 @@ public class AlertLayout extends AbstractLayeredDialog {
     private AlertConfig alertConfig;
     private JLabel editStatusLabel = new JLabel();
     private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
-    private final List<SectionFieldGroup> sectionFieldGroupList;
+    private final List<SectionComponents> sectionComponentsList;
     private final AlertComponentListener alertComponentListener;
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
        this.alertComponentListener = new AlertComponentListener(this);
        this.setTitlePanelLeftComp(makeAlertComboBoxPanel());
-       this.sectionFieldGroupList = new ArrayList<>();
+       this.sectionComponentsList = new ArrayList<>();
         for(AlertSectionName alertSectionName: AlertSectionName.getSortedSectionNames()) {
-            SectionFieldGroup sectionComps = new SectionFieldGroup(alertSectionName);
+            SectionComponents sectionComps = new SectionComponents(alertSectionName);
             sectionComps.addActionListener(alertComponentListener);
-            sectionFieldGroupList.add(sectionComps);
+            sectionComponentsList.add(sectionComps);
         }
     }
     private JComponent makeAlertComboBoxPanel() {
@@ -127,11 +127,11 @@ public class AlertLayout extends AbstractLayeredDialog {
         return titledPanelGenerator.getPanel();
     }
     private JComponent getSectionComponent(AlertSectionName sectionName) {
-        SectionFieldGroup sectionFieldGroup = getSectionFieldGroup(sectionName);
-        sectionFieldGroup.setSectionAtrribute(getAlertConfig().getSectionAtrribute(sectionName));
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sectionFieldGroup.getSectionName().getDisplay(),totalWidth,rowHeight,sectionFieldGroup.activateStatus);
-        SectionLayout sectionLayout = new SectionLayout(sectionFieldGroup);
-        sectionFieldGroupList.add(sectionFieldGroup);
+        SectionComponents sc = getSectionComponents(sectionName);
+        sc.setSectionAtrribute(getAlertConfig().getSectionAtrribute(sectionName));
+        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sc.getSectionName().getDisplay(),totalWidth,rowHeight,sc.activateStatus);
+        SectionLayout sectionLayout = new SectionLayout(sc);
+        sectionComponentsList.add(sc);
         titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
@@ -170,8 +170,8 @@ public class AlertLayout extends AbstractLayeredDialog {
     private void save(ActionEvent event) {
 
         final AlertConfig selectedAlert = checkNewAlert();
-        for(SectionFieldGroup sfg : sectionFieldGroupList) {
-            sfg.updateSectionAttribute();
+        for(SectionComponents sc : sectionComponentsList) {
+            sc.updateSectionAttribute();
         }
         final AbstractButton btn = (AbstractButton)event.getSource();
         String err = AlertConfigValidator.validate(this);
@@ -219,10 +219,10 @@ public class AlertLayout extends AbstractLayeredDialog {
         if (GameUtils.isRealGame(game)) {
             String visitor = game.getVisitorteam();
             String home = game.getHometeam();
-            SectionFieldGroup spreadFieldGrp = getSectionFieldGroup(AlertSectionName.spreadName);
-            SectionFieldGroup mlinesFieldGrp = getSectionFieldGroup(AlertSectionName.mLineName);
-            spreadFieldGrp.setLeftColumnTitle(visitor);
-            spreadFieldGrp.setRightColumnTitle(home);
+            SectionComponents spreadComps = getSectionComponents(AlertSectionName.spreadName);
+            SectionComponents mlinesFieldGrp = getSectionComponents(AlertSectionName.mLineName);
+            spreadComps.setLeftColumnTitle(visitor);
+            spreadComps.setRightColumnTitle(home);
             mlinesFieldGrp.setLeftColumnTitle(visitor);
             mlinesFieldGrp.setRightColumnTitle(home);
         }
@@ -233,8 +233,8 @@ public class AlertLayout extends AbstractLayeredDialog {
     public AlertPeriod getSelectedAlertPeriod() {
         return (AlertPeriod)period.getSelectedItem();
     }
-    public SectionFieldGroup getSectionFieldGroup(AlertSectionName alertSectionName) {
-        return sectionFieldGroupList.stream().filter(g->g.sectionName == alertSectionName).findAny().get();
+    public SectionComponents getSectionComponents(AlertSectionName alertSectionName) {
+        return sectionComponentsList.stream().filter(g->g.sectionName == alertSectionName).findAny().get();
     }
     private void updateAlertAttributes(ValueChangedEvent event) {
         LineSeekerAlertSelectionItem lineSeekerAlertSelectionItem = (LineSeekerAlertSelectionItem)this.alertsCombobox.getSelectedItem();
@@ -247,8 +247,8 @@ public class AlertLayout extends AbstractLayeredDialog {
         this.alertConfig = alertConfig;
         List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
         for(AlertSectionName alertSectionName:alertSectionNames ) {
-            SectionFieldGroup sectionFieldGroup = getSectionFieldGroup(alertSectionName);
-            sectionFieldGroup.setSectionAtrribute(alertConfig.getSectionAtrribute(alertSectionName));
+            SectionComponents sc = getSectionComponents(alertSectionName);
+            sc.setSectionAtrribute(alertConfig.getSectionAtrribute(alertSectionName));
         }
         setEditStatus(false);
     }

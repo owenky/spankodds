@@ -23,7 +23,7 @@ public class SectionLayout {
     private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
-    public SectionLayout(SectionFieldGroup spreadFieldGrp) {
+    public SectionLayout(SectionComponents spreadFieldGrp) {
 
         this.leftColumn = spreadFieldGrp.leftColumn;
         this.rightColumn = spreadFieldGrp.rightColumn;

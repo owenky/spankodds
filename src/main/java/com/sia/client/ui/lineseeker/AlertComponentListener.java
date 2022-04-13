@@ -18,12 +18,12 @@ public class AlertComponentListener implements KeyListener, ActionListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        checkAndSetEditStatus();
+//        checkAndSetEditStatus();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        checkAndSetEditStatus();
+//        checkAndSetEditStatus();
     }
 
     @Override
@@ -31,11 +31,48 @@ public class AlertComponentListener implements KeyListener, ActionListener {
         checkAndSetEditStatus();
     }
     private void checkAndSetEditStatus() {
-        if ( isConfigurationChanged() ) {
-            alertLayout.setEditStatus(true);
-        }
+        alertLayout.setEditStatus(isConfigurationChanged());
     }
     private boolean isConfigurationChanged() {
-        return true;
+        AlertConfig currentConfig = alertLayout.getAlertConfig();
+        boolean changed = false;
+        for(AlertSectionName alertSectionName: AlertSectionName.values()) {
+            SectionAttribute sectionAttr = currentConfig.getSectionAtrribute(alertSectionName);
+            SectionComponents sc = alertLayout.getSectionComponents(alertSectionName);
+            if ( (changed=valueChanged(sectionAttr,sc))) {
+                break;
+            }
+        }
+        return changed;
+    }
+    private boolean valueChanged(SectionAttribute sectionAttr, SectionComponents sc) {
+
+        boolean changed = sectionAttr.isActivateStatus() != sc.activateStatus.isSelected();
+        if ( changed) {
+            return true;
+        }
+        changed = sectionAttr.isUseEquivalent() != sc.useEquivalent.isSelected();
+        if ( changed ) {
+            return true;
+        }
+        changed = columnValueChanged(sectionAttr.getLeftColumn(),sc.getLeftColumn());
+        if ( changed ) {
+            return true;
+        }
+
+        return columnValueChanged(sectionAttr.getRightColumn(),sc.getLeftColumn());
+    }
+    private boolean columnValueChanged(ColumnAttributes columnAttributes, ColumnComponents columnComponents) {
+        boolean changed = ! columnComponents.getLineText().equals(columnAttributes.getLineInput());
+        if ( changed ) {
+            return true;
+        }
+        changed = ! columnComponents.getJuiceText().equals(columnAttributes.getJuiceInput());
+        if ( changed ) {
+            return true;
+        }
+
+        String alertStateName = columnComponents.getAlertState();
+        return ! columnAttributes.getAlertState().name().equals(alertStateName);
     }
 }

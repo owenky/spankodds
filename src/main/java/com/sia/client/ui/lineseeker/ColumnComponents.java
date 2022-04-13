@@ -84,6 +84,9 @@ public class ColumnComponents {
         this.juiceInput.setText(columnAttributes.getJuiceInput());
         this.getAlertStateButton(columnAttributes.getAlertState()).setSelected(true);
     }
+    public String getAlertState() {
+        return alertStateButtons.getSelection().getActionCommand();
+    }
     public ColumnAttributes getColumnAttributes() {
         return this.columnAttributes;
     }
@@ -92,7 +95,7 @@ public class ColumnComponents {
      * @return error message
      */
     public String updateColumnAttributes() {
-        String alertStateName = alertStateButtons.getSelection().getActionCommand();
+        String alertStateName = getAlertState();
         columnAttributes.setLineInput(lineInput.getText());
         columnAttributes.setJuiceInput(juiceInput.getText());
         AlertState alertState = Enum.valueOf(AlertState.class,alertStateName);

@@ -13,7 +13,7 @@ public abstract class AlertConfigValidator {
         AlertSectionName [] assertSectionNames = AlertSectionName.values();
         boolean hasInput = false;
         for(AlertSectionName name: assertSectionNames) {
-            SectionAttribute attribute = alertLayout.getSectionFieldGroup(name).getSectionAtrribute();
+            SectionAttribute attribute = alertLayout.getSectionComponents(name).getSectionAtrribute();
             ColumnAttributes leftAttribute = attribute.getLeftColumn();
             ColumnAttributes rightAttribute = attribute.getRightColumn();
             if ( ! Utils.isEmpty(leftAttribute.getJuiceInput()) || ! Utils.isEmpty(leftAttribute.getLineInput())

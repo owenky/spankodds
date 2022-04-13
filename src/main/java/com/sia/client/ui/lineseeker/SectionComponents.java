@@ -2,7 +2,7 @@ package com.sia.client.ui.lineseeker;
 
 import javax.swing.*;
 
-public class SectionFieldGroup {
+public class SectionComponents {
 
     public final ColumnComponents leftColumn;
     public final ColumnComponents rightColumn;
@@ -11,7 +11,7 @@ public class SectionFieldGroup {
     public final AlertSectionName sectionName;
     private SectionAttribute sectionAtrribute;
 
-    public SectionFieldGroup(AlertSectionName sectionName) {
+    public SectionComponents(AlertSectionName sectionName) {
         this.sectionName = sectionName;
         leftColumn = new ColumnComponents(sectionName.getLeftColTitle(),sectionName).withShowLineInput(sectionName.toShowLineInput());
         rightColumn = new ColumnComponents(sectionName.getRightColTitle(),sectionName).withShowLineInput(sectionName.toShowLineInput());
@@ -57,5 +57,11 @@ public class SectionFieldGroup {
         getSectionAtrribute().setUseEquivalent( this.useEquivalent.isSelected());
         getSectionAtrribute().setActivateStatus(activateStatus.isSelected());
         getSectionAtrribute().setSectionName(sectionName);
+    }
+    public ColumnComponents getLeftColumn() {
+        return leftColumn;
+    }
+    public ColumnComponents getRightColumn() {
+        return rightColumn;
     }
 }
