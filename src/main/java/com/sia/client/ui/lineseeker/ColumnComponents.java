@@ -2,7 +2,6 @@ package com.sia.client.ui.lineseeker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 public class ColumnComponents {
@@ -40,9 +39,9 @@ public class ColumnComponents {
             juiceInput.setText(ColumnAttributes.defaultJuice);
         });
     }
-    public void addInputListener(ActionListener l) {
-        lineInput.addActionListener(l);
-        juiceInput.addActionListener(l);
+    public void addInputListener(AlertComponentListener l) {
+        lineInput.addKeyListener(l);
+        juiceInput.addKeyListener(l);
         Enumeration<AbstractButton> radioBtnEnum = alertStateButtons.getElements();
         while ( radioBtnEnum.hasMoreElements()) {
             radioBtnEnum.nextElement().addActionListener(l);

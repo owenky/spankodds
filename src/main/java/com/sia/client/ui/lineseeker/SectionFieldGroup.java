@@ -1,7 +1,6 @@
 package com.sia.client.ui.lineseeker;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public class SectionFieldGroup {
 
@@ -21,7 +20,7 @@ public class SectionFieldGroup {
         activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
         activateStatus.setSelected(true);
     }
-    public void addActionListener(ActionListener l) {
+    public void addActionListener(AlertComponentListener l) {
         leftColumn.addInputListener(l);
         rightColumn.addInputListener(l);
         useEquivalent.addActionListener(l);

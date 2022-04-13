@@ -4,16 +4,16 @@ import com.sia.client.config.Utils;
 
 public abstract class AlertConfigValidator {
 
-    public static String validate(AlertConfig alertConfig) {
+    public static String validate(AlertLayout alertLayout) {
 
-        if ( alertConfig.getGameId() < 1) {
+        if ( alertLayout.getSelectedGameId() < 1) {
             return "Please select a game ";
         }
         String err = null;
         AlertSectionName [] assertSectionNames = AlertSectionName.values();
         boolean hasInput = false;
         for(AlertSectionName name: assertSectionNames) {
-            SectionAttribute attribute = alertConfig.getSectionFieldGroup(name).getSectionAtrribute();
+            SectionAttribute attribute = alertLayout.getSectionFieldGroup(name).getSectionAtrribute();
             ColumnAttributes leftAttribute = attribute.getLeftColumn();
             ColumnAttributes rightAttribute = attribute.getRightColumn();
             if ( ! Utils.isEmpty(leftAttribute.getJuiceInput()) || ! Utils.isEmpty(leftAttribute.getLineInput())

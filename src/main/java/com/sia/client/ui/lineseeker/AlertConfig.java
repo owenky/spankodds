@@ -1,20 +1,10 @@
 package com.sia.client.ui.lineseeker;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class AlertConfig {
 
     private AlertAttributes alertAttributes;
-    private final Map<AlertSectionName,SectionFieldGroup> sectionMap = new HashMap<>();
-
     public AlertConfig(AlertAttributes alertAttributes) {
         this.alertAttributes = alertAttributes;
-        List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
-        for(AlertSectionName alertSectionName: alertSectionNames) {
-            addToMap(new SectionFieldGroup(alertSectionName));
-        }
     }
     public AlertAttributes getAlertAttributes() {
         return alertAttributes;
@@ -25,16 +15,10 @@ public class AlertConfig {
     public SectionAttribute getSectionAtrribute(AlertSectionName sectionName) {
         return alertAttributes.getSectionAtrribute(sectionName);
     }
-    public SectionFieldGroup getSectionFieldGroup(AlertSectionName sectionName) {
-        return sectionMap.get(sectionName);
-    }
     public int getGameId() {
         return alertAttributes.getGameId();
     }
     public AlertPeriod getPeriod() {
         return alertAttributes.getPeriod();
-    }
-    private void addToMap(SectionFieldGroup sectionGroup) {
-        sectionMap.put(sectionGroup.getSectionName(),sectionGroup);
     }
 }
