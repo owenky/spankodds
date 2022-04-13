@@ -6,7 +6,7 @@ import com.sia.client.ui.sbt.SelectionConvertor;
 public class LinkSeekerAlertSelectionConvertor implements SelectionConvertor<String, LineSeekerAlertSelectionItem> {
     @Override
     public LineSeekerAlertSelectionItem convertToSelectionItem(String keyValue, String display) {
-        AlertAttributes alertAttributes = AlertAttrManager.of(keyValue);
+        AlertConfig alertAttributes = AlertAttrManager.of(keyValue);
         return (LineSeekerAlertSelectionItem) new LineSeekerAlertSelectionItem(alertAttributes).withDisplay(display);
     }
 

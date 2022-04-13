@@ -11,29 +11,29 @@ public class AlertAttrManager {
     private static AlertAttColl alertAttColl;
 
 
-    public static AlertAttributes getAlertAttr(String gameId, AlertPeriod period)  {
+    public static AlertConfig getAlertAttr(String gameId, AlertPeriod period)  {
         return getAlertAttColl().getAlertAttrMap().get(makeKey(gameId,period));
     }
-    public static AlertAttributes getAlertAttr(String atttibuteKey)  {
+    public static AlertConfig getAlertAttr(String atttibuteKey)  {
         return getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
     }
-    public static AlertAttributes of(String atttibuteKey) {
-        AlertAttributes rtn = getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
+    public static AlertConfig of(String atttibuteKey) {
+        AlertConfig rtn = getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
         if ( null == rtn ) {
             String [] keyComp = atttibuteKey.split(KeyJointer);
             AlertPeriod period = AlertPeriod.valueOf(keyComp[1]);
-            rtn = new AlertAttributes(Integer.parseInt(keyComp[0]),period);
+            rtn = new AlertConfig(Integer.parseInt(keyComp[0]),period);
             alertAttColl.getAlertAttrMap().put(atttibuteKey,rtn);
         }
         return rtn;
     }
-    public static AlertAttributes of(int gameId, AlertPeriod period) {
+    public static AlertConfig of(int gameId, AlertPeriod period) {
        return of(makeKey(String.valueOf(gameId),period) );
     }
-    public static void addToCache(AlertAttributes alertAttributes) {
+    public static void addToCache(AlertConfig alertAttributes) {
         getAlertAttColl().getAlertAttrMap().put(alertAttributes.getKey(),alertAttributes);
     }
-    public static String serializeAlertAttr(AlertAttributes attr) throws JsonProcessingException {
+    public static String serializeAlertAttr(AlertConfig attr) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(attr);
     }
     public static String serializeAlertAlertAttColl() throws JsonProcessingException {

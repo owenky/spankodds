@@ -65,7 +65,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     public AlertConfig getAlertConfig() {
         if ( null == alertConfig) {
-            setAlertConfig(new AlertConfig(new AlertAttributes(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full)));
+            setAlertConfig(new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full));
         }
         return this.alertConfig;
     }
@@ -156,20 +156,20 @@ public class AlertLayout extends AbstractLayeredDialog {
         titledPanelGenerator.setBodyComponent(bottomCrtPanelWrapper);
         return titledPanelGenerator.getPanel();
     }
-    private AlertAttributes checkNewAlert() {
+    private AlertConfig checkNewAlert() {
         AlertConfig alertConfig =getAlertConfig();
         int selectGameId = ((GameSelectionItem)gameNumBox.getSelectedItem()).getGame().getGame_id();
         AlertPeriod selectPeriod = (AlertPeriod)period.getSelectedItem();
-        AlertAttributes selectedAlertAttr = AlertAttrManager.of(selectGameId, selectPeriod);
+        AlertConfig selectedAlertConfig = AlertAttrManager.of(selectGameId, selectPeriod);
         if ( alertConfig.getGameId()  < 0 ) {
-            selectedAlertAttr.cloneAttributes(alertConfig.getAlertAttributes());
-            setAlertConfig(new AlertConfig(selectedAlertAttr));
+            selectedAlertConfig.cloneAttributes(alertConfig);
+            setAlertConfig(selectedAlertConfig);
         }
-        return selectedAlertAttr;
+        return selectedAlertConfig;
     }
     private void save(ActionEvent event) {
 
-        final AlertAttributes selectedAlert = checkNewAlert();
+        final AlertConfig selectedAlert = checkNewAlert();
         for(SectionFieldGroup sfg : sectionFieldGroupList) {
             sfg.updateSectionAttribute();
         }
@@ -238,17 +238,17 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void updateAlertAttributes(ValueChangedEvent event) {
         LineSeekerAlertSelectionItem lineSeekerAlertSelectionItem = (LineSeekerAlertSelectionItem)this.alertsCombobox.getSelectedItem();
-        AlertAttributes alertAttributes = lineSeekerAlertSelectionItem.getAlertAttributes();
-        if ( alertAttributes.getGameId() != alertConfig.getGameId() || alertAttributes.getPeriod() != alertConfig.getPeriod()) {
-            boolean entableControlBoxes =  0 >= alertAttributes.getGameId();
+        AlertConfig alertConfig = lineSeekerAlertSelectionItem.getAlertAttributes();
+        if ( alertConfig.getGameId() != this.alertConfig.getGameId() || alertConfig.getPeriod() != this.alertConfig.getPeriod()) {
+            boolean entableControlBoxes =  0 >= alertConfig.getGameId();
             this.gameNumBox.setEnabled(entableControlBoxes);
             this.period.setEnabled(entableControlBoxes);
         }
-        this.alertConfig.setAlertAttributes(alertAttributes);
+        this.alertConfig = alertConfig;
         List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
         for(AlertSectionName alertSectionName:alertSectionNames ) {
             SectionFieldGroup sectionFieldGroup = getSectionFieldGroup(alertSectionName);
-            sectionFieldGroup.setSectionAtrribute(alertAttributes.getSectionAtrribute(alertSectionName));
+            sectionFieldGroup.setSectionAtrribute(alertConfig.getSectionAtrribute(alertSectionName));
         }
         setEditStatus(false);
     }

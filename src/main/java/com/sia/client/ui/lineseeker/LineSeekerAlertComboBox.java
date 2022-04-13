@@ -14,7 +14,7 @@ public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlert
 	private static final String myUiClassId = SBTComboBoxUI.uiClassID;
 
 	static {
-		AlertAttributes dummyAttr = new AlertAttributes(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full);
+		AlertConfig dummyAttr = new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full);
 		promptInput = (LineSeekerAlertSelectionItem)(new LineSeekerAlertSelectionItem(dummyAttr).withDisplay(" "));
 	}
 	public LineSeekerAlertComboBox() {
@@ -30,7 +30,7 @@ public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlert
 		withPromptInput(promptInput);
 		setKeySelectionManager(new GameIdComboKeyManager());
 	}
-	public void addIfAbsent(AlertAttributes alertAttr,boolean setSelected) {
+	public void addIfAbsent(AlertConfig alertAttr, boolean setSelected) {
 		ComboBoxModel<LineSeekerAlertSelectionItem> model = this.getModel();
 		int selectedIndex = -1;
 		int insertIndex = 1;

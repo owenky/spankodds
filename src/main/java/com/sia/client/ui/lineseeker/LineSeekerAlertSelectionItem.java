@@ -7,8 +7,8 @@ import com.sia.client.ui.games.GameSelectionItem;
 
 public class LineSeekerAlertSelectionItem extends SelectionItem<String> {
 
-	private final AlertAttributes alertAttributes;
-	public LineSeekerAlertSelectionItem(AlertAttributes alertAttributes) {
+	private final AlertConfig alertAttributes;
+	public LineSeekerAlertSelectionItem(AlertConfig alertAttributes) {
 		super(alertAttributes.getKey());
 		this.alertAttributes = alertAttributes;
 		Comparable<SelectionItem<String>> comparator = (o)-> getKeyValue().compareTo(o.getKeyValue());
@@ -18,11 +18,11 @@ public class LineSeekerAlertSelectionItem extends SelectionItem<String> {
 			withDisplay(game.getGame_id() + " " + GameSelectionItem.getGameDesc(game) + " : " + alertAttributes.getPeriod().toString());
 		}
 	}
-	public AlertAttributes getAlertAttributes() {
+	public AlertConfig getAlertAttributes() {
 		return alertAttributes;
 	}
 	public static LineSeekerAlertSelectionItem makeBlankAlert() {
-		AlertAttributes dummyAttribute = new AlertAttributes(SELECT_BLANK_KEY, AlertPeriod.Full);
+		AlertConfig dummyAttribute = new AlertConfig(SELECT_BLANK_KEY, AlertPeriod.Full);
 		return (LineSeekerAlertSelectionItem)new LineSeekerAlertSelectionItem(dummyAttribute).withDisplay("  New Alert  ");
 	}
 }
