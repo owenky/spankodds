@@ -6,12 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertComponentListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertComponentListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/ColumnComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/ColumnComponents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionFieldGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionComponents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionLayout.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -254,20 +248,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1619104025768</updated>
-    </task>
-    <task id="LOCAL-00537" summary="embeded new sport configuraion popup window">
-      <created>1642958503707</created>
-      <option name="number" value="00537" />
-      <option name="presentableId" value="LOCAL-00537" />
-      <option name="project" value="LOCAL" />
-      <updated>1642958503708</updated>
-    </task>
-    <task id="LOCAL-00538" summary="embeded secondary configuraion popup window">
-      <created>1642999653856</created>
-      <option name="number" value="00538" />
-      <option name="presentableId" value="LOCAL-00538" />
-      <option name="project" value="LOCAL" />
-      <updated>1642999653857</updated>
     </task>
     <task id="LOCAL-00539" summary="fixed column rename bug">
       <created>1643086670650</created>
@@ -598,7 +578,21 @@
       <option name="project" value="LOCAL" />
       <updated>1649817369035</updated>
     </task>
-    <option name="localTasksCounter" value="586" />
+    <task id="LOCAL-00586" summary="LineSeekerAlert: refactoring">
+      <created>1649820022831</created>
+      <option name="number" value="00586" />
+      <option name="presentableId" value="LOCAL-00586" />
+      <option name="project" value="LOCAL" />
+      <updated>1649820022831</updated>
+    </task>
+    <task id="LOCAL-00587" summary="LineSeekerAlert: refactoring">
+      <created>1649820142677</created>
+      <option name="number" value="00587" />
+      <option name="presentableId" value="LOCAL-00587" />
+      <option name="project" value="LOCAL" />
+      <updated>1649820142677</updated>
+    </task>
+    <option name="localTasksCounter" value="588" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -794,11 +788,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankOdds.java</url>
           <line>148</line>
           <option name="timeStamp" value="1385" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java</url>
-          <line>160</line>
-          <option name="timeStamp" value="1396" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-defaults>
