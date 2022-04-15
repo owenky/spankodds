@@ -6,20 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/config/SiaConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/config/SiaConst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/config/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/config/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/model/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/games/GameSelectionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/games/GameSelectionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttColl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttColl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/ColumnComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/ColumnComponents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LineSeekerAlertComboBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LineSeekerAlertComboBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LineSeekerAlertSelectionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LineSeekerAlertSelectionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LinkSeekerAlertSelectionConvertor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/LinkSeekerAlertSelectionConvertor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionComponents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploytools/DigitCertAndJarSign/sia.jks" beforeDir="false" afterPath="$PROJECT_DIR$/deploytools/DigitCertAndJarSign/sia.jks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploytools/DigitCertAndJarSign/sia.p7b" beforeDir="false" afterPath="$PROJECT_DIR$/deploytools/DigitCertAndJarSign/sia.p7b" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -238,10 +226,10 @@
       <item itemvalue="Application.SpankOdds" />
       <item itemvalue="Application.Utils" />
       <item itemvalue="Application.TestCls" />
+      <item itemvalue="Application.AlertConfig" />
       <item itemvalue="JUnit.UtilsTest.testIsIntegerString" />
       <item itemvalue="JUnit.UtilsTest.testIsNumericString" />
       <item itemvalue="JUnit.UtilsTest" />
-      <item itemvalue="Application.AlertConfig" />
     </list>
     <recent_temporary>
       <list>
@@ -262,13 +250,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1619104025768</updated>
-    </task>
-    <task id="LOCAL-00540" summary="fixed column rename bug">
-      <created>1643166895395</created>
-      <option name="number" value="00540" />
-      <option name="presentableId" value="LOCAL-00540" />
-      <option name="project" value="LOCAL" />
-      <updated>1643166895395</updated>
     </task>
     <task id="LOCAL-00541" summary="fixed column rename bug">
       <created>1643167834248</created>
@@ -606,7 +587,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649900315522</updated>
     </task>
-    <option name="localTasksCounter" value="589" />
+    <task id="LOCAL-00589" summary="LineSeekerAlert: add readme">
+      <created>1650051778049</created>
+      <option name="number" value="00589" />
+      <option name="presentableId" value="LOCAL-00589" />
+      <option name="project" value="LOCAL" />
+      <updated>1650051778050</updated>
+    </task>
+    <option name="localTasksCounter" value="590" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -730,7 +718,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implementation of hiding games with not lines" />
     <MESSAGE value="implement line seeker dialog" />
     <MESSAGE value="fixed showHeader not taking effective" />
     <MESSAGE value="LineSeekerAlert: removed Line from Money Line Section" />
@@ -755,7 +742,8 @@
     <MESSAGE value="LineSeekerAlert: add alert combobox" />
     <MESSAGE value="LineSeekerAlert: refactoring" />
     <MESSAGE value="LineSeekerAlert: add json library" />
-    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: add json library" />
+    <MESSAGE value="LineSeekerAlert: add readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: add readme" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
