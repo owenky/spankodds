@@ -1,6 +1,7 @@
 package com.sia.client.ui.lineseeker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sia.client.model.SelectionItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ public class AlertConfig {
     private final int gameId;
     private final AlertPeriod period;
     private Map<AlertSectionName, SectionAttribute> sectionMap = new HashMap<>();
+    public static final AlertConfig BlankAlert = new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full);
 
     public AlertConfig(@JsonProperty("gameId") int gameId, @JsonProperty("period") AlertPeriod period) {
         this.gameId = gameId;

@@ -7,22 +7,23 @@ import com.sia.client.ui.games.GameSelectionItem;
 
 public class LineSeekerAlertSelectionItem extends SelectionItem<String> {
 
-	private final AlertConfig alertAttributes;
-	public LineSeekerAlertSelectionItem(AlertConfig alertAttributes) {
-		super(alertAttributes.getKey());
-		this.alertAttributes = alertAttributes;
+	private final int gameId;
+	private final AlertPeriod alertPeriod;
+	public LineSeekerAlertSelectionItem(int gameId, AlertPeriod alertPeriod) {
+		super(AlertAttrManager.makeKey(gameId,alertPeriod));
+		this.gameId = gameId;
+		this.alertPeriod = alertPeriod;
 		Comparable<SelectionItem<String>> comparator = (o)-> getKeyValue().compareTo(o.getKeyValue());
-		Game game = AppController.getGame(alertAttributes.getGameId());
+		Game game = AppController.getGame(gameId);
 		withComparator(comparator);
 		if ( null != game ) {
-			withDisplay(game.getGame_id() + " " + GameSelectionItem.getGameDesc(game) + " : " + alertAttributes.getPeriod().toString());
+			withDisplay(game.getGame_id() + " " + GameSelectionItem.getGameDesc(game) + " : " + alertPeriod.toString());
 		}
 	}
-	public AlertConfig getAlertAttributes() {
-		return alertAttributes;
+	public AlertConfig getAlertConfig() {
+		return AlertAttrManager.of(gameId,alertPeriod);
 	}
 	public static LineSeekerAlertSelectionItem makeBlankAlert() {
-		AlertConfig dummyAttribute = new AlertConfig(SELECT_BLANK_KEY, AlertPeriod.Full);
-		return (LineSeekerAlertSelectionItem)new LineSeekerAlertSelectionItem(dummyAttribute).withDisplay("  New Alert  ");
+		return (LineSeekerAlertSelectionItem)new LineSeekerAlertSelectionItem(AlertConfig.BlankAlert.getGameId(),AlertConfig.BlankAlert.getPeriod()).withDisplay("  New Alert  ");
 	}
 }

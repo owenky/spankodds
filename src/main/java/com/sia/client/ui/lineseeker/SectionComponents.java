@@ -9,7 +9,6 @@ public class SectionComponents {
     public final JCheckBox useEquivalent;
     public final JCheckBox activateStatus;
     public final AlertSectionName sectionName;
-    private SectionAttribute sectionAtrribute;
 
     public SectionComponents(AlertSectionName sectionName) {
         this.sectionName = sectionName;
@@ -35,28 +34,17 @@ public class SectionComponents {
     public void setRightColumnTitle(String leftColumnTitle) {
         rightColumn.setTitle(leftColumnTitle);
     }
-    public void setSectionAtrribute(SectionAttribute sectionAtrribute) {
-        this.sectionAtrribute = sectionAtrribute;
-        this.leftColumn.setColumnAttributes(sectionAtrribute.getLeftColumn());
-        this.rightColumn.setColumnAttributes(sectionAtrribute.getRightColumn());
+    public void setSectionCompValues(SectionAttribute sectionAtrribute) {
+        this.leftColumn.setColumnCompValues(sectionAtrribute.getLeftColumn());
+        this.rightColumn.setColumnCompValues(sectionAtrribute.getRightColumn());
         this.useEquivalent.setSelected(sectionAtrribute.isUseEquivalent());
         this.activateStatus.setSelected(sectionAtrribute.isActivateStatus());
     }
-    public synchronized SectionAttribute getSectionAtrribute() {
-        if ( null == sectionAtrribute) {
-            sectionAtrribute = new SectionAttribute();
-            sectionAtrribute.setSectionName(sectionName);
-            this.leftColumn.setColumnAttributes(sectionAtrribute.getLeftColumn());
-            this.rightColumn.setColumnAttributes(sectionAtrribute.getRightColumn());
-        }
-        return this.sectionAtrribute;
-    }
-    public void updateSectionAttribute() {
-        this.leftColumn.updateColumnAttributes();
-        this.rightColumn.updateColumnAttributes();
-        getSectionAtrribute().setUseEquivalent( this.useEquivalent.isSelected());
-        getSectionAtrribute().setActivateStatus(activateStatus.isSelected());
-        getSectionAtrribute().setSectionName(sectionName);
+    public void updateSectionAttribute(SectionAttribute sectionAtrribute) {
+        this.leftColumn.updateColumnCompAttr(sectionAtrribute.getLeftColumn());
+        this.rightColumn.updateColumnCompAttr(sectionAtrribute.getRightColumn());
+        sectionAtrribute.setUseEquivalent( this.useEquivalent.isSelected());
+        sectionAtrribute.setActivateStatus(this.activateStatus.isSelected());
     }
     public ColumnComponents getLeftColumn() {
         return leftColumn;

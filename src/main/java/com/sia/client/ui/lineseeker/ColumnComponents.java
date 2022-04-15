@@ -13,7 +13,6 @@ public class ColumnComponents {
     public final JLabel titleLabel;
     public final JButton clearBtn = new JButton("Clear");
     public final AlertSectionName sectionName;
-    private ColumnAttributes columnAttributes;
 
     public ColumnComponents(String columnTitle,AlertSectionName sectionName) {
         this.sectionName = sectionName;
@@ -78,29 +77,17 @@ public class ColumnComponents {
     public void setTitle(String titleStr) {
         titleLabel.setText(titleStr);
     }
-    public void setColumnAttributes(ColumnAttributes columnAttributes) {
-        this.columnAttributes = columnAttributes;
+    public void setColumnCompValues(ColumnAttributes columnAttributes) {
         this.lineInput.setText(columnAttributes.getLineInput());
         this.juiceInput.setText(columnAttributes.getJuiceInput());
         this.getAlertStateButton(columnAttributes.getAlertState()).setSelected(true);
     }
+    public void updateColumnCompAttr(ColumnAttributes columnAttributes) {
+        columnAttributes.setLineInput(this.lineInput.getText());
+        columnAttributes.setJuiceInput(this.juiceInput.getText());
+        columnAttributes.setAlertState(AlertState.valueOf(getAlertState()));
+    }
     public String getAlertState() {
         return alertStateButtons.getSelection().getActionCommand();
     }
-    public ColumnAttributes getColumnAttributes() {
-        return this.columnAttributes;
-    }
-    /**
-     *
-     * @return error message
-     */
-    public String updateColumnAttributes() {
-        String alertStateName = getAlertState();
-        columnAttributes.setLineInput(lineInput.getText());
-        columnAttributes.setJuiceInput(juiceInput.getText());
-        AlertState alertState = Enum.valueOf(AlertState.class,alertStateName);
-        columnAttributes.setAlertState(alertState);
-        return null;
-    }
-
 }

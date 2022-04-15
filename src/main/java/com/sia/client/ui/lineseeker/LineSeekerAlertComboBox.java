@@ -1,6 +1,5 @@
 package com.sia.client.ui.lineseeker;
 
-import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.sbt.GameIdComboKeyManager;
 import com.sia.client.ui.sbt.SBTComboBox;
 import com.sia.client.ui.sbt.SBTComboBoxUI;
@@ -9,14 +8,9 @@ import javax.swing.*;
 
 public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlertSelectionItem> {
 
-	public static final LineSeekerAlertSelectionItem promptInput;
 	private static final int maxGameIdLen = 6;
 	private static final String myUiClassId = SBTComboBoxUI.uiClassID;
 
-	static {
-		AlertConfig dummyAttr = new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full);
-		promptInput = (LineSeekerAlertSelectionItem)(new LineSeekerAlertSelectionItem(dummyAttr).withDisplay(" "));
-	}
 	public LineSeekerAlertComboBox() {
 		super(new LinkSeekerAlertSelectionConvertor());
 		init();
@@ -36,7 +30,7 @@ public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlert
 		int insertIndex = 1;
 		for(int i=0;i<model.getSize();i++) {
 			LineSeekerAlertSelectionItem item = model.getElementAt(i);
-			int keyOrderDiff = item.getAlertAttributes().getKey().compareTo(alertAttr.getKey());
+			int keyOrderDiff = item.getAlertConfig().getKey().compareTo(alertAttr.getKey());
 			if ( 0 == keyOrderDiff ) {
 				selectedIndex = i;
 				insertIndex = -1;
@@ -48,7 +42,7 @@ public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlert
 		}
 
 		if ( 0 <=insertIndex ) {
-			this.insertItemAt(new LineSeekerAlertSelectionItem(alertAttr),insertIndex);
+			this.insertItemAt(new LineSeekerAlertSelectionItem(alertAttr.getGameId(),alertAttr.getPeriod()),insertIndex);
 			selectedIndex = insertIndex;
 		}
 

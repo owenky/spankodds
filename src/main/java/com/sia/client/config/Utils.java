@@ -137,6 +137,14 @@ public abstract class Utils {
             return defaultValue;
         }
     }
+    public static void sleep(long delayTime) {
+        try {
+            Thread.sleep(delayTime);
+        } catch (InterruptedException e) {
+            Utils.log(e);
+        }
+
+    }
     public static void checkAndRunInEDT(Runnable r) {
         checkAndRunInEDT(r,false);
     }

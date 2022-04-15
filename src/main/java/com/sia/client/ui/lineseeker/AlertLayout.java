@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
-import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
@@ -30,6 +30,9 @@ public class AlertLayout extends AbstractLayeredDialog {
     private static final int totalWidth = 800;
     private static final int rowHeight =150;
     private static final String saveBtnText = "Save";
+    private static final String delBtnText = "Delete";
+    private static final String cloneBtnText = "Clone";
+    private static final long actionWaitTime = 600L;
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<AlertPeriod> period;
@@ -65,7 +68,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     public AlertConfig getAlertConfig() {
         if ( null == alertConfig) {
-            setAlertConfig(new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full));
+            setAlertConfig(AlertConfig.BlankAlert);
         }
         return this.alertConfig;
     }
@@ -86,7 +89,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
         userComp.add(bottomControlSection());
         gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
-        alertsCombobox.addValueChangeListener(this::updateAlertAttributes);
+        alertsCombobox.addValueChangeListener(this::updateLayoutComponents);
         return userComp;
     }
     private JComponent controlSec() {
@@ -128,7 +131,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private JComponent getSectionComponent(AlertSectionName sectionName) {
         SectionComponents sc = getSectionComponents(sectionName);
-        sc.setSectionAtrribute(getAlertConfig().getSectionAtrribute(sectionName));
+        sc.setSectionCompValues(getAlertConfig().getSectionAtrribute(sectionName));
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sc.getSectionName().getDisplay(),totalWidth,rowHeight,sc.activateStatus);
         SectionLayout sectionLayout = new SectionLayout(sc);
         sectionComponentsList.add(sc);
@@ -141,11 +144,19 @@ public class AlertLayout extends AbstractLayeredDialog {
 
         JButton saveBtn = new JButton(saveBtnText);
         saveBtn.addActionListener(this::save);
+
+        JButton delBtn = new JButton(delBtnText);
+        delBtn.addActionListener(this::delete);
+
+        JButton cloneBtn = new JButton(cloneBtnText);
+        cloneBtn.addActionListener(this::clone);
+
         JPanel bottomCtrPanel = new JPanel();
         Border outsideBorder = BorderFactory.createMatteBorder(1,0,0,0, Color.darkGray);
         bottomCtrPanel.setBorder(outsideBorder);
 
         bottomCtrPanel.add(saveBtn);
+        bottomCtrPanel.add(delBtn);
         bottomCtrPanel.add(clsBtn);
 
         JPanel bottomCrtPanelWrapper = new JPanel();
@@ -162,16 +173,51 @@ public class AlertLayout extends AbstractLayeredDialog {
         AlertPeriod selectPeriod = (AlertPeriod)period.getSelectedItem();
         AlertConfig selectedAlertConfig = AlertAttrManager.of(selectGameId, selectPeriod);
         if ( alertConfig.getGameId()  < 0 ) {
-            selectedAlertConfig.cloneAttributes(alertConfig);
+//            selectedAlertConfig.cloneAttributes(alertConfig);
             setAlertConfig(selectedAlertConfig);
         }
         return selectedAlertConfig;
+    }
+    private void clone(ActionEvent event) {
+       Utils.log(new Exception("need Implementation"));
+    }
+    private void delete(ActionEvent event) {
+        if ( JOptionPane.NO_OPTION == Utils.showOptions(getSportsTabPane(),"Do you want to delete this alert?") ) {
+            return;
+        }
+
+        JButton delBtn = (JButton)event.getSource();
+        alertsCombobox.removeItemAt(alertsCombobox.getSelectedIndex());
+        if ( alertConfig.getGameId() < 0) {
+            LineSeekerAlertSelectionItem blankAlert = LineSeekerAlertSelectionItem.makeBlankAlert();
+            setAlertConfig(blankAlert.getAlertConfig());
+            alertsCombobox.insertItemAt(blankAlert,0);
+            alertsCombobox.setSelectedIndex(0);
+        } else {
+            AlertAttrManager.removeFromCache(alertConfig);
+        }
+        delBtn.setText("Deleting...");
+        delBtn.setEnabled(false);
+        SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
+            @Override
+            protected Void doInBackground()  {
+                Utils.sleep(actionWaitTime);
+                return null;
+            }
+            @Override
+            protected void done() {
+                delBtn.setText(delBtnText);
+                delBtn.setEnabled(true);
+            }
+        };
+        saveWorker.execute();
     }
     private void save(ActionEvent event) {
 
         final AlertConfig selectedAlert = checkNewAlert();
         for(SectionComponents sc : sectionComponentsList) {
-            sc.updateSectionAttribute();
+            SectionAttribute sectionAttribute = selectedAlert.getSectionAtrribute(sc.getSectionName());
+            sc.updateSectionAttribute(sectionAttribute);
         }
         final AbstractButton btn = (AbstractButton)event.getSource();
         String err = AlertConfigValidator.validate(this);
@@ -204,6 +250,8 @@ public class AlertLayout extends AbstractLayeredDialog {
                 } else {
                     alertsCombobox.addIfAbsent(selectedAlert,true);
                 }
+                gameNumBox.setEnabled(false);
+                period.setEnabled(false);
                 btn.setText(saveBtnText);
                 btn.setEnabled(true);
             }
@@ -212,6 +260,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void performSave() throws JsonProcessingException {
         //doing backgroud work.
+        Utils.sleep(actionWaitTime);
     }
     private void updateLineSeekerAlertSection(ValueChangedEvent event) {
         GameSelectionItem item = (GameSelectionItem)gameNumBox.getSelectedItem();
@@ -236,20 +285,22 @@ public class AlertLayout extends AbstractLayeredDialog {
     public SectionComponents getSectionComponents(AlertSectionName alertSectionName) {
         return sectionComponentsList.stream().filter(g->g.sectionName == alertSectionName).findAny().get();
     }
-    private void updateAlertAttributes(ValueChangedEvent event) {
+    private void updateLayoutComponents(ValueChangedEvent event) {
         LineSeekerAlertSelectionItem lineSeekerAlertSelectionItem = (LineSeekerAlertSelectionItem)this.alertsCombobox.getSelectedItem();
-        AlertConfig alertConfig = lineSeekerAlertSelectionItem.getAlertAttributes();
-        if ( alertConfig.getGameId() != this.alertConfig.getGameId() || alertConfig.getPeriod() != this.alertConfig.getPeriod()) {
-            boolean entableControlBoxes =  0 >= alertConfig.getGameId();
+        AlertConfig selectedAlertConfig = lineSeekerAlertSelectionItem.getAlertConfig();
+        if ( selectedAlertConfig.getGameId() != this.alertConfig.getGameId() || selectedAlertConfig.getPeriod() != this.alertConfig.getPeriod()) {
+            boolean entableControlBoxes =  0 >= selectedAlertConfig.getGameId();
             this.gameNumBox.setEnabled(entableControlBoxes);
             this.period.setEnabled(entableControlBoxes);
         }
-        this.alertConfig = alertConfig;
+        this.alertConfig = selectedAlertConfig;
         List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
         for(AlertSectionName alertSectionName:alertSectionNames ) {
             SectionComponents sc = getSectionComponents(alertSectionName);
-            sc.setSectionAtrribute(alertConfig.getSectionAtrribute(alertSectionName));
+            sc.setSectionCompValues(alertConfig.getSectionAtrribute(alertSectionName));
         }
+        this.gameNumBox.setSelectedItem(new GameSelectionItem(AppController.getGame(alertConfig.getGameId())));
+        this.period.setSelectedItem(alertConfig.getPeriod());
         setEditStatus(false);
     }
     public void setEditStatus(boolean status) {

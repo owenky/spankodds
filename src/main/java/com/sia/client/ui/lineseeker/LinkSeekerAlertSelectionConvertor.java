@@ -7,7 +7,7 @@ public class LinkSeekerAlertSelectionConvertor implements SelectionConvertor<Str
     @Override
     public LineSeekerAlertSelectionItem convertToSelectionItem(String keyValue, String display) {
         AlertConfig alertAttributes = AlertAttrManager.of(keyValue);
-        return (LineSeekerAlertSelectionItem) new LineSeekerAlertSelectionItem(alertAttributes).withDisplay(display);
+        return (LineSeekerAlertSelectionItem) new LineSeekerAlertSelectionItem(alertAttributes.getGameId(),alertAttributes.getPeriod()).withDisplay(display);
     }
 
     @Override
