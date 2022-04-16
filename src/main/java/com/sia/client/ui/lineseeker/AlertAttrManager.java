@@ -42,8 +42,8 @@ public class AlertAttrManager {
     public static void addToCache(AlertConfig alertAttributes) {
         getAlertAttColl().getAlertAttrMap().put(alertAttributes.getKey(),alertAttributes);
     }
-    public static void removeFromCache(AlertConfig alertAttributes) {
-        getAlertAttColl().getAlertAttrMap().remove(alertAttributes.getKey());
+    public static void removeFromCache(AlertConfig alertConfig) {
+        getAlertAttColl().getAlertAttrMap().remove(alertConfig.getKey());
     }
     public static String serializeAlertAttr(AlertConfig attr) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(attr);

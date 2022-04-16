@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
+import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.TitledPanelGenerator;
@@ -32,7 +33,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private static final String saveBtnText = "Save";
     private static final String delBtnText = "Delete";
     private static final String cloneBtnText = "Clone";
-    private static final long actionWaitTime = 600L;
+    private static final long actionWaitTime = 300L;
     public static final Dimension dialogPreferredSize = new Dimension(totalWidth+50,800);
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<AlertPeriod> period;
@@ -63,12 +64,9 @@ public class AlertLayout extends AbstractLayeredDialog {
     private JPanel createUserComp() {
         return new JPanel();
     }
-    public void setAlertConfig(AlertConfig alertConfig) {
-        this.alertConfig = alertConfig;
-    }
     public AlertConfig getAlertConfig() {
         if ( null == alertConfig) {
-            setAlertConfig(AlertConfig.BlankAlert);
+            this.alertConfig = AlertConfig.BlankAlert;
         }
         return this.alertConfig;
     }
@@ -156,6 +154,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         bottomCtrPanel.setBorder(outsideBorder);
 
         bottomCtrPanel.add(saveBtn);
+        bottomCtrPanel.add(cloneBtn);
         bottomCtrPanel.add(delBtn);
         bottomCtrPanel.add(clsBtn);
 
@@ -173,13 +172,19 @@ public class AlertLayout extends AbstractLayeredDialog {
         AlertPeriod selectPeriod = (AlertPeriod)period.getSelectedItem();
         AlertConfig selectedAlertConfig = AlertAttrManager.of(selectGameId, selectPeriod);
         if ( alertConfig.getGameId()  < 0 ) {
-//            selectedAlertConfig.cloneAttributes(alertConfig);
-            setAlertConfig(selectedAlertConfig);
+            this.alertConfig = selectedAlertConfig;
         }
         return selectedAlertConfig;
     }
     private void clone(ActionEvent event) {
-       Utils.log(new Exception("need Implementation"));
+        //construct a new instance, don't use the singleton
+        AlertConfig buffer = new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full);
+        saveCompValuesToAlertConfig(buffer);
+        alertsCombobox.setSelectedIndex(0);
+        this.updateLayoutComponents(buffer);
+        this.gameNumBox.setEnabled(true);
+        this.period.setEnabled(true);
+        this.setEditStatus(true);
     }
     private void delete(ActionEvent event) {
         if ( JOptionPane.NO_OPTION == Utils.showOptions(getSportsTabPane(),"Do you want to delete this alert?") ) {
@@ -187,15 +192,12 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
 
         JButton delBtn = (JButton)event.getSource();
-        alertsCombobox.removeItemAt(alertsCombobox.getSelectedIndex());
-        if ( alertConfig.getGameId() < 0) {
-            LineSeekerAlertSelectionItem blankAlert = LineSeekerAlertSelectionItem.makeBlankAlert();
-            setAlertConfig(blankAlert.getAlertConfig());
-            alertsCombobox.insertItemAt(blankAlert,0);
-            alertsCombobox.setSelectedIndex(0);
-        } else {
+        //removeFromCache must be before removeItemAt
+        boolean isNewAlert =  alertConfig.getGameId() < 0;
+        if ( ! isNewAlert) {
             AlertAttrManager.removeFromCache(alertConfig);
         }
+        alertsCombobox.removeItemAt(alertsCombobox.getSelectedIndex());
         delBtn.setText("Deleting...");
         delBtn.setEnabled(false);
         SwingWorker<Void,Void> saveWorker = new SwingWorker<Void,Void>() {
@@ -208,17 +210,21 @@ public class AlertLayout extends AbstractLayeredDialog {
             protected void done() {
                 delBtn.setText(delBtnText);
                 delBtn.setEnabled(true);
+                alertsCombobox.setSelectedIndex(0);
             }
         };
         saveWorker.execute();
     }
+    private void saveCompValuesToAlertConfig(AlertConfig targetAlertConfig) {
+        for(SectionComponents sc : sectionComponentsList) {
+            SectionAttribute sectionAttribute = targetAlertConfig.getSectionAtrribute(sc.getSectionName());
+            sc.updateSectionAttribute(sectionAttribute);
+        }
+    }
     private void save(ActionEvent event) {
 
         final AlertConfig selectedAlert = checkNewAlert();
-        for(SectionComponents sc : sectionComponentsList) {
-            SectionAttribute sectionAttribute = selectedAlert.getSectionAtrribute(sc.getSectionName());
-            sc.updateSectionAttribute(sectionAttribute);
-        }
+        saveCompValuesToAlertConfig(selectedAlert);
         final AbstractButton btn = (AbstractButton)event.getSource();
         String err = AlertConfigValidator.validate(this);
         if ( null != err ) {
@@ -288,6 +294,10 @@ public class AlertLayout extends AbstractLayeredDialog {
     private void updateLayoutComponents(ValueChangedEvent event) {
         LineSeekerAlertSelectionItem lineSeekerAlertSelectionItem = (LineSeekerAlertSelectionItem)this.alertsCombobox.getSelectedItem();
         AlertConfig selectedAlertConfig = lineSeekerAlertSelectionItem.getAlertConfig();
+        updateLayoutComponents(selectedAlertConfig);
+    }
+    private void updateLayoutComponents(AlertConfig selectedAlertConfig) {
+
         if ( selectedAlertConfig.getGameId() != this.alertConfig.getGameId() || selectedAlertConfig.getPeriod() != this.alertConfig.getPeriod()) {
             boolean entableControlBoxes =  0 >= selectedAlertConfig.getGameId();
             this.gameNumBox.setEnabled(entableControlBoxes);

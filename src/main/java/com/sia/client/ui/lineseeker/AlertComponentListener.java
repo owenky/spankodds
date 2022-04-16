@@ -60,7 +60,7 @@ public class AlertComponentListener implements KeyListener, ActionListener {
             return true;
         }
 
-        return columnValueChanged(sectionAttr.getRightColumn(),sc.getLeftColumn());
+        return columnValueChanged(sectionAttr.getRightColumn(),sc.getRightColumn());
     }
     private boolean columnValueChanged(ColumnAttributes columnAttributes, ColumnComponents columnComponents) {
         boolean changed = ! columnComponents.getLineText().equals(columnAttributes.getLineInput());
