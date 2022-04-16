@@ -1,33 +1,19 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
+import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 
@@ -43,6 +29,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private Supplier<Point> anchorLocSupplier;
     private final SportsTabPane stp;
     private String title;
+    private Callable<Boolean> closeValidor;
     private JComponent titlePanelLeftComp;
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
@@ -62,7 +49,10 @@ public class AnchoredLayeredPane implements ComponentListener {
         mouseListener = new HideOnMouseOutListener();
         layeredPane = getJLayeredPane();
     }
-
+    public AnchoredLayeredPane withCloseValidor(Callable<Boolean> closeValidor) {
+        this.closeValidor = closeValidor;
+        return this;
+    }
     private void prepareListening() {
 		anchoredParentComp.addComponentListener(this);
     }
@@ -181,10 +171,19 @@ public class AnchoredLayeredPane implements ComponentListener {
         this.titlePanelLeftComp = titlePanelLeftComp;
     }
     public void close() {
-        hide();
-        isOpened = false;
-		anchoredParentComp.removeComponentListener(this);
-        activeLayeredPaneMap.remove(this.getActiveMapKey(),this);
+        boolean toClose;
+        try {
+            toClose = (null == closeValidor || closeValidor.call());
+        }catch ( Exception e) {
+            Utils.log(e);
+            toClose = true;
+        }
+        if ( toClose ) {
+            hide();
+            isOpened = false;
+            anchoredParentComp.removeComponentListener(this);
+            activeLayeredPaneMap.remove(this.getActiveMapKey(), this);
+        }
     }
     protected final void hide() {
         if ( null == userComponentScrollPane) {

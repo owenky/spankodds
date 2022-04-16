@@ -53,6 +53,7 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComps.addActionListener(alertComponentListener);
             sectionComponentsList.add(sectionComps);
         }
+        withCloseValidor(this::validateClose);
     }
     private JComponent makeAlertComboBoxPanel() {
         JPanel panel = new JPanel();
@@ -323,6 +324,14 @@ public class AlertLayout extends AbstractLayeredDialog {
         String tooltipText = status ?"To select another Alert, please save or delete this configuration.":"";
         alertsCombobox.setToolTipText(tooltipText);
 
+    }
+    private boolean validateClose() {
+        if ( isEdited()) {
+            int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes to this alert configuration?");
+            return JOptionPane.YES_OPTION == option;
+        } else {
+            return true;
+        }
     }
     private boolean isEdited() {
         return editIndicator.equals(editStatusLabel.getText());
