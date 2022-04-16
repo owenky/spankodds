@@ -196,6 +196,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         boolean isNewAlert =  alertConfig.getGameId() < 0;
         if ( ! isNewAlert) {
             AlertAttrManager.removeFromCache(alertConfig);
+        } else {
+            this.updateLayoutComponents(alertConfig);
+            return;
         }
         alertsCombobox.removeItemAt(alertsCombobox.getSelectedIndex());
         delBtn.setText("Deleting...");
@@ -316,6 +319,10 @@ public class AlertLayout extends AbstractLayeredDialog {
     public void setEditStatus(boolean status) {
         String statusTxt = status?editIndicator:"";
         this.editStatusLabel.setText(statusTxt);
+        this.alertsCombobox.setEnabled(!status);
+        String tooltipText = status ?"To select another Alert, please save or delete this configuration.":"";
+        alertsCombobox.setToolTipText(tooltipText);
+
     }
     private boolean isEdited() {
         return editIndicator.equals(editStatusLabel.getText());

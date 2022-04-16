@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertComponentListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertComponentListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
@@ -250,13 +249,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1619104025768</updated>
-    </task>
-    <task id="LOCAL-00542" summary="implements auto fill user/pwd">
-      <created>1643344176612</created>
-      <option name="number" value="00542" />
-      <option name="presentableId" value="LOCAL-00542" />
-      <option name="project" value="LOCAL" />
-      <updated>1643344176613</updated>
     </task>
     <task id="LOCAL-00543" summary="implements auto fill user/pwd">
       <created>1643594443731</created>
@@ -594,7 +586,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650054017283</updated>
     </task>
-    <option name="localTasksCounter" value="591" />
+    <task id="LOCAL-00591" summary="LineSeekerAlert: implemented clone and fixed delete btn">
+      <created>1650076558863</created>
+      <option name="number" value="00591" />
+      <option name="presentableId" value="LOCAL-00591" />
+      <option name="project" value="LOCAL" />
+      <updated>1650076558863</updated>
+    </task>
+    <option name="localTasksCounter" value="592" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -718,7 +717,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed showHeader not taking effective" />
     <MESSAGE value="LineSeekerAlert: removed Line from Money Line Section" />
     <MESSAGE value="LineSeekerAlert: use ComboBox for game# field" />
     <MESSAGE value="LineSeekerAlert: use SBTComboBox" />
@@ -743,7 +741,8 @@
     <MESSAGE value="LineSeekerAlert: add json library" />
     <MESSAGE value="LineSeekerAlert: add readme" />
     <MESSAGE value="LineSeekerAlert: update certificate" />
-    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: update certificate" />
+    <MESSAGE value="LineSeekerAlert: implemented clone and fixed delete btn" />
+    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: implemented clone and fixed delete btn" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -790,11 +789,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankOdds.java</url>
           <line>148</line>
           <option name="timeStamp" value="1385" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertAttrManager.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="1395" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-defaults>
