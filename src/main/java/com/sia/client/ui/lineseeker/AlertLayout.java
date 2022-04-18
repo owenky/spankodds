@@ -29,7 +29,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private static final String editIndicator="*";
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
-    private static final int rowHeight =150;
+    private static final int rowHeight =100;
     private static final String saveBtnText = "Save";
     private static final String delBtnText = "Delete";
     private static final String cloneBtnText = "Clone";
@@ -93,11 +93,10 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private JComponent controlSec() {
 
-        final Dimension fieldDim = new Dimension(100,30);
         period = new JComboBox<>(new Vector<>(AlertPeriod.getOrderedVec()));
 
         JPanel bodyComp = new JPanel();
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(null,totalWidth,80,null);
+        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(null,totalWidth,40,null,null);
         titledPanelGenerator.setBodyComponent(bodyComp);
 
         bodyComp.setLayout(new GridBagLayout());
@@ -131,7 +130,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private JComponent getSectionComponent(AlertSectionName sectionName) {
         SectionComponents sc = getSectionComponents(sectionName);
         sc.setSectionCompValues(getAlertConfig().getSectionAtrribute(sectionName));
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sc.getSectionName().getDisplay(),totalWidth,rowHeight,sc.activateStatus);
+        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sc.getSectionName().getDisplay(),totalWidth,rowHeight,sc.activateStatus,sc.useEquivalent);
         SectionLayout sectionLayout = new SectionLayout(sc);
         sectionComponentsList.add(sc);
         titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
@@ -155,7 +154,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         bottomCtrPanel.setBorder(outsideBorder);
 
         bottomCtrPanel.add(saveBtn);
-        bottomCtrPanel.add(cloneBtn);
+//        bottomCtrPanel.add(cloneBtn);
         bottomCtrPanel.add(delBtn);
         bottomCtrPanel.add(clsBtn);
 
@@ -163,7 +162,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         bottomCrtPanelWrapper.setLayout(new BorderLayout());
         bottomCrtPanelWrapper.add(bottomCtrPanel,BorderLayout.CENTER);
 
-        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",totalWidth,30,null);
+        TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",totalWidth,25,null,null);
         titledPanelGenerator.setBodyComponent(bottomCrtPanelWrapper);
         return titledPanelGenerator.getPanel();
     }
@@ -227,14 +226,15 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void save(ActionEvent event) {
 
-        final AlertConfig selectedAlert = checkNewAlert();
-        saveCompValuesToAlertConfig(selectedAlert);
-        final AbstractButton btn = (AbstractButton)event.getSource();
         String err = AlertConfigValidator.validate(this);
         if ( null != err ) {
             Utils.showMessageDialog(getSportsTabPane(),err);
             return;
         }
+
+        final AlertConfig selectedAlert = checkNewAlert();
+        saveCompValuesToAlertConfig(selectedAlert);
+        final AbstractButton btn = (AbstractButton)event.getSource();
 
         btn.setText("Saving...");
         btn.setEnabled(false);

@@ -5,10 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ant.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AbstractLayeredDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AbstractLayeredDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AnchoredLayeredPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AnchoredLayeredPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TitledPanelGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TitledPanelGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfigValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/SectionLayout.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,44 +26,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodeInsightWorkspaceSettings">
-    <option name="optimizeImportsOnTheFly" value="true" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Enum" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="UrgentMessages" />
-  </component>
-  <component name="Git.Rebase.Settings">
-    <option name="NEW_BASE" value="origin/BeforeRefactor" />
-  </component>
   <component name="Git.Settings">
-    <favorite-branches>
-      <branch-storage>
-        <map>
-          <entry type="LOCAL">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$" source="Frank" />
-                <branch-info repo="$PROJECT_DIR$" source="feature21.10" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </favorite-branches>
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="repository" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -64,755 +37,57 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="InstancesTracker">
-    <option name="classes">
-      <map>
-        <entry key="com.sia.client.model.LineData" value="CREATION" />
-        <entry key="java.lang.String" value="CREATION" />
-        <entry key="java.sql.Timestamp" value="CREATION" />
-      </map>
-    </option>
-  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="1rWuAcZ6mLOrhak5RRnQkz9RfVD" />
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="27uSVAri0GGPli097qCAMADYV8L" />
   <component name="ProjectViewState">
-    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
-    <property name="JavaMethodFindUsagesOptions.isOverridingMethods" value="true" />
-    <property name="JavaMethodFindUsagesOptions.isSearchForTextOccurrences" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JSON&#10;JSON5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../spankodds_jars" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.21289062" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\sia_uber\spankodds\src\main\resources\media" />
-      <recent name="I:\sia_uber\spankodds\deploytools\DigitCertAndJarSign" />
-      <recent name="I:\sia_uber\spankodds\target" />
-      <recent name="I:\sia_uber\spankodds" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\sia_uber\spankodds\src\main\java\com\sia\client\ui" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.sia.client.ui.lineseeker" />
-      <recent name="com.sia.client.ui.games" />
-      <recent name="com.sia.client.ui" />
-      <recent name="com.sia.client.ui.sbt" />
-      <recent name="com.sia.client.mqsimulator" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.sia.client.ui.lineseeker" />
-      <recent name="com.sia.client.ui.sbt" />
-      <recent name="com.sia.client.ui" />
-      <recent name="com.sia.client.model" />
-      <recent name="com.sia.client.simulator" />
+      <recent name="C:\sia_uber\spankodds\.idea" />
     </key>
   </component>
-  <component name="RunAnythingCache">
-    <option name="myCommands">
-      <command value="mvn compile" />
-      <command value="mvn idea:clean" />
-      <command value="mvn idea:idea" />
-      <command value="mvn clean install" />
-    </option>
-  </component>
-  <component name="RunManager" selected="Application.SpankOdds">
-    <configuration name="AlertConfig" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.lineseeker.AlertConfig" />
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.ui.lineseeker.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="SpankOdds" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.SpankOdds" />
       <module name="client" />
-      <option name="VM_PARAMETERS" value="-XX:+UseSerialGC -Xmx1000m -DDebug=true -DInterestedMessageTypes=Game,Line,Score -DMesgDir=c:\temp\OngingGameMessages -DRunSimulator=false -DGetMesgFromLog=false -DLogMesg=true -DLogToFile=false" />
+      <option name="PROGRAM_PARAMETERS" value="-XX:+UseSerialGC -Xmx1000m -DDebug=true -DInterestedMessageTypes=Game,Line,Score -DMesgDir=c:\temp\OngingGameMessages_notMoved -DRunSimulator=false -DGetMesgFromLog=false -DLogMesg=false -DLogToFile=false -DFilter==559@,=559~" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestCls" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.lineseeker.TestCls" />
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.ui.lineseeker.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Utils" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.config.Utils" />
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.ui.games.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UtilsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.config.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.sia.client.config" />
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.config.UtilsTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UtilsTest.testIsIntegerString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.config.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.sia.client.config" />
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.config.UtilsTest" />
-      <option name="METHOD_NAME" value="testIsIntegerString" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UtilsTest.testIsNumericString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.config.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.sia.client.config" />
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.config.UtilsTest" />
-      <option name="METHOD_NAME" value="testIsNumericString" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="Application.SpankOdds" />
-      <item itemvalue="Application.Utils" />
-      <item itemvalue="Application.TestCls" />
-      <item itemvalue="Application.AlertConfig" />
-      <item itemvalue="JUnit.UtilsTest.testIsIntegerString" />
-      <item itemvalue="JUnit.UtilsTest.testIsNumericString" />
-      <item itemvalue="JUnit.UtilsTest" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.TestCls" />
-        <item itemvalue="JUnit.UtilsTest" />
-        <item itemvalue="Application.AlertConfig" />
-        <item itemvalue="JUnit.UtilsTest.testIsNumericString" />
-        <item itemvalue="JUnit.UtilsTest.testIsIntegerString" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="" />
-      <changelist id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
-      <created>1619104025768</created>
+      <created>1650168498745</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1619104025768</updated>
+      <updated>1650168498745</updated>
     </task>
-    <task id="LOCAL-00544" summary="improve tool tip">
-      <created>1643772025447</created>
-      <option name="number" value="00544" />
-      <option name="presentableId" value="LOCAL-00544" />
-      <option name="project" value="LOCAL" />
-      <updated>1643772025447</updated>
-    </task>
-    <task id="LOCAL-00545" summary="create update to change display only, not to re-create main screen">
-      <created>1644034322544</created>
-      <option name="number" value="00545" />
-      <option name="presentableId" value="LOCAL-00545" />
-      <option name="project" value="LOCAL" />
-      <updated>1644034322545</updated>
-    </task>
-    <task id="LOCAL-00546" summary="refactored to fullfil column name change update from server">
-      <created>1644203852211</created>
-      <option name="number" value="00546" />
-      <option name="presentableId" value="LOCAL-00546" />
-      <option name="project" value="LOCAL" />
-      <updated>1644203852211</updated>
-    </task>
-    <task id="LOCAL-00547" summary="implement line seeker dialog">
-      <created>1644987953508</created>
-      <option name="number" value="00547" />
-      <option name="presentableId" value="LOCAL-00547" />
-      <option name="project" value="LOCAL" />
-      <updated>1644987953509</updated>
-    </task>
-    <task id="LOCAL-00548" summary="implementation of hiding games with not lines">
-      <created>1646022051690</created>
-      <option name="number" value="00548" />
-      <option name="presentableId" value="LOCAL-00548" />
-      <option name="project" value="LOCAL" />
-      <updated>1646022051690</updated>
-    </task>
-    <task id="LOCAL-00549" summary="implement line seeker dialog">
-      <created>1646542719380</created>
-      <option name="number" value="00549" />
-      <option name="presentableId" value="LOCAL-00549" />
-      <option name="project" value="LOCAL" />
-      <updated>1646542719380</updated>
-    </task>
-    <task id="LOCAL-00550" summary="fixed showHeader not taking effective">
-      <created>1647566860771</created>
-      <option name="number" value="00550" />
-      <option name="presentableId" value="LOCAL-00550" />
-      <option name="project" value="LOCAL" />
-      <updated>1647566860772</updated>
-    </task>
-    <task id="LOCAL-00551" summary="fixed showHeader not taking effective">
-      <created>1647569124789</created>
-      <option name="number" value="00551" />
-      <option name="presentableId" value="LOCAL-00551" />
-      <option name="project" value="LOCAL" />
-      <updated>1647569124789</updated>
-    </task>
-    <task id="LOCAL-00552" summary="LineSeekerAlert: removed Line from Money Line Section">
-      <created>1647712438663</created>
-      <option name="number" value="00552" />
-      <option name="presentableId" value="LOCAL-00552" />
-      <option name="project" value="LOCAL" />
-      <updated>1647712438663</updated>
-    </task>
-    <task id="LOCAL-00553" summary="LineSeekerAlert: use ComboBox for game# field">
-      <created>1647713665996</created>
-      <option name="number" value="00553" />
-      <option name="presentableId" value="LOCAL-00553" />
-      <option name="project" value="LOCAL" />
-      <updated>1647713665996</updated>
-    </task>
-    <task id="LOCAL-00554" summary="LineSeekerAlert: use SBTComboBox">
-      <created>1648000878096</created>
-      <option name="number" value="00554" />
-      <option name="presentableId" value="LOCAL-00554" />
-      <option name="project" value="LOCAL" />
-      <updated>1648000878096</updated>
-    </task>
-    <task id="LOCAL-00555" summary="LineSeekerAlert: use SBTComboBox">
-      <created>1648084657702</created>
-      <option name="number" value="00555" />
-      <option name="presentableId" value="LOCAL-00555" />
-      <option name="project" value="LOCAL" />
-      <updated>1648084657702</updated>
-    </task>
-    <task id="LOCAL-00556" summary="LineSeekerAlert: use SBTComboBox">
-      <created>1648091859932</created>
-      <option name="number" value="00556" />
-      <option name="presentableId" value="LOCAL-00556" />
-      <option name="project" value="LOCAL" />
-      <updated>1648091859932</updated>
-    </task>
-    <task id="LOCAL-00557" summary="LineSeekerAlert: use SBTComboBox">
-      <created>1648308795539</created>
-      <option name="number" value="00557" />
-      <option name="presentableId" value="LOCAL-00557" />
-      <option name="project" value="LOCAL" />
-      <updated>1648308795539</updated>
-    </task>
-    <task id="LOCAL-00558" summary="LineSeekerAlert: update game teams for spreads and mline">
-      <created>1648342710770</created>
-      <option name="number" value="00558" />
-      <option name="presentableId" value="LOCAL-00558" />
-      <option name="project" value="LOCAL" />
-      <updated>1648342710770</updated>
-    </task>
-    <task id="LOCAL-00559" summary="LineSeekerAlert: use game::getSportIdentifyingLeagueId for game filter">
-      <created>1648406290342</created>
-      <option name="number" value="00559" />
-      <option name="presentableId" value="LOCAL-00559" />
-      <option name="project" value="LOCAL" />
-      <updated>1648406290342</updated>
-    </task>
-    <task id="LOCAL-00560" summary="LineSeekerAlert: change keystroke sequence logic">
-      <created>1648406412172</created>
-      <option name="number" value="00560" />
-      <option name="presentableId" value="LOCAL-00560" />
-      <option name="project" value="LOCAL" />
-      <updated>1648406412172</updated>
-    </task>
-    <task id="LOCAL-00561" summary="LineSeekerAlert: use game::getSportIdentifyingLeagueId for game filter">
-      <created>1648406423230</created>
-      <option name="number" value="00561" />
-      <option name="presentableId" value="LOCAL-00561" />
-      <option name="project" value="LOCAL" />
-      <updated>1648406423230</updated>
-    </task>
-    <task id="LOCAL-00562" summary="LineSeekerAlert: use game::getSportIdentifyingLeagueId for game filter">
-      <created>1648406452910</created>
-      <option name="number" value="00562" />
-      <option name="presentableId" value="LOCAL-00562" />
-      <option name="project" value="LOCAL" />
-      <updated>1648406452910</updated>
-    </task>
-    <task id="LOCAL-00563" summary="LineSeekerAlert: add delete key feature">
-      <created>1648413551574</created>
-      <option name="number" value="00563" />
-      <option name="presentableId" value="LOCAL-00563" />
-      <option name="project" value="LOCAL" />
-      <updated>1648413551574</updated>
-    </task>
-    <task id="LOCAL-00564" summary="LineSeekerAlert: fixed bug where selected id is string">
-      <created>1648424989658</created>
-      <option name="number" value="00564" />
-      <option name="presentableId" value="LOCAL-00564" />
-      <option name="project" value="LOCAL" />
-      <updated>1648424989658</updated>
-    </task>
-    <task id="LOCAL-00565" summary="LineSeekerAlert: fixed bug where selected id is string">
-      <created>1648425004816</created>
-      <option name="number" value="00565" />
-      <option name="presentableId" value="LOCAL-00565" />
-      <option name="project" value="LOCAL" />
-      <updated>1648425004816</updated>
-    </task>
-    <task id="LOCAL-00566" summary="LineSeekerAlert: use default fixed columns and shown columns when bookie config broken">
-      <created>1648436358781</created>
-      <option name="number" value="00566" />
-      <option name="presentableId" value="LOCAL-00566" />
-      <option name="project" value="LOCAL" />
-      <updated>1648436358781</updated>
-    </task>
-    <task id="LOCAL-00567" summary="LineSeekerAlert: fixed custom tab not saved bug">
-      <created>1648523206455</created>
-      <option name="number" value="00567" />
-      <option name="presentableId" value="LOCAL-00567" />
-      <option name="project" value="LOCAL" />
-      <updated>1648523206455</updated>
-    </task>
-    <task id="LOCAL-00568" summary="LineSeekerAlert: repack lineseeker alert classes">
-      <created>1648696020870</created>
-      <option name="number" value="00568" />
-      <option name="presentableId" value="LOCAL-00568" />
-      <option name="project" value="LOCAL" />
-      <updated>1648696020870</updated>
-    </task>
-    <task id="LOCAL-00569" summary="LineSeekerAlert: repack lineseeker alert classes">
-      <created>1648696158494</created>
-      <option name="number" value="00569" />
-      <option name="presentableId" value="LOCAL-00569" />
-      <option name="project" value="LOCAL" />
-      <updated>1648696158494</updated>
-    </task>
-    <task id="LOCAL-00570" summary="LineSeekerAlert: separete AlertLayout from data">
-      <created>1648782922362</created>
-      <option name="number" value="00570" />
-      <option name="presentableId" value="LOCAL-00570" />
-      <option name="project" value="LOCAL" />
-      <updated>1648782922362</updated>
-    </task>
-    <task id="LOCAL-00571" summary="LineSeekerAlert: temp version">
-      <created>1648860586791</created>
-      <option name="number" value="00571" />
-      <option name="presentableId" value="LOCAL-00571" />
-      <option name="project" value="LOCAL" />
-      <updated>1648860586791</updated>
-    </task>
-    <task id="LOCAL-00572" summary="LineSeekerAlert: use Enum for Alert Section Name">
-      <created>1648866286294</created>
-      <option name="number" value="00572" />
-      <option name="presentableId" value="LOCAL-00572" />
-      <option name="project" value="LOCAL" />
-      <updated>1648866286294</updated>
-    </task>
-    <task id="LOCAL-00573" summary="LineSeekerAlert: add jason library">
-      <created>1648935367853</created>
-      <option name="number" value="00573" />
-      <option name="presentableId" value="LOCAL-00573" />
-      <option name="project" value="LOCAL" />
-      <updated>1648935367853</updated>
-    </task>
-    <task id="LOCAL-00574" summary="LineSeekerAlert: add jason library">
-      <created>1648935385708</created>
-      <option name="number" value="00574" />
-      <option name="presentableId" value="LOCAL-00574" />
-      <option name="project" value="LOCAL" />
-      <updated>1648935385708</updated>
-    </task>
-    <task id="LOCAL-00575" summary="LineSeekerAlert: separate data from layout">
-      <created>1649001467721</created>
-      <option name="number" value="00575" />
-      <option name="presentableId" value="LOCAL-00575" />
-      <option name="project" value="LOCAL" />
-      <updated>1649001467721</updated>
-    </task>
-    <task id="LOCAL-00576" summary="LineSeekerAlert: save attribute as jason string">
-      <created>1649044843113</created>
-      <option name="number" value="00576" />
-      <option name="presentableId" value="LOCAL-00576" />
-      <option name="project" value="LOCAL" />
-      <updated>1649044843113</updated>
-    </task>
-    <task id="LOCAL-00577" summary="LineSeekerAlert: save attribute as jason string">
-      <created>1649130809489</created>
-      <option name="number" value="00577" />
-      <option name="presentableId" value="LOCAL-00577" />
-      <option name="project" value="LOCAL" />
-      <updated>1649130809489</updated>
-    </task>
-    <task id="LOCAL-00578" summary="LineSeekerAlert: fixed NPE when closing window">
-      <created>1649295668059</created>
-      <option name="number" value="00578" />
-      <option name="presentableId" value="LOCAL-00578" />
-      <option name="project" value="LOCAL" />
-      <updated>1649295668059</updated>
-    </task>
-    <task id="LOCAL-00579" summary="LineSeekerAlert: backup project settings">
-      <created>1649296068156</created>
-      <option name="number" value="00579" />
-      <option name="presentableId" value="LOCAL-00579" />
-      <option name="project" value="LOCAL" />
-      <updated>1649296068156</updated>
-    </task>
-    <task id="LOCAL-00580" summary="LineSeekerAlert: fixed NPE when closing window">
-      <created>1649302198672</created>
-      <option name="number" value="00580" />
-      <option name="presentableId" value="LOCAL-00580" />
-      <option name="project" value="LOCAL" />
-      <updated>1649302198672</updated>
-    </task>
-    <task id="LOCAL-00581" summary="LineSeekerAlert: save attribute as jason string">
-      <created>1649302690588</created>
-      <option name="number" value="00581" />
-      <option name="presentableId" value="LOCAL-00581" />
-      <option name="project" value="LOCAL" />
-      <updated>1649302690588</updated>
-    </task>
-    <task id="LOCAL-00582" summary="LineSeekerAlert: add alert combobox">
-      <created>1649647862643</created>
-      <option name="number" value="00582" />
-      <option name="presentableId" value="LOCAL-00582" />
-      <option name="project" value="LOCAL" />
-      <updated>1649647862643</updated>
-    </task>
-    <task id="LOCAL-00583" summary="LineSeekerAlert: add alert combobox">
-      <created>1649734916888</created>
-      <option name="number" value="00583" />
-      <option name="presentableId" value="LOCAL-00583" />
-      <option name="project" value="LOCAL" />
-      <updated>1649734916888</updated>
-    </task>
-    <task id="LOCAL-00584" summary="LineSeekerAlert: refactoring">
-      <created>1649816999999</created>
-      <option name="number" value="00584" />
-      <option name="presentableId" value="LOCAL-00584" />
-      <option name="project" value="LOCAL" />
-      <updated>1649816999999</updated>
-    </task>
-    <task id="LOCAL-00585" summary="LineSeekerAlert: refactoring">
-      <created>1649817369035</created>
-      <option name="number" value="00585" />
-      <option name="presentableId" value="LOCAL-00585" />
-      <option name="project" value="LOCAL" />
-      <updated>1649817369035</updated>
-    </task>
-    <task id="LOCAL-00586" summary="LineSeekerAlert: refactoring">
-      <created>1649820022831</created>
-      <option name="number" value="00586" />
-      <option name="presentableId" value="LOCAL-00586" />
-      <option name="project" value="LOCAL" />
-      <updated>1649820022831</updated>
-    </task>
-    <task id="LOCAL-00587" summary="LineSeekerAlert: refactoring">
-      <created>1649820142677</created>
-      <option name="number" value="00587" />
-      <option name="presentableId" value="LOCAL-00587" />
-      <option name="project" value="LOCAL" />
-      <updated>1649820142677</updated>
-    </task>
-    <task id="LOCAL-00588" summary="LineSeekerAlert: add json library">
-      <created>1649900315522</created>
-      <option name="number" value="00588" />
-      <option name="presentableId" value="LOCAL-00588" />
-      <option name="project" value="LOCAL" />
-      <updated>1649900315522</updated>
-    </task>
-    <task id="LOCAL-00589" summary="LineSeekerAlert: add readme">
-      <created>1650051778049</created>
-      <option name="number" value="00589" />
-      <option name="presentableId" value="LOCAL-00589" />
-      <option name="project" value="LOCAL" />
-      <updated>1650051778050</updated>
-    </task>
-    <task id="LOCAL-00590" summary="LineSeekerAlert: update certificate">
-      <created>1650054017283</created>
-      <option name="number" value="00590" />
-      <option name="presentableId" value="LOCAL-00590" />
-      <option name="project" value="LOCAL" />
-      <updated>1650054017283</updated>
-    </task>
-    <task id="LOCAL-00591" summary="LineSeekerAlert: implemented clone and fixed delete btn">
-      <created>1650076558863</created>
-      <option name="number" value="00591" />
-      <option name="presentableId" value="LOCAL-00591" />
-      <option name="project" value="LOCAL" />
-      <updated>1650076558863</updated>
-    </task>
-    <task id="LOCAL-00592" summary="LineSeekerAlert: implemented clone and fixed delete btn">
-      <created>1650077205166</created>
-      <option name="number" value="00592" />
-      <option name="presentableId" value="LOCAL-00592" />
-      <option name="project" value="LOCAL" />
-      <updated>1650077205166</updated>
-    </task>
-    <option name="localTasksCounter" value="593" />
     <servers />
   </component>
-  <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_ID_ORDER">
-      <list>
-        <option value="Default.Root" />
-        <option value="Default.Author" />
-        <option value="Default.Date" />
-        <option value="Default.Subject" />
-        <option value="Space.CommitStatus" />
-      </list>
-    </option>
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="1cc3598e-e0c9-48bf-9e62-91f8d1ae82c6">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="45ba16b8-f866-42c6-8a00-6e0651666fd1">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="2022_02" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-        <entry key="64d5ec32-b947-461c-92ba-ba78d096f3b8">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="2022_02" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-        <entry key="85068255-d66f-4fb0-ad5a-2e17602f1466">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="9b312e05-f6f0-4ac5-a95e-15e08a84610b">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="CUSTOM_BOOLEAN_PROPERTIES">
-                <map>
-                  <entry key="Show.Git.Branches" value="false" />
-                </map>
-              </option>
-              <option name="BEK_SORT_TYPE" value="1" />
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="2022_02" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-              <option name="TEXT_FILTER_SETTINGS">
-                <TextFilterSettings>
-                  <option name="REGEX" value="true" />
-                  <option name="MATCH_CASE" value="true" />
-                </TextFilterSettings>
-              </option>
-            </State>
-          </value>
-        </entry>
-        <entry key="ad452dd0-ad0b-45b9-b969-b84c9eac74cb">
-          <value>
-            <State />
-          </value>
-        </entry>
-        <entry key="f39f5284-9a56-431b-8c7d-a9472033a3c9">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="2022_02" />
-                </option>
-              </RecentGroup>
-            </list>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="LineSeekerAlert: removed Line from Money Line Section" />
-    <MESSAGE value="LineSeekerAlert: use ComboBox for game# field" />
-    <MESSAGE value="LineSeekerAlert: use SBTComboBox" />
-    <MESSAGE value="LineSeekerAlert: update game teams for spreads and mline" />
-    <MESSAGE value="LineSeekerAlert: change keystroke sequence logic" />
-    <MESSAGE value="LineSeekerAlert: use game::getSportIdentifyingLeagueId for game filter" />
-    <MESSAGE value="LineSeekerAlert: add delete key feature" />
-    <MESSAGE value="LineSeekerAlert: fixed bug where selected id is string" />
-    <MESSAGE value="LineSeekerAlert: use default fixed columns and shown columns when bookie config broken" />
-    <MESSAGE value="LineSeekerAlert: fixed custom tab not saved bug" />
-    <MESSAGE value="LineSeekerAlert: repack lineseeker alert classes" />
-    <MESSAGE value="LineSeekerAlert: separete AlertLayout from data" />
-    <MESSAGE value="LineSeekerAlert: temp version" />
-    <MESSAGE value="LineSeekerAlert: use Enum for Alert Section Name" />
-    <MESSAGE value="LineSeekerAlert: add jason library" />
-    <MESSAGE value="LineSeekerAlert: separate data from layout" />
-    <MESSAGE value="LineSeekerAlert: backup project settings" />
-    <MESSAGE value="LineSeekerAlert: fixed NPE when closing window" />
-    <MESSAGE value="LineSeekerAlert: save attribute as jason string" />
-    <MESSAGE value="LineSeekerAlert: add alert combobox" />
-    <MESSAGE value="LineSeekerAlert: refactoring" />
-    <MESSAGE value="LineSeekerAlert: add json library" />
-    <MESSAGE value="LineSeekerAlert: add readme" />
-    <MESSAGE value="LineSeekerAlert: update certificate" />
-    <MESSAGE value="LineSeekerAlert: implemented clone and fixed delete btn" />
-    <option name="LAST_COMMIT_MESSAGE" value="LineSeekerAlert: implemented clone and fixed delete btn" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>jar://$PROJECT_DIR$/../../Program Files/Java/jdk1.8.0_162/src.zip!/java/lang/NullPointerException.java</url>
-          <line>69</line>
-          <option name="timeStamp" value="1039" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="java-line">
-          <url>jar://$PROJECT_DIR$/../../Program Files/Java/jdk1.8.0_162/src.zip!/java/lang/NullPointerException.java</url>
-          <line>59</line>
-          <option name="timeStamp" value="1146" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/TableColumnHeaderManager.java</url>
-          <line>104</line>
-          <option name="timeStamp" value="1157" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="java-line">
-          <condition expression="9531== game.getGame_id()" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/model/KeyedObjectList.java</url>
-          <line>61</line>
-          <option name="timeStamp" value="1235" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/GamesConsumer.java</url>
-          <line>265</line>
-          <option name="timeStamp" value="1252" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="java-line">
-          <condition expression="newLine.getGameid()==53331321 || newLine.getGameid()==543" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/AppController.java</url>
-          <line>1067</line>
-          <option name="timeStamp" value="1363" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <condition expression="((SportNode)userObject).toString().equals(&quot;Other Soccer&quot;)" language="JAVA" custom="com.sia.client.model.SportNode" />
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/sbt/SBTComboBoxUI.java</url>
-          <line>70</line>
-          <option name="timeStamp" value="1380" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankOdds.java</url>
-          <line>148</line>
-          <option name="timeStamp" value="1385" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertLayout.java</url>
-          <line>328</line>
-          <option name="timeStamp" value="1396" />
-        </line-breakpoint>
-      </breakpoints>
-      <breakpoints-defaults>
-        <breakpoint suspend="THREAD" type="java-line" />
-      </breakpoints-defaults>
-    </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="winList" language="JAVA" />
-      </configuration>
-    </watches-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/spankodds$SpankOdds.ic" NAME="SpankOdds Coverage Results" MODIFIED="1641743757552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/spankodds$SpankOdds.ic" NAME="SpankOdds Coverage Results" MODIFIED="1633917911405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

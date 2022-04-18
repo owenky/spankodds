@@ -113,16 +113,16 @@ public class SectionLayout {
             c.gridx = 4;
             layoutPane.add(radioGrpRight, c);
 
-            //new row -- check box
-            c.gridy++;
-
-            c.gridx = 0;
-            c.gridwidth = 7;
-            c.anchor = GridBagConstraints.CENTER;
-            if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
-                useEquivalent.setLabel(useEquivalent.getName());
-            }
-            layoutPane.add(useEquivalent, c);
+//            //new row -- check box
+//            c.gridy++;
+//
+//            c.gridx = 0;
+//            c.gridwidth = 7;
+//            c.anchor = GridBagConstraints.CENTER;
+//            if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
+//                useEquivalent.setLabel(useEquivalent.getName());
+//            }
+//            layoutPane.add(useEquivalent, c);
         }
         return layoutPane;
     }

@@ -4,10 +4,17 @@ public abstract class AlertConfigValidator {
 
     public static String validate(AlertLayout alertLayout) {
 
-        if ( alertLayout.getSelectedGameId() < 1) {
+        int selectedGameId = alertLayout.getSelectedGameId();
+        if ( selectedGameId < 1) {
             return "Please select a game ";
         } else {
-            return null;
+            if( null != AlertAttrManager.getAlertAttr(String.valueOf(selectedGameId),alertLayout.getSelectedAlertPeriod())) {
+                return "Alert for game id "+selectedGameId+" and period "+alertLayout.getSelectedAlertPeriod()+
+                        " already exists. Please change game id or period to create new alert," +
+                        " or chose from Alerts drop down box to modify existing one. ";
+            }else {
+                return null;
+            }
         }
     }
 }
