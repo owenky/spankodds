@@ -1,5 +1,6 @@
 package com.sia.client.ui.lineseeker;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sia.client.model.SelectionItem;
 
@@ -37,6 +38,7 @@ public class AlertConfig {
             return sectionAtrribute;
         });
     }
+    @JsonIgnore
     public String getKey() {
         return AlertAttrManager.makeKey(String.valueOf(gameId),period);
     }
