@@ -21,7 +21,7 @@ import static com.sia.client.config.Utils.log;
 
 public class TopView extends JPanel implements ItemListener, Cloneable {
     private static final String mutedImgFile="muted.png";
-    private static final String unMutedImgFile="unmuted.jfif";
+    private static final String unMutedImgFile="unmuted.jpg";
     private final SportsTabPane stb;
     private JButton clearBut;
     private JButton clearAllBut;
@@ -110,11 +110,11 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         adjustcolsBut = new JButton("Adj Cols");
         chartBut = new JButton("Chart");
         chartBut.addActionListener(e -> new ChartHome(stb).show());
-        muteBut = new JButton(new ImageIcon(Utils.getMediaResource(unMutedImgFile)));
-        muteBut.setActionCommand("mute");
+        muteBut = new JButton();
         muteBut.setContentAreaFilled(false);
         muteBut.setBorder(BorderFactory.createEmptyBorder());
         muteBut.addActionListener(this::toggleMuteBut);
+        setMuteButtonActionCommand(muteBut,"toMute");
 
         alertsComp = new UrgentMesgHistComp();
         AppController.alertsVector.bind(alertsComp);
@@ -134,7 +134,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         add(chartBut);
         add(alertsComp.getComponent());
         add(new JToolBar.Separator());
-//        add(muteBut);
+        add(muteBut);
 
     }
 
@@ -388,16 +388,25 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     private void toggleMuteBut(ActionEvent ae) {
         AbstractButton muteBut = (AbstractButton)ae.getSource();
         String ac = muteBut.getActionCommand();
-        if ( "mute".equalsIgnoreCase(ac)) {
-//            muteBut.setText("Un-mute");
-            muteBut.setIcon(Utils.getImageIcon(mutedImgFile));
-            muteBut.setActionCommand("unmute");
+        String nextActionCommand;
+        if ("toMute".equalsIgnoreCase(ac)) {
             SoundPlayer.enableSound = false;
+            nextActionCommand = "toUnMute";
         } else {
-//            muteBut.setText("mute");
-            muteBut.setIcon(Utils.getImageIcon(unMutedImgFile));
-            muteBut.setActionCommand("mute");
             SoundPlayer.enableSound = true;
+            nextActionCommand = "toMute";
         }
+        setMuteButtonActionCommand(muteBut,nextActionCommand);
+    }
+    private static void setMuteButtonActionCommand(AbstractButton btn, String actionCommand) {
+        if ( "toMute".equalsIgnoreCase(actionCommand)) {
+            btn.setIcon(Utils.getImageIcon(unMutedImgFile));
+            btn.setToolTipText("Click to mute audio plays");
+
+        } else {
+            btn.setIcon(Utils.getImageIcon(mutedImgFile));
+            btn.setToolTipText("Click to un-mute audio plays");
+        }
+        btn.setActionCommand(actionCommand);
     }
 }
