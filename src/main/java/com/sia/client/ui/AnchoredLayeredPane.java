@@ -139,6 +139,7 @@ public class AnchoredLayeredPane implements ComponentListener {
             closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()));
             closeBtn.setOpaque(false);
             closeBtn.setBorder(BorderFactory.createEmptyBorder());
+            closeBtn.setContentAreaFilled(false);
             JPanel btnPanel = new JPanel();
             btnPanel.setLayout(new BorderLayout());
             btnPanel.add(closeBtn,BorderLayout.EAST);

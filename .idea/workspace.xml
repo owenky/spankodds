@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/lineseeker/AlertConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/media/SoundPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/media/SoundPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AnchoredLayeredPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/AnchoredLayeredPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,17 +52,18 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/media" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.21289062" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\sia_uber\spankodds\src\main\resources\media" />
       <recent name="C:\sia_uber\spankodds\.idea" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.LineSeekerAlertUtil">
+  <component name="RunManager" selected="Application.SpankOdds">
     <configuration name="LineSeekerAlertUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.lineseeker.LineSeekerAlertUtil" />
       <module name="client" />
@@ -109,23 +112,20 @@
       <option name="project" value="LOCAL" />
       <updated>1650252379271</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="check fixed json serialization bug">
+      <created>1650419157149</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1650419157149</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="check duplicate alert when saving" />
-    <option name="LAST_COMMIT_MESSAGE" value="check duplicate alert when saving" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/UserPrefsProducer.java</url>
-          <line>160</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="check fixed json serialization bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="check fixed json serialization bug" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/spankodds$SpankOdds.ic" NAME="SpankOdds Coverage Results" MODIFIED="1633917911405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

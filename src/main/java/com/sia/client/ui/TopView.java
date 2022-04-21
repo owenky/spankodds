@@ -1,17 +1,13 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
+import com.sia.client.config.Utils;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -24,24 +20,27 @@ import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class TopView extends JPanel implements ItemListener, Cloneable {
+    private static final String mutedImgFile="muted.png";
+    private static final String unMutedImgFile="unmuted.jfif";
     private final SportsTabPane stb;
-    JButton clearBut;
-    JButton clearAllBut;
-    JButton lastBut;
-    JButton openerBut;
-    JButton sortBut;
-    JButton addBookieBut;
-    JButton shrinkTeamBut;
-    JButton newWindowBut;
-    JButton alertBut;
-    JButton adjustcolsBut;
-    JButton chartBut;
-    JComboBox cb;
-    JComboBox periodcb;
-    String[] display = new String[9];
-    String[] display2 = new String[9];
-    int[] perioddisplay = new int[8];
-    String[] perioddisplay2 = new String[8];
+    private JButton clearBut;
+    private JButton clearAllBut;
+    private JButton lastBut;
+    private JButton openerBut;
+    private JButton sortBut;
+    private JButton addBookieBut;
+    private JButton shrinkTeamBut;
+    private JButton newWindowBut;
+    private JButton alertBut;
+    private JButton adjustcolsBut;
+    private JButton chartBut;
+    private JButton muteBut;
+    private JComboBox cb;
+    private JComboBox periodcb;
+    private String[] display = new String[9];
+    private String[] display2 = new String[9];
+    private int[] perioddisplay = new int[8];
+    private String[] perioddisplay2 = new String[8];
     private MutableItemContainer<AlertStruct> alertsComp;
 
     public TopView(SportsTabPane stb) {
@@ -111,6 +110,11 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         adjustcolsBut = new JButton("Adj Cols");
         chartBut = new JButton("Chart");
         chartBut.addActionListener(e -> new ChartHome(stb).show());
+        muteBut = new JButton(new ImageIcon(Utils.getMediaResource(unMutedImgFile)));
+        muteBut.setActionCommand("mute");
+        muteBut.setContentAreaFilled(false);
+        muteBut.setBorder(BorderFactory.createEmptyBorder());
+        muteBut.addActionListener(this::toggleMuteBut);
 
         alertsComp = new UrgentMesgHistComp();
         AppController.alertsVector.bind(alertsComp);
@@ -129,6 +133,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         add(adjustcolsBut);
         add(chartBut);
         add(alertsComp.getComponent());
+        add(new JToolBar.Separator());
+//        add(muteBut);
 
     }
 
@@ -377,6 +383,21 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             //	com.sia.client.ui.ChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
             //	SoccerChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
             log("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
+        }
+    }
+    private void toggleMuteBut(ActionEvent ae) {
+        AbstractButton muteBut = (AbstractButton)ae.getSource();
+        String ac = muteBut.getActionCommand();
+        if ( "mute".equalsIgnoreCase(ac)) {
+//            muteBut.setText("Un-mute");
+            muteBut.setIcon(Utils.getImageIcon(mutedImgFile));
+            muteBut.setActionCommand("unmute");
+            SoundPlayer.enableSound = false;
+        } else {
+//            muteBut.setText("mute");
+            muteBut.setIcon(Utils.getImageIcon(unMutedImgFile));
+            muteBut.setActionCommand("mute");
+            SoundPlayer.enableSound = true;
         }
     }
 }
