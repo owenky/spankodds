@@ -40,7 +40,9 @@ public class LinesTableData extends TableSection<Game> {
     }
     @Override
     protected boolean toAddToModel(Game g) {
-        return AppController.containAnyLine(g.getGame_id());
+        // remove empty line filtering upon david's request -- 04/21/2022
+//        return AppController.containAnyLine(g.getGame_id());
+        return true;
     }
     @Override
     public boolean equals(final Object o) {
