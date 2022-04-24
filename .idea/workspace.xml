@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/JToggleButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/ToggerButtonListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/MainScreenLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/MainScreenLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankyWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankyWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
@@ -125,7 +125,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650595188478</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="sync mute button across windows">
+      <created>1650810377034</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1650810377034</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -134,7 +141,8 @@
     <MESSAGE value="add mute/unmute images" />
     <MESSAGE value="implement mute/unmute buttons" />
     <MESSAGE value="remove empty lines filtering for adding game to model" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove empty lines filtering for adding game to model" />
+    <MESSAGE value="sync mute button across windows" />
+    <option name="LAST_COMMIT_MESSAGE" value="sync mute button across windows" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -143,11 +151,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/simulator/OngoingGameMessages.java</url>
           <line>241</line>
           <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/ColumnHeaderCellRenderer.java</url>
-          <line>38</line>
-          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-defaults>

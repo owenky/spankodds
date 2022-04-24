@@ -35,7 +35,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
     private JButton alertBut;
     private JButton adjustcolsBut;
     private JButton chartBut;
-    private JButton muteBut;
+    private JToggleButton muteBut;
+    private JToggleButton blockAlertPopupBut;
     private JComboBox cb;
     private JComboBox periodcb;
     private String[] display = new String[9];
@@ -111,11 +112,13 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         adjustcolsBut = new JButton("Adj Cols");
         chartBut = new JButton("Chart");
         chartBut.addActionListener(e -> new ChartHome(stb).show());
-        muteBut = new JButton();
-        muteBut.setContentAreaFilled(false);
-        muteBut.setBorder(BorderFactory.createEmptyBorder());
-        muteBut.addActionListener(this::muteButtonActionListener);
-        setMuteButtonActionCommand(muteBut,"toMute");
+        muteBut = new JToggleButton("muteAlert",unMutedImgFile,"Click to mute audio plays",mutedImgFile,"Click to un-mute audio plays");
+        ToggerButtonListener muteButListener = (button)-> SoundPlayer.enableSound = button.isEnabled();
+        muteBut.addActionListener(muteButListener);
+
+        blockAlertPopupBut = new JToggleButton("blockAlertPopup",unMutedImgFile,"Click to block popup alert",mutedImgFile,"Click to un-block popup alert");
+        ToggerButtonListener blockAlertPopupListener = (button)-> SoundPlayer.enableSound = button.isEnabled();
+        blockAlertPopupBut.addActionListener(blockAlertPopupListener);
 
         alertsComp = new UrgentMesgHistComp();
         AppController.alertsVector.bind(alertsComp);
@@ -136,7 +139,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         add(alertsComp.getComponent());
         add(new JToolBar.Separator());
         add(muteBut);
-
+        add(blockAlertPopupBut);
     }
 
     public void initEvents() {
@@ -385,40 +388,5 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             //	SoccerChartView.setPeriod(perioddisplay[periodcb.getSelectedIndex()]);
             log("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
         }
-    }
-    private void muteButtonActionListener(ActionEvent ae) {
-        toggleMuteButsForAllWindows();
-    }
-    private void toggleMuteButton() {
-        String ac = muteBut.getActionCommand();
-        String nextActionCommand;
-        if ("toMute".equalsIgnoreCase(ac)) {
-            SoundPlayer.enableSound = false;
-            nextActionCommand = "toUnMute";
-        } else {
-            SoundPlayer.enableSound = true;
-            nextActionCommand = "toMute";
-        }
-        setMuteButtonActionCommand(muteBut,nextActionCommand);
-    }
-    public void toggleMuteButsForAllWindows() {
-        Iterator<SpankyWindow> ite = SpankyWindow.getAllSpankyWindows();
-        while ( ite.hasNext()) {
-            SpankyWindow window = ite.next();
-            TopView tv= window.getTopView();
-            tv.toggleMuteButton();
-        }
-
-    }
-    private static void setMuteButtonActionCommand(AbstractButton btn, String actionCommand) {
-        if ( "toMute".equalsIgnoreCase(actionCommand)) {
-            btn.setIcon(Utils.getImageIcon(unMutedImgFile));
-            btn.setToolTipText("Click to mute audio plays");
-
-        } else {
-            btn.setIcon(Utils.getImageIcon(mutedImgFile));
-            btn.setToolTipText("Click to un-mute audio plays");
-        }
-        btn.setActionCommand(actionCommand);
     }
 }
