@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.Iterator;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -113,7 +114,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         muteBut = new JButton();
         muteBut.setContentAreaFilled(false);
         muteBut.setBorder(BorderFactory.createEmptyBorder());
-        muteBut.addActionListener(this::toggleMuteBut);
+        muteBut.addActionListener(this::muteButtonActionListener);
         setMuteButtonActionCommand(muteBut,"toMute");
 
         alertsComp = new UrgentMesgHistComp();
@@ -385,8 +386,10 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             log("JUST SET PERIOD=" + perioddisplay[periodcb.getSelectedIndex()]);
         }
     }
-    private void toggleMuteBut(ActionEvent ae) {
-        AbstractButton muteBut = (AbstractButton)ae.getSource();
+    private void muteButtonActionListener(ActionEvent ae) {
+        toggleMuteButsForAllWindows();
+    }
+    private void toggleMuteButton() {
         String ac = muteBut.getActionCommand();
         String nextActionCommand;
         if ("toMute".equalsIgnoreCase(ac)) {
@@ -397,6 +400,15 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             nextActionCommand = "toMute";
         }
         setMuteButtonActionCommand(muteBut,nextActionCommand);
+    }
+    public void toggleMuteButsForAllWindows() {
+        Iterator<SpankyWindow> ite = SpankyWindow.getAllSpankyWindows();
+        while ( ite.hasNext()) {
+            SpankyWindow window = ite.next();
+            TopView tv= window.getTopView();
+            tv.toggleMuteButton();
+        }
+
     }
     private static void setMuteButtonActionCommand(AbstractButton btn, String actionCommand) {
         if ( "toMute".equalsIgnoreCase(actionCommand)) {

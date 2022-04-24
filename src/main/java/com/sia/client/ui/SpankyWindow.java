@@ -122,6 +122,9 @@ public class SpankyWindow extends JFrame {
         setContentPane(mainpanel);
         setSize(600, 600);
     }
+    public TopView getTopView() {
+        return this.tv;
+    }
     public void populateTabPane() {
         stp.populateComponents();
     }

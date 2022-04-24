@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/media/muted.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/MainScreenLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/MainScreenLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankyWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/SpankyWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/media/unmuted.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/media/unmuted.jpg" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -63,39 +63,17 @@
       <recent name="C:\sia_uber\spankodds\.idea" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SpankOdds">
-    <configuration name="LineSeekerAlertUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.lineseeker.LineSeekerAlertUtil" />
-      <module name="client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sia.client.ui.lineseeker.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="SpankOdds" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.sia.client.ui.SpankOdds" />
       <module name="client" />
-      <option name="PROGRAM_PARAMETERS" value="-XX:+UseSerialGC -Xmx1000m -DDebug=true -DInterestedMessageTypes=Game,Line,Score -DMesgDir=c:\temp\OngingGameMessages_notMoved -DRunSimulator=false -DGetMesgFromLog=false -DLogMesg=false -DLogToFile=false -DFilter==559@,=559~" />
+      <option name="VM_PARAMETERS" value="-XX:+UseSerialGC -Xmx1000m -DDebug=true -DInterestedMessageTypes=Game,Line,Score -DMesgDir=c:\temp\OngingGameMessages -DRunSimulator=false -DGetMesgFromLog=false -DLogMesg=false -DLogToFile=true -DFilter==505@,=505~" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="Application.SpankOdds" />
-      <item itemvalue="Application.LineSeekerAlertUtil" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.LineSeekerAlertUtil" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -133,15 +111,54 @@
       <option name="project" value="LOCAL" />
       <updated>1650506498336</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="implement mute/unmute buttons">
+      <created>1650508390039</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1650508390039</updated>
+    </task>
+    <task id="LOCAL-00006" summary="remove empty lines filtering for adding game to model">
+      <created>1650595188478</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1650595188478</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="check duplicate alert when saving" />
     <MESSAGE value="check fixed json serialization bug" />
-    <MESSAGE value="implement mute/unmute buttons" />
     <MESSAGE value="add mute/unmute images" />
-    <option name="LAST_COMMIT_MESSAGE" value="add mute/unmute images" />
+    <MESSAGE value="implement mute/unmute buttons" />
+    <MESSAGE value="remove empty lines filtering for adding game to model" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove empty lines filtering for adding game to model" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/simulator/OngoingGameMessages.java</url>
+          <line>241</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/sia/client/ui/ColumnHeaderCellRenderer.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-defaults>
+        <breakpoint suspend="THREAD" type="java-line" />
+      </breakpoints-defaults>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="AppController.getGame(921)" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/spankodds$SpankOdds.ic" NAME="SpankOdds Coverage Results" MODIFIED="1633917911405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
