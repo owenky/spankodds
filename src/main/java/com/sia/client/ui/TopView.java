@@ -23,6 +23,8 @@ import static com.sia.client.config.Utils.log;
 public class TopView extends JPanel implements ItemListener, Cloneable {
     private static final String mutedImgFile="muted.png";
     private static final String unMutedImgFile="unmuted.jpg";
+    private static final String blockingPopupImgFile="blocking.jpg";
+    private static final String unBlockingPopupImgFile="unblocking.jpg";
     private final SportsTabPane stb;
     private JButton clearBut;
     private JButton clearAllBut;
@@ -116,8 +118,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         ToggerButtonListener muteButListener = (button)-> SoundPlayer.enableSound = button.isEnabled();
         muteBut.addActionListener(muteButListener);
 
-        blockAlertPopupBut = new JToggleButton("blockAlertPopup",unMutedImgFile,"Click to block popup alert",mutedImgFile,"Click to un-block popup alert");
-        ToggerButtonListener blockAlertPopupListener = (button)-> SoundPlayer.enableSound = button.isEnabled();
+        blockAlertPopupBut = new JToggleButton("blockAlertPopup",unBlockingPopupImgFile,"Click to block popup alert",blockingPopupImgFile,"Click to un-block popup alert");
+        ToggerButtonListener blockAlertPopupListener = (button)-> UrgentMessage.popupEnabled = button.isEnabled();
         blockAlertPopupBut.addActionListener(blockAlertPopupListener);
 
         alertsComp = new UrgentMesgHistComp();

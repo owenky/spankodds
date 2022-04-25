@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/JToggleButton.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/ToggerButtonListener.java" afterDir="false" />
+    <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="Abstract JToggleButton and implent block/unblock alert popup">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/media/blocking.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/media/unblocking.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UrgentMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UrgentMessage.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650810377034</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Abstract JToggleButton and implent block/unblock alert popup">
+      <created>1650839155294</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1650839155294</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -142,7 +150,8 @@
     <MESSAGE value="implement mute/unmute buttons" />
     <MESSAGE value="remove empty lines filtering for adding game to model" />
     <MESSAGE value="sync mute button across windows" />
-    <option name="LAST_COMMIT_MESSAGE" value="sync mute button across windows" />
+    <MESSAGE value="Abstract JToggleButton and implent block/unblock alert popup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Abstract JToggleButton and implent block/unblock alert popup" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
