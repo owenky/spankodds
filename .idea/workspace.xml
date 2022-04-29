@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="Abstract JToggleButton and implent block/unblock alert popup">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/media/blocking.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/media/unblocking.jpg" afterDir="false" />
+    <list default="true" id="4d979731-9ea5-4e5e-ba90-cff7b2ee8924" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/FontConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/TopView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/SportsMenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/SportsMenuBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UrgentMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sia/client/ui/UrgentMessage.java" afterDir="false" />
     </list>
     <list id="afa18ada-6502-48d2-9919-68750c86977e" name="DontCommit" comment="" />
@@ -140,7 +140,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650839155294</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="implements popup enable config">
+      <created>1650852995692</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1650852995692</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -151,7 +158,8 @@
     <MESSAGE value="remove empty lines filtering for adding game to model" />
     <MESSAGE value="sync mute button across windows" />
     <MESSAGE value="Abstract JToggleButton and implent block/unblock alert popup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Abstract JToggleButton and implent block/unblock alert popup" />
+    <MESSAGE value="implements popup enable config" />
+    <option name="LAST_COMMIT_MESSAGE" value="implements popup enable config" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

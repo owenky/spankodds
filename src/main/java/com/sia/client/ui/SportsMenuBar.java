@@ -26,6 +26,7 @@ public class SportsMenuBar extends JMenuBar {
     private final JMenu gamealertsmenu = new JMenu("Game Alerts");
     private final JMenu tabsmenu = new JMenu("Tabs");
     private final JMenu windowmenu = new JMenu("Window");
+    private final JMenu settingmenu = new JMenu("Setting");
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
@@ -127,6 +128,10 @@ public class SportsMenuBar extends JMenuBar {
         newwindow.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0)); // 0 means no modifiers
         newwindow.addActionListener(AppController.getNewWindowAction());
         windowmenu.add(newwindow);
+
+        add(settingmenu);
+        JMenu fontconfig = new FontConfig().createFontMenu();
+        settingmenu.add(fontconfig);
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);

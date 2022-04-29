@@ -37,6 +37,7 @@ public class UrgentMessage {
     private void showUrgentMessage(String urgentmessage, int ms, int where, Component c) {
 
         if ( ! popupEnabled ) {
+            Utils.log("DEBUG:  popupEnabled=false, popup is disabled..................");
             return;
         }
         String alerttext = "<HTML><H1>URGENT MESSAGE</H1><FONT COLOR=BLUE>" +
