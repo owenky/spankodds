@@ -39,9 +39,14 @@ public class GameBatchUpdator implements TableModelListener {
     public void flush(TableModelEvent e) {
         if ( null != e) {
             addUpdateEvent(e);
-        }
-        //TODO watch for following disable
+            // if e == null, flush method is usually called by game delete action, must force flushing out all TableEvents
+            // otherwise delete happens before pending events, which result in update event row number invalid -- 04/28/2022
+            forcing = true;
+        } else {
+            //if e is not null, no need to forcing flush, because flushingScheduler might have just invoked checkToUpdate -- 04/28/2022
 //        forcing = true;
+        }
+
         checkToUpdate();
     }
     /**
@@ -57,7 +62,7 @@ public class GameBatchUpdator implements TableModelListener {
                     if ( null != spankyWindow && null != spankyWindow.getSportsTabPane()) { //when user close a window, null scenario might happen -- 2021-11-25
                         Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
                         if (selectedComp instanceof MainScreen) {
-                            if ((selectedComp).isShowing()) {
+                            if (selectedComp.isShowing()) {
                                 model.fireTableChanged(e);
                             }
                         }
