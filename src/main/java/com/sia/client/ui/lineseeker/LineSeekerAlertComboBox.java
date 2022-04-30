@@ -59,43 +59,4 @@ public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlert
 		items.add(0,LineSeekerAlertSelectionItem.makeBlankAlert());
 		this.addElement(items);
 	}
-//	public void loadGames() {
-//		Games games = AppController.getGames();
-//		Iterator<Game> ite = games.iterator();
-//		List<Game> gameList = new ArrayList<>(games.size()+2);
-//		while(ite.hasNext()) {
-//			Game g = ite.next();
-//			if (GameUtils.isRealGame(g)) {
-//				gameList.add(g);
-//			}
-//		}
-//		gameList.sort(new GameIdSorter());
-//		List<GameSelectionItem> gameItemList = gameList.stream().map(GameSelectionItem::new).collect(Collectors.toList());
-//
-//		int maxDisplayLen = 0;
-//		GameSelectionItem prototypeDisplayValue = null;
-//		for(GameSelectionItem gItem: gameItemList) {
-//			Game game = gItem.getGame();
-//			int gameId = game.getGame_id();
-//			String gameIdStr = formatGameId(gameId);
-//			String display = String.format("%s  %s",gameIdStr,GameSelectionItem.getGameDesc(game));
-//			gItem.withDisplay(display);
-//			if ( display.length() > maxDisplayLen) {
-//				maxDisplayLen = display.length();
-//				prototypeDisplayValue = gItem;
-//			}
-//
-//		}
-//		setPrototypeDisplayValue(prototypeDisplayValue);
-//		gameItemList.add(0,promptInput);
-//		this.addElement(gameItemList);
-//	}
-//
-//	private static String formatGameId(int gameId) {
-//		StringBuilder sb = new StringBuilder(String.valueOf(gameId));
-//		for(int i=sb.length();i<maxGameIdLen;i++) {
-//			sb.append(" ");
-//		}
-//		return sb.toString();
-//	}
 }
