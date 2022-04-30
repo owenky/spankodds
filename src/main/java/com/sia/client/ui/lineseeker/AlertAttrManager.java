@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sia.client.model.SelectionItem;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class AlertAttrManager {
 
     private static final String KeyJointer = "@";
     private static AlertAttColl alertAttColl;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
 
     public static AlertConfig getAlertAttr(String gameId, AlertPeriod period)  {
@@ -46,13 +47,13 @@ public class AlertAttrManager {
         getAlertAttColl().getAlertAttrMap().remove(alertConfig.getKey());
     }
     public static String serializeAlertAttr(AlertConfig attr) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(attr);
+        return objectMapper.writeValueAsString(attr);
     }
     public static String serializeAlertAlertAttColl() throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(getAlertAttColl());
+        return objectMapper.writeValueAsString(getAlertAttColl());
     }
     public static void deSerializeAlertAlertAttColl(String alertAttCollJsonStr) throws JsonProcessingException {
-        alertAttColl = new ObjectMapper().readValue(alertAttCollJsonStr,AlertAttColl.class);
+        alertAttColl = objectMapper.readValue(alertAttCollJsonStr,AlertAttColl.class);
     }
     private static synchronized AlertAttColl getAlertAttColl() {
         if ( null == alertAttColl) {
@@ -69,5 +70,16 @@ public class AlertAttrManager {
     }
     public static String makeKey(int gameId, AlertPeriod period) {
         return makeKey(String.valueOf(gameId),period);
+    }
+    public static List<LineSeekerAlertSelectionItem> getLineSeekerAlertSelectionItem() {
+        Set<String> keys = getAlertAttColl().getAlertAttrMap().keySet();
+        List<LineSeekerAlertSelectionItem> rtn = new ArrayList<>(keys.size());
+        for(String key: keys) {
+            String [] parts = key.split(KeyJointer);
+            int gameId = Integer.parseInt(parts[0]);
+            AlertPeriod alertPeriod = AlertPeriod.valueOf(parts[1]);
+            rtn.add(new LineSeekerAlertSelectionItem(gameId,alertPeriod));
+        }
+        return rtn;
     }
 }

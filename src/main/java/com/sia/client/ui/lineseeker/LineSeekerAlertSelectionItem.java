@@ -9,16 +9,25 @@ public class LineSeekerAlertSelectionItem extends SelectionItem<String> {
 
 	private final int gameId;
 	private final AlertPeriod alertPeriod;
+
 	public LineSeekerAlertSelectionItem(int gameId, AlertPeriod alertPeriod) {
 		super(AlertAttrManager.makeKey(gameId,alertPeriod));
 		this.gameId = gameId;
 		this.alertPeriod = alertPeriod;
 		Comparable<SelectionItem<String>> comparator = (o)-> getKeyValue().compareTo(o.getKeyValue());
 		Game game = AppController.getGame(gameId);
-		withComparator(comparator);
 		if ( null != game ) {
 			withDisplay(game.getGame_id() + " " + GameSelectionItem.getGameDesc(game) + " : " + alertPeriod.toString());
 		}
+	}
+	@Override
+	public int compareTo(SelectionItem<String> o) {
+		LineSeekerAlertSelectionItem another = (LineSeekerAlertSelectionItem)o;
+		int diff = gameId - another.gameId;
+		if ( 0 ==  diff) {
+			diff = alertPeriod.name().compareTo(another.alertPeriod.name());
+		}
+		return diff;
 	}
 	public AlertConfig getAlertConfig() {
 		return AlertAttrManager.of(gameId,alertPeriod);

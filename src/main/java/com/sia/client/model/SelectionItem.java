@@ -1,8 +1,6 @@
 package com.sia.client.model;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 public class SelectionItem<T> implements Comparable<SelectionItem<T>> {
@@ -13,7 +11,6 @@ public class SelectionItem<T> implements Comparable<SelectionItem<T>> {
 	public static final Integer UPDATE_FAILURE = -4;
 	private String display;
 	private final T keyValue;
-	private Comparable<SelectionItem<T>> comparator;
 	private static final Set<Integer> specialKeys;
 
 	static {
@@ -24,14 +21,12 @@ public class SelectionItem<T> implements Comparable<SelectionItem<T>> {
 		specialKeys.add(UPDATE_FAILURE);
 		specialKeys.add(READING);
 	}
-
 	public SelectionItem(T keyValue) {
 		this.keyValue = keyValue;
-		this.comparator = (o)-> String.valueOf(this.keyValue).compareTo(String.valueOf(o.keyValue));
 	}
 	@Override
-	public int compareTo(SelectionItem o) {
-		return comparator.compareTo(o);
+	public int compareTo(SelectionItem<T> o) {
+		return String.valueOf(this.keyValue).compareTo(String.valueOf(o.keyValue));
 	}
 	public T getKeyValue(){
 		return keyValue;
@@ -39,10 +34,6 @@ public class SelectionItem<T> implements Comparable<SelectionItem<T>> {
 
 	public SelectionItem<T> withDisplay(String display) {
 		this.display = display;
-		return this;
-	}
-	public SelectionItem<T> withComparator(Comparable<SelectionItem<T>> comparator) {
-		this.comparator = comparator;
 		return this;
 	}
 	public boolean isSpecialItem(){
@@ -85,7 +76,7 @@ public class SelectionItem<T> implements Comparable<SelectionItem<T>> {
 	public String getDisplay(){
 		return display;
 	}
-	public String valueOf(String text){ // ÔÚComboBoxInputLineEditor µÄgetItem ·½·¨ÖÐ±»·´ÉäÊ¹ÓÃ
+	public String valueOf(String text){ // ï¿½ï¿½ComboBoxInputLineEditor ï¿½ï¿½getItem ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½
 		return String.valueOf(text);
 	}
 }

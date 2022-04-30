@@ -3,6 +3,7 @@ package com.sia.client.ui.games;
 import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.lineseeker.LineSeekerAlertSelectionItem;
 
 import java.util.Objects;
 
@@ -22,13 +23,25 @@ public class GameSelectionItem extends SelectionItem<Integer> {
 	public GameSelectionItem(Game game) {
 		super(game.getGame_id());
 		this.game = game;
-		Comparable<SelectionItem<Integer>> comparator = (o)-> getKeyValue()-o.getKeyValue();
-		withComparator(comparator);
 	}
 	public Game getGame() {
 		return game;
 	}
-
+	@Override
+	public int compareTo(SelectionItem<Integer> o) {
+		GameSelectionItem another = (GameSelectionItem)o;
+		return getGameId(this)-getGameId(another);
+	}
+	private static int getGameId(GameSelectionItem item) {
+		if ( null == item) {
+			return 0;
+		}
+		Game game = item.getGame();
+		if ( null == game) {
+			return 0;
+		}
+		return game.getGame_id();
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

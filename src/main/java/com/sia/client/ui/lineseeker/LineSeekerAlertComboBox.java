@@ -5,6 +5,8 @@ import com.sia.client.ui.sbt.SBTComboBox;
 import com.sia.client.ui.sbt.SBTComboBoxUI;
 
 import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
 
 public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlertSelectionItem> {
 
@@ -52,7 +54,10 @@ public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlert
 
 	}
 	public void loadAlerts() {
-		this.addItem(LineSeekerAlertSelectionItem.makeBlankAlert());
+		List<LineSeekerAlertSelectionItem> items = AlertAttrManager.getLineSeekerAlertSelectionItem();
+		Collections.sort(items);
+		items.add(0,LineSeekerAlertSelectionItem.makeBlankAlert());
+		this.addElement(items);
 	}
 //	public void loadGames() {
 //		Games games = AppController.getGames();
