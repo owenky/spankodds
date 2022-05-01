@@ -148,7 +148,8 @@ public class GamesConsumer implements MessageListener {
                             "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
                             "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR></TABLE></FONT></HTML>";
                     try {
-                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
+                        //what is the use of the statement? 05/01/2022
+//                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
                     } catch (Exception ex) {
                         log(ex);
                     }
