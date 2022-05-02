@@ -11,6 +11,13 @@ public class GameGroupDateSorter implements GameGroupHeaderSorter {
 	    if ( 0 != result) {
 	        return result;
         }
+		if ( null == g1 && null == g2) {
+			return 0;
+		} else if ( null == g1) {
+			return -1;
+		} else if ( null == g2) {
+			return 1;
+		}
 	    return g1.getGameDate().compareTo(g2.getGameDate());
     }
     public static void main(String [] argv) {
