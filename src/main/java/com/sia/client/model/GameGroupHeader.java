@@ -28,7 +28,7 @@ public class GameGroupHeader {
         this.leagueId = leagueId;
         this.anchorPos = anchorPos;
         this.leagueName = leagueName;
-        this.gameDate = gameDate;
+        this.gameDate = null==gameDate?LocalDate.of(1900,1,1):gameDate;
         this.gameDateStr = null==gameDate?"":gameDateFormatter.format(this.gameDate);
         this.gameGroupHeaderStr = constructGameGroupHeaderString(leagueName,gameDateStr);
     }
