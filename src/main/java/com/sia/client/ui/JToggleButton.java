@@ -3,9 +3,12 @@ package com.sia.client.ui;
 import com.sia.client.config.Utils;
 
 import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JToggleButton extends JButton {
 
+    private static final Map<String,Boolean> initialEnableStatus = new HashMap<>();
     private boolean enabled;
     private final String enabledIcon;
     private final String enabledTip;
@@ -19,7 +22,9 @@ public class JToggleButton extends JButton {
         setName(name);
         setContentAreaFilled(false);
         setBorder(BorderFactory.createEmptyBorder());
-        setEnable(true);
+        //set initial status to the one that have already been set by same button in previous SpankyWindow 05/01/2022
+        Boolean initialStatus = initialEnableStatus.computeIfAbsent(name,key->true);
+        setEnable(initialStatus);
     }
     public void toggle() {
         setEnable( !enabled);
@@ -37,5 +42,6 @@ public class JToggleButton extends JButton {
             setToolTipText(disabledTip);
         }
         enabled = enable;
+        initialEnableStatus.put(getName(),enabled);
     }
 }
