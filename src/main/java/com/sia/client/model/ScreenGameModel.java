@@ -140,6 +140,12 @@ public class ScreenGameModel {
     }
 
     private int calcmaxlength(String s1, String s2) {
+        if ( null == s1) {
+            s1="";
+        }
+        if ( null == s2) {
+            s2="";
+        }
         return Math.max(s1.length(), s2.length());
     }
 
