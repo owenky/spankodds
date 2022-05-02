@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class GameGroupAggregator {
         while ( ite.hasNext()) {
             Game g = ite.next();
             if (!gameFilter.apply(g)) {
+Utils.log("DEBUG GAME MISSING: game not added to sport "+sportType.getSportName()+", game info="+GameUtils.getGameDebugInfo(g));
                 continue;
             }
             if (null == g.getStatus()) {
