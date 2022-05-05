@@ -638,6 +638,7 @@ public class Game implements KeyedObject,Cloneable {
     }
 
     public void setGameDateTime(java.sql.Date gamedate,Long time) {
+        // gamedate.getTime should be same as time per David modification -- 05/05/2022
 //        if (gamedate == null ) {
 //            if ( game_id != SiaConst.BlankGameId) {
 //                log("gamedate null for gameid=" + game_id);
