@@ -177,7 +177,7 @@ public abstract class OngoingGameMessages {
             if (null != files) {
                 for (int i = 0; i < (files.length-1); i++) {  //skip initGameMesgs.txt
                     String filePath = InitialGameMessages.MesgDir + File.separator + i + ".txt";
-//                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
+                    log("loading the "+i+".txt of out total of "+(files.length-1)+" files.");
                     try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
                         stream.forEach(OngoingGameMessages::processMessage);
                     } catch (Exception e) {
@@ -221,7 +221,7 @@ public abstract class OngoingGameMessages {
         if ( ! toContinue){
             return;
         }
-
+        log(messageText);
         MessageDispatcher messageDispatcher;
         Message message;
         if (MessageType.Line.name().equals(type)) {

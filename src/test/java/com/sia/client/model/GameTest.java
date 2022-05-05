@@ -25,12 +25,12 @@ public class GameTest {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormat.parse(dateStr);
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-        java.sql.Time sqatime = new java.sql.Time((9*60+6)*60*1000L);
+        Long sqltime = (9*60+6)*60*1000L;
 
-        game.setGameDateTime(sqlDate,sqatime);
+        game.setGameDateTime(sqlDate,sqltime);
         assertEquals(dateTime.getTime()- SiaConst.diffBetweenEasternAndUTC, game.gameDate.getTime());
 
-        game.setGameDateTime(sqlDateTime,new java.sql.Time(sqlDateTime.getTime()));
-        assertEquals(dateTime.getTime()- SiaConst.diffBetweenEasternAndUTC, game.gameDate.getTime());
+        game.setGameDateTime(sqlDateTime,sqlDateTime.getTime());
+        assertEquals(sqltime, (Long)(game.getGametime()+SiaConst.diffBetweenEasternAndUTC));
     }
 }

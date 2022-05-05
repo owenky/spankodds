@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 
@@ -27,8 +28,11 @@ public class GameGroupAggregator {
         Iterator<Game> ite = allgames.iterator();
         while ( ite.hasNext()) {
             Game g = ite.next();
-            if (!gameFilter.apply(g)) {
-Utils.log("DEBUG GAME MISSING: game not added to sport "+sportType.getSportName()+", game info="+GameUtils.getGameDebugInfo(g));
+            if (!gameFilter.apply(g) ) {
+                Sport sport = GameUtils.getSport(g);
+                if ( sportType.getSportName().equals(SiaConst.SportName.Baseball) && null != sport && SiaConst.SportName.Baseball.equals(sport.getSportname())) {
+                    Utils.log("DEBUG GAME MISSING: game not added to sport " + sportType.getSportName() + ", game info=" + GameUtils.getGameDebugInfo(g));
+                }
                 continue;
             }
             if (null == g.getStatus()) {
