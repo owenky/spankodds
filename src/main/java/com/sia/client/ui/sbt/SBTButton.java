@@ -1,6 +1,3 @@
-/*
- * Created on 2005-6-17 by Y.M.S.
- */
 package com.sia.client.ui.sbt;
 
 import com.sia.client.config.SiaConst;
@@ -41,10 +38,6 @@ public class SBTButton extends JButton{
     public synchronized void removeMouseListener(MouseListener ml){
     	super.removeMouseListener(ml);
     }
-
-    /**
-     * 当这个按钮作为表格编辑器的构件，并即将显示时，所要做的准备工作。-- XFZ@2012-08-07
-     */
     public void prepareForEditing() {
     	//doing nothing.由子类覆盖
     }
@@ -75,20 +68,12 @@ public class SBTButton extends JButton{
     	}
     	return rtn_;
     }
-	/**
-	 * 创建一个用以表示下拉的按钮。
-	 * @return
-	 */
 	public static JButton createArrowButton(){
 		JButton button = new BasicArrowButton(BasicArrowButton.SOUTH);
 		button.setSize(10,10);
 		button.setPreferredSize(new Dimension(50,50));
 		return button;
 	}
-	/**
-	 * 创建一个用以表示下拉的按钮(image)。
-	 * @return
-	 */
 	public static SBTButton createComboboxDropDownButton() {
 		SBTButton button = new SBTButton();
 		ImageIcon icon = Utils.getImageIcon("downbutton.jpg");
@@ -122,10 +107,6 @@ public class SBTButton extends JButton{
 		super.setToolTipText(tooltiptxt);
 		updateCloneButtonProperties();
 	}
-	/**
-	 * 将这个按钮的属性（如显示、监听、状态等复制到anotherButton，如这些属性变了，anotherButton也要跟着变）-- XFZ@2010-10-29
-	 * @param anotherButton
-	 */
 	public void cloneProperties(AbstractButton anotherButton){
 		
 		if ( clonedButtons == null) {
@@ -135,10 +116,7 @@ public class SBTButton extends JButton{
 		clonedButtons.add(anotherButton); //将所有被复制的按钮放入clonedButtons以便属性改变后可以通知他们 -- XFZ@2010-10-29
 		
 		setCloneProperties(anotherButton);
-		
-		/**
-		 * anotherButton按钮的动作应该执行这个按钮的动作 -- XFZ@2010-10-29
-		 */
+
 		anotherButton.addActionListener(new ActionDelegateListener(this));
 	}
 	private void updateCloneButtonProperties(){
@@ -157,12 +135,6 @@ public class SBTButton extends JButton{
 		boolean isEnabled_ = this.isEnabled();
 		anotherButton.setEnabled(isEnabled_);
 	}
-//////////////////////内部类实现按钮的鼠标监听 -- XFZ@2011-01-25 //////////////////////////////////
-	/**
-	 * 安装这个监听器的按钮，执行的动作是sourceButton的执行动作
-	 * @author xfzheng
-	 *
-	 */
 	private static class ActionDelegateListener implements ActionListener{
 		public ActionDelegateListener(SBTButton sourceButton_){
 			this.sourceButton = sourceButton_;
