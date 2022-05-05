@@ -18,7 +18,7 @@ public class DefaultComboBoxListener<K,T extends SelectionItem<K>> implements Fo
 
         if (UiFunc.isEnterKey(e)) {
 
-            Object highlightedValue = comboBox.getHighLightValue(); // 被highlight但尚未被选中的项目--XFZ@2010-12-17
+            Object highlightedValue = comboBox.getHighLightValue();
             Object selectedItemValue = comboBox.getSelectedItem();
             if (highlightedValue != null) {
                 e.consume();
@@ -66,7 +66,7 @@ public class DefaultComboBoxListener<K,T extends SelectionItem<K>> implements Fo
 
     @Override
     public final void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.DESELECTED) { // 选项目被除掉时,不要继续,否则下面回被执行两次
+        if (e.getStateChange() == ItemEvent.DESELECTED) {
             return;
         }
         SBTComboBox<?,?> box = (SBTComboBox<?,?>) e.getSource();

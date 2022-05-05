@@ -29,9 +29,10 @@ public class GameGroupAggregator {
         while ( ite.hasNext()) {
             Game g = ite.next();
             if (!gameFilter.apply(g) ) {
-if ( sportType.getSportName().equals(SiaConst.SportName.Baseball)) {
-    Utils.log("DEBUG GAME MISSING: game not added to sport " + sportType.getSportName() + ", game info=" + GameUtils.getGameDebugInfo(g));
-}
+                Sport sport = GameUtils.getSport(g);
+                if ( sportType.getSportName().equals(SiaConst.SportName.Baseball) && null != sport && SiaConst.SportName.Baseball.equals(sport.getSportname())) {
+                    Utils.log("DEBUG GAME MISSING: game not added to sport " + sportType.getSportName() + ", game info=" + GameUtils.getGameDebugInfo(g));
+                }
                 continue;
             }
             if (null == g.getStatus()) {

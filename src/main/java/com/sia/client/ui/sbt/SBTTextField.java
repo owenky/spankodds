@@ -240,10 +240,8 @@ public class SBTTextField extends JFormattedTextField{
 				public void mouseClicked(MouseEvent e) {
 					if ( UiFunc.isSpecialKeyDown(e)) {
 						if (e.getClickCount() > 1) {
-							// 双击就全选
 							selectAll();
 						} else {
-							// 单击不选
 							requestFocus();
 							int caretposition_ = getCaretPosition();
 							if (caretposition_ >= 0) {

@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class Game implements KeyedObject,Cloneable {
     int visitoraltgamenumber;
     int homealtgamenumber;
     java.sql.Date gameDate;
-    java.sql.Time gameTime;
+    Long gameTime;
     String visitorteam;
     String hometeam;
     String shortvisitorteam;
@@ -108,7 +109,7 @@ public class Game implements KeyedObject,Cloneable {
                 int visitoraltgamenumber,
                 int homealtgamenumber,
                 java.sql.Date gamedate,
-                java.sql.Time gametime,
+                Long gametime,
                 String visitorteam,
                 String hometeam,
                 String shortvisitorteam,
@@ -636,25 +637,36 @@ public class Game implements KeyedObject,Cloneable {
         return gameDate;
     }
 
-    public void setGameDateTime(java.sql.Date gamedate,java.sql.Time gametime) {
+    public void setGameDateTime(java.sql.Date gamedate,Long timeAfterHour0) {
         if (gamedate == null ) {
             if ( game_id != SiaConst.BlankGameId) {
                 log("gamedate null for gameid=" + game_id);
             }
             gamedate = new java.sql.Date(1000);
         }
-        if (gametime == null) {
+        if (null == timeAfterHour0) {
             if ( game_id != SiaConst.BlankGameId) {
-                log("gametime null for gameid=" + game_id);
+                log("game time null for gameid=" + game_id);
             }
-            gametime = new java.sql.Time(1000);
+            timeAfterHour0 = 1000L;
         }
-        this.gameTime = gametime;
-        this.gameDate = new java.sql.Date(gamedate.getTime()+gametime.getTime()-SiaConst.diffBetweenEasternAndUTC);
-//        this.gameDate = gamedate;
+        this.gameTime = timeAfterHour0;
+        //TODO use logic 1 after server fix date/time problem -- m05/05/2022
+        //logic 1
+//        this.gameDate = new java.sql.Date(gamedate.getTime() + gametime.getTime() - SiaConst.diffBetweenEasternAndUTC);
+
+        // logic 2
+        if ( timeAfterHour0 > 24 * 3600 * 1000L) {
+            //probably gametime and gamedate are same, for this scenario, gamedate include date and time -- 05/05/2022
+            this.gameDate = new java.sql.Date(gamedate.getTime()- SiaConst.diffBetweenEasternAndUTC);
+            this.gameTime = Utils.getTime(gameDate);
+        } else {
+            this.gameDate = new java.sql.Date(gamedate.getTime() + timeAfterHour0 - SiaConst.diffBetweenEasternAndUTC);
+        }
+        // end of logic 2
     }
 
-    public java.sql.Time getGametime() {
+    public Long getGametime() {
         return gameTime;
     }
     @Override

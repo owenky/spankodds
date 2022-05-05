@@ -5,31 +5,17 @@ import com.sia.client.model.SelectionItem;
 import java.text.Collator;
 import java.util.Comparator;
 
-/**
- * SBTSelectionItem比较器 可以通过设置comparePart比较SBTSelectionItem不同的部分。
- * 
- * @author XFZ Created on 2010-08-07
- */
-
 public class SelectionItemComparator implements Comparator<SelectionItem> {
 
 	public enum ComparingPart {KEY,DISPLAY};
 	private ComparingPart comparingPart;
 
-	/**
-	 * 默认是比较SBTSelectionItem的getKeyValue()
-	 */
 	public SelectionItemComparator() {
 		this(ComparingPart.KEY);
 	}
 	public SelectionItemComparator(ComparingPart comparingPart) {
 		setComparePart(comparingPart);
 	}
-	/**
-	 * 比较时，是用SBTSelectionItem的主键或显示内容
-	 * 
-	 * @param comparingPart_
-	 */
 	public void setComparePart(ComparingPart comparingPart_) {
 		this.comparingPart = comparingPart_;
 	}

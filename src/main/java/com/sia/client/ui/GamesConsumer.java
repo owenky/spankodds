@@ -79,7 +79,7 @@ public class GamesConsumer implements MessageListener {
             leagueid = textMessage.getStringProperty("leagueid");
             String oldvpitcher = "";
             String oldhpitcher = "";
-            Time oldgametime = null;
+            Long oldgametime = null;
 
             if (leagueid == null) {
                 leagueid = "";
@@ -215,7 +215,7 @@ public class GamesConsumer implements MessageListener {
                         }
 
                     }
-                    String tc = new java.util.Date() + "..TIME CHANGE!!! " + game.getVisitorgamenumber() + "..old=" + oldgametime.getTime() + "...new=" + game.getGametime().getTime();
+                    String tc = new java.util.Date() + "..TIME CHANGE!!! " + game.getVisitorgamenumber() + "..old=" + oldgametime + "...new=" + game.getGametime();
                     try {
 //                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
                         log(tc);

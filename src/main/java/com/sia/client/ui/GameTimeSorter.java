@@ -33,7 +33,7 @@ public class GameTimeSorter implements Comparator<Game> {
             return 1;
         }
 
-        long diff = g1.getGametime().getTime()-g2.getGametime().getTime();
+        long diff = g1.getGametime()-g2.getGametime();
         if ( diff > 0) {
             return 1;
         } else if ( diff < 0) {
