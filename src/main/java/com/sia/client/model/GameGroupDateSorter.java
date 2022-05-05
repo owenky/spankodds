@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class GameGroupDateSorter implements GameGroupHeaderSorter {
 	@Override
@@ -26,5 +27,8 @@ public class GameGroupDateSorter implements GameGroupHeaderSorter {
 
 		System.out.println(date);
 		System.out.println(test);
+
+		System.out.println(new Date(1651716600000L));
 	}
+
 }
