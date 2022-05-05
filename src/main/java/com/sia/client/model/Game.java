@@ -656,7 +656,7 @@ public class Game implements KeyedObject,Cloneable {
 //        this.gameDate = new java.sql.Date(gamedate.getTime() + gametime.getTime() - SiaConst.diffBetweenEasternAndUTC);
 
         // logic 2
-        if ( timeAfterHour0 > 24 * 3600 * 1000L) {
+        if ( timeAfterHour0 >= gamedate.getTime()) {
             //probably gametime and gamedate are same, for this scenario, gamedate include date and time -- 05/05/2022
             this.gameDate = new java.sql.Date(gamedate.getTime()- SiaConst.diffBetweenEasternAndUTC);
             this.gameTime = Utils.getTime(gameDate);
