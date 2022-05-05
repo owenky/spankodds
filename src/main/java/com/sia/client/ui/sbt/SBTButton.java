@@ -31,7 +31,7 @@ public class SBTButton extends JButton{
     }
     
     private void init() {
-		setFont(new java.awt.Font("宋体", 0,12));
+		setFont(new JLabel().getFont());
 		this.setCursor(SiaConst.Ui.CURSOR_HAND);
     }
     @Override
@@ -39,7 +39,7 @@ public class SBTButton extends JButton{
     	super.removeMouseListener(ml);
     }
     public void prepareForEditing() {
-    	//doing nothing.由子类覆盖
+
     }
     public boolean isTableCellEditor() {
 		return isTableCellEditor;
@@ -113,7 +113,7 @@ public class SBTButton extends JButton{
 			clonedButtons = new ArrayList<>();
 		}
 		
-		clonedButtons.add(anotherButton); //将所有被复制的按钮放入clonedButtons以便属性改变后可以通知他们 -- XFZ@2010-10-29
+		clonedButtons.add(anotherButton);
 		
 		setCloneProperties(anotherButton);
 

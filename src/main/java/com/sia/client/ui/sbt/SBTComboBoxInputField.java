@@ -37,7 +37,7 @@ public class SBTComboBoxInputField extends SBTTextField {
 		setSelectionColor(SiaConst.Ui.COLOR_TEXT_SELECTION_BCK);
 		setSelectedTextColor(SiaConst.Ui.COLOR_TEXT_SELECTION_FORE);
 		createUnderLine();
-		setOpaque(false); // 默认设置为透明
+		setOpaque(false);
 	}
 
 	private void createUnderLine() {

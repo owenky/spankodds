@@ -1,8 +1,6 @@
 package com.sia.client.ui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.internal.NotNull;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
@@ -205,7 +203,6 @@ public class FontConfig implements ActionListener {
             return null;
         }
     }
-    @NotNull
     private Font getSelectedFont() {
         GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Font[] fonts = graphicsEnvironment.getAllFonts();
