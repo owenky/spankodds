@@ -637,32 +637,32 @@ public class Game implements KeyedObject,Cloneable {
         return gameDate;
     }
 
-    public void setGameDateTime(java.sql.Date gamedate,Long timeAfterHour0) {
-        if (gamedate == null ) {
-            if ( game_id != SiaConst.BlankGameId) {
-                log("gamedate null for gameid=" + game_id);
-            }
-            gamedate = new java.sql.Date(1000);
-        }
-        if (null == timeAfterHour0) {
+    public void setGameDateTime(java.sql.Date gamedate,Long time) {
+//        if (gamedate == null ) {
+//            if ( game_id != SiaConst.BlankGameId) {
+//                log("gamedate null for gameid=" + game_id);
+//            }
+//            gamedate = new java.sql.Date(1000);
+//        }
+        if (null == time) {
             if ( game_id != SiaConst.BlankGameId) {
                 log("game time null for gameid=" + game_id);
             }
-            timeAfterHour0 = 1000L;
+            time = 1000L;
         }
-        this.gameTime = timeAfterHour0;
+//        this.gameTime = timeAfterHour0;
         //TODO use logic 1 after server fix date/time problem -- m05/05/2022
         //logic 1
 //        this.gameDate = new java.sql.Date(gamedate.getTime() + gametime.getTime() - SiaConst.diffBetweenEasternAndUTC);
 
-        // logic 2
-        if ( timeAfterHour0 >= gamedate.getTime()) {
+//        // logic 2
+//        if ( timeAfterHour0 >= gamedate.getTime()) {
             //probably gametime and gamedate are same, for this scenario, gamedate include date and time -- 05/05/2022
-            this.gameDate = new java.sql.Date(gamedate.getTime()- SiaConst.diffBetweenEasternAndUTC);
+            this.gameDate = new java.sql.Date(time- SiaConst.diffBetweenEasternAndUTC);
             this.gameTime = Utils.getTime(gameDate);
-        } else {
-            this.gameDate = new java.sql.Date(gamedate.getTime() + timeAfterHour0 - SiaConst.diffBetweenEasternAndUTC);
-        }
+//        } else {
+//            this.gameDate = new java.sql.Date(gamedate.getTime() + timeAfterHour0 - SiaConst.diffBetweenEasternAndUTC);
+//        }
         // end of logic 2
     }
 
