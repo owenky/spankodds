@@ -1,8 +1,15 @@
 package com.sia.client.model;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +27,7 @@ public class Game implements KeyedObject,Cloneable {
     int visitoraltgamenumber;
     int homealtgamenumber;
     java.sql.Date gameDate;
-    Long gameTime;
+    LocalTime gameTime;
     String visitorteam;
     String hometeam;
     String shortvisitorteam;
@@ -659,15 +666,16 @@ public class Game implements KeyedObject,Cloneable {
 //        // logic 2
 //        if ( timeAfterHour0 >= gamedate.getTime()) {
             //probably gametime and gamedate are same, for this scenario, gamedate include date and time -- 05/05/2022
-            this.gameDate = new java.sql.Date(time- SiaConst.diffBetweenEasternAndUTC);
-            this.gameTime = Utils.getTime(gameDate);
+//            this.gameDate = new java.sql.Date(time- SiaConst.diffBetweenEasternAndUTC + SiaConst.diffBetweenEasternAndUTC);
+            this.gameDate = new java.sql.Date(time); //why minus SiaConst.diffBetweenEasternAndUTC + SiaConst.diffBetweenEasternAndUTC above? -- 05/05/2022
+            this.gameTime = Instant.ofEpochMilli(gameDate.getTime()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalTime();
 //        } else {
 //            this.gameDate = new java.sql.Date(gamedate.getTime() + timeAfterHour0 - SiaConst.diffBetweenEasternAndUTC);
 //        }
         // end of logic 2
     }
 
-    public Long getGametime() {
+    public LocalTime getGametime() {
         return gameTime;
     }
     @Override
@@ -688,5 +696,15 @@ public class Game implements KeyedObject,Cloneable {
     }
     public boolean isInStage() {
         return isInFinal() || isHalfTime() || isInProgress() || isSeriesprice() ||  isIngame();
+    }
+    public static void main(String [] argv) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
+        java.util.Date date = new java.util.Date(1651879800000L);
+        System.out.println(date);
+        Game g = new Game();
+        g.setGameDateTime(new java.sql.Date(date.getTime()),date.getTime());
+        LocalDateTime localDateTime = GameUtils.getGameDateTime(g, ZoneId.of(SiaConst.DefaultGameTimeZone));
+        System.out.println(localDateTime);
+        System.out.println(formatter.format(g.getGametime()));
     }
 }

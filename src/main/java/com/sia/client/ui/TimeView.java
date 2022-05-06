@@ -6,12 +6,14 @@ import com.sia.client.model.LineData;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 public class TimeView {
 
     public static String ICON_UP = ImageFile.ARR_UP;
     public static String ICON_DOWN = ImageFile.ARR_DOWN;
     public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
     LineData topbox;
     LineData bottombox;
     LineData[] boxes = new LineData[2];
@@ -32,7 +34,7 @@ public class TimeView {
         g = AppController.getGame(gid);
         dateformat = sdf2.format(g.getGamedate());
 
-        timeformat = sdf.format(g.getGametime());
+        timeformat = formatter.format(g.getGametime());
         timeformat = timeformat.replace("PM", "p");
         timeformat = timeformat.replace("AM", "a");
 
@@ -62,7 +64,7 @@ public class TimeView {
 
         // updated 8/27 to reflect time chnages live!
         dateformat = sdf2.format(g.getGamedate());
-        timeformat = sdf.format(g.getGametime());
+        timeformat = formatter.format(g.getGametime());
         timeformat = timeformat.replace("PM", "p");
         timeformat = timeformat.replace("AM", "a");
 

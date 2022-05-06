@@ -79,40 +79,4 @@ public class UtilsTest {
         assertFalse(Utils.isNumericString("1..0"));
         assertFalse(Utils.isNumericString("123a1"));
     }
-    @Test
-    public void testGetTime1() throws ParseException {
-
-        final int hours = 9;
-        final int minute = 6;
-        long milliseconds = (hours*60+minute)*60*1000L;
-        final String dateStr = "2022-05-05";
-        final String format = dateStr+" %02d:%02d";
-        final String dateTimeStr = String.format(format,hours,minute);
-        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date dateTime = dateTimeFormat.parse(dateTimeStr);
-
-        long time = Utils.getTime(dateTime);
-        long diff = time - milliseconds;
-        System.out.println("datetime="+dateTime+", diff="+diff/(60000*60));
-        assertEquals(0, diff);
-
-    }
-    @Test
-    public void testGetTime2() throws ParseException {
-
-        final int hours = 19;
-        final int minute = 6;
-        long milliseconds = (hours*60+minute)*60*1000L;
-        final String dateStr = "2022-05-05";
-        final String format = dateStr+" %02d:%02d";
-        final String dateTimeStr = String.format(format,hours,minute);
-        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date dateTime = dateTimeFormat.parse(dateTimeStr);
-
-        long time = Utils.getTime(dateTime);
-        long diff = time - milliseconds;
-        System.out.println("datetime="+dateTime+", diff="+diff/(60000*60));
-        assertEquals(0, diff);
-
-    }
 }

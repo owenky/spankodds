@@ -27,7 +27,7 @@ public abstract class GameUtils {
             return null;
         }
         LocalDate gameDate = Instant.ofEpochMilli(game.getGamedate().getTime()).atZone(zoneId).toLocalDate();
-        LocalTime gameTime = Instant.ofEpochMilli(game.getGametime()).atZone(zoneId).toLocalTime();
+        LocalTime gameTime = Instant.ofEpochMilli(game.getGamedate().getTime()).atZone(zoneId).toLocalTime();
         return LocalDateTime.of(gameDate,gameTime);
     }
     public static boolean isGameStarted(Game game) {

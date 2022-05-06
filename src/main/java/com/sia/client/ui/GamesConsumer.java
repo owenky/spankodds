@@ -24,6 +24,7 @@ import javax.jms.TextMessage;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -79,7 +80,7 @@ public class GamesConsumer implements MessageListener {
             leagueid = textMessage.getStringProperty("leagueid");
             String oldvpitcher = "";
             String oldhpitcher = "";
-            Long oldgametime = null;
+            LocalTime oldgametime = null;
 
             if (leagueid == null) {
                 leagueid = "";

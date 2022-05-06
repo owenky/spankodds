@@ -466,9 +466,4 @@ public abstract class Utils {
         }
         return numericPattern.matcher(str).matches();
     }
-    public static long getTime(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return (calendar.get(Calendar.HOUR_OF_DAY)*3600+calendar.get(Calendar.MINUTE)*60+calendar.get(Calendar.SECOND))*1000L+calendar.get(Calendar.MILLISECOND);
-    }
 }
