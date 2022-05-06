@@ -26,9 +26,7 @@ public abstract class GameUtils {
         if ( null == game.getGamedate() || null == game.getGametime()) {
             return null;
         }
-        LocalDate gameDate = Instant.ofEpochMilli(game.getGamedate().getTime()).atZone(zoneId).toLocalDate();
-        LocalTime gameTime = Instant.ofEpochMilli(game.getGamedate().getTime()).atZone(zoneId).toLocalTime();
-        return LocalDateTime.of(gameDate,gameTime);
+        return LocalDateTime.of(game.getGamedate(),game.getGametime());
     }
     public static boolean isGameStarted(Game game) {
         LocalDateTime now = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDateTime();
@@ -70,8 +68,7 @@ public abstract class GameUtils {
         }
         return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getLeague_id(),game.getGamedate());
     }
-    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,Date gameDate) {
-        LocalDate ld = Instant.ofEpochMilli(gameDate.getTime()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDate(); //atOffset(ZoneOffset.UTC).toLocalDate();
+    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,LocalDate ld) {
         return GameGroupHeader.create(leagueName,ld,subLeagueId,leagueId);
     }
     public static boolean isGameNear(Game game) {

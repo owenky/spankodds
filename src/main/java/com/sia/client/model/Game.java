@@ -2,13 +2,8 @@ package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Objects;
@@ -26,8 +21,8 @@ public class Game implements KeyedObject,Cloneable {
     int homegamenumber;
     int visitoraltgamenumber;
     int homealtgamenumber;
-    java.sql.Date gameDate;
-    LocalTime gameTime;
+    private LocalDate gameDate;
+    private LocalTime gameTime;
     String visitorteam;
     String hometeam;
     String shortvisitorteam;
@@ -640,39 +635,21 @@ public class Game implements KeyedObject,Cloneable {
         this.specialnotes = specialnotes;
     }
 
-    public java.sql.Date getGamedate() {
+    public LocalDate getGamedate() {
         return gameDate;
     }
 
     public void setGameDateTime(java.sql.Date gamedate,Long time) {
-        // gamedate.getTime should be same as time per David modification -- 05/05/2022
-//        if (gamedate == null ) {
-//            if ( game_id != SiaConst.BlankGameId) {
-//                log("gamedate null for gameid=" + game_id);
-//            }
-//            gamedate = new java.sql.Date(1000);
-//        }
         if (null == time) {
             if ( game_id != SiaConst.BlankGameId) {
                 log("game time null for gameid=" + game_id);
             }
             time = 1000L;
         }
-//        this.gameTime = timeAfterHour0;
-        //TODO use logic 1 after server fix date/time problem -- m05/05/2022
-        //logic 1
-//        this.gameDate = new java.sql.Date(gamedate.getTime() + gametime.getTime() - SiaConst.diffBetweenEasternAndUTC);
 
-//        // logic 2
-//        if ( timeAfterHour0 >= gamedate.getTime()) {
-            //probably gametime and gamedate are same, for this scenario, gamedate include date and time -- 05/05/2022
-//            this.gameDate = new java.sql.Date(time- SiaConst.diffBetweenEasternAndUTC + SiaConst.diffBetweenEasternAndUTC);
-            this.gameDate = new java.sql.Date(time); //why minus SiaConst.diffBetweenEasternAndUTC + SiaConst.diffBetweenEasternAndUTC above? -- 05/05/2022
-            this.gameTime = Instant.ofEpochMilli(gameDate.getTime()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalTime();
-//        } else {
-//            this.gameDate = new java.sql.Date(gamedate.getTime() + timeAfterHour0 - SiaConst.diffBetweenEasternAndUTC);
-//        }
-        // end of logic 2
+        ZonedDateTime zonedDateTime = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault());
+        this.gameDate = zonedDateTime.toLocalDate();
+        this.gameTime = zonedDateTime.toLocalTime();
     }
 
     public LocalTime getGametime() {
