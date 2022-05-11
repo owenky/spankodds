@@ -159,6 +159,9 @@ public class UserPrefsProducer {
 
             //send line seeker alert
             mapMessage.setString("lineseekeralert", AlertAttrManager.serializeAlertAlertAttColl());
+
+            //send font configuration
+            mapMessage.setString("fontconfig", FontConfig.serialize());
             this.producer.send(mapMessage);
         } catch (Exception ex) {
             log(ex);

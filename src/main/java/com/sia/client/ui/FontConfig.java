@@ -1,6 +1,10 @@
 package com.sia.client.ui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sia.client.ui.lineseeker.AlertAttColl;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
@@ -14,6 +18,10 @@ import java.util.stream.Collectors;
 
 public class FontConfig implements ActionListener {
 
+    @JsonIgnore
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    @JsonIgnore
+    private static FontConfig thefontConfig;
     @JsonIgnore
     private static final Pattern fontPropSplitorPattern;
     @JsonIgnore
@@ -80,7 +88,13 @@ public class FontConfig implements ActionListener {
     private int selectedFontSize;
     private String selectedFontStyle;
 
-    public FontConfig() {
+    public static synchronized FontConfig instance() {
+        if ( null == thefontConfig){
+            thefontConfig = new FontConfig();
+        }
+        return thefontConfig;
+    }
+    FontConfig() {
         fontSizeList.setModel( new AbstractListModel<Integer>() {
             public int getSize() {
                 return fontArray.length;
@@ -369,5 +383,11 @@ public class FontConfig implements ActionListener {
     }
     Font createFont() {
         return new Font(selectedFontName, fontStyleSting2IntMap.get(selectedFontStyle), selectedFontSize);
+    }
+    public static String serialize() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(instance());
+    }
+    public static void deSerialize(String fontConfigStr) throws JsonProcessingException {
+        thefontConfig = objectMapper.readValue(fontConfigStr, FontConfig.class);
     }
 }
