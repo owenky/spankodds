@@ -42,6 +42,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private final List<SectionComponents> sectionComponentsList;
     private final AlertComponentListener alertComponentListener;
+    private JButton saveBtn;
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
@@ -140,7 +141,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         JButton clsBtn = new JButton("Close");
         clsBtn.addActionListener((event)->this.close());
 
-        JButton saveBtn = new JButton(saveBtnText);
+        saveBtn = new JButton(saveBtnText);
         saveBtn.addActionListener(this::save);
 
         JButton delBtn = new JButton(delBtnText);
@@ -259,11 +260,11 @@ public class AlertLayout extends AbstractLayeredDialog {
                     Utils.showErrorMessageDialog(getSportsTabPane(),sw.toString());
                 } else {
                     alertsCombobox.addIfAbsent(selectedAlert,true);
+                    AlertLayout.this.setEditStatus(false);
                 }
                 gameNumBox.setEnabled(false);
                 period.setEnabled(false);
                 btn.setText(saveBtnText);
-                btn.setEnabled(true);
             }
         };
         saveWorker.execute();
@@ -324,6 +325,12 @@ public class AlertLayout extends AbstractLayeredDialog {
         String tooltipText = status ?"To select another Alert, please save or delete this configuration.":"";
         alertsCombobox.setToolTipText(tooltipText);
 
+        if ( status ) {
+            saveBtn.setEnabled(true);
+        } else {
+            saveBtn.setEnabled(getSelectedGameId()<=0);
+        }
+
     }
     private boolean validateClose() {
         if ( isEdited()) {
@@ -333,7 +340,7 @@ public class AlertLayout extends AbstractLayeredDialog {
             return true;
         }
     }
-    private boolean isEdited() {
+    public boolean isEdited() {
         return editIndicator.equals(editStatusLabel.getText());
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
