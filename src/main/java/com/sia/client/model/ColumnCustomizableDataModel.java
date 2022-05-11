@@ -4,6 +4,7 @@ package com.sia.client.model;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.FontConfig;
 import com.sia.client.ui.GameBatchUpdator;
 import com.sia.client.ui.TableUtils;
 
@@ -44,7 +45,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
-            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
+            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, FontConfig.getDefaultHeaderFont(), SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
     }
