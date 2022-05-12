@@ -39,8 +39,8 @@ public class ColumnComponents {
         });
     }
     public void addInputListener(AlertComponentListener l) {
-        lineInput.addKeyListener(l);
-        juiceInput.addKeyListener(l);
+        lineInput.getDocument().addDocumentListener(l);
+        juiceInput.getDocument().addDocumentListener(l);
         Enumeration<AbstractButton> radioBtnEnum = alertStateButtons.getElements();
         while ( radioBtnEnum.hasMoreElements()) {
             radioBtnEnum.nextElement().addActionListener(l);

@@ -42,7 +42,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private final List<SectionComponents> sectionComponentsList;
     private final AlertComponentListener alertComponentListener;
-    private JButton saveBtn;
+    private final JButton saveBtn = new JButton();
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
@@ -90,6 +90,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         userComp.add(bottomControlSection());
         gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
         alertsCombobox.addValueChangeListener(this::updateLayoutComponents);
+        this.setEditStatus(false);  //this is initial state, but  userComp.add(getSectionComponent(alertSectionName)) set edit status to true becuase of document listener. Override it. -- 05/11/2022
         return userComp;
     }
     private JComponent controlSec() {
@@ -141,7 +142,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         JButton clsBtn = new JButton("Close");
         clsBtn.addActionListener((event)->this.close());
 
-        saveBtn = new JButton(saveBtnText);
+        saveBtn.setText(saveBtnText);
         saveBtn.addActionListener(this::save);
 
         JButton delBtn = new JButton(delBtnText);

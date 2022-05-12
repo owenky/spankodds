@@ -1,11 +1,13 @@
 package com.sia.client.ui.lineseeker;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class AlertComponentListener implements KeyListener, ActionListener {
+public class AlertComponentListener implements KeyListener, ActionListener, DocumentListener {
 
     private final AlertLayout alertLayout;
     public AlertComponentListener(AlertLayout alertLayout) {
@@ -28,6 +30,20 @@ public class AlertComponentListener implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        checkAndSetEditStatus();
+    }
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        checkAndSetEditStatus();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        checkAndSetEditStatus();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
         checkAndSetEditStatus();
     }
     private void checkAndSetEditStatus() {
