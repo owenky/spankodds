@@ -138,8 +138,8 @@ public class FontConfig implements ActionListener {
     public void setSelectedFontStyle(String selectedFontStyle) {
         this.selectedFontStyle = selectedFontStyle;
     }
-    public static Font getDefaultHeaderFont() {
-        return DefaultHeaderFont;
+    public Font getDefaultHeaderFont() {
+        return getSelectedFont().deriveFont(Font.BOLD);
     }
     public Font getSelectedFont() {
         if ( null == selectedFont) {
@@ -290,7 +290,9 @@ public class FontConfig implements ActionListener {
             Object key = keys.nextElement();
             Object value = UIManager.get( key );
             if ( value instanceof Font ) {
+//                System.out.println("before key="+key+", value="+value);
                 UIManager.put( key, font );
+//                System.out.println("after key="+key+", value="+UIManager.getFont( key ));
             }
         }
         SpankyWindow.applyToAllWindows((tp)-> {

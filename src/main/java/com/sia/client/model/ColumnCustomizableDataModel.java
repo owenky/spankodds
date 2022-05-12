@@ -45,7 +45,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
-            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, FontConfig.getDefaultHeaderFont(), SiaConst.GameGroupHeaderHeight);
+            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, FontConfig.instance().getDefaultHeaderFont(), SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
     }
