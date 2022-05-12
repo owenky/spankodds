@@ -3,8 +3,6 @@ package com.sia.client.ui;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sia.client.ui.lineseeker.AlertAttColl;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
@@ -64,8 +62,8 @@ public class FontConfig implements ActionListener {
     private final JMenuItem applyMenuItem = new JMenuItem("Apply");
     @JsonIgnore
     private final JMenuItem resetMenuItem = new JMenuItem("Reset");
-    @JsonIgnore
-    private static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);
+//    @JsonIgnore
+//    private static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);
     @JsonIgnore
     private static final Map<Integer,String> fontStyleInt2StrMap = new HashMap<>();
     @JsonIgnore
@@ -138,9 +136,11 @@ public class FontConfig implements ActionListener {
     public void setSelectedFontStyle(String selectedFontStyle) {
         this.selectedFontStyle = selectedFontStyle;
     }
+    @JsonIgnore
     public Font getDefaultHeaderFont() {
         return getSelectedFont().deriveFont(Font.BOLD);
     }
+    @JsonIgnore
     public Font getSelectedFont() {
         if ( null == selectedFont) {
             selectedFont = systemDefaultFont;
