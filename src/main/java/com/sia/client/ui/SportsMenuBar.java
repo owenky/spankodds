@@ -130,7 +130,7 @@ public class SportsMenuBar extends JMenuBar {
         windowmenu.add(newwindow);
 
         add(settingmenu);
-        JMenu fontconfig = new FontConfig().createFontMenu();
+        JMenu fontconfig = FontConfig.instance().createFontMenu();
         settingmenu.add(fontconfig);
     }
     private JMenuItem createGameAlertMenuItem(String command) {

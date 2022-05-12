@@ -11,6 +11,7 @@ import com.sia.client.model.ScreenGameModel;
 import com.sia.client.model.ScreenProperty;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.model.SportType;
+import com.sia.client.ui.FontConfig;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
 import com.sia.client.ui.MainScreenLoader;
@@ -131,7 +132,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         mainGameTable.setIntercellSpacing(new Dimension(4, 2));
         mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
-        Font headerFont = new Font("Verdana", Font.BOLD, 11);
+        Font headerFont = FontConfig.instance().getSelectedFont().deriveFont(Font.BOLD, 11);
         tableHeader.setFont(headerFont);
         model.addTableSectionListener(() -> {
             mainGameTable.setToConfigHeaderRow(true);

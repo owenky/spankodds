@@ -53,6 +53,8 @@ public class FontConfig implements ActionListener {
     @JsonIgnore
     private JScrollPane fontStylePane;
     @JsonIgnore
+    private boolean changed = false;
+    @JsonIgnore
     private final JMenu fontFamilyMenu = new JMenu("Font Family");
     @JsonIgnore
     private final JMenu fontSizeMenu = new JMenu("Font Sizes");
@@ -140,6 +142,10 @@ public class FontConfig implements ActionListener {
         return DefaultHeaderFont;
     }
     public Font getSelectedFont() {
+        if ( null == selectedFont) {
+            selectedFont = systemDefaultFont;
+            setSelectedFontAttributes(selectedFont);
+        }
         return selectedFont;
     }
     @Override
@@ -210,7 +216,7 @@ public class FontConfig implements ActionListener {
         fontSizeMenu.setText( 0<=selectedFontSize? String.valueOf(selectedFontSize):"Size ?");
         fontStyleMenu.setText( null != selectedFontStyle?selectedFontStyle: "Style ?");
 
-        boolean enableApply = 0 <= selectedFontSize && null != selectedFontStyle;
+        boolean enableApply = 0 <= selectedFontSize && null != selectedFontStyle && changed;
         applyMenuItem.setEnabled(enableApply);
     }
     private void loadFontNames() {
@@ -275,6 +281,7 @@ public class FontConfig implements ActionListener {
         selectedFont = systemDefaultFont;
         applyApplicationDefaultFont(selectedFont);
         setSelectedFontAttributes(selectedFont);
+        changed = false;
         setFontMenuProperties();
     }
     private static void applyApplicationDefaultFont(Font font) {
@@ -283,16 +290,17 @@ public class FontConfig implements ActionListener {
             Object key = keys.nextElement();
             Object value = UIManager.get( key );
             if ( value instanceof Font ) {
-                System.out.println("before key="+key+", value="+value);
                 UIManager.put( key, font );
-                System.out.println("after key="+key+", value="+UIManager.getFont( key ));
             }
         }
         SpankyWindow.applyToAllWindows((tp)-> {
             SpankyWindow sw = SpankyWindow.findSpankyWindow(tp.getWindowIndex());
             sw.revalidate();
             sw.repaint();
+            sw.getSportsTabPane().rebuildMainScreen();
         });
+        FontConfig.instance().changed = false;
+        FontConfig.instance().setFontMenuProperties();
     }
     private static <E> int getModelIndex(ListModel<E> model, E value) {
         int index = -1;
@@ -332,30 +340,27 @@ public class FontConfig implements ActionListener {
         setFontMenuProperties();
     }
     private void onFontFamilyName(ListSelectionEvent event) {
-        boolean isChanged = !selectedFontName.equals(fontNameList.getSelectedValue());
-        if ( isChanged ) {
+        changed = !selectedFontName.equals(fontNameList.getSelectedValue());
+        if ( changed ) {
             selectedFontName = fontNameList.getSelectedValue();
-            applyMenuItem.setEnabled(true);
         }
         createFontSizeAndStyleList(selectedFontName);
         validateStyleAndSize();
         fontFamilyMenu.getPopupMenu().setVisible(false);
     }
     private void onFontStyle(ListSelectionEvent event) {
-        boolean isChanged = !selectedFontStyle.equals(fontStyleList.getSelectedValue());
-        if ( isChanged ) {
+        changed = !selectedFontStyle.equals(fontStyleList.getSelectedValue());
+        if ( changed ) {
             selectedFontStyle = fontStyleList.getSelectedValue();
-            applyMenuItem.setEnabled(true);
         }
 
         setFontMenuProperties();
         fontStyleMenu.getPopupMenu().setVisible(false);
     }
     private void onFontSize(ListSelectionEvent event) {
-        boolean isChanged = selectedFontSize != fontSizeList.getSelectedValue();
-        if ( isChanged ) {
+        changed = selectedFontSize != fontSizeList.getSelectedValue();
+        if ( changed ) {
             selectedFontSize = fontSizeList.getSelectedValue();
-            applyMenuItem.setEnabled(true);
         }
 
         setFontMenuProperties();

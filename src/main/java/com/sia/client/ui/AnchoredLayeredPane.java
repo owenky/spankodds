@@ -131,7 +131,7 @@ public class AnchoredLayeredPane implements ComponentListener {
             titlePanel.setLayout(new BorderLayout());
             JLabel titleLabel = new JLabel(title);
             titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            Font defaultFont = titleLabel.getFont();
+            Font defaultFont = FontConfig.instance().getSelectedFont();
             Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
             titleLabel.setFont(titleFont);
 
