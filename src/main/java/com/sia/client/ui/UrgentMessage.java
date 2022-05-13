@@ -22,7 +22,7 @@ import java.awt.GridLayout;
 
 public class UrgentMessage {
 
-
+    public static boolean popupEnabled = true;
     static AlertGroup ag = new AlertGroup();
 
     public UrgentMessage(String urgentmessage) {
@@ -36,6 +36,10 @@ public class UrgentMessage {
 
     private void showUrgentMessage(String urgentmessage, int ms, int where, Component c) {
 
+        if ( ! popupEnabled ) {
+            Utils.log("DEBUG:  popupEnabled=false, popup is disabled..................");
+            return;
+        }
         String alerttext = "<HTML><H1>URGENT MESSAGE</H1><FONT COLOR=BLUE>" +
                 "Alert Demo<BR>" +
                 "Hello,<BR>" +

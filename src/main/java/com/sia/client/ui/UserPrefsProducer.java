@@ -1,20 +1,14 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.SportType;
 import com.sia.client.model.User;
+import com.sia.client.ui.lineseeker.AlertAttrManager;
 
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import java.awt.Color;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Set;
-import java.util.Vector;
+import javax.jms.*;
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 import static com.sia.client.config.Utils.log;
 
@@ -87,11 +81,9 @@ public class UserPrefsProducer {
 
         try {
             String customtabs = "";
-
-            Vector<String> customtabsvec = AppController.getCustomTabsVec();
-            Enumeration<String> enumtabs = customtabsvec.elements();
-            while (enumtabs.hasMoreElements()) {
-                String tabinfo = "" + enumtabs.nextElement();
+            List<String> customtabsvec = AppController.getCustomTabsVec();
+            for (String nextCustTab:customtabsvec) {
+                String tabinfo = "" + nextCustTab;
                 log("CUSTOMTAB INFO=" + tabinfo);
                 customtabs = customtabs + tabinfo + "?";
             }
@@ -166,6 +158,11 @@ public class UserPrefsProducer {
 
             mapMessage.setString("linealerts", u.getLineAlerts());
 
+            //send line seeker alert
+            mapMessage.setString(SiaConst.Serialization.LineSeekerAlert, AlertAttrManager.serializeAlertAlertAttColl());
+
+            //send font configuration
+            mapMessage.setString(SiaConst.Serialization.Font, FontConfig.serialize());
             this.producer.send(mapMessage);
         } catch (Exception ex) {
             log(ex);

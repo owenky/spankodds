@@ -1,4 +1,4 @@
-package com.sia.client.ui;
+package com.sia.client.ui.lineseeker;
 
 
 import javax.swing.BorderFactory;
@@ -14,16 +14,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class LineSeekerSectionLayout {
+public class SectionLayout {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
-    private final LineSeekerColumnFieldGroup leftColumn;
-    private final LineSeekerColumnFieldGroup rightColumn;
+    private final ColumnComponents leftColumn;
+    private final ColumnComponents rightColumn;
     private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
-    public LineSeekerSectionLayout(LineSeekerSectionFieldGroup spreadFieldGrp) {
+    public SectionLayout(SectionComponents spreadFieldGrp) {
 
         this.leftColumn = spreadFieldGrp.leftColumn;
         this.rightColumn = spreadFieldGrp.rightColumn;
@@ -84,7 +84,7 @@ public class LineSeekerSectionLayout {
             c.gridx = 0;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
-            layoutPane.add(leftColumn.lineInput, c);
+            addComponent(leftColumn.lineInput,c);
 
             c.gridx = 1;
             layoutPane.add(leftColumn.juiceInput, c);
@@ -93,7 +93,7 @@ public class LineSeekerSectionLayout {
             layoutPane.add(leftColumn.clearBtn, c);
 
             c.gridx = 4;
-            layoutPane.add(rightColumn.lineInput, c);
+            addComponent(rightColumn.lineInput,c);
 
             c.gridx = 5;
             layoutPane.add(rightColumn.juiceInput, c);
@@ -113,32 +113,47 @@ public class LineSeekerSectionLayout {
             c.gridx = 4;
             layoutPane.add(radioGrpRight, c);
 
-            //new row -- check box
-            c.gridy++;
-
-            c.gridx = 0;
-            c.gridwidth = 7;
-            c.anchor = GridBagConstraints.CENTER;
-            if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
-                useEquivalent.setLabel(useEquivalent.getName());
-            }
-            layoutPane.add(useEquivalent, c);
+//            //new row -- check box
+//            c.gridy++;
+//
+//            c.gridx = 0;
+//            c.gridwidth = 7;
+//            c.anchor = GridBagConstraints.CENTER;
+//            if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
+//                useEquivalent.setLabel(useEquivalent.getName());
+//            }
+//            layoutPane.add(useEquivalent, c);
         }
         return layoutPane;
     }
+    private void addComponent(JComponent comp,GridBagConstraints c) {
+        if ( comp.isVisible()) {
+            layoutPane.add(comp, c);
+        } else {
+            JLabel dummyComp = new JLabel();
+            dummyComp.setPreferredSize(comp.getPreferredSize());
+            dummyComp.setMinimumSize(comp.getPreferredSize());
+            layoutPane.add(dummyComp, c);
+        }
+    }
     private JLabel makeInputTitleLabel(JComponent input) {
-        JLabel fieldTitleLabel = new JLabel(input.getName());
+        JLabel fieldTitleLabel;
+        if ( input.isVisible()) {
+            fieldTitleLabel = new JLabel(input.getName());
+        } else {
+            fieldTitleLabel = new JLabel();
+        }
         fieldTitleLabel.setVerticalAlignment(SwingConstants.BOTTOM);
         fieldTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return fieldTitleLabel;
     }
-    private JComponent makeRadioGroup(LineSeekerColumnFieldGroup columnFieldGroup) {
+    private JComponent makeRadioGroup(ColumnComponents columnComponents) {
 
         JPanel grpPanel = new JPanel();
         grpPanel.setLayout(new FlowLayout());
-        grpPanel.add(columnFieldGroup.good);
-        grpPanel.add(columnFieldGroup.bad);
-        grpPanel.add(columnFieldGroup.neutral);
+        grpPanel.add(columnComponents.getAlertStateButton(AlertState.Good));
+        grpPanel.add(columnComponents.getAlertStateButton(AlertState.Bad));
+        grpPanel.add(columnComponents.getAlertStateButton(AlertState.Neutral));
 
         return grpPanel;
     }

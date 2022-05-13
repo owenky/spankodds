@@ -157,8 +157,10 @@ public class SpankOdds {
 
         // if loginPane was cancelled or closed then its status is CANCELLED
         // and still need to dispose main JFrame to exiting application
-        if (loginPane.getStatus() == JXLoginPane.Status.CANCELLED) {
-            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        if (loginPane.getStatus() == JXLoginPane.Status.CANCELLED ) {
+            if ( null != frame ) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
             System.exit(0);
         }
     }

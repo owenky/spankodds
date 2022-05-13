@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.sia</groupId>
         <artifactId>common-client-dependency</artifactId>
-        <version>1.2.1</version>
+        <version>1.2.3</version>
     </parent>
 
     <groupId>com.sia</groupId>
@@ -21,6 +21,7 @@
     <name>client</name>
     <packaging>jar</packaging>
     <description>client application of spankodds</description>
+
     <dependencies>
         <!--dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -42,6 +43,7 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>./src/main/java</sourceDirectory>
         <!--resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>

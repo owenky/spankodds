@@ -1,46 +1,17 @@
 package com.sia.client.ui;// Demonstrate BoxLayout and the Box class.
 
-import com.jidesoft.swing.CheckBoxTree;
-import com.jidesoft.swing.JideTitledBorder;
-import com.jidesoft.swing.PartialEtchedBorder;
-import com.jidesoft.swing.PartialSide;
-import com.jidesoft.swing.SearchableUtils;
+import com.jidesoft.swing.*;
 import com.jidesoft.tree.TreeUtils;
 import com.sia.client.model.Sport;
+import com.sia.client.model.SportNode;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.MainScreen;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import javax.swing.*;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.sia.client.config.Utils.log;
 
@@ -54,7 +25,6 @@ public class SportConfigurator {
     private final List<String> checkedsports = new ArrayList<>();
     private final List<DefaultMutableTreeNode> checkednodes = new ArrayList<>();
     private CheckBoxTree _tree;
-    private final Map<String,String> leaguenameidhash = new HashMap<>();
     private final SportType sportType;
     private final AnchoredLayeredPane anchoredLayeredPane;
 
@@ -238,11 +208,17 @@ public class SportConfigurator {
                 for (final int treeRow : treeRows) {
                     TreePath path = _tree.getPathForRow(treeRow);
                     log(path.getLastPathComponent());
-                    String id = "" + leaguenameidhash.get("" + path.getLastPathComponent());
-                    if ( "null".equals(id)) {
-                        id = "" + path.getLastPathComponent();
+                    DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)path.getLastPathComponent();
+                    Object userObject = treeNode.getUserObject();
+                    if ( userObject instanceof SportNode) {
+                        //userObject of root node is String, such as "Soccer", representing sport type -- 03/27/2022
+                        int id = ((SportNode)userObject).getLeague_id();
+                        sportselected = sportselected + id + ",";
+                    } else if ( userObject.equals(sportType.getSportName())) {
+                        //this scenario is for select all games for this sport type. -- 03/27/2022
+                        sportselected = sportType.getSportName();
+                        break;
                     }
-                    sportselected = sportselected + id + ",";
                 }
             }
 
@@ -347,10 +323,10 @@ public class SportConfigurator {
                 sport = value;
                 if (sport.getSportname().equals(tabname)) {
                     tempnode = sportnode;
-                    DefaultMutableTreeNode child = new DefaultMutableTreeNode(sport.getLeaguename());
+                    SportNode sn = new SportNode(sport);
+                    DefaultMutableTreeNode child = new DefaultMutableTreeNode(sn);
                     tempnode.add(child);
-                    leaguenameidhash.put(sport.getLeaguename(), "" + sport.getLeague_id());
-                    if (checkedsports.contains("" + sport.getLeague_id()) || checkedsports.contains(sport.getSportname())
+                    if (checkedsports.contains("" + sn.getLeague_id()) || checkedsports.contains(sn.getSportname())
                             || checkedsports.contains("All Sports")) {
                         checkednodes.add(child);
 

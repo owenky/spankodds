@@ -4,6 +4,7 @@ import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.JComponent;
 import java.awt.Dimension;
+import java.util.concurrent.Callable;
 
 public abstract class AbstractLayeredDialog {
 
@@ -15,6 +16,9 @@ public abstract class AbstractLayeredDialog {
         anchoredLayeredPane = new AnchoredLayeredPane(stp);
         anchoredLayeredPane.setTitle(title);
     }
+    public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
+        anchoredLayeredPane.setTitlePanelLeftComp(titlePanelLeftComp);
+    }
     public void show(Dimension dim) {
         anchoredLayeredPane.openAndCenter(getUserComponent(),dim,false);
     }
@@ -23,5 +27,9 @@ public abstract class AbstractLayeredDialog {
     }
     public void close() {
         this.anchoredLayeredPane.close();
+    }
+    public AbstractLayeredDialog withCloseValidor(Callable<Boolean> closeValidor) {
+        anchoredLayeredPane.withCloseValidor(closeValidor);
+        return this;
     }
 }

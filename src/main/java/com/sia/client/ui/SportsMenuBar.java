@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.ui.lineseeker.AlertLayout;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -25,6 +26,7 @@ public class SportsMenuBar extends JMenuBar {
     private final JMenu gamealertsmenu = new JMenu("Game Alerts");
     private final JMenu tabsmenu = new JMenu("Tabs");
     private final JMenu windowmenu = new JMenu("Window");
+    private final JMenu settingmenu = new JMenu("Setting");
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
@@ -71,7 +73,7 @@ public class SportsMenuBar extends JMenuBar {
         generallinealert.addActionListener(ae -> new LineAlert(stb).show(UIProperties.LineAlertDim));
 
         JMenuItem majorlinemove = new JMenuItem("Line Seekers");
-        majorlinemove.addActionListener(ae -> new LineSeekersAlert(stb).show(LineSeekersAlert.dialogPreferredSize));
+        majorlinemove.addActionListener(ae -> new AlertLayout(stb).show(AlertLayout.dialogPreferredSize));
 
         JMenuItem openers = new JMenuItem("Openers");
         openers.addActionListener(ae -> new LineAlertOpeners(stb).show(UIProperties.LineAlertDim));
@@ -126,6 +128,10 @@ public class SportsMenuBar extends JMenuBar {
         newwindow.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0)); // 0 means no modifiers
         newwindow.addActionListener(AppController.getNewWindowAction());
         windowmenu.add(newwindow);
+
+        add(settingmenu);
+        JMenu fontconfig = FontConfig.instance().createFontMenu();
+        settingmenu.add(fontconfig);
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);

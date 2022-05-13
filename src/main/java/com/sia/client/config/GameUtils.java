@@ -9,18 +9,9 @@ import com.sia.client.ui.AppController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class GameUtils {
 
@@ -35,9 +26,7 @@ public abstract class GameUtils {
         if ( null == game.getGamedate() || null == game.getGametime()) {
             return null;
         }
-        LocalDate gameDate = Instant.ofEpochMilli(game.getGamedate().getTime()).atZone(zoneId).toLocalDate();
-        LocalTime gameTime = Instant.ofEpochMilli(game.getGametime().getTime()).atZone(zoneId).toLocalTime();
-        return LocalDateTime.of(gameDate,gameTime);
+        return LocalDateTime.of(game.getGamedate(),game.getGametime());
     }
     public static boolean isGameStarted(Game game) {
         LocalDateTime now = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDateTime();
@@ -79,8 +68,7 @@ public abstract class GameUtils {
         }
         return createGameGroupHeader(sport.getNormalizedLeaguename(), game.getSubleague_id(),game.getLeague_id(),game.getGamedate());
     }
-    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,Date gameDate) {
-        LocalDate ld = Instant.ofEpochMilli(gameDate.getTime()).atZone(ZoneId.of(SiaConst.DefaultGameTimeZone)).toLocalDate(); //atOffset(ZoneOffset.UTC).toLocalDate();
+    public static GameGroupHeader createGameGroupHeader(String leagueName, int subLeagueId,int leagueId,LocalDate ld) {
         return GameGroupHeader.create(leagueName,ld,subLeagueId,leagueId);
     }
     public static boolean isGameNear(Game game) {
@@ -124,7 +112,7 @@ public abstract class GameUtils {
         //log("gametext="+text);
         // here in 1st entry i made game_id visitorgamenumber
         Game g = new Game(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Integer.parseInt(array[2]), Integer.parseInt(array[3]),
-                Integer.parseInt(array[4]), new java.sql.Date(Long.parseLong(array[5])), new java.sql.Time(Long.parseLong(array[6])),
+                Integer.parseInt(array[4]), new java.sql.Date(Long.parseLong(array[5])), Long.parseLong(array[6]),
                 array[7], array[8], array[9], array[10], Integer.parseInt(array[11]), Integer.parseInt(array[12]), Integer.parseInt(array[13]),
                 Integer.parseInt(array[14]), Integer.parseInt(array[15]), array[16], array[17], array[18], array[19], array[20], array[21],
                 array[22], array[23], Integer.parseInt(array[24]), array[25],
@@ -216,7 +204,7 @@ public abstract class GameUtils {
             g.setGame_id(gameid);
             g.setVisitorgamenumber(Integer.parseInt(visitorgamenumber));
             g.setHomegamenumber(Integer.parseInt(homegamenumber));
-            g.setGameDateTime(new java.sql.Date(Long.parseLong(gamedatelong)),new java.sql.Time(Long.parseLong(gametimelong)));
+            g.setGameDateTime(new java.sql.Date(Long.parseLong(gamedatelong)),Long.parseLong(gametimelong));
             g.setVisitorteam(visitorteamname);
             g.setHometeam(hometeamname);
             g.setShortvisitorteam(visitorabbr);
@@ -284,6 +272,13 @@ public abstract class GameUtils {
     }
     public static boolean isTimeSort(Boolean windowConfigTimeSort, boolean userDefinedTimesort) {
         return null == windowConfigTimeSort? userDefinedTimesort:windowConfigTimeSort;
+    }
+    public static boolean isRealGame(Game game) {
+        if ( game.getGame_id() <=0) {
+            return false;
+        }
+        return ! Utils.isBlank(game.getVisitorteam()) && ! Utils.isBlank(game.getShortvisitorteam())
+                && ! Utils.isBlank(game.getHometeam()) && ! Utils.isBlank(game.getShorthometeam());
     }
     public static void main(String [] argv) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

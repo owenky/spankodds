@@ -1,17 +1,13 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
+import com.sia.client.config.Utils;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -19,29 +15,36 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.Iterator;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class TopView extends JPanel implements ItemListener, Cloneable {
+    private static final String mutedImgFile="muted.png";
+    private static final String unMutedImgFile="unmuted.jpg";
+    private static final String blockingPopupImgFile="blocking.jpg";
+    private static final String unBlockingPopupImgFile="unblocking.jpg";
     private final SportsTabPane stb;
-    JButton clearBut;
-    JButton clearAllBut;
-    JButton lastBut;
-    JButton openerBut;
-    JButton sortBut;
-    JButton addBookieBut;
-    JButton shrinkTeamBut;
-    JButton newWindowBut;
-    JButton alertBut;
-    JButton adjustcolsBut;
-    JButton chartBut;
-    JComboBox cb;
-    JComboBox periodcb;
-    String[] display = new String[9];
-    String[] display2 = new String[9];
-    int[] perioddisplay = new int[8];
-    String[] perioddisplay2 = new String[8];
+    private JButton clearBut;
+    private JButton clearAllBut;
+    private JButton lastBut;
+    private JButton openerBut;
+    private JButton sortBut;
+    private JButton addBookieBut;
+    private JButton shrinkTeamBut;
+    private JButton newWindowBut;
+    private JButton alertBut;
+    private JButton adjustcolsBut;
+    private JButton chartBut;
+    private JToggleButton muteBut;
+    private JToggleButton blockAlertPopupBut;
+    private JComboBox cb;
+    private JComboBox periodcb;
+    private String[] display = new String[9];
+    private String[] display2 = new String[9];
+    private int[] perioddisplay = new int[8];
+    private String[] perioddisplay2 = new String[8];
     private MutableItemContainer<AlertStruct> alertsComp;
 
     public TopView(SportsTabPane stb) {
@@ -111,6 +114,13 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         adjustcolsBut = new JButton("Adj Cols");
         chartBut = new JButton("Chart");
         chartBut.addActionListener(e -> new ChartHome(stb).show());
+        muteBut = new JToggleButton("muteAlert",unMutedImgFile,"Click to mute audio plays",mutedImgFile,"Click to un-mute audio plays");
+        ToggerButtonListener muteButListener = (button)-> SoundPlayer.enableSound = button.isEnabled();
+        muteBut.addActionListener(muteButListener);
+
+        blockAlertPopupBut = new JToggleButton("blockAlertPopup",unBlockingPopupImgFile,"Click to block popup alert",blockingPopupImgFile,"Click to un-block popup alert");
+        ToggerButtonListener blockAlertPopupListener = (button)-> UrgentMessage.popupEnabled = button.isEnabled();
+        blockAlertPopupBut.addActionListener(blockAlertPopupListener);
 
         alertsComp = new UrgentMesgHistComp();
         AppController.alertsVector.bind(alertsComp);
@@ -129,7 +139,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         add(adjustcolsBut);
         add(chartBut);
         add(alertsComp.getComponent());
-
+        add(new JToolBar.Separator());
+        add(muteBut);
+        add(blockAlertPopupBut);
     }
 
     public void initEvents() {

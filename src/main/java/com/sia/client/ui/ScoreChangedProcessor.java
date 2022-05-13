@@ -28,7 +28,7 @@ public abstract class ScoreChangedProcessor {
             boolean sound = false;
             int popupsecs = 15;
             int location = 6;
-            String audiofile = "";
+            String audiofile;
             String[] sports;
             boolean goodsport = false;
 
@@ -52,22 +52,16 @@ public abstract class ScoreChangedProcessor {
             } catch (Exception ex) {
                 log(ex);
             }
-            try {
-                audiofile = arr[4];
-            } catch (Exception ex) {
-                log(ex);
-            }
-            try {
-                sports = arr[5].split(",");
-                for (String sportid : sports) {
-                    if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname())
-                            || sportid.equalsIgnoreCase("All Sports")) {
-                        goodsport = true;
-                        break;
-                    }
+
+            audiofile = 5<=arr.length?arr[4]:"";
+
+            sports = 6<=arr.length?arr[5].split(","):new String [0];
+            for (String sportid : sports) {
+                if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname())
+                        || sportid.equalsIgnoreCase("All Sports")) {
+                    goodsport = true;
+                    break;
                 }
-            } catch (Exception ex) {
-                log(ex);
             }
 
             if (goodsport &&  ! SpankOdds.getMessagesFromLog) {

@@ -4,6 +4,7 @@ package com.sia.client.model;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.FontConfig;
 import com.sia.client.ui.GameBatchUpdator;
 import com.sia.client.ui.TableUtils;
 
@@ -44,7 +45,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
-            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, SiaConst.DefaultHeaderFont, SiaConst.GameGroupHeaderHeight);
+            columnHeaderProperty = new ColumnHeaderProperty(SiaConst.DefaultHeaderColor, SiaConst.DefaultHeaderFontColor, FontConfig.instance().getDefaultHeaderFont(), SiaConst.GameGroupHeaderHeight);
         }
         return columnHeaderProperty;
     }
@@ -187,32 +188,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         int rowIndexInLinesTableData = rowModelIndex-ltdSrhStruct.offset;
         return section.getGame(rowIndexInLinesTableData);
     }
-    //refactored from MainScreen::moveGameToThisHeader(Game, String)
-//    public void moveGameToThisHeader(V g, GameGroupHeader header) {
-//        V thisgame = null;
-//        TableSection<V> group = null;
-//        for (TableSection<V> gameLine : tableSections) {
-//            thisgame = gameLine.removeGameId(g.getGame_id());
-//            if (thisgame != null) {
-//                group = gameLine;
-//                fireTableSectionChangeEvent();
-//                log("MOVING GAME, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been removed from secion "+group.getGameGroupHeader());
-//                break;
-//            }
-//        }
-//        // now lets see if i found it in either
-//        if ( null != thisgame ) {
-//            TableSection<V> ltd = findTableSectionByHeaderValue(header);
-//            if ( null != ltd) {
-//                addGameToTableSection(ltd,thisgame);
-//                log("GAME MOVED, the game id:"+g.getGame_id()+", teams:"+g.getTeams()+" has been moved from secion "+group.getGameGroupHeader()+" and SUCCESSFULLY added to "+header);
-//            } else {
-//                log( new Exception("can't find LinesTableData for header:"+header));
-//            }
-//        } else {
-//            log("MOVING GAME FAILURED! can't find game "+ GameUtils.getGameDebugInfo((Game)g)+" in any section.");
-//        }
-//    }
     public void moveGameToThisHeader(V g, GameGroupHeader header) {
         TableSection<V> sourceGroup = null;
         for (TableSection<V> gameLine : tableSections) {
@@ -234,12 +209,12 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         flushUpdate();
         sourceSection.removeGameId(game.getGame_id());
         fireTableSectionChangeEvent();
-        log("MOVING GAME, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been removed from secion "+sourceSection.getGameGroupHeader());
+        log("MOVING GAME, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been removed from section "+sourceSection.getGameGroupHeader());
 
         TableSection<V> ltd = findTableSectionByHeaderValue(targetGameGroupHeader);
         if ( null != ltd) {
             addGameToTableSection(ltd,game);
-            log("GAME MOVED, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been moved from secion "+sourceSection.getGameGroupHeader()+" and SUCCESSFULLY added to "+targetGameGroupHeader);
+            log("GAME MOVED, the game id:"+game.getGame_id()+", teams:"+game.getTeams()+" has been moved from section "+sourceSection.getGameGroupHeader()+" and SUCCESSFULLY added to "+targetGameGroupHeader);
         } else {
             log( new Exception("can't find LinesTableData for header:"+targetGameGroupHeader));
         }
@@ -408,7 +383,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             fireTableSectionChangeEvent();
         }
     }
-    public TableSection<V> getLinesTableDataWithSecionIndex(int sectionIndex) {
+    public TableSection<V> getLinesTableDataWithSectionIndex(int sectionIndex) {
        return tableSections.get(sectionIndex);
     }
     public void addTableSectionListener(TableSectionListener l) {

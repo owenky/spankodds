@@ -7,17 +7,7 @@ import com.sia.client.ui.SpankOdds;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -233,8 +223,7 @@ public class SportType {
             //for customized sport, always add to screen ( or always near game) -- 2021-10-25
             return true;
         }
-        Date gd = game.getGamedate();
-        LocalDate gmDate = LocalDate.of(gd.getYear()+1900, gd.getMonth()+1,gd.getDate());
+        LocalDate gmDate = game.getGamedate();
         Calendar c = Calendar.getInstance();
         LocalDate today = LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,c.get(Calendar.DAY_OF_MONTH));
         if ( gmDate.isBefore(today) ) {
@@ -249,7 +238,7 @@ public class SportType {
         if ( isFilteredByConfig(game)) {
             return false;
         }
-        return  null == leagueFilter || leagueFilter.isSelected(game.getLeague_id());
+        return  null == leagueFilter || leagueFilter.isSelected(game.getSportIdentifyingLeagueId());
     }
     public boolean shouldSelect(Game game) {
        String err = GameUtils.checkError(game);
@@ -361,7 +350,7 @@ public class SportType {
                 return false;
             }
             LocalDate today = LocalDate.now();
-            LocalDate gameDate = game.getGamedate().toLocalDate();
+            LocalDate gameDate = game.getGamedate();
             return gameDate.compareTo(today) <= 0;
         };
     }

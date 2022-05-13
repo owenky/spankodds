@@ -1,12 +1,16 @@
 package com.sia.client.config;
 
+import com.sia.client.model.Game;
 import org.junit.Test;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.sia.client.config.Utils.log;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class UtilsTest {
 
@@ -32,5 +36,47 @@ public class UtilsTest {
         assertFalse(Utils.containsOnlyAlphanumeric("-0Aaa09Z"));
         assertFalse(Utils.containsOnlyAlphanumeric("+0Aaa09Z"));
         assertFalse(Utils.containsOnlyAlphanumeric("0Aa+a09Z"));
+    }
+    @Test
+    public void testIsIntegerString() {
+        assertTrue(Utils.isIntegerString("-123"));
+        assertTrue(Utils.isIntegerString("123"));
+        assertTrue(Utils.isIntegerString(" 123"));
+        assertTrue(Utils.isIntegerString("123 "));
+        assertTrue(Utils.isIntegerString(" 123 "));
+        assertFalse(Utils.isIntegerString("123a1"));
+        assertFalse(Utils.isIntegerString(""));
+        assertFalse(Utils.isIntegerString("1.23"));
+        assertFalse(Utils.isIntegerString("1 23"));
+        assertFalse(Utils.isIntegerString(null));
+        assertFalse(Utils.isIntegerString(""));
+        assertFalse(Utils.isIntegerString(" "));
+        assertFalse(Utils.isIntegerString("abc"));
+    }
+    @Test
+    public void testIsNumericString() {
+        assertTrue(Utils.isNumericString("123"));
+        assertTrue(Utils.isNumericString(" 123"));
+        assertTrue(Utils.isNumericString("123 "));
+        assertTrue(Utils.isNumericString(" 123 "));
+        assertTrue(Utils.isNumericString("0.1"));
+        assertTrue(Utils.isNumericString("-123"));
+        assertTrue(Utils.isNumericString("-123."));
+        assertTrue(Utils.isNumericString("-123.0"));
+        assertTrue(Utils.isNumericString("-.01"));
+        assertTrue(Utils.isNumericString(".01"));
+        assertTrue(Utils.isNumericString("1."));
+        assertTrue(Utils.isNumericString("-1."));
+        assertTrue(Utils.isNumericString("1.23"));
+        assertTrue(Utils.isNumericString("-1.23"));
+        assertFalse(Utils.isNumericString(""));
+        assertFalse(Utils.isNumericString("1 23"));
+        assertFalse(Utils.isNumericString(null));
+        assertFalse(Utils.isNumericString(""));
+        assertFalse(Utils.isNumericString(" "));
+        assertFalse(Utils.isNumericString("abc"));
+        assertFalse(Utils.isNumericString("."));
+        assertFalse(Utils.isNumericString("1..0"));
+        assertFalse(Utils.isNumericString("123a1"));
     }
 }

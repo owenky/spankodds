@@ -37,6 +37,9 @@ public class GameGroupNode {
     public int getLeagueId() {
         return gameGroupHeader.getLeagueId();
     }
+    public int getSportIdentifyingLeagueId() {
+        return gameGroupHeader.getSportIdentifyingLeagueId();
+    }
     @Override
     public String toString() {
         String eventStr;

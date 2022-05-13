@@ -6,12 +6,15 @@ import com.sia.client.model.LineData;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 public class TimeView {
 
     public static String ICON_UP = ImageFile.ARR_UP;
     public static String ICON_DOWN = ImageFile.ARR_DOWN;
     public static String ICON_BLANK = null;//new ImageIcon("blank.gif");
+    private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mma");
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd");
     LineData topbox;
     LineData bottombox;
     LineData[] boxes = new LineData[2];
@@ -19,8 +22,8 @@ public class TimeView {
     LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
     int gid;
     Game g;
-    SimpleDateFormat sdf = new SimpleDateFormat("h:mma");
-    SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
+//    SimpleDateFormat sdf = new SimpleDateFormat("h:mma");
+//    SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd");
 
     String timeformat;
     String dateformat;
@@ -30,9 +33,9 @@ public class TimeView {
 
         this.gid = gid;
         g = AppController.getGame(gid);
-        dateformat = sdf2.format(g.getGamedate());
+        dateformat = dateFormatter.format(g.getGamedate());
 
-        timeformat = sdf.format(g.getGametime());
+        timeformat = timeFormatter.format(g.getGametime());
         timeformat = timeformat.replace("PM", "p");
         timeformat = timeformat.replace("AM", "a");
 
@@ -61,8 +64,8 @@ public class TimeView {
     public void setCurrentBoxes() {
 
         // updated 8/27 to reflect time chnages live!
-        dateformat = sdf2.format(g.getGamedate());
-        timeformat = sdf.format(g.getGametime());
+        dateformat = dateFormatter.format(g.getGamedate());
+        timeformat = timeFormatter.format(g.getGametime());
         timeformat = timeformat.replace("PM", "p");
         timeformat = timeformat.replace("AM", "a");
 

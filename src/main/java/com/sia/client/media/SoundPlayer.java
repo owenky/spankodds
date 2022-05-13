@@ -12,6 +12,7 @@ import static com.sia.client.config.Utils.log;
 
 public class SoundPlayer {
 
+	public static boolean enableSound = true;
 	private static long lasttimesoundplayed = 1;
 	public SoundPlayer(String file) {
 		this(file,false);
@@ -23,18 +24,20 @@ public class SoundPlayer {
 	}
 	
 	public static synchronized void playSound(URL fileUrl, boolean illcatch) {
-		long now = new java.util.Date().getTime();
-		if(1000L < (now - lasttimesoundplayed)) { // this makes sure sounds dont play over each other
-			try {
-				AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileUrl);
-				Clip clip = AudioSystem.getClip();
-				clip.open(audioInputStream);
-				clip.start();
-			} catch (Exception ex) {
-				log("Error with playing sound. sourfile url="+fileUrl);
-				log(ex);
-				if (illcatch) JOptionPane.showMessageDialog(null, "Error Playing Sound File!");
+		if ( enableSound ) {
+			long now = new java.util.Date().getTime();
+			if (1000L < (now - lasttimesoundplayed)) { // this makes sure sounds dont play over each other
+				try {
+					AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileUrl);
+					Clip clip = AudioSystem.getClip();
+					clip.open(audioInputStream);
+					clip.start();
+				} catch (Exception ex) {
+					log("Error with playing sound. sourfile url=" + fileUrl);
+					log(ex);
+					if (illcatch) JOptionPane.showMessageDialog(null, "Error Playing Sound File!");
 
+				}
 			}
 		}
 	}

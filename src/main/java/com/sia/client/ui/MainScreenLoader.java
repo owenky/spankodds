@@ -29,6 +29,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
         this.mainScreen = mainScreen;
     }
     public void load() {
+//        Utils.log(new Exception("debug screen reloading...."));
         synchronized ( MainScreenLoader.class) {
             MainScreenLoader activeLoaderOfWindow = activeLoaders.get(mainScreen.getWindowIndex());
             if ( null != activeLoaderOfWindow ) {

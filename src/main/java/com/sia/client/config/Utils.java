@@ -3,34 +3,17 @@ package com.sia.client.config;
 import com.sia.client.model.ViewValue;
 
 import javax.jms.MapMessage;
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -156,6 +139,14 @@ public abstract class Utils {
             return defaultValue;
         }
     }
+    public static void sleep(long delayTime) {
+        try {
+            Thread.sleep(delayTime);
+        } catch (InterruptedException e) {
+            Utils.log(e);
+        }
+
+    }
     public static void checkAndRunInEDT(Runnable r) {
         checkAndRunInEDT(r,false);
     }
@@ -182,6 +173,15 @@ public abstract class Utils {
         checkAndRunInEDT(()-> {
             JOptionPane.showMessageDialog(parentComponent, message);
         });
+    }
+    public static void showErrorMessageDialog(Component parentComponent, Object message) throws HeadlessException {
+        checkAndRunInEDT(()-> {
+            JOptionPane.showMessageDialog(parentComponent, message,"ERROR !",JOptionPane.ERROR_MESSAGE);
+        });
+    }
+    public static int showOptions(Component parentComponent, Object message) throws HeadlessException {
+
+        return JOptionPane.showConfirmDialog(parentComponent,message,"Confirmation", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null);
     }
     public static void ensureNotEdtThread() {
         if ( SwingUtilities.isEventDispatchThread()) {
@@ -413,5 +413,57 @@ public abstract class Utils {
             panel.add(right,BorderLayout.EAST);
         }
         return panel;
+    }
+    public static boolean isSameObject(Object o1, Object o2){
+        if ( o1 == null && o2 == null){
+            return true;
+        }else if ( o1 == null && o2 != null){
+            return false;
+        }else if ( o1 != null && o2 == null){
+            return false;
+        }else{
+            return o1.equals(o2);
+        }
+    }
+    public static boolean isBlank(Object o_) {
+        if (o_ == null) {
+            return true;
+        }
+        return 0 == o_.toString().length();
+    }
+    public static String replaceStr(String sStr, String oldStr, String newStr){
+        if (sStr != null && oldStr != null && newStr != null){
+            int i1 = 0;
+            String s2 = sStr;
+            int fromIndex_ = 0;
+            while ((i1 = s2.indexOf(oldStr,fromIndex_)) != -1){
+                s2 = s2.substring(0, i1) + newStr + s2.substring(i1 + oldStr.length(), s2.length());
+                fromIndex_ = i1+newStr.length();
+            }
+            return s2;
+        }else{
+            return sStr;
+        }
+    }
+    private static final Pattern integerPattern = Pattern.compile("-?\\d+");
+    public static boolean isIntegerString(String str) {
+        if ( null == str) {
+            return false;
+        }
+        str = str.trim();
+        return integerPattern.matcher(str).matches();
+    }
+    private static final Pattern numericPattern = Pattern.compile("-?(\\d+)?(\\.)?(\\d+)?");
+    public static boolean isNumericString(String str) {
+        if ( null == str ) {
+            return false;
+        }
+        str = str.trim();
+        if ( 0 == str.length()) {
+            return false;
+        } else if (".".equals(str)) {
+            return false;
+        }
+        return numericPattern.matcher(str).matches();
     }
 }

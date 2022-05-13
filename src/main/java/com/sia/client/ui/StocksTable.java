@@ -50,7 +50,8 @@ public class StocksTable extends JFrame {
 
         m_title = new JLabel(m_data.getTitle(),
                 new ImageIcon(Utils.getMediaResource("money.gif")), SwingConstants.CENTER);
-        m_title.setFont(new Font("Helvetica", Font.PLAIN, 24));
+//        m_title.setFont(new Font("Helvetica", Font.PLAIN, 24));
+        m_title.setFont(FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN, 24));
         getContentPane().add(m_title, BorderLayout.NORTH);
 
         m_table = new JTable();

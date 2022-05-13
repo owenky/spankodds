@@ -25,9 +25,6 @@ public class RowHeaderColumnModel extends DefaultTableColumnModel {
 	public void setColumnMargin(int columnMargin) {
 		//don't set column margin, use main table's column margin.
 	}
-	/**
-	 * 设置表格行号列的标题(如序号或设置等,以及二维表的" 颜色 / 尺寸" -- XFZ@2013-10-17
-	 */
 	public void setRowNumberHeader(String row_number_header_){
 		row_number_header = row_number_header_;
 		TableColumn rowNuoCol_ = getRowNoColumn();

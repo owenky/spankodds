@@ -24,6 +24,7 @@ import javax.jms.TextMessage;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -79,7 +80,7 @@ public class GamesConsumer implements MessageListener {
             leagueid = textMessage.getStringProperty("leagueid");
             String oldvpitcher = "";
             String oldhpitcher = "";
-            Time oldgametime = null;
+            LocalTime oldgametime = null;
 
             if (leagueid == null) {
                 leagueid = "";
@@ -148,7 +149,8 @@ public class GamesConsumer implements MessageListener {
                             "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
                             "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR></TABLE></FONT></HTML>";
                     try {
-                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
+                        //what is the use of the statement? 05/01/2022
+//                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
                     } catch (Exception ex) {
                         log(ex);
                     }
@@ -214,7 +216,7 @@ public class GamesConsumer implements MessageListener {
                         }
 
                     }
-                    String tc = new java.util.Date() + "..TIME CHANGE!!! " + game.getVisitorgamenumber() + "..old=" + oldgametime.getTime() + "...new=" + game.getGametime().getTime();
+                    String tc = new java.util.Date() + "..TIME CHANGE!!! " + game.getVisitorgamenumber() + "..old=" + oldgametime + "...new=" + game.getGametime();
                     try {
 //                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
                         log(tc);

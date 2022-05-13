@@ -19,12 +19,14 @@ public class TitledPanelGenerator {
     private JComponent bodyComponent;
     private JPanel panel;
     private JComponent topLeftControl;
-    public TitledPanelGenerator(String title,int width,int height,JComponent topLeftControl) {
+    private JComponent topRightControl;
+    public TitledPanelGenerator(String title,int width,int height,JComponent topLeftControl,JComponent topRightControl) {
         this.title = title;
         this.width = width;
         this.height = height;
         this.panel = null;
         this.topLeftControl = topLeftControl;
+        this.topRightControl = topRightControl;
     }
     public void setBodyComponent(JComponent bodyComponent) {
         this.bodyComponent = bodyComponent;
@@ -43,20 +45,37 @@ public class TitledPanelGenerator {
             titleLabel.setBorder(BorderFactory.createEmptyBorder(3,1,3,1));
             titleLabel.setForeground(fgColor);
             JPanel titlePanel;
-            if ( null != topLeftControl) {
-                topLeftControl.setOpaque(false);
-                topLeftControl.setForeground(fgColor);
-                JComponent rightDummyPanel = new JLabel(topLeftControl.getName());
-                rightDummyPanel.setForeground(bckColor); //rightDummyPanel is used for right side padding so that title can be place at center
-                titlePanel = Utils.createCompCenteredPanel(topLeftControl,titleLabel,rightDummyPanel);
+            if ( null != topLeftControl || null != topRightControl) {
+
+                if ( null == topLeftControl) {
+                    topLeftControl = makeDummyComponent(topRightControl.getName(),bckColor);
+                } else {
+                    topLeftControl.setOpaque(false);
+                    topLeftControl.setForeground(fgColor);
+                }
+
+                if ( null == topRightControl) {
+                    topRightControl = makeDummyComponent(topLeftControl.getName(),bckColor);
+                } else {
+                    topRightControl.setOpaque(false);
+                    topRightControl.setForeground(fgColor);
+                }
+                titlePanel = Utils.createCompCenteredPanel(topLeftControl,titleLabel,topRightControl);
             } else {
                 titlePanel = Utils.createCompCenteredPanel(titleLabel);
             }
+
             titlePanel.setBackground(bckColor);
             panel.add(titlePanel,BorderLayout.NORTH);
         }
         panel.add(bodyComponent,BorderLayout.CENTER);
 //        panel.setBorder(BorderFactory.createMatteBorder(0,1,0,0,Color.GRAY));
+    }
+    //dummy component is used for padding at blank side so that title can be place at center
+    private static JComponent makeDummyComponent(String dummyString, Color bgColor) {
+        JLabel dummyComp  = new JLabel(dummyString);
+        dummyComp.setForeground(bgColor);
+        return dummyComp;
     }
     public JPanel getPanel() {
         if ( null == panel) {

@@ -1,13 +1,11 @@
 package com.sia.client.config;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.9)";
+    public static final String Version="(v21.20.10.32)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -24,7 +22,6 @@ public abstract class SiaConst {
     public static final Integer GameGroupHeaderHeight = 20;
     public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
     public static final Color DefaultHeaderFontColor = Color.WHITE;
-    public static final Font DefaultHeaderFont = new Font("Verdana", Font.BOLD, 11);
     public static final double DefaultSpread = -99999d;
     public static final double DefaultOver = 99999d;
     public static final int ColumnWidthRefreshRate = 2500;
@@ -32,6 +29,15 @@ public abstract class SiaConst {
     public static final String DefaultGameTimeZone = "US/Eastern";
     public static final long diffBetweenEasternAndUTC = 5*3600*1000L;
 
+    public interface Ui {
+        Color COLOR_WINDOW_BCK = new java.awt.Color(255,255,255);
+        Color COLOR_UNDERLINE = new java.awt.Color(121, 124, 128);
+        Color COLOR_TEXT_SELECTION_BCK = new java.awt.Color(49, 106, 197);
+        Color COLOR_TEXT_SELECTION_FORE = new java.awt.Color(255, 255, 255);
+        Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
+        Cursor CURSOR_BUSY = new Cursor(Cursor.WAIT_CURSOR);
+        Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
+    }
     public interface SportName {
         String Football = "Football";
         String Basketball = "Basketball";
@@ -70,5 +76,9 @@ public abstract class SiaConst {
         int screenYmargin = 50;
         Dimension LineAlertDim = new Dimension(1200,800);
         Dimension CustomTab2Dim = new Dimension(1000,650);
+    }
+    public interface Serialization {
+        String Font = "fontconfig";
+        String LineSeekerAlert = "lineseekeralert";
     }
 }

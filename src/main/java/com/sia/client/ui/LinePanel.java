@@ -74,7 +74,8 @@ public class LinePanel extends JPanel {
         drawPanel = createContainingComponent(draw,leftPaddingSpace,rightPaddingSpace);
         totalPanel = createContainingComponent(total,leftPaddingSpace,rightPaddingSpace);
 
-        Font myfont = new Font("Arial", Font.PLAIN, 12);
+//        Font myfont = new Font("Arial", Font.PLAIN, 12);
+        Font myfont = FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN);
         top.setFont(myfont);
         bottom.setFont(myfont);
         draw.setFont(myfont);
