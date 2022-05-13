@@ -111,6 +111,7 @@ public class FontConfig implements ActionListener {
                 return styleArray[i];
             }
         });
+        loadFontNames();
     }
     //getter and setter for JSON serialization/deserialization
     public String getSelectedFontName() {
@@ -162,12 +163,18 @@ public class FontConfig implements ActionListener {
                 selectedFont = systemDefaultFont;
                 setSelectedFontAttributes(selectedFont);
             }
+            setSelectedValuesOfFontList();
         }
     }
     private void setSelectedFontAttributes(Font f) {
         selectedFontName = getFontName(f);
         selectedFontStyle = getFontStyle(f);
         selectedFontSize = f.getSize();
+    }
+    private void setSelectedValuesOfFontList() {
+        fontNameList.setSelectedValue(selectedFontName,true);
+        fontStyleList.setSelectedValue(selectedFontStyle,true);
+        fontSizeList.setSelectedValue(selectedFontSize,true);
     }
     public JMenu createFontMenu() {
 
@@ -205,7 +212,6 @@ public class FontConfig implements ActionListener {
         applyMenuItem.addActionListener((ae-> setApplicationDefaultFont()));
         resetMenuItem.addActionListener((ae-> reSetApplicationDefaultFont()));
 
-        loadFontNames();
         loadFontStyles(selectedFontName);
         setFontMenuProperties();
         applyMenuItem.setEnabled(false);
@@ -346,8 +352,9 @@ public class FontConfig implements ActionListener {
         if ( changed ) {
             selectedFontName = fontNameList.getSelectedValue();
         }
-        createFontSizeAndStyleList(selectedFontName);
-        validateStyleAndSize();
+//        createFontSizeAndStyleList(selectedFontName);
+//        validateStyleAndSize();
+        setFontMenuProperties();
         fontFamilyMenu.getPopupMenu().setVisible(false);
     }
     private void onFontStyle(ListSelectionEvent event) {

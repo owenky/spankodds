@@ -197,10 +197,14 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setBookieColumnsChanged(text);
-            } else if ("lineseekeralert".equals(messageType)) {
+            } else if (SiaConst.Serialization.LineSeekerAlert.equals(messageType)) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AlertAttrManager.deSerializeAlertAlertAttColl(text);
+            } else if (SiaConst.Serialization.Font.equals(messageType)) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                FontConfig.deSerialize(text);
             } else if (messageType.equals("QueueCredentials")) {
                 setLoginResultBack(true);
                 TextMessage textMessage = (TextMessage) message;
