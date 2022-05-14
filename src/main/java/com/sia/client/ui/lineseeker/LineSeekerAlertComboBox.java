@@ -10,7 +10,6 @@ import java.util.List;
 
 public class LineSeekerAlertComboBox extends SBTComboBox<String, LineSeekerAlertSelectionItem> {
 
-	private static final int maxGameIdLen = 6;
 	private static final String myUiClassId = SBTComboBoxUI.uiClassID;
 
 	public LineSeekerAlertComboBox() {

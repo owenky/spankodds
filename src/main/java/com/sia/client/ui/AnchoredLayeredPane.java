@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
@@ -31,6 +32,11 @@ public class AnchoredLayeredPane implements ComponentListener {
     private String title;
     private Callable<Boolean> closeValidor;
     private JComponent titlePanelLeftComp;
+    private JComponent titlePaneRightComp;
+    private final JPanel westPanel;
+    private final JPanel eastPanel;
+    private final JButton closeBtn;
+    private boolean isCloseBtnAdded;
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
     public AnchoredLayeredPane(SportsTabPane stp) {
@@ -48,6 +54,12 @@ public class AnchoredLayeredPane implements ComponentListener {
 		this.anchoredParentComp = anchoredParentComp;
         mouseListener = new HideOnMouseOutListener();
         layeredPane = getJLayeredPane();
+        westPanel = new JPanel();
+        eastPanel = new JPanel();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.LINE_AXIS));
+        westPanel.setLayout(new BorderLayout());
+        closeBtn = new LinkButton("X");
+        isCloseBtnAdded = false;
     }
     public AnchoredLayeredPane withCloseValidor(Callable<Boolean> closeValidor) {
         this.closeValidor = closeValidor;
@@ -135,25 +147,24 @@ public class AnchoredLayeredPane implements ComponentListener {
             Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
             titleLabel.setFont(titleFont);
 
-            JButton closeBtn = new JButton("X");
             closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()));
-            closeBtn.setOpaque(false);
-            closeBtn.setBorder(BorderFactory.createEmptyBorder());
-            closeBtn.setContentAreaFilled(false);
-            JPanel btnPanel = new JPanel();
-            btnPanel.setLayout(new BorderLayout());
-            btnPanel.add(closeBtn,BorderLayout.EAST);
-
-            JPanel westPanel = new JPanel();
-            westPanel.setLayout(new BorderLayout());
+//            closeBtn.setOpaque(false);
+//            closeBtn.setBorder(BorderFactory.createEmptyBorder());
+//            closeBtn.setContentAreaFilled(false);
+//            JPanel btnPanel = new JPanel();
+//            btnPanel.setLayout(new BorderLayout());
+//            btnPanel.add(closeBtn,BorderLayout.EAST);
+            if ( ! isCloseBtnAdded) {
+                eastPanel.add(closeBtn);
+                isCloseBtnAdded = true;
+            }
 
             titlePanel.add(westPanel,BorderLayout.WEST);
-            titlePanel.add(btnPanel,BorderLayout.EAST);
+            titlePanel.add(eastPanel,BorderLayout.EAST);
             titlePanel.add(titleLabel,BorderLayout.CENTER);
-            if ( null != titlePanelLeftComp) {
-                westPanel.add(titlePanelLeftComp,BorderLayout.CENTER);
+            if ( null == eastPanel.getPreferredSize() && null != titlePanelLeftComp) {
                 Dimension preSize = titlePanelLeftComp.getPreferredSize();
-                btnPanel.setPreferredSize(preSize);
+                eastPanel.setPreferredSize(preSize);
             }
 
             closeBtn.addActionListener(event-> close());
@@ -170,6 +181,16 @@ public class AnchoredLayeredPane implements ComponentListener {
     }
     public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
         this.titlePanelLeftComp = titlePanelLeftComp;
+        westPanel.removeAll();
+        westPanel.add(titlePanelLeftComp,BorderLayout.CENTER);
+    }
+    public void setTitlePanelRightComp(JComponent titlePanelLeftComp) {
+        this.titlePanelLeftComp = titlePanelLeftComp;
+        eastPanel.removeAll();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.LINE_AXIS));
+        eastPanel.add(titlePanelLeftComp);
+        eastPanel.add(Box.createRigidArea(new Dimension(15, 0)));
+        eastPanel.add(closeBtn);
     }
     public void close() {
         boolean toClose;

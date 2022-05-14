@@ -8,6 +8,7 @@ import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.TitledPanelGenerator;
+import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
 import com.sia.client.ui.games.GameSelectionItem;
@@ -43,6 +44,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final List<SectionComponents> sectionComponentsList;
     private final AlertComponentListener alertComponentListener;
     private final JButton saveBtn = new JButton();
+    private final JButton alertMediaSetting;
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
@@ -55,6 +57,9 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComponentsList.add(sectionComps);
         }
         withCloseValidor(this::validateClose);
+        alertMediaSetting = new LinkButton("Alert Setting");
+        alertMediaSetting.addActionListener(this::openAlertMediaSettingDialog);
+        setTitlePanelRightComp(alertMediaSetting);
     }
     private JComponent makeAlertComboBoxPanel() {
         JPanel panel = new JPanel();
@@ -333,6 +338,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
 
     }
+    public boolean isEdited() {
+        return editIndicator.equals(editStatusLabel.getText());
+    }
     private boolean validateClose() {
         if ( isEdited()) {
             int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes to this alert configuration?");
@@ -341,8 +349,8 @@ public class AlertLayout extends AbstractLayeredDialog {
             return true;
         }
     }
-    public boolean isEdited() {
-        return editIndicator.equals(editStatusLabel.getText());
+    private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
+
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();
