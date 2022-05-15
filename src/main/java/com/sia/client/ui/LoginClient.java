@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
@@ -204,7 +205,13 @@ public class LoginClient implements MessageListener {
             } else if (SiaConst.Serialization.Font.equals(messageType)) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                FontConfig.deSerialize(text);
+                Utils.checkAndRunInEDT(()-> {
+                    try {
+                        FontConfig.deSerialize(text);
+                    } catch (JsonProcessingException e) {
+                        Utils.log(e);
+                    }
+                });
             } else if (messageType.equals("QueueCredentials")) {
                 setLoginResultBack(true);
                 TextMessage textMessage = (TextMessage) message;

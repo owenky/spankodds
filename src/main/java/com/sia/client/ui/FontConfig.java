@@ -3,6 +3,8 @@ package com.sia.client.ui;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sia.client.config.Utils;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
@@ -95,6 +97,9 @@ public class FontConfig implements ActionListener {
         return thefontConfig;
     }
     FontConfig() {
+        Utils.checkAndRunInEDT(this::init);
+    }
+    private void init() {
         fontSizeList.setModel( new AbstractListModel<Integer>() {
             public int getSize() {
                 return fontArray.length;

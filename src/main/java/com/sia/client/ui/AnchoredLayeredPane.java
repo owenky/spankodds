@@ -12,6 +12,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -37,21 +38,13 @@ public class AnchoredLayeredPane implements ComponentListener {
     private final JPanel eastPanel;
     private final JButton closeBtn;
     private boolean isCloseBtnAdded;
+    private final java.util.List<Runnable> closeActions = new ArrayList<>();
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
-    public AnchoredLayeredPane(SportsTabPane stp) {
-        this(stp, stp,  LayedPaneIndex.SportConfigIndex);
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public SportsTabPane getSportsTabPane() {
-        return stp;
-    }
     public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,int layer_index) {
         this.stp = stp;
         this.layer_index = layer_index;
-		this.anchoredParentComp = anchoredParentComp;
+        this.anchoredParentComp = anchoredParentComp;
         mouseListener = new HideOnMouseOutListener();
         layeredPane = getJLayeredPane();
         westPanel = new JPanel();
@@ -60,6 +53,21 @@ public class AnchoredLayeredPane implements ComponentListener {
         westPanel.setLayout(new BorderLayout());
         closeBtn = new LinkButton("X");
         isCloseBtnAdded = false;
+    }
+    public AnchoredLayeredPane(SportsTabPane stp,int layer_index) {
+        this(stp, stp,  layer_index);
+    }
+    public AnchoredLayeredPane(SportsTabPane stp) {
+        this(stp, stp,  LayedPaneIndex.SportConfigIndex);
+    }
+    public synchronized void addCloseAction(Runnable r) {
+        closeActions.add(r);
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public SportsTabPane getSportsTabPane() {
+        return stp;
     }
     public AnchoredLayeredPane withCloseValidor(Callable<Boolean> closeValidor) {
         this.closeValidor = closeValidor;
@@ -205,6 +213,9 @@ public class AnchoredLayeredPane implements ComponentListener {
             isOpened = false;
             anchoredParentComp.removeComponentListener(this);
             activeLayeredPaneMap.remove(this.getActiveMapKey(), this);
+        }
+        for(Runnable r: closeActions) {
+            r.run();
         }
     }
     protected final void hide() {

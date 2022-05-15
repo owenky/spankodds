@@ -2,11 +2,13 @@ package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.LineSeekerAlertMethodDialog;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.control.SportsTabPane;
@@ -23,6 +25,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Supplier;
 
 
 public class AlertLayout extends AbstractLayeredDialog {
@@ -39,16 +42,17 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<AlertPeriod> period;
     private AlertConfig alertConfig;
-    private JLabel editStatusLabel = new JLabel();
-    private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
+    private final JLabel editStatusLabel = new JLabel();
+    private final LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private final List<SectionComponents> sectionComponentsList;
-    private final AlertComponentListener alertComponentListener;
     private final JButton saveBtn = new JButton();
-    private final JButton alertMediaSetting;
+    private final JButton alertMethodSetting = new LinkButton("Alert Method");
+    private LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog;
+    private JComponent userComp;
 
     public AlertLayout(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
-       this.alertComponentListener = new AlertComponentListener(this);
+        AlertComponentListener alertComponentListener = new AlertComponentListener(this);
        this.setTitlePanelLeftComp(makeAlertComboBoxPanel());
        this.sectionComponentsList = new ArrayList<>();
         for(AlertSectionName alertSectionName: AlertSectionName.getSortedSectionNames()) {
@@ -57,9 +61,13 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComponentsList.add(sectionComps);
         }
         withCloseValidor(this::validateClose);
-        alertMediaSetting = new LinkButton("Alert Setting");
-        alertMediaSetting.addActionListener(this::openAlertMediaSettingDialog);
-        setTitlePanelRightComp(alertMediaSetting);
+        alertMethodSetting.addActionListener(this::openAlertMediaSettingDialog);
+        setTitlePanelRightComp(alertMethodSetting);
+        this.addCloseAction(()->{
+            if ( null != lineSeekerAlertMethodDialog) {
+                lineSeekerAlertMethodDialog.close();
+            }
+        });
     }
     private JComponent makeAlertComboBoxPanel() {
         JPanel panel = new JPanel();
@@ -82,20 +90,22 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     @Override
     protected JComponent getUserComponent() {
-        alertsCombobox.loadAlerts();
-        gameNumBox.loadGames();
-        gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
-        JPanel userComp = createUserComp();
-        userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
-        userComp.add(controlSec());
-        List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
-        for(AlertSectionName alertSectionName:alertSectionNames ) {
-            userComp.add(getSectionComponent(alertSectionName));
+        if ( null == userComp ) {
+            alertsCombobox.loadAlerts();
+            gameNumBox.loadGames();
+            gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
+            userComp = createUserComp();
+            userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
+            userComp.add(controlSec());
+            List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
+            for (AlertSectionName alertSectionName : alertSectionNames) {
+                userComp.add(getSectionComponent(alertSectionName));
+            }
+            userComp.add(bottomControlSection());
+            gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
+            alertsCombobox.addValueChangeListener(this::updateLayoutComponents);
+            this.setEditStatus(false);  //this is initial state, but  userComp.add(getSectionComponent(alertSectionName)) set edit status to true becuase of document listener. Override it. -- 05/11/2022
         }
-        userComp.add(bottomControlSection());
-        gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
-        alertsCombobox.addValueChangeListener(this::updateLayoutComponents);
-        this.setEditStatus(false);  //this is initial state, but  userComp.add(getSectionComponent(alertSectionName)) set edit status to true becuase of document listener. Override it. -- 05/11/2022
         return userComp;
     }
     private JComponent controlSec() {
@@ -350,7 +360,19 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
+        if ( null == lineSeekerAlertMethodDialog) {
+            lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane());
+            lineSeekerAlertMethodDialog.addCloseAction(()->alertMethodSetting.setEnabled(true));
+        }
+        final AbstractButton alertSettingBtn = (AbstractButton)actionEvent.getSource();
+        alertSettingBtn.setEnabled(false);
+        Supplier<Point> anchorLocSupplier = ()->{
+            JComponent userComp = getUserComponent();
+            Point userCompLoc = userComp.getLocationOnScreen();
+            return new Point( userCompLoc.x+ userComp.getWidth()+3, userCompLoc.y);
 
+        };
+        lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim,anchorLocSupplier);
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();
