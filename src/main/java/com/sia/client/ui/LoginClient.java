@@ -255,7 +255,7 @@ public class LoginClient implements MessageListener {
                         Utils.parseTimestamp(array[6]),
                         Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
                         Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
-                        Integer.parseInt(array[17]));
+                        Integer.parseInt(array[17]),Integer.parseInt(array[18]));
                 AppController.addSpreadline(line);
                 //setLoginResultBack(true);
                 //owen took out 7/11/20 and moved back to loginconnection
@@ -271,7 +271,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
                         Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
 
-                        Integer.parseInt(array[17]));
+                        Integer.parseInt(array[17]),Integer.parseInt(array[18]));
                 int period = Integer.parseInt(array[17]);
 
                 AppController.addTotalline(line);
@@ -313,7 +313,8 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[27]),
 
                         Utils.parseTimestamp(array[28]),
-                        Integer.parseInt(array[29]));
+                        Integer.parseInt(array[29]),
+                        Integer.parseInt(array[30]));
                 int period = Integer.parseInt(array[29]);
 
                 AppController.addTeamTotalline(line);
@@ -330,7 +331,8 @@ public class LoginClient implements MessageListener {
                         Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
                         Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
 
-                        Integer.parseInt(array[14]));
+                        Integer.parseInt(array[14]),
+                        Integer.parseInt(array[15]));
                 int period = Integer.parseInt(array[14]);
 
                 AppController.addMoneyline(line);

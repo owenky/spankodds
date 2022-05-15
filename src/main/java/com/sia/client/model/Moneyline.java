@@ -81,7 +81,29 @@ public class Moneyline extends Line implements Serializable {
 
 
     }
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, double pvj, double phj, double pdj, long pts, double ovj, double ohj, double odj, long ots, int p,int mb) {
+        this();
+        currentvisitjuice = vj;
+        currenthomejuice = hj;
+        currentdrawjuice = dj;
+        currentts = ts;
 
+        priorvisitjuice = pvj;
+        priorhomejuice = phj;
+        priordrawjuice = pdj;
+        priorts = pts;
+
+        openervisitjuice = ovj;
+        openerhomejuice = ohj;
+        openerdrawjuice = odj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit = mb;
+
+    }
     public boolean isBestVisitMoney() {
         return isbestvisitmoney;
     }

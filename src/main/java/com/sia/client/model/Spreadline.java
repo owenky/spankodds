@@ -95,7 +95,33 @@ public class Spreadline extends Line {
 
 
     }
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, double pvs, double pvj, double phs, double phj, long pts, double ovs, double ovj, double ohs, double ohj, long ots, int p,int mb) {
+        this();
 
+        currentvisitspread = vs;
+        currentvisitjuice = vj;
+        currenthomespread = hs;
+        currenthomejuice = hj;
+        currentts = ts;
+
+        priorvisitspread = pvs;
+        priorvisitjuice = pvj;
+        priorhomespread = phs;
+        priorhomejuice = phj;
+        priorts = pts;
+
+        openervisitspread = ovs;
+        openervisitjuice = ovj;
+        openerhomespread = ohs;
+        openerhomejuice = ohj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit  = mb;
+
+    }
     public static void main(String args[]) {
 //
 //

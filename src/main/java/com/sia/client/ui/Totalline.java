@@ -93,7 +93,32 @@ public class Totalline extends Line implements Serializable {
 
 
     }
+    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots, int p,int mb) {
+        this();
+        currentover = o;
+        currentoverjuice = oj;
+        currentunder = u;
+        currentunderjuice = uj;
+        currentts = ts;
 
+        priorover = po;
+        prioroverjuice = poj;
+        priorunder = pu;
+        priorunderjuice = puj;
+        priorts = pts;
+
+        openerover = oo;
+        openeroverjuice = ooj;
+        openerunder = ou;
+        openerunderjuice = ouj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit = mb;
+
+    }
     public boolean isBestOver() {
         return isbestover;
     }
