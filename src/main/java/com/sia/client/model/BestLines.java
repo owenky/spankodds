@@ -160,7 +160,7 @@ public class BestLines {
 						{
 							if(leagueid == 5 && period ==0 && gameid == 901)
 							{
-								System.out.println("BEFORE OVER."+over+".."+overjuice+".."+bestover+".."+bestoverjuice);
+							//	System.out.println("BEFORE OVER."+over+".."+overjuice+".."+bestover+".."+bestoverjuice);
 							}
 							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
 								bo = tl;
@@ -192,7 +192,7 @@ public class BestLines {
 						{
 							if(leagueid == 5 && period ==0 && gameid == 901)
 							{
-								System.out.println("BEFORE UNDER."+under+".."+underjuice+".."+bestunder+".."+bestunderjuice);
+							//	System.out.println("BEFORE UNDER."+under+".."+underjuice+".."+bestunder+".."+bestunderjuice);
 							}
 							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
 								bu = tl;

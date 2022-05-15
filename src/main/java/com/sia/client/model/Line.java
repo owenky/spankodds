@@ -91,7 +91,7 @@ public class Line {
                 message = "Increased from "+oldlimit+" to "+newlimit;
             }
         }
-        /*
+
         new UrgentMessage("<HTML><H2>"+AppController.getBookie(getBookieid()).getName()+" - "+type.toUpperCase()+" LIMIT CHANGE " + getLeague_id() + "</H2>" +
                 "<TABLE cellspacing=1 cellpadding=1>" +
 
@@ -99,7 +99,7 @@ public class Line {
                 "<TR><TD>" + message+"</TD></TR>" +
                 "</TABLE></HTML>", 40 * 1000,2, AppController.getMainTabPane());
 
-         */
+
     }
 
     public int getBookieid() {
