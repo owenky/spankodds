@@ -21,6 +21,9 @@ public abstract class AbstractLayeredDialog {
         anchoredLayeredPane = new AnchoredLayeredPane(stp);
         anchoredLayeredPane.setTitle(title);
     }
+    public SportsTabPane getSportsTabPane() {
+        return anchoredLayeredPane.getSportsTabPane();
+    }
     public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
         anchoredLayeredPane.setTitlePanelLeftComp(titlePanelLeftComp);
     }
