@@ -17,8 +17,9 @@ public class BestLines {
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
+		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
-        allcols.addAll(fixedbookies);
+
 
         Spreadline bvsl = null;
         Spreadline bhsl = null;
@@ -33,35 +34,73 @@ public class BestLines {
 ///////////////////////////////////spreadlines
 			try {
 				Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
-				if (null != sl) {
+				if (null != sl && sl.getCurrentvisitjuice()!= 0 && sl.getCurrenthomejuice()!= 0 )
+				{
+					double visitjuice =  sl.getCurrentvisitjuice();
+					double visitspread =  sl.getCurrentvisitspread();
+					double homejuice =  sl.getCurrenthomejuice();
+					double homespread =  sl.getCurrenthomespread();
+					int leagueid = sl.getLeague_id();
+					double[] arr = LinesMoves.getleagueidArray(leagueid,period,"SPREAD");
 					sl.setBestVisitSpread(false);
 					sl.setBestHomeSpread(false);
-					if (bvsl == null && sl.getCurrentvisitjuice() != 0) {
+					//if (bvsl == null && sl.getCurrentvisitjuice() != 0)
+					if (bvsl == null)
+					{
 						bvsl = sl;
-					} else if (sl.getCurrentvisitjuice() != 0) {
-						if ( null == bvsl || sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
-							bvsl = sl;
-						} else if (sl.getCurrentvisitspread() == bvsl.getCurrentvisitspread()) {
-							if (sl.getCurrentvisitjuice() > bvsl.getCurrentvisitjuice()) {
+					}
+					else // here we know bvsl is not null;
+					{
+						double bestvisitjuice = bvsl.getCurrentvisitjuice();
+						double bestvisitspread = bvsl.getCurrentvisitspread();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+
+
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD")) {
 								bvsl = sl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+							if (sl.getCurrentvisitjuice() != 0) {
+								if (null == bvsl || sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
+									bvsl = sl;
+								} else if (sl.getCurrentvisitspread() == bvsl.getCurrentvisitspread()) {
+									if (sl.getCurrentvisitjuice() > bvsl.getCurrentvisitjuice()) {
+										bvsl = sl;
+									}
+								}
 							}
 						}
 					}
-
-
-					if (bhsl == null && sl.getCurrenthomejuice() != 0) {
+					//if (bhsl == null && sl.getCurrenthomejuice() != 0)
+					if (bhsl == null)
+					{
 						bhsl = sl;
-					} else if (sl.getCurrenthomejuice() != 0) {
-						if ( null == bhsl || sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
-							bhsl = sl;
-						} else if (sl.getCurrenthomespread() == bhsl.getCurrenthomespread()) {
-							if (sl.getCurrenthomejuice() > bhsl.getCurrenthomejuice()) {
+					}
+					else // here we know bhsl is not null;
+					{
+						double besthomejuice = bhsl.getCurrenthomejuice();
+						double besthomespread = bhsl.getCurrenthomespread();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD")) {
 								bhsl = sl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+							if (sl.getCurrenthomejuice() != 0) {
+								if (null == bhsl || sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
+									bhsl = sl;
+								} else if (sl.getCurrenthomespread() == bhsl.getCurrenthomespread()) {
+									if (sl.getCurrenthomejuice() > bhsl.getCurrenthomejuice()) {
+										bhsl = sl;
+									}
+								}
 							}
 						}
 					}
 				}
-
 			} catch (Exception ex) {
 				log(ex);
 			}
@@ -77,12 +116,14 @@ public class BestLines {
     }
 
     public static void calculatebesttotal(int gameid, int period) {
+
 		List<Bookie> shownbookies = AppController.getShownCols();
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
+		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
-        allcols.addAll(fixedbookies);
+
 
         Totalline bo = null;
         Totalline bu = null;
@@ -94,30 +135,79 @@ public class BestLines {
 			}
 			try {
 				Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
-				if (null != tl) {
+				if (null != tl && tl.getCurrentoverjuice() != 0 && tl.getCurrentunderjuice() != 0)
+				{
+					double overjuice =  tl.getCurrentoverjuice();
+					double over =  tl.getCurrentover();
+					double underjuice =  tl.getCurrentunderjuice();
+					double under =  tl.getCurrentunder();
+					int leagueid = tl.getLeague_id();
+					double[] arr = LinesMoves.getleagueidArray(leagueid,period,"TOTAL");
 					tl.setBestOver(false);
 					tl.setBestUnder(false);
-					if (bo == null && tl.getCurrentoverjuice() != 0) {
+
+					//if (bo == null && tl.getCurrentoverjuice() != 0)
+					if (bo == null)
+					{
 						bo = tl;
-					} else if (tl.getCurrentoverjuice() != 0) {
-						if (null == bo || tl.getCurrentover() < bo.getCurrentover()) {
-							bo = tl;
-						} else if (tl.getCurrentover() == bo.getCurrentover()) {
-							if (tl.getCurrentoverjuice() > bo.getCurrentoverjuice()) {
+					}
+					else
+					{
+
+						double bestoverjuice = bo.getCurrentoverjuice();
+						double bestover = bo.getCurrentover();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+							if(leagueid == 5 && period ==0 && gameid == 901)
+							{
+							//	System.out.println("BEFORE OVER."+over+".."+overjuice+".."+bestover+".."+bestoverjuice);
+							}
+							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
 								bo = tl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+							if (tl.getCurrentoverjuice() != 0) {
+								if (null == bo || tl.getCurrentover() < bo.getCurrentover()) {
+									bo = tl;
+								} else if (tl.getCurrentover() == bo.getCurrentover()) {
+									if (tl.getCurrentoverjuice() > bo.getCurrentoverjuice()) {
+										bo = tl;
+									}
+								}
 							}
 						}
 					}
 
-
-					if (bu == null && tl.getCurrentunderjuice() != 0) {
+					//if (bu == null && tl.getCurrentunderjuice() != 0)
+					if (bu == null)
+					{
 						bu = tl;
-					} else if (tl.getCurrentunderjuice() != 0) {
-						if (null == bu || tl.getCurrentunder() > bu.getCurrentunder()) {
-							bu = tl;
-						} else if (tl.getCurrentunder() == bu.getCurrentunder()) {
-							if (tl.getCurrentunderjuice() > bu.getCurrentunderjuice()) {
+					}
+					else {
+
+						double bestunderjuice = bu.getCurrentunderjuice();
+						double bestunder = bu.getCurrentunder();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+							if(leagueid == 5 && period ==0 && gameid == 901)
+							{
+							//	System.out.println("BEFORE UNDER."+under+".."+underjuice+".."+bestunder+".."+bestunderjuice);
+							}
+							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
 								bu = tl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+
+							if (tl.getCurrentunderjuice() != 0) {
+								if (null == bu || tl.getCurrentunder() > bu.getCurrentunder()) {
+									bu = tl;
+								} else if (tl.getCurrentunder() == bu.getCurrentunder()) {
+									if (tl.getCurrentunderjuice() > bu.getCurrentunderjuice()) {
+										bu = tl;
+									}
+								}
 							}
 						}
 					}
@@ -144,8 +234,9 @@ public class BestLines {
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
+		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
-        allcols.addAll(fixedbookies);
+
         TeamTotalline bvo = null;
         TeamTotalline bvu = null;
         TeamTotalline bho = null;
@@ -240,8 +331,9 @@ public class BestLines {
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
+		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
-        allcols.addAll(fixedbookies);
+
 
         Moneyline bvml = null;
         Moneyline bhml = null;
@@ -304,8 +396,9 @@ public class BestLines {
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
+		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
-        allcols.addAll(fixedbookies);
+
 
         Spreadline bvsl = null;
         Spreadline bhsl = null;
@@ -330,6 +423,78 @@ public class BestLines {
 				continue;
 			}
 ///////////////////////////////////spreadlines
+			try {
+				Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
+				if (null != sl && sl.getCurrentvisitjuice() != 0 && sl.getCurrenthomejuice() != 0)
+				{
+					double visitjuice =  sl.getCurrentvisitjuice();
+					double visitspread =  sl.getCurrentvisitspread();
+					double homejuice =  sl.getCurrenthomejuice();
+					double homespread =  sl.getCurrenthomespread();
+					int leagueid = sl.getLeague_id();
+					double[] arr = LinesMoves.getleagueidArray(leagueid,period,"SPREAD");
+					sl.setBestVisitSpread(false);
+					sl.setBestHomeSpread(false);
+					//if (bvsl == null && sl.getCurrentvisitjuice() != 0)
+					if (bvsl == null)
+					{
+						bvsl = sl;
+					}
+					else // here we know bvsl is not null;
+					{
+						double bestvisitjuice = bvsl.getCurrentvisitjuice();
+						double bestvisitspread = bvsl.getCurrentvisitspread();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD")) {
+								bvsl = sl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+							if (sl.getCurrentvisitjuice() != 0) {
+								if (null == bvsl || sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
+									bvsl = sl;
+								} else if (sl.getCurrentvisitspread() == bvsl.getCurrentvisitspread()) {
+									if (sl.getCurrentvisitjuice() > bvsl.getCurrentvisitjuice()) {
+										bvsl = sl;
+									}
+								}
+							}
+						}
+					}
+					//if (bhsl == null && sl.getCurrenthomejuice() != 0)
+					if (bhsl == null)
+					{
+						bhsl = sl;
+					}
+					else // here we know bhsl is not null;
+					{
+						double besthomejuice = bhsl.getCurrenthomejuice();
+						double besthomespread = bhsl.getCurrenthomespread();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD")) {
+								bhsl = sl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+							if (sl.getCurrenthomejuice() != 0) {
+								if (null == bhsl || sl.getCurrenthomespread() > bhsl.getCurrenthomespread()) {
+									bhsl = sl;
+								} else if (sl.getCurrenthomespread() == bhsl.getCurrenthomespread()) {
+									if (sl.getCurrenthomejuice() > bhsl.getCurrenthomejuice()) {
+										bhsl = sl;
+									}
+								}
+							}
+						}
+					}
+				}
+			} catch (Exception ex) {
+				log(ex);
+			}
+
+	/*
 			try {
 				Spreadline sl = AppController.getSpreadline(b.getBookie_id(), gameid, period);
 				if (null != sl) {
@@ -363,7 +528,7 @@ public class BestLines {
 			} catch (Exception ex) {
 				log(ex);
 			}
-
+*/
 
 ///////////////////////////////////moneylines
 
@@ -402,8 +567,82 @@ public class BestLines {
 				log(ex);
 			}
 ///////////////////////////////////totalline
+			try {
+				Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
+				if (null != tl && tl.getCurrentoverjuice() != 0 && tl.getCurrentunderjuice() != 0)
+				{
+					double overjuice =  tl.getCurrentoverjuice();
+					double over =  tl.getCurrentover();
+					double underjuice =  tl.getCurrentunderjuice();
+					double under =  tl.getCurrentunder();
+					int leagueid = tl.getLeague_id();
+					double[] arr = LinesMoves.getleagueidArray(leagueid,period,"TOTAL");
+					tl.setBestOver(false);
+					tl.setBestUnder(false);
 
+					//if (bo == null && tl.getCurrentoverjuice() != 0)
+					if (bo == null)
+					{
+						bo = tl;
+					}
+					else
+					{
 
+						double bestoverjuice = bo.getCurrentoverjuice();
+						double bestover = bo.getCurrentover();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+
+							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
+								bo = tl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+							if (tl.getCurrentoverjuice() != 0) {
+								if (null == bo || tl.getCurrentover() < bo.getCurrentover()) {
+									bo = tl;
+								} else if (tl.getCurrentover() == bo.getCurrentover()) {
+									if (tl.getCurrentoverjuice() > bo.getCurrentoverjuice()) {
+										bo = tl;
+									}
+								}
+							}
+						}
+					}
+
+					//if (bu == null && tl.getCurrentunderjuice() != 0)
+					if (bu == null)
+					{
+						bu = tl;
+					}
+					else {
+
+						double bestunderjuice = bu.getCurrentunderjuice();
+						double bestunder = bu.getCurrentunder();
+						if (arr != null) // i have push chart lets use it for smart highlighting
+						{
+							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
+								bu = tl;
+							}
+
+						} else { // given i don't have push chart ill just highlight extreme
+
+							if (tl.getCurrentunderjuice() != 0) {
+								if (null == bu || tl.getCurrentunder() > bu.getCurrentunder()) {
+									bu = tl;
+								} else if (tl.getCurrentunder() == bu.getCurrentunder()) {
+									if (tl.getCurrentunderjuice() > bu.getCurrentunderjuice()) {
+										bu = tl;
+									}
+								}
+							}
+						}
+					}
+				}
+			} catch (Exception ex) {
+				log(ex);
+			}
+/*
 			try {
 				Totalline tl = AppController.getTotalline(b.getBookie_id(), gameid, period);
 				if (null != tl) {
@@ -437,7 +676,7 @@ public class BestLines {
 			} catch (Exception ex) {
 				log(ex);
 			}
-
+*/
 
 			//teamtotal line
 			try {

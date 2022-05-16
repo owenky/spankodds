@@ -765,7 +765,33 @@ public class SpreadTotalView extends ViewValue {
 
         try {
             Game game = getGame();
-            if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
+            if (game != null && (!topboxS.equals("") || !bottomboxS.equals("")))
+            {
+                String limithtml = "";
+                int sidelimit = 0;
+                int totallimit = 0;
+                int moneylimit = 0;
+                if(sl != null)
+                {
+                    sidelimit = sl.getLimit();
+                }
+                if(tl != null)
+                {
+                    totallimit = tl.getLimit();
+                }
+                if(ml != null)
+                {
+                    moneylimit = ml.getLimit();
+                }
+
+                 limithtml = sidelimit+" / "+totallimit+" / "+moneylimit;
+                if(!limithtml.equals("0 / 0 / 0"))
+                {
+                    setTooltiptext("<html><body>" +limithtml+"</body></html>");
+                }
+
+
+                /*
                 setTooltiptext("<html><body>" +
                         "<table border=1>" +
                         "<tr>" +
@@ -784,13 +810,13 @@ public class SpreadTotalView extends ViewValue {
                         "<tr>");
 
                 if (sl != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getCurrentvisitspread() + "") + makeNullBlank(sl.getCurrentvisitjuice() + "") + "</td>");
+                    appendTooltipText("<td align='left' >" + sl.getLimit()+".."+makeNullBlank(sl.getCurrentvisitspread() + "") + makeNullBlank(sl.getCurrentvisitjuice() + "") + "</td>");
                 }
                 if (ml != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getCurrentvisitjuice() + "") + "</td>");
+                    appendTooltipText("<td align='left' >" + ml.getLimit()+".."+ makeNullBlank(ml.getCurrentvisitjuice() + "") + "</td>");
                 }
                 if (tl != null) {
-                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>");
+                    appendTooltipText("<td align='left' >" + tl.getLimit()+".."+ makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>");
                 }
                 appendTooltipText("</tr><tr>");
 
@@ -849,6 +875,8 @@ public class SpreadTotalView extends ViewValue {
                 }
 
                 appendTooltipText("</tr></table></td></tr></table></body></html>");
+
+                 */
             }
         } catch (Exception ex) {
             log(ex);

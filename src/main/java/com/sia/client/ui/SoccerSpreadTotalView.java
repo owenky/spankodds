@@ -708,6 +708,29 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         try {
             if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
+                String limithtml = "";
+                int sidelimit = 0;
+                int totallimit = 0;
+                int moneylimit = 0;
+                if(sl != null)
+                {
+                    sidelimit = sl.getLimit();
+                }
+                if(tl != null)
+                {
+                    totallimit = tl.getLimit();
+                }
+                if(ml != null)
+                {
+                    moneylimit = ml.getLimit();
+                }
+
+                limithtml = sidelimit+" / "+totallimit+" / "+moneylimit;
+                if(!limithtml.equals("0 / 0 / 0"))
+                {
+                    setTooltiptext("<html><body>" +limithtml+"</body></html>");
+                }
+                /*
                 setTooltiptext("<html><body>" +
                         "<table border=1>" +
                         "<tr>" +
@@ -794,7 +817,7 @@ public class SoccerSpreadTotalView extends ViewValue {
                 }
 
                 appendTooltipText("</tr></table></td></tr></table></body></html>");
-
+                   */
             }
         } catch (Exception ex) {
             log(ex);

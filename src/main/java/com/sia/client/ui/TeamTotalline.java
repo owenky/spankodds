@@ -100,7 +100,46 @@ public class TeamTotalline extends Line {
 
 
     }
+    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts,
+                         double pvo, double pvoj, double pvu, double pvuj, double pho, double phoj, double phu, double phuj, long pts,
+                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, long ots, int p,int mb) {
+        this();
+        currentvisitover = vo;
+        currentvisitoverjuice = voj;
+        currentvisitunder = vu;
+        currentvisitunderjuice = vuj;
+        currenthomeover = ho;
+        currenthomeoverjuice = hoj;
+        currenthomeunder = hu;
+        currenthomeunderjuice = huj;
+        currentts = ts;
 
+        priorvisitover = pvo;
+        priorvisitoverjuice = pvoj;
+        priorvisitunder = pvu;
+        priorvisitunderjuice = pvuj;
+        priorhomeover = pho;
+        priorhomeoverjuice = phoj;
+        priorhomeunder = phu;
+        priorhomeunderjuice = phuj;
+        priorts = pts;
+
+        openervisitover = ovo;
+        openervisitoverjuice = ovoj;
+        openervisitunder = ovu;
+        openervisitunderjuice = ovuj;
+        openerhomeover = oho;
+        openerhomeoverjuice = ohoj;
+        openerhomeunder = ohu;
+        openerhomeunderjuice = ohuj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit = mb;
+
+    }
     public boolean isBestVisitOver() {
         return isbestvisitover;
     }
