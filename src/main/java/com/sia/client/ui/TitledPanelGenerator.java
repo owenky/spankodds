@@ -13,6 +13,8 @@ import java.awt.Dimension;
 
 public class TitledPanelGenerator {
 
+    private static final Color defaultTitleBarBgColor = Color.DARK_GRAY;
+    private static final Color defaultTitleBarFgColr = Color.WHITE;
     private final String title;
     private final int width;
     private final int height;
@@ -20,6 +22,9 @@ public class TitledPanelGenerator {
     private JPanel panel;
     private JComponent topLeftControl;
     private JComponent topRightControl;
+    private Color titleBarBgColor = defaultTitleBarBgColor;
+    private Color titleBarFgColor = defaultTitleBarFgColr;
+
     public TitledPanelGenerator(String title,int width,int height,JComponent topLeftControl,JComponent topRightControl) {
         this.title = title;
         this.width = width;
@@ -34,38 +39,42 @@ public class TitledPanelGenerator {
     public void setTopLeftControl(JComponent topLeftControl) {
         this.topLeftControl = topLeftControl;
     }
+    public void setTitleBarBgColor(Color titleBarBgColor) {
+        this.titleBarBgColor = titleBarBgColor;
+    }
+    public void setTitleBarFgColor(Color titleBarFgColor) {
+        this.titleBarFgColor = titleBarFgColor;
+    }
     public void build() {
         panel = new JPanel();
         panel.setPreferredSize(new Dimension(width,height));
         panel.setLayout(new BorderLayout());
         if ( null != title && ! title.trim().equals("")) {
-            Color bckColor = Color.DARK_GRAY;
-            Color fgColor = Color.WHITE;
             JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
             titleLabel.setBorder(BorderFactory.createEmptyBorder(3,1,3,1));
-            titleLabel.setForeground(fgColor);
+            titleLabel.setForeground(titleBarFgColor);
             JPanel titlePanel;
             if ( null != topLeftControl || null != topRightControl) {
 
                 if ( null == topLeftControl) {
-                    topLeftControl = makeDummyComponent(topRightControl.getName(),bckColor);
+                    topLeftControl = makeDummyComponent(topRightControl.getName(), titleBarBgColor);
                 } else {
                     topLeftControl.setOpaque(false);
-                    topLeftControl.setForeground(fgColor);
+                    topLeftControl.setForeground(titleBarFgColor);
                 }
 
                 if ( null == topRightControl) {
-                    topRightControl = makeDummyComponent(topLeftControl.getName(),bckColor);
+                    topRightControl = makeDummyComponent(topLeftControl.getName(), titleBarBgColor);
                 } else {
                     topRightControl.setOpaque(false);
-                    topRightControl.setForeground(fgColor);
+                    topRightControl.setForeground(titleBarFgColor);
                 }
                 titlePanel = Utils.createCompCenteredPanel(topLeftControl,titleLabel,topRightControl);
             } else {
                 titlePanel = Utils.createCompCenteredPanel(titleLabel);
             }
 
-            titlePanel.setBackground(bckColor);
+            titlePanel.setBackground(titleBarBgColor);
             panel.add(titlePanel,BorderLayout.NORTH);
         }
         panel.add(bodyComponent,BorderLayout.CENTER);

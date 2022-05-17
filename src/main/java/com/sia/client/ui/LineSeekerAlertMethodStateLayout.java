@@ -90,11 +90,8 @@ public class LineSeekerAlertMethodStateLayout {
         panel.setBorder(BorderFactory.createEtchedBorder());
         panel.setLayout(new GridBagLayout());
 
-        JLabel forlab = new JLabel("for ");
-        JLabel secondslab = new JLabel("seconds");
-        JLabel renotifyme = new JLabel("Renotify me on same Sport only after");
-        JLabel renotifyme2 = new JLabel(" minutes have elapsed");
 
+        JLabel renotifyme = new JLabel("Renotify me on same Sport only after");
 
         usedefaultsound.addActionListener(ae -> {
             int i = LineSeekerAlertMethodStateLayout.idx;
@@ -135,66 +132,76 @@ public class LineSeekerAlertMethodStateLayout {
 
         });
 
+        JComboBox<String> soundSrc = new JComboBox<>();
+        soundSrc.addItem("Default Sound");
+        soundSrc.addItem("Upload Sound File");
 
         GridBagConstraints c = new GridBagConstraints();
-        //notify
-        c.gridy = 20;
+        c.insets = new Insets(3,3,3,3);
+        //audio row
+        c.gridy = 0;
 
         c.gridx = 0;
-        c.gridwidth = 2;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.anchor =  GridBagConstraints.WEST;
         panel.add(audiocheckbox, c);
-        c.gridx = 2;
-        c.gridwidth = 2;
-        panel.add(usedefaultsound, c);
-        c.gridx = 4;
-        c.gridwidth = 2;
-        panel.add(usecustomsound, c);
-        c.gridx = 8;
-        c.gridwidth = 4;
+
+        c.gridy = 1;
+        c.gridx = 0;
+        c.gridwidth = 1;
+        panel.add(soundSrc, c);
+
+        c.gridx = 1;
+        c.gridwidth = 1;
         panel.add(testsound, c);
-        c.gridy = 21;
 
-        c.gridx = 3;
-        c.gridwidth = 2;
-        panel.add(soundlabel, c);
-
-        c.gridy = 24;
+        //popup row
+        c.gridy = 2;
 
         c.gridx = 0;
-        c.gridwidth = 2;
+        c.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(popupcheckbox, c);
-        c.gridx = 2;
-        c.gridwidth = 1;
-        panel.add(radioPanel, c);
-        c.gridx = 3;
-        c.gridwidth = 1;
-        panel.add(forlab, c);
-        c.gridx = 4;
-        c.gridwidth = 1;
-        panel.add(popupsecsComboBox, c);
 
-        c.gridx = 5;
+        c.gridx = 0;
+        c.gridy = 3;
         c.gridwidth = 1;
-        panel.add(secondslab, c);
-        c.gridx = 8;
-        c.gridwidth = 4;
+        panel.add(makePopupTimeComp(), c);
+
+        c.gridx = 1;
+        c.gridwidth = 1;
         panel.add(testpopup, c);
 
-        c.gridy = 26;
+        //renotify row
+        c.gridy = 4;
 
         c.gridx = 0;
-        c.gridwidth = 4;
+        c.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(renotifyme, c);
-        c.gridx = 4;
-        c.gridwidth = 1;
-        panel.add(renotifyComboBox, c);
-        c.gridx = 5;
-        c.gridwidth = 3;
-        panel.add(renotifyme2, c);
+
+        c.gridy = 5;
+        c.gridx = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        panel.add(renotify2(), c);
 
         return panel;
     }
-
+    private JComponent makePopupTimeComp() {
+        JPanel comp = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(comp,BoxLayout.X_AXIS);
+        comp.setLayout(boxLayout);
+        comp.add(new JLabel(" for "));
+        comp.add(popupsecsComboBox);
+        comp.add(new JLabel(" seconds"));
+        return comp;
+    }
+    private JComponent renotify2() {
+        JPanel comp = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(comp,BoxLayout.X_AXIS);
+        comp.setLayout(boxLayout);
+        comp.add(renotifyComboBox);
+        comp.add(new JLabel(" minutes have elapsed"));
+        return comp;
+    }
     public static void playSound(String file) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());

@@ -76,7 +76,7 @@ public abstract class SiaConst {
         int screenXmargin = 50;
         int screenYmargin = 50;
         Dimension LineAlertDim = new Dimension(1200,800);
-        Dimension LineAlertMethodDim = new Dimension(300,400);
+        Dimension LineAlertMethodDim = new Dimension(350,720);
         Dimension CustomTab2Dim = new Dimension(1000,650);
     }
     public interface Serialization {

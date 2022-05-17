@@ -4,6 +4,7 @@ import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.lineseeker.AlertState;
+import com.sia.client.ui.lineseeker.SectionLayout;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -32,7 +33,15 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         for(AlertState alertState: AlertState.values()) {
             LineSeekerAlertMethodStateLayout stateLayout = new LineSeekerAlertMethodStateLayout(alertState.name());
-            userComponent.add(stateLayout.getLayoutPane(sw));
+
+            int width = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-25;
+            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-40)/3;
+            TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(alertState.name(),width,height,null,null);
+            titledPanelGenerator.setTitleBarBgColor(Color.GRAY.brighter().brighter());
+            titledPanelGenerator.setTitleBarFgColor(Color.BLACK);
+            titledPanelGenerator.setBodyComponent(stateLayout.getLayoutPane(sw));
+
+            userComponent.add(titledPanelGenerator.getPanel());
         }
         return userComponent;
     }
