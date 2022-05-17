@@ -72,7 +72,7 @@ public class Line {
         {
             return;
         }
-        else if(getGameObject().isIngame())
+        else if(getGameObject().isIngame() || leagueid == 12)
         {
             return;
         }

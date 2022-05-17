@@ -52,7 +52,7 @@ public class SpreadTotalView extends ViewValue {
     private String topicon = ICON_BLANK;
     private String bottomicon = ICON_BLANK;
     private long clearts;
-
+    private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
     public SpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
         if (bid > 1000) {
             isopenerbookie = true;
@@ -790,7 +790,8 @@ public class SpreadTotalView extends ViewValue {
                     setTooltiptext("<html><body>" +limithtml+"</body></html>");
                 }
 
-
+                linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display;
+                setUrl(linehistoryurl);
                 /*
                 setTooltiptext("<html><body>" +
                         "<table border=1>" +
