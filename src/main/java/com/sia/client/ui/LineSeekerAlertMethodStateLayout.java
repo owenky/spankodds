@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
@@ -31,15 +32,79 @@ public class LineSeekerAlertMethodStateLayout {
     private final int popuplocationint = 0;
     private final String alerttype = "";
     private final String name;
+    private final JCheckBox audiocheckbox = new JCheckBox("Play Audio");
+    private final JCheckBox popupcheckbox = new JCheckBox("Show Popup");
+    private final JComboBox<String> soundSrc = new JComboBox<>();
 
     public LineSeekerAlertMethodStateLayout(String name) {
         this.name = name;
     }
     public JComponent getLayoutPane(SpankyWindow spankyWindow) {
 
-        audiolist[0] = "select sound";
-        audiolist[1] = "openers";
-        audiolist[2] = "Custom Sounds";
+        initComponents(spankyWindow);
+        JLabel renotifyme = new JLabel("Renotify me on same Sport only after");
+        JLabel titleLabel = new JLabel(name);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(3,3,3,3);
+
+        //0. title row
+        c.gridy = 0;
+        c.gridx = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.anchor =  GridBagConstraints.CENTER;
+        panel.add(titleLabel, c);
+
+        //1. audio row
+        c.gridy = 1;
+        c.gridx = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.anchor =  GridBagConstraints.WEST;
+        panel.add(audiocheckbox, c);
+
+        //2. audio row 2
+        c.gridy = 2;
+        c.gridx = 0;
+        c.gridwidth = 1;
+        panel.add(soundSrc, c);
+
+        c.gridx = 1;
+        c.gridwidth = 1;
+        panel.add(testsound, c);
+
+        //3. popup row
+        c.gridy = 3;
+        c.gridx = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        panel.add(popupcheckbox, c);
+
+        //4. popup row 2
+        c.gridx = 0;
+        c.gridy = 4;
+        c.gridwidth = 1;
+        panel.add(makePopupTimeComp(), c);
+
+        c.gridx = 1;
+        c.gridwidth = 1;
+        panel.add(testpopup, c);
+
+        //5. renotify row
+        c.gridy = 5;
+        c.gridx = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        panel.add(renotifyme, c);
+
+        //6.renotify row 2
+        c.gridy = 6;
+        c.gridx = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        panel.add(renotify2(), c);
+
+        setComponentFont(panel, FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN));
+        titleLabel.setFont(FontConfig.instance().getSelectedFont().deriveFont(Font.BOLD));
+        return panel;
+    }
+    private void initComponents(SpankyWindow spankyWindow) {
         for (int v = 1; v <= 60; v++) {
             secslist[v - 1] = v + "";
         }
@@ -51,9 +116,6 @@ public class LineSeekerAlertMethodStateLayout {
         LookAndFeelFactory.installJideExtension();
         AppController.LineOpenerAlertNodeList.get(LineSeekerAlertMethodStateLayout.idx).popuplocationint = popuplocationint;
 
-        JPanel radioPanel = new JPanel(new GridLayout(2, 2, 0, 0));
-
-        JCheckBox audiocheckbox = new JCheckBox("Play Audio");
         audiocheckbox.addItemListener(e -> {
             int i = LineSeekerAlertMethodStateLayout.idx;
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -63,8 +125,6 @@ public class LineSeekerAlertMethodStateLayout {
             }
         });
 
-
-        JCheckBox popupcheckbox = new JCheckBox("Show Popup");
         popupcheckbox.addItemListener(e -> {
             int i = LineSeekerAlertMethodStateLayout.idx;
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -89,9 +149,6 @@ public class LineSeekerAlertMethodStateLayout {
 
         panel.setBorder(BorderFactory.createEtchedBorder());
         panel.setLayout(new GridBagLayout());
-
-
-        JLabel renotifyme = new JLabel("Renotify me on same Sport only after");
 
         usedefaultsound.addActionListener(ae -> {
             int i = LineSeekerAlertMethodStateLayout.idx;
@@ -132,58 +189,27 @@ public class LineSeekerAlertMethodStateLayout {
 
         });
 
-        JComboBox<String> soundSrc = new JComboBox<>();
         soundSrc.addItem("Default Sound");
         soundSrc.addItem("Upload Sound File");
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(3,3,3,3);
-        //audio row
-        c.gridy = 0;
-
-        c.gridx = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.anchor =  GridBagConstraints.WEST;
-        panel.add(audiocheckbox, c);
-
-        c.gridy = 1;
-        c.gridx = 0;
-        c.gridwidth = 1;
-        panel.add(soundSrc, c);
-
-        c.gridx = 1;
-        c.gridwidth = 1;
-        panel.add(testsound, c);
-
-        //popup row
-        c.gridy = 2;
-
-        c.gridx = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        panel.add(popupcheckbox, c);
-
-        c.gridx = 0;
-        c.gridy = 3;
-        c.gridwidth = 1;
-        panel.add(makePopupTimeComp(), c);
-
-        c.gridx = 1;
-        c.gridwidth = 1;
-        panel.add(testpopup, c);
-
-        //renotify row
-        c.gridy = 4;
-
-        c.gridx = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        panel.add(renotifyme, c);
-
-        c.gridy = 5;
-        c.gridx = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        panel.add(renotify2(), c);
-
-        return panel;
+    }
+    private static void setComponentFont(JComponent parent, Font font ) {
+        java.util.List<JComponent> result = new ArrayList<>();
+        findChildCompDeep(parent,result);
+        for(JComponent c: result) {
+            c.setFont(font);
+        }
+    }
+    private static void findChildCompDeep(JComponent parent,java.util.List<JComponent> result) {
+        for( Component c : parent.getComponents()) {
+            if ( c instanceof JComponent) {
+                JComponent jc = (JComponent)c;
+                if( jc.getComponents().length > 0) {
+                    findChildCompDeep(jc,result);
+                } else {
+                    result.add(jc);
+                }
+            }
+        }
     }
     private JComponent makePopupTimeComp() {
         JPanel comp = new JPanel();

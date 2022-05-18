@@ -32,11 +32,12 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
         SportsTabPane stp = getSportsTabPane();
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         for(AlertState alertState: AlertState.values()) {
+            userComponent.add(Box.createRigidArea(new Dimension(0, 3)));
             LineSeekerAlertMethodStateLayout stateLayout = new LineSeekerAlertMethodStateLayout(alertState.name());
 
             int width = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-25;
             int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-40)/3;
-            TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(alertState.name(),width,height,null,null);
+            TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",width,height,null,null);
             titledPanelGenerator.setTitleBarBgColor(Color.GRAY.brighter().brighter());
             titledPanelGenerator.setTitleBarFgColor(Color.BLACK);
             titledPanelGenerator.setBodyComponent(stateLayout.getLayoutPane(sw));
