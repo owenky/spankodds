@@ -1,6 +1,8 @@
 package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
+import com.sia.client.ui.comps.LightComboBox;
+import com.sia.client.ui.comps.LinkButton;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -17,9 +19,11 @@ import static com.sia.client.config.Utils.showMessageDialog;
 public class LineSeekerAlertMethodStateLayout {
 
     static int idx;
+    private static final Dimension TestButtonSpacing = new Dimension(10,0);
+    private static final Dimension ComboBoxPrefSize = new Dimension(60,15);
     private JComboBox<String> renotifyComboBox;
-    private final JButton testsound = new JButton("Test Sound");
-    private final JButton testpopup = new JButton("Test Popup");
+    private final JButton testsound = new LinkButton("Test Sound");
+    private final JButton testpopup = new LinkButton("Test Popup");
     private JComboBox<String> popupsecsComboBox;
     private final JPanel panel = new JPanel();
     private final JButton usedefaultsound = new JButton("Use Default Sound");
@@ -27,14 +31,13 @@ public class LineSeekerAlertMethodStateLayout {
     private final JLabel soundlabel = new JLabel("DEFAULT");
     private final String[] secslist = new String[60];
     private final String[] minslist = new String[20];
-    private final String[] audiolist = new String[8];
     private final int popupsecs = 5;
     private final int popuplocationint = 0;
     private final String alerttype = "";
     private final String name;
-    private final JCheckBox audiocheckbox = new JCheckBox("Play Audio");
-    private final JCheckBox popupcheckbox = new JCheckBox("Show Popup");
-    private final JComboBox<String> soundSrc = new JComboBox<>();
+    private final JCheckBox audiocheckbox = new JCheckBox("Audio");
+    private final JCheckBox popupcheckbox = new JCheckBox("Popup");
+    private final JComboBox<String> soundSrc = new LightComboBox<>();
 
     public LineSeekerAlertMethodStateLayout(String name) {
         this.name = name;
@@ -46,7 +49,7 @@ public class LineSeekerAlertMethodStateLayout {
         JLabel titleLabel = new JLabel(name);
 
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(3,3,3,3);
+        c.insets = new Insets(0,1,20,1);
 
         //0. title row
         c.gridy = 0;
@@ -60,48 +63,51 @@ public class LineSeekerAlertMethodStateLayout {
         c.gridx = 0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.anchor =  GridBagConstraints.WEST;
-        panel.add(audiocheckbox, c);
+        panel.add(makeAudioRow(), c);
 
-        //2. audio row 2
-        c.gridy = 2;
-        c.gridx = 0;
-        c.gridwidth = 1;
-        panel.add(soundSrc, c);
-
-        c.gridx = 1;
-        c.gridwidth = 1;
-        panel.add(testsound, c);
-
-        //3. popup row
-        c.gridy = 3;
+        //2. popup row
+        c.gridy++;
         c.gridx = 0;
         c.gridwidth = GridBagConstraints.REMAINDER;
-        panel.add(popupcheckbox, c);
+        panel.add(makePopupRow(), c);
 
-        //4. popup row 2
-        c.gridx = 0;
-        c.gridy = 4;
-        c.gridwidth = 1;
-        panel.add(makePopupTimeComp(), c);
-
-        c.gridx = 1;
-        c.gridwidth = 1;
-        panel.add(testpopup, c);
-
-        //5. renotify row
-        c.gridy = 5;
+        //3. renotify row
+        c.insets = new Insets(0,1,10,1);
+        c.gridy++;
         c.gridx = 0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(renotifyme, c);
 
         //6.renotify row 2
-        c.gridy = 6;
+        c.gridy++;
         c.gridx = 0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(renotify2(), c);
 
         setComponentFont(panel, FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN));
         titleLabel.setFont(FontConfig.instance().getSelectedFont().deriveFont(Font.BOLD));
+        return panel;
+    }
+    private JComponent makeAudioRow() {
+        JPanel panel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(panel,BoxLayout.X_AXIS);
+        panel.setLayout(boxLayout);
+        panel.add(audiocheckbox);
+        panel.add(soundSrc);
+        panel.add(Box.createRigidArea(TestButtonSpacing));
+        panel.add(testsound);
+        return panel;
+    }
+    private JComponent makePopupRow() {
+        JPanel panel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(panel,BoxLayout.X_AXIS);
+        panel.setLayout(boxLayout);
+        panel.add(popupcheckbox);
+        panel.add(new JLabel(" for "));
+        panel.add(popupsecsComboBox);
+        panel.add(new JLabel(" seconds"));
+        panel.add(Box.createRigidArea(TestButtonSpacing));
+        panel.add(testpopup);
         return panel;
     }
     private void initComponents(SpankyWindow spankyWindow) {
@@ -133,14 +139,16 @@ public class LineSeekerAlertMethodStateLayout {
                 AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
             }
         });
-        popupsecsComboBox = new JComboBox<>(secslist);
+        popupsecsComboBox = new LightComboBox<>(secslist);
+        popupsecsComboBox.setPreferredSize(ComboBoxPrefSize);
         popupsecsComboBox.addItemListener(e -> {
             int i = LineSeekerAlertMethodStateLayout.idx;
             AppController.LineOpenerAlertNodeList.get(i).showpopvalue = Integer.parseInt((String) popupsecsComboBox.getSelectedItem());
         });
 
 
-        renotifyComboBox = new JComboBox<>(minslist);
+        renotifyComboBox = new LightComboBox<>(minslist);
+        renotifyComboBox.setPreferredSize(ComboBoxPrefSize);
         renotifyComboBox.addItemListener(e -> {
             int i = LineSeekerAlertMethodStateLayout.idx;
             AppController.LineOpenerAlertNodeList.get(i).renotifyvalue = Double.parseDouble((String) renotifyComboBox.getSelectedItem());
@@ -203,22 +211,15 @@ public class LineSeekerAlertMethodStateLayout {
         for( Component c : parent.getComponents()) {
             if ( c instanceof JComponent) {
                 JComponent jc = (JComponent)c;
-                if( jc.getComponents().length > 0) {
+                if ( jc instanceof JComboBox || jc instanceof JCheckBox ) {
+                    result.add(jc);
+                }  else if( jc.getComponents().length > 0) {
                     findChildCompDeep(jc,result);
                 } else {
                     result.add(jc);
                 }
             }
         }
-    }
-    private JComponent makePopupTimeComp() {
-        JPanel comp = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(comp,BoxLayout.X_AXIS);
-        comp.setLayout(boxLayout);
-        comp.add(new JLabel(" for "));
-        comp.add(popupsecsComboBox);
-        comp.add(new JLabel(" seconds"));
-        return comp;
     }
     private JComponent renotify2() {
         JPanel comp = new JPanel();

@@ -36,7 +36,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
             LineSeekerAlertMethodStateLayout stateLayout = new LineSeekerAlertMethodStateLayout(alertState.name());
 
             int width = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-25;
-            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-40)/3;
+            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-60)/3;
             TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",width,height,null,null);
             titledPanelGenerator.setTitleBarBgColor(Color.GRAY.brighter().brighter());
             titledPanelGenerator.setTitleBarFgColor(Color.BLACK);
