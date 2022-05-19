@@ -42,6 +42,7 @@ public class User {
 
     private String tabsindex;
     private String linealerts;
+    private String loginkey;
     private static User instance = new User();
 
     public static User instance() {
@@ -149,6 +150,13 @@ public class User {
         linealerts = s;
     }
 
+    public String getLoginKey() {
+        return loginkey;
+    }
+
+    public void setLoginKey(String s) {
+        loginkey = s;
+    }
 
     public int getChartMinAmtNotify() {
         return chartminamtnotify;

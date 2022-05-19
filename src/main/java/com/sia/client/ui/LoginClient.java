@@ -44,6 +44,8 @@ public class LoginClient implements MessageListener {
     private MessageProducer producer;
     private MessageConsumer consumer;
     private Destination tempDest;
+    private String ip = "";
+
 
     public LoginClient() {
         try {
@@ -74,7 +76,12 @@ public class LoginClient implements MessageListener {
             log(ex);
         }
     }
+    public LoginClient(String ip)
+    {
+        this();
+        this.ip = ip;
 
+    }
     public static void main(String[] args) throws Exception {
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
@@ -106,6 +113,7 @@ public class LoginClient implements MessageListener {
         MapMessage mapMessage = session.createMapMessage();
         mapMessage.setString("username", username);
         mapMessage.setString("password", password);
+        mapMessage.setString("ip", ip);
 
         mapMessage.setJMSReplyTo(tempDest);
 
@@ -198,7 +206,11 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setBookieColumnsChanged(text);
-            } else if (SiaConst.Serialization.LineSeekerAlert.equals(messageType)) {
+            } else if ( messageType.equals("loginkey")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                AppController.getUser().setLoginKey(text);
+            }else if (SiaConst.Serialization.LineSeekerAlert.equals(messageType)) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AlertAttrManager.deSerializeAlertAlertAttColl(text);

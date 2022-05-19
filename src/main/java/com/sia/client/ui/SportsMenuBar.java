@@ -40,13 +40,13 @@ public class SportsMenuBar extends JMenuBar {
         add(filemenu);
 
         JMenuItem storeprefs = new JMenuItem("Store User Prefs");
-        storeprefs.addActionListener(ev -> AppController.getUserPrefsProducer().sendUserPrefs());
+        storeprefs.addActionListener(ev -> AppController.getUserPrefsProducer().sendUserPrefs(false));
         filemenu.add(storeprefs);
 
         JMenuItem logout = new JMenuItem("Exit...");
         logout.addActionListener(ev -> {
             // need to store user prefs
-            AppController.getUserPrefsProducer().sendUserPrefs();
+            AppController.getUserPrefsProducer().sendUserPrefs(true);
             System.exit(0);
         });
         filemenu.add(logout);
