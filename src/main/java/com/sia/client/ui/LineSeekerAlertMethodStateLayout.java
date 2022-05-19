@@ -39,6 +39,8 @@ public class LineSeekerAlertMethodStateLayout {
     private final JCheckBox audiocheckbox = new JCheckBox("Audio");
     private final JCheckBox popupcheckbox = new JCheckBox("Popup");
     private final JComboBox<String> soundSrc = new LightComboBox<>();
+    private static final String SoundSrcDefault = "Default Sound";
+    private static final String SoundSrcUpload = "Upload Sound File";
 
     public LineSeekerAlertMethodStateLayout(String name) {
         this.name = name;
@@ -123,23 +125,6 @@ public class LineSeekerAlertMethodStateLayout {
         LookAndFeelFactory.installJideExtension();
         AppController.LineOpenerAlertNodeList.get(LineSeekerAlertMethodStateLayout.idx).popuplocationint = popuplocationint;
 
-        audiocheckbox.addItemListener(e -> {
-            int i = LineSeekerAlertMethodStateLayout.idx;
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                AppController.LineOpenerAlertNodeList.get(i).isAudioChecks = true;
-            } else {
-                AppController.LineOpenerAlertNodeList.get(i).isAudioChecks = true;
-            }
-        });
-
-        popupcheckbox.addItemListener(e -> {
-            int i = LineSeekerAlertMethodStateLayout.idx;
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
-            } else {
-                AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks = true;
-            }
-        });
         popupsecsComboBox = new LightComboBox<>(secslist);
         popupsecsComboBox.setPreferredSize(ComboBoxPrefSize);
         popupsecsComboBox.addItemListener(e -> {
@@ -166,15 +151,7 @@ public class LineSeekerAlertMethodStateLayout {
             soundlabel.setText("DEFAULT");
         });
         usecustomsound.addActionListener(ae -> {
-            int i = LineSeekerAlertMethodStateLayout.idx;
-            JFileChooser jfc = new JFileChooser();
-            log("hai iam from filechooser");
-            jfc.showOpenDialog(spankyWindow);
-            File f1 = jfc.getSelectedFile();
 
-            AppController.LineOpenerAlertNodeList.get(i).soundfile = f1.getPath();
-            AppController.LineOpenerAlertNodeList.get(i).soundlabel = f1.getPath();
-            soundlabel.setText(f1.getPath());
         });
 
 
@@ -198,8 +175,22 @@ public class LineSeekerAlertMethodStateLayout {
 
         });
 
-        soundSrc.addItem("Default Sound");
-        soundSrc.addItem("Upload Sound File");
+        soundSrc.addItem(SoundSrcDefault);
+        soundSrc.addItem(SoundSrcUpload);
+        soundSrc.addItemListener(this::onSoundFileChanged);
+    }
+    private void onSoundFileChanged(ItemEvent ie) {
+
+        if (ie.getStateChange() == ItemEvent.SELECTED) {
+            Object item = ie.getItem();
+            if ( SoundSrcUpload.equals(item)) {
+                JFileChooser jfc = new JFileChooser();
+                jfc.showOpenDialog(SpankyWindow.getFirstSpankyWindow());
+                File f1 = jfc.getSelectedFile();
+                String uploaded = f1.getPath();
+                System.out.println("uploaded="+uploaded);
+            }
+        }
     }
     private static void setComponentFont(JComponent parent, Font font ) {
         java.util.List<JComponent> result = new ArrayList<>();
