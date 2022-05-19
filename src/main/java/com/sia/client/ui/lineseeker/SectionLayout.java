@@ -20,14 +20,12 @@ public class SectionLayout {
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
     private final ColumnComponents leftColumn;
     private final ColumnComponents rightColumn;
-    private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
     public SectionLayout(SectionComponents spreadFieldGrp) {
 
         this.leftColumn = spreadFieldGrp.leftColumn;
         this.rightColumn = spreadFieldGrp.rightColumn;
-        this.useEquivalent = spreadFieldGrp.useEquivalent;
     }
 
     public JComponent getLayoutPane() {
@@ -112,17 +110,6 @@ public class SectionLayout {
             JComponent radioGrpRight = makeRadioGroup(rightColumn);
             c.gridx = 4;
             layoutPane.add(radioGrpRight, c);
-
-//            //new row -- check box
-//            c.gridy++;
-//
-//            c.gridx = 0;
-//            c.gridwidth = 7;
-//            c.anchor = GridBagConstraints.CENTER;
-//            if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
-//                useEquivalent.setLabel(useEquivalent.getName());
-//            }
-//            layoutPane.add(useEquivalent, c);
         }
         return layoutPane;
     }
