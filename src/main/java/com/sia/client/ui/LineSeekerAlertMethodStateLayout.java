@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.ui.comps.LightComboBox;
 import com.sia.client.ui.comps.LinkButton;
+import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -239,6 +240,20 @@ public class LineSeekerAlertMethodStateLayout {
             JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
             log(ex);
         }
+    }
+    public void updateAlertMethodAttr(LineSeekerAlertMethodAttr attr) {
+        audiocheckbox.setSelected(attr.getAudioEnabled());
+        soundSrc.setSelectedItem(attr.getSoundFile());
+        popupcheckbox.setSelected(attr.getPopupEnabled());
+        popupsecsComboBox.setSelectedItem(attr.getPopupSeconds());
+        renotifyComboBox.setSelectedItem(attr.getRenotifyInMinutes());
+    }
+    public void saveMethodAttr(LineSeekerAlertMethodAttr attr) {
+        attr.setAudioEnabled(audiocheckbox.isSelected());
+        attr.setSoundFile(String.valueOf(soundSrc.getSelectedItem()));
+        attr.setPopupEnabled(popupcheckbox.isSelected());
+        attr.setPopupSeconds(String.valueOf(popupsecsComboBox.getSelectedItem()));
+        attr.setRenotifyInMinutes(String.valueOf(renotifyComboBox.getSelectedItem()));
     }
 }
 

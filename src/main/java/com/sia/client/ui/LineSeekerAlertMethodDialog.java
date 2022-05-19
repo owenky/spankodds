@@ -1,26 +1,26 @@
 package com.sia.client.ui;
 
-import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.ui.lineseeker.AlertAttrManager;
+import com.sia.client.ui.lineseeker.AlertConfig;
 import com.sia.client.ui.lineseeker.AlertState;
-import com.sia.client.ui.lineseeker.SectionLayout;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.io.File;
-
-import static com.sia.client.config.Utils.log;
-import static com.sia.client.config.Utils.showMessageDialog;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
 
-    public LineSeekerAlertMethodDialog(SportsTabPane stp) {
+    private final Map<String,LineSeekerAlertMethodStateLayout> layoutMap = new HashMap<>();
+    private final JButton saveBtn = new JButton("Save");
+    private final AlertConfig alertConfig;
+    public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertConfig alertConfig) {
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
+        this.alertConfig = alertConfig;
+        saveBtn.addActionListener(this::saveAlertMethodAttr);
     }
     @Override
     protected JComponent getUserComponent() {
@@ -33,10 +33,10 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         for(AlertState alertState: AlertState.values()) {
             userComponent.add(Box.createRigidArea(new Dimension(0, 3)));
-            LineSeekerAlertMethodStateLayout stateLayout = new LineSeekerAlertMethodStateLayout(alertState.name());
+            LineSeekerAlertMethodStateLayout stateLayout = layoutMap.computeIfAbsent(alertState.name(),LineSeekerAlertMethodStateLayout::new);
 
             int width = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-25;
-            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-60)/3;
+            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-75)/3;
             TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",width,height,null,null);
             titledPanelGenerator.setTitleBarBgColor(Color.GRAY.brighter().brighter());
             titledPanelGenerator.setTitleBarFgColor(Color.BLACK);
@@ -44,7 +44,24 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
 
             userComponent.add(titledPanelGenerator.getPanel());
         }
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BorderLayout());
+        btnPanel.add(saveBtn,BorderLayout.CENTER);
+        userComponent.add(btnPanel);
         return userComponent;
+    }
+    private void saveAlertMethodAttr(ActionEvent ae) {
+        for(AlertState alertState: AlertState.values()) {
+            LineSeekerAlertMethodStateLayout stateLayout = layoutMap.computeIfAbsent(alertState.name(),LineSeekerAlertMethodStateLayout::new);
+            stateLayout.saveMethodAttr(AlertAttrManager.getLineSeekerAlertMethodAttr(alertState.name()));
+        }
+        close();
+    }
+    public void updateAlertMethodAttr() {
+        for(AlertState alertState: AlertState.values()) {
+            LineSeekerAlertMethodStateLayout stateLayout = layoutMap.computeIfAbsent(alertState.name(),LineSeekerAlertMethodStateLayout::new);
+            stateLayout.updateAlertMethodAttr(AlertAttrManager.getLineSeekerAlertMethodAttr(alertState.name()));
+        }
     }
 }
 

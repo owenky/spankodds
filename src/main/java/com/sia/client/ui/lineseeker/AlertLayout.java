@@ -361,7 +361,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
         if ( null == lineSeekerAlertMethodDialog) {
-            lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane());
+            lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane(),alertConfig);
             lineSeekerAlertMethodDialog.addCloseAction(()->alertMethodSetting.setEnabled(true));
         }
         final AbstractButton alertSettingBtn = (AbstractButton)actionEvent.getSource();
@@ -373,6 +373,7 @@ public class AlertLayout extends AbstractLayeredDialog {
 
         };
         lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim,anchorLocSupplier);
+        lineSeekerAlertMethodDialog.updateAlertMethodAttr();
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();
