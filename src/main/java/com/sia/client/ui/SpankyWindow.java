@@ -61,7 +61,7 @@ public class SpankyWindow extends JFrame {
                         return;
                     }
 
-                    AppController.getUserPrefsProducer().sendUserPrefs();
+                    AppController.getUserPrefsProducer().sendUserPrefs(true);
                 }
                 instance.unBindAlertsComp();
                 log("closing SpankyWindow instance "+instance.getName());

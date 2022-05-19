@@ -39,6 +39,24 @@ public class UserPrefsProducer {
         }
     }
 
+    public void sendUserPrefs(boolean logout)
+    {
+
+        if(true) // let server know you are logging out
+        {
+            try {
+                MapMessage mapMessage = session.createMapMessage();
+                mapMessage.setString("username", u.getUsername());
+                mapMessage.setString("logout", "true");
+                this.producer.send(mapMessage);
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+        sendUserPrefs();
+
+    }
+
     public void sendUserPrefs() {
 
         try {

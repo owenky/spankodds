@@ -22,6 +22,12 @@ import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.net.DatagramSocket;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -32,6 +38,7 @@ public class SpankOdds {
     public static boolean getMessagesFromLog = false;
     private SpankyWindow frame;
     private String userName;
+    private static String ip;
 
     public static void main(String[] args) {
         getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
@@ -48,6 +55,18 @@ public class SpankOdds {
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
 
         InitialGameMessages.initMsgLoggingProps();
+
+        //spanky added ip lookup to pass to loginclient
+        try
+        {
+            URL whatismyip = new URL("http://checkip.amazonaws.com");
+            BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));
+            ip = in.readLine(); //you get the IP as a String
+        }
+        catch(Exception ex)
+        {
+            log(ex);
+        }
 
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
@@ -78,7 +97,7 @@ public class SpankOdds {
         }
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        LoginClient client = new LoginClient();
+        LoginClient client = new LoginClient(ip);
         LocalPwdStore localPwdStore = new LocalPwdStore(LocalConfig.instance());
         LocalUserStore localUserStore = new LocalUserStore(LocalConfig.instance());
         final JXLoginPane loginPane = new JXLoginPane(null, localPwdStore, localUserStore) {
