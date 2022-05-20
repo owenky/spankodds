@@ -10,6 +10,8 @@ public class LineSeekerAlertMethodAttr {
     private String soundFile = DefaultSoundFilePath;
     private String popupSeconds = "3";
     private String renotifyInMinutes = "0.5";
+
+    private PopupLocation popupLocation;
     private final String alertState;
 
     public LineSeekerAlertMethodAttr (@JsonProperty("alertState") String alertState) {
@@ -57,5 +59,24 @@ public class LineSeekerAlertMethodAttr {
 
     public String getAlertState() {
         return alertState;
+    }
+
+    public PopupLocation getPopupLocation() {
+        if ( null == popupLocation) {
+            popupLocation =  PopupLocation.Right_Top;
+        }
+        return popupLocation;
+    }
+
+    public void setPopupLocation(PopupLocation popupLocation) {
+        this.popupLocation = popupLocation;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public enum PopupLocation {
+        Left_Bottom,
+        Left_Top,
+        Right_Bottom,
+        Right_Top,
     }
 }

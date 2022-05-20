@@ -33,7 +33,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         for(AlertState alertState: AlertState.values()) {
             userComponent.add(Box.createRigidArea(new Dimension(0, 3)));
-            LineSeekerAlertMethodStateLayout stateLayout = layoutMap.computeIfAbsent(alertState.name(),LineSeekerAlertMethodStateLayout::new);
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
 
             int width = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-25;
             int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-75)/3;
@@ -50,18 +50,33 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
         userComponent.add(btnPanel);
         return userComponent;
     }
+    private LineSeekerAlertMethodStateLayout getLineSeekerAlertMethodStateLayout(AlertState alertState) {
+        return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStateLayout(AlertAttrManager.getLineSeekerAlertMethodAttr(name)));
+    }
     private void saveAlertMethodAttr(ActionEvent ae) {
         for(AlertState alertState: AlertState.values()) {
-            LineSeekerAlertMethodStateLayout stateLayout = layoutMap.computeIfAbsent(alertState.name(),LineSeekerAlertMethodStateLayout::new);
-            stateLayout.saveMethodAttr(AlertAttrManager.getLineSeekerAlertMethodAttr(alertState.name()));
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            stateLayout.saveMethodAttr();
         }
         close();
     }
     public void updateAlertMethodAttr() {
         for(AlertState alertState: AlertState.values()) {
-            LineSeekerAlertMethodStateLayout stateLayout = layoutMap.computeIfAbsent(alertState.name(),LineSeekerAlertMethodStateLayout::new);
-            stateLayout.updateAlertMethodAttr(AlertAttrManager.getLineSeekerAlertMethodAttr(alertState.name()));
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            stateLayout.updateAlertMethodAttr();
         }
+    }
+    @Override
+    public boolean isEdited() {
+        boolean isEdited = false;
+        for(AlertState alertState: AlertState.values()) {
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            isEdited = stateLayout.isEdited();
+            if ( isEdited) {
+                break;
+            }
+        }
+        return isEdited;
     }
 }
 

@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.33)";
+    public static final String Version="(v21.20.10.34)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -67,6 +67,7 @@ public abstract class SiaConst {
         String DefaultMesgDir = "c:\\temp\\OngingGameMessages";
         String InitialLoadingFileName = "initGameMesgs.txt";
     }
+    public static final String EditedIndicator = "***";
     public static final String MessageDelimiter = "~";
     public static final String ColumnDelimiter = ",";
     public static final String PropertyDelimiter = "@#_#_#@";
@@ -76,7 +77,7 @@ public abstract class SiaConst {
         int screenXmargin = 50;
         int screenYmargin = 50;
         Dimension LineAlertDim = new Dimension(1200,800);
-        Dimension LineAlertMethodDim = new Dimension(350,720);
+        Dimension LineAlertMethodDim = new Dimension(450,720);
         Dimension CustomTab2Dim = new Dimension(1000,650);
     }
     public interface Serialization {

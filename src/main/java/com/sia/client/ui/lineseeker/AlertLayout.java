@@ -30,7 +30,6 @@ import java.util.function.Supplier;
 
 public class AlertLayout extends AbstractLayeredDialog {
 
-    private static final String editIndicator="*";
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
     private static final int rowHeight =100;
@@ -60,7 +59,6 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComps.addActionListener(alertComponentListener);
             sectionComponentsList.add(sectionComps);
         }
-        withCloseValidor(this::validateClose);
         alertMethodSetting.addActionListener(this::openAlertMediaSettingDialog);
         setTitlePanelRightComp(alertMethodSetting);
         this.addCloseAction(()->{
@@ -335,7 +333,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         setEditStatus(false);
     }
     public void setEditStatus(boolean status) {
-        String statusTxt = status?editIndicator:"";
+        String statusTxt = status?SiaConst.EditedIndicator:"";
         this.editStatusLabel.setText(statusTxt);
         this.alertsCombobox.setEnabled(!status);
         String tooltipText = status ?"To select another Alert, please save or delete this configuration.":"";
@@ -348,16 +346,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
 
     }
+    @Override
     public boolean isEdited() {
-        return editIndicator.equals(editStatusLabel.getText());
-    }
-    private boolean validateClose() {
-        if ( isEdited()) {
-            int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes to this alert configuration?");
-            return JOptionPane.YES_OPTION == option;
-        } else {
-            return true;
-        }
+        return SiaConst.EditedIndicator.equals(editStatusLabel.getText());
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
         lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane(),alertConfig);
