@@ -123,16 +123,26 @@ public class Totalline extends Line implements Serializable {
         return isbestover;
     }
 
-    public void setBestOver(boolean b) {
+    public void setBestOver(boolean b)
+    {
         isbestover = b;
+        if(b)
+        {
+            AppController.bestover.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public boolean isBestUnder() {
         return isbestunder;
     }
 
-    public void setBestUnder(boolean b) {
+    public void setBestUnder(boolean b)
+    {
         isbestunder = b;
+        if(b)
+        {
+            AppController.bestunder.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public String recordMove(double over, double overjuice, double under, double underjuice, long ts, boolean isopener) {
@@ -270,18 +280,20 @@ public class Totalline extends Line implements Serializable {
 
     public String getShortPrintedTotal(double o, double oj, double u, double uj) {
 
-        String retvalue = o + "";
+        String retvalue = "";
+
         if (oj == 0) {
             return "";
         }
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
+
 
 
         double juice = 0;
-        if (oj == uj && oj == -110) {
-
+        if (oj == uj && oj == -110 && o==u) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue.replace(".0", "");
             char half = AsciiChar.getAscii(170);
 
@@ -291,9 +303,19 @@ public class Totalline extends Line implements Serializable {
             retvalue = retvalue.replace(".75", "\u00BE");
             return retvalue;
         } else if (oj < uj) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
+
             retvalue = retvalue + "o";
             juice = oj;
         } else {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
+
             retvalue = retvalue + "u";
             juice = uj;
         }
@@ -359,18 +381,20 @@ public class Totalline extends Line implements Serializable {
     }
 
     public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
-        String retvalue = o + "";
-        if (oj == 0) {
+        String retvalue = "";
+
+        if (uj == 0) {
             return "";
         }
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
+
 
 
         double juice = 0;
-        if (oj == uj && oj == -110) {
-
+        if (oj == uj && uj == -110 && o==u) {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue.replace(".0", "");
             char half = AsciiChar.getAscii(170);
 
@@ -380,9 +404,17 @@ public class Totalline extends Line implements Serializable {
             retvalue = retvalue.replace(".75", "\u00BE");
             return retvalue;
         } else if (oj < uj) {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "u";
             juice = uj;
         } else {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "o";
             juice = oj;
         }

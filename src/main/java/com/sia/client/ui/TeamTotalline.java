@@ -368,18 +368,20 @@ public class TeamTotalline extends Line {
 
     public String getShortPrintedTotal(double o, double oj, double u, double uj) {
 
-        String retvalue = o + "";
+        String retvalue = "";
+
         if (oj == 0) {
             return "";
         }
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
+
 
 
         double juice = 0;
-        if (oj == uj && oj == -110) {
-
+        if (oj == uj && oj == -110 && o==u) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue.replace(".0", "");
             char half = AsciiChar.getAscii(170);
 
@@ -389,9 +391,17 @@ public class TeamTotalline extends Line {
             retvalue = retvalue.replace(".75", "\u00BE");
             return retvalue;
         } else if (oj < uj) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "o";
             juice = oj;
         } else {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "u";
             juice = uj;
         }
@@ -472,18 +482,21 @@ public class TeamTotalline extends Line {
     }
 
     public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
-        String retvalue = o + "";
+        String retvalue = "";
+
         if (oj == 0) {
             return "";
         }
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
+
+
 
 
         double juice = 0;
-        if (oj == uj && oj == -110) {
-
+        if (oj == uj && oj == -110 && o==u) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue.replace(".0", "");
             char half = AsciiChar.getAscii(170);
 
@@ -493,9 +506,17 @@ public class TeamTotalline extends Line {
             retvalue = retvalue.replace(".75", "\u00BE");
             return retvalue;
         } else if (oj < uj) {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "u";
             juice = uj;
         } else {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "o";
             juice = oj;
         }

@@ -11,6 +11,7 @@ import com.sia.client.model.Spreadline;
 import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -54,9 +55,11 @@ public class SpreadTotalView extends ViewValue {
     private long clearts;
     private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
     public SpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
-        if (bid > 1000) {
+        if (bid >= 1000) {
             isopenerbookie = true;
-            bid = bid - 1000;
+            if(bid != 1000) {
+                bid = bid - 1000;
+            }
         }
         this.bid = bid;
         this.gid = gid;
@@ -105,9 +108,13 @@ public class SpreadTotalView extends ViewValue {
 
 
         double visitspread;
+        double homespread = 9999;
         double visitjuice;
         double homejuice;
         double over;
+        double under = 1;
+        double overjuice = -110;
+        double underjuice = -110;
         double visitmljuice;
         double homemljuice;
         double visitover;
@@ -122,6 +129,7 @@ public class SpreadTotalView extends ViewValue {
         try {
             if (null != sl) {
                 visitspread = sl.getCurrentvisitspread();
+                homespread = sl.getCurrenthomespread();
                 visitjuice = sl.getCurrentvisitjuice();
                 homejuice = sl.getCurrenthomejuice();
 
@@ -153,6 +161,9 @@ public class SpreadTotalView extends ViewValue {
         try {
             if (null != tl) {
                 over = tl.getCurrentover();
+                under = tl.getCurrentunder();
+                overjuice = tl.getCurrentoverjuice();
+                underjuice = tl.getCurrentunderjuice();
                 whowasbettotal = tl.getWhowasbet();
                 if (shouldGoRed(tl)) {
                     totalcolor = Color.RED;
@@ -767,29 +778,45 @@ public class SpreadTotalView extends ViewValue {
             Game game = getGame();
             if (game != null && (!topboxS.equals("") || !bottomboxS.equals("")))
             {
-                String limithtml = "";
-                int sidelimit = 0;
-                int totallimit = 0;
-                int moneylimit = 0;
-                if(sl != null)
+                if(bid == 996 ) // seperate tooltip for best
                 {
-                    sidelimit = sl.getLimit();
-                }
-                if(tl != null)
-                {
-                    totallimit = tl.getLimit();
-                }
-                if(ml != null)
-                {
-                    moneylimit = ml.getLimit();
-                }
 
-                 limithtml = sidelimit+" / "+totallimit+" / "+moneylimit;
-                if(!limithtml.equals("0 / 0 / 0"))
-                {
-                    setTooltiptext("<html><body>" +limithtml+"</body></html>");
-                }
+                    String besthtml = "<table><th></th><th>v/o</th><th>h/u</th>";
+                    Bookie visitspreadbookie = AppController.bestvisitspread.get(period+"-"+gid);
+                    Bookie homespreadbookie = AppController.besthomespread.get(period+"-"+gid);
+                    Bookie overbookie = AppController.bestover.get(period+"-"+gid);
+                    Bookie underbookie = AppController.bestunder.get(period+"-"+gid);
+                    Bookie visitmlbookie = AppController.bestvisitml.get(period+"-"+gid);
+                    Bookie homemlbookie = AppController.besthomeml.get(period+"-"+gid);
 
+                    besthtml = besthtml+"<tr><td>S:</td><td><table border=1><tr><td align=center>"+visitspreadbookie.getShortname()+"</td><tr><td>"+format(visitspread)+format(visitjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+homespreadbookie.getShortname()+"</td><tr><td>"+format(homespread)+format(homejuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml+"<tr><td>T:</td><td><table border=1><tr><td align=center>"+overbookie.getShortname()+"</td><tr><td>o"+format(over)+format(overjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+underbookie.getShortname()+"</td><tr><td>u"+format(under)+format(underjuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml+"<tr><td>M:</td><td><table border=1><tr><td align=center>"+visitmlbookie.getShortname()+"</td><tr><td>"+format(visitmljuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+homemlbookie.getShortname()+"</td><tr><td>"+format(homemljuice)+"</td></tr></table></td></tr>";
+
+                    besthtml = besthtml+"</table>";
+                    setTooltiptext("<html><body>" +besthtml + "</body></html>");
+                }
+                else
+                 {
+                    String limithtml = "";
+                    int sidelimit = 0;
+                    int totallimit = 0;
+                    int moneylimit = 0;
+                    if (sl != null) {
+                        sidelimit = sl.getLimit();
+                    }
+                    if (tl != null) {
+                        totallimit = tl.getLimit();
+                    }
+                    if (ml != null) {
+                        moneylimit = ml.getLimit();
+                    }
+
+                    limithtml = sidelimit + " / " + totallimit + " / " + moneylimit;
+                    if (!limithtml.equals("0 / 0 / 0")) {
+                        setTooltiptext("<html><body>" + limithtml + "</body></html>");
+                    }
+                }
                 linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display;
                 setUrl(linehistoryurl);
                 /*
@@ -1517,4 +1544,6 @@ public class SpreadTotalView extends ViewValue {
     public Sport getSport() {
         return AppController.getSportByLeagueId(getGame().getLeague_id());
     }
+
+
 }

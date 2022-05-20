@@ -70,8 +70,8 @@ public class SpankOdds {
 
         AppController.createLineOpenerAlertNodeList();
         AppController.initializSpotsTabPaneVector();
-       // ToolTipManager.sharedInstance().setInitialDelay(500);
-        ToolTipManager.sharedInstance().setDismissDelay(5000);
+        ToolTipManager.sharedInstance().setInitialDelay(0);
+        ToolTipManager.sharedInstance().setDismissDelay(30000);
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog(),true);
     }
 

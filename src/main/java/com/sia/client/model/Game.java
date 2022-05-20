@@ -32,6 +32,12 @@ public class Game implements KeyedObject,Cloneable {
     int finalvisitorscore;
     int finalhomescore;
 
+
+
+
+
+
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -684,4 +690,10 @@ public class Game implements KeyedObject,Cloneable {
         System.out.println(localDateTime);
         System.out.println(formatter.format(g.getGametime()));
     }
+
+
+
+
+
+
 }

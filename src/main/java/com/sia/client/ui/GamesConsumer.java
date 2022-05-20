@@ -234,6 +234,7 @@ public class GamesConsumer implements MessageListener {
                 GameUtils.setGameProperty(g,fields);
                 Game oldGame = AppController.getGame(g.getGame_id());
                 boolean changed = ! g.equals(oldGame);
+
                 if ( changed) {
                     if ( null != oldGame) {
                         moveIfGameGroupChanged(oldGame, g);

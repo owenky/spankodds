@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.LineAlertManager;
 
 import java.io.Serializable;
@@ -108,24 +109,39 @@ public class Moneyline extends Line implements Serializable {
         return isbestvisitmoney;
     }
 
-    public void setBestVisitMoney(boolean b) {
+    public void setBestVisitMoney(boolean b)
+    {
         isbestvisitmoney = b;
+       if(b)
+       {
+           AppController.bestvisitml.put(period+"-"+gameid,getBookieObject());
+       }
     }
 
     public boolean isBestHomeMoney() {
         return isbesthomemoney;
     }
 
-    public void setBestHomeMoney(boolean b) {
+    public void setBestHomeMoney(boolean b)
+    {
         isbesthomemoney = b;
+        if(b)
+        {
+            AppController.besthomeml.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public boolean isBestDrawMoney() {
         return isbestdrawmoney;
     }
 
-    public void setBestDrawMoney(boolean b) {
+    public void setBestDrawMoney(boolean b)
+    {
         isbestdrawmoney = b;
+        if(b)
+        {
+            AppController.bestdrawml.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public String recordMove(double visitjuice, double homejuice, double drawjuice, long ts, boolean isopener) {
