@@ -28,13 +28,9 @@ public class LineSeekerAlertMethodStateLayout {
     private final JButton testpopup = new LinkButton("Test Popup");
     private JComboBox<String> popupsecsComboBox;
     private final JPanel panel = new JPanel();
-    private final JButton usedefaultsound = new JButton("Use Default Sound");
-    private final JButton usecustomsound = new JButton("Use Custom Sound");
-    private final JLabel soundlabel = new JLabel("DEFAULT");
     private final String[] secslist = new String[60];
     private final String[] minslist = new String[20];
     private final int popupsecs = 5;
-    private final int popuplocationint = 0;
     private final String alerttype = "";
     private final JCheckBox audiocheckbox = new JCheckBox("Audio");
     private final JCheckBox popupcheckbox = new JCheckBox("Popup");
@@ -143,7 +139,6 @@ public class LineSeekerAlertMethodStateLayout {
         }
 
         LookAndFeelFactory.installJideExtension();
-        AppController.LineOpenerAlertNodeList.get(LineSeekerAlertMethodStateLayout.idx).popuplocationint = popuplocationint;
 
         popupsecsComboBox = new LightComboBox<>(secslist);
         popupsecsComboBox.setPreferredSize(ComboBoxPrefSize);
@@ -164,17 +159,6 @@ public class LineSeekerAlertMethodStateLayout {
         panel.setBorder(BorderFactory.createEtchedBorder());
         panel.setLayout(new GridBagLayout());
 
-        usedefaultsound.addActionListener(ae -> {
-            int i = LineSeekerAlertMethodStateLayout.idx;
-            AppController.LineOpenerAlertNodeList.get(i).soundfile = "openers.wav";
-            AppController.LineOpenerAlertNodeList.get(i).soundlabel = "DEFAULT";
-            soundlabel.setText("DEFAULT");
-        });
-        usecustomsound.addActionListener(ae -> {
-
-        });
-
-
         testsound.addActionListener(ae -> {
             try {
                 SoundPlayer.playSound(((SoundBoxItem) Objects.requireNonNull(soundSrc.getSelectedItem())).path);
@@ -185,14 +169,13 @@ public class LineSeekerAlertMethodStateLayout {
         });
 
         testpopup.addActionListener(ae -> {
+            int popuplocationint = ((LineSeekerAlertMethodAttr.PopupLocation)popupLocationBox.getSelectedItem()).getLocation();
             new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
                     "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
 
                     "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
                     "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
                     "</TABLE></FONT></HTML>", popupsecs * 1000, popuplocationint, spankyWindow);
-            log("popupsecs=" + popupsecs);
-
         });
 
         soundSrc.addItem(defaultSoundItem);

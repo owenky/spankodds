@@ -63,7 +63,7 @@ public class LineSeekerAlertMethodAttr {
 
     public PopupLocation getPopupLocation() {
         if ( null == popupLocation) {
-            popupLocation =  PopupLocation.Right_Top;
+            popupLocation =  PopupLocation.CENTER;
         }
         return popupLocation;
     }
@@ -74,9 +74,23 @@ public class LineSeekerAlertMethodAttr {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     public enum PopupLocation {
-        Left_Bottom,
-        Left_Top,
-        Right_Bottom,
-        Right_Top,
+        CENTER(0),
+        TOP_CENTER(1),
+        TOP_RIGHT(2),
+        MIDDLE_RIGHT(3),
+        BOTTOM_RIGHT(4),
+        BOTTOM_CENTER(5),
+        BOTTOM_LEFT(6),
+        MIDDLE_LEFT(7),
+        TOP_LEFT(8);
+
+
+        PopupLocation(int location) {
+            this.location = location;
+        }
+        public int getLocation() {
+            return location;
+        }
+        private final int location;
     }
 }
