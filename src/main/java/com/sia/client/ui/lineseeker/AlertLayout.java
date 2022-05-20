@@ -360,10 +360,8 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
-        if ( null == lineSeekerAlertMethodDialog) {
-            lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane(),alertConfig);
-            lineSeekerAlertMethodDialog.addCloseAction(()->alertMethodSetting.setEnabled(true));
-        }
+        lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane(),alertConfig);
+        lineSeekerAlertMethodDialog.addCloseAction(()->alertMethodSetting.setEnabled(true));
         final AbstractButton alertSettingBtn = (AbstractButton)actionEvent.getSource();
         alertSettingBtn.setEnabled(false);
         Supplier<Point> anchorLocSupplier = ()->{

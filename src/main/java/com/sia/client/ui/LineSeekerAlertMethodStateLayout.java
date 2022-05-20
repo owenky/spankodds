@@ -20,6 +20,7 @@ import static com.sia.client.config.Utils.showMessageDialog;
 public class LineSeekerAlertMethodStateLayout {
 
     static int idx;
+    private static final String DefaultSoundFileDisp = "Default Sound";
     private static final Dimension TestButtonSpacing = new Dimension(10,0);
     private static final Dimension ComboBoxPrefSize = new Dimension(60,15);
     private JComboBox<String> renotifyComboBox;
@@ -38,9 +39,10 @@ public class LineSeekerAlertMethodStateLayout {
     private final String name;
     private final JCheckBox audiocheckbox = new JCheckBox("Audio");
     private final JCheckBox popupcheckbox = new JCheckBox("Popup");
-    private final JComboBox<String> soundSrc = new LightComboBox<>();
-    private static final String SoundSrcDefault = "Default Sound";
-    private static final String SoundSrcUpload = "Upload Sound File";
+    private final JComboBox<SoundBoxItem> soundSrc = new LightComboBox<>();
+    private final SoundBoxItem customerSoundItem = new SoundBoxItem("","");
+    private final SoundBoxItem defaultSoundItem = new SoundBoxItem(DefaultSoundFileDisp, LineSeekerAlertMethodAttr.DefaultSoundFilePath);
+    private final SoundBoxItem uploadSoundItem = new SoundBoxItem("Upload Sound File","");
 
     public LineSeekerAlertMethodStateLayout(String name) {
         this.name = name;
@@ -175,20 +177,24 @@ public class LineSeekerAlertMethodStateLayout {
 
         });
 
-        soundSrc.addItem(SoundSrcDefault);
-        soundSrc.addItem(SoundSrcUpload);
+        soundSrc.addItem(defaultSoundItem);
+        soundSrc.addItem(customerSoundItem);
+        soundSrc.addItem(uploadSoundItem);
         soundSrc.addItemListener(this::onSoundFileChanged);
     }
     private void onSoundFileChanged(ItemEvent ie) {
 
         if (ie.getStateChange() == ItemEvent.SELECTED) {
             Object item = ie.getItem();
-            if ( SoundSrcUpload.equals(item)) {
+            if ( uploadSoundItem.equals(item)) {
                 JFileChooser jfc = new JFileChooser();
                 jfc.showOpenDialog(SpankyWindow.getFirstSpankyWindow());
                 File f1 = jfc.getSelectedFile();
-                String uploaded = f1.getPath();
-                System.out.println("uploaded="+uploaded);
+                if ( null != f1) {
+                    String uploadedFilePath = f1.getPath();
+                    customerSoundItem.setPath(uploadedFilePath);
+                    soundSrc.setSelectedItem(customerSoundItem);
+                }
             }
         }
     }
@@ -234,17 +240,53 @@ public class LineSeekerAlertMethodStateLayout {
     }
     public void updateAlertMethodAttr(LineSeekerAlertMethodAttr attr) {
         audiocheckbox.setSelected(attr.getAudioEnabled());
-        soundSrc.setSelectedItem(attr.getSoundFile());
+        SoundBoxItem selectedItem;
+        if ( defaultSoundItem.path.equals(attr.getSoundFile()) ||  uploadSoundItem.path.equals(attr.getSoundFile())) {
+            selectedItem = defaultSoundItem;
+        } else {
+            selectedItem = customerSoundItem;
+            selectedItem.setPath(attr.getSoundFile());
+        }
+        soundSrc.setSelectedItem(selectedItem);
         popupcheckbox.setSelected(attr.getPopupEnabled());
         popupsecsComboBox.setSelectedItem(attr.getPopupSeconds());
         renotifyComboBox.setSelectedItem(attr.getRenotifyInMinutes());
     }
     public void saveMethodAttr(LineSeekerAlertMethodAttr attr) {
         attr.setAudioEnabled(audiocheckbox.isSelected());
-        attr.setSoundFile(String.valueOf(soundSrc.getSelectedItem()));
+        SoundBoxItem selectedSoundItem = (SoundBoxItem)soundSrc.getSelectedItem();
+        attr.setSoundFile(selectedSoundItem.path);
         attr.setPopupEnabled(popupcheckbox.isSelected());
         attr.setPopupSeconds(String.valueOf(popupsecsComboBox.getSelectedItem()));
         attr.setRenotifyInMinutes(String.valueOf(renotifyComboBox.getSelectedItem()));
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////
+    private static class SoundBoxItem {
+        private String path;
+        private String display;
+        public SoundBoxItem(String display,String path) {
+            this.path = path;
+            this.display = display;
+        }
+        @Override
+        public String toString() {
+            return display;
+        }
+        public void setPath(String path) {
+            if ( ! DefaultSoundFileDisp.equals(path)) {
+                String[] parts = path.split("\\\\|/");
+                this.display = parts[parts.length - 1];
+                this.path = this.display;
+            } else {
+                this.display = DefaultSoundFileDisp;
+                this.path = LineSeekerAlertMethodAttr.DefaultSoundFilePath;
+            }
+        }
+    }
+    public static void main(String [] argv) {
+        String path = "/abc/123/456/efg/test.txt";
+        SoundBoxItem test= new SoundBoxItem("TEST",path);
+        System.out.println(test);
     }
 }
 

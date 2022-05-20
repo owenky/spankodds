@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LineSeekerAlertMethodAttr {
 
-    public static final String DefaultSoundFile="Default";
+    public static final String DefaultSoundFilePath = "openers.wav";
     private boolean isAudioEnabled = true;
     private boolean isPopupEnabled = true;
-    private String soundFile = DefaultSoundFile;
+    private String soundFile = DefaultSoundFilePath;
     private String popupSeconds = "3";
     private String renotifyInMinutes = "0.5";
     private final String alertState;
