@@ -2,18 +2,17 @@ package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.config.SiaConst;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.ui.comps.LightComboBox;
 import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
@@ -178,7 +177,7 @@ public class LineSeekerAlertMethodStateLayout {
 
         testsound.addActionListener(ae -> {
             try {
-                playSound("openers.wav");
+                SoundPlayer.playSound(((SoundBoxItem) Objects.requireNonNull(soundSrc.getSelectedItem())).path);
             } catch (Exception ex) {
                 showMessageDialog(null, "Error Playing File!");
                 log(ex);
@@ -261,17 +260,6 @@ public class LineSeekerAlertMethodStateLayout {
         comp.add(new JLabel(" minutes have elapsed"));
         return comp;
     }
-    public static void playSound(String file) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error Playing File! Check file path. Only AIFF,AU and WAV are supported!");
-            log(ex);
-        }
-    }
     public void updateAlertMethodAttr() {
         audiocheckbox.setSelected(attr.getAudioEnabled());
         SoundBoxItem selectedItem;
@@ -296,6 +284,7 @@ public class LineSeekerAlertMethodStateLayout {
         attr.setPopupSeconds(String.valueOf(popupsecsComboBox.getSelectedItem()));
         attr.setRenotifyInMinutes(String.valueOf(renotifyComboBox.getSelectedItem()));
         attr.setPopupLocation((LineSeekerAlertMethodAttr.PopupLocation)popupLocationBox.getSelectedItem());
+        setEdited(false);
     }
     private void checkAndSetEditStatus() {
         SoundBoxItem selectedSoundItem = (SoundBoxItem)soundSrc.getSelectedItem();
@@ -332,9 +321,9 @@ public class LineSeekerAlertMethodStateLayout {
         }
         public void setPath(String path) {
             if ( ! DefaultSoundFileDisp.equals(path)) {
+                this.path = path;
                 String[] parts = path.split("\\\\|/");
                 this.display = parts[parts.length - 1];
-                this.path = this.display;
             } else {
                 this.display = DefaultSoundFileDisp;
                 this.path = LineSeekerAlertMethodAttr.DefaultSoundFilePath;
