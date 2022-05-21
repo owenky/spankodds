@@ -32,11 +32,16 @@ public class LinesMoves
     {
 
 
-
+        mlbsides[0] =  .0000001;
         mlbsides[1] =  .13;
+        mlbsides[2] =  .10;
 
         mlbh1sides[0] = .15;
+        mlbh1sides[1] = .13;
+        mlbh1sides[2] = .10;
 
+        mlbtotals[5] = .140; // made up
+        mlbtotals[6] = .082; // made up
         mlbtotals[7] = .124;
         mlbtotals[8] = .072;
         mlbtotals[9] = .103;
