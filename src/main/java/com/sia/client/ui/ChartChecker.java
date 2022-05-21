@@ -122,7 +122,8 @@ public class ChartChecker {
                 sc.useDelimiter("\n");
                 count1 = 0;
 
-                while (sc.hasNext()) {
+                while (sc.hasNext())
+                {
                     count1++;
                     String s = sc.next();
                     int ln = s.charAt(0);
@@ -414,7 +415,7 @@ public class ChartChecker {
 
 
         } catch (Exception ex) {
-            log(ex);
+            log("exception reading chart file "+ex);
         }
     }
 

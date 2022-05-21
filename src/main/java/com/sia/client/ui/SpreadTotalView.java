@@ -789,9 +789,40 @@ public class SpreadTotalView extends ViewValue {
                     Bookie visitmlbookie = AppController.bestvisitml.get(period+"-"+gid);
                     Bookie homemlbookie = AppController.besthomeml.get(period+"-"+gid);
 
-                    besthtml = besthtml+"<tr><td>S:</td><td><table border=1><tr><td align=center>"+visitspreadbookie.getShortname()+"</td><tr><td>"+format(visitspread)+format(visitjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+homespreadbookie.getShortname()+"</td><tr><td>"+format(homespread)+format(homejuice)+"</td></tr></table></td></tr>";
-                    besthtml = besthtml+"<tr><td>T:</td><td><table border=1><tr><td align=center>"+overbookie.getShortname()+"</td><tr><td>o"+format(over)+format(overjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+underbookie.getShortname()+"</td><tr><td>u"+format(under)+format(underjuice)+"</td></tr></table></td></tr>";
-                    besthtml = besthtml+"<tr><td>M:</td><td><table border=1><tr><td align=center>"+visitmlbookie.getShortname()+"</td><tr><td>"+format(visitmljuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+homemlbookie.getShortname()+"</td><tr><td>"+format(homemljuice)+"</td></tr></table></td></tr>";
+                    String vsb = "";
+                    String hsb = "";
+                    String ob = "";
+                    String ub = "";
+                    String vmb = "";
+                    String hmb = "";
+                    if(visitspreadbookie != null)
+                    {
+                        vsb = visitspreadbookie.getShortname();
+                    }
+                    if(homespreadbookie != null)
+                    {
+                        hsb = homespreadbookie.getShortname();
+                    }
+                    if(overbookie != null)
+                    {
+                        ob = overbookie.getShortname();
+                    }
+                    if(underbookie != null)
+                    {
+                        ub = underbookie.getShortname();
+                    }
+                    if(visitmlbookie != null)
+                    {
+                        vmb = visitmlbookie.getShortname();
+                    }
+                    if(homemlbookie != null)
+                    {
+                        hmb = homemlbookie.getShortname();
+                    }
+
+                    besthtml = besthtml+"<tr><td>S:</td><td><table border=1><tr><td align=center>"+vsb+"</td><tr><td>"+format(visitspread)+format(visitjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hsb+"</td><tr><td>"+format(homespread)+format(homejuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml+"<tr><td>T:</td><td><table border=1><tr><td align=center>"+ob+"</td><tr><td>o"+format(over)+format(overjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+ub+"</td><tr><td>u"+format(under)+format(underjuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml+"<tr><td>M:</td><td><table border=1><tr><td align=center>"+vmb+"</td><tr><td>"+format(visitmljuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hmb+"</td><tr><td>"+format(homemljuice)+"</td></tr></table></td></tr>";
 
                     besthtml = besthtml+"</table>";
                     setTooltiptext("<html><body>" +besthtml + "</body></html>");
