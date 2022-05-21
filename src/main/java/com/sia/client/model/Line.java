@@ -15,6 +15,8 @@ public class Line {
 	protected long  openerts = 1000;
 	protected int leagueid = 0;
 
+	protected boolean scalp = false;
+
     public String getPrintedJuiceLine(double ml) {
         String retvalue = "";
         if (ml > 0) {
@@ -43,6 +45,14 @@ public class Line {
 	public void setType(final String type) {
 		this.type = type;
 	}
+
+    public boolean isScalp() {
+        return scalp;
+    }
+    public void setScalp(boolean scalp) {
+        this.scalp = scalp;
+    }
+
     public String getWhowasbet() {
         return whowasbet;
     }
