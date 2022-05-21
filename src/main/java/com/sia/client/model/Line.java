@@ -46,12 +46,6 @@ public class Line {
 		this.type = type;
 	}
 
-    public boolean isScalp() {
-        return scalp;
-    }
-    public void setScalp(boolean scalp) {
-        this.scalp = scalp;
-    }
 
     public String getWhowasbet() {
         return whowasbet;
