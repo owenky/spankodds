@@ -60,7 +60,7 @@ public class BestLines {
 						{
 
 
-							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid)) {
 								bvsl = sl;
 							}
 
@@ -87,7 +87,7 @@ public class BestLines {
 						double besthomespread = bhsl.getCurrenthomespread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid)) {
 								bhsl = sl;
 							}
 
@@ -187,7 +187,7 @@ public class BestLines {
 							{
 							//	System.out.println("BEFORE OVER."+over+".."+overjuice+".."+bestover+".."+bestoverjuice);
 							}
-							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
+							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER",gameid)) {
 								bo = tl;
 							}
 
@@ -219,7 +219,7 @@ public class BestLines {
 							{
 							//	System.out.println("BEFORE UNDER."+under+".."+underjuice+".."+bestunder+".."+bestunderjuice);
 							}
-							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
+							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER",gameid)) {
 								bu = tl;
 							}
 
@@ -567,7 +567,7 @@ public class BestLines {
 						double bestvisitspread = bvsl.getCurrentvisitspread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid)) {
 								bvsl = sl;
 							}
 
@@ -594,7 +594,7 @@ public class BestLines {
 						double besthomespread = bhsl.getCurrenthomespread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid)) {
 								bhsl = sl;
 							}
 
@@ -714,7 +714,7 @@ public class BestLines {
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
 
-							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
+							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER",gameid)) {
 								bo = tl;
 							}
 
@@ -742,7 +742,7 @@ public class BestLines {
 						double bestunder = bu.getCurrentunder();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
+							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER",gameid)) {
 								bu = tl;
 							}
 
