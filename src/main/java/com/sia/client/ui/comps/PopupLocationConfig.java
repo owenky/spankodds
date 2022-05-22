@@ -13,7 +13,6 @@ public class PopupLocationConfig {
 
     private JPanel userComponent;
     private PopupLocation selectedPopupLocation = PopupLocation.TOP_RIGHT;
-    private final Map<PopupLocation,JideToggleButton> location2ButtonMap = new HashMap<>();
     private final Map<JideToggleButton,PopupLocation> button2LocaionMap = new HashMap<>();
     private final JideToggleButton upperright;
     private final JideToggleButton upperleft;
@@ -55,22 +54,8 @@ public class PopupLocationConfig {
         return userComponent;
     }
     private JideToggleButton makeJideToggleButton(String icon,PopupLocation popupLocation) {
-        JideToggleButton button = new JideToggleButton(new ImageIcon(Utils.getMediaResource(icon))) {
-            @Override
-            public int hashCode() {
-                return getName().hashCode();
-            }
-            @Override
-            public boolean equals(Object o) {
-                if ( this.getClass().equals(o.getClass())) {
-                    return getName().equals(((JideToggleButton)o).getName());
-                } else {
-                    return false;
-                }
-            }
-        };
-        location2ButtonMap.put(popupLocation,button);
-        lowerright.addItemListener(e -> {
+        JideToggleButton button = new JideToggleButton(new ImageIcon(Utils.getMediaResource(icon)));
+        button.addItemListener(e -> {
             selectedPopupLocation = popupLocation;
             if ( null != popupLocationListener) {
                 popupLocationListener.process(popupLocation);

@@ -5,6 +5,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.ui.comps.LightComboBox;
 import com.sia.client.ui.comps.LinkButton;
+import com.sia.client.ui.comps.PopupLocationConfig;
 import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr;
 
 import javax.swing.*;
@@ -35,12 +36,12 @@ public class LineSeekerAlertMethodStateLayout {
     private final JCheckBox audiocheckbox = new JCheckBox("Audio");
     private final JCheckBox popupcheckbox = new JCheckBox("Popup");
     private final JComboBox<SoundBoxItem> soundSrc = new LightComboBox<>();
-    private final JComboBox<LineSeekerAlertMethodAttr.PopupLocation> popupLocationBox = new LightComboBox<>();
     private final SoundBoxItem customerSoundItem = new SoundBoxItem("","");
     private final SoundBoxItem defaultSoundItem = new SoundBoxItem(DefaultSoundFileDisp, LineSeekerAlertMethodAttr.DefaultSoundFilePath);
     private final SoundBoxItem uploadSoundItem = new SoundBoxItem("Upload Sound File","");
     private final JLabel editStatusLabel = new JLabel();
     private final LineSeekerAlertMethodAttr attr;
+    private final PopupLocationConfig popupLocationConfig = new PopupLocationConfig();
 
     public LineSeekerAlertMethodStateLayout(LineSeekerAlertMethodAttr attr) {
         this.attr = attr;
@@ -48,7 +49,7 @@ public class LineSeekerAlertMethodStateLayout {
     public JComponent getLayoutPane(SpankyWindow spankyWindow) {
 
         initComponents(spankyWindow);
-        JLabel renotifyme = new JLabel("Renotify me on same Sport only after");
+        JLabel renotifyme = new JLabel("Renotify me on same Game only after");
         JLabel titleLabel = new JLabel(attr.getAlertState());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         JPanel titlePanel = new JPanel();
@@ -114,7 +115,7 @@ public class LineSeekerAlertMethodStateLayout {
         panel.setLayout(boxLayout);
         panel.add(popupcheckbox);
         panel.add(new JLabel(" at "));
-        panel.add(popupLocationBox);
+        panel.add(popupLocationConfig.getUserComponent());
         panel.add(new JLabel(" for "));
         panel.add(popupsecsComboBox);
         panel.add(new JLabel(" seconds"));
@@ -169,7 +170,7 @@ public class LineSeekerAlertMethodStateLayout {
         });
 
         testpopup.addActionListener(ae -> {
-            int popuplocationint = ((LineSeekerAlertMethodAttr.PopupLocation)popupLocationBox.getSelectedItem()).getLocation();
+            int popuplocationint = popupLocationConfig.getSelectedPopupLocation().getLocation();
             new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
                     "NFL<BR><TABLE cellspacing=5 cellpadding=5>" +
 
@@ -183,17 +184,17 @@ public class LineSeekerAlertMethodStateLayout {
         soundSrc.addItem(uploadSoundItem);
         soundSrc.addItemListener(this::onSoundFileChanged);
 
-        for(LineSeekerAlertMethodAttr.PopupLocation popupLocation: LineSeekerAlertMethodAttr.PopupLocation.values()) {
-            popupLocationBox.addItem(popupLocation);
-        }
         // add listeners
         audiocheckbox.addItemListener(this::onItemChanged);
         soundSrc.addItemListener(this::onItemChanged);
         popupcheckbox.addItemListener(this::onItemChanged);
         popupsecsComboBox.addItemListener(this::onItemChanged);
         renotifyComboBox.addItemListener(this::onItemChanged);
-        popupLocationBox.addItemListener(this::onItemChanged);
+        popupLocationConfig.setPopupLocationListener(this::onPopupLocationChanged);
         //
+    }
+    private void onPopupLocationChanged(LineSeekerAlertMethodAttr.PopupLocation popupLocation) {
+        checkAndSetEditStatus();
     }
     private void onItemChanged(ItemEvent ie) {
         checkAndSetEditStatus();
@@ -256,7 +257,7 @@ public class LineSeekerAlertMethodStateLayout {
         popupcheckbox.setSelected(attr.getPopupEnabled());
         popupsecsComboBox.setSelectedItem(attr.getPopupSeconds());
         renotifyComboBox.setSelectedItem(attr.getRenotifyInMinutes());
-        popupLocationBox.setSelectedItem(attr.getPopupLocation());
+        popupLocationConfig.setSelectedPopupLocation(attr.getPopupLocation());
         setEdited(false);
     }
     public void saveMethodAttr() {
@@ -266,7 +267,7 @@ public class LineSeekerAlertMethodStateLayout {
         attr.setPopupEnabled(popupcheckbox.isSelected());
         attr.setPopupSeconds(String.valueOf(popupsecsComboBox.getSelectedItem()));
         attr.setRenotifyInMinutes(String.valueOf(renotifyComboBox.getSelectedItem()));
-        attr.setPopupLocation((LineSeekerAlertMethodAttr.PopupLocation)popupLocationBox.getSelectedItem());
+        attr.setPopupLocation(popupLocationConfig.getSelectedPopupLocation());
         setEdited(false);
     }
     private void checkAndSetEditStatus() {
@@ -276,7 +277,7 @@ public class LineSeekerAlertMethodStateLayout {
                 || attr.getPopupEnabled() != popupcheckbox.isSelected()
                 || ! attr.getPopupSeconds().equals(popupsecsComboBox.getSelectedItem())
                 || ! attr.getRenotifyInMinutes().equals(renotifyComboBox.getSelectedItem())
-                || attr.getPopupLocation() != popupLocationBox.getSelectedItem();
+                || attr.getPopupLocation() != popupLocationConfig.getSelectedPopupLocation();
 
         setEdited(isEdited);
     }
