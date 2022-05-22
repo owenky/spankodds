@@ -2,6 +2,8 @@ package com.sia.client.ui.lineseeker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+
 public class LineSeekerAlertMethodAttr {
 
     public static final String DefaultSoundFilePath = "openers.wav";
@@ -84,7 +86,9 @@ public class LineSeekerAlertMethodAttr {
         MIDDLE_LEFT(7),
         TOP_LEFT(8);
 
-
+        public static PopupLocation findPopupLocation(int location) {
+            return Arrays.stream(PopupLocation.values()).filter(popupLocation -> popupLocation.getLocation() == location).findAny().get();
+        }
         PopupLocation(int location) {
             this.location = location;
         }

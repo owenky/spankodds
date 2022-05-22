@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.34)";
+    public static final String Version="(v21.20.10.35)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -53,7 +53,7 @@ public abstract class SiaConst {
     public interface LayedPaneIndex {
         int TableColumnMenuIndex = 10;
         int SportConfigIndex = TableColumnMenuIndex; //so that Sports Config Pane will hide Table Column Menu Pane, and vice visa. 2022-01-09
-        int LineSeekerAlertMethodDialogIndex = TableColumnMenuIndex+1;
+        int LineSeekerAlertMethodDialogIndex = TableColumnMenuIndex;
     }
     public interface ImageFile {
         String ICON_BLANK = "blank.gif";
@@ -77,7 +77,7 @@ public abstract class SiaConst {
         int screenXmargin = 50;
         int screenYmargin = 50;
         Dimension LineAlertDim = new Dimension(1200,800);
-        Dimension LineAlertMethodDim = new Dimension(450,720);
+        Dimension LineAlertMethodDim = new Dimension(900,720);
         Dimension CustomTab2Dim = new Dimension(1000,650);
     }
     public interface Serialization {

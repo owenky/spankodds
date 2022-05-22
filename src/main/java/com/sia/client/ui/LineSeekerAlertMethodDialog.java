@@ -16,10 +16,8 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
 
     private final Map<String,LineSeekerAlertMethodStateLayout> layoutMap = new HashMap<>();
     private final JButton saveBtn = new JButton("Save");
-    private final AlertConfig alertConfig;
-    public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertConfig alertConfig) {
+    public LineSeekerAlertMethodDialog(SportsTabPane stp) {
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
-        this.alertConfig = alertConfig;
         saveBtn.addActionListener(this::saveAlertMethodAttr);
     }
     @Override

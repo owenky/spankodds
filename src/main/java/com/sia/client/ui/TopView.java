@@ -1,21 +1,14 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.LayedPaneIndex;
-import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.util.Iterator;
+import java.awt.*;
+import java.awt.event.*;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;

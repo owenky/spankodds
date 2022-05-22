@@ -8,9 +8,7 @@ import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.LineSeekerAlertMethodDialog;
 import com.sia.client.ui.TitledPanelGenerator;
-import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
 import com.sia.client.ui.games.GameSelectionItem;
@@ -25,7 +23,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.function.Supplier;
 
 
 public class AlertLayout extends AbstractLayeredDialog {
@@ -45,8 +42,6 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private final List<SectionComponents> sectionComponentsList;
     private final JButton saveBtn = new JButton();
-    private final JButton alertMethodSetting = new LinkButton("Alert Method");
-    private LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog;
     private JComponent userComp;
 
     public AlertLayout(SportsTabPane stp) {
@@ -59,13 +54,6 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComps.addActionListener(alertComponentListener);
             sectionComponentsList.add(sectionComps);
         }
-        alertMethodSetting.addActionListener(this::openAlertMediaSettingDialog);
-        setTitlePanelRightComp(alertMethodSetting);
-        this.addCloseAction(()->{
-            if ( null != lineSeekerAlertMethodDialog) {
-                lineSeekerAlertMethodDialog.close();
-            }
-        });
     }
     private JComponent makeAlertComboBoxPanel() {
         JPanel panel = new JPanel();
@@ -349,20 +337,6 @@ public class AlertLayout extends AbstractLayeredDialog {
     @Override
     public boolean isEdited() {
         return SiaConst.EditedIndicator.equals(editStatusLabel.getText());
-    }
-    private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
-        lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane(),alertConfig);
-        lineSeekerAlertMethodDialog.addCloseAction(()->alertMethodSetting.setEnabled(true));
-        final AbstractButton alertSettingBtn = (AbstractButton)actionEvent.getSource();
-        alertSettingBtn.setEnabled(false);
-        Supplier<Point> anchorLocSupplier = ()->{
-            JComponent userComp = getUserComponent();
-            Point userCompLoc = userComp.getLocationOnScreen();
-            return new Point( userCompLoc.x+ userComp.getWidth()+3, userCompLoc.y);
-
-        };
-        lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim,anchorLocSupplier);
-        lineSeekerAlertMethodDialog.updateAlertMethodAttr();
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();
