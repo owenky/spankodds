@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
 
@@ -151,16 +152,26 @@ public class Spreadline extends Line {
         return isbestvisitspread;
     }
 
-    public void setBestVisitSpread(boolean b) {
+    public void setBestVisitSpread(boolean b)
+    {
         isbestvisitspread = b;
+        if(b)
+        {
+            AppController.bestvisitspread.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public boolean isBestHomeSpread() {
         return isbesthomespread;
     }
 
-    public void setBestHomeSpread(boolean b) {
+    public void setBestHomeSpread(boolean b)
+    {
         isbesthomespread = b;
+        if(b)
+        {
+            AppController.besthomespread.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, long ts, boolean isopener) {

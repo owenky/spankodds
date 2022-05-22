@@ -10,6 +10,7 @@ import com.sia.client.model.Spreadline;
 import com.sia.client.model.ViewValue;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -66,9 +67,12 @@ public class SoccerSpreadTotalView extends ViewValue {
     boolean isopenerbookie = false;
     private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
     public SoccerSpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
-        if (bid > 1000) {
+        if (bid >= 1000) {
             isopenerbookie = true;
-            bid = bid - 1000;
+            if(bid != 1000)
+            {
+                bid = bid - 1000;
+            }
         }
         this.bid = bid;
         this.gid = gid;
@@ -161,6 +165,7 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         long tsnow = System.currentTimeMillis();
         visitspread = null == sl ? SiaConst.DefaultSpread : sl.getCurrentvisitspread();
+        homespread = null == sl ? SiaConst.DefaultSpread : sl.getCurrenthomespread();
         visitjuice = null == sl ? SiaConst.DefaultSpread : sl.getCurrentvisitjuice();
         homejuice = null == sl ? SiaConst.DefaultSpread : sl.getCurrenthomejuice();
         whowasbetspread = null == sl ? "" : sl.getWhowasbet();
@@ -180,6 +185,9 @@ public class SoccerSpreadTotalView extends ViewValue {
 
 
         over = null == tl ? SiaConst.DefaultOver : tl.getCurrentover();
+        overjuice = null == tl ? SiaConst.DefaultOver : tl.getCurrentoverjuice();
+        under = null == tl ? SiaConst.DefaultOver : tl.getCurrentunder();
+        underjuice = null == tl ? SiaConst.DefaultOver : tl.getCurrentunderjuice();
         whowasbettotal = null == tl ? "" : tl.getWhowasbet();
 
         if (null == tl) {
@@ -708,27 +716,75 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         try {
             if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
-                String limithtml = "";
-                int sidelimit = 0;
-                int totallimit = 0;
-                int moneylimit = 0;
-                if(sl != null)
+                if(bid == 996 ) // seperate tooltip for best
                 {
-                    sidelimit = sl.getLimit();
-                }
-                if(tl != null)
-                {
-                    totallimit = tl.getLimit();
-                }
-                if(ml != null)
-                {
-                    moneylimit = ml.getLimit();
-                }
 
-                limithtml = sidelimit+" / "+totallimit+" / "+moneylimit;
-                if(!limithtml.equals("0 / 0 / 0"))
-                {
-                    setTooltiptext("<html><body>" +limithtml+"</body></html>");
+                    String besthtml = "<table><th></th><th>v/o</th><th>h/u</th>";
+                    Bookie visitspreadbookie = AppController.bestvisitspread.get(period+"-"+gid);
+                    Bookie homespreadbookie = AppController.besthomespread.get(period+"-"+gid);
+                    Bookie overbookie = AppController.bestover.get(period+"-"+gid);
+                    Bookie underbookie = AppController.bestunder.get(period+"-"+gid);
+                    Bookie visitmlbookie = AppController.bestvisitml.get(period+"-"+gid);
+                    Bookie homemlbookie = AppController.besthomeml.get(period+"-"+gid);
+
+                    String vsb = "";
+                    String hsb = "";
+                    String ob = "";
+                    String ub = "";
+                    String vmb = "";
+                    String hmb = "";
+                    if(visitspreadbookie != null)
+                    {
+                        vsb = visitspreadbookie.getShortname();
+                    }
+                    if(homespreadbookie != null)
+                    {
+                        hsb = homespreadbookie.getShortname();
+                    }
+                    if(overbookie != null)
+                    {
+                        ob = overbookie.getShortname();
+                    }
+                    if(underbookie != null)
+                    {
+                        ub = underbookie.getShortname();
+                    }
+                    if(visitmlbookie != null)
+                    {
+                        vmb = visitmlbookie.getShortname();
+                    }
+                    if(homemlbookie != null)
+                    {
+                        hmb = homemlbookie.getShortname();
+                    }
+
+                    besthtml = besthtml+"<tr><td>S:</td><td><table border=1><tr><td align=center>"+vsb+"</td><tr><td>"+format(visitspread)+format(visitjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hsb+"</td><tr><td>"+format(homespread)+format(homejuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml+"<tr><td>T:</td><td><table border=1><tr><td align=center>"+ob+"</td><tr><td>o"+format(over)+format(overjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+ub+"</td><tr><td>u"+format(under)+format(underjuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml+"<tr><td>M:</td><td><table border=1><tr><td align=center>"+vmb+"</td><tr><td>"+format(visitmljuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hmb+"</td><tr><td>"+format(homemljuice)+"</td></tr></table></td></tr>";
+
+
+                    besthtml = besthtml+"</table>";
+                    setTooltiptext("<html><body>" +besthtml + "</body></html>");
+                }
+                else {
+                    String limithtml = "";
+                    int sidelimit = 0;
+                    int totallimit = 0;
+                    int moneylimit = 0;
+                    if (sl != null) {
+                        sidelimit = sl.getLimit();
+                    }
+                    if (tl != null) {
+                        totallimit = tl.getLimit();
+                    }
+                    if (ml != null) {
+                        moneylimit = ml.getLimit();
+                    }
+
+                    limithtml = sidelimit + " / " + totallimit + " / " + moneylimit;
+                    if (!limithtml.equals("0 / 0 / 0")) {
+                        setTooltiptext("<html><body>" + limithtml + "</body></html>");
+                    }
                 }
                 linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display;
                 setUrl(linehistoryurl);

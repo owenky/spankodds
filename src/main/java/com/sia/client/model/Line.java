@@ -15,6 +15,8 @@ public class Line {
 	protected long  openerts = 1000;
 	protected int leagueid = 0;
 
+	protected boolean scalp = false;
+
     public String getPrintedJuiceLine(double ml) {
         String retvalue = "";
         if (ml > 0) {
@@ -43,6 +45,8 @@ public class Line {
 	public void setType(final String type) {
 		this.type = type;
 	}
+
+
     public String getWhowasbet() {
         return whowasbet;
     }
@@ -91,14 +95,15 @@ public class Line {
                 message = "Increased from "+oldlimit+" to "+newlimit;
             }
         }
-
+// need to apply filter here before alerting
+        /*
         new UrgentMessage("<HTML><H2>"+AppController.getBookie(getBookieid()).getName()+" - "+type.toUpperCase()+" LIMIT CHANGE " + getLeague_id() + "</H2>" +
                 "<TABLE cellspacing=1 cellpadding=1>" +
 
                 "<TR><TD>" + getGameid() + "-"+getPeriod()+"</TD></TR>" +
                 "<TR><TD>" + message+"</TD></TR>" +
                 "</TABLE></HTML>", 40 * 1000,2, AppController.getMainTabPane());
-
+        */
 
     }
 
@@ -133,6 +138,11 @@ public class Line {
     public Game getGameObject() {
         Game g = AppController.getGame(gameid);
         return g;
+    }
+
+    public Bookie getBookieObject() {
+        Bookie b = AppController.getBookie(bookieid);
+        return b;
     }
     public int getLeague_id() {
         if(leagueid == 0) // look up

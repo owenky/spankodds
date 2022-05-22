@@ -2,6 +2,8 @@ package com.sia.client.model;
 
 public class LinesMoves
 {
+
+    static boolean debug = false;
     static boolean initialized = false;
     static double[] cfsides = new double[100];
     static double[] cftotals = new double[100];
@@ -32,11 +34,16 @@ public class LinesMoves
     {
 
 
-
+        mlbsides[0] =  .0000001;
         mlbsides[1] =  .13;
+        mlbsides[2] =  .10;
 
         mlbh1sides[0] = .15;
+        mlbh1sides[1] = .13;
+        mlbh1sides[2] = .10;
 
+        mlbtotals[5] = .140; // made up
+        mlbtotals[6] = .082; // made up
         mlbtotals[7] = .124;
         mlbtotals[8] = .072;
         mlbtotals[9] = .103;
@@ -536,10 +543,12 @@ public class LinesMoves
         }
         return percentmove;
     }
-    public static double percentOfMove(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type)
+    public static double percentOfMove(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid)
     {
-
-        //System.out.println("oldline="+oldline+".."+oldjuice+"..newline="+newline+".."+newjuice);
+        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+        {
+           System.out.println("oldline=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice);
+        }
         double[] arr = new double[100];
 
         arr = getleagueidArray(leagueid,period,type);
@@ -550,9 +559,13 @@ public class LinesMoves
         double negativefactor = 1;
 
         // if( ( oldline+newline == 0 && type.equals("SPREAD")) || ( oldline-newline == 0 && type.equals("TOTAL"))) // difference == 0
-        if( type.equals("MONEYLINE") || ( oldline== newline && type.equals("SPREAD")) || ( oldline-newline == 0 &&   (  type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER")          )  )) // difference == 0
+        if( type.equals("MONEYLINE") || ( oldline == newline && type.equals("SPREAD")) || ( oldline-newline == 0 &&   (  type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER")          )  )) // difference == 0
         {
             juicepercent = percentageofjuicemove(oldjuice,newjuice);
+            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+            {
+                System.out.println("juicepercent="+juicepercent);
+            }
             //System.out.println("juicepercent="+juicepercent);
             return juicepercent;
         }
@@ -578,6 +591,7 @@ public class LinesMoves
         {
 
         }
+
 				/*
 			if(oldline > newline)
 				{
@@ -637,7 +651,10 @@ public class LinesMoves
             st = en;
             en = temp;
         }
-
+        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+        {
+            System.out.println("********STARTING AT="+st+"..to="+en);
+        }
         for (double startline = st; startline < en; startline=startline+.5)
         {
             // add half of push probability every time we cross whole number
@@ -647,27 +664,35 @@ public class LinesMoves
             {
                 positiveindex = index*-1;
             }
-            prob = prob+arr[positiveindex]/2.0*negativefactor;
-            //System.out.println(index+".."+arr[positiveindex]/2.0*negativefactor);
 
+            prob = prob+arr[positiveindex]/2.0*negativefactor;
+            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+            {
+                System.out.println("oldline="+oldline+".."+oldjuice+"..newline="+newline+".."+newjuice+".."+index + ".." + arr[positiveindex] / 2.0 * negativefactor);
+            }
         }
 
         //prob = prob *negativefactor;
         double linepercent = (prob-.5)/.5; // use 50% and no vig
         double totalpercent = juicepercent+linepercent;
+        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+        {
+            System.out.println("totalpercent="+totalpercent);
+        }
        // System.out.println("juicepercent="+juicepercent+"\tlinepercent="+linepercent);
        // System.out.println("totalpercent="+totalpercent);
         return totalpercent;
 
     }
 
-    public static boolean isLine1BetterThanLine2(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type)
+
+    public static boolean isLine1BetterThanLine2(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid)
     {
         if(oldjuice == 0)
         {
             return false;
         }
-        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type);
+        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid);
         if(movePercent > 0)
         {
             return true;
@@ -680,7 +705,7 @@ public class LinesMoves
     }
     public static boolean didNewLineMoveEnough(double desiredPercent, double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type)
     {
-        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type);
+        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type,0);
         //System.out.println("MOVE ENOUGH? "+movePercent+">="+desiredPercent+".."+oldline+".."+oldjuice+".."+newline+".."+newjuice+".."+leagueid+".."+type);
         if(Math.abs(movePercent*100.00) >= desiredPercent)
         {

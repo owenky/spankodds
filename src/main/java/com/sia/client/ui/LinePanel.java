@@ -22,15 +22,22 @@ import static com.sia.client.config.Utils.log;
 
 public class LinePanel extends JPanel {
     // 183 52 235
-    private static final MatteBorder bestvisitborder = new MatteBorder(2, 2, 2, 2, new Color(51,0, 0));
-    private static final MatteBorder besthomeborder = new MatteBorder(2, 2, 2, 2, new Color(51, 0, 0));
-    private static final MatteBorder bestoverborder = new MatteBorder(2, 2, 2, 2, new Color(51 ,0, 0));
-    private static final MatteBorder bestunderborder = new MatteBorder(2, 2, 2, 2, new Color(51 ,0, 0));
-    private static final MatteBorder bestvisitborderblackorred = new MatteBorder(2, 2, 2, 2, new Color(255,255, 0));
-    private static final MatteBorder besthomeborderblackorred = new MatteBorder(2, 2, 2, 2, new Color(255,255, 0));
-    private static final MatteBorder bestoverborderblackorred = new MatteBorder(2, 2, 2, 2, new Color(255,255, 0));
-    private static final MatteBorder bestunderborderblackorred = new MatteBorder(2, 2, 2, 2, new Color(255,255, 0));
-    private static final MatteBorder bestdrawborder = new MatteBorder(2, 2, 2, 2, new Color(183, 52, 235));
+    private static int topthickness = 2;
+    private static int bottomthickness = 2;
+    private static int rightthickness = 1;
+    private static int leftthickness = 1;
+    private static final MatteBorder scalpbordertop = new MatteBorder(2, 2, 0, 2, new Color(0 ,102, 0));
+    private static final MatteBorder scalpborderbottom = new MatteBorder(0, 2, 2, 2, new Color(0 ,102, 0));
+    private static final MatteBorder scalpborder = new MatteBorder(2, 2, 2, 2, new Color(0 ,102, 0));
+    private static final MatteBorder bestvisitborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51,0, 0));
+    private static final MatteBorder besthomeborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51, 0, 0));
+    private static final MatteBorder bestoverborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51 ,0, 0));
+    private static final MatteBorder bestunderborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51 ,0, 0));
+    private static final MatteBorder bestvisitborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder besthomeborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder bestoverborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder bestunderborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder bestdrawborder = new MatteBorder(2, 2, 2, 2, new Color(255, 255, 0));
     private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(222, 235, 52));
     private static final Color altcolor = new Color(204, 255, 229);
     private static final Color openercolor = Color.LIGHT_GRAY;
@@ -97,6 +104,16 @@ public class LinePanel extends JPanel {
         total.setHorizontalTextPosition(textAlignment);
 
         this.setOpaque(true);
+
+
+
+
+
+
+
+
+
+
     }
     public void setSoccerLines(JTable table,SoccerSpreadTotalView stv, int row, int col) {
 
@@ -199,7 +216,11 @@ public class LinePanel extends JPanel {
             if(blackorred) {  top.setBorder(bestunderborderblackorred);}
             else { top.setBorder(bestunderborder); }
 
-        } else {
+        } else if (ld.getBorder().contains("scalp")) {
+            top.setBorder(scalpborder);
+        }
+
+        else {
             top.setBorder(null);
         }
 
@@ -270,7 +291,11 @@ public class LinePanel extends JPanel {
             if(blackorred) {  bottom.setBorder(bestunderborderblackorred);}
             else { bottom.setBorder(bestunderborder); }
 
-        } else {
+        } else if (ld.getBorder().contains("scalp")) {
+            bottom.setBorder(scalpborder);
+        }
+
+        else {
             bottom.setBorder(null);
         }
 
@@ -415,7 +440,12 @@ public class LinePanel extends JPanel {
         } else if (ld.getBorder().contains("bestunder")) {
             if(blackorred) {  total.setBorder(bestunderborderblackorred);}
             else { total.setBorder(bestunderborder); }
-        } else {
+        }
+        else if (ld.getBorder().contains("scalp")) {
+            total.setBorder(scalpborder);
+        }
+
+        else {
             total.setBorder(null);
         }
 
@@ -425,6 +455,7 @@ public class LinePanel extends JPanel {
     public void setLines(JTable table,SpreadTotalView stv, int row, int col) {
         LineData[] boxes;
         try {
+            boolean bothscalps = false;
             SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
             stv.setDisplayType(spankyWindowConfig.getDisplay());
             stv.setPeriodType(spankyWindowConfig.getPeriod());
@@ -437,8 +468,20 @@ public class LinePanel extends JPanel {
             } else {
                 boxes = stv.getCurrentBoxes();
             }
+            if(boxes[0].getBorder().equals(boxes[1].getBorder()) && boxes[0].getBorder().equals("scalp"))
+            {
+                bothscalps = true;
+                boxes[0].setBorder("");
+                boxes[1].setBorder("");
+            }
             setTop(table,boxes[0], row, col);
             setBottom(table,boxes[1], row, col);
+            if(bothscalps)
+            {
+                top.setBorder(scalpbordertop);
+                bottom.setBorder(scalpborderbottom);
+            }
+
         } catch (Exception ex) {
             log("ERROR=..." + stv + "..row=" + row + "...col=" + col);
             log(ex);

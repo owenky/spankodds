@@ -12,6 +12,7 @@ import static com.sia.client.config.Utils.log;
 
 public class BestLines {
 
+	static int bestbookieid = 996;
     public static void calculatebestspread(int gameid, int period) {
 		List<Bookie> shownbookies = AppController.getShownCols();
 		List<Bookie> fixedbookies = AppController.getFixedCols();
@@ -19,10 +20,12 @@ public class BestLines {
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
 		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
-
+        Bookie bestBookie = AppController.getBookie(bestbookieid);
 
         Spreadline bvsl = null;
         Spreadline bhsl = null;
+
+
 
 
 		for (Object allcol : allcols) {
@@ -57,7 +60,7 @@ public class BestLines {
 						{
 
 
-							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid)) {
 								bvsl = sl;
 							}
 
@@ -84,7 +87,7 @@ public class BestLines {
 						double besthomespread = bhsl.getCurrenthomespread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid)) {
 								bhsl = sl;
 							}
 
@@ -107,9 +110,31 @@ public class BestLines {
 		}
 		if (bvsl != null) {
 			bvsl.setBestVisitSpread(true);
+
+			Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
+			if(bestsl == null)
+			{
+				AppController.addSpreadline(new Spreadline(gameid,bestbookieid,bvsl.getCurrentvisitspread(),bvsl.getCurrentvisitjuice(),bvsl.getCurrenthomespread(),bvsl.getCurrenthomejuice(),0,period));
+			}
+			else
+			{
+				bestsl.setCurrentvisitspread(bvsl.getCurrentvisitspread());
+				bestsl.setCurrentvisitjuice(bvsl.getCurrentvisitjuice());
+			}
 		}
 		if (bhsl != null) {
 			bhsl.setBestHomeSpread(true);
+
+			Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
+			if(bestsl == null)
+			{
+				AppController.addSpreadline(new Spreadline(gameid,bestbookieid,bhsl.getCurrentvisitspread(),bhsl.getCurrentvisitjuice(),bhsl.getCurrenthomespread(),bhsl.getCurrenthomejuice(),0,period));
+			}
+			else
+			{
+				bestsl.setCurrenthomespread(bhsl.getCurrenthomespread());
+				bestsl.setCurrenthomejuice(bhsl.getCurrenthomejuice());
+			}
 		}
 
 
@@ -162,7 +187,7 @@ public class BestLines {
 							{
 							//	System.out.println("BEFORE OVER."+over+".."+overjuice+".."+bestover+".."+bestoverjuice);
 							}
-							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
+							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER",gameid)) {
 								bo = tl;
 							}
 
@@ -194,7 +219,7 @@ public class BestLines {
 							{
 							//	System.out.println("BEFORE UNDER."+under+".."+underjuice+".."+bestunder+".."+bestunderjuice);
 							}
-							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
+							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER",gameid)) {
 								bu = tl;
 							}
 
@@ -220,9 +245,31 @@ public class BestLines {
 
 		if (bo != null) {
 			bo.setBestOver(true);
+
+			Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
+			if(besttl == null)
+			{
+				AppController.addTotalline(new Totalline(gameid,bestbookieid,bo.getCurrentover(),bo.getCurrentoverjuice(),bo.getCurrentunder(),bo.getCurrentunderjuice(),0,period));
+			}
+			else
+			{
+				besttl.setCurrentover(bo.getCurrentover());
+				besttl.setCurrentoverjuice(bo.getCurrentoverjuice());
+			}
 		}
 		if (bu != null) {
 			bu.setBestUnder(true);
+
+			Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
+			if(besttl == null)
+			{
+				AppController.addTotalline(new Totalline(gameid,bestbookieid,bu.getCurrentover(),bu.getCurrentoverjuice(),bu.getCurrentunder(),bu.getCurrentunderjuice(),0,period));
+			}
+			else
+			{
+				besttl.setCurrentunder(bu.getCurrentunder());
+				besttl.setCurrentunderjuice(bu.getCurrentunderjuice());
+			}
 		}
 
 
@@ -236,6 +283,8 @@ public class BestLines {
 		List<Bookie> allcols = new ArrayList<>(shownbookies.size()+fixedbookies.size());
 		allcols.addAll(fixedbookies);
         allcols.addAll(shownbookies);
+
+
 
         TeamTotalline bvo = null;
         TeamTotalline bvu = null;
@@ -313,15 +362,56 @@ public class BestLines {
 
 		if (bvo != null) {
 			bvo.setBestVisitOver(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bvo.getCurrentvisitover(),bvo.getCurrentvisitoverjuice(),bvo.getCurrentvisitunder(),bvo.getCurrentvisitunderjuice(),bvo.getCurrenthomeover(),bvo.getCurrenthomeoverjuice(),bvo.getCurrenthomeunder(),bvo.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrentvisitover(bvo.getCurrentvisitover());
+				bestttl.setCurrentvisitoverjuice(bvo.getCurrentvisitoverjuice());
+			}
+
 		}
 		if (bvu != null) {
 			bvu.setBestVisitUnder(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bvu.getCurrentvisitover(),bvo.getCurrentvisitoverjuice(),bvu.getCurrentvisitunder(),bvu.getCurrentvisitunderjuice(),bvu.getCurrenthomeover(),bvu.getCurrenthomeoverjuice(),bvu.getCurrenthomeunder(),bvu.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrentvisitunder(bvu.getCurrentvisitunder());
+				bestttl.setCurrentvisitunderjuice(bvu.getCurrentvisitunderjuice());
+			}
 		}
 		if (bho != null) {
 			bho.setBestHomeOver(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bho.getCurrentvisitover(),bho.getCurrentvisitoverjuice(),bho.getCurrentvisitunder(),bho.getCurrentvisitunderjuice(),bho.getCurrenthomeover(),bho.getCurrenthomeoverjuice(),bho.getCurrenthomeunder(),bho.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrenthomeover(bho.getCurrenthomeover());
+				bestttl.setCurrenthomeoverjuice(bho.getCurrenthomeoverjuice());
+			}
 		}
 		if (bhu != null) {
 			bhu.setBestHomeUnder(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bhu.getCurrentvisitover(),bhu.getCurrentvisitoverjuice(),bhu.getCurrentvisitunder(),bhu.getCurrentvisitunderjuice(),bhu.getCurrenthomeover(),bhu.getCurrenthomeoverjuice(),bhu.getCurrenthomeunder(),bhu.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrenthomeunder(bhu.getCurrenthomeunder());
+				bestttl.setCurrenthomeunderjuice(bhu.getCurrenthomeunderjuice());
+			}
 		}
 
     }
@@ -380,12 +470,43 @@ public class BestLines {
 		}
 		if (bvml != null) {
 			bvml.setBestVisitMoney(true);
+
+			Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
+			if(bestml == null)
+			{
+				AppController.addMoneyline(new Moneyline(gameid,bestbookieid,bvml.getCurrentvisitjuice(),bvml.getCurrenthomejuice(),bvml.getCurrentdrawjuice(),0,period));
+			}
+			else
+			{
+				bestml.setCurrentvisitjuice(bvml.getCurrentvisitjuice());
+			}
+
+
 		}
 		if (bhml != null) {
 			bhml.setBestHomeMoney(true);
+
+			Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
+			if(bestml == null)
+			{
+				AppController.addMoneyline(new Moneyline(gameid,bestbookieid,bhml.getCurrentvisitjuice(),bhml.getCurrenthomejuice(),bhml.getCurrentdrawjuice(),0,period));
+			}
+			else
+			{
+				bestml.setCurrenthomejuice(bhml.getCurrenthomejuice());
+			}
 		}
 		if (bdml != null) {
 			bdml.setBestDrawMoney(true);
+			Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
+			if(bestml == null)
+			{
+				AppController.addMoneyline(new Moneyline(gameid,bestbookieid,bdml.getCurrentvisitjuice(),bdml.getCurrenthomejuice(),bdml.getCurrentdrawjuice(),0,period));
+			}
+			else
+			{
+				bestml.setCurrentdrawjuice(bdml.getCurrentdrawjuice());
+			}
 		}
 
     }
@@ -446,7 +567,7 @@ public class BestLines {
 						double bestvisitspread = bvsl.getCurrentvisitspread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid)) {
 								bvsl = sl;
 							}
 
@@ -473,7 +594,7 @@ public class BestLines {
 						double besthomespread = bhsl.getCurrenthomespread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD")) {
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid)) {
 								bhsl = sl;
 							}
 
@@ -593,7 +714,7 @@ public class BestLines {
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
 
-							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER")) {
+							if (LinesMoves.isLine1BetterThanLine2(over, overjuice, bestover, bestoverjuice, leagueid, period, "OVER",gameid)) {
 								bo = tl;
 							}
 
@@ -621,7 +742,7 @@ public class BestLines {
 						double bestunder = bu.getCurrentunder();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER")) {
+							if (LinesMoves.isLine1BetterThanLine2(under, underjuice, bestunder, bestunderjuice, leagueid, period, "UNDER",gameid)) {
 								bu = tl;
 							}
 
@@ -746,37 +867,151 @@ public class BestLines {
         //log("bestline "+gameid+".."+period+".."+bvsl);
 		if (bvsl != null) {
 			bvsl.setBestVisitSpread(true);
+			Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
+			if(bestsl == null)
+			{
+				AppController.addSpreadline(new Spreadline(gameid,bestbookieid,bvsl.getCurrentvisitspread(),bvsl.getCurrentvisitjuice(),bvsl.getCurrenthomespread(),bvsl.getCurrenthomejuice(),0,period));
+			}
+			else
+			{
+				bestsl.setCurrentvisitspread(bvsl.getCurrentvisitspread());
+				bestsl.setCurrentvisitjuice(bvsl.getCurrentvisitjuice());
+			}
 		}
 		if (bhsl != null) {
 			bhsl.setBestHomeSpread(true);
+			Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
+			if(bestsl == null)
+			{
+				AppController.addSpreadline(new Spreadline(gameid,bestbookieid,bhsl.getCurrentvisitspread(),bhsl.getCurrentvisitjuice(),bhsl.getCurrenthomespread(),bhsl.getCurrenthomejuice(),0,period));
+			}
+			else
+			{
+				bestsl.setCurrenthomespread(bhsl.getCurrenthomespread());
+				bestsl.setCurrenthomejuice(bhsl.getCurrenthomejuice());
+			}
 		}
 		if (bo != null) {
 			bo.setBestOver(true);
+			Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
+			if(besttl == null)
+			{
+				AppController.addTotalline(new Totalline(gameid,bestbookieid,bo.getCurrentover(),bo.getCurrentoverjuice(),bo.getCurrentunder(),bo.getCurrentunderjuice(),0,period));
+			}
+			else
+			{
+				besttl.setCurrentover(bo.getCurrentover());
+				besttl.setCurrentoverjuice(bo.getCurrentoverjuice());
+			}
 		}
 		if (bu != null) {
 			bu.setBestUnder(true);
+			Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
+			if(besttl == null)
+			{
+				AppController.addTotalline(new Totalline(gameid,bestbookieid,bu.getCurrentover(),bu.getCurrentoverjuice(),bu.getCurrentunder(),bu.getCurrentunderjuice(),0,period));
+			}
+			else
+			{
+				besttl.setCurrentunder(bu.getCurrentunder());
+				besttl.setCurrentunderjuice(bu.getCurrentunderjuice());
+			}
 		}
 		if (bvml != null) {
 			bvml.setBestVisitMoney(true);
+			Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
+			if(bestml == null)
+			{
+				AppController.addMoneyline(new Moneyline(gameid,bestbookieid,bvml.getCurrentvisitjuice(),bvml.getCurrenthomejuice(),bvml.getCurrentdrawjuice(),0,period));
+			}
+			else
+			{
+				bestml.setCurrentvisitjuice(bvml.getCurrentvisitjuice());
+			}
+
+
 		}
 		if (bhml != null) {
 			bhml.setBestHomeMoney(true);
+			Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
+			if(bestml == null)
+			{
+				AppController.addMoneyline(new Moneyline(gameid,bestbookieid,bhml.getCurrentvisitjuice(),bhml.getCurrenthomejuice(),bhml.getCurrentdrawjuice(),0,period));
+			}
+			else
+			{
+				bestml.setCurrenthomejuice(bhml.getCurrenthomejuice());
+			}
 		}
 		if (bdml != null) {
 			bdml.setBestDrawMoney(true);
+			Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
+			if(bestml == null)
+			{
+				AppController.addMoneyline(new Moneyline(gameid,bestbookieid,bdml.getCurrentvisitjuice(),bdml.getCurrenthomejuice(),bdml.getCurrentdrawjuice(),0,period));
+			}
+			else
+			{
+				bestml.setCurrentdrawjuice(bdml.getCurrentdrawjuice());
+			}
 		}
+
 		if (bvo != null) {
 			bvo.setBestVisitOver(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bvo.getCurrentvisitover(),bvo.getCurrentvisitoverjuice(),bvo.getCurrentvisitunder(),bvo.getCurrentvisitunderjuice(),bvo.getCurrenthomeover(),bvo.getCurrenthomeoverjuice(),bvo.getCurrenthomeunder(),bvo.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrentvisitover(bvo.getCurrentvisitover());
+				bestttl.setCurrentvisitoverjuice(bvo.getCurrentvisitoverjuice());
+			}
+
 		}
 		if (bvu != null) {
 			bvu.setBestVisitUnder(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bvu.getCurrentvisitover(),bvo.getCurrentvisitoverjuice(),bvu.getCurrentvisitunder(),bvu.getCurrentvisitunderjuice(),bvu.getCurrenthomeover(),bvu.getCurrenthomeoverjuice(),bvu.getCurrenthomeunder(),bvu.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrentvisitunder(bvu.getCurrentvisitunder());
+				bestttl.setCurrentvisitunderjuice(bvu.getCurrentvisitunderjuice());
+			}
 		}
 		if (bho != null) {
 			bho.setBestHomeOver(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bho.getCurrentvisitover(),bho.getCurrentvisitoverjuice(),bho.getCurrentvisitunder(),bho.getCurrentvisitunderjuice(),bho.getCurrenthomeover(),bho.getCurrenthomeoverjuice(),bho.getCurrenthomeunder(),bho.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrenthomeover(bho.getCurrenthomeover());
+				bestttl.setCurrenthomeoverjuice(bho.getCurrenthomeoverjuice());
+			}
 		}
 		if (bhu != null) {
 			bhu.setBestHomeUnder(true);
+			TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
+			if(bestttl == null)
+			{
+				AppController.addTeamTotalline(new TeamTotalline(gameid,bestbookieid,bhu.getCurrentvisitover(),bhu.getCurrentvisitoverjuice(),bhu.getCurrentvisitunder(),bhu.getCurrentvisitunderjuice(),bhu.getCurrenthomeover(),bhu.getCurrenthomeoverjuice(),bhu.getCurrenthomeunder(),bhu.getCurrenthomeunderjuice(),0,period));
+			}
+			else
+			{
+				bestttl.setCurrenthomeunder(bhu.getCurrenthomeunder());
+				bestttl.setCurrenthomeunderjuice(bhu.getCurrenthomeunderjuice());
+			}
 		}
+
+
+
 
 //        if (bhsl != null) {
 //            //log("gameid="+gameid+"..bhsl="+bhsl.getBookieid()+"..bhsl="+bhsl.getCurrenthomespread()+bhsl.getCurrenthomejuice());

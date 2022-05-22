@@ -26,4 +26,13 @@ public class ViewValue {
         }
         tooltiptext = tooltiptext + newText;
     }
+    public static String format(double d)
+    {
+        if(d == (long) d)
+            return String.format("%d",(long)d);
+        else
+            return String.format("%s",d);
+    }
+
+
 }

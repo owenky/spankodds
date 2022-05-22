@@ -122,6 +122,15 @@ public class AppController {
     private static Map<String, TeamTotalline> liveteamtotals = new ConcurrentHashMap<>();
     private static Map<Integer, Color> bookiecolors = new ConcurrentHashMap<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
+
+    public static Map<String, Bookie> bestvisitspread = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> besthomespread = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestvisitml = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> besthomeml = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestdrawml = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestover = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestunder = new ConcurrentHashMap<>();
+
     private static final BookieManager bookieManager = BookieManager.instance();
     private static Games games = new Games();
     private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
