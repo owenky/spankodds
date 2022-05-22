@@ -6,14 +6,11 @@ import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.lineseeker.AlertLayout;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
@@ -72,8 +69,13 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem generallinealert = new JMenuItem("Line Moves");
         generallinealert.addActionListener(ae -> new LineAlert(stb).show(UIProperties.LineAlertDim));
 
-        JMenuItem majorlinemove = new JMenuItem("Line Seekers");
-        majorlinemove.addActionListener(ae -> new AlertLayout(stb).show(AlertLayout.dialogPreferredSize));
+        JMenu majorlinemove = new JMenu("Line Seekers");
+        JMenuItem lineSeekerConfig = new JMenuItem("Configuration");
+        lineSeekerConfig.addActionListener(ae -> new AlertLayout(stb).show(AlertLayout.dialogPreferredSize));
+        JMenuItem lineSeekerMethod = new JMenuItem("Alert Method");
+        lineSeekerMethod.addActionListener(this::openAlertMediaSettingDialog);
+        majorlinemove.add(lineSeekerConfig);
+        majorlinemove.add(lineSeekerMethod);
 
         JMenuItem openers = new JMenuItem("Openers");
         openers.addActionListener(ae -> new LineAlertOpeners(stb).show(UIProperties.LineAlertDim));
@@ -132,6 +134,11 @@ public class SportsMenuBar extends JMenuBar {
         add(settingmenu);
         JMenu fontconfig = FontConfig.instance().createFontMenu();
         settingmenu.add(fontconfig);
+    }
+    private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
+        LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb);
+        lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim);
+        lineSeekerAlertMethodDialog.updateAlertMethodAttr();
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);

@@ -1,26 +1,24 @@
 package com.sia.client.ui;
 
-import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.ui.lineseeker.AlertAttrManager;
+import com.sia.client.ui.lineseeker.AlertConfig;
 import com.sia.client.ui.lineseeker.AlertState;
-import com.sia.client.ui.lineseeker.SectionLayout;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.io.File;
-
-import static com.sia.client.config.Utils.log;
-import static com.sia.client.config.Utils.showMessageDialog;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
 
+    private final Map<String,LineSeekerAlertMethodStateLayout> layoutMap = new HashMap<>();
+    private final JButton saveBtn = new JButton("Save");
     public LineSeekerAlertMethodDialog(SportsTabPane stp) {
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
+        saveBtn.addActionListener(this::saveAlertMethodAttr);
     }
     @Override
     protected JComponent getUserComponent() {
@@ -32,18 +30,51 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog  {
         SportsTabPane stp = getSportsTabPane();
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         for(AlertState alertState: AlertState.values()) {
-            LineSeekerAlertMethodStateLayout stateLayout = new LineSeekerAlertMethodStateLayout(alertState.name());
+            userComponent.add(Box.createRigidArea(new Dimension(0, 3)));
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
 
             int width = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-25;
-            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-40)/3;
-            TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(alertState.name(),width,height,null,null);
+            int height = ((int)SiaConst.UIProperties.LineAlertMethodDim.getHeight()-75)/3;
+            TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",width,height,null,null);
             titledPanelGenerator.setTitleBarBgColor(Color.GRAY.brighter().brighter());
             titledPanelGenerator.setTitleBarFgColor(Color.BLACK);
             titledPanelGenerator.setBodyComponent(stateLayout.getLayoutPane(sw));
 
             userComponent.add(titledPanelGenerator.getPanel());
         }
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BorderLayout());
+        btnPanel.add(saveBtn,BorderLayout.CENTER);
+        userComponent.add(btnPanel);
         return userComponent;
+    }
+    private LineSeekerAlertMethodStateLayout getLineSeekerAlertMethodStateLayout(AlertState alertState) {
+        return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStateLayout(AlertAttrManager.getLineSeekerAlertMethodAttr(name)));
+    }
+    private void saveAlertMethodAttr(ActionEvent ae) {
+        for(AlertState alertState: AlertState.values()) {
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            stateLayout.saveMethodAttr();
+        }
+        close();
+    }
+    public void updateAlertMethodAttr() {
+        for(AlertState alertState: AlertState.values()) {
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            stateLayout.updateAlertMethodAttr();
+        }
+    }
+    @Override
+    public boolean isEdited() {
+        boolean isEdited = false;
+        for(AlertState alertState: AlertState.values()) {
+            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            isEdited = stateLayout.isEdited();
+            if ( isEdited) {
+                break;
+            }
+        }
+        return isEdited;
     }
 }
 

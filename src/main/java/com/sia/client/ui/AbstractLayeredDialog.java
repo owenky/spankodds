@@ -1,8 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
@@ -16,6 +17,14 @@ public abstract class AbstractLayeredDialog {
     public AbstractLayeredDialog(SportsTabPane stp,String title,int layer_index) {
         anchoredLayeredPane = new AnchoredLayeredPane(stp,layer_index);
         anchoredLayeredPane.setTitle(title);
+        anchoredLayeredPane.setCloseValidor(() -> {
+            if ( isEdited()) {
+                int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes?");
+                return JOptionPane.YES_OPTION == option;
+            } else {
+                return true;
+            }
+        });
     }
     public AbstractLayeredDialog(SportsTabPane stp,String title) {
         anchoredLayeredPane = new AnchoredLayeredPane(stp);
@@ -42,11 +51,13 @@ public abstract class AbstractLayeredDialog {
     public void close() {
         this.anchoredLayeredPane.close();
     }
-    public AbstractLayeredDialog withCloseValidor(Callable<Boolean> closeValidor) {
-        anchoredLayeredPane.withCloseValidor(closeValidor);
-        return this;
+    public void setCloseValidor(Callable<Boolean> closeValidor) {
+        anchoredLayeredPane.setCloseValidor(closeValidor);
     }
     public synchronized void addCloseAction(Runnable r) {
         anchoredLayeredPane.addCloseAction(r);
+    }
+    protected boolean isEdited() {
+        return false;
     }
 }

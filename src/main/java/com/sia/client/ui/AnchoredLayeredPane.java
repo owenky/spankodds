@@ -69,9 +69,8 @@ public class AnchoredLayeredPane implements ComponentListener {
     public SportsTabPane getSportsTabPane() {
         return stp;
     }
-    public AnchoredLayeredPane withCloseValidor(Callable<Boolean> closeValidor) {
+    public void setCloseValidor(Callable<Boolean> closeValidor) {
         this.closeValidor = closeValidor;
-        return this;
     }
     private void prepareListening() {
 		anchoredParentComp.addComponentListener(this);

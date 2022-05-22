@@ -8,9 +8,7 @@ import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.LineSeekerAlertMethodDialog;
 import com.sia.client.ui.TitledPanelGenerator;
-import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
 import com.sia.client.ui.games.GameSelectionItem;
@@ -25,12 +23,10 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.function.Supplier;
 
 
 public class AlertLayout extends AbstractLayeredDialog {
 
-    private static final String editIndicator="*";
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
     private static final int rowHeight =100;
@@ -46,8 +42,6 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private final List<SectionComponents> sectionComponentsList;
     private final JButton saveBtn = new JButton();
-    private final JButton alertMethodSetting = new LinkButton("Alert Method");
-    private LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog;
     private JComponent userComp;
 
     public AlertLayout(SportsTabPane stp) {
@@ -60,14 +54,6 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComps.addActionListener(alertComponentListener);
             sectionComponentsList.add(sectionComps);
         }
-        withCloseValidor(this::validateClose);
-        alertMethodSetting.addActionListener(this::openAlertMediaSettingDialog);
-        setTitlePanelRightComp(alertMethodSetting);
-        this.addCloseAction(()->{
-            if ( null != lineSeekerAlertMethodDialog) {
-                lineSeekerAlertMethodDialog.close();
-            }
-        });
     }
     private JComponent makeAlertComboBoxPanel() {
         JPanel panel = new JPanel();
@@ -335,7 +321,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         setEditStatus(false);
     }
     public void setEditStatus(boolean status) {
-        String statusTxt = status?editIndicator:"";
+        String statusTxt = status?SiaConst.EditedIndicator:"";
         this.editStatusLabel.setText(statusTxt);
         this.alertsCombobox.setEnabled(!status);
         String tooltipText = status ?"To select another Alert, please save or delete this configuration.":"";
@@ -348,31 +334,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
 
     }
+    @Override
     public boolean isEdited() {
-        return editIndicator.equals(editStatusLabel.getText());
-    }
-    private boolean validateClose() {
-        if ( isEdited()) {
-            int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes to this alert configuration?");
-            return JOptionPane.YES_OPTION == option;
-        } else {
-            return true;
-        }
-    }
-    private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
-        if ( null == lineSeekerAlertMethodDialog) {
-            lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(getSportsTabPane());
-            lineSeekerAlertMethodDialog.addCloseAction(()->alertMethodSetting.setEnabled(true));
-        }
-        final AbstractButton alertSettingBtn = (AbstractButton)actionEvent.getSource();
-        alertSettingBtn.setEnabled(false);
-        Supplier<Point> anchorLocSupplier = ()->{
-            JComponent userComp = getUserComponent();
-            Point userCompLoc = userComp.getLocationOnScreen();
-            return new Point( userCompLoc.x+ userComp.getWidth()+3, userCompLoc.y);
-
-        };
-        lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim,anchorLocSupplier);
+        return SiaConst.EditedIndicator.equals(editStatusLabel.getText());
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();

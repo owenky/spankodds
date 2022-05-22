@@ -3,54 +3,25 @@ package com.sia.client.ui;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.CheckBoxTree;
 import com.jidesoft.swing.JideTitledBorder;
-import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.tree.TreeUtils;
-import com.sia.client.config.Utils;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
+import com.sia.client.ui.comps.PopupLocationConfig;
 import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -71,10 +42,6 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     public static String[] gameperiod = new String[]{"Full Game", "1st Half", "2nd Half", "All Halfs", " ", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Live", "All Periods"};
     static int idx;
     JLabel welcome = new JLabel("LINE ALERT");
-    JideToggleButton upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
-    JideToggleButton upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
-    JideToggleButton lowerright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerright.png")));
-    JideToggleButton lowerleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerleft.png")));
     JComboBox renotifyComboBox;
     JButton testsound = new JButton("Test Sound");
     JButton testpopup = new JButton("Test Popup");
@@ -131,6 +98,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     private Hashtable leaguenameidhash = new Hashtable();
     private Hashtable bookienameidhash = new Hashtable();
     private String alerttype = "";
+    private final PopupLocationConfig popupLocationConfig = new PopupLocationConfig();
 
     public LineAlertOpeners(SportsTabPane stp) {
         super(stp,"Openers Line Alerts");
@@ -216,75 +184,28 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         display2[1] = "Bottom Left";
         display2[2] = "Top Right";
         display2[3] = "Bottom Right";
-//        JComboBox popuplocation = new JComboBox(display2);
         AppController.LineOpenerAlertNodeList.get(LineAlertOpeners.idx).popuplocationint = popuplocationint;
-        upperright.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                int i = LineAlertOpeners.idx;
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    popuplocationint = SwingConstants.NORTH_EAST;
-                    AppController.LineOpenerAlertNodeList.get(i).isUpperRight = true;
-                    AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
-                } else {
-                    AppController.LineOpenerAlertNodeList.get(i).isUpperRight = false;
-                }
-            }
-        });
-        upperleft.addItemListener(e -> {
+        PopupLocationConfig.PopupLocationListener popupLocationListener = (popUpLocation)-> {
             int i = LineAlertOpeners.idx;
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                popuplocationint = SwingConstants.NORTH_WEST;
+            AppController.LineOpenerAlertNodeList.get(i).isUpperRight = false;
+            AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = false;
+            AppController.LineOpenerAlertNodeList.get(i).isLowerRight = false;
+            AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = false;
+            popuplocationint = popUpLocation.getLocation();
+            AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
+            if ( popUpLocation == LineSeekerAlertMethodAttr.PopupLocation.TOP_RIGHT) {
+                AppController.LineOpenerAlertNodeList.get(i).isUpperRight = true;
+            } else if ( popUpLocation == LineSeekerAlertMethodAttr.PopupLocation.TOP_LEFT) {
                 AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = true;
-                AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
-            } else {
-                AppController.LineOpenerAlertNodeList.get(i).isUpperLeft = true;
-            }
-        });
-        lowerright.addItemListener(e -> {
-            int i = LineAlertOpeners.idx;
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                popuplocationint = SwingConstants.SOUTH_EAST;
+            } else if ( popUpLocation == LineSeekerAlertMethodAttr.PopupLocation.BOTTOM_LEFT) {
+                AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
+            } else if ( popUpLocation == LineSeekerAlertMethodAttr.PopupLocation.BOTTOM_RIGHT) {
                 AppController.LineOpenerAlertNodeList.get(i).isLowerRight = true;
-                AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
-            } else {
-                AppController.LineOpenerAlertNodeList.get(i).isLowerRight = false;
             }
-        });
-        lowerleft.addItemListener(e -> {
-            int i = LineAlertOpeners.idx;
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                popuplocationint = SwingConstants.SOUTH_WEST;
-                AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
-                AppController.LineOpenerAlertNodeList.get(i).popuplocationint = popuplocationint;
 
-            } else {
-                AppController.LineOpenerAlertNodeList.get(i).isLowerLeft = true;
-            }
-        });
-
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(upperright);
-        group.add(upperleft);
-        group.add(lowerright);
-        group.add(lowerleft);
-
-        JPanel radioPanel = new JPanel(new GridLayout(2, 2, 0, 0));
-
-        if (popuplocationint == SwingConstants.NORTH_EAST) {
-            upperright.setSelected(true);
-        } else if (popuplocationint == SwingConstants.NORTH_WEST) {
-            upperleft.setSelected(true);
-        } else if (popuplocationint == SwingConstants.SOUTH_EAST) {
-            lowerright.setSelected(true);
-        } else if (popuplocationint == SwingConstants.SOUTH_WEST) {
-            lowerleft.setSelected(true);
-        }
-        radioPanel.add(upperleft);
-        radioPanel.add(upperright);
-        radioPanel.add(lowerleft);
-        radioPanel.add(lowerright);
-
+        };
+        popupLocationConfig.setPopupLocationListener(popupLocationListener);
+        popupLocationConfig.setSelectedPopupLocation(popuplocationint);
 
         sportComboBox.setSelectedIndex(0);
         sportComboBox.addItemListener(this);
@@ -874,7 +795,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         panel.add(popupcheckbox, c);
         c.gridx = 2;
         c.gridwidth = 1;
-        panel.add(radioPanel, c);
+        panel.add(popupLocationConfig.getUserComponent(), c);
         c.gridx = 3;
         c.gridwidth = 1;
         panel.add(forlab, c);
@@ -1609,18 +1530,6 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                     popupcheckbox.setSelected(true);
                     popupsecsComboBox.setSelectedItem("" + AppController.LineOpenerAlertNodeList.get(i).showpopvalue);
 
-                }
-                if (AppController.LineOpenerAlertNodeList.get(i).isUpperLeft) {
-                    upperleft.setSelected(true);
-                }
-                if (AppController.LineOpenerAlertNodeList.get(i).isUpperRight) {
-                    upperright.setSelected(true);
-                }
-                if (AppController.LineOpenerAlertNodeList.get(i).isLowerLeft) {
-                    lowerleft.setSelected(true);
-                }
-                if (AppController.LineOpenerAlertNodeList.get(i).isLowerRight) {
-                    lowerright.setSelected(true);
                 }
                 renotifyComboBox.setSelectedItem("" + AppController.LineOpenerAlertNodeList.get(i).renotifyvalue);
 
