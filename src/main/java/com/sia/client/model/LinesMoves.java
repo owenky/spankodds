@@ -560,6 +560,13 @@ public class LinesMoves
         {
            System.out.println("oldline=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice);
         }
+
+        boolean easygood = isLine1BetterThanLine2NoMath(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid);
+
+        if(easygood)
+        {
+            return 1;
+        }
         double[] arr = new double[100];
 
         arr = getleagueidArray(leagueid,period,type);
@@ -570,7 +577,7 @@ public class LinesMoves
         double negativefactor = 1;
 
         // if( ( oldline+newline == 0 && type.equals("SPREAD")) || ( oldline-newline == 0 && type.equals("TOTAL"))) // difference == 0
-        if( type.equals("MONEYLINE") || ( oldline == newline && type.equals("SPREAD")) || ( oldline-newline == 0 &&   (  type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER")          )  )) // difference == 0
+        if( type.equals("MONEYLINE") || ( oldline == newline && type.equals("SPREAD")) || ( oldline-newline == 0 &&   (  type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER") || type.equals("TTOVER") || type.equals("TTUNDER")         )  )) // difference == 0
         {
             juicepercent = percentageofjuicemove(oldjuice,newjuice);
             if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
@@ -711,6 +718,32 @@ public class LinesMoves
         else
         {
             return false;
+        }
+
+    }
+    public static boolean isLine1BetterThanLine2NoMath(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid)
+    {
+        if(oldjuice == 0)
+        {
+            return false;
+        }
+        if(type.indexOf("OVER") != -1)
+        {
+            if (oldline <= newline && oldjuice >= newjuice) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        }
+        else
+        {
+            if (oldline >= newline && oldjuice >= newjuice) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
     }

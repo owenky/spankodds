@@ -11,6 +11,8 @@ import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
 
+// this manages both linealerts and line seekers
+
 public class LineAlertManager {
     public static void checkMove(Line line) {
         if (line == null) {
@@ -212,6 +214,21 @@ public class LineAlertManager {
             }
 
 
+        }
+
+        Vector lineseekernodes = AppController.getLineSeekerNodes();
+        //log(linealertnodes.size());
+        for (int i = 0; i < lineseekernodes.size(); i++)
+        {
+            try {
+                LineSeekerNode lsn = (LineSeekerNode) lineseekernodes.elementAt(i);
+                lsn.doesthislinequalify(line);
+
+                }
+            catch (Exception ex)
+            {
+                log(ex);
+            }
         }
 
     }
