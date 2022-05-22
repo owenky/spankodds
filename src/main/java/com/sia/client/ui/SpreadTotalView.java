@@ -278,7 +278,7 @@ public class SpreadTotalView extends ViewValue {
                     }
 
                 }
-            } else if (visitspread < 0) // visitor is the favorite
+            } else if (visitspread < 0 && homespread > 0) // visitor is the favorite
             {
                 topboxS = sl.getShortPrintedCurrentSpread();
                 topcolor = spreadcolor;
@@ -325,7 +325,7 @@ public class SpreadTotalView extends ViewValue {
                         bottomicon = ICON_BLANK;
                     }
                 }
-            } else if (visitspread > 0) {
+            } else if (visitspread > 0 && homespread < 0) {
                 if (over == 99999) {
                     topboxS = "";
                     topcolor = Color.WHITE;
@@ -370,7 +370,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     bottomicon = ICON_BLANK;
                 }
-            } else // game is a pickem
+            } else if(visitspread == homespread && visitspread == 0) // game is a pickem ....not nececsaiirry with best column!
             {
                 if (visitjuice < homejuice) {
                     topboxS = sl.getShortPrintedCurrentSpread();
@@ -465,6 +465,59 @@ public class SpreadTotalView extends ViewValue {
                     }
                 }
 
+            }
+            else
+                { // two positives or twonegatvles
+                    String sign = "";
+                    if(visitspread > 0)
+                    {
+                        sign= "+";
+                    }
+                    topboxS = sign+sl.getShortPrintedCurrentSpread();
+                    topcolor = spreadcolor;
+                    if (sl.isBestVisitSpread()) {
+                        topborder += "bestvisitspread";
+                    }
+                    if (sl.isBestHomeSpread()) {
+                        topborder += "besthomespread";
+                    }
+                    if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
+                    {
+                        topborder += "scalp";
+                    }
+                    if (whowasbetspread.equals("h")) {
+                        topicon = ICON_DOWN;
+                    } else if (whowasbetspread.equals("v")) {
+                        topicon = ICON_UP;
+                    } else {
+                        topicon = ICON_BLANK;
+                    }
+
+
+                    if (over == 99999) {
+                        bottomboxS = "";
+                        bottomcolor = Color.WHITE;
+                    } else {
+                        bottomboxS = tl.getShortPrintedCurrentTotal();
+                        bottomcolor = totalcolor;
+                        if (tl.isBestOver()) {
+                            bottomborder += "bestover";
+                        }
+                        if (tl.isBestUnder()) {
+                            bottomborder += "bestunder";
+                        }
+                        if(overjuice+underjuice>0 && under >= over)
+                        {
+                            bottomborder += "scalp";
+                        }
+                        if (whowasbettotal.equals("u")) {
+                            bottomicon = ICON_DOWN;
+                        } else if (whowasbettotal.equals("o")) {
+                            bottomicon = ICON_UP;
+                        } else {
+                            bottomicon = ICON_BLANK;
+                        }
+                    }
             }
         } else if (display.equals("totalmoney") || display.equals("totalbothmoney")) {
             showcomebacks = display.equals("totalbothmoney");
@@ -614,22 +667,50 @@ public class SpreadTotalView extends ViewValue {
                 bottomboxS = "";
                 topcolor = bottomcolor = Color.WHITE; //spreadcolor;
             } else {
-                if (visitspread == 0) {
-                    if (visitjuice < homejuice) {
+                if (visitspread == 0 && homespread == 0)
+                {
+                    if (visitjuice < homejuice)
+                    {
                         topboxS = sl.getShortPrintedCurrentSpread();
                         bottomboxS = sl.getOtherPrintedCurrentSpread();
-                    } else {
+                    }
+                    else
+                    {
                         bottomboxS = sl.getShortPrintedCurrentSpread();
                         topboxS = sl.getOtherPrintedCurrentSpread();
                     }
-                } else if (visitspread < 0) {
+                }
+                else if (visitspread < 0 && homespread > 0)
+                {
                     topboxS = "-" + sl.getShortPrintedCurrentSpread();
                     bottomboxS = "+" + sl.getOtherPrintedCurrentSpread();
-                } else {
+                }
+                else if(visitspread > 0 && homespread < 0)
+                {
                     bottomboxS = "-" + sl.getShortPrintedCurrentSpread();
                     topboxS = "+" + sl.getOtherPrintedCurrentSpread();
                 }
-
+                // here are new cases for best column
+                else if(visitspread < 0 && homespread < 0)
+                {
+                    topboxS = "-" + sl.getShortPrintedCurrentSpread();
+                    bottomboxS = "-" + sl.getOtherPrintedCurrentSpread();
+                }
+                else if(visitspread > 0 && homespread > 0)
+                {
+                    topboxS = "+" + sl.getShortPrintedCurrentSpread();
+                    bottomboxS = "+" + sl.getOtherPrintedCurrentSpread();
+                }
+                else if(visitspread < homespread )
+                {
+                    topboxS = "+" + sl.getShortPrintedCurrentSpread();
+                    bottomboxS = "+" + sl.getOtherPrintedCurrentSpread();
+                }
+                else if(homespread <= visitspread)
+                {
+                    bottomboxS = "+" + sl.getShortPrintedCurrentSpread();
+                    topboxS = "+" + sl.getOtherPrintedCurrentSpread();
+                }
                 if (sl.isBestVisitSpread()) {
                     topborder += "bestvisitspread";
                 }

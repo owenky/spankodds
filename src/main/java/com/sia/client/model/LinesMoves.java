@@ -2,7 +2,7 @@ package com.sia.client.model;
 
 public class LinesMoves
 {
-
+    static int debuggameid = 905;
     static boolean debug = false;
     static boolean initialized = false;
     static double[] cfsides = new double[100];
@@ -49,9 +49,13 @@ public class LinesMoves
         mlbtotals[9] = .103;
         mlbtotals[10] = .065;
         mlbtotals[11] = .089;
+        mlbtotals[12] = .055; // made up
+        mlbtotals[13] = .079; // made up
 
         mlbh1totals[4] = .14;
         mlbh1totals[5] = .12;
+        mlbh1totals[6] = .12; // made up
+        mlbh1totals[7] = .10; // made up
 
 
 
@@ -500,13 +504,16 @@ public class LinesMoves
         // newjuice is closing line
         //System.out.println("JUICE INPUTS..oj="+oldjuice+"..nj="+newjuice);
         double percentmove = 0;
+        double percentmove2 = 0;
+        double percentmovefinal = 0;
         if(newjuice < 0 && oldjuice < 0)
         {
             double newj = (newjuice/(newjuice-100));
             double oldj = oldjuice/(oldjuice-100);
             //System.out.println("newj="+newj);
             //System.out.println("oldj="+oldj);
-            percentmove = (newj-oldj)/oldj;
+            percentmovefinal = (newj-oldj)/oldj;
+
             //percentmove = ( newjuice/(newjuice-100) - oldjuice/(oldjuice-100))/((oldjuice/(oldjuice-100)));
 
         }
@@ -516,7 +523,7 @@ public class LinesMoves
             double oldj = 1- (oldjuice/(oldjuice+100));
             //System.out.println("newj="+newj);
             //System.out.println("oldj="+oldj);
-            percentmove = (newj-oldj)/oldj;
+            percentmovefinal = (newj-oldj)/oldj;
             //percentmove = ( ((1 - newjuice/(newjuice+100)) - (1 - oldjuice/(oldjuice+100)))/(1 - (oldjuice/(oldjuice+100))));
 
         }
@@ -526,9 +533,11 @@ public class LinesMoves
             double oldj = oldjuice/(oldjuice-100);
             //System.out.println("newj="+newj);
             //System.out.println("oldj="+oldj);
-            percentmove = (newj-oldj)/oldj;
+            percentmove = Math.abs((newj-oldj)/oldj);
+            percentmove2 = Math.abs((oldj-newj)/newj);
+            percentmovefinal = (percentmove+percentmove2)/-2.0;
 
-            //percentmove = ( ((1 - newjuice/(newjuice+100)) - (oldjuice/(oldjuice-100)))/((oldjuice/(oldjuice-100))));
+
 
         }
         else if(newjuice < 0 && oldjuice > 0)
@@ -537,15 +546,17 @@ public class LinesMoves
             double oldj = 1- (oldjuice/(oldjuice+100));
             //System.out.println("newj="+newj);
             //System.out.println("oldj="+oldj);
-            percentmove = (newj-oldj)/oldj;
-            //percentmove = ( ((newjuice/(newjuice-100)) - (1 - oldjuice/(oldjuice+100)))/(1 - (oldjuice/(oldjuice+100))));
+            percentmove = Math.abs((newj-oldj)/oldj);
+            percentmove2 = Math.abs((oldj-newj)/newj);
+            percentmovefinal = (percentmove+percentmove2)/2.0;
+
 
         }
-        return percentmove;
+        return percentmovefinal;
     }
     public static double percentOfMove(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid)
     {
-        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
         {
            System.out.println("oldline=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice);
         }
@@ -562,7 +573,7 @@ public class LinesMoves
         if( type.equals("MONEYLINE") || ( oldline == newline && type.equals("SPREAD")) || ( oldline-newline == 0 &&   (  type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER")          )  )) // difference == 0
         {
             juicepercent = percentageofjuicemove(oldjuice,newjuice);
-            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
             {
                 System.out.println("juicepercent="+juicepercent);
             }
@@ -651,7 +662,7 @@ public class LinesMoves
             st = en;
             en = temp;
         }
-        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
         {
             System.out.println("********STARTING AT="+st+"..to="+en);
         }
@@ -666,16 +677,16 @@ public class LinesMoves
             }
 
             prob = prob+arr[positiveindex]/2.0*negativefactor;
-            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
             {
-                System.out.println("oldline="+oldline+".."+oldjuice+"..newline="+newline+".."+newjuice+".."+index + ".." + arr[positiveindex] / 2.0 * negativefactor);
+                System.out.println("forloop...ol="+oldline+".."+oldjuice+"..newline="+newline+".."+newjuice+".."+index + ".." + arr[positiveindex] / 2.0 * negativefactor);
             }
         }
 
         //prob = prob *negativefactor;
         double linepercent = (prob-.5)/.5; // use 50% and no vig
         double totalpercent = juicepercent+linepercent;
-        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == 957 && debug)
+        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
         {
             System.out.println("totalpercent="+totalpercent);
         }

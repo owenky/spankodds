@@ -305,8 +305,11 @@ public class Spreadline extends Line {
     }
 
     public String getShortPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
-
-
+        boolean debug = false;
+        if(period == 1 && gameid == 903 && bookieid==996 && debug)
+        {
+            System.out.println(bookieid+"...leagueid="+leagueid+"...SHORTPRINTEDSPREAD="+vspread+".."+vjuice+".vs."+hspread+".."+hjuice);
+        }
         String retvalue = "";
 		if (vjuice == 0) {
 			return "";
@@ -321,12 +324,20 @@ public class Spreadline extends Line {
         } else if (vspread > hspread) {
             spreadd = hspread;
             juice = hjuice;
-        } else // game is a pk
+        } else if(vspread == hspread && vspread == 0)// game is a pk
         {
             juice = min(vjuice, hjuice);
+        }
+        else // two positives most like two +.5
+        {
+            spreadd = vspread;
+            juice = vjuice;
 
         }
-        spreadd = spreadd * -1; // take out minus sign
+        if(spreadd < 0)
+        {
+            spreadd = spreadd * -1; // take out minus sign
+        }
 
         String spread = spreadd + "";
         if (spreadd < 1 && spreadd != 0 && spread.startsWith("0")) {
@@ -386,6 +397,12 @@ public class Spreadline extends Line {
             retvalue = ".75";
         }
         char half = AsciiChar.getAscii(170);
+
+        if(period == 1 && gameid == 903 && debug && bookieid==996)
+        {
+            System.out.println("retvalue="+retvalue);
+        }
+
 
         retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
@@ -407,12 +424,18 @@ public class Spreadline extends Line {
     }
 
     public String getOtherPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
-
-
+        boolean debug = false;
+        if(period == 1 && gameid == 903 && bookieid==996 && debug)
+        {
+            System.out.println(bookieid+"OTHERPRINTEDSPREAD="+vspread+".."+vjuice+".vs."+hspread+".."+hjuice);
+        }
         String retvalue = "";
 		if (vjuice == 0) {
 			return "";
 		}
+
+
+
         double spreadd = 0;
         double juice = 0;
         if (vspread < hspread) {
@@ -421,11 +444,19 @@ public class Spreadline extends Line {
         } else if (vspread > hspread) {
             spreadd = vspread;
             juice = vjuice;
-        } else // game is a pk
-        {
-            juice = max(vjuice, hjuice);
 
         }
+        else if(vspread == hspread && vspread == 0)// game is a pk
+        {
+            juice = max(vjuice, hjuice);
+        }
+        else // two positives or two negatives  most likely two +.5 for best column
+        {
+            spreadd = hspread;
+            juice = hjuice;
+
+        }
+
 
 
         String spread = spreadd + "";
@@ -486,6 +517,12 @@ public class Spreadline extends Line {
         if (retvalue.equals("0.75") || retvalue.equals("0.750")) {
             retvalue = ".75";
         }
+        if(period == 1 && gameid == 903 && debug && bookieid==996)
+        {
+            System.out.println("retvalue="+retvalue);
+        }
+
+
         retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
         retvalue = retvalue.replace(".75", "\u00BE");
