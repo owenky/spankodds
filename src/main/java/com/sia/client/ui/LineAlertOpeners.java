@@ -6,6 +6,7 @@ import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -29,10 +30,8 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
@@ -685,7 +684,8 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 
         testsound.addActionListener(ae -> {
             try {
-                playSound("openers.wav");
+               // playSound("openers.wav");
+                SoundPlayer.playSound("openers.wav");
             } catch (Exception ex) {
                 showMessageDialog(null, "Error Playing File!");
                 log(ex);
