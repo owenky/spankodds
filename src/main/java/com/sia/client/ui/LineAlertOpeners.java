@@ -302,7 +302,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 
         JLabel forlab = new JLabel("for ");
         JLabel secondslab = new JLabel("seconds");
-        JLabel renotifyme = new JLabel("Renotify me on same Sport only after");
+        JLabel renotifyme = new JLabel("Renotify me on same Sport+Bookie only after");
         JLabel renotifyme2 = new JLabel(" minutes have elapsed");
 
 
