@@ -5,8 +5,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-class LineOpenerAlertNode{
-	
+public class LineOpenerAlertNode{
+	String delimiter = "|";
 	String SportName;
 	boolean isSpreadCheck=false;
 	boolean isTotalCheck=false;
@@ -31,12 +31,14 @@ class LineOpenerAlertNode{
 	
 	boolean isAudioChecks=false;
 	boolean isShowpopChecks=false;
+
+	boolean isTextChecks=false;
 	
 	
 	Instant start=Instant.now();
 	
-	int showpopvalue;
-	int popuplocationint=SwingConstants.SOUTH_EAST;
+	int showpopvalue = 5;
+	int popuplocationint;
 	
 	String audiovalue="Major Line Move";
 	
@@ -45,10 +47,14 @@ class LineOpenerAlertNode{
 	ArrayList bookies=new ArrayList();
 	ArrayList periods=new ArrayList();
 	int sports_id;
-	int popupsec=1;
+	int popupsec=10;
 	
 	Vector checkedLeagueNodes=new Vector();
 	Vector checkedBookieNodes=new Vector();
+
+
+	List<String> sportcodes = new ArrayList<>();
+	List<String> bookiecodes = new ArrayList<>();
 	
 	boolean isAllLeaguesSelected=false;
 	boolean isAllBookiesSelected=false;
@@ -60,7 +66,90 @@ class LineOpenerAlertNode{
 	{
 		this.SportName=SportName;
 	}
-	
-	
+
+
+	public String getSport()
+	{
+		return SportName;
+	}
+	public void setSport(String SportName)
+	{
+		this.SportName = SportName;
+	}
+	public String toString()
+	{
+		String str = SportName+delimiter
+				//+checkedLeagueNodes.toString()+delimiter
+				//+checkedBookieNodes.toString()+delimiter
+				+((sportcodes.toString()).replace("[","")).replace("]","")+delimiter
+				+((bookiecodes.toString()).replace("[","")).replace("]","")+delimiter
+				+isFullGameCheck+delimiter
+				+is1stHafCheck+delimiter
+				+is2ndHalfCheck+delimiter
+				+is1stQutCheck+delimiter
+				+is2ndQutCheck+delimiter
+				+is3rdQutCheck+delimiter
+				+is4thQutCheck+delimiter
+				+isSpreadCheck+delimiter
+				+isTotalCheck+delimiter
+				+isMoneyCheck+delimiter
+				+isTeamTotalCheck+delimiter
+				+isAudioChecks+delimiter
+				+isShowpopChecks+delimiter
+				+popuplocationint+delimiter
+				+popupsec+delimiter
+				+renotifyvalue+delimiter
+				+soundfile+delimiter
+				+isTextChecks+delimiter;
+
+
+		return str;
+	}
+
+	public LineOpenerAlertNode(String SportName,
+								ArrayList leagues,
+				ArrayList bookies,
+				boolean isFullGameCheck,
+	boolean is1stHafCheck,
+	boolean is2ndHalfCheck,
+	boolean is1stQutCheck,
+	boolean is2ndQutCheck,
+	boolean is3rdQutCheck,
+	boolean is4thQutCheck,
+	boolean isSpreadCheck,
+	boolean isTotalCheck,
+	boolean isMoneyCheck,
+	boolean isTeamTotalCheck,
+	boolean isAudioChecks,
+	boolean isShowpopChecks,
+	int popuplocationint,
+	int popupsec,
+	double renotifyvalue,
+				String soundfile,boolean isTextChecks)
+	{
+		this.SportName = SportName;
+		this.sportcodes = leagues;
+		this.bookiecodes = bookies;
+		this.isFullGameCheck = isFullGameCheck;
+		this.is1stHafCheck = is1stHafCheck;
+		this.is2ndHalfCheck = is2ndHalfCheck;
+		this.is1stQutCheck = is1stQutCheck;
+		this.is2ndQutCheck = is2ndQutCheck;
+		this.is3rdQutCheck = is3rdQutCheck;
+		this.is4thQutCheck = is4thQutCheck;
+		this.isSpreadCheck = isSpreadCheck;
+		this.isTotalCheck = isTotalCheck;
+		this.isMoneyCheck = isMoneyCheck;
+		this.isTeamTotalCheck = isTeamTotalCheck;
+		this.isAudioChecks = isAudioChecks;
+		this.isShowpopChecks = isShowpopChecks;
+		this.popuplocationint = popuplocationint;
+		this.popupsec = popupsec;
+		this.renotifyvalue = renotifyvalue;
+		this.soundfile = soundfile;
+		this.isTextChecks = isTextChecks;
+
+	}
+
 
 }

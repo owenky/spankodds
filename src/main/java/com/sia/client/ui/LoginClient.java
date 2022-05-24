@@ -207,7 +207,12 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setBookieColumnsChanged(text);
-            } else if ( messageType.equals("loginkey")) {
+             } else if ( messageType.equals("openeralert")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                AppController.getUser().setOpeneralert(text);
+            }
+            else if ( messageType.equals("loginkey")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setLoginKey(text);
@@ -360,6 +365,7 @@ public class LoginClient implements MessageListener {
 
             } else if (messageType.equals("Unsubscribe")) {
 
+                AppController.createLineOpenerAlertNodeListFromUserPrefs();
                 AppController.createGamesConsumer();
                 AppController.createScoresConsumer();
                 AppController.createUrgentsConsumer();

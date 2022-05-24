@@ -304,6 +304,55 @@ public class AppController {
         LineOpenerAlertNodeList.add(autoracing);
     }
 
+    public static void createLineOpenerAlertNodeListFromUserPrefs() {
+
+        String openerdata = getUser().getOpeneralert();
+        String lans[] = openerdata.split("~");
+        for(int i = 0;i < lans.length; i++)
+        {
+            String[] items = lans[i].split("\\|");
+            if(items.length > 1)
+            {
+
+                 String[] sportcodeselements = items[1].split(",\\s* ");
+                List<String> sportcodeslist = Arrays.asList(sportcodeselements);
+                ArrayList<String> sportcodesarraylist = new ArrayList<String>(sportcodeslist);
+
+                String[] bookieselements = items[2].split(",\\s* ");
+                List<String> bookieslist = Arrays.asList(bookieselements);
+                ArrayList<String> bookiesarraylist = new ArrayList<String>(bookieslist);
+
+
+                LineOpenerAlertNode lan = new LineOpenerAlertNode(
+                        items[0],
+                        sportcodesarraylist,
+                        bookiesarraylist,
+                        Boolean.parseBoolean(items[3]),
+                        Boolean.parseBoolean(items[4]),
+                        Boolean.parseBoolean(items[5]),
+                        Boolean.parseBoolean(items[6]),
+                        Boolean.parseBoolean(items[7]),
+                        Boolean.parseBoolean(items[8]),
+                        Boolean.parseBoolean(items[9]),
+                        Boolean.parseBoolean(items[10]),
+                        Boolean.parseBoolean(items[11]),
+                        Boolean.parseBoolean(items[12]),
+                        Boolean.parseBoolean(items[13]),
+                        Boolean.parseBoolean(items[14]),
+                        Boolean.parseBoolean(items[15]),
+                        Integer.parseInt(items[16]),
+                        Integer.parseInt(items[17]),
+                        Double.parseDouble(items[18]),
+                        items[19],
+                        Boolean.parseBoolean(items[20]));
+                log("about to add opener="+lan);
+                LineOpenerAlertNodeList.set(i,lan);
+
+            }
+        }
+
+    }
+
 
     public static void addLineAlertNode(LineAlertNode lan) {
 

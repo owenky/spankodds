@@ -162,4 +162,5 @@ public class Line {
 	public final void setOpenerts(long openerts) {
 		this.openerts = openerts;
 	}
+	public String getOpener() { return "";}
 }

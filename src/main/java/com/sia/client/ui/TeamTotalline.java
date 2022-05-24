@@ -197,6 +197,7 @@ public class TeamTotalline extends Line {
                 this.setOpenervisitunder(visitunder);
                 this.setOpenervisitunderjuice(visitunderjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
       //  }
 
@@ -704,7 +705,11 @@ public class TeamTotalline extends Line {
     public void setOpenerhomeunderjuice(double openerhomeunderjuice) {
         this.openerhomeunderjuice = openerhomeunderjuice;
     }
-
+    @Override
+    public String getOpener()
+    {
+        return getShortPrintedOpenerVisitTotal()+"/"+getOtherPrintedOpenerVisitTotal();
+    }
 
 }
 

@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.LineAlertManager;
+import com.sia.client.ui.LineAlertOpenerManager;
 
 import java.io.Serializable;
 
@@ -174,6 +175,7 @@ public class Moneyline extends Line implements Serializable {
             if (isopener) {
                 this.setOpenerdrawjuice(drawjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
         }
 
@@ -296,4 +298,9 @@ public class Moneyline extends Line implements Serializable {
         this.openerdrawjuice = openerdrawjuice;
     }
 
+    @Override
+    public String getOpener()
+    {
+        return getOpenervisitjuice()+"/"+getOpenerhomejuice();
+    }
 }

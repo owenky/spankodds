@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
+import com.sia.client.ui.LineAlertOpenerManager;
 
 import static com.sia.client.config.Utils.log;
 
@@ -192,6 +193,7 @@ public class Spreadline extends Line {
                 this.setOpenervisitspread(visitspread);
                 this.setOpenervisitjuice(visitjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
        // }
       //  if (homejuice != 0)
@@ -579,5 +581,10 @@ public class Spreadline extends Line {
         this.openerhomejuice = openerhomejuice;
     }
 
+    @Override
+    public String getOpener()
+    {
+        return getShortPrintedOpenerSpread()+"/"+getOtherPrintedOpenerSpread();
+    }
 
 }

@@ -170,6 +170,7 @@ public class Totalline extends Line implements Serializable {
                 this.setOpenerunder(under);
                 this.setOpenerunderjuice(underjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
        // }
 
@@ -522,5 +523,12 @@ public class Totalline extends Line implements Serializable {
     public void setOpenerunderjuice(double openerunderjuice) {
         this.openerunderjuice = openerunderjuice;
     }
+
+    @Override
+    public String getOpener()
+    {
+        return getShortPrintedOpenerTotal()+"/"+getOtherPrintedOpenerTotal();
+    }
+
 
 }
