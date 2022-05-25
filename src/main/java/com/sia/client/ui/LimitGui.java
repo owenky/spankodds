@@ -370,7 +370,8 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
         panel2.setBorder(BorderFactory.createEtchedBorder());
         panel2.setLayout(new GridBagLayout());
 
-        JLabel forlab = new JLabel("for ");
+        JLabel forlab = new JLabel("for length (secs) =");
+        JLabel percentlab = new JLabel("%");
         JLabel secondslab = new JLabel("seconds");
         JLabel renotifyme = new JLabel("Renotify me on same Sport+Bookie only after");
         JLabel renotifyme2 = new JLabel(" minutes have elapsed");
@@ -546,33 +547,37 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
         c.gridx = 0;
         c.gridwidth = 2;
         panel.add(popupcheckbox, c);
-        c.gridx = 2;
-        c.gridwidth = 2;
-        c.gridheight = 2;
-        panel.add(radioPanel, c);
+
 
 
         // panel.add(popupLocationConfig.getUserComponent(), c);
-        c.gridx = 4;
+        c.gridheight = 2;
+        c.gridx = 2;
         c.gridwidth = 1;
         panel.add(forlab, c);
-        c.gridx = 5;
+        c.gridx =3;
         c.gridwidth = 1;
         panel.add(popupsecsComboBox, c);
 
-        c.gridx = 6;
+       // c.gridx = 4;
+        //c.gridwidth = 1;
+       //panel.add(secondslab, c);
+        c.gridx = 4;
         c.gridwidth = 1;
-       panel.add(secondslab, c);
-        c.gridx = 7;
-        c.gridwidth = 1;
-        panel.add(testpopup, c);
-
+        c.gridheight = 2;
+        panel.add(radioPanel, c);
+       // c.gridx = 7;
+       // c.gridwidth = 1;
+       // panel.add(testpopup, c);
+        c.gridheight = 1;
         c.gridy = 25;
         c.gridx = 0;
         c.gridwidth=2;
         c.gridheight=1;
         panel.add(popupcheckbox2, c);
-
+        // c.gridx = 2;
+        // c.gridwidth = 1;
+        //  panel.add(testpopup, c);
 
 
         c.gridy = 26;
@@ -593,10 +598,13 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
        // c.anchor=GridBagConstraints.BASELINE_TRAILING;
         panel.add(minpercentagelab, c);
       //  c.anchor=GridBagConstraints.BASELINE_LEADING;
-        c.gridx = 4;
+        c.gridx = 3;
         c.gridwidth=1;
         panel.add(percentageComboBox, c);
-
+        c.anchor=GridBagConstraints.BELOW_BASELINE_LEADING;
+        c.gridx = 4;
+        c.gridwidth=1;
+        panel.add(percentlab, c);
 
 
 
