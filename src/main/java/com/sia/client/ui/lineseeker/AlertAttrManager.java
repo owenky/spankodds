@@ -83,9 +83,12 @@ public class AlertAttrManager {
         return rtn;
     }
     public static Map<String, LineSeekerAlertMethodAttr> getAlertMethodMap() {
-        return getAlertAttColl().getAlertMethodMap();
+        return getAlertAttColl().getAlertSeekerMethods().getAlertMethodMap();
     }
     public static  LineSeekerAlertMethodAttr getLineSeekerAlertMethodAttr(String alertState) {
-        return getAlertAttColl().getAlertMethodMap().computeIfAbsent(alertState, LineSeekerAlertMethodAttr::new);
+        return getAlertMethodMap().computeIfAbsent(alertState, LineSeekerAlertMethodAttr::new);
+    }
+    public static AlertSeekerMethods getAlertSeekerMethods() {
+        return getAlertAttColl().getAlertSeekerMethods();
     }
 }

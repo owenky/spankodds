@@ -795,7 +795,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         panel.add(popupcheckbox, c);
         c.gridx = 2;
         c.gridwidth = 1;
-        panel.add(popupLocationConfig.getUserComponent(), c);
+        panel.add(popupLocationConfig, c);
         c.gridx = 3;
         c.gridwidth = 1;
         panel.add(forlab, c);

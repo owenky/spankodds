@@ -6,12 +6,12 @@ import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr.PopupLocation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PopupLocationConfig {
+public class PopupLocationConfig extends JPanel {
 
-    private JPanel userComponent;
     private PopupLocation selectedPopupLocation = PopupLocation.TOP_RIGHT;
     private final Map<JideToggleButton,PopupLocation> button2LocaionMap = new HashMap<>();
     private final JideToggleButton upperright;
@@ -30,6 +30,13 @@ public class PopupLocationConfig {
         group.add(upperleft);
         group.add(lowerright);
         group.add(lowerleft);
+        initLayout();
+    }
+    public void addItemListener(ItemListener itemListener) {
+        upperright.addItemListener(itemListener);
+        upperleft.addItemListener(itemListener);
+        lowerright.addItemListener(itemListener);
+        lowerleft.addItemListener(itemListener);
     }
     public void setPopupLocationListener(PopupLocationListener popupLocationListener) {
         this.popupLocationListener = popupLocationListener;
@@ -43,15 +50,14 @@ public class PopupLocationConfig {
     public PopupLocation getSelectedPopupLocation() {
         return selectedPopupLocation;
     }
-    public JComponent getUserComponent() {
-        if ( null == userComponent) {
-            userComponent = new JPanel(new GridLayout(2, 2, 0, 0));
-            userComponent.add(upperleft);
-            userComponent.add(upperright);
-            userComponent.add(lowerleft);
-            userComponent.add(lowerright);
-        }
-        return userComponent;
+    private void initLayout() {
+
+        setLayout(new GridLayout(2, 2, 0, 0));
+        add(upperleft);
+        add(upperright);
+        add(lowerleft);
+        add(lowerright);
+
     }
     private JideToggleButton makeJideToggleButton(String icon,PopupLocation popupLocation) {
         JideToggleButton button = new JideToggleButton(new ImageIcon(Utils.getMediaResource(icon)));

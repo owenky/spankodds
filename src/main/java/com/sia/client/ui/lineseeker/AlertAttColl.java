@@ -6,7 +6,9 @@ import java.util.Map;
 public class AlertAttColl {
 
     private Map<String, AlertConfig> alertAttrMap = new HashMap<>();
-    private Map<String,LineSeekerAlertMethodAttr> alertMethodMap = new HashMap<>();
+    private AlertSeekerMethods alertSeekerMethods = new AlertSeekerMethods();
+
+
     //necessary for ObjectMapper serialization.
     public Map<String, AlertConfig> getAlertAttrMap() {
         return alertAttrMap;
@@ -14,10 +16,11 @@ public class AlertAttColl {
     public void setAlertAttrMap(Map<String, AlertConfig> alertAttrMap) {
         this.alertAttrMap = alertAttrMap;
     }
-    public Map<String, LineSeekerAlertMethodAttr> getAlertMethodMap() {
-        return alertMethodMap;
+    public AlertSeekerMethods getAlertSeekerMethods() {
+        return alertSeekerMethods;
     }
-    public void setAlertMethodMap(Map<String, LineSeekerAlertMethodAttr> alertMethodMap) {
-        this.alertMethodMap = alertMethodMap;
+
+    public void setAlertSeekerMethods(AlertSeekerMethods alertSeekerMethods) {
+        this.alertSeekerMethods = alertSeekerMethods;
     }
 }

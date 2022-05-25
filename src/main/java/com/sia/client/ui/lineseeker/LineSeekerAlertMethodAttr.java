@@ -6,10 +6,9 @@ import java.util.Arrays;
 
 public class LineSeekerAlertMethodAttr {
 
-    public static final String DefaultSoundFilePath = "openers.wav";
     private boolean isAudioEnabled = true;
     private boolean isPopupEnabled = true;
-    private String soundFile = DefaultSoundFilePath;
+    private String soundFile;
     private String popupSeconds = "3";
     private String renotifyInMinutes = "0.5";
 
@@ -18,6 +17,7 @@ public class LineSeekerAlertMethodAttr {
 
     public LineSeekerAlertMethodAttr (@JsonProperty("alertState") String alertState) {
         this.alertState = alertState;
+        this.soundFile = AlertState.valueOf(alertState).getDefaultSoundFile();
     }
     public boolean getAudioEnabled() {
         return isAudioEnabled;
@@ -49,10 +49,6 @@ public class LineSeekerAlertMethodAttr {
 
     public void setPopupSeconds(String popupSeconds) {
         this.popupSeconds = popupSeconds;
-    }
-
-    public String getRenotifyInMinutes() {
-        return renotifyInMinutes;
     }
 
     public void setRenotifyInMinutes(String renotifyInMinutes) {

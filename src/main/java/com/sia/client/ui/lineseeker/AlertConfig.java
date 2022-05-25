@@ -12,12 +12,14 @@ public class AlertConfig {
     private final int gameId;
     private final AlertPeriod period;
     private Map<AlertSectionName, LineSeekerAttribute> sectionMap = new HashMap<>();
+
     public static final AlertConfig BlankAlert = new AlertConfig(SelectionItem.SELECT_BLANK_KEY,AlertPeriod.Full);
 
     public AlertConfig(@JsonProperty("gameId") int gameId, @JsonProperty("period") AlertPeriod period) {
         this.gameId = gameId;
         this.period = period;
     }
+
     public int getGameId() {
         return gameId;
     }
@@ -30,7 +32,6 @@ public class AlertConfig {
     public AlertPeriod getPeriod() {
         return period;
     }
-
     public LineSeekerAttribute getSectionAtrribute(AlertSectionName alertSectionName) {
         return sectionMap.computeIfAbsent(alertSectionName, (name)-> {
             LineSeekerAttribute sectionAtrribute = new LineSeekerAttribute();
@@ -46,4 +47,5 @@ public class AlertConfig {
         sectionMap.clear();
         sectionMap.putAll(source.sectionMap);
     }
+
 }
