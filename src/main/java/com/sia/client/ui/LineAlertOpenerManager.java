@@ -7,10 +7,7 @@ import com.sia.client.model.*;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.util.*;
 
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
@@ -18,7 +15,7 @@ import static com.sia.client.config.Utils.showMessageDialog;
 public class LineAlertOpenerManager
 {
     static Vector<String> leagueids = new Vector();
-    static Hashtable<String,Vector> bookieidsBySport = new Hashtable<String,Vector>();
+    static Hashtable<String,List> bookieidsBySport = new Hashtable<String,List>();
     static Hashtable<String,Long> lastAlertForThisLeagueHash = new Hashtable<String,Long>();
     static Hashtable<String,LineOpenerAlertNode> lans= new Hashtable<String,LineOpenerAlertNode>();
 
@@ -44,8 +41,8 @@ public class LineAlertOpenerManager
 
 
             String sport = lan.getSport();
-            leagueids.addAll(lan.checkedLeagueNodes);
-            bookieidsBySport.put(sport,lan.checkedBookieNodes);
+            leagueids.addAll(lan.sportcodes);
+            bookieidsBySport.put(sport,lan.bookiecodes);
             lans.put(sport,lan);
             storageString = storageString+lan.toString()+"~";
         }
@@ -70,16 +67,23 @@ public class LineAlertOpenerManager
         LineOpenerAlertNode lan = lans.get(sportname);
         //step 1 check if gameid is involved in a league id we have checked off
 
-        if(!leagueids.contains(""+game.getLeague_id()))
+        int leagueidtocheck = game.getLeague_id();
+        if(leagueidtocheck == 9)
         {
-            log("Opener but leagueid not included "+game.getLeague_id());
+            leagueidtocheck = game.getSubleague_id();
+        }
+        if(!leagueids.contains(""+leagueidtocheck))
+        {
+            log("Opener but leagueid not included "+leagueidtocheck);
+            log(""+leagueids.toString());
             return;
         }
         //step2 check if bookie id is checked off in sport
-         Vector bookieschecked = bookieidsBySport.get(sportname);
+         ArrayList bookieschecked = (ArrayList)bookieidsBySport.get(sportname);
         if(!bookieschecked.contains(bid+""))
         {
-            log("Opener but bookie not included "+b);
+            log("Opener but bookie not included "+b+".."+b.getBookie_id());
+            log(""+bookieschecked.toString());
             return;
         }
         //step 3 check if game period is checked off

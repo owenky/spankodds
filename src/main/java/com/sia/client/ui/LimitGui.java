@@ -338,6 +338,10 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
         } else if (popuplocationint == SwingConstants.SOUTH_WEST) {
             lowerleft.setSelected(true);
         }
+        else  {
+            upperright.setSelected(true);
+            popuplocationint = SwingConstants.NORTH_EAST;
+        }
         radioPanel.add(upperleft);
         radioPanel.add(upperright);
         radioPanel.add(lowerleft);
@@ -1111,8 +1115,12 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
                     upperleft.setSelected(true);
                 } else if (popuplocationint == SwingConstants.SOUTH_EAST) {
                     lowerright.setSelected(true);
-                } else if (popuplocationint == SwingConstants.SOUTH_WEST) {
+                }  else if  (popuplocationint == SwingConstants.SOUTH_WEST) {
                     lowerleft.setSelected(true);
+                }
+               else  {
+                    upperright.setSelected(true);
+                    popuplocationint = SwingConstants.NORTH_EAST;
                 }
 
 

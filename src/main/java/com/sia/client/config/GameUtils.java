@@ -86,7 +86,9 @@ public abstract class GameUtils {
         }
 
         if ( ! AppController.existLeagueId(game.getSportIdentifyingLeagueId()) ) {
-            return "League id:"+game.getLeague_id()+", identifyingLeagueId:"+game.getSportIdentifyingLeagueId()+" does not exist...";
+            //spanky took out 5/25/2022
+          //  return "League id:"+game.getLeague_id()+", identifyingLeagueId:"+game.getSportIdentifyingLeagueId()+" does not exist...";
+            return "";
         }
         if ( null == game.getGamedate()) {
             return ("skipping gameid=" + game.getGame_id() + "...cuz of null game date");

@@ -7,10 +7,7 @@ import com.sia.client.model.*;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.util.*;
 
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
@@ -18,7 +15,7 @@ import static com.sia.client.config.Utils.showMessageDialog;
 public class LimitAlertManager
 {
     static Vector<String> leagueids = new Vector();
-    static Hashtable<String,Vector> bookieidsBySport = new Hashtable<String,Vector>();
+    static Hashtable<String,List> bookieidsBySport = new Hashtable<String,List>();
     static Hashtable<String,Long> lastAlertForThisLeagueHash = new Hashtable<String,Long>();
     static Hashtable<String,LimitNode> lans= new Hashtable<String,LimitNode>();
 
@@ -42,10 +39,9 @@ public class LimitAlertManager
         for (int i = 0; i < AppController.LimitNodeList.size(); i++) {
             LimitNode lan = AppController.LimitNodeList.get(i);
 
-
             String sport = lan.getSport();
-            leagueids.addAll(lan.checkedLeagueNodes);
-            bookieidsBySport.put(sport,lan.checkedBookieNodes);
+            leagueids.addAll(lan.sportcodes);
+            bookieidsBySport.put(sport,lan.bookiecodes);
             lans.put(sport,lan);
             storageString = storageString+lan.toString()+"@";
         }
@@ -58,6 +54,7 @@ public class LimitAlertManager
 
     public static void limitChangeAlert(int gid, int bid, int period,double oldlimit,double newlimit, Line line)
     {
+        reloadprefs();
         double percentagechange;
         boolean limitincrease = true;
         if(oldlimit == 0 || newlimit == 0 || oldlimit == newlimit)
@@ -87,17 +84,23 @@ public class LimitAlertManager
         String sportname = sport.getSportname();
         LimitNode lan = lans.get(sportname);
         //step 1 check if gameid is involved in a league id we have checked off
-
-        if(!leagueids.contains(""+game.getLeague_id()))
+        int leagueidtocheck = game.getLeague_id();
+        if(leagueidtocheck == 9)
         {
-            log("Limit Change but leagueid not included "+game.getLeague_id());
+            leagueidtocheck = game.getSubleague_id();
+        }
+        if(!leagueids.contains(""+leagueidtocheck))
+        {
+            log("Limit Change but leagueid not included "+leagueidtocheck);
+            log(""+leagueids.toString());
             return;
         }
         //step2 check if bookie id is checked off in sport
-        Vector bookieschecked = bookieidsBySport.get(sportname);
+        ArrayList bookieschecked = (ArrayList)bookieidsBySport.get(sportname);
         if(!bookieschecked.contains(bid+""))
         {
             log("Limit Change but bookie not included "+b);
+            log(""+bookieschecked.toString());
             return;
         }
         //step 3 check if game period is checked off
@@ -134,7 +137,7 @@ public class LimitAlertManager
             return;
         }
         //step5 check if % is enough
-        if(percentagechange >= lan.minpercentagechange )
+        if(percentagechange < lan.minpercentagechange )
         {
             log("Limit Change but % not high enough "+percentagechange);
             return;

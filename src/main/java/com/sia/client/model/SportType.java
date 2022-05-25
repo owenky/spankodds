@@ -243,7 +243,9 @@ public class SportType {
     public boolean shouldSelect(Game game) {
        String err = GameUtils.checkError(game);
        if ( null != err) {
-           log(err);
+          if(!err.equals("")) {
+              log(err);
+          }
            return false;
        }
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);

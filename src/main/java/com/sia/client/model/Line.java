@@ -72,12 +72,13 @@ public class Line {
     {
         int oldlimit = this.limit;
         this.limit = newlimit;
+        Game g = getGameObject();
 
         if(oldlimit == newlimit)
         {
             return;
         }
-        else if(getGameObject().isIngame() || leagueid == 12)
+        else if(g.isIngame() || !g.getStatus().equals("") )
         {
             return;
         }
@@ -156,6 +157,7 @@ public class Line {
         {
             Game g = AppController.getGame(gameid);
             leagueid = g.getLeague_id();
+
         }
         return leagueid;
     }
