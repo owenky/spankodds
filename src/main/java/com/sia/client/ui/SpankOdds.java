@@ -69,6 +69,7 @@ public class SpankOdds {
         }
 
         AppController.createLineOpenerAlertNodeList();
+        AppController.createLimitNodeList();
         AppController.initializSpotsTabPaneVector();
         ToolTipManager.sharedInstance().setInitialDelay(0);
         ToolTipManager.sharedInstance().setDismissDelay(30000);

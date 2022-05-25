@@ -79,10 +79,15 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenuItem openers = new JMenuItem("Openers");
         openers.addActionListener(ae -> new LineAlertOpeners(stb).show(UIProperties.LineAlertDim));
+
+
+        JMenuItem limitchange = new JMenuItem("Limit Changes");
+        limitchange.addActionListener(ae -> new LimitGui(stb).show(UIProperties.LineAlertDim));
+
         linealertsmenu.add(generallinealert);
         linealertsmenu.add(majorlinemove);
         linealertsmenu.add(openers);
-
+        linealertsmenu.add(limitchange);
 
         add(gamealertsmenu);
 
@@ -93,7 +98,7 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem officials = createGameAlertMenuItem("Officials");
         JMenuItem injuries = createGameAlertMenuItem("Injuries");
         JMenuItem timechange = createGameAlertMenuItem("Time Changes");
-        JMenuItem limitchange = createGameAlertMenuItem("Limit Changes");
+        //JMenuItem limitchange = createGameAlertMenuItem("Limit Changes");
 
         JMenuItem test = new JMenuItem("Test");
         test.addActionListener(ae -> {
@@ -119,8 +124,8 @@ public class SportsMenuBar extends JMenuBar {
         gamealertsmenu.add(officials);
         gamealertsmenu.add(injuries);
         gamealertsmenu.add(timechange);
-        gamealertsmenu.add(limitchange);
-        gamealertsmenu.add(test);
+       // gamealertsmenu.add(limitchange);
+       // gamealertsmenu.add(test);
         add(tabsmenu);
         populateTabsMenu();
 

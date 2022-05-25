@@ -366,6 +366,7 @@ public class LoginClient implements MessageListener {
             } else if (messageType.equals("Unsubscribe")) {
 
                 AppController.createLineOpenerAlertNodeListFromUserPrefs();
+                AppController.createLimitNodeListFromUserPrefs();
                 AppController.createGamesConsumer();
                 AppController.createScoresConsumer();
                 AppController.createUrgentsConsumer();

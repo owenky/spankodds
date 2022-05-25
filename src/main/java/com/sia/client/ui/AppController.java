@@ -86,6 +86,20 @@ public class AppController {
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode(SportName.Tennis);
     public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode(SportName.Auto_Racing);
     public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
+
+    public static LimitNode footballlimitnode = new LimitNode(SportName.Football);
+    public static LimitNode basketballlimitnode = new LimitNode(SportName.Basketball);
+    public static LimitNode baseballlimitnode = new LimitNode(SportName.Baseball);
+    public static LimitNode hockeylimitnode = new LimitNode(SportName.Hockey);
+    public static LimitNode soccerlimitnode = new LimitNode(SportName.Soccer);
+    public static LimitNode fightinglimitnode = new LimitNode(SportName.Fighting);
+    public static LimitNode golflimitnode = new LimitNode(SportName.Golf);
+    public static LimitNode tennislimitnode = new LimitNode(SportName.Tennis);
+    public static LimitNode autoracinglimitnode = new LimitNode(SportName.Auto_Racing);
+    public static List<LimitNode> LimitNodeList = new ArrayList<>();
+
+
+
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
     public static Vector<String> SportsTabPaneVector = new Vector<>();
     private static Map<String, String> customTabsHash = new ConcurrentHashMap<>();
@@ -303,7 +317,17 @@ public class AppController {
         LineOpenerAlertNodeList.add(tennis);
         LineOpenerAlertNodeList.add(autoracing);
     }
-
+    public static void createLimitNodeList() {
+        LimitNodeList.add(footballlimitnode);
+        LimitNodeList.add(basketballlimitnode);
+        LimitNodeList.add(baseballlimitnode);
+        LimitNodeList.add(hockeylimitnode);
+        LimitNodeList.add(soccerlimitnode);
+        LimitNodeList.add(fightinglimitnode);
+        LimitNodeList.add(golflimitnode);
+        LimitNodeList.add(tennislimitnode);
+        LimitNodeList.add(autoracinglimitnode);
+    }
     public static void createLineOpenerAlertNodeListFromUserPrefs() {
 
         String openerdata = getUser().getOpeneralert();
@@ -353,7 +377,63 @@ public class AppController {
 
     }
 
+    public static void createLimitNodeListFromUserPrefs() {
 
+        String limitdata = getUser().getLimitchangeAlert();
+        String lans[] = limitdata.split("@");
+        for(int i = 0;i < lans.length; i++)
+        {
+            String[] items = lans[i].split("\\|");
+            if(items.length > 1)
+            {
+
+                String[] sportcodeselements = items[1].split(",\\s* ");
+                List<String> sportcodeslist = Arrays.asList(sportcodeselements);
+                ArrayList<String> sportcodesarraylist = new ArrayList<String>(sportcodeslist);
+
+                String[] bookieselements = items[2].split(",\\s* ");
+                List<String> bookieslist = Arrays.asList(bookieselements);
+                ArrayList<String> bookiesarraylist = new ArrayList<String>(bookieslist);
+
+
+                LimitNode lan = new LimitNode(
+                        items[0],
+                        sportcodesarraylist,
+                        bookiesarraylist,
+                        Boolean.parseBoolean(items[3]), //fg check
+                        Boolean.parseBoolean(items[4]),
+                        Boolean.parseBoolean(items[5]),
+                        Boolean.parseBoolean(items[6]),
+                        Boolean.parseBoolean(items[7]),
+                        Boolean.parseBoolean(items[8]),
+                        Boolean.parseBoolean(items[9]),
+                        Boolean.parseBoolean(items[10]),
+                        Boolean.parseBoolean(items[11]),
+                        Boolean.parseBoolean(items[12]),
+                        Boolean.parseBoolean(items[13]), //isttcheck
+                        Boolean.parseBoolean(items[14]),
+                        Boolean.parseBoolean(items[15]),
+                        Boolean.parseBoolean(items[16]),
+                        Boolean.parseBoolean(items[17]),
+                        Integer.parseInt(items[18]),
+                        Integer.parseInt(items[19]),
+                        Double.parseDouble(items[20]),
+                        items[21],
+                        items[22],
+                        Integer.parseInt(items[23]));
+
+
+
+
+
+
+                log("about to add limitnode="+lan);
+                LimitNodeList.set(i,lan);
+
+            }
+        }
+
+    }
     public static void addLineAlertNode(LineAlertNode lan) {
 
         checkAndRunInEDT(() -> linealertnodes.add(lan));

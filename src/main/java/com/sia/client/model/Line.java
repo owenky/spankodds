@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.LimitAlertManager;
 import com.sia.client.ui.UrgentMessage;
 
 public class Line {
@@ -71,7 +72,7 @@ public class Line {
     {
         int oldlimit = this.limit;
         this.limit = newlimit;
-        String message = "";
+
         if(oldlimit == newlimit)
         {
             return;
@@ -84,8 +85,14 @@ public class Line {
         {
             return;
         }
-        else
-        {
+
+        // if we get here lets see if its worthy of an alert
+        LimitAlertManager.limitChangeAlert(gameid,bookieid,period,oldlimit,newlimit,this);
+
+/*
+        String message = "";
+
+
             if(oldlimit > newlimit)
             {
                 message = "Decreased from "+oldlimit+" to "+newlimit;
@@ -94,7 +101,7 @@ public class Line {
             {
                 message = "Increased from "+oldlimit+" to "+newlimit;
             }
-        }
+        */
 // need to apply filter here before alerting
         /*
         new UrgentMessage("<HTML><H2>"+AppController.getBookie(getBookieid()).getName()+" - "+type.toUpperCase()+" LIMIT CHANGE " + getLeague_id() + "</H2>" +
