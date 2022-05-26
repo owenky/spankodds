@@ -85,7 +85,7 @@ public class LinePanel extends JPanel {
         bottomPanel = createContainingComponent(bottom,leftPaddingSpace,rightPaddingSpace);
         drawPanel = createContainingComponent(draw,leftPaddingSpace,rightPaddingSpace);
         totalPanel = createContainingComponent(total,leftPaddingSpace,rightPaddingSpace);
-
+        //setToolTipText("linepaneltooltiptext");
 //        Font myfont = new Font("Arial", Font.PLAIN, 12);
         Font myfont = FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN);
         top.setFont(myfont);
@@ -224,7 +224,7 @@ public class LinePanel extends JPanel {
             top.setBorder(null);
         }
 
-
+        top.setToolTipText(ld.getTooltip());
     }
 
     public void setBottom(JTable table,LineData ld, int row, int col) {
@@ -298,8 +298,7 @@ public class LinePanel extends JPanel {
         else {
             bottom.setBorder(null);
         }
-
-
+        bottom.setToolTipText(ld.getTooltip());
     }
 
     private void setDraw(JTable table,LineData ld, int row, int col) {

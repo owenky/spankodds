@@ -164,7 +164,7 @@ public class Totalline extends Line implements Serializable {
        // {
             this.setCurrentunder(under);
             this.setCurrentunderjuice(underjuice);
-            this.setCurrentts(ts);
+           //why call this twice this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenerunder(under);
@@ -532,6 +532,22 @@ public class Totalline extends Line implements Serializable {
 
         return s;
     }
+    public String showHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
 
+        return s;
+        }
+            catch(Exception ex)
+        {
+            log("total show history exception "+ex);
+        }
+        return "";
+    }
 
 }

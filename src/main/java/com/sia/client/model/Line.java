@@ -4,6 +4,8 @@ import com.sia.client.ui.AppController;
 import com.sia.client.ui.LimitAlertManager;
 import com.sia.client.ui.UrgentMessage;
 
+import java.text.SimpleDateFormat;
+
 public class Line {
     protected int bookieid;
 	protected int gameid;
@@ -15,8 +17,21 @@ public class Line {
 	protected long currentts = 1000;
 	protected long  openerts = 1000;
 	protected int leagueid = 0;
-
+    static final SimpleDateFormat sdf3 = new SimpleDateFormat("MM/dd HH:mm:ss");
 	protected boolean scalp = false;
+
+	public String formatts(long ts)
+    {
+        if(ts == 1000)
+        {
+            return "";
+        }
+        else
+        {
+          String s = sdf3.format(new java.util.Date(ts));
+          return s;
+        }
+    }
 
     public String getPrintedJuiceLine(double ml) {
         String retvalue = "";
@@ -164,8 +179,17 @@ public class Line {
 	public final long getCurrentts() {
 		return currentts;
 	}
+    public final long getPriorts() {
+        return priorts;
+    }
+    public final long getOpenerts() {
+        return openerts;
+    }
 	public final void setCurrentts(long currentts) {
-        this.priorts = this.currentts;
+        if(this.priorts != this.currentts)
+        {
+            this.priorts = this.currentts;
+        }
 		this.currentts = currentts;
 	}
 	public final void setOpenerts(long openerts) {

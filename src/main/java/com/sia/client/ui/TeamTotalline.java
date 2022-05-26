@@ -191,7 +191,7 @@ public class TeamTotalline extends Line {
        // if (visitunderjuice != 0) {
             this.setCurrentvisitunder(visitunder);
             this.setCurrentvisitunderjuice(visitunderjuice);
-            this.setCurrentts(ts);
+            //why call this 4x this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenervisitunder(visitunder);
@@ -204,7 +204,7 @@ public class TeamTotalline extends Line {
        // if (homeoverjuice != 0) {
             this.setCurrenthomeover(homeover);
             this.setCurrenthomeoverjuice(homeoverjuice);
-            this.setCurrentts(ts);
+        //why call this 4x this.setCurrentts(ts);
 
 
             if (isopener) {
@@ -216,7 +216,7 @@ public class TeamTotalline extends Line {
       //  if (homeunderjuice != 0) {
             this.setCurrenthomeunder(homeunder);
             this.setCurrenthomeunderjuice(homeunderjuice);
-            this.setCurrentts(ts);
+        //why call this 4x this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenerhomeunder(homeunder);
@@ -721,6 +721,43 @@ public class TeamTotalline extends Line {
 
 
         return s;
+    }
+
+    public String showAwayHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentVisitTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorVisitTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerVisitTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
+
+        return s;
+        }
+        catch(Exception ex)
+        {
+            log("ttlaway show history exception "+ex);
+        }
+        return "";
+
+    }
+    public String showHomeHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentHomeTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorHomeTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerHomeTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
+
+        return s;
+        }
+        catch(Exception ex)
+        {
+            log("ttlhome show history exception "+ex);
+        }
+        return "";
+
     }
 
 }

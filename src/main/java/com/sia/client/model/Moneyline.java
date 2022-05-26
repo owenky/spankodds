@@ -161,7 +161,7 @@ public class Moneyline extends Line implements Serializable {
       //  if (homejuice != 0)
       //  {
             this.setCurrenthomejuice(homejuice);
-            this.setCurrentts(ts);
+           //why call this twice this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenerhomejuice(homejuice);
@@ -170,7 +170,7 @@ public class Moneyline extends Line implements Serializable {
        // }
         if (drawjuice != 0) {
             this.setCurrentdrawjuice(drawjuice);
-            this.setCurrentts(ts);
+            //why call this twice this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenerdrawjuice(drawjuice);
@@ -298,9 +298,48 @@ public class Moneyline extends Line implements Serializable {
         this.openerdrawjuice = openerdrawjuice;
     }
 
+    public String getShortPrintedCurrentMoneyline()
+    {
+        return getShortPrintedMoneyline(currentvisitjuice, currenthomejuice, currentdrawjuice);
+    }
+    public String getShortPrintedPriorMoneyline()
+    {
+        return getShortPrintedMoneyline(priorvisitjuice, priorhomejuice, priordrawjuice);
+    }
+    public String getShortPrintedOpenerMoneyline()
+    {
+        return getShortPrintedMoneyline(openervisitjuice, openerhomejuice, openerdrawjuice);
+    }
+    public String getShortPrintedMoneyline(double vjuice, double hjuice, double djuice)
+    {
+        double juice = min(vjuice,hjuice);
+        if(juice == -100 || juice == 100)
+        {
+            return "EVEN";
+        }
+        String juiceS = juice+"";
+        juiceS = juiceS.replace(".0", "");
+        return juiceS;
+
+    }
+
     @Override
     public String getOpener()
     {
         return getOpenervisitjuice()+"<br>"+getOpenerhomejuice();
+    }
+
+    public String showHistory() {
+        try {
+            String s =
+                    "<tr><td>C:</td><td>" + getShortPrintedCurrentMoneyline() + "</td><td>" + formatts(getCurrentts()) + "</td></tr>" +
+                    "<tr><td>P:</td><td>" + getShortPrintedPriorMoneyline() + "</td><td>" + formatts(getPriorts()) + "</td></tr>" +
+                    "<tr><td>O:</td><td>" + getShortPrintedOpenerMoneyline() + "</td><td>" + formatts(getOpenerts()) + "</td></tr>";
+
+            return s;
+        } catch (Exception ex) {
+            log("ml show history exception " + ex);
+        }
+        return "";
     }
 }

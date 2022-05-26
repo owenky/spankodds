@@ -11,20 +11,14 @@ import com.sia.client.model.TableCellRendererProvider;
 import com.sia.client.model.TableSection;
 import com.sun.javafx.collections.ImmutableObservableList;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +56,43 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 //        marginProvider = null;
 //    }
     @Override
-    public String getToolTipText(MouseEvent e) {
-       return Utils.getTableCellToolTipText(this,e);
+    public String getToolTipText(MouseEvent e)
+    {
+        // spanky 5/26/22 implemented deep tooltip for jlabel line history
+        String tip = Utils.getTableCellToolTipText(this, e);
+
+        if(tip != null)
+        {
+           // System.out.println("returning "+tip);
+            return tip;
+        }
+        Point p = e.getPoint();
+
+        // Locate the renderer under the event location
+        int hitColumnIndex = columnAtPoint(p);
+        int hitRowIndex = rowAtPoint(p);
+
+        if (hitColumnIndex != -1 && hitRowIndex != -1)
+        {
+            TableCellRenderer renderer = getCellRenderer(hitRowIndex, hitColumnIndex);
+            Component component = prepareRenderer(renderer, hitRowIndex, hitColumnIndex);
+            Rectangle cellRect = getCellRect(hitRowIndex, hitColumnIndex, false);
+
+            component.setBounds(cellRect);
+            component.validate();
+            component.doLayout();
+            p.translate(-cellRect.x, -cellRect.y);
+            //System.out.println("x="+cellRect.x+"...y="+cellRect.y);
+            //Component comp = component.getComponentAt(p);
+            Component comp = SwingUtilities.getDeepestComponentAt(component, p.x, p.y);
+            if (comp instanceof JLabel)
+            {
+             //   System.out.println("its a jlabel!! "+comp.getClass()+".."+((JComponent) comp).getToolTipText());
+                tip = ((JLabel) comp).getToolTipText();
+            }
+        }
+
+        return tip;
     }
     public MarginProvider getMarginProvider() {
         if ( null == marginProvider) {
