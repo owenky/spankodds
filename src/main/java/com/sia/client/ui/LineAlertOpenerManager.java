@@ -5,6 +5,7 @@ package com.sia.client.ui;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.*;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -18,7 +19,7 @@ public class LineAlertOpenerManager
     static Hashtable<String,List> bookieidsBySport = new Hashtable<String,List>();
     static Hashtable<String,Long> lastAlertForThisLeagueHash = new Hashtable<String,Long>();
     static Hashtable<String,LineOpenerAlertNode> lans= new Hashtable<String,LineOpenerAlertNode>();
-
+    static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     static String storageString = "";
 
     public static String getStorageString()
@@ -141,15 +142,16 @@ public class LineAlertOpenerManager
             // popup
             if(lan.isShowpopChecks)
             {
-                String mesg = "Opener:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString();
+                String mesg = "Opener:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" "+line.getOpener();
                 String hrmin = AppController.getCurrentHoursMinutes();
                 AppController.addAlert(hrmin,mesg);
-
+                String ts = sdf3.format(new java.sql.Timestamp(new java.util.Date().getTime()));
                 //log(com.sia.client.ui.AppController.alertsVector.size());
 
                 new UrgentMessage("<HTML><H1>"+line.getType().toUpperCase()+" Openers " + getLeagueAbbr(game.getLeague_id()) + "</H1><FONT COLOR=BLUE>" +
                         b + "<BR><TABLE cellspacing=5 cellpadding=5>" +
-                        "<TR><TD COLSPAN=4>" + game.getGame_id()+" "+game.getGameString() + "</TD><TD>"+line.getOpener()+"</TD></TR>" +
+                        "<TR><TD COLSPAN=2>" + game.getGame_id()+" "+game.getGameString() + "</TD><TD COLSPAN=2>"+line.getOpener()+"</TD></TR>"+
+                        "<TR><TD COLSPAN=4>"+ts+"<TD></TR>" +
                         "</TABLE></FONT></HTML>", lan.popupsec * 1000, lan.popuplocationint, AppController.getMainTabPane());
 
             }

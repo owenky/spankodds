@@ -708,7 +708,19 @@ public class TeamTotalline extends Line {
     @Override
     public String getOpener()
     {
-        return getShortPrintedOpenerVisitTotal()+"/"+getOtherPrintedOpenerVisitTotal();
+        String s = "";
+        if(getOpenervisitoverjuice()!= 0)
+        {
+            s = getOpenervisitover()+"o"+getOpenervisitoverjuice()+"<br>"+getOpenervisitunder()+"u"+getOpenervisitunderjuice();
+        }
+        if(getOpenerhomeoverjuice()!= 0)
+        {
+            s = s+"<br>"+getOpenerhomeover()+"o"+getOpenerhomeoverjuice()+"<br>"+getOpenerhomeunder()+"u"+getOpenerhomeunderjuice();
+        }
+
+
+
+        return s;
     }
 
 }

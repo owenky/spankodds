@@ -527,7 +527,10 @@ public class Totalline extends Line implements Serializable {
     @Override
     public String getOpener()
     {
-        return getShortPrintedOpenerTotal()+"/"+getOtherPrintedOpenerTotal();
+        String s = getCurrentover()+"o"+getCurrentoverjuice()+"<br>"+getCurrentunder()+"u"+getCurrentunderjuice();
+
+
+        return s;
     }
 
 

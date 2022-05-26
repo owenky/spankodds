@@ -584,7 +584,9 @@ public class Spreadline extends Line {
     @Override
     public String getOpener()
     {
-        return getShortPrintedOpenerSpread()+"/"+getOtherPrintedOpenerSpread();
+        String s;
+        s = getOpenervisitspread()+getOpenervisitjuice()+"<br>"+getOpenerhomespread()+getOpenerhomejuice();
+        return s;
     }
 
 }

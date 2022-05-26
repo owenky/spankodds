@@ -301,6 +301,6 @@ public class Moneyline extends Line implements Serializable {
     @Override
     public String getOpener()
     {
-        return getOpenervisitjuice()+"/"+getOpenerhomejuice();
+        return getOpenervisitjuice()+"<br>"+getOpenerhomejuice();
     }
 }

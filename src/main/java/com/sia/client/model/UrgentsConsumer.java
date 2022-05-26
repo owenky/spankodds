@@ -65,7 +65,8 @@ public class UrgentsConsumer implements MessageListener {
                     System.out.println("prevloginkey="+AppController.getUser().getLoginKey());
                     if(!AppController.getUser().getLoginKey().equals(loginkey))
                     {
-                        AppController.getUserPrefsProducer().sendUserPrefs(true);
+                        // no longer doing this
+                      //  AppController.getUserPrefsProducer().sendUserPrefs(true);
 
 
 
