@@ -142,15 +142,15 @@ public class LineAlertOpenerManager
             // popup
             if(lan.isShowpopChecks)
             {
-                String mesg = "Opener:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" "+line.getOpener();
+                String mesg = "Opener:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" "+gameperiod[period]+" "+line.getOpener();
                 String hrmin = AppController.getCurrentHoursMinutes();
                 AppController.addAlert(hrmin,mesg);
                 String ts = sdf3.format(new java.sql.Timestamp(new java.util.Date().getTime()));
                 //log(com.sia.client.ui.AppController.alertsVector.size());
 
                 new UrgentMessage("<HTML><H1>"+line.getType().toUpperCase()+" Openers " + getLeagueAbbr(game.getLeague_id()) + "</H1><FONT COLOR=BLUE>" +
-                        b + "<BR><TABLE cellspacing=5 cellpadding=5>" +
-                        "<TR><TD COLSPAN=2>" + game.getGame_id()+" "+game.getGameString() + "</TD><TD COLSPAN=2>"+line.getOpener()+"</TD></TR>"+
+                        b + "<BR><TABLE>" +
+                        "<TR><TD COLSPAN=2>" + game.getGame_id()+" "+game.getGameString() + "</TD><td>"+gameperiod[period]+"</td><TD>"+line.getOpener()+"</TD></TR>"+
                         "<TR><TD COLSPAN=4>"+ts+"<TD></TR>" +
                         "</TABLE></FONT></HTML>", lan.popupsec * 1000, lan.popuplocationint, AppController.getMainTabPane());
 

@@ -30,7 +30,7 @@ public class LimitAlertManager
     {
         storageString = s;
     }
-
+    public static String[] gameperiod = new String[]{"Full Game", "1st Half", "2nd Half", "All Halfs", " ", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Live", "All Periods"};
     public static void reloadprefs()
     {
         storageString = "";
@@ -51,7 +51,7 @@ public class LimitAlertManager
     }
 
 
-    public static String[] gameperiod = new String[]{"Full Game", "1st Half", "2nd Half", "All Halfs", " ", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Live", "All Periods"};
+
 
     public static void limitChangeAlert(int gid, int bid, int period,double oldlimit,double newlimit, Line line)
     {
@@ -177,31 +177,33 @@ public class LimitAlertManager
             String ts = sdf3.format(new java.sql.Timestamp(new java.util.Date().getTime()));
             if(limitincrease && lan.isIncShowpopChecks)
             {
-                String mesg = "Limit Increase:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" From "+oldlimit+" to "+newlimit;
+                String mesg = "Limit Increase:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" "+gameperiod[period]+" From "+oldlimit+" to "+newlimit;
                 String hrmin = AppController.getCurrentHoursMinutes();
                 AppController.addAlert(hrmin,mesg);
 
                 //log(com.sia.client.ui.AppController.alertsVector.size());
 
-                new UrgentMessage("<HTML><H1>"+line.getType().toUpperCase()+" Limit Increase " + getLeagueAbbr(game.getLeague_id()) + "</H1><FONT COLOR=BLUE>" +
-                        b + "<BR><TABLE cellspacing=5 cellpadding=5>" +
-                        "<TR><TD COLSPAN=2>" + game.getGame_id()+" "+game.getGameString() + "</TD><TD COLSPAN=2>From "+oldlimit+" to "+newlimit+"</TD></TR>" +
-                       "<TR><TD COLSPAN=4>"+ts+"</TD></TR>"+
+                new UrgentMessage("<HTML><H2>"+line.getType().toUpperCase()+" Limit Increase " + getLeagueAbbr(game.getLeague_id()) + "</H2><FONT COLOR=BLUE>" +
+                        b + "<BR><TABLE>" +
+                        "<TR><TD COLSPAN=3>" + game.getGame_id()+" "+game.getGameString() +" "+gameperiod[period]+"</TD></TR>"+
+                        "<TR><TD COLSPAN=3>From "+oldlimit+" to "+newlimit+"</TD></TR>" +
+                       "<TR><TD COLSPAN=3>"+ts+"</TD></TR>"+
                         "</TABLE></FONT></HTML>", lan.popupsec * 1000, lan.popuplocationint, AppController.getMainTabPane());
 
             }
             if(!limitincrease && lan.isDecShowpopChecks)
             {
-                String mesg = "Limit Decrease:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" From "+oldlimit+" to "+newlimit;
+                String mesg = "Limit Decrease:" + b+" "+getLeagueAbbr(game.getLeague_id()) + " " + line.getType()+" "+game.getGame_id()+" "+game.getGameString()+" "+gameperiod[period]+" From "+oldlimit+" to "+newlimit;
                 String hrmin = AppController.getCurrentHoursMinutes();
                 AppController.addAlert(hrmin,mesg);
 
                 //log(com.sia.client.ui.AppController.alertsVector.size());
 
-                new UrgentMessage("<HTML><H1>"+line.getType().toUpperCase()+" Limit Decrease " + getLeagueAbbr(game.getLeague_id()) + "</H1><FONT COLOR=RED>" +
-                        b + "<BR><TABLE cellspacing=5 cellpadding=5>" +
-                        "<TR><TD COLSPAN=2>" + game.getGame_id()+" "+game.getGameString() + "</TD><TD COLSPAN=2>From "+oldlimit+" to "+newlimit+"</TD></TR>" +
-                        "<TR><TD COLSPAN=4>"+ts+"</TD></TR>"+
+                new UrgentMessage("<HTML><H2>"+line.getType().toUpperCase()+" Limit Decrease " + getLeagueAbbr(game.getLeague_id()) + "</H2><FONT COLOR=RED>" +
+                        b + "<BR><TABLE>" +
+                        "<TR><TD COLSPAN=3>" + game.getGame_id()+" "+game.getGameString() +" "+gameperiod[period]+"</TD></TR>"+
+                        "<TR><TD COLSPAN=3>From "+oldlimit+" to "+newlimit+"</TD></TR>" +
+                        "<TR><TD COLSPAN=3>"+ts+"</TD></TR>"+
                         "</TABLE></FONT></HTML>", lan.popupsec * 1000, lan.popuplocationint, AppController.getMainTabPane());
 
             }
