@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public class LineSeekerAlertMethodAttr {
 
-    private boolean isAudioEnabled = true;
-    private boolean isPopupEnabled = true;
+    private boolean audioEnabled = true;
+    private boolean popupEnabled = true;
     private String soundFile;
     private String popupSeconds = "3";
     private String renotifyInMinutes = "0.5";
@@ -20,19 +20,19 @@ public class LineSeekerAlertMethodAttr {
         this.soundFile = AlertState.valueOf(alertState).getDefaultSoundFile();
     }
     public boolean getAudioEnabled() {
-        return isAudioEnabled;
+        return audioEnabled;
     }
 
     public void setAudioEnabled(boolean audioEnabled) {
-        isAudioEnabled = audioEnabled;
+        this.audioEnabled = audioEnabled;
     }
 
     public boolean getPopupEnabled() {
-        return isPopupEnabled;
+        return popupEnabled;
     }
 
     public void setPopupEnabled(boolean popupEnabled) {
-        isPopupEnabled = popupEnabled;
+        this.popupEnabled = popupEnabled;
     }
 
     public String getSoundFile() {

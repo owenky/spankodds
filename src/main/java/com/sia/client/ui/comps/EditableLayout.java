@@ -10,7 +10,7 @@ public interface EditableLayout {
 
     JComponent getLayoutPane();
     JLabel getEditStatusLabel();
-    JComponentBinder getJComponentBinder();
+    UICompValueBinder getJComponentBinder();
 
     default boolean isEdited() {
         return SiaConst.EditedIndicator.equals(getEditStatusLabel().getText());
@@ -23,17 +23,17 @@ public interface EditableLayout {
         }
     }
     default void persist() throws IOException {
-        JComponentBinder binder = getJComponentBinder();
+        UICompValueBinder binder = getJComponentBinder();
         binder.persistJComponentValues();
         setEdited(false);
     }
     default void updateLayout() {
-        JComponentBinder binder = getJComponentBinder();
+        UICompValueBinder binder = getJComponentBinder();
         binder.updateJComponentValues();
         setEdited(false);
     }
     default void checkAndSetEditStatus() {
-        JComponentBinder binder = getJComponentBinder();
+        UICompValueBinder binder = getJComponentBinder();
         boolean isEdited = binder.areValuesChanged();
         setEdited(isEdited);
     }

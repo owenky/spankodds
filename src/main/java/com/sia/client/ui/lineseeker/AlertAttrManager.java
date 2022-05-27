@@ -55,7 +55,7 @@ public class AlertAttrManager {
     public static void deSerializeAlertAlertAttColl(String alertAttCollJsonStr) throws JsonProcessingException {
         alertAttColl = objectMapper.readValue(alertAttCollJsonStr,AlertAttColl.class);
     }
-    private static synchronized AlertAttColl getAlertAttColl() {
+    public static synchronized AlertAttColl getAlertAttColl() {
         if ( null == alertAttColl) {
             initAlertAttColl();
         }

@@ -1,9 +1,7 @@
 package com.sia.client.ui.lineseeker;
 
-import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.comps.EditableLayout;
-import com.sia.client.ui.comps.JComponentBinder;
-import com.sia.client.ui.comps.LightComboBox;
+import com.sia.client.ui.comps.UICompValueBinder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +12,7 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
     private final AlertSeekerMethods alertSeekerMethods;
     private JComboBox<String> renotifyComboBox;
     private final String[] minslist = new String[20];
-    private JComponentBinder jComponentBinder;
+    private UICompValueBinder UICompValueBinder;
 
     public LineSeekerAlertRenotifyLayout(AlertSeekerMethods alertSeekerMethods) {
         this.alertSeekerMethods = alertSeekerMethods;
@@ -24,12 +22,12 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
         return editStatusLabel;
     }
     @Override
-    public JComponentBinder getJComponentBinder() {
-        if ( null == jComponentBinder) {
-            jComponentBinder = new JComponentBinder(alertSeekerMethods,getOnValueChangedEventFunction());
-            jComponentBinder.bind("renotifyInMinutes",renotifyComboBox);
+    public UICompValueBinder getJComponentBinder() {
+        if ( null == UICompValueBinder) {
+            UICompValueBinder = new UICompValueBinder(alertSeekerMethods,getOnValueChangedEventFunction());
+            UICompValueBinder.bind("renotifyInMinutes",renotifyComboBox);
         }
-        return jComponentBinder;
+        return UICompValueBinder;
     }
     @Override
     public JComponent getLayoutPane() {

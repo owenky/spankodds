@@ -2,15 +2,15 @@ package com.sia.client.ui.comps;
 
 import com.jidesoft.swing.JideToggleButton;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr;
 import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr.PopupLocation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PopupLocationConfig extends JPanel {
+public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
 
     private PopupLocation selectedPopupLocation = PopupLocation.TOP_RIGHT;
     private final Map<JideToggleButton,PopupLocation> button2LocaionMap = new HashMap<>();
@@ -32,11 +32,26 @@ public class PopupLocationConfig extends JPanel {
         group.add(lowerleft);
         initLayout();
     }
-    public void addItemListener(ItemListener itemListener) {
+    @Override
+    public void addListener(CompValueChangedListener itemListener) {
         upperright.addItemListener(itemListener);
         upperleft.addItemListener(itemListener);
         lowerright.addItemListener(itemListener);
         lowerleft.addItemListener(itemListener);
+    }
+    @Override
+    public void setValue(Object obj) {
+        LineSeekerAlertMethodAttr.PopupLocation popupLocation;
+        if ( obj instanceof LineSeekerAlertMethodAttr.PopupLocation) {
+            popupLocation = (LineSeekerAlertMethodAttr.PopupLocation)obj;
+        } else {
+            popupLocation = LineSeekerAlertMethodAttr.PopupLocation.valueOf(String.valueOf(obj));
+        }
+        setSelectedPopupLocation(popupLocation);
+    }
+    @Override
+    public LineSeekerAlertMethodAttr.PopupLocation getValue() {
+        return selectedPopupLocation;
     }
     public void setPopupLocationListener(PopupLocationListener popupLocationListener) {
         this.popupLocationListener = popupLocationListener;

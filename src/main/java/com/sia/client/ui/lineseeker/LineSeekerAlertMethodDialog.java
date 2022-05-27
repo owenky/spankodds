@@ -6,6 +6,7 @@ import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.comps.BookieTree;
+import com.sia.client.ui.comps.BookieTreeLayout;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
     private final int bookiePanelWidtHeight;
     private final int renotifyHeight = 40;
     private final int savePanelHeight = 40;
+    private BookieTreeLayout bookieTreeLayout;
 
     public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertSeekerMethods alertSeekerMethods) {
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
@@ -60,13 +62,10 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
         return wrapper;
     }
     private JComponent makeBookiePanel() {
-        Dimension preferredSize = new Dimension(bookiePanelWidth,bookiePanelWidtHeight);
-        JPanel sportsbooktreePanel = new JPanel();
+        bookieTreeLayout = new BookieTreeLayout(new BookieTree(),AlertAttrManager.getAlertAttColl().getBookies());
+        JComponent sportsbooktreePanel = bookieTreeLayout.getLayoutPane();
+        Dimension preferredSize = new Dimension(bookiePanelWidth, bookiePanelWidtHeight);
         sportsbooktreePanel.setPreferredSize(preferredSize);
-        BookieTree bookieTree = new BookieTree();
-        JScrollPane jScrollPane = new JScrollPane(bookieTree.getSportTreeModel());
-        jScrollPane.setPreferredSize(preferredSize);
-        sportsbooktreePanel.add(jScrollPane);
         return sportsbooktreePanel;
     }
 
@@ -104,6 +103,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
                 stateLayout.persist();
             }
             lineSeekerAlertRenotifyLayout.persist();
+            bookieTreeLayout.persist();
         } catch ( IOException ioe) {
             Utils.log(ioe);
         }
@@ -115,6 +115,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
             stateLayout.updateLayout();
         }
         lineSeekerAlertRenotifyLayout.updateLayout();
+        bookieTreeLayout.updateLayout();
     }
     @Override
     public boolean isEdited() {
@@ -126,7 +127,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
                 break;
             }
         }
-        return isEdited;
+        return isEdited || lineSeekerAlertRenotifyLayout.isEdited() || bookieTreeLayout.isEdited();
     }
 }
 

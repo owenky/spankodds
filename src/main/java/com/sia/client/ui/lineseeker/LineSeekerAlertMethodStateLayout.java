@@ -6,7 +6,7 @@ import com.sia.client.ui.FontConfig;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.UrgentMessage;
 import com.sia.client.ui.comps.EditableLayout;
-import com.sia.client.ui.comps.JComponentBinder;
+import com.sia.client.ui.comps.UICompValueBinder;
 import com.sia.client.ui.comps.PopupLocationConfig;
 
 import javax.swing.*;
@@ -33,7 +33,7 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
     private final JLabel editStatusLabel = new JLabel();
     private final LineSeekerAlertMethodAttr attr;
     private final PopupLocationConfig popupLocationConfig = new PopupLocationConfig();
-    private JComponentBinder jComponentBinder;
+    private UICompValueBinder UICompValueBinder;
     private final SpankyWindow spankyWindow;
 
     public LineSeekerAlertMethodStateLayout(LineSeekerAlertMethodAttr attr,SpankyWindow spankyWindow) {
@@ -213,14 +213,14 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
         }
     }
     @Override
-    public JComponentBinder getJComponentBinder() {
-        if ( null == jComponentBinder) {
-            jComponentBinder = new JComponentBinder(attr,getOnValueChangedEventFunction());
-            jComponentBinder.bind("isAudioEnabled",audiocheckbox).bind("soundFile",soundSrc)
-                    .bind("isPopupEnabled",popupcheckbox).bind("popupSeconds",popupsecsComboBox)
+    public UICompValueBinder getJComponentBinder() {
+        if ( null == UICompValueBinder) {
+            UICompValueBinder = new UICompValueBinder(attr,getOnValueChangedEventFunction());
+            UICompValueBinder.bind("audioEnabled",audiocheckbox).bind("soundFile",soundSrc)
+                    .bind("popupEnabled",popupcheckbox).bind("popupSeconds",popupsecsComboBox)
                     .bind("popupLocation",popupLocationConfig);
         }
-        return jComponentBinder;
+        return UICompValueBinder;
     }
     @Override
     public JLabel getEditStatusLabel() {
