@@ -29,6 +29,8 @@ public class SpreadTotalView extends ViewValue {
     LineData[] boxes = new LineData[2];
     LineData[] priorboxes = new LineData[2];
     LineData[] openerboxes = new LineData[2];
+    String toptooltip;
+    String bottomtooltip;
     LineData ld1 = new LineData(ICON_BLANK, "", Color.WHITE);
     LineData ld2 = new LineData(ICON_BLANK, "", Color.WHITE);
     int bid;
@@ -257,6 +259,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     bottomboxS = tl.getShortPrintedCurrentTotal();
                     bottomcolor = totalcolor;
+                    bottomtooltip = tl.showHistory();
 
                     if (tl.isBestOver()) {
                         bottomborder += "bestover";
@@ -282,6 +285,7 @@ public class SpreadTotalView extends ViewValue {
             {
                 topboxS = sl.getShortPrintedCurrentSpread();
                 topcolor = spreadcolor;
+                toptooltip = sl.showHistory();
                 if (sl.isBestVisitSpread()) {
                     topborder += "bestvisitspread";
                 }
@@ -307,6 +311,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     bottomboxS = tl.getShortPrintedCurrentTotal();
                     bottomcolor = totalcolor;
+                    bottomtooltip = tl.showHistory();
                     if (tl.isBestOver()) {
                         bottomborder += "bestover";
                     }
@@ -332,6 +337,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     topboxS = tl.getShortPrintedCurrentTotal();
                     topcolor = totalcolor;
+                    toptooltip = tl.showHistory();
                     if (tl.isBestOver()) {
                         topborder += "bestover";
                     }
@@ -353,6 +359,7 @@ public class SpreadTotalView extends ViewValue {
                 }
                 bottomboxS = sl.getShortPrintedCurrentSpread();
                 bottomcolor = spreadcolor;
+                bottomtooltip = sl.showHistory();
                 if (sl.isBestVisitSpread()) {
                     bottomborder += "bestvisitspread";
                 }
@@ -375,6 +382,7 @@ public class SpreadTotalView extends ViewValue {
                 if (visitjuice < homejuice) {
                     topboxS = sl.getShortPrintedCurrentSpread();
                     topcolor = spreadcolor;
+                    toptooltip = sl.showHistory();
                     if (sl.isBestVisitSpread()) {
                         topborder += "bestvisitspread";
                     }
@@ -398,6 +406,7 @@ public class SpreadTotalView extends ViewValue {
                     } else {
                         bottomboxS = tl.getShortPrintedCurrentTotal();
                         bottomcolor = totalcolor;
+                        bottomtooltip = tl.showHistory();
                         if (tl.isBestOver()) {
                             bottomborder += "bestover";
                         }
@@ -424,6 +433,7 @@ public class SpreadTotalView extends ViewValue {
                     } else {
                         topboxS = tl.getShortPrintedCurrentTotal();
                         topcolor = totalcolor;
+                        toptooltip = tl.showHistory();
                         if (tl.isBestOver()) {
                             topborder += "bestover";
                         }
@@ -446,6 +456,7 @@ public class SpreadTotalView extends ViewValue {
 
                     bottomboxS = sl.getShortPrintedCurrentSpread();
                     bottomcolor = spreadcolor;
+                    bottomtooltip = sl.showHistory();
                     if (sl.isBestVisitSpread()) {
                         bottomborder += "bestvisitspread";
                     }
@@ -475,6 +486,7 @@ public class SpreadTotalView extends ViewValue {
                     }
                     topboxS = sign+sl.getShortPrintedCurrentSpread();
                     topcolor = spreadcolor;
+                    toptooltip = sl.showHistory();
                     if (sl.isBestVisitSpread()) {
                         topborder += "bestvisitspread";
                     }
@@ -500,6 +512,7 @@ public class SpreadTotalView extends ViewValue {
                     } else {
                         bottomboxS = tl.getShortPrintedCurrentTotal();
                         bottomcolor = totalcolor;
+                        bottomtooltip = tl.showHistory();
                         if (tl.isBestOver()) {
                             bottomborder += "bestover";
                         }
@@ -530,6 +543,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     bottomboxS = tl.getShortPrintedCurrentTotal();
                     bottomcolor = totalcolor;
+                    bottomtooltip = tl.showHistory();
                     if (tl.isBestOver()) {
                         bottomborder += "bestover";
                     }
@@ -563,6 +577,7 @@ public class SpreadTotalView extends ViewValue {
                 }
 
                 topcolor = moneycolor;
+                toptooltip = ml.showHistory();
                 if (ml.isBestVisitMoney()) {
                     topborder += "bestvisitmoney";
                 }
@@ -588,6 +603,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     bottomboxS = tl.getShortPrintedCurrentTotal();
                     bottomcolor = totalcolor;
+                    bottomtooltip = tl.showHistory();
                     if (tl.isBestOver()) {
                         bottomborder += "bestover";
                     }
@@ -615,6 +631,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     topboxS = tl.getShortPrintedCurrentTotal();
                     topcolor = totalcolor;
+                    toptooltip = tl.showHistory();
                     if (tl.isBestOver()) {
                         topborder += "bestover";
                     }
@@ -642,6 +659,7 @@ public class SpreadTotalView extends ViewValue {
                 }
 
                 bottomcolor = moneycolor;
+                bottomtooltip = ml.showHistory();
                 if (ml.isBestVisitMoney()) {
                     bottomborder += "bestvisitmoney";
                 }
@@ -666,7 +684,8 @@ public class SpreadTotalView extends ViewValue {
                 topboxS = "";
                 bottomboxS = "";
                 topcolor = bottomcolor = Color.WHITE; //spreadcolor;
-            } else {
+            } else
+                {
                 if (visitspread == 0 && homespread == 0)
                 {
                     if (visitjuice < homejuice)
@@ -725,6 +744,7 @@ public class SpreadTotalView extends ViewValue {
 
 
                 topcolor = bottomcolor = spreadcolor;
+                toptooltip = bottomtooltip = sl.showHistory();
                 if (whowasbetspread.equals("h")) {
                     bottomicon = ICON_DOWN;
                     topicon = null;
@@ -735,12 +755,14 @@ public class SpreadTotalView extends ViewValue {
                     topicon = bottomicon = ICON_BLANK;
                 }
             }
-        } else if (display.equals("justmoney")) {
+        } else if (display.equals("justmoney"))
+        {
             if (visitmljuice == -99999) {
                 topboxS = "";
                 bottomboxS = "";
                 topicon = bottomicon = null;
                 topcolor = bottomcolor = Color.WHITE; //moneycolor;
+
 
             }
             //else if(visitmljuice < 0)
@@ -748,6 +770,7 @@ public class SpreadTotalView extends ViewValue {
                 topboxS = ml.getPrintedJuiceLine(visitmljuice);
                 bottomboxS = ml.getPrintedJuiceLine(homemljuice);
                 topcolor = bottomcolor = moneycolor;
+                toptooltip = bottomtooltip = ml.showHistory();
                 if (whowasbetmoney.equals("h")) {
                     topicon = ICON_DOWN;
                     bottomicon = ICON_BLANK;
@@ -772,6 +795,7 @@ public class SpreadTotalView extends ViewValue {
                 topboxS = ml.getPrintedJuiceLine(visitmljuice);
                 bottomboxS = ml.getPrintedJuiceLine(homemljuice);
                 topcolor = bottomcolor = moneycolor;
+                toptooltip = bottomtooltip = ml.showHistory();
                 if (whowasbetmoney.equals("h")) {
                     bottomicon = ICON_UP;
                     topicon = ICON_BLANK;
@@ -813,6 +837,7 @@ public class SpreadTotalView extends ViewValue {
 
 
                 topcolor = bottomcolor = totalcolor;
+                toptooltip = bottomtooltip = tl.showHistory();
                 if (whowasbettotal.equals("u")) {
                     bottomicon = ICON_DOWN;
                     topicon = null;
@@ -854,6 +879,7 @@ public class SpreadTotalView extends ViewValue {
 
 
                 topcolor = bottomcolor = totalcolor;
+                toptooltip = bottomtooltip = ttl.showAwayHistory();
                 if (whowasbetteamtotal.equals("u")) {
                     bottomicon = ICON_DOWN;
                     topicon = null;
@@ -894,6 +920,7 @@ public class SpreadTotalView extends ViewValue {
 
 
                 topcolor = bottomcolor = totalcolor;
+                toptooltip = bottomtooltip = ttl.showHomeHistory();
                 if (whowasbetteamtotal.equals("u")) {
                     bottomicon = ICON_DOWN;
                     topicon = null;
@@ -917,38 +944,6 @@ public class SpreadTotalView extends ViewValue {
 
             }
         }
-        //testing
-        //topicon = ICON_UP;
-        //bottomicon = ICON_DOWN;
-        if (topicon == null) {
-            topicon = ICON_BLANK;
-        }
-        if (bottomicon == null) {
-            bottomicon = ICON_BLANK;
-        }
-        if (topboxS.equals("")) {
-            topicon = ICON_BLANK;
-        }
-        if (bottomboxS.equals("")) {
-            bottomicon = ICON_BLANK;
-        }
-
-        ld1.setIconPath(topicon);
-        ld2.setIconPath(bottomicon);
-        ld1.setData(topboxS);
-        ld2.setData(bottomboxS);
-        ld1.setBackgroundColor(topcolor);
-        ld2.setBackgroundColor(bottomcolor);
-        ld1.setBorder(topborder);
-        ld2.setBorder(bottomborder);
-
-
-        boxes[0] = ld1;
-        boxes[1] = ld2;
-        setCurrentBoxes(boxes);
-        //if(sl == null) sl = Spreadline.sl;
-        //if(tl == null) tl = Totalline.tl;
-        //if(ml == null) ml = Moneyline.ml;
 
         try {
             Game game = getGame();
@@ -1002,10 +997,11 @@ public class SpreadTotalView extends ViewValue {
                     besthtml = besthtml+"<tr><td>M:</td><td><table border=1><tr><td align=center>"+vmb+"</td><tr><td>"+format(visitmljuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hmb+"</td><tr><td>"+format(homemljuice)+"</td></tr></table></td></tr>";
 
                     besthtml = besthtml+"</table>";
-                    setTooltiptext("<html><body>" +besthtml + "</body></html>");
+                   // setTooltiptext("<html><body>" +besthtml + "</body></html>");
+                    toptooltip = bottomtooltip = "<html><body>" +besthtml + "</body></html>";
                 }
                 else
-                 {
+                {
                     String limithtml = "";
                     int sidelimit = 0;
                     int totallimit = 0;
@@ -1020,13 +1016,28 @@ public class SpreadTotalView extends ViewValue {
                         moneylimit = ml.getLimit();
                     }
 
-                    limithtml = sidelimit + " / " + totallimit + " / " + moneylimit;
-                    if (!limithtml.equals("0 / 0 / 0")) {
-                        setTooltiptext("<html><body>" + limithtml + "</body></html>");
+                    limithtml = ""+sidelimit + " / " + totallimit + " / " + moneylimit;
+                    if (!limithtml.equals("0 / 0 / 0"))
+                    {
+                        toptooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+toptooltip+"</table>";
+                        bottomtooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+bottomtooltip+"</table>";
+                        //setTooltiptext("<html><body>" + limithtml + "</body></html>");
+                    }
+                    else
+                    {
+                        toptooltip = "<table>"+toptooltip+"</table>";
+                        bottomtooltip = "<table>"+bottomtooltip+"</table>";
                     }
                 }
-                linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display;
+                linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display+"&strgameDate=";
                 setUrl(linehistoryurl);
+
+
+                toptooltip ="<html><body>"+toptooltip+"</body></html>";
+                bottomtooltip ="<html><body>"+bottomtooltip+"</body></html>";
+
+
+
                 /*
                 setTooltiptext("<html><body>" +
                         "<table border=1>" +
@@ -1117,6 +1128,57 @@ public class SpreadTotalView extends ViewValue {
         } catch (Exception ex) {
             log(ex);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //testing
+        //topicon = ICON_UP;
+        //bottomicon = ICON_DOWN;
+
+
+
+        if (topicon == null) {
+            topicon = ICON_BLANK;
+        }
+        if (bottomicon == null) {
+            bottomicon = ICON_BLANK;
+        }
+        if (topboxS.equals("")) {
+            topicon = ICON_BLANK;
+        }
+        if (bottomboxS.equals("")) {
+            bottomicon = ICON_BLANK;
+        }
+
+        ld1.setIconPath(topicon);
+        ld2.setIconPath(bottomicon);
+        ld1.setData(topboxS);
+        ld2.setData(bottomboxS);
+        ld1.setBackgroundColor(topcolor);
+        ld2.setBackgroundColor(bottomcolor);
+        ld1.setBorder(topborder);
+        ld2.setBorder(bottomborder);
+        ld1.setTooltip(toptooltip);
+        ld2.setTooltip(bottomtooltip);
+
+
+        boxes[0] = ld1;
+        boxes[1] = ld2;
+        setCurrentBoxes(boxes);
+
+
+
         return boxes;
     }
 

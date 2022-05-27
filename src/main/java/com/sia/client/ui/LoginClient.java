@@ -54,7 +54,7 @@ public class LoginClient implements MessageListener {
             AppController.addBookie(new Bookie(992, "Gm#", "Gm#", "", ""));
             AppController.addBookie(new Bookie(993, "Team", "Team", "", ""));
             AppController.addBookie(new Bookie(994, "Chart", "Chart", "", ""));
-            AppController.addBookie(new Bookie(996, "Best*", "Best*", "", ""));
+            AppController.addBookie(new Bookie(996, "*Best", "*Best", "", ""));
             //should i add chart bookie here????
             connection = AppController.getGuestConnection();
 
@@ -207,7 +207,12 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setBookieColumnsChanged(text);
-            } else if ( messageType.equals("loginkey")) {
+             } else if ( messageType.equals("openeralert")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                AppController.getUser().setOpeneralert(text);
+            }
+            else if ( messageType.equals("loginkey")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setLoginKey(text);
@@ -360,6 +365,8 @@ public class LoginClient implements MessageListener {
 
             } else if (messageType.equals("Unsubscribe")) {
 
+                AppController.createLineOpenerAlertNodeListFromUserPrefs();
+                AppController.createLimitNodeListFromUserPrefs();
                 AppController.createGamesConsumer();
                 AppController.createScoresConsumer();
                 AppController.createUrgentsConsumer();

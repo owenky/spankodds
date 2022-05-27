@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
+import com.sia.client.ui.LineAlertOpenerManager;
 
 import static com.sia.client.config.Utils.log;
 
@@ -192,13 +193,14 @@ public class Spreadline extends Line {
                 this.setOpenervisitspread(visitspread);
                 this.setOpenervisitjuice(visitjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
        // }
       //  if (homejuice != 0)
        // {
             this.setCurrenthomespread(homespread);
             this.setCurrenthomejuice(homejuice);
-            this.setCurrentts(ts);
+            // why call this twice this.setCurrentts(ts);
 
             if (isopener)
             {
@@ -579,5 +581,29 @@ public class Spreadline extends Line {
         this.openerhomejuice = openerhomejuice;
     }
 
+    @Override
+    public String getOpener()
+    {
+        String s;
+        s = getOpenervisitspread()+getOpenervisitjuice()+"<br>"+getOpenerhomespread()+getOpenerhomejuice();
+        return s;
+    }
+
+    public String showHistory()
+    {
+        try {
+            String s =
+                    "<tr><td>C:</td><td>" + getShortPrintedCurrentSpread() + "</td><td>" + formatts(getCurrentts()) + "</td></tr>" +
+                    "<tr><td>P:</td><td>" + getShortPrintedPriorSpread() + "</td><td>" + formatts(getPriorts()) + "</td></tr>" +
+                    "<tr><td>O:</td><td>" + getShortPrintedOpenerSpread() + "</td><td>" + formatts(getOpenerts()) + "</td></tr>";
+
+            return s;
+        }
+        catch(Exception ex)
+        {
+            log("spread show history exception "+ex);
+        }
+        return "";
+    }
 
 }

@@ -1,7 +1,10 @@
 package com.sia.client.model;
 
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.LimitAlertManager;
 import com.sia.client.ui.UrgentMessage;
+
+import java.text.SimpleDateFormat;
 
 public class Line {
     protected int bookieid;
@@ -14,8 +17,21 @@ public class Line {
 	protected long currentts = 1000;
 	protected long  openerts = 1000;
 	protected int leagueid = 0;
-
+    static final SimpleDateFormat sdf3 = new SimpleDateFormat("MM/dd HH:mm:ss");
 	protected boolean scalp = false;
+
+	public String formatts(long ts)
+    {
+        if(ts == 1000)
+        {
+            return "";
+        }
+        else
+        {
+          String s = sdf3.format(new java.util.Date(ts));
+          return s;
+        }
+    }
 
     public String getPrintedJuiceLine(double ml) {
         String retvalue = "";
@@ -71,12 +87,13 @@ public class Line {
     {
         int oldlimit = this.limit;
         this.limit = newlimit;
-        String message = "";
+        Game g = getGameObject();
+
         if(oldlimit == newlimit)
         {
             return;
         }
-        else if(getGameObject().isIngame() || leagueid == 12)
+        else if(g.isIngame() || !g.getStatus().equals("") )
         {
             return;
         }
@@ -84,8 +101,14 @@ public class Line {
         {
             return;
         }
-        else
-        {
+
+        // if we get here lets see if its worthy of an alert
+        LimitAlertManager.limitChangeAlert(gameid,bookieid,period,oldlimit,newlimit,this);
+
+/*
+        String message = "";
+
+
             if(oldlimit > newlimit)
             {
                 message = "Decreased from "+oldlimit+" to "+newlimit;
@@ -94,7 +117,7 @@ public class Line {
             {
                 message = "Increased from "+oldlimit+" to "+newlimit;
             }
-        }
+        */
 // need to apply filter here before alerting
         /*
         new UrgentMessage("<HTML><H2>"+AppController.getBookie(getBookieid()).getName()+" - "+type.toUpperCase()+" LIMIT CHANGE " + getLeague_id() + "</H2>" +
@@ -149,17 +172,28 @@ public class Line {
         {
             Game g = AppController.getGame(gameid);
             leagueid = g.getLeague_id();
+
         }
         return leagueid;
     }
 	public final long getCurrentts() {
 		return currentts;
 	}
+    public final long getPriorts() {
+        return priorts;
+    }
+    public final long getOpenerts() {
+        return openerts;
+    }
 	public final void setCurrentts(long currentts) {
-        this.priorts = this.currentts;
+        if(this.priorts != this.currentts)
+        {
+            this.priorts = this.currentts;
+        }
 		this.currentts = currentts;
 	}
 	public final void setOpenerts(long openerts) {
 		this.openerts = openerts;
 	}
+	public String getOpener() { return "";}
 }

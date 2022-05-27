@@ -191,19 +191,20 @@ public class TeamTotalline extends Line {
        // if (visitunderjuice != 0) {
             this.setCurrentvisitunder(visitunder);
             this.setCurrentvisitunderjuice(visitunderjuice);
-            this.setCurrentts(ts);
+            //why call this 4x this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenervisitunder(visitunder);
                 this.setOpenervisitunderjuice(visitunderjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
       //  }
 
        // if (homeoverjuice != 0) {
             this.setCurrenthomeover(homeover);
             this.setCurrenthomeoverjuice(homeoverjuice);
-            this.setCurrentts(ts);
+        //why call this 4x this.setCurrentts(ts);
 
 
             if (isopener) {
@@ -215,7 +216,7 @@ public class TeamTotalline extends Line {
       //  if (homeunderjuice != 0) {
             this.setCurrenthomeunder(homeunder);
             this.setCurrenthomeunderjuice(homeunderjuice);
-            this.setCurrentts(ts);
+        //why call this 4x this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenerhomeunder(homeunder);
@@ -704,7 +705,60 @@ public class TeamTotalline extends Line {
     public void setOpenerhomeunderjuice(double openerhomeunderjuice) {
         this.openerhomeunderjuice = openerhomeunderjuice;
     }
+    @Override
+    public String getOpener()
+    {
+        String s = "";
+        if(getOpenervisitoverjuice()!= 0)
+        {
+            s = getOpenervisitover()+"o"+getOpenervisitoverjuice()+"<br>"+getOpenervisitunder()+"u"+getOpenervisitunderjuice();
+        }
+        if(getOpenerhomeoverjuice()!= 0)
+        {
+            s = s+"<br>"+getOpenerhomeover()+"o"+getOpenerhomeoverjuice()+"<br>"+getOpenerhomeunder()+"u"+getOpenerhomeunderjuice();
+        }
 
+
+
+        return s;
+    }
+
+    public String showAwayHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentVisitTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorVisitTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerVisitTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
+
+        return s;
+        }
+        catch(Exception ex)
+        {
+            log("ttlaway show history exception "+ex);
+        }
+        return "";
+
+    }
+    public String showHomeHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentHomeTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorHomeTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerHomeTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
+
+        return s;
+        }
+        catch(Exception ex)
+        {
+            log("ttlhome show history exception "+ex);
+        }
+        return "";
+
+    }
 
 }
 

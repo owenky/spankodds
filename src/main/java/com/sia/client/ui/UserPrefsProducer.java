@@ -171,6 +171,7 @@ public class UserPrefsProducer {
             mapMessage.setString("bigearnalert", u.getBigearnAlert());
             mapMessage.setString("officialalert", u.getOfficialAlert());
             mapMessage.setString("startedalert", u.getStartedAlert());
+            mapMessage.setString("openeralert", u.getOpeneralert());
 
             mapMessage.setString("tabsindex", u.getTabsIndex());
 

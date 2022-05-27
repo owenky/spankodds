@@ -501,8 +501,11 @@ public class LinesMoves
 
     public static double percentageofjuicemove(double oldjuice,double newjuice)
     {
-        // newjuice is closing line
-        //System.out.println("JUICE INPUTS..oj="+oldjuice+"..nj="+newjuice);
+        double negfactor = 1.0;
+        if(newjuice > oldjuice)
+        {
+            negfactor = -1.0;
+        }
         double percentmove = 0;
         double percentmove2 = 0;
         double percentmovefinal = 0;
@@ -512,19 +515,24 @@ public class LinesMoves
             double oldj = oldjuice/(oldjuice-100);
             //System.out.println("newj="+newj);
             //System.out.println("oldj="+oldj);
-            percentmovefinal = (newj-oldj)/oldj;
+            percentmove = Math.abs((newj-oldj)/oldj);
+            percentmove2 = Math.abs((oldj-newj)/newj);
+            percentmovefinal = (percentmove+percentmove2)/2.0*negfactor;
 
-            //percentmove = ( newjuice/(newjuice-100) - oldjuice/(oldjuice-100))/((oldjuice/(oldjuice-100)));
+
 
         }
         else if(newjuice > 0 && oldjuice > 0)
         {
+
             double newj = 1 - (newjuice/(newjuice+100));
             double oldj = 1- (oldjuice/(oldjuice+100));
             //System.out.println("newj="+newj);
             //System.out.println("oldj="+oldj);
             percentmovefinal = (newj-oldj)/oldj;
-            //percentmove = ( ((1 - newjuice/(newjuice+100)) - (1 - oldjuice/(oldjuice+100)))/(1 - (oldjuice/(oldjuice+100))));
+            percentmove = Math.abs((newj-oldj)/oldj);
+            percentmove2 = Math.abs((oldj-newj)/newj);
+            percentmovefinal = (percentmove+percentmove2)/2.0*negfactor;
 
         }
         else if(newjuice > 0 && oldjuice < 0)
@@ -561,12 +569,7 @@ public class LinesMoves
            System.out.println("oldline=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice);
         }
 
-        boolean easygood = isLine1BetterThanLine2NoMath(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid);
 
-        if(easygood)
-        {
-            return 1;
-        }
         double[] arr = new double[100];
 
         arr = getleagueidArray(leagueid,period,type);
@@ -591,8 +594,17 @@ public class LinesMoves
         // need to handle case where i don't have push chart data
         if(arr == null)
         {
+            if(arr == null)
+            {
+                boolean easygood = isLine1BetterThanLine2NoMath(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid);
 
-            return 0;
+                if(easygood)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+
         }
 
         if(oldline <0 && newline <0)

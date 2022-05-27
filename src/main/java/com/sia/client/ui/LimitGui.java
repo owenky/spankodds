@@ -34,17 +34,21 @@ import java.util.List;
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
 
-public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListener {
+public class LimitGui extends AbstractLayeredDialog implements ItemListener {
 
     public static String[] gameperiod = new String[]{"Full Game", "1st Half", "2nd Half", "All Halfs", " ", "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter", "Live", "All Periods"};
     static int idx;
     JLabel welcome = new JLabel("LINE ALERT");
     JComboBox renotifyComboBox;
-    JButton testsound = new JButton("Test Sound");
+    JComboBox percentageComboBox;
+    JButton testincsound = new JButton("Test Inc Sound");
+    JButton testdecsound = new JButton("Test Dec Sound");
     JButton testpopup = new JButton("Test Popup");
     String sport = "";
     JCheckBox audiocheckbox;
     JCheckBox popupcheckbox;
+    JCheckBox audiocheckbox2;
+    JCheckBox popupcheckbox2;
     JCheckBox textcheckbox;
     JComboBox popupsecsComboBox;
     JPanel panel = new JPanel();
@@ -76,8 +80,13 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     String[] sportlist = new String[10];
     String[] secslist = new String[60];
     String[] minslist = new String[20];
-    String[] audiolist = new String[8];
+    String[] percentagelist = new String[16];
+    String[] incaudiolist = new String[8];
+    String[] decaudiolist = new String[8];
     private JComboBox sportComboBox;
+
+    private JComboBox incaudioComboBox;
+    private JComboBox decaudioComboBox;
 
     private JLabel linetype = new JLabel("LINE TYPE");
     private JLabel notify = new JLabel("NOTIFY");
@@ -86,7 +95,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     private Box box2 = Box.createVerticalBox();
     private Box box3 = Box.createVerticalBox();
     private int popupsecs = 5;
-    private int popuplocationint = 0;
+    private int popuplocationint = 8;
     private List<Bookie> bookeis;
     private List<Sport> sports;
     private Vector checkednodes2 = new Vector();
@@ -98,6 +107,11 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     private String alerttype = "";
     private final PopupLocationConfig popupLocationConfig = new PopupLocationConfig();
     private String soundfile = "";
+    private String incsoundfile = "";
+    private String decsoundfile = "";
+
+    Vector<String> incaudiofilevec = new Vector<>();
+    Vector<String> decaudiofilevec = new Vector<>();
 
     JideToggleButton upperright;
     JideToggleButton upperleft;
@@ -108,8 +122,8 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     JList eventsList = new JList();
     DefaultListModel eventsModel = new DefaultListModel();
 
-    public LineAlertOpeners(SportsTabPane stp) {
-        super(stp,"Openers Line Alerts");
+    public LimitGui(SportsTabPane stp) {
+        super(stp,"Limit Change Alerts");
     }
     @Override
     protected JComponent getUserComponent() {
@@ -119,9 +133,45 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         tp7.setShow(TextPrompt.Show.FOCUS_LOST);
         tp7.changeStyle(Font.BOLD + Font.ITALIC);
 
-        audiolist[0] = "select sound";
-        audiolist[1] = "openers";
-        audiolist[2] = "Custom Sounds";
+        incaudiolist[0] = "Limit Change";
+        incaudiolist[1] = "Limit Increase";
+        incaudiolist[2] = "Fire Away";
+        incaudiolist[3] = "Come Get Some";
+        incaudiolist[4] = "Come Get Some XXX";
+        incaudiolist[5] = "Horn";
+        incaudiolist[6] = "Double Horn";
+        incaudiolist[7] = "Scream";
+
+        incaudiofilevec.add("limitchange.wav");
+        incaudiofilevec.add("limitincrease.wav");
+        incaudiofilevec.add("fireaway.wav");
+        incaudiofilevec.add("comegetsome.wav");
+        incaudiofilevec.add("comegetsomeyoulittlebitch.wav");
+        incaudiofilevec.add("horn.wav");
+        incaudiofilevec.add("doublehorn.wav");
+        incaudiofilevec.add("scream.wav");
+
+        decaudiolist[0] = "Limit Change";
+        decaudiolist[1] = "Limit Decrease";
+        decaudiolist[2] = "Getting Nervous";
+        decaudiolist[3] = "Getting Nervous XXX";
+        decaudiolist[4] = "What The F*ck";
+        decaudiolist[5] = "Horn";
+        decaudiolist[6] = "Double Horn";
+        decaudiolist[7] = "Scream";
+
+        decaudiofilevec.add("limitchange.wav");
+        decaudiofilevec.add("limitdecrease.wav");
+        decaudiofilevec.add("oogettingnervous.wav");
+        decaudiofilevec.add("ohshitiamgettingveryverynervous.wav");
+        decaudiofilevec.add("whatthefuck2.wav");
+        decaudiofilevec.add("horn.wav");
+        decaudiofilevec.add("doublehorn.wav");
+        decaudiofilevec.add("scream.wav");
+
+        incaudioComboBox = new JComboBox(incaudiolist);
+        decaudioComboBox = new JComboBox(decaudiolist);
+
         for (int v = 1; v <= 60; v++) {
             secslist[v - 1] = v + "";
         }
@@ -146,6 +196,24 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         minslist[17] = "9.0";
         minslist[18] = "9.5";
         minslist[19] = "10.0";
+
+        percentagelist[0] = "0";
+        percentagelist[1] = "5";
+        percentagelist[2] = "10";
+        percentagelist[3] = "15";
+        percentagelist[4] = "20";
+        percentagelist[5] = "25";
+        percentagelist[6] = "30";
+        percentagelist[7] = "35";
+        percentagelist[8] = "40";
+        percentagelist[9] = "45";
+        percentagelist[10] = "50";
+        percentagelist[11] = "60";
+        percentagelist[12] = "70";
+        percentagelist[13] = "80";
+        percentagelist[14] = "90";
+        percentagelist[15] = "100";
+
 
         int index=0;
         sportlist[index++] = "Please Select a Sport...";
@@ -223,10 +291,10 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         display2[2] = "Top Right";
         display2[3] = "Bottom Right";
 
-         upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
-         upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
-         lowerright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerright.png")));
-         lowerleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerleft.png")));
+        upperright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperright.png")));
+        upperleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("upperleft.png")));
+        lowerright = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerright.png")));
+        lowerleft = new JideToggleButton(new ImageIcon(Utils.getMediaResource("lowerleft.png")));
 
         upperright.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -270,6 +338,10 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         } else if (popuplocationint == SwingConstants.SOUTH_WEST) {
             lowerleft.setSelected(true);
         }
+        else  {
+            upperright.setSelected(true);
+            popuplocationint = SwingConstants.NORTH_EAST;
+        }
         radioPanel.add(upperleft);
         radioPanel.add(upperright);
         radioPanel.add(lowerleft);
@@ -279,19 +351,21 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         sportComboBox.setSelectedIndex(0);
         sportComboBox.addItemListener(this);
 
-        audiocheckbox = new JCheckBox("Play Audio");
+        audiocheckbox = new JCheckBox("Play Audio (Increases)");
+        audiocheckbox2 = new JCheckBox("Play Audio (Decreases)");
         textcheckbox = new JCheckBox("Send Text ");
 
 
 
-        popupcheckbox = new JCheckBox("Show Popup");
+        popupcheckbox = new JCheckBox("Show Popup (Increases)");
+        popupcheckbox2 = new JCheckBox("Show Popup (Decreases)");
 
         popupsecsComboBox = new JComboBox(secslist);
 
 
 
         renotifyComboBox = new JComboBox(minslist);
-
+        percentageComboBox = new JComboBox(percentagelist);
 
         panel1.setBorder(BorderFactory.createEtchedBorder());
         panel1.setLayout(new GridBagLayout());
@@ -300,51 +374,59 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         panel2.setBorder(BorderFactory.createEtchedBorder());
         panel2.setLayout(new GridBagLayout());
 
-        JLabel forlab = new JLabel("for ");
+        JLabel forlab = new JLabel("for length (secs) =");
+        JLabel percentlab = new JLabel("%");
         JLabel secondslab = new JLabel("seconds");
         JLabel renotifyme = new JLabel("Renotify me on same Sport+Bookie only after");
         JLabel renotifyme2 = new JLabel(" minutes have elapsed");
 
-
+        JLabel minpercentagelab = new JLabel("Only alert me of % changes that are >=");
 
 
 
 
         usedefaultsound.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                int i = LineAlertOpeners.idx;
-                soundfile = "openers.wav";
-          //      AppController.LineOpenerAlertNodeList.get(i).soundfile = "openers.wav";
-          //      AppController.LineOpenerAlertNodeList.get(i).soundlabel = "DEFAULT";
+                int i = LimitGui.idx;
+                soundfile = "limitchange.wav";
+
                 soundlabel.setText("DEFAULT");
             }
         });
         usecustomsound.addActionListener(ae -> {
-            int i = LineAlertOpeners.idx;
+            int i = LimitGui.idx;
             JFileChooser jfc = new JFileChooser();
             log("hai iam from filechooser");
             jfc.showOpenDialog(jfrm1);
             File f1 = jfc.getSelectedFile();
             soundfile = f1.getPath();
-          //  AppController.LineOpenerAlertNodeList.get(i).soundfile = f1.getPath();
-          //  AppController.LineOpenerAlertNodeList.get(i).soundlabel = f1.getPath();
+            //  AppController.LimitNodeList.get(i).soundfile = f1.getPath();
+            //  AppController.LimitNodeList.get(i).soundlabel = f1.getPath();
             soundlabel.setText(f1.getPath());
         });
 
 
-        testsound.addActionListener(ae -> {
+        testincsound.addActionListener(ae -> {
             try {
-               // playSound("openers.wav");
-                SoundPlayer.playSound(soundfile);
+
+                new SoundPlayer(incaudiofilevec.elementAt(incaudioComboBox.getSelectedIndex()), true);
             } catch (Exception ex) {
-                showMessageDialog(null, "Error Playing File!");
+                showMessageDialog(null, "Error Playing Inc File!");
                 log(ex);
             }
         });
+        testdecsound.addActionListener(ae -> {
+            try {
 
+                new SoundPlayer(decaudiofilevec.elementAt(decaudioComboBox.getSelectedIndex()), true);
+            } catch (Exception ex) {
+                showMessageDialog(null, "Error Playing Dec File!");
+                log(ex);
+            }
+        });
         testpopup.addActionListener(ae -> {
             new UrgentMessage("<HTML><H1>" + alerttype.toUpperCase() + "</H1><FONT COLOR=BLUE>" +
-                    "OPENERS<BR><TABLE cellspacing=5 cellpadding=5>" +
+                    "Limit Change<BR><TABLE cellspacing=5 cellpadding=5>" +
 
                     "<TR><TD COLSPAN=3>TEST MESSAGE A1</TD></TR>" +
                     "<TR><TD COLSPAN=3>TEST MESSAGE A2</TD></TR>" +
@@ -394,7 +476,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         c.gridx = 4;
         c.gridwidth = 2;
         panel2.add(fourthtquarter, c);
-       // panel2.add(allperiods, c);
+        // panel2.add(allperiods, c);
 
         c.gridy = 4;
         c.gridx = 0;
@@ -402,7 +484,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         //panel2.add(allquarters, c);
         c.gridx = 4;
         c.gridwidth = 2;
-       //blank
+        //blank
         //spread total moneyline and teamtotal checkboxes
         c.gridy = 12;
         c.gridx = 0;
@@ -431,59 +513,105 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         panel.add(audiocheckbox, c);
         c.gridx = 2;
         c.gridwidth = 2;
-        panel.add(usedefaultsound, c);
-        c.gridx = 4;
-        c.gridwidth = 2;
-        panel.add(usecustomsound, c);
-        c.gridx = 8;
-        c.gridwidth = 4;
-        panel.add(testsound, c);
-        c.gridy = 21;
 
-        c.gridx = 3;
+        // add increase audio choices here
+        panel.add(incaudioComboBox, c);
+        c.gridx = 4;
+        c.gridwidth = 1;
+        //panel.add(usecustomsound, c);
+        //c.gridx = 8;
+        //c.gridwidth = 4;
+        panel.add(testincsound, c);
+
+
+        c.gridy = 21;
+        c.gridx = 0;
         c.gridwidth = 2;
-        panel.add(soundlabel, c);
+        panel.add(audiocheckbox2, c);
+        c.gridx = 2;
+        c.gridwidth = 2;
+
+        // add increase audio choices here
+        panel.add(decaudioComboBox, c);
+        c.gridx = 4;
+        c.gridwidth = 1;
+        //panel.add(usecustomsound, c);
+        //c.gridx = 8;
+        //c.gridwidth = 4;
+        panel.add(testdecsound, c);
+
+
+
+       // c.gridx = 3;
+       // c.gridwidth = 2;
+       // panel.add(soundlabel, c);
 
         c.gridy = 24;
 
         c.gridx = 0;
         c.gridwidth = 2;
         panel.add(popupcheckbox, c);
+
+
+
+        // panel.add(popupLocationConfig.getUserComponent(), c);
+        c.gridheight = 2;
         c.gridx = 2;
         c.gridwidth = 1;
-        panel.add(radioPanel, c);
-       // panel.add(popupLocationConfig.getUserComponent(), c);
-        panel.add(popupLocationConfig, c);
-        c.gridx = 3;
-        c.gridwidth = 1;
         panel.add(forlab, c);
-        c.gridx = 4;
+        c.gridx =3;
         c.gridwidth = 1;
         panel.add(popupsecsComboBox, c);
 
-        c.gridx = 5;
-        c.gridwidth = 1;
-        panel.add(secondslab, c);
-        c.gridx = 8;
-        c.gridwidth = 4;
-        panel.add(testpopup, c);
-
-        c.gridy = 26;
-        c.gridx = 0;
-        c.gridwidth=2;
-        panel.add(textcheckbox, c);
-
-        c.gridy = 28;
-
-        c.gridx = 0;
-        c.gridwidth = 4;
-        panel.add(renotifyme, c);
+       // c.gridx = 4;
+        //c.gridwidth = 1;
+       //panel.add(secondslab, c);
         c.gridx = 4;
         c.gridwidth = 1;
-        panel.add(renotifyComboBox, c);
-        c.gridx = 5;
+        c.gridheight = 2;
+        panel.add(radioPanel, c);
+       // c.gridx = 7;
+       // c.gridwidth = 1;
+       // panel.add(testpopup, c);
+        c.gridheight = 1;
+        c.gridy = 25;
+        c.gridx = 0;
+        c.gridwidth=2;
+        c.gridheight=1;
+        panel.add(popupcheckbox2, c);
+        // c.gridx = 2;
+        // c.gridwidth = 1;
+        //  panel.add(testpopup, c);
+
+
+        c.gridy = 26;
+
+        c.gridx = 0;
         c.gridwidth = 3;
+        panel.add(renotifyme, c);
+        c.gridx = 3;
+        c.gridwidth = 1;
+        panel.add(renotifyComboBox, c);
+        c.gridx = 4;
+        c.gridwidth = 1;
         panel.add(renotifyme2, c);
+
+        c.gridy = 27;
+        c.gridx = 0;
+        c.gridwidth=3;
+       // c.anchor=GridBagConstraints.BASELINE_TRAILING;
+        panel.add(minpercentagelab, c);
+      //  c.anchor=GridBagConstraints.BASELINE_LEADING;
+        c.gridx = 3;
+        c.gridwidth=1;
+        panel.add(percentageComboBox, c);
+        c.anchor=GridBagConstraints.BELOW_BASELINE_LEADING;
+        c.gridx = 4;
+        c.gridwidth=1;
+        panel.add(percentlab, c);
+
+
+
 
 
         selectedList.revalidate();
@@ -567,49 +695,54 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 
 
 
-                AppController.LineOpenerAlertNodeList.get(idx).setSport(sport);
-                AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes = sportselectedvec;
-                AppController.LineOpenerAlertNodeList.get(idx).checkedBookieNodes = bookieselectedvec;
-                AppController.LineOpenerAlertNodeList.get(idx).sportcodes = new ArrayList<String>(Arrays.asList(sportselected.split(",")));;
-                AppController.LineOpenerAlertNodeList.get(idx).bookiecodes = new ArrayList<String>(Arrays.asList(bookieselected.split(",")));;
-                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).renotifyvalue=(String)renotifyComboBox.getSelectedItem();
-                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).showpopvalue=(String)popupsecsComboBox.getSelectedItem();
-                //com.sia.client.ui.AppController.LineOpenerAlertNodeList.get(idx).audiovalue=(String)audioComboBox.getSelectedItem();
+                AppController.LimitNodeList.get(idx).setSport(sport);
+                AppController.LimitNodeList.get(idx).checkedLeagueNodes = sportselectedvec;
+                AppController.LimitNodeList.get(idx).checkedBookieNodes = bookieselectedvec;
+                AppController.LimitNodeList.get(idx).sportcodes = new ArrayList<String>(Arrays.asList(sportselected.split(",")));;
+                AppController.LimitNodeList.get(idx).bookiecodes = new ArrayList<String>(Arrays.asList(bookieselected.split(",")));;
+                //com.sia.client.ui.AppController.LimitNodeList.get(idx).renotifyvalue=(String)renotifyComboBox.getSelectedItem();
+                //com.sia.client.ui.AppController.LimitNodeList.get(idx).showpopvalue=(String)popupsecsComboBox.getSelectedItem();
+                //com.sia.client.ui.AppController.LimitNodeList.get(idx).audiovalue=(String)audioComboBox.getSelectedItem();
                 String popsec = (String) popupsecsComboBox.getSelectedItem();
-                AppController.LineOpenerAlertNodeList.get(idx).popupsec = Integer.parseInt(popsec);
-                AppController.LineOpenerAlertNodeList.get(idx).popuplocationint = popuplocationint;
+                AppController.LimitNodeList.get(idx).popupsec = Integer.parseInt(popsec);
+                AppController.LimitNodeList.get(idx).popuplocationint = popuplocationint;
+
+                String minpercentageS = (String) percentageComboBox.getSelectedItem();
+                AppController.LimitNodeList.get(idx).minpercentagechange = Integer.parseInt(minpercentageS);
 
 
 
 
 
 
+                AppController.LimitNodeList.get(idx).renotifyvalue = Double.parseDouble((String) renotifyComboBox.getSelectedItem());
+                AppController.LimitNodeList.get(idx).showpopvalue = Integer.parseInt((String) popupsecsComboBox.getSelectedItem());
+                AppController.LimitNodeList.get(idx).isIncShowpopChecks = popupcheckbox.isSelected();
+                AppController.LimitNodeList.get(idx).isDecShowpopChecks = popupcheckbox2.isSelected();
+                AppController.LimitNodeList.get(idx).isIncAudioChecks = audiocheckbox.isSelected();
+                AppController.LimitNodeList.get(idx).isDecAudioChecks = audiocheckbox2.isSelected();
+                AppController.LimitNodeList.get(idx).minpercentagechange = Integer.parseInt((String)percentageComboBox.getSelectedItem());
 
-                AppController.LineOpenerAlertNodeList.get(idx).renotifyvalue = Double.parseDouble((String) renotifyComboBox.getSelectedItem());
-                AppController.LineOpenerAlertNodeList.get(idx).showpopvalue = Integer.parseInt((String) popupsecsComboBox.getSelectedItem());
-                AppController.LineOpenerAlertNodeList.get(idx).isShowpopChecks = popupcheckbox.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).isAudioChecks = audiocheckbox.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).isTextChecks =textcheckbox.isSelected();
+                AppController.LimitNodeList.get(idx).is1stHafCheck = firsthalf.isSelected();
+                AppController.LimitNodeList.get(idx).is2ndHalfCheck = secondhalf.isSelected();
+                //AppController.LimitNodeList.get(idx).isAllHalfsCheck = true;
+                AppController.LimitNodeList.get(idx).is1stQutCheck = firstquarter.isSelected();
+                AppController.LimitNodeList.get(idx).is2ndQutCheck = secondquarter.isSelected();
+                AppController.LimitNodeList.get(idx).is3rdQutCheck = thirdquarter.isSelected();
+                AppController.LimitNodeList.get(idx).is4thQutCheck = fourthtquarter.isSelected();
+                // AppController.LimitNodeList.get(idx).isAllQutCheck = true;
+                AppController.LimitNodeList.get(idx).isFullGameCheck = fullgame.isSelected();
+                // AppController.LimitNodeList.get(idx).isAllPerCheck = true;
 
-                AppController.LineOpenerAlertNodeList.get(idx).is1stHafCheck = firsthalf.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).is2ndHalfCheck = secondhalf.isSelected();
-                //AppController.LineOpenerAlertNodeList.get(idx).isAllHalfsCheck = true;
-                AppController.LineOpenerAlertNodeList.get(idx).is1stQutCheck = firstquarter.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).is2ndQutCheck = secondquarter.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).is3rdQutCheck = thirdquarter.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).is4thQutCheck = fourthtquarter.isSelected();
-               // AppController.LineOpenerAlertNodeList.get(idx).isAllQutCheck = true;
-                AppController.LineOpenerAlertNodeList.get(idx).isFullGameCheck = fullgame.isSelected();
-               // AppController.LineOpenerAlertNodeList.get(idx).isAllPerCheck = true;
+                AppController.LimitNodeList.get(idx).isSpreadCheck = spreadcheckbox.isSelected();
+                AppController.LimitNodeList.get(idx).isTotalCheck = totalcheckbox.isSelected();
+                AppController.LimitNodeList.get(idx).isMoneyCheck = moneylinecheckbox.isSelected();
+                AppController.LimitNodeList.get(idx).isTeamTotalCheck = teamtotalcheckbox.isSelected();
 
-                AppController.LineOpenerAlertNodeList.get(idx).isSpreadCheck = spreadcheckbox.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).isTotalCheck = totalcheckbox.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).isMoneyCheck = moneylinecheckbox.isSelected();
-                AppController.LineOpenerAlertNodeList.get(idx).isTeamTotalCheck = teamtotalcheckbox.isSelected();
-
-                AppController.LineOpenerAlertNodeList.get(idx).soundfile = soundfile;
-               // System.out.println("popuplocationint="+popuplocationint);
-                LineAlertOpenerManager.reloadprefs();
+                AppController.LimitNodeList.get(idx).incsoundfile = incaudiofilevec.elementAt(incaudioComboBox.getSelectedIndex());
+                AppController.LimitNodeList.get(idx).decsoundfile = decaudiofilevec.elementAt(decaudioComboBox.getSelectedIndex());
+                // System.out.println("popuplocationint="+popuplocationint);
+                LimitAlertManager.reloadprefs();
 
             } catch (Exception e) {
                 checkednodes2.clear();
@@ -645,8 +778,8 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         userComponent.add(box2);
         userComponent.add(box1);
 
-        for (int i = 0; i < AppController.LineOpenerAlertNodeList.size(); i++) {
-          //  System.out.println(i+"="+(LineOpenerAlertNode)AppController.LineOpenerAlertNodeList.get(i) );
+        for (int i = 0; i < AppController.LimitNodeList.size(); i++) {
+            //  System.out.println(i+"="+(LimitNode)AppController.LimitNodeList.get(i) );
         }
 
         return userComponent;
@@ -727,13 +860,13 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
             if (sportComboBox.getSelectedIndex() != 0) {
                 int i;
                 String sportname = (String) sportComboBox.getSelectedItem();
-                for (i = 0; i < AppController.LineOpenerAlertNodeList.size(); i++) {
-                    if (AppController.LineOpenerAlertNodeList.get(i).SportName.equalsIgnoreCase(sportname)) {
-                        LineAlertOpeners.idx = i;
+                for (i = 0; i < AppController.LimitNodeList.size(); i++) {
+                    if (AppController.LimitNodeList.get(i).SportName.equalsIgnoreCase(sportname)) {
+                        LimitGui.idx = i;
                         break;
                     }
                 }
-                LineOpenerAlertNode lan = (LineOpenerAlertNode)AppController.LineOpenerAlertNodeList.get(idx);
+                LimitNode lan = (LimitNode)AppController.LimitNodeList.get(idx);
                 sport = sportlist[sportComboBox.getSelectedIndex()];
 
 
@@ -741,11 +874,11 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                 //------------------------------
                 // owen new code
 
-                //log("SportCodes For "+idx+"..="+AppController.LineOpenerAlertNodeList.get(idx).sportcodes);
-               // log("SportCodes For "+idx+"..="+AppController.LineOpenerAlertNodeList.get(idx).sportcodes);
+                //log("SportCodes For "+idx+"..="+AppController.LimitNodeList.get(idx).sportcodes);
+                // log("SportCodes For "+idx+"..="+AppController.LimitNodeList.get(idx).sportcodes);
 
-                List<String> lansports = AppController.LineOpenerAlertNodeList.get(idx).sportcodes;
-                List<String> lanbookies = AppController.LineOpenerAlertNodeList.get(idx).bookiecodes;
+                List<String> lansports = AppController.LimitNodeList.get(idx).sportcodes;
+                List<String> lanbookies = AppController.LimitNodeList.get(idx).bookiecodes;
                 DefaultMutableTreeNode root = new DefaultMutableTreeNode(lan.getSport());
                 DefaultTreeModel treeModel = new DefaultTreeModel(root);
                 _tree = new CheckBoxTree(treeModel) {
@@ -885,78 +1018,95 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 
 
                 //set line checkes
-                if (AppController.LineOpenerAlertNodeList.get(i).isSpreadCheck) {
+                if (AppController.LimitNodeList.get(i).isSpreadCheck) {
                     spreadcheckbox.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isTotalCheck) {
+                if (AppController.LimitNodeList.get(i).isTotalCheck) {
                     totalcheckbox.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isMoneyCheck) {
+                if (AppController.LimitNodeList.get(i).isMoneyCheck) {
                     moneylinecheckbox.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isTeamTotalCheck) {
+                if (AppController.LimitNodeList.get(i).isTeamTotalCheck) {
                     teamtotalcheckbox.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isAllLinesCheck) {
+                if (AppController.LimitNodeList.get(i).isAllLinesCheck) {
                     alllinescheckbox.setSelected(true);
                 }
 
                 //set period cheks
-                if (AppController.LineOpenerAlertNodeList.get(i).isFullGameCheck) {
+                if (AppController.LimitNodeList.get(i).isFullGameCheck) {
                     fullgame.setSelected(true);
                 }
 
-                if (AppController.LineOpenerAlertNodeList.get(i).is1stHafCheck) {
+                if (AppController.LimitNodeList.get(i).is1stHafCheck) {
                     firsthalf.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).is2ndHalfCheck) {
+                if (AppController.LimitNodeList.get(i).is2ndHalfCheck) {
                     secondhalf.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck) {
+                if (AppController.LimitNodeList.get(i).isAllHalfsCheck) {
                     allhafs.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).is1stQutCheck) {
+                if (AppController.LimitNodeList.get(i).is1stQutCheck) {
                     firstquarter.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).is2ndQutCheck) {
+                if (AppController.LimitNodeList.get(i).is2ndQutCheck) {
                     secondquarter.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).is3rdQutCheck) {
+                if (AppController.LimitNodeList.get(i).is3rdQutCheck) {
                     thirdquarter.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).is4thQutCheck) {
+                if (AppController.LimitNodeList.get(i).is4thQutCheck) {
                     fourthtquarter.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isAllHalfsCheck) {
+                if (AppController.LimitNodeList.get(i).isAllHalfsCheck) {
                     allhafs.setSelected(true);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isAllPerCheck) {
+                if (AppController.LimitNodeList.get(i).isAllPerCheck) {
                     allperiods.setSelected(true);
                 }
                 //checks and set audio and popup  checks
-                if (AppController.LineOpenerAlertNodeList.get(i).isAudioChecks) {
+                if (AppController.LimitNodeList.get(i).isIncAudioChecks) {
                     audiocheckbox.setSelected(true);
 
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isTextChecks) {
+                if (AppController.LimitNodeList.get(i).isDecAudioChecks) {
+                    audiocheckbox2.setSelected(true);
+
+                }
+                if (AppController.LimitNodeList.get(i).isTextChecks) {
                     textcheckbox.setSelected(true);
 
                 }
-                soundfile = AppController.LineOpenerAlertNodeList.get(i).soundfile;
-                if(soundfile.equals("openers.wav")) {
+                incsoundfile = AppController.LimitNodeList.get(i).incsoundfile;
+                decsoundfile = AppController.LimitNodeList.get(i).decsoundfile;
+                incaudioComboBox.setSelectedIndex(incaudiofilevec.indexOf(incsoundfile));
+                decaudioComboBox.setSelectedIndex(decaudiofilevec.indexOf(decsoundfile));
+
+
+                if(soundfile.equals("limitchange.wav")) {
                     soundlabel.setText("DEFAULT");
                 }
                 else
                 {
                     soundlabel.setText(soundfile);
                 }
-                if (AppController.LineOpenerAlertNodeList.get(i).isShowpopChecks) {
+                if (AppController.LimitNodeList.get(i).isIncShowpopChecks) {
                     popupcheckbox.setSelected(true);
 
 
                 }
-                popupsecsComboBox.setSelectedItem("" + AppController.LineOpenerAlertNodeList.get(i).popupsec);
-                renotifyComboBox.setSelectedItem("" + AppController.LineOpenerAlertNodeList.get(i).renotifyvalue);
+                if (AppController.LimitNodeList.get(i).isDecShowpopChecks) {
+                    popupcheckbox2.setSelected(true);
+
+
+                }
+
+                popupsecsComboBox.setSelectedItem("" + AppController.LimitNodeList.get(i).popupsec);
+                percentageComboBox.setSelectedItem("" + AppController.LimitNodeList.get(i).minpercentagechange);
+
+                renotifyComboBox.setSelectedItem("" + AppController.LimitNodeList.get(i).renotifyvalue);
 
                 popuplocationint = lan.popuplocationint;
                 if (popuplocationint == SwingConstants.NORTH_EAST) {
@@ -965,8 +1115,12 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                     upperleft.setSelected(true);
                 } else if (popuplocationint == SwingConstants.SOUTH_EAST) {
                     lowerright.setSelected(true);
-                } else if (popuplocationint == SwingConstants.SOUTH_WEST) {
+                }  else if  (popuplocationint == SwingConstants.SOUTH_WEST) {
                     lowerleft.setSelected(true);
+                }
+               else  {
+                    upperright.setSelected(true);
+                    popuplocationint = SwingConstants.NORTH_EAST;
                 }
 
 
@@ -1031,7 +1185,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
         try {
 
             List<Sport> sportsVec = AppController.getSportsVec();
-            Vector checkedsports = AppController.LineOpenerAlertNodeList.get(idx).checkedLeagueNodes;
+            Vector checkedsports = AppController.LimitNodeList.get(idx).checkedLeagueNodes;
 
 
             for (Sport value : sportsVec) {
