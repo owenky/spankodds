@@ -198,6 +198,10 @@ public class AppController {
     }
 
     public static void initializeLineAlertVectorFromUser() {
+        if(User.instance().getLineAlerts() == null || User.instance().getLineAlerts().equals("") || User.instance().getLineAlerts().equals("a"))
+        {
+            return;
+        }
         String[] linealerts = User.instance().getLineAlerts().split("\\?");
         for (final String linealert : linealerts) {
             try {
@@ -331,6 +335,10 @@ public class AppController {
     public static void createLineOpenerAlertNodeListFromUserPrefs() {
 
         String openerdata = getUser().getOpeneralert();
+        if(openerdata == null || openerdata.equals(""))
+        {
+            return;
+        }
         String lans[] = openerdata.split("~");
         for(int i = 0;i < lans.length; i++)
         {
@@ -380,6 +388,16 @@ public class AppController {
     public static void createLimitNodeListFromUserPrefs() {
 
         String limitdata = getUser().getLimitchangeAlert();
+        if(limitdata == null || limitdata.equals(""))
+        {
+            return;
+        }
+        else
+        {
+
+            System.out.println("limitdata="+limitdata);
+        }
+
         String lans[] = limitdata.split("@");
         for(int i = 0;i < lans.length; i++)
         {
