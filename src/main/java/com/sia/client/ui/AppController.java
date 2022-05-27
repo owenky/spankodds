@@ -331,6 +331,9 @@ public class AppController {
     public static void createLineOpenerAlertNodeListFromUserPrefs() {
 
         String openerdata = getUser().getOpeneralert();
+        if ( null == openerdata || "".equals(openerdata)) {
+            return;
+        }
         String lans[] = openerdata.split("~");
         for(int i = 0;i < lans.length; i++)
         {

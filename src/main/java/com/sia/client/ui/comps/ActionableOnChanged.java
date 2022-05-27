@@ -5,4 +5,7 @@ public interface ActionableOnChanged {
     void addListener(CompValueChangedListener l);
     void setValue(Object str);
     Object getValue();
+    default String checkError() {
+        return null;
+    }
 }

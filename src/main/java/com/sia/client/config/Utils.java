@@ -36,7 +36,7 @@ public abstract class Utils {
     public static synchronized ObjectMapper getObjectMapper() {
         if ( null == objectMapper) {
             objectMapper = new ObjectMapper();
-//            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
         return objectMapper;
     }

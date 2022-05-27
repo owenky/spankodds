@@ -1,6 +1,7 @@
 package com.sia.client.ui.comps;
 
 import com.jidesoft.swing.CheckBoxTree;
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.Bookie;
 import com.sia.client.ui.AppController;
 
@@ -12,7 +13,7 @@ import static com.sia.client.config.Utils.log;
 
 public class BookieTree implements ActionableOnChanged {
 
-    private static final String valueDelimeter = ",";
+    private static final String valueDelimeter = SiaConst.ColumnDelimiter;
     private final Map<String, String> bookienameidhash = new HashMap<>();
     private CheckBoxTree sportsbooktree;
 
@@ -67,12 +68,22 @@ public class BookieTree implements ActionableOnChanged {
     }
     @Override
     public Object getValue() {
-//        String [] selectedValues = (String [])sportsbooktree.getSelectionPath().getPath();
-//        return String.join(valueDelimeter,selectedValues);
-        return "";
+        if ( null == sportsbooktree.getSelectionPath()) {
+            return "";
+        }
+        String [] selectedValues = (String [])sportsbooktree.getSelectionPath().getPath();
+        return String.join(valueDelimeter,selectedValues);
     }
     @Override
     public void addListener(CompValueChangedListener l) {
         sportsbooktree.addTreeSelectionListener(l);
+    }
+    @Override
+    public String checkError() {
+        if ( null == sportsbooktree.getSelectionPath()) {
+            return "Please select a bookie.";
+        } else {
+            return null;
+        }
     }
 }

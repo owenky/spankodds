@@ -7,16 +7,19 @@ import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.comps.BookieTree;
 import com.sia.client.ui.comps.BookieTreeLayout;
+import com.sia.client.ui.comps.EditableLayout;
+import com.sia.client.ui.comps.OnEditableLayout;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
+public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implements OnEditableLayout {
 
     private final Map<String, LineSeekerAlertMethodStateLayout> layoutMap = new HashMap<>();
     private final Dimension verticalSpacing = new Dimension(0,1);
@@ -30,6 +33,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
     private final int renotifyHeight = 40;
     private final int savePanelHeight = 40;
     private BookieTreeLayout bookieTreeLayout;
+    private java.util.List<EditableLayout> editableLayoutList;
 
     public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertSeekerMethods alertSeekerMethods) {
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
@@ -41,6 +45,19 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
         bookiePanelWidth = 225;
         methodPanelWidth = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-bookiePanelWidth-40;
         methodPaneHeight = (bookiePanelWidtHeight-renotifyHeight)/3;
+    }
+    @Override
+    public java.util.List<EditableLayout> getEditablelayout() {
+        if ( null== editableLayoutList) {
+            editableLayoutList = new ArrayList<>(5);
+            for(AlertState alertState: AlertState.values()) {
+                LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+                editableLayoutList.add(stateLayout);
+            }
+            editableLayoutList.add(lineSeekerAlertRenotifyLayout);
+            editableLayoutList.add(bookieTreeLayout);
+        }
+        return editableLayoutList;
     }
     @Override
     protected JComponent getUserComponent() {
@@ -109,6 +126,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog {
         }
         close();
     }
+    //TODO
     public void updateAlertMethodAttr() {
         for(AlertState alertState: AlertState.values()) {
             LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
