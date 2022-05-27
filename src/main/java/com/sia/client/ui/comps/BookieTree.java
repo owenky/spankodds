@@ -67,8 +67,9 @@ public class BookieTree implements ActionableOnChanged {
     }
     @Override
     public Object getValue() {
-        String [] selectedValues = (String [])sportsbooktree.getSelectionPath().getPath();
-        return String.join(valueDelimeter,selectedValues);
+//        String [] selectedValues = (String [])sportsbooktree.getSelectionPath().getPath();
+//        return String.join(valueDelimeter,selectedValues);
+        return "";
     }
     @Override
     public void addListener(CompValueChangedListener l) {

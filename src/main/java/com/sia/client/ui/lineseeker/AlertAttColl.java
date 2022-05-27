@@ -26,6 +26,9 @@ public class AlertAttColl {
         this.alertSeekerMethods = alertSeekerMethods;
     }
     public SimpleValueWraper<String> getBookies() {
+        if ( null == bookies) {
+            bookies = new SimpleValueWraper<>("");
+        }
         return bookies;
     }
 
