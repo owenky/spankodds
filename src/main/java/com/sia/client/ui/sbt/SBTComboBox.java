@@ -2,6 +2,8 @@ package com.sia.client.ui.sbt;
 
 import com.sia.client.config.Utils;
 import com.sia.client.model.SelectionItem;
+import com.sia.client.ui.comps.ActionableOnChanged;
+import com.sia.client.ui.comps.CompValueChangedListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBox<T>  {
+public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBox<T> implements ActionableOnChanged {
 
 	public static final String IS_TABLE_CELL_EDITOR = "JComboBox.isTableCellEditor";
 	public static final String CONTAINING_TABLE = "CONTAINING_TABLE";
@@ -480,5 +482,18 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	public void clearHighLightIndex() {
 		SBTComboBoxUI theUI_ = (SBTComboBoxUI) this.getUI();
 		theUI_.clearHighLightIndex();
+	}
+	@Override
+	public void addListener(CompValueChangedListener l) {
+		this.addItemListener(l);
+	}
+	@Override
+	public void setValue(Object obj) {
+		T value = convertObjectToSBTSelectionItem(obj);
+		setSelectedItem(value);
+	}
+	@Override
+	public Object getValue() {
+		return getSelectedItem();
 	}
 }

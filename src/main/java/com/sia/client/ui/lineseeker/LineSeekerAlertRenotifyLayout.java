@@ -1,6 +1,7 @@
 package com.sia.client.ui.lineseeker;
 
 import com.sia.client.ui.comps.EditableLayout;
+import com.sia.client.ui.comps.SbtStringComboBox;
 import com.sia.client.ui.comps.UICompValueBinder;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
 
     private final JLabel editStatusLabel = new JLabel();
     private final AlertSeekerMethods alertSeekerMethods;
-    private JComboBox<String> renotifyComboBox;
+    private SbtStringComboBox renotifyComboBox;
     private final String[] minslist = new String[20];
     private UICompValueBinder UICompValueBinder;
 
@@ -52,7 +53,7 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
         for(int i=0;i<20;i++) {
             minslist[i]=String.valueOf(0.5+0.5*i);
         }
-        renotifyComboBox = new JComboBox<>(minslist);
+        renotifyComboBox = new SbtStringComboBox(minslist);
     }
 }
 

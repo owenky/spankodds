@@ -60,13 +60,13 @@ public class LineSeekerAlertMethodAttr {
     }
 
     public PopupLocation getPopupLocation() {
-        if ( null == popupLocation) {
-            popupLocation =  PopupLocation.CENTER;
-        }
         return popupLocation;
     }
 
     public void setPopupLocation(PopupLocation popupLocation) {
+        if ( popupLocation == PopupLocation.CENTER) {
+            popupLocation = PopupLocation.TOP_RIGHT;
+        }
         this.popupLocation = popupLocation;
     }
 

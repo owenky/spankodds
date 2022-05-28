@@ -7,6 +7,8 @@ import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr.PopupLocation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +20,6 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
     private final JideToggleButton upperleft;
     private final JideToggleButton lowerright;
     private final JideToggleButton lowerleft;
-    private PopupLocationListener popupLocationListener;
 
     public PopupLocationConfig() {
         upperright = makeJideToggleButton("upperright.png",PopupLocation.TOP_RIGHT);
@@ -34,10 +35,17 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
     }
     @Override
     public void addListener(CompValueChangedListener itemListener) {
-        upperright.addItemListener(itemListener);
-        upperleft.addItemListener(itemListener);
-        lowerright.addItemListener(itemListener);
-        lowerleft.addItemListener(itemListener);
+        ItemListener compoundListener = (e) -> {
+            if ( e.getStateChange()== ItemEvent.SELECTED) {
+                selectedPopupLocation = button2LocaionMap.get(e.getSource());
+                System.out.println("selectedPopupLocation="+selectedPopupLocation);
+                itemListener.itemStateChanged(e);
+            }
+        };
+        upperright.addItemListener(compoundListener);
+        upperleft.addItemListener(compoundListener);
+        lowerright.addItemListener(compoundListener);
+        lowerleft.addItemListener(compoundListener);
     }
     @Override
     public void setValue(Object obj) {
@@ -53,13 +61,13 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
     public LineSeekerAlertMethodAttr.PopupLocation getValue() {
         return selectedPopupLocation;
     }
-    public void setPopupLocationListener(PopupLocationListener popupLocationListener) {
-        this.popupLocationListener = popupLocationListener;
-    }
     public void setSelectedPopupLocation(int location) {
         setSelectedPopupLocation(PopupLocation.findPopupLocation(location));
     }
     public void setSelectedPopupLocation(PopupLocation popupLocation) {
+        if ( null == popupLocation || popupLocation==PopupLocation.CENTER) {
+            popupLocation = PopupLocation.TOP_RIGHT;
+        }
         selectedPopupLocation = popupLocation;
     }
     public PopupLocation getSelectedPopupLocation() {
@@ -76,17 +84,7 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
     }
     private JideToggleButton makeJideToggleButton(String icon,PopupLocation popupLocation) {
         JideToggleButton button = new JideToggleButton(new ImageIcon(Utils.getMediaResource(icon)));
-        button.addItemListener(e -> {
-            selectedPopupLocation = popupLocation;
-            if ( null != popupLocationListener) {
-                popupLocationListener.process(popupLocation);
-            }
-        });
         button2LocaionMap.put(button,popupLocation);
         return button;
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    public interface PopupLocationListener {
-        void process(PopupLocation popupLocation);
     }
 }

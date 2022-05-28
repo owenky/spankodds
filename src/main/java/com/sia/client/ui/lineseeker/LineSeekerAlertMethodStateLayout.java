@@ -5,9 +5,7 @@ import com.sia.client.media.SoundPlayer;
 import com.sia.client.ui.FontConfig;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.UrgentMessage;
-import com.sia.client.ui.comps.EditableLayout;
-import com.sia.client.ui.comps.UICompValueBinder;
-import com.sia.client.ui.comps.PopupLocationConfig;
+import com.sia.client.ui.comps.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,14 +20,14 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
     private static final Dimension ComboBoxPrefSize = new Dimension(60,15);
     private final JButton testsound = new JButton("Test Sound");
     private final JButton testpopup = new JButton("Test Popup");
-    private JComboBox<String> popupsecsComboBox;
+    private SbtStringComboBox popupsecsComboBox;
     private final JPanel panel = new JPanel();
     private final String[] secslist = new String[60];
     private final int popupsecs = 5;
     private final String alerttype = "";
-    private final JCheckBox audiocheckbox = new JCheckBox("Audio");
-    private final JCheckBox popupcheckbox = new JCheckBox("Popup");
-    private final JComboBox<String> soundSrc = new JComboBox<>();
+    private final SbtCheckBox audiocheckbox = new SbtCheckBox("Audio");
+    private final SbtCheckBox popupcheckbox = new SbtCheckBox("Popup");
+    private final SbtStringComboBox soundSrc = new SbtStringComboBox();
     private final JLabel editStatusLabel = new JLabel();
     private final LineSeekerAlertMethodAttr attr;
     private final PopupLocationConfig popupLocationConfig = new PopupLocationConfig();
@@ -135,9 +133,7 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
         }
         LookAndFeelFactory.installJideExtension();
 
-        popupsecsComboBox = new JComboBox<>(secslist);
-//        popupsecsComboBox.setPreferredSize(ComboBoxPrefSize);
-
+        popupsecsComboBox = new SbtStringComboBox(secslist);
         panel.setBorder(BorderFactory.createEtchedBorder());
         panel.setLayout(new GridBagLayout());
 
@@ -175,22 +171,22 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
         soundSrc.addItem("scream.wav");
         soundSrc.addItem("whatthefuck.wav");
 
-        soundSrc.addItemListener(this::onItemChanged);
+//        soundSrc.addItemListener(this::onItemChanged);
 
         // add listeners
-        audiocheckbox.addItemListener(this::onItemChanged);
-        soundSrc.addItemListener(this::onItemChanged);
-        popupcheckbox.addItemListener(this::onItemChanged);
-        popupsecsComboBox.addItemListener(this::onItemChanged);
-        popupLocationConfig.setPopupLocationListener(this::onPopupLocationChanged);
+//        audiocheckbox.addItemListener(this::onItemChanged);
+//        soundSrc.addItemListener(this::onItemChanged);
+//        popupcheckbox.addItemListener(this::onItemChanged);
+//        popupsecsComboBox.addItemListener(this::onItemChanged);
+//        popupLocationConfig.setPopupLocationListener(this::onPopupLocationChanged);
         //
     }
-    private void onPopupLocationChanged(LineSeekerAlertMethodAttr.PopupLocation popupLocation) {
-        checkAndSetEditStatus();
-    }
-    private void onItemChanged(ItemEvent ie) {
-        checkAndSetEditStatus();
-    }
+//    private void onPopupLocationChanged(LineSeekerAlertMethodAttr.PopupLocation popupLocation) {
+//        checkAndSetEditStatus();
+//    }
+//    private void onItemChanged(ItemEvent ie) {
+//        checkAndSetEditStatus();
+//    }
     private static void setComponentFont(JComponent parent, Font font ) {
         java.util.List<JComponent> result = new ArrayList<>();
         findChildCompDeep(parent,result);

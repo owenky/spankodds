@@ -8,7 +8,7 @@ import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.comps.BookieTree;
 import com.sia.client.ui.comps.BookieTreeLayout;
 import com.sia.client.ui.comps.EditableLayout;
-import com.sia.client.ui.comps.OnEditableLayout;
+import com.sia.client.ui.comps.ActionOnEditableLayouts;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implements OnEditableLayout {
+public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implements ActionOnEditableLayouts {
 
     private final Map<String, LineSeekerAlertMethodStateLayout> layoutMap = new HashMap<>();
     private final Dimension verticalSpacing = new Dimension(0,1);
@@ -39,7 +39,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
         this.alertSeekerMethods = alertSeekerMethods;
         int height = (int)SiaConst.UIProperties.LineAlertMethodDim.getHeight();
-        saveBtn.addActionListener(this::saveAlertMethodAttr);
+        saveBtn.addActionListener(this::persist);
         lineSeekerAlertRenotifyLayout = new LineSeekerAlertRenotifyLayout(this.alertSeekerMethods);
         bookiePanelWidtHeight = height -savePanelHeight-40;
         bookiePanelWidth = 225;
@@ -113,39 +113,9 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStateLayout(AlertAttrManager.getLineSeekerAlertMethodAttr(name),sw));
     }
-    private void saveAlertMethodAttr(ActionEvent ae)  {
-        try {
-            for (AlertState alertState : AlertState.values()) {
-                LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
-                stateLayout.persist();
-            }
-            lineSeekerAlertRenotifyLayout.persist();
-            bookieTreeLayout.persist();
-        } catch ( IOException ioe) {
-            Utils.log(ioe);
-        }
+    private void persist(ActionEvent ae) {
+        persist();
         close();
-    }
-    //TODO
-    public void updateAlertMethodAttr() {
-        for(AlertState alertState: AlertState.values()) {
-            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
-            stateLayout.updateLayout();
-        }
-        lineSeekerAlertRenotifyLayout.updateLayout();
-        bookieTreeLayout.updateLayout();
-    }
-    @Override
-    public boolean isEdited() {
-        boolean isEdited = false;
-        for(AlertState alertState: AlertState.values()) {
-            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
-            isEdited = stateLayout.isEdited();
-            if ( isEdited) {
-                break;
-            }
-        }
-        return isEdited || lineSeekerAlertRenotifyLayout.isEdited() || bookieTreeLayout.isEdited();
     }
 }
 
