@@ -6,6 +6,7 @@ import com.sia.client.config.Utils;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 public interface EditableLayout {
@@ -28,7 +29,7 @@ public interface EditableLayout {
         boolean status = true;
         UICompValueBinder uiCompValueBinder = getJComponentBinder();
         List<ActionableOnChanged> bindedUiComp = uiCompValueBinder.getBindedUiComponents();
-        String err = bindedUiComp.stream().map(ActionableOnChanged::checkError).findAny().orElse(null);
+        String err = bindedUiComp.stream().map(ActionableOnChanged::checkError).filter(Objects::nonNull).findAny().orElse(null);
         if ( null != err) {
             Utils.showErrorMessageDialog(getLayoutPane(),err);
             status = false;

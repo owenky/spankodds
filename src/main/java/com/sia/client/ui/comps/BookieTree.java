@@ -6,8 +6,10 @@ import com.sia.client.model.Bookie;
 import com.sia.client.ui.AppController;
 
 import javax.swing.tree.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.sia.client.config.Utils.log;
 
@@ -71,8 +73,8 @@ public class BookieTree implements ActionableOnChanged {
         if ( null == sportsbooktree.getSelectionPath()) {
             return "";
         }
-        String [] selectedValues = (String [])sportsbooktree.getSelectionPath().getPath();
-        return String.join(valueDelimeter,selectedValues);
+        Object [] selectedValues = sportsbooktree.getSelectionPath().getPath();
+        return Arrays.stream(selectedValues).map(String::valueOf).collect(Collectors.joining());
     }
     @Override
     public void addListener(CompValueChangedListener l) {

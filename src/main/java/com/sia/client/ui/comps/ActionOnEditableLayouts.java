@@ -1,8 +1,6 @@
 package com.sia.client.ui.comps;
 
 import com.sia.client.config.Utils;
-import com.sia.client.ui.lineseeker.AlertState;
-import com.sia.client.ui.lineseeker.LineSeekerAlertMethodStateLayout;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,7 +11,7 @@ public interface ActionOnEditableLayouts {
     default boolean validate() {
         boolean status = true;
         for(EditableLayout editableLayout: getEditablelayout()) {
-            if (editableLayout.validate() ) {
+            if (!editableLayout.validate() ) {
                 status = false;
                 break;
             }

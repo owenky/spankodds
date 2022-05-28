@@ -2,6 +2,7 @@ package com.sia.client.ui.comps;
 
 import com.sia.client.config.Utils;
 import com.sia.client.model.NumberSelectionItem;
+import com.sia.client.model.StringSelectionItem;
 import com.sia.client.ui.sbt.SBTComboBox;
 import com.sia.client.ui.sbt.SelectionConvertor;
 
@@ -33,5 +34,19 @@ public class SbtNumberComboBox extends SBTComboBox<Number, NumberSelectionItem> 
                 return convertStringToKey(String.valueOf(keyValue));
             }
         });
+    }
+    @Override
+    public Number getValue() {
+        return ((NumberSelectionItem)super.getValue()).getKeyValue();
+    }
+    @Override
+    public void setValue(Object obj) {
+        if ( obj instanceof NumberSelectionItem) {
+            setSelectedItem(obj);
+        } else {
+            Number number = getSelectionConvertor().convertStringToKey(String.valueOf(obj));
+            NumberSelectionItem numberSelectionItem = new NumberSelectionItem(number);
+            setSelectedItem(numberSelectionItem);
+        }
     }
 }

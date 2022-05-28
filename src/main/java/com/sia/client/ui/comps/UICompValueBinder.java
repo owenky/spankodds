@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.sia.client.config.Utils;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.text.JTextComponent;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.Arrays;

@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
 
@@ -69,6 +70,11 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
             popupLocation = PopupLocation.TOP_RIGHT;
         }
         selectedPopupLocation = popupLocation;
+        Optional<Map.Entry<JideToggleButton,PopupLocation>> selectedEntry
+                = button2LocaionMap.entrySet().stream().filter(e->e.getValue()==selectedPopupLocation).findAny();
+        if ( selectedEntry.isPresent()) {
+            selectedEntry.get().getKey().setSelected(true);
+        }
     }
     public PopupLocation getSelectedPopupLocation() {
         return selectedPopupLocation;

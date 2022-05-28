@@ -44,6 +44,9 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		FilterComboBoxModel<K,T> model = new FilterComboBoxModel<>(this.selectionConvertor);
 		setModel(model);
 	}
+	public SelectionConvertor<K,T> getSelectionConvertor() {
+		return selectionConvertor;
+	}
 	public void addElement(List<T> elements) {
 		FilterComboBoxModel<K,T> model = (FilterComboBoxModel<K,T>)getModel();
 		for(T ele: elements) {

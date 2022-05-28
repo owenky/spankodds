@@ -117,5 +117,9 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         persist();
         close();
     }
+    @Override
+    public boolean isEdited() {
+        return ActionOnEditableLayouts.super.isEdited();
+    }
 }
 

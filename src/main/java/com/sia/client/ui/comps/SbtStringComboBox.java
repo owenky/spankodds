@@ -35,4 +35,17 @@ public class SbtStringComboBox extends SBTComboBox<String, StringSelectionItem> 
     public void addItem(String str) {
         addItem(new StringSelectionItem(str));
     }
+    @Override
+    public String getValue() {
+        return ((StringSelectionItem)super.getValue()).getKeyValue();
+    }
+    @Override
+    public void setValue(Object obj) {
+        if ( obj instanceof StringSelectionItem) {
+            setSelectedItem(obj);
+        } else {
+            StringSelectionItem stringSelectionItem = new StringSelectionItem(String.valueOf(obj));
+            setSelectedItem(stringSelectionItem);
+        }
+    }
 }
