@@ -491,6 +491,10 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		this.addItemListener(l);
 	}
 	@Override
+	public void rmListener(CompValueChangedListener l) {
+		this.removeItemListener(l);
+	}
+	@Override
 	public void setValue(Object obj) {
 		T value = convertObjectToSBTSelectionItem(obj);
 		setSelectedItem(value);

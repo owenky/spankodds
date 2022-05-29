@@ -17,19 +17,36 @@ import java.util.function.Function;
 public class UICompValueBinder {
 
     private final Object data;
+    private static final Map<Integer,UICompValueBinder> identityHashCode2BinderMap = new HashMap<>();
     private final Map<String,ActionableOnChanged> name2UiCompMap = new HashMap<>();
     private final CompValueChangedListener compValueChangedListener;
     private final Function<Object,Void> onValueChangedEvent;
 
-    public UICompValueBinder(Object data, Function<Object,Void> onValueChangedEvent) {
+    public static synchronized UICompValueBinder register(Object containingObj, Object data, Function<Object,Void> onValueChangedEvent) {
+        int identityHashCode = System.identityHashCode(containingObj);
+        return identityHashCode2BinderMap.computeIfAbsent(identityHashCode,(key)->new UICompValueBinder(data,onValueChangedEvent));
+    }
+    public static UICompValueBinder getBinder(Object containingObj) {
+        int identityHashCode = System.identityHashCode(containingObj);
+        return identityHashCode2BinderMap.get(identityHashCode);
+    }
+    public static UICompValueBinder rmBinder(Object containingObj) {
+        int identityHashCode = System.identityHashCode(containingObj);
+        return identityHashCode2BinderMap.remove(identityHashCode);
+    }
+    private UICompValueBinder(Object data, Function<Object,Void> onValueChangedEvent) {
         this.data = data;
         this.onValueChangedEvent = onValueChangedEvent;
         this.compValueChangedListener = makeDefaultJCompValueChangedListener();
     }
     public UICompValueBinder bind(String dataFieldName, ActionableOnChanged uiComponent) {
         if ( null != compValueChangedListener) {
+            if ( name2UiCompMap.containsKey(dataFieldName)) {
+                ActionableOnChanged oldComp = name2UiCompMap.get(dataFieldName);
+                oldComp.rmListener(compValueChangedListener);
+            }
             uiComponent.addListener(compValueChangedListener);
-            name2UiCompMap.put(dataFieldName,uiComponent);
+            name2UiCompMap.put(dataFieldName, uiComponent);
         }
         return this;
     }
@@ -62,7 +79,6 @@ public class UICompValueBinder {
             ActionableOnChanged comp = name2UiCompMap.get(name);
             String componentValue = String.valueOf(comp.getValue());
             String existingValue = String.valueOf(existingValueMap.get(name));
-System.out.println(name+", componentValue="+componentValue+", existingValue="+existingValue);
             if ( ! Objects.equals(componentValue,existingValue) ) {
                 isChanged = true;
                 break;

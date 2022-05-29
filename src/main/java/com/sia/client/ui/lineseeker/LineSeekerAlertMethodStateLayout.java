@@ -9,7 +9,6 @@ import com.sia.client.ui.comps.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 import static com.sia.client.config.Utils.log;
@@ -17,7 +16,6 @@ import static com.sia.client.config.Utils.showMessageDialog;
 
 public class LineSeekerAlertMethodStateLayout implements EditableLayout {
 
-    private static final Dimension ComboBoxPrefSize = new Dimension(60,15);
     private final JButton testsound = new JButton("Test Sound");
     private final JButton testpopup = new JButton("Test Popup");
     private SbtStringComboBox popupsecsComboBox;
@@ -31,7 +29,7 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
     private final JLabel editStatusLabel = new JLabel();
     private final LineSeekerAlertMethodAttr attr;
     private final PopupLocationConfig popupLocationConfig = new PopupLocationConfig();
-    private UICompValueBinder UICompValueBinder;
+    private UICompValueBinder uiCompValueBinder;
     private final SpankyWindow spankyWindow;
 
     public LineSeekerAlertMethodStateLayout(LineSeekerAlertMethodAttr attr,SpankyWindow spankyWindow) {
@@ -170,23 +168,7 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
         soundSrc.addItem("onothissucks.wav");
         soundSrc.addItem("scream.wav");
         soundSrc.addItem("whatthefuck.wav");
-
-//        soundSrc.addItemListener(this::onItemChanged);
-
-        // add listeners
-//        audiocheckbox.addItemListener(this::onItemChanged);
-//        soundSrc.addItemListener(this::onItemChanged);
-//        popupcheckbox.addItemListener(this::onItemChanged);
-//        popupsecsComboBox.addItemListener(this::onItemChanged);
-//        popupLocationConfig.setPopupLocationListener(this::onPopupLocationChanged);
-        //
     }
-//    private void onPopupLocationChanged(LineSeekerAlertMethodAttr.PopupLocation popupLocation) {
-//        checkAndSetEditStatus();
-//    }
-//    private void onItemChanged(ItemEvent ie) {
-//        checkAndSetEditStatus();
-//    }
     private static void setComponentFont(JComponent parent, Font font ) {
         java.util.List<JComponent> result = new ArrayList<>();
         findChildCompDeep(parent,result);
@@ -210,13 +192,13 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
     }
     @Override
     public UICompValueBinder getJComponentBinder() {
-        if ( null == UICompValueBinder) {
-            UICompValueBinder = new UICompValueBinder(attr,getOnValueChangedEventFunction());
-            UICompValueBinder.bind("audioEnabled",audiocheckbox).bind("soundFile",soundSrc)
+        if ( null == uiCompValueBinder) {
+            uiCompValueBinder = UICompValueBinder.register(this,attr,getOnValueChangedEventFunction());
+            uiCompValueBinder.bind("audioEnabled",audiocheckbox).bind("soundFile",soundSrc)
                     .bind("popupEnabled",popupcheckbox).bind("popupSeconds",popupsecsComboBox)
                     .bind("popupLocation",popupLocationConfig);
         }
-        return UICompValueBinder;
+        return uiCompValueBinder;
     }
     @Override
     public JLabel getEditStatusLabel() {

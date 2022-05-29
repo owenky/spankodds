@@ -34,6 +34,11 @@ public interface ActionOnEditableLayouts {
             editableLayout.updateLayout();
         }
     }
+    default void close(){
+        for(EditableLayout editableLayout: getEditablelayout()) {
+            editableLayout.close();
+        }
+    }
     default boolean isEdited() {
         return getEditablelayout().stream().map(EditableLayout::isEdited).filter(edited->edited).findAny().orElse(false);
     }

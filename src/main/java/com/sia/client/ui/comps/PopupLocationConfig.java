@@ -17,6 +17,7 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
 
     private PopupLocation selectedPopupLocation = PopupLocation.TOP_RIGHT;
     private final Map<JideToggleButton,PopupLocation> button2LocaionMap = new HashMap<>();
+    private final Map<CompValueChangedListener,ItemListener> compoundListenerMap = new HashMap<>();
     private final JideToggleButton upperright;
     private final JideToggleButton upperleft;
     private final JideToggleButton lowerright;
@@ -39,14 +40,24 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
         ItemListener compoundListener = (e) -> {
             if ( e.getStateChange()== ItemEvent.SELECTED) {
                 selectedPopupLocation = button2LocaionMap.get(e.getSource());
-                System.out.println("selectedPopupLocation="+selectedPopupLocation);
                 itemListener.itemStateChanged(e);
             }
         };
+        compoundListenerMap.put(itemListener,compoundListener);
         upperright.addItemListener(compoundListener);
         upperleft.addItemListener(compoundListener);
         lowerright.addItemListener(compoundListener);
         lowerleft.addItemListener(compoundListener);
+    }
+    @Override
+    public void rmListener(CompValueChangedListener itemListener) {
+        ItemListener compoundListener = compoundListenerMap.remove(itemListener);
+        if ( null != compoundListener) {
+            upperright.removeItemListener(compoundListener);
+            upperleft.removeItemListener(compoundListener);
+            lowerright.removeItemListener(compoundListener);
+            lowerleft.removeItemListener(compoundListener);
+        }
     }
     @Override
     public void setValue(Object obj) {

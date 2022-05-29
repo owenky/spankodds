@@ -118,6 +118,11 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         close();
     }
     @Override
+    public void close() {
+        super.close();
+        ActionOnEditableLayouts.super.close();
+    }
+    @Override
     public boolean isEdited() {
         return ActionOnEditableLayouts.super.isEdited();
     }

@@ -14,7 +14,10 @@ public class SbtCheckBox extends JCheckBox implements ActionableOnChanged{
     public void addListener(CompValueChangedListener l) {
         this.addItemListener(l);
     }
-
+    @Override
+    public void rmListener(CompValueChangedListener l) {
+        this.removeItemListener(l);
+    }
     @Override
     public void setValue(Object obj) {
         Boolean value;

@@ -55,4 +55,7 @@ public interface EditableLayout {
     default Function<Object,Void> getOnValueChangedEventFunction() {
         return (event)-> {checkAndSetEditStatus(); return null;};
     }
+    default void close() {
+        UICompValueBinder.rmBinder(this);
+    }
 }

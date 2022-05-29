@@ -13,7 +13,7 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
     private final AlertSeekerMethods alertSeekerMethods;
     private SbtStringComboBox renotifyComboBox;
     private final String[] minslist = new String[20];
-    private UICompValueBinder UICompValueBinder;
+    private UICompValueBinder uiCompValueBinder;
 
     public LineSeekerAlertRenotifyLayout(AlertSeekerMethods alertSeekerMethods) {
         this.alertSeekerMethods = alertSeekerMethods;
@@ -24,11 +24,11 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
     }
     @Override
     public UICompValueBinder getJComponentBinder() {
-        if ( null == UICompValueBinder) {
-            UICompValueBinder = new UICompValueBinder(alertSeekerMethods,getOnValueChangedEventFunction());
-            UICompValueBinder.bind("renotifyInMinutes",renotifyComboBox);
+        if ( null == uiCompValueBinder) {
+            uiCompValueBinder = UICompValueBinder.register(this,alertSeekerMethods,getOnValueChangedEventFunction());
+            uiCompValueBinder.bind("renotifyInMinutes",renotifyComboBox);
         }
-        return UICompValueBinder;
+        return uiCompValueBinder;
     }
     @Override
     public JComponent getLayoutPane() {
