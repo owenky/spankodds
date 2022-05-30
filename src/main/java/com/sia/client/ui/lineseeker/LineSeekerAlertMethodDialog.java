@@ -1,5 +1,6 @@
 package com.sia.client.ui.lineseeker;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AbstractLayeredDialog;
@@ -79,7 +80,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         return wrapper;
     }
     private JComponent makeBookiePanel() {
-        bookieTreeLayout = new BookieTreeLayout(new BookieTree(),AlertAttrManager.getAlertAttColl().getBookies());
+        bookieTreeLayout = new BookieTreeLayout(new BookieTree(), Config.instance().getBookies());
         JComponent sportsbooktreePanel = bookieTreeLayout.getLayoutPane();
         Dimension preferredSize = new Dimension(bookiePanelWidth, bookiePanelWidtHeight);
         sportsbooktreePanel.setPreferredSize(preferredSize);

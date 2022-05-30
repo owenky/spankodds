@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.*;
 import com.sia.client.ui.lineseeker.*;
@@ -223,7 +224,7 @@ public class LineSeekerNode {
         Vector bookiecodes = new Vector();
         // load bookiecodes from LineSeekerConfig
         String bookies = AlertAttrManager.getBookies(); // bookie names ( NOT booke id) separated by ","
-        float lineseekerwaitmin = Float.parseFloat(AlertAttrManager.getAlertAttColl().getAlertSeekerMethods().getRenotifyInMinutes());
+        float lineseekerwaitmin = Float.parseFloat(Config.instance().getAlertSeekerMethods().getRenotifyInMinutes());
 
         boolean playgoodaudio = false;
         String goodaudiofile = "";

@@ -1,25 +1,16 @@
 package com.sia.client.ui.control;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.AbstractScreen;
-import com.sia.client.model.Game;
-import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.GameStatus;
-import com.sia.client.model.MainGameTableModel;
-import com.sia.client.model.ScreenGameModel;
-import com.sia.client.model.ScreenProperty;
-import com.sia.client.model.SpankyWindowConfig;
-import com.sia.client.model.SportType;
-import com.sia.client.ui.FontConfig;
+import com.sia.client.model.*;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
 import com.sia.client.ui.MainScreenLoader;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.table.JTableHeader;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -132,7 +123,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         mainGameTable.setIntercellSpacing(new Dimension(4, 2));
         mainGameTable.setName(getName());
         JTableHeader tableHeader = mainGameTable.getTableHeader();
-        Font headerFont = FontConfig.instance().getSelectedFont().deriveFont(Font.BOLD, 11);
+        Font headerFont = Config.instance().getFontConfig().getSelectedFont().deriveFont(Font.BOLD, 11);
         tableHeader.setFont(headerFont);
         model.addTableSectionListener(() -> {
             mainGameTable.setToConfigHeaderRow(true);

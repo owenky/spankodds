@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.comps.LinkButton;
@@ -150,7 +152,7 @@ public class AnchoredLayeredPane implements ComponentListener {
             titlePanel.setLayout(new BorderLayout());
             JLabel titleLabel = new JLabel(title);
             titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            Font defaultFont = FontConfig.instance().getSelectedFont();
+            Font defaultFont = Config.instance().getFontConfig().getSelectedFont();
             Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
             titleLabel.setFont(titleFont);
 

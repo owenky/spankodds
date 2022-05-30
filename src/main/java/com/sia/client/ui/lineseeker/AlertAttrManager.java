@@ -1,23 +1,25 @@
 package com.sia.client.ui.lineseeker;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
+import com.sia.client.config.Utils;
 import com.sia.client.model.SelectionItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AlertAttrManager {
 
     private static final String KeyJointer = "@";
-    private static AlertAttColl alertAttColl;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
 
     public static AlertConfig getAlertAttr(String gameId, AlertPeriod period)  {
-        return getAlertAttColl().getAlertAttrMap().get(makeKey(gameId,period));
+        return Config.instance().getAlertAttrMap().get(makeKey(gameId,period));
     }
     public static AlertConfig getAlertAttr(String atttibuteKey)  {
-        return getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
+        return Config.instance().getAlertAttrMap().get(atttibuteKey);
     }
     public static AlertConfig of(String atttibuteKey) {
         String [] keyComp = atttibuteKey.split(KeyJointer);
@@ -27,7 +29,7 @@ public class AlertAttrManager {
     }
     public static AlertConfig of(int gameId,AlertPeriod alertPeriod) {
         String atttibuteKey = makeKey(gameId,alertPeriod);
-        AlertConfig rtn = getAlertAttColl().getAlertAttrMap().get(atttibuteKey);
+        AlertConfig rtn = Config.instance().getAlertAttrMap().get(atttibuteKey);
         if ( null == rtn ) {
             if (SelectionItem.SELECT_BLANK_KEY == gameId) {
                 rtn = AlertConfig.BlankAlert;
@@ -35,35 +37,13 @@ public class AlertAttrManager {
                 rtn = new AlertConfig(gameId, alertPeriod);
             }
             if ( gameId > 0) {
-                alertAttColl.getAlertAttrMap().put(atttibuteKey, rtn);
+                Config.instance().getAlertAttrMap().put(atttibuteKey, rtn);
             }
         }
         return rtn;
     }
-    public static void addToCache(AlertConfig alertAttributes) {
-        getAlertAttColl().getAlertAttrMap().put(alertAttributes.getKey(),alertAttributes);
-    }
     public static void removeFromCache(AlertConfig alertConfig) {
-        getAlertAttColl().getAlertAttrMap().remove(alertConfig.getKey());
-    }
-    public static String serializeAlertAttr(AlertConfig attr) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(attr);
-    }
-    public static String serializeAlertAlertAttColl() throws JsonProcessingException {
-        return objectMapper.writeValueAsString(getAlertAttColl());
-    }
-    public static void deSerializeAlertAlertAttColl(String alertAttCollJsonStr) throws JsonProcessingException {
-        alertAttColl = objectMapper.readValue(alertAttCollJsonStr,AlertAttColl.class);
-    }
-    public static synchronized AlertAttColl getAlertAttColl() {
-        if ( null == alertAttColl) {
-            initAlertAttColl();
-        }
-        return alertAttColl;
-    }
-    private static synchronized void initAlertAttColl() {
-        alertAttColl = new AlertAttColl();
-        alertAttColl.setAlertAttrMap(new HashMap<>());
+        Config.instance().getAlertAttrMap().remove(alertConfig.getKey());
     }
     public static String makeKey(String gameId, AlertPeriod period) {
         return gameId+KeyJointer+period.name();
@@ -72,7 +52,7 @@ public class AlertAttrManager {
         return makeKey(String.valueOf(gameId),period);
     }
     public static List<LineSeekerAlertSelectionItem> getLineSeekerAlertSelectionItem() {
-        Set<String> keys = getAlertAttColl().getAlertAttrMap().keySet();
+        Set<String> keys = Config.instance().getAlertAttrMap().keySet();
         List<LineSeekerAlertSelectionItem> rtn = new ArrayList<>(keys.size());
         for(String key: keys) {
             String [] parts = key.split(KeyJointer);
@@ -83,15 +63,18 @@ public class AlertAttrManager {
         return rtn;
     }
     public static Map<String, LineSeekerAlertMethodAttr> getAlertMethodMap() {
-        return getAlertAttColl().getAlertSeekerMethods().getAlertMethodMap();
+        return Config.instance().getAlertSeekerMethods().getAlertMethodMap();
     }
     public static  LineSeekerAlertMethodAttr getLineSeekerAlertMethodAttr(String alertState) {
         return getAlertMethodMap().computeIfAbsent(alertState, LineSeekerAlertMethodAttr::new);
     }
     public static AlertSeekerMethods getAlertSeekerMethods() {
-        return getAlertAttColl().getAlertSeekerMethods();
+        return Config.instance().getAlertSeekerMethods();
     }
     public static String getBookies() {
-        return getAlertAttColl().getBookies().getValue();
+        return Config.instance().getBookies().getValue();
+    }
+    public static synchronized FontConfig getFontConfig() {
+        return Config.instance().getFontConfig();
     }
 }

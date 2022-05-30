@@ -1,8 +1,9 @@
 package com.sia.client.ui.lineseeker;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
+import com.sia.client.config.Config;
 import com.sia.client.media.SoundPlayer;
-import com.sia.client.ui.FontConfig;
+import com.sia.client.config.FontConfig;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.UrgentMessage;
 import com.sia.client.ui.comps.*;
@@ -102,7 +103,7 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
 //        c.fill = GridBagConstraints.NONE;
         panel.add(testpopup,c);
 
-        Font font = FontConfig.instance().getSelectedFont();
+        Font font = Config.instance().getFontConfig().getSelectedFont();
         setComponentFont(panel, font);
         titleLabel.setFont(font.deriveFont(Font.BOLD,(float)(font.getSize()+1)));
         return panel;

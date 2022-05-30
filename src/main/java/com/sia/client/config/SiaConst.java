@@ -81,7 +81,6 @@ public abstract class SiaConst {
         Dimension CustomTab2Dim = new Dimension(1000,650);
     }
     public interface Serialization {
-        String Font = "fontconfig";
-        String LineSeekerAlert = "lineseekeralert";
+        String config = "config";
     }
 }

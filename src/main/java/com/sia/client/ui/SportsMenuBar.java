@@ -1,5 +1,7 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
@@ -138,7 +140,7 @@ public class SportsMenuBar extends JMenuBar {
         windowmenu.add(newwindow);
 
         add(settingmenu);
-        JMenu fontconfig = FontConfig.instance().createFontMenu();
+        JMenu fontconfig = Config.instance().getFontConfig().createFontMenu();
         settingmenu.add(fontconfig);
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
