@@ -53,7 +53,7 @@ public class AlertComponentListener implements KeyListener, ActionListener, Docu
         AlertConfig currentConfig = alertLayout.getAlertConfig();
         boolean changed = false;
         for(AlertSectionName alertSectionName: AlertSectionName.values()) {
-            SectionAttribute sectionAttr = currentConfig.getSectionAtrribute(alertSectionName);
+            LineSeekerAttribute sectionAttr = currentConfig.getSectionAtrribute(alertSectionName);
             SectionComponents sc = alertLayout.getSectionComponents(alertSectionName);
             if ( (changed=valueChanged(sectionAttr,sc))) {
                 break;
@@ -61,7 +61,7 @@ public class AlertComponentListener implements KeyListener, ActionListener, Docu
         }
         return changed;
     }
-    private boolean valueChanged(SectionAttribute sectionAttr, SectionComponents sc) {
+    private boolean valueChanged(LineSeekerAttribute sectionAttr, SectionComponents sc) {
 
         boolean changed = sectionAttr.isActivateStatus() != sc.activateStatus.isSelected();
         if ( changed) {
@@ -71,12 +71,12 @@ public class AlertComponentListener implements KeyListener, ActionListener, Docu
         if ( changed ) {
             return true;
         }
-        changed = columnValueChanged(sectionAttr.getLeftColumn(),sc.getLeftColumn());
+        changed = columnValueChanged(sectionAttr.getHomeColumn(),sc.getLeftColumn());
         if ( changed ) {
             return true;
         }
 
-        return columnValueChanged(sectionAttr.getRightColumn(),sc.getRightColumn());
+        return columnValueChanged(sectionAttr.getVisitorColumn(),sc.getRightColumn());
     }
     private boolean columnValueChanged(ColumnAttributes columnAttributes, ColumnComponents columnComponents) {
         boolean changed = ! columnComponents.getLineText().equals(columnAttributes.getLineInput());

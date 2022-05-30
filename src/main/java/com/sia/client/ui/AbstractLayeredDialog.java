@@ -57,7 +57,7 @@ public abstract class AbstractLayeredDialog {
     public synchronized void addCloseAction(Runnable r) {
         anchoredLayeredPane.addCloseAction(r);
     }
-    protected boolean isEdited() {
+    public boolean isEdited() {
         return false;
     }
 }

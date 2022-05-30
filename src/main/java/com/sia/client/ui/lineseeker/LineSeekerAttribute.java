@@ -1,33 +1,33 @@
 package com.sia.client.ui.lineseeker;
 
-public class SectionAttribute {
+public class LineSeekerAttribute {
 
-    private ColumnAttributes leftColumn;
-    private ColumnAttributes rightColumn;
+    private ColumnAttributes homeColumn;
+    private ColumnAttributes visitorColumn;
     private boolean useEquivalent = true;
     private boolean activateStatus = true;
     private AlertSectionName sectionName;
 
-    public synchronized ColumnAttributes getLeftColumn() {
-        if ( null == leftColumn) {
-            leftColumn = new ColumnAttributes();
+    public synchronized ColumnAttributes getHomeColumn() {
+        if ( null == homeColumn) {
+            homeColumn = new ColumnAttributes();
         }
-        return leftColumn;
+        return homeColumn;
     }
 
-    public void setLeftColumn(ColumnAttributes leftColumn) {
-        this.leftColumn = leftColumn;
+    public void setHomeColumn(ColumnAttributes homeColumn) {
+        this.homeColumn = homeColumn;
     }
 
-    public synchronized ColumnAttributes getRightColumn() {
-        if ( null == rightColumn) {
-            rightColumn = new ColumnAttributes();
+    public synchronized ColumnAttributes getVisitorColumn() {
+        if ( null == visitorColumn) {
+            visitorColumn = new ColumnAttributes();
         }
-        return rightColumn;
+        return visitorColumn;
     }
 
-    public void setRightColumn(ColumnAttributes rightColumn) {
-        this.rightColumn = rightColumn;
+    public void setVisitorColumn(ColumnAttributes visitorColumn) {
+        this.visitorColumn = visitorColumn;
     }
 
     public boolean isUseEquivalent() {

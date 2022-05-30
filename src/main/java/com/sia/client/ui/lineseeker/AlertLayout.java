@@ -223,8 +223,8 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void saveCompValuesToAlertConfig(AlertConfig targetAlertConfig) {
         for(SectionComponents sc : sectionComponentsList) {
-            SectionAttribute sectionAttribute = targetAlertConfig.getSectionAtrribute(sc.getSectionName());
-            sc.updateSectionAttribute(sectionAttribute);
+            LineSeekerAttribute lineSeekerAttribute = targetAlertConfig.getSectionAtrribute(sc.getSectionName());
+            sc.updateSectionAttribute(lineSeekerAttribute);
         }
     }
     private void save(ActionEvent event) {

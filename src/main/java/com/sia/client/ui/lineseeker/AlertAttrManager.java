@@ -55,7 +55,7 @@ public class AlertAttrManager {
     public static void deSerializeAlertAlertAttColl(String alertAttCollJsonStr) throws JsonProcessingException {
         alertAttColl = objectMapper.readValue(alertAttCollJsonStr,AlertAttColl.class);
     }
-    private static synchronized AlertAttColl getAlertAttColl() {
+    public static synchronized AlertAttColl getAlertAttColl() {
         if ( null == alertAttColl) {
             initAlertAttColl();
         }
@@ -83,9 +83,15 @@ public class AlertAttrManager {
         return rtn;
     }
     public static Map<String, LineSeekerAlertMethodAttr> getAlertMethodMap() {
-        return getAlertAttColl().getAlertMethodMap();
+        return getAlertAttColl().getAlertSeekerMethods().getAlertMethodMap();
     }
     public static  LineSeekerAlertMethodAttr getLineSeekerAlertMethodAttr(String alertState) {
-        return getAlertAttColl().getAlertMethodMap().computeIfAbsent(alertState, LineSeekerAlertMethodAttr::new);
+        return getAlertMethodMap().computeIfAbsent(alertState, LineSeekerAlertMethodAttr::new);
+    }
+    public static AlertSeekerMethods getAlertSeekerMethods() {
+        return getAlertAttColl().getAlertSeekerMethods();
+    }
+    public static String getBookies() {
+        return getAlertAttColl().getBookies().getValue();
     }
 }
