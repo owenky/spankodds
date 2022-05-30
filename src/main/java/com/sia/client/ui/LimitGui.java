@@ -79,7 +79,7 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
     CheckBoxTree[] trees = new CheckBoxTree[10];
     String[] sportlist = new String[10];
     String[] secslist = new String[60];
-    String[] minslist = new String[20];
+    String[] minslist = new String[21];
     String[] percentagelist = new String[16];
     String[] incaudiolist = new String[8];
     String[] decaudiolist = new String[8];
@@ -175,27 +175,27 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
         for (int v = 1; v <= 60; v++) {
             secslist[v - 1] = v + "";
         }
-
-        minslist[0] = "0.5";
-        minslist[1] = "1.0";
-        minslist[2] = "1.5";
-        minslist[3] = "2.0";
-        minslist[4] = "2.5";
-        minslist[5] = "3.0";
-        minslist[6] = "3.5";
-        minslist[7] = "4.0";
-        minslist[8] = "4.5";
-        minslist[9] = "5.0";
-        minslist[10] = "5.5";
-        minslist[11] = "6.0";
-        minslist[12] = "6.5";
-        minslist[13] = "7.0";
-        minslist[14] = "7.5";
-        minslist[15] = "8.0";
-        minslist[16] = "8.5";
-        minslist[17] = "9.0";
-        minslist[18] = "9.5";
-        minslist[19] = "10.0";
+        minslist[0] = "0";
+        minslist[1] = "0.5";
+        minslist[2] = "1.0";
+        minslist[3] = "1.5";
+        minslist[4] = "2.0";
+        minslist[5] = "2.5";
+        minslist[6] = "3.0";
+        minslist[7] = "3.5";
+        minslist[8] = "4.0";
+        minslist[9] = "4.5";
+        minslist[10] = "5.0";
+        minslist[11] = "5.5";
+        minslist[12] = "6.0";
+        minslist[13] = "6.5";
+        minslist[14] = "7.0";
+        minslist[15] = "7.5";
+        minslist[16] = "8.0";
+        minslist[17] = "8.5";
+        minslist[18] = "9.0";
+        minslist[19] = "9.5";
+        minslist[20] = "10.0";
 
         percentagelist[0] = "0";
         percentagelist[1] = "5";
