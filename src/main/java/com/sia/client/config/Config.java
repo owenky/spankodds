@@ -64,10 +64,11 @@ public class Config {
     public static String serialize() throws JsonProcessingException {
         return Utils.getObjectMapper().writeValueAsString(instance);
     }
-    public static void deSerialize(String alertAttCollJsonStr) throws IOException {
-
-        ObjectMapper objectMapper = Utils.getObjectMapper();
-        ObjectReader objectReader = objectMapper.readerForUpdating(instance);
-        objectReader.readValue(alertAttCollJsonStr,instance.getClass());
+    public static void deSerialize(String str) throws IOException {
+        if ( null != str && 0 < str.length()) {
+            ObjectMapper objectMapper = Utils.getObjectMapper();
+            ObjectReader objectReader = objectMapper.readerForUpdating(instance);
+            objectReader.readValue(str, instance.getClass());
+        }
     }
 }

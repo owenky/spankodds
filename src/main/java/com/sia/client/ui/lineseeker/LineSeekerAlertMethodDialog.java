@@ -115,8 +115,10 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStateLayout(AlertAttrManager.getLineSeekerAlertMethodAttr(name),sw));
     }
     private void persist(ActionEvent ae) {
-        persist();
-        close();
+        boolean status = persist();
+        if ( status ) {
+            close();
+        }
     }
     @Override
     public void close() {

@@ -62,7 +62,9 @@ public class PopupLocationConfig extends JPanel implements ActionableOnChanged{
     @Override
     public void setValue(Object obj) {
         LineSeekerAlertMethodAttr.PopupLocation popupLocation;
-        if ( obj instanceof LineSeekerAlertMethodAttr.PopupLocation) {
+        if (null == obj) {
+            popupLocation = PopupLocation.TOP_RIGHT;
+        } else if ( obj instanceof LineSeekerAlertMethodAttr.PopupLocation) {
             popupLocation = (LineSeekerAlertMethodAttr.PopupLocation)obj;
         } else {
             popupLocation = LineSeekerAlertMethodAttr.PopupLocation.valueOf(String.valueOf(obj));
