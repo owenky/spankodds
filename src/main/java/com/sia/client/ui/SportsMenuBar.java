@@ -1,16 +1,19 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.ui.lineseeker.AlertAttrManager;
 import com.sia.client.ui.lineseeker.AlertLayout;
+import com.sia.client.ui.lineseeker.LineSeekerAlertMethodDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
@@ -138,13 +141,13 @@ public class SportsMenuBar extends JMenuBar {
         windowmenu.add(newwindow);
 
         add(settingmenu);
-        JMenu fontconfig = FontConfig.instance().createFontMenu();
+        JMenu fontconfig = Config.instance().getFontConfig().createFontMenu();
         settingmenu.add(fontconfig);
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
-        LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb);
+        LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb, AlertAttrManager.getAlertSeekerMethods());
         lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim);
-        lineSeekerAlertMethodDialog.updateAlertMethodAttr();
+        lineSeekerAlertMethodDialog.updateLayout();
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);

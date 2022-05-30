@@ -1,9 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.SportType;
 import com.sia.client.model.User;
-import com.sia.client.ui.lineseeker.AlertAttrManager;
 
 import javax.jms.*;
 import java.awt.*;
@@ -177,11 +178,8 @@ public class UserPrefsProducer {
 
             mapMessage.setString("linealerts", u.getLineAlerts());
 
-            //send line seeker alert
-            mapMessage.setString(SiaConst.Serialization.LineSeekerAlert, AlertAttrManager.serializeAlertAlertAttColl());
-
-            //send font configuration
-            mapMessage.setString(SiaConst.Serialization.Font, FontConfig.serialize());
+            //send config
+            mapMessage.setString(SiaConst.Serialization.config, Config.serialize());
             this.producer.send(mapMessage);
         } catch (Exception ex) {
             log(ex);

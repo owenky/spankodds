@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.35)";
+    public static final String Version="(v21.20.10.39)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -81,7 +81,6 @@ public abstract class SiaConst {
         Dimension CustomTab2Dim = new Dimension(1000,650);
     }
     public interface Serialization {
-        String Font = "fontconfig";
-        String LineSeekerAlert = "lineseekeralert";
+        String config = "config";
     }
 }

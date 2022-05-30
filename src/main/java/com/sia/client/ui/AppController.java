@@ -388,16 +388,6 @@ public class AppController {
     public static void createLimitNodeListFromUserPrefs() {
 
         String limitdata = getUser().getLimitchangeAlert();
-        if(limitdata == null || limitdata.equals(""))
-        {
-            return;
-        }
-        else
-        {
-
-            System.out.println("limitdata="+limitdata);
-        }
-
         String lans[] = limitdata.split("@");
         for(int i = 0;i < lans.length; i++)
         {

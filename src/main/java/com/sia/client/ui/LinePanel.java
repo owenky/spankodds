@@ -1,22 +1,15 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SpankyWindowConfig;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 
 import static com.sia.client.config.Utils.log;
 
@@ -88,7 +81,7 @@ public class LinePanel extends JPanel {
         totalPanel = createContainingComponent(total,leftPaddingSpace,rightPaddingSpace);
         //setToolTipText("linepaneltooltiptext");
 //        Font myfont = new Font("Arial", Font.PLAIN, 12);
-        Font myfont = FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN);
+        Font myfont = Config.instance().getFontConfig().getSelectedFont().deriveFont(Font.PLAIN);
         top.setFont(myfont);
         bottom.setFont(myfont);
         draw.setFont(myfont);

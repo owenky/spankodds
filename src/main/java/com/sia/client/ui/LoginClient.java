@@ -1,9 +1,7 @@
 package com.sia.client.ui;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
+import com.sia.client.config.*;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
@@ -23,6 +21,7 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import java.io.IOException;
 import java.util.UUID;
 
 import static com.sia.client.config.Utils.log;
@@ -216,17 +215,13 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setLoginKey(text);
-            }else if (SiaConst.Serialization.LineSeekerAlert.equals(messageType)) {
-                TextMessage textMessage = (TextMessage) message;
-                String text = textMessage.getText();
-                AlertAttrManager.deSerializeAlertAlertAttColl(text);
-            } else if (SiaConst.Serialization.Font.equals(messageType)) {
+            } else if (SiaConst.Serialization.config.equals(messageType)) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 Utils.checkAndRunInEDT(()-> {
                     try {
-                        FontConfig.deSerialize(text);
-                    } catch (JsonProcessingException e) {
+                        Config.deSerialize(text);
+                    }  catch (IOException e) {
                         Utils.log(e);
                     }
                 });

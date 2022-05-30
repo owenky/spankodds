@@ -34,15 +34,15 @@ public class SectionComponents {
     public void setRightColumnTitle(String leftColumnTitle) {
         rightColumn.setTitle(leftColumnTitle);
     }
-    public void setSectionCompValues(SectionAttribute sectionAtrribute) {
-        this.leftColumn.setColumnCompValues(sectionAtrribute.getLeftColumn());
-        this.rightColumn.setColumnCompValues(sectionAtrribute.getRightColumn());
+    public void setSectionCompValues(LineSeekerAttribute sectionAtrribute) {
+        this.leftColumn.setColumnCompValues(sectionAtrribute.getHomeColumn());
+        this.rightColumn.setColumnCompValues(sectionAtrribute.getVisitorColumn());
         this.useEquivalent.setSelected(sectionAtrribute.isUseEquivalent());
         this.activateStatus.setSelected(sectionAtrribute.isActivateStatus());
     }
-    public void updateSectionAttribute(SectionAttribute sectionAtrribute) {
-        this.leftColumn.updateColumnCompAttr(sectionAtrribute.getLeftColumn());
-        this.rightColumn.updateColumnCompAttr(sectionAtrribute.getRightColumn());
+    public void updateSectionAttribute(LineSeekerAttribute sectionAtrribute) {
+        this.leftColumn.updateColumnCompAttr(sectionAtrribute.getHomeColumn());
+        this.rightColumn.updateColumnCompAttr(sectionAtrribute.getVisitorColumn());
         sectionAtrribute.setUseEquivalent( this.useEquivalent.isSelected());
         sectionAtrribute.setActivateStatus(this.activateStatus.isSelected());
     }

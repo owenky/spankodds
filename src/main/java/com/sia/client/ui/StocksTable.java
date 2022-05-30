@@ -14,6 +14,8 @@ package com.sia.client.ui; /**
  * or form) code contained in this file.
  */
 
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
 import com.sia.client.config.Utils;
 
 import javax.swing.ImageIcon;
@@ -51,7 +53,7 @@ public class StocksTable extends JFrame {
         m_title = new JLabel(m_data.getTitle(),
                 new ImageIcon(Utils.getMediaResource("money.gif")), SwingConstants.CENTER);
 //        m_title.setFont(new Font("Helvetica", Font.PLAIN, 24));
-        m_title.setFont(FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN, 24));
+        m_title.setFont(Config.instance().getFontConfig().getSelectedFont().deriveFont(Font.PLAIN, 24));
         getContentPane().add(m_title, BorderLayout.NORTH);
 
         m_table = new JTable();
