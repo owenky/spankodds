@@ -274,7 +274,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action lastaction = new AbstractAction("Last") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log("last button pressed");
+//                log("last button pressed");
                 if (lastBut.getText().equals("Current")) {
                     lastBut.setText("Last");
                     stb.setLast(false);
@@ -299,7 +299,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action openeraction = new AbstractAction("Opener") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log("opener button pressed");
+//                log("opener button pressed");
                 if (openerBut.getText().equals("Current")) {
                     openerBut.setText("Opener");
                     stb.setOpener(false);
