@@ -154,9 +154,12 @@ public class Totalline extends Line implements Serializable {
             this.setCurrentts(ts);
 
 
-            if (isopener) {
+            if (isopener)
+            {
                 this.setOpenerover(over);
                 this.setOpeneroverjuice(overjuice);
+                this.setOpenerunder(under);
+                this.setOpenerunderjuice(underjuice);
                 this.setOpenerts(ts);
             }
        // }
@@ -167,9 +170,7 @@ public class Totalline extends Line implements Serializable {
            //why call this twice this.setCurrentts(ts);
 
             if (isopener) {
-                this.setOpenerunder(under);
-                this.setOpenerunderjuice(underjuice);
-                this.setOpenerts(ts);
+
                 LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
        // }

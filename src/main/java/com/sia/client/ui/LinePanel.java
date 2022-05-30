@@ -22,6 +22,7 @@ import static com.sia.client.config.Utils.log;
 
 public class LinePanel extends JPanel {
     // 183 52 235
+    private boolean useArrowIcons = true;
     private static int topthickness = 2;
     private static int bottomthickness = 2;
     private static int rightthickness = 1;
@@ -225,6 +226,10 @@ public class LinePanel extends JPanel {
         }
 
         top.setToolTipText(ld.getTooltip());
+        if(!useArrowIcons)
+        {
+            top.setIcon(null);
+        }
     }
 
     public void setBottom(JTable table,LineData ld, int row, int col) {
@@ -299,6 +304,10 @@ public class LinePanel extends JPanel {
             bottom.setBorder(null);
         }
         bottom.setToolTipText(ld.getTooltip());
+        if(!useArrowIcons)
+        {
+            bottom.setIcon(null);
+        }
     }
 
     private void setDraw(JTable table,LineData ld, int row, int col) {

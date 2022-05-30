@@ -981,6 +981,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                 //box1.add(gameperiodComboBox);
                 box1.add(treePanel);
                 box1.add(sportsbooktreePanel);
+                box1.setAlignmentY(Component.TOP_ALIGNMENT);
                 //box1.add(linealertname);
                 //box1.add(saveBut);
                 box1.revalidate();
@@ -1003,6 +1004,10 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                 box2.add(panel);
                 box2.add(new JLabel("  "));
                 box2.add(set);
+                for(int k=0; k <15;k++) {
+                    box2.add(new JLabel("  "));
+                }
+
 
 				/*	//box2.add(totalcheckbox);
 					box2.add(totalPanel);
@@ -1010,6 +1015,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
 					box2.add(moneylinePanel);
 					//box2.add(teamtotalcheckbox);
 					box2.add(teamtotalPanel);*/
+
 
 
                 box2.revalidate();

@@ -1158,6 +1158,9 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
                 box2.add(panel);
                 box2.add(new JLabel("  "));
                 box2.add(set);
+                for(int k=0; k <14;k++) {
+                    box2.add(new JLabel("  "));
+                }
 
 				/*	//box2.add(totalcheckbox);
 					box2.add(totalPanel);

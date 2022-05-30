@@ -28,6 +28,7 @@ public class SpankyWindow extends JFrame {
 
     public static final List<SpankyWindow> winList = new ArrayList<>();
     private static final String spankoddsicon = "spanky.jpg";
+    private static final String spankoddsiconnew = "spankoddsrgb.png";
     private static final AtomicInteger counter = new AtomicInteger(0);
     private final SportsTabPane stp;
     private final TopView tv;
@@ -43,8 +44,9 @@ public class SpankyWindow extends JFrame {
         instance.setName(String.valueOf(windowIndex));
         winList.add(instance);
         try {
-            URL imgResource = Utils.getMediaResource(spankoddsicon);
+            URL imgResource = Utils.getMediaResource(spankoddsiconnew);
             Image spankyimage = ImageIO.read(imgResource);
+           // spankyimage =  Utils.getImage(spankoddsiconnew);
             instance.setIconImage(spankyimage);
         } catch (Exception ex) {
             log(ex);

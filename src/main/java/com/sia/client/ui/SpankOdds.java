@@ -18,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RepaintManager;
 import javax.swing.ToolTipManager;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -193,6 +194,11 @@ public class SpankOdds {
             SpankyWindow.setLocationaAndSize(frame,UIProperties.screenXmargin,UIProperties.screenYmargin);
             frame.populateTabPane();
             frame.setVisible(true);
+            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(AppController.getMainTabPane());
+            //anchoredLayeredPane.setTitle("Welcome!");
+            WelcomeImagePane wip = new WelcomeImagePane(anchoredLayeredPane);
+            wip.openAndCenter(new Dimension(700,700),false);
+
         } catch (Exception e) {
             log(e);
             JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);

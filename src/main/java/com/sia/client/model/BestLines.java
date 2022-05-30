@@ -64,7 +64,8 @@ public class BestLines {
 								bvsl = sl;
 							}
 
-						} else { // given i don't have push chart ill just highlight extreme
+						}
+						else { // given i don't have push chart ill just highlight extreme
 							if (sl.getCurrentvisitjuice() != 0) {
 								if (null == bvsl || sl.getCurrentvisitspread() > bvsl.getCurrentvisitspread()) {
 									bvsl = sl;

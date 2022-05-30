@@ -46,7 +46,7 @@ public class SoundPlayer {
 				} catch (Exception ex) {
 					log("Error with playing sound. sourfile url=" + fileUrl);
 					log(ex);
-					if (illcatch) JOptionPane.showMessageDialog(null, "Error Playing Sound File!");
+					if (illcatch) JOptionPane.showMessageDialog(null, "Error Playing Sound File! "+fileUrl);
 
 				}
 			}

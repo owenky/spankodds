@@ -176,39 +176,37 @@ public class Spreadline extends Line {
     }
 
     public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, long ts, boolean isopener) {
-        if(bookieid==880 & gameid == 345)
+
+        if (isopener)
         {
-         //   log("BAX TEST "+visitspread+".."+visitjuice+".."+homespread+".."+homejuice+".."+isopener);
+            this.setOpenervisitspread(visitspread);
+            this.setOpenervisitjuice(visitjuice);
+            this.setOpenerhomespread(homespread);
+            this.setOpenerhomejuice(homejuice);
+            this.setOpenerts(ts);
+
+        }
+        else if(gameid < 10000) // if this is a half move i will throw away
+        {
+            if( (visitspread == this.getCurrentvisitspread() && visitjuice == this.getCurrentvisitjuice())
+            ||  (homespread == this.getCurrenthomespread() && homejuice == this.getCurrenthomejuice())
+            )
+            {
+               // log("Throw out half spread=" + gameid + "..bookie=" +this.getBookieObject()+".."+visitspread+visitjuice+"/"+homespread+homejuice+"/ vs."+this.getCurrentvisitspread()+"/"+this.getCurrentvisitjuice()+"/"+this.getCurrenthomespread()+"/"+this.getCurrenthomejuice());
+               // return "";
+            }
 
         }
 
-       // if (visitjuice != 0)
-        //{
+
             this.setCurrentvisitspread(visitspread);
             this.setCurrentvisitjuice(visitjuice);
+        this.setCurrenthomespread(homespread);
+        this.setCurrenthomejuice(homejuice);
             this.setCurrentts(ts);
 
-            if (isopener)
-            {
-                this.setOpenervisitspread(visitspread);
-                this.setOpenervisitjuice(visitjuice);
-                this.setOpenerts(ts);
-                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
-            }
-       // }
-      //  if (homejuice != 0)
-       // {
-            this.setCurrenthomespread(homespread);
-            this.setCurrenthomejuice(homejuice);
-            // why call this twice this.setCurrentts(ts);
 
-            if (isopener)
-            {
-                this.setOpenerhomespread(homespread);
-                this.setOpenerhomejuice(homejuice);
-                this.setOpenerts(ts);
-            }
-      //  }
+
         try {
             if (this.getPriorvisitspread() < this.getCurrentvisitspread()) // -6 to -5  5 to 6
             {
@@ -234,6 +232,12 @@ public class Spreadline extends Line {
             this.whowasbet = "";
             log(ex);
         }
+
+        if (isopener)
+        {
+            LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
+        }
+
 
         try {
             if (!this.whowasbet.equals("")) {
@@ -585,7 +589,7 @@ public class Spreadline extends Line {
     public String getOpener()
     {
         String s;
-        s = getOpenervisitspread()+getOpenervisitjuice()+"<br>"+getOpenerhomespread()+getOpenerhomejuice();
+        s = ""+getOpenervisitspread()+getOpenervisitjuice()+"<br>"+getOpenerhomespread()+getOpenerhomejuice();
         return s;
     }
 

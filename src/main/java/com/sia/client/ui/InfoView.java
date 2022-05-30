@@ -52,6 +52,7 @@ public class InfoView {
 
             ld1.setData(s.getLeagueabbr());
             ld2.setData("I W L");
+            ld2.setTooltip("Injury/Weather/Lineups Coming soon");
             ld1.setBackgroundColor(topcolor);
             ld2.setBackgroundColor(bottomcolor);
         } else if (g.getStatus().equalsIgnoreCase("Cncld")) {

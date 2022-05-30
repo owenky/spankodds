@@ -147,36 +147,44 @@ public class Moneyline extends Line implements Serializable {
 
     public String recordMove(double visitjuice, double homejuice, double drawjuice, long ts, boolean isopener) {
 
-       // if (visitjuice != 0)
-      //  {
-            this.setCurrentvisitjuice(visitjuice);
-            this.setCurrentts(ts);
+
+
 
             if (isopener)
             {
                 this.setOpenervisitjuice(visitjuice);
-                this.setOpenerts(ts);
-            }
-      //  }
-      //  if (homejuice != 0)
-      //  {
-            this.setCurrenthomejuice(homejuice);
-           //why call this twice this.setCurrentts(ts);
-
-            if (isopener) {
                 this.setOpenerhomejuice(homejuice);
                 this.setOpenerts(ts);
             }
-       // }
-        if (drawjuice != 0) {
-            this.setCurrentdrawjuice(drawjuice);
-            //why call this twice this.setCurrentts(ts);
+            else if(gameid < 10000)
+            // if this is a half move i will throw away
+            {
+                if( visitjuice == this.getCurrentvisitjuice() || homejuice == this.getCurrenthomejuice())
 
-            if (isopener) {
+                {
+                    if(drawjuice != 0 && drawjuice == this.getCurrentdrawjuice() )
+                    {
+                      //  log("Throwout half moneyline =" + gameid + "..bookie=" +this.getBookieObject()+".."+visitjuice+"/"+homejuice+"/"+drawjuice+" vs."+this.getCurrentvisitjuice()+"/"+this.getCurrenthomejuice()+"/"+this.getCurrentdrawjuice());
+                      //  return "";
+                    }
+                }
+
+            }
+
+            this.setCurrentvisitjuice(visitjuice);
+
+            this.setCurrentts(ts);
+            this.setCurrenthomejuice(homejuice);
+
+        if (drawjuice != 0)
+        {
+            if (isopener)
+            {
                 this.setOpenerdrawjuice(drawjuice);
                 this.setOpenerts(ts);
-                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
+
             }
+            this.setCurrentdrawjuice(drawjuice);
         }
 
 
@@ -193,6 +201,12 @@ public class Moneyline extends Line implements Serializable {
             this.whowasbet = "";
             log(ex);
         }
+
+        if (isopener)
+        {
+            LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
+        }
+
 
         try {
             if (!this.whowasbet.equals("")) {

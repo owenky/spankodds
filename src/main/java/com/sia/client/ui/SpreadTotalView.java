@@ -1036,7 +1036,15 @@ public class SpreadTotalView extends ViewValue {
                 toptooltip ="<html><body>"+toptooltip+"</body></html>";
                 bottomtooltip ="<html><body>"+bottomtooltip+"</body></html>";
 
+                if(topboxS.equals(""))
+                {
+                    toptooltip ="";
 
+                }
+                if(bottomboxS.equals(""))
+                {
+                    bottomtooltip ="";
+                }
 
                 /*
                 setTooltiptext("<html><body>" +
@@ -1124,6 +1132,12 @@ public class SpreadTotalView extends ViewValue {
                 appendTooltipText("</tr></table></td></tr></table></body></html>");
 
                  */
+            }
+            else
+            {
+                toptooltip ="";
+                bottomtooltip ="";
+
             }
         } catch (Exception ex) {
             log(ex);

@@ -51,8 +51,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import static com.sia.client.config.Utils.checkAndRunInEDT;
-import static com.sia.client.config.Utils.log;
+import static com.sia.client.config.Utils.*;
 
 
 public class GameAlert  extends AbstractLayeredDialog {
@@ -84,6 +83,8 @@ public class GameAlert  extends AbstractLayeredDialog {
         JFrame jfrm1 = SpankyWindow.findSpankyWindow(getAnchoredLayeredPane().getSportsTabPane().getWindowIndex());
         String userpref = "";
 
+            System.out.println("ALERTTYPE="+alerttype);
+
         if (alerttype.equalsIgnoreCase(SiaConst.FinalStr)) {
             userpref = AppController.getUser().getFinalAlert();
             log("userprefs =" + userpref);
@@ -96,19 +97,19 @@ public class GameAlert  extends AbstractLayeredDialog {
             userpref = AppController.getUser().getHalftimeAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "halftime.wav";
-        } else if (alerttype.equalsIgnoreCase("Lineup")) {
+        } else if (alerttype.equalsIgnoreCase("Lineups")) {
             userpref = AppController.getUser().getLineupAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "lineups.wav";
-        } else if (alerttype.equalsIgnoreCase("Official")) {
+        } else if (alerttype.equalsIgnoreCase("Officials")) {
             userpref = AppController.getUser().getOfficialAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "officials.wav";
-        } else if (alerttype.equalsIgnoreCase("Injury")) {
+        } else if (alerttype.equalsIgnoreCase("Injuries")) {
             userpref = AppController.getUser().getInjuryAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "injury.wav";
-        } else if (alerttype.equalsIgnoreCase("Time change")) {
+        } else if (alerttype.equalsIgnoreCase("Time Changes")) {
             userpref = AppController.getUser().getTimechangeAlert();
             log("userprefs =" + userpref);
             defaultsoundfile = "timechange.wav";
@@ -372,7 +373,14 @@ public class GameAlert  extends AbstractLayeredDialog {
         testsoundBut.addActionListener(ae -> {
 
             //playSound(defaultsoundfileplay);
-            new SoundPlayer(defaultsoundfileplay, true);
+           // new SoundPlayer(defaultsoundfileplay, true);
+            try {
+
+                new SoundPlayer(defaultsoundfileplay, true);
+            } catch (Exception ex) {
+                showMessageDialog(null, "Error Playing Inc File!");
+                log(ex);
+            }
 
         });
 
@@ -454,13 +462,13 @@ public class GameAlert  extends AbstractLayeredDialog {
                 AppController.getUser().setStartedAlert(newuserprefs);
             } else if (alerttype.equalsIgnoreCase("Halftime")) {
                 AppController.getUser().setHalftimeAlert(newuserprefs);
-            } else if (alerttype.equalsIgnoreCase("Lineup")) {
+            } else if (alerttype.equalsIgnoreCase("Lineups")) {
                 AppController.getUser().setLineupAlert(newuserprefs);
-            } else if (alerttype.equalsIgnoreCase("Official")) {
+            } else if (alerttype.equalsIgnoreCase("Officials")) {
                 AppController.getUser().setOfficialAlert(newuserprefs);
-            } else if (alerttype.equalsIgnoreCase("Injury")) {
+            } else if (alerttype.equalsIgnoreCase("Injuries")) {
                 AppController.getUser().setInjuryAlert(newuserprefs);
-            } else if (alerttype.equalsIgnoreCase("Time Change")) {
+            } else if (alerttype.equalsIgnoreCase("Time Changes")) {
                 AppController.getUser().setTimechangeAlert(newuserprefs);
             } else if (alerttype.equalsIgnoreCase("Limit Change")) {
                 AppController.getUser().setLimitchangeAlert(newuserprefs);

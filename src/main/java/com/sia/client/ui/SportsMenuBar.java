@@ -24,6 +24,7 @@ public class SportsMenuBar extends JMenuBar {
     private final JMenu tabsmenu = new JMenu("Tabs");
     private final JMenu windowmenu = new JMenu("Window");
     private final JMenu settingmenu = new JMenu("Setting");
+    private final JMenu reportmenu = new JMenu("Report");
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
