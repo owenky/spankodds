@@ -135,7 +135,7 @@ public class BookieTree implements ActionableOnChanged {
         String leaf = String.valueOf(paths[0].getLastPathComponent());
         if ( e.isAddedPath()) {
             selections.add(leaf);
-            selections = selections.stream().sorted().collect(Collectors.toList());
+            selections = selections.stream().distinct().sorted().collect(Collectors.toList());
         } else {
             selections.remove(leaf);
         }

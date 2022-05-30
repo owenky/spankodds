@@ -91,4 +91,7 @@ public class AlertAttrManager {
     public static AlertSeekerMethods getAlertSeekerMethods() {
         return getAlertAttColl().getAlertSeekerMethods();
     }
+    public static String getBookies() {
+        return getAlertAttColl().getBookies().getValue();
+    }
 }
