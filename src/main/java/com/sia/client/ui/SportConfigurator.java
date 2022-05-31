@@ -11,17 +11,21 @@ import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import static com.sia.client.config.Utils.log;
 
 
 public class SportConfigurator {
+
+    public static final int FPS_MAX = 14;
+    private static final int FPS_MIN = 0;
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private final JList<Object> selectedList = new JList<>();
     private final JList<String> eventsList = new JList<>();
     private final DefaultListModel<String> eventsModel = new DefaultListModel<>();
-    private int popupsecs = 5;
+    private int maxShowDays = 5;
     private final List<String> checkedsports = new ArrayList<>();
     private final List<DefaultMutableTreeNode> checkednodes = new ArrayList<>();
     private CheckBoxTree _tree;
@@ -38,7 +42,7 @@ public class SportConfigurator {
         final String[] prefs = userpref.split("\\|");
 
         try {
-            popupsecs = Integer.parseInt(prefs[1]);
+            maxShowDays = getEffectiveMaxShowDays(Integer.parseInt(prefs[1]));
         } catch (Exception ex) {
             log(ex);
         }
@@ -118,7 +122,7 @@ public class SportConfigurator {
         TreeUtils.expandAll(_tree, true);
 
         treePanel.add(new JScrollPane(_tree));
-        JLabel jlabpopupsecs = new JLabel("Till how many days games should show up  ");
+        JLabel jlabpopupsecs = new JLabel("Till how many days games should show up");
 
         // Make the buttons.
         JButton jbtnOne = new JButton("One");
@@ -176,15 +180,18 @@ public class SportConfigurator {
         } catch (Exception ex) {
             log(ex);
         }
-        int FPS_MIN = 0;
-        int FPS_MAX = 14;
-
-        if (popupsecs > FPS_MAX) {
-            FPS_MAX = popupsecs;
-        }
+//
+//
+//        if (popupsecs > FPS_MAX) {
+//            FPS_MAX = popupsecs;
+//        }
+        maxShowDays = getEffectiveMaxShowDays(maxShowDays);
 
         JSlider popupsecsslider = new JSlider(JSlider.HORIZONTAL,
-                FPS_MIN, FPS_MAX, popupsecs);
+                FPS_MIN, FPS_MAX, Math.min(FPS_MAX,maxShowDays));
+
+        Hashtable<Object,Object> dictionary = popupsecsslider.createStandardLabels(1);
+        popupsecsslider.setLabelTable(dictionary);
 
         popupsecsslider.setMajorTickSpacing(1);
         popupsecsslider.setMinorTickSpacing(0);
@@ -193,11 +200,13 @@ public class SportConfigurator {
         popupsecsslider.addChangeListener(e -> {
             JSlider source = (JSlider) e.getSource();
             if (!source.getValueIsAdjusting()) {
-                popupsecs = source.getValue();
-                log("secs=" + popupsecs);
+                maxShowDays = source.getValue();
+//                log("secs=" + popupsecs);
             }
         });
 
+        JLabel maxValueLabel = (JLabel)dictionary.get(FPS_MAX);
+        maxValueLabel.setText("\u221e");
 
         saveBut.addActionListener(ae -> {
 
@@ -226,7 +235,7 @@ public class SportConfigurator {
                 sportselected = "null";
             }
 
-            String newuserprefs = dateRadioButton.isSelected() + "|" + popupsecs + "|" + sportselected + "|" + includeheaders.isSelected() + "|" + includeseries.isSelected() + "|" + includeingame.isSelected() + "|" + includeadded.isSelected() + "|" + includeextra.isSelected() + "|" + includeprops.isSelected();
+            String newuserprefs = dateRadioButton.isSelected() + "|" + maxShowDays + "|" + sportselected + "|" + includeheaders.isSelected() + "|" + includeseries.isSelected() + "|" + includeingame.isSelected() + "|" + includeadded.isSelected() + "|" + includeextra.isSelected() + "|" + includeprops.isSelected();
 
             sportType.setPerference(newuserprefs);
             int tabVal = SportType.getPreDefinedSportTabIndex(sportType);
@@ -308,6 +317,13 @@ public class SportConfigurator {
         mainPanel.add(box2);
 
         return mainPanel;
+    }
+    public static int getEffectiveMaxShowDays(int popupsecs) {
+        int effectiveMaxShowDays = Math.min(popupsecs, FPS_MAX);
+        if ( FPS_MAX ==effectiveMaxShowDays) {
+            effectiveMaxShowDays = Integer.MAX_VALUE;
+        }
+        return effectiveMaxShowDays;
     }
     private TreeModel createSportTreeModel(String tabname) {
         DefaultMutableTreeNode sportnode = new DefaultMutableTreeNode(tabname);
