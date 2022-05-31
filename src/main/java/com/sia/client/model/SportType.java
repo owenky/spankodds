@@ -4,6 +4,7 @@ import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankOdds;
+import com.sia.client.ui.SportConfigurator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -151,7 +152,7 @@ public class SportType {
         return this.comingDays;
     }
     public void setComingDays(int comingDays) {
-        this.comingDays = comingDays;
+        this.comingDays = SportConfigurator.getEffectiveMaxShowDays(comingDays);
     }
     public void setLeagueFilter(LeagueFilter leagueFilter) {
         this.leagueFilter = leagueFilter;

@@ -18,8 +18,9 @@ public interface ActionOnEditableLayouts {
         }
         return status;
     }
-    default void persist()  {
-        if ( validate()) {
+    default boolean persist()  {
+        boolean status = validate();
+        if ( status) {
             for(EditableLayout editableLayout: getEditablelayout()) {
                 try {
                     editableLayout.persist();
@@ -28,6 +29,7 @@ public interface ActionOnEditableLayouts {
                 }
             }
         }
+        return status;
     }
     default void updateLayout(){
         for(EditableLayout editableLayout: getEditablelayout()) {

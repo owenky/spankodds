@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.Bookie;
+import com.sia.client.model.BookieManager;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -427,8 +428,9 @@ public class BookieColumnController2 extends JPanel implements LayerAnchored {
             }
             AppController.getUser().setBookieColumnPrefs(showncols);
             AppController.getUser().setFixedColumnPrefs(fixedcols);
-            log(fixedcols);
-            log(showncols);
+            BookieManager.instance().reset();
+//            log(fixedcols);
+//            log(showncols);
             AppController.refreshTabs3();
 //            f.dispose();
             AnchoredLayeredPane anchoredLayeredPane = getAnchoredLayeredPane();
