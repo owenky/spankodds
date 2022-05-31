@@ -199,7 +199,8 @@ public class CustomTab2 extends AbstractLayeredDialog {
     private void addSportTypes(SportType st,Map<String,GameGroupNode> gameGroupNodeMap) {
         InvisibleNode node = new InvisibleNode(st.getSportName());
         root.add(node);
-        Function<Game,Boolean> gameFilter = (game)-> null == GameUtils.checkError(game) && st.isGameNear(game) && st.isMyType(game);
+        //dont filter game by game near for custom tab selecting sport. -- 05/30/2022
+        Function<Game,Boolean> gameFilter = (game)-> null == GameUtils.checkError(game)  && st.isMyType(game);
         GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(st,gameFilter,false);
         Map<GameGroupHeader, Vector<Game>> headerToGameListMap = gameGroupAggregator.aggregate();
         List<GameGroupHeader> gameGroupHeaderList = headerToGameListMap.keySet().stream().sorted(new GameGroupDateSorter().thenComparing(new GameGroupLeagueSorter())).collect(Collectors.toList());
