@@ -1,19 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.SportName;
-import com.sia.client.model.AlertVector;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.BookieManager;
-import com.sia.client.model.Game;
-import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.Games;
-import com.sia.client.model.Line;
-import com.sia.client.model.Moneyline;
-import com.sia.client.model.NewLineListener;
-import com.sia.client.model.Sport;
-import com.sia.client.model.Spreadline;
-import com.sia.client.model.UrgentsConsumer;
-import com.sia.client.model.User;
+import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -21,22 +9,10 @@ import javax.jms.Connection;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.Color;
+import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
@@ -147,7 +123,7 @@ public class AppController {
     public static Map<String, Bookie> bestunder = new ConcurrentHashMap<>();
 
     private static final BookieManager bookieManager = BookieManager.instance();
-    private static Games games = new Games();
+    private static final Games games = Games.instance();
     private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
     public static void initializeSportsTabPaneVectorFromUser() {

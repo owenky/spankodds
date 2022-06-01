@@ -5,7 +5,9 @@ import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.*;
 import com.sia.client.ui.lineseeker.*;
 
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class LineSeekerNode {
     private final int gameid;
@@ -58,6 +60,15 @@ public class LineSeekerNode {
     private Game g;
     private Sport s;
 
+    public static List<LineSeekerNode> getAllNodes() {
+        return Config.instance().getAlertAttrMap().keySet().stream().map(LineSeekerNode::of).collect(Collectors.toList());
+    }
+    public static LineSeekerNode of (String key) {
+        String strs [] = key.split(Config.KeyJointer);
+        int gameid = Integer.parseInt(strs[0]);
+        AlertPeriod period = AlertPeriod.valueOf(strs[1]);
+        return of(gameid,period);
+    }
     public static LineSeekerNode of(int gameid, AlertPeriod period) {
         boolean spreadcheck=false;
         boolean usespreadmatheq=false;

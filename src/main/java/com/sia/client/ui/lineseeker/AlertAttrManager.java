@@ -1,9 +1,7 @@
 package com.sia.client.ui.lineseeker;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.Config;
 import com.sia.client.config.FontConfig;
-import com.sia.client.config.Utils;
 import com.sia.client.model.SelectionItem;
 
 import java.util.ArrayList;
@@ -13,8 +11,6 @@ import java.util.Set;
 
 public class AlertAttrManager {
 
-    private static final String KeyJointer = "@";
-
     public static AlertConfig getAlertAttr(String gameId, AlertPeriod period)  {
         return Config.instance().getAlertAttrMap().get(makeKey(gameId,period));
     }
@@ -22,7 +18,7 @@ public class AlertAttrManager {
         return Config.instance().getAlertAttrMap().get(atttibuteKey);
     }
     public static AlertConfig of(String atttibuteKey) {
-        String [] keyComp = atttibuteKey.split(KeyJointer);
+        String [] keyComp = atttibuteKey.split(Config.KeyJointer);
         AlertPeriod alertPeriod = AlertPeriod.valueOf(keyComp[1]);
         int gameId = Integer.parseInt(keyComp[0]);
         return of(gameId,alertPeriod);
@@ -46,7 +42,7 @@ public class AlertAttrManager {
         Config.instance().getAlertAttrMap().remove(alertConfig.getKey());
     }
     public static String makeKey(String gameId, AlertPeriod period) {
-        return gameId+KeyJointer+period.name();
+        return gameId+Config.KeyJointer+period.name();
     }
     public static String makeKey(int gameId, AlertPeriod period) {
         return makeKey(String.valueOf(gameId),period);
@@ -55,7 +51,7 @@ public class AlertAttrManager {
         Set<String> keys = Config.instance().getAlertAttrMap().keySet();
         List<LineSeekerAlertSelectionItem> rtn = new ArrayList<>(keys.size());
         for(String key: keys) {
-            String [] parts = key.split(KeyJointer);
+            String [] parts = key.split(Config.KeyJointer);
             int gameId = Integer.parseInt(parts[0]);
             AlertPeriod alertPeriod = AlertPeriod.valueOf(parts[1]);
             rtn.add(new LineSeekerAlertSelectionItem(gameId,alertPeriod));

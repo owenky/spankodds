@@ -3,6 +3,7 @@ package com.sia.client.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.sia.client.model.Games;
 import com.sia.client.ui.comps.ActionableOnChanged;
 import com.sia.client.ui.comps.SimpleValueWraper;
 import com.sia.client.ui.lineseeker.AlertConfig;
@@ -10,10 +11,13 @@ import com.sia.client.ui.lineseeker.AlertSeekerMethods;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Config {
 
+    public static final String KeyJointer = "@";
     private Map<String, AlertConfig> alertAttrMap = new HashMap<>();
     private AlertSeekerMethods alertSeekerMethods = new AlertSeekerMethods();
     private SimpleValueWraper<String> bookies;
@@ -60,6 +64,16 @@ public class Config {
 
     public void setFontConfig(FontConfig fontConfig) {
         this.fontConfig = fontConfig;
+    }
+    public void syncWithGames() {
+        List<String> obsoleteGameIds = alertAttrMap.keySet().stream()
+                .filter(key-> ! Games.instance().containsGameId(key.split(KeyJointer)[0]))
+                .collect(Collectors.toList());
+
+        obsoleteGameIds.forEach(key-> {
+            alertAttrMap.remove(key);
+        });
+
     }
     public static String serialize() throws JsonProcessingException {
         return Utils.getObjectMapper().writeValueAsString(instance);

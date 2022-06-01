@@ -8,6 +8,7 @@ import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.LineSeekerNode;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;

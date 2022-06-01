@@ -1,11 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.CheckThreadViolationRepaintManager;
-import com.sia.client.config.LocalConfig;
-import com.sia.client.config.Logger;
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.*;
 import com.sia.client.config.SiaConst.UIProperties;
-import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.LocalMessageLogger;
 import org.jdesktop.swingx.JXLoginPane;
@@ -117,6 +113,7 @@ public class SpankOdds {
                 frame = SpankyWindow.create("Spank Odds (" + SiaConst.Version + ")");
                 SpankOdds.this.userName = loginPane.getUserName();
                 InitialGameMessages.postDataLoading();
+                Config.instance().syncWithGames();
                 SpankOdds.this.showGui();
             }
 
