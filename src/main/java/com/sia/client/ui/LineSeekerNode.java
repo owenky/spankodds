@@ -261,57 +261,69 @@ public class LineSeekerNode {
         int neutralpopuplocation = 5;
         int neutralpopupseconds = 10;
 
-        if (bookiecodes.contains("" + bookieid)) {
+        if(this.gameid == gameid && this.getPeriod().getOrder() == periodid) {
 
-            if (line instanceof Spreadline && spreadcheck) {
-                html = shouldIAlertSpreadline((Spreadline) line);
-            } else if (line instanceof Totalline && totalcheck) {
-                html = shouldIAlertTotalline((Totalline) line);
-            } else if (line instanceof Moneyline && moneylinecheck) {
-                html = shouldIAlertMoneyline((Moneyline) line);
-            } else if (line instanceof TeamTotalline && awayttcheck) {
-                html = shouldIAlertAwayTeamTotalline((TeamTotalline) line);
-            } else if (line instanceof TeamTotalline && homettcheck) {
-                html = shouldIAlertHomeTeamTotalline((TeamTotalline) line);
+            //  if (bookiecodes.contains("" + bookieid)) {
+
+            // this prints out all bookies, circa... why is circa always printing out?
+            System.out.println("bookies string in lineseekernode=" + bookies);
+            if (bookies.indexOf(AppController.getBookie(bookieid).getName()) != -1 || bookies.indexOf("All Bookies") != -1) {
+
+                System.out.println(line.getClass()+".."+line.toString()+".."+totalcheck+".."+AppController.getBookie(bookieid).getName());
+                if (line instanceof Spreadline && spreadcheck) {
+                    html = shouldIAlertSpreadline((Spreadline) line);
+                } else if (line instanceof Totalline && totalcheck) {
+                    html = shouldIAlertTotalline((Totalline) line);
+                } else if (line instanceof Moneyline && moneylinecheck) {
+                    html = shouldIAlertMoneyline((Moneyline) line);
+                } else if (line instanceof TeamTotalline && awayttcheck) {
+                    html = shouldIAlertAwayTeamTotalline((TeamTotalline) line);
+                } else if (line instanceof TeamTotalline && homettcheck) {
+                    html = shouldIAlertHomeTeamTotalline((TeamTotalline) line);
+                } else {
+
+                    html = "";
+                }
+
             } else {
-
                 html = "";
             }
 
-        } else {
-            html = "";
-        }
+            if (!html.equals("")) {
 
-        if (!html.equals("")) {
+                if (html.indexOf("GOOD") != -1) {
+                    if (playgoodaudio) {
+                        new SoundPlayer(goodaudiofile);
+                    }
+                    if (showgoodpopup) {
+                        new UrgentMessage(html, goodpopupseconds * 1000, goodpopuplocation, AppController.getMainTabPane());
+                    }
 
-            if (html.indexOf("GOOD") != -1) {
-                if (playgoodaudio) {
-                    new SoundPlayer(goodaudiofile);
+                } else if (html.indexOf("BAD") != -1) {
+                    if (playbadaudio) {
+                        new SoundPlayer(badaudiofile);
+                    }
+                    if (showgoodpopup) {
+                        new UrgentMessage(html, badpopupseconds * 1000, badpopuplocation, AppController.getMainTabPane());
+                    }
+                } else if (html.indexOf("NEUTRAL") != -1) {
+                    if (playneutralaudio) {
+                        new SoundPlayer(neutralaudiofile);
+                    }
+                    if (showneutralpopup) {
+                        new UrgentMessage(html, neutralpopupseconds * 1000, neutralpopuplocation, AppController.getMainTabPane());
+                    }
                 }
-                if (showgoodpopup) {
-                    new UrgentMessage(html, goodpopupseconds * 1000, goodpopuplocation, AppController.getMainTabPane());
-                }
-
-            } else if (html.indexOf("BAD") != -1) {
-                if (playbadaudio) {
-                    new SoundPlayer(badaudiofile);
-                }
-                if (showgoodpopup) {
-                    new UrgentMessage(html, badpopupseconds * 1000, badpopuplocation, AppController.getMainTabPane());
-                }
-            } else if (html.indexOf("NEUTRAL") != -1) {
-                if (playneutralaudio) {
-                    new SoundPlayer(neutralaudiofile);
-                }
-                if (showneutralpopup) {
-                    new UrgentMessage(html, neutralpopupseconds * 1000, neutralpopuplocation, AppController.getMainTabPane());
-                }
+                return true;
+            } else {
+                return false;
             }
-            return true;
-        } else {
-            return false;
         }
+        else
+        {
+            return false;
 
+        }
 
     }
 
@@ -419,7 +431,9 @@ public class LineSeekerNode {
 
 
         if (isUsetotalmatheq()) {
+            System.out.println("using total math.."+line.getLeague_id()+".."+line.getPeriod()+"..."+thisover+thisoverjuice+".vs."+over+overjuice);
             if (LinesMoves.isLine1BetterThanLine2(thisover, thisoverjuice, over, overjuice, line.getLeague_id(), line.getPeriod(), "OVER", line.getGameid())) {
+                System.out.println("line1 is better now check.."+nowms+".."+lasttotalnotify);
                 if (nowms - lasttotalnotify > lineseekerwaitmin * 60 * 1000) {
                     lasttotalnotify = nowms;
                     return htmlover;

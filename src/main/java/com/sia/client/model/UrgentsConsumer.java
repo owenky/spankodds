@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankyWindow;
+import com.sia.client.ui.UrgentMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -96,12 +97,19 @@ public class UrgentsConsumer implements MessageListener {
 
                 }
             }
-            else
+            else if(messageType.equals("Urgent")) // force show!
             {
                 log("messageType:" + messageType + ", message=" + message);
-                String mesg = String.valueOf(message);
+                String mesg = mapMessage.getString("urgentmessage");
+
                 addMessageToAlertVector(mesg);
+
+                new UrgentMessage("<HTML><H2>URGENT MESSAGE</H2>" +mesg+
+                        "</HTML>", 20000, 2, AppController.getMainTabPane());
+
             }
+
+
 
         } catch (Exception e)
         {

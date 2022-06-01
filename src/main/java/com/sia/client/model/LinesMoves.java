@@ -30,6 +30,11 @@ public class LinesMoves
     static double[] mlbh1sides = new double[100];
     static double[] mlbh1totals = new double[100];
 
+    static double[] nhlsides = new double[100];
+    static double[] nhltotals = new double[100];
+    static double[] nhlp1sides = new double[100];
+    static double[] nhlp1totals = new double[100];
+
     public static void initi()
     {
 
@@ -51,15 +56,43 @@ public class LinesMoves
         mlbtotals[11] = .089;
         mlbtotals[12] = .055; // made up
         mlbtotals[13] = .079; // made up
+        mlbtotals[14] = .055; // made up
+        mlbtotals[15] = .079; // made up
+        mlbtotals[16] = .055; // made up
+        mlbtotals[17] = .079; // made up
+        mlbtotals[18] = .055; // made up
+        mlbtotals[19] = .079; // made up
 
         mlbh1totals[4] = .14;
         mlbh1totals[5] = .12;
         mlbh1totals[6] = .12; // made up
         mlbh1totals[7] = .10; // made up
+        mlbh1totals[8] = .10; // made up
+        mlbh1totals[9] = .10; // made up
+        mlbh1totals[10] = .10; // made up
+        mlbh1totals[11] = .10; // made up
 
 
+        // made up all hockey push data
+        nhlsides[0] = 0.0;
+        nhlsides[1] = 0.30;
+        nhlsides[2] = 0.15;
 
+        nhltotals[5] = 0.30;
+        nhltotals[6] = 0.20;
+        nhltotals[7] = 0.30;
+        nhltotals[8] = 0.20;
+        nhltotals[9] = 0.30;
 
+        nhlp1totals[1] = 0.40;
+        nhlp1totals[2] = 0.40;
+        nhlp1totals[3] = 0.40;
+        nhlp1totals[4] = 0.40;
+        nhlp1totals[5] = 0.40;
+
+        nhlp1sides[0] = 0.40;
+        nhlp1sides[1] = 0.30;
+        nhlp1sides[2] = 0.20;
 
 
         cfsides[0] = 0.000000001;
@@ -304,7 +337,7 @@ public class LinesMoves
         {
             nbatotals[cnt] = .0175; // was .02475
         }
-        for(int cnt = 110; cnt<= 190;cnt++)
+        for(int cnt = 95; cnt<= 190;cnt++)
         {
             cbtotals[cnt] = .025;
         }
@@ -429,7 +462,7 @@ public class LinesMoves
             }
         }
 
-        else if(leagueid == 4  )
+        else if(leagueid == 4  || leagueid == 8) // treat wnba like cbb
         {
             if(type.equals("SPREAD"))
             {
@@ -463,7 +496,20 @@ public class LinesMoves
             }
         }
 
-        else if(leagueid == 5)
+        //lets add all other baseball leagues to this...
+        else if(leagueid == 5
+                || leagueid == 848
+                || leagueid == 849
+                || leagueid == 850
+                || leagueid == 851
+                || leagueid == 852
+                || leagueid == 853
+                || leagueid == 899
+                || leagueid == 904
+                || leagueid == 920
+                || leagueid == 6
+                || leagueid == 785
+        )
         {
             if(type.equals("SPREAD"))
             {
@@ -496,6 +542,49 @@ public class LinesMoves
                 }
             }
         }
+        //lets add all other hockey leagues to this...
+        else if(leagueid == 7
+                || leagueid == 15
+                || leagueid == 881
+                || leagueid == 902
+                || leagueid == 903
+                || leagueid == 891
+
+        )
+        {
+            if(type.equals("SPREAD"))
+            {
+                if(period == 0)
+                {
+                    arr = nhlsides;
+                }
+                else if(period >= 1)
+                {
+                    arr = nhlp1sides;
+                }
+                else
+                {
+                    arr = null;
+                }
+            }
+            else if(type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER"))
+            {
+                if(period == 0)
+                {
+                    arr = nhltotals;
+                }
+                else if(period >= 1)
+                {
+                    arr = nhlp1totals;
+                }
+                else
+                {
+                    arr = null;
+                }
+            }
+        }
+
+
         return arr;
     }
 
