@@ -28,7 +28,6 @@ public class AppController {
     private static final AtomicReference<CountDownLatch> messageProcessingLatchRef = new AtomicReference<>(new CountDownLatch(1));
     public static Vector<String> customTabsVec = new Vector<>();
     public static Vector<LineAlertNode> linealertnodes = new Vector<>();
-    public static Vector<LineSeekerNode> lineseekernodes = new Vector<>();
     public static Vector<SportsMenuBar> menubars = new Vector<>();
     public static Vector<Sport> sportsVec = new Vector<>();
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
@@ -538,11 +537,6 @@ public class AppController {
     public static Vector<LineAlertNode> getLineAlertNodes() {
         return linealertnodes;
     }
-
-    public static Vector<LineSeekerNode> getLineSeekerNodes() {
-        return lineseekernodes;
-    }
-
     public static SportsTabPane getMainTabPane() {
         return SpankyWindow.getFirstSpankyWindow().getSportsTabPane();
     }
