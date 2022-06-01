@@ -7,6 +7,7 @@ import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -216,12 +217,12 @@ public class LineAlertManager {
 
         }
 
-        Vector lineseekernodes = AppController.getLineSeekerNodes();
+        List<LineSeekerNode> lineseekernodes = LineSeekerNode.getAllNodes();
         //log(linealertnodes.size());
         for (int i = 0; i < lineseekernodes.size(); i++)
         {
             try {
-                LineSeekerNode lsn = (LineSeekerNode) lineseekernodes.elementAt(i);
+                LineSeekerNode lsn =  lineseekernodes.get(i);
                 lsn.doesthislinequalify(line);
 
                 }
