@@ -5,7 +5,9 @@ import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.*;
 import com.sia.client.ui.lineseeker.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -59,17 +61,22 @@ public class LineSeekerNode {
     private double lineseekerwaitmin = 0;
     private Game g;
     private Sport s;
+    private static Map<String,LineSeekerNode> liveNodes = new HashMap<>();
 
     public static List<LineSeekerNode> getAllNodes() {
         return Config.instance().getAlertAttrMap().keySet().stream().map(LineSeekerNode::of).collect(Collectors.toList());
     }
     public static LineSeekerNode of (String key) {
-        String strs [] = key.split(Config.KeyJointer);
+        String[] strs = key.split(Config.KeyJointer);
         int gameid = Integer.parseInt(strs[0]);
         AlertPeriod period = AlertPeriod.valueOf(strs[1]);
-        return of(gameid,period);
+        LineSeekerNode lineSeekerNode = liveNodes.computeIfAbsent(key, (k)->new LineSeekerNode(gameid,period));
+        updateWithAlertConfig(lineSeekerNode);
+        return lineSeekerNode;
     }
-    public static LineSeekerNode of(int gameid, AlertPeriod period) {
+    private static void updateWithAlertConfig(LineSeekerNode lineSeekerNode) {
+        int gameid = lineSeekerNode.gameid;
+        AlertPeriod period = lineSeekerNode.period;
         boolean spreadcheck=false;
         boolean usespreadmatheq=false;
         double visitorspread=0d;
@@ -159,15 +166,18 @@ public class LineSeekerNode {
             homettunderjuice = Double.parseDouble(homettAttr.getHomeColumn().getJuiceInput());
             homettunderalerttype = homettAttr.getHomeColumn().getAlertState().name();
         }
-        return new LineSeekerNode(gameid, period
-                ,spreadcheck,   usespreadmatheq,    visitorspread, visitorjuice,      visitorspreadalerttype,homespread,        homejuice,       homespreadalerttype
+        lineSeekerNode.updateWithAlertConfig(
+                spreadcheck,   usespreadmatheq,    visitorspread, visitorjuice,      visitorspreadalerttype,homespread,        homejuice,       homespreadalerttype
                 ,totalcheck,    usetotalmatheq,     over,          overjuice,          overalerttype,         under,            underjuice,      underalerttype
                 ,moneylinecheck,usemoneylinematheq, visitorml,     visitormlalerttype, homeml,                homemlalerttype
                 ,awayttcheck,   useawayttmatheq,    awayttover,    awayttoverjuice,    awayttoveralerttype,   awayttunder,      awayttunderjuice, awayttunderalerttype
                 ,homettcheck,   usehomettmatheq,    homettover,    homettoverjuice,    homettoveralerttype,   homettunder,      homettunderjuice, homettunderalerttype);
     }
-
-    private LineSeekerNode(int gameid, AlertPeriod period, boolean spreadcheck, boolean usespreadmatheq, double visitorspread, double visitorjuice,
+    private LineSeekerNode(int gameid, AlertPeriod period) {
+        this.gameid = gameid;
+        this.period = period;
+    }
+    private void updateWithAlertConfig(boolean spreadcheck, boolean usespreadmatheq, double visitorspread, double visitorjuice,
                            String visitorspreadalerttype, double homespread, double homejuice, String homespreadalerttype, boolean totalcheck,
                            boolean usetotalmatheq, double over, double overjuice, String overalerttype, double under,
                            double underjuice, String underalerttype, boolean moneylinecheck, boolean usemoneylinematheq,
@@ -176,8 +186,6 @@ public class LineSeekerNode {
                            String awayttoveralerttype, double awayttunder, double awayttunderjuice, String awayttunderalerttype,
                            boolean homettcheck, boolean usehomettmatheq, double homettover, double homettoverjuice,
                            String homettoveralerttype, double homettunder, double homettunderjuice, String homettunderalerttype) {
-        this.gameid = gameid;
-        this.period = period;
         this.spreadcheck = spreadcheck;
         this.usespreadmatheq = usespreadmatheq;
         this.visitorspread = visitorspread;
