@@ -260,13 +260,18 @@ public class GamesConsumer implements MessageListener {
                 // END OLD CODE
                  */
                 // NEW CODE
+                GameStatus oldStatus = null;
+                if(oldGame!= null)
+                {
+                    oldStatus = GameStatus.getGameStatus(oldGame);
+                    // stored old status now copy new stuff into oldGame object
+                    GameUtils.setGameProperty(oldGame,fields);
+                }
 
-                GameStatus oldStatus = GameStatus.getGameStatus(oldGame);
 
                 GameStatus newStatus = GameStatus.getGameStatus(g);
 
-                // stored old status now copy new stuff into oldGame object
-                GameUtils.setGameProperty(oldGame,fields);
+
 
                 // only use oldgame with new values going forward
                     if ( null != oldGame)
