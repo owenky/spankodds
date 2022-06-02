@@ -743,7 +743,10 @@ public class LinesMoves
                 arr[(int)newline] = 0.0001;
             }
         }
-        catch(Exception ex) {}
+        catch(Exception ex)
+        {
+
+        }
 
         if(type.equals("OVER"))
         {
@@ -774,20 +777,28 @@ public class LinesMoves
         {
             System.out.println("********STARTING AT="+st+"..to="+en);
         }
+
         for (double startline = st; startline < en; startline=startline+.5)
         {
-            // add half of push probability every time we cross whole number
-            int index = (int)Math.round(startline);
-            int positiveindex = index;
-            if(index < 0)
-            {
-                positiveindex = index*-1;
-            }
+            int positiveindex = 0;
+            try {
+                // add half of push probability every time we cross whole number
+                int index = (int) Math.round(startline);
+                positiveindex = index;
+                if (index < 0) {
+                    positiveindex = index * -1;
+                }
 
-            prob = prob+arr[positiveindex]/2.0*negativefactor;
-            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
+                prob = prob + arr[positiveindex] / 2.0 * negativefactor;
+                if (leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug) {
+                    System.out.println("forloop...ol=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice + ".." + index + ".." + arr[positiveindex] / 2.0 * negativefactor);
+                }
+
+            }
+            catch(Exception ex)
             {
-                System.out.println("forloop...ol="+oldline+".."+oldjuice+"..newline="+newline+".."+newjuice+".."+index + ".." + arr[positiveindex] / 2.0 * negativefactor);
+                System.out.println("Exception "+ex+"..index="+positiveindex+"..gameid="+gameid);
+                break;
             }
         }
 
