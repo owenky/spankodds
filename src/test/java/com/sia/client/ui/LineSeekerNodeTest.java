@@ -21,8 +21,8 @@ public class LineSeekerNodeTest {
     public void init() {
         AlertConfig alertConfig = AlertAttrManager.of(gameId,period);
         LineSeekerAttribute lineSeekerAttribute = alertConfig.getSectionAtrribute(AlertSectionName.totalsName);
-        lineSeekerAttribute.getHomeColumn().setLineInput("1");
-        lineSeekerAttribute.getHomeColumn().setJuiceInput("2");
+        lineSeekerAttribute.getVisitorColumn().setLineInput("1");
+        lineSeekerAttribute.getVisitorColumn().setJuiceInput("2");
 
     }
     @Test
@@ -32,6 +32,7 @@ public class LineSeekerNodeTest {
         assertEquals(1,nodes.size());
 
         LineSeekerNode node = nodes.get(0);
-        assertEquals(1,node.get)
+        assertEquals(1,new Double(node.getOver()).intValue());
+        assertEquals(2,new Double(node.getOverjuice()).intValue());
     }
 }
