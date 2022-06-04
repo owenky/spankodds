@@ -50,7 +50,7 @@ public class LoginClient implements MessageListener {
         try {
             AppController.addBookie(new Bookie(990, "Details", "Dtals", "", ""));
             AppController.addBookie(new Bookie(991, "Time", "Time", "", ""));
-            AppController.addBookie(new Bookie(992, "Gm#", "Gm#", "", ""));
+            AppController.addBookie(new Bookie(992, SiaConst.GameNumColIden, SiaConst.GameNumColIden, "", ""));
             AppController.addBookie(new Bookie(993, "Team", "Team", "", ""));
             AppController.addBookie(new Bookie(994, "Chart", "Chart", "", ""));
             AppController.addBookie(new Bookie(996, "*Best", "*Best", "", ""));

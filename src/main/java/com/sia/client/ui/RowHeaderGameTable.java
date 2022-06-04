@@ -7,4 +7,7 @@ public class RowHeaderGameTable extends RowHeaderTable<Game> {
     public RowHeaderGameTable(MainGameTable mainTable,boolean hasRowNumber) {
         super(mainTable,hasRowNumber);
     }
+    public int getWindowIndex() {
+        return ((MainGameTable)getMainTable()).getWindowIndex();
+    }
 }

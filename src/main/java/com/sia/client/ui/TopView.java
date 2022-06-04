@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.AlertStruct;
@@ -322,7 +323,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             log("sort button pressed");
             if (sortBut.getText().equals("Time sort")) {
                 stb.setSort(true);
-                sortBut.setText("Gm# sort");
+                sortBut.setText(SiaConst.GameNumColIden+" sort");
             } else {
                 stb.setSort(false);
                 sortBut.setText("Time sort");

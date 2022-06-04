@@ -45,6 +45,9 @@ public abstract class AbstractLayeredDialog {
     public void show(Dimension dim, Supplier<Point> anchorLocSupplier) {
         anchoredLayeredPane.openAndAnchoredAt(getUserComponent(),dim,false,anchorLocSupplier);
     }
+    public void show(Dimension dim, boolean toHideOnMouseOut,Supplier<Point> anchorLocSupplier) {
+        anchoredLayeredPane.openAndAnchoredAt(getUserComponent(),dim,toHideOnMouseOut,anchorLocSupplier);
+    }
     public AnchoredLayeredPane getAnchoredLayeredPane() {
         return anchoredLayeredPane;
     }

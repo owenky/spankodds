@@ -113,7 +113,7 @@ public class SpankOdds {
                 frame = SpankyWindow.create("Spank Odds (" + SiaConst.Version + ")");
                 SpankOdds.this.userName = loginPane.getUserName();
                 InitialGameMessages.postDataLoading();
-                Config.instance().setSyncStatus(false);
+                Config.instance().setOutOfSync();
                 SpankOdds.this.showGui();
             }
 
