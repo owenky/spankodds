@@ -1,13 +1,13 @@
 package com.sia.client.ui.lineseeker;
 
-import com.sia.client.ui.comps.EditableLayout;
+import com.sia.client.ui.comps.EditablePane;
 import com.sia.client.ui.comps.SbtStringComboBox;
 import com.sia.client.ui.comps.UICompValueBinder;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LineSeekerAlertRenotifyLayout implements EditableLayout {
+public class LineSeekerAlertRenotifyPane implements EditablePane {
 
     private final JLabel editStatusLabel = new JLabel();
     private final AlertSeekerMethods alertSeekerMethods;
@@ -15,7 +15,7 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
     private final String[] minslist = new String[20];
     private UICompValueBinder uiCompValueBinder;
 
-    public LineSeekerAlertRenotifyLayout(AlertSeekerMethods alertSeekerMethods) {
+    public LineSeekerAlertRenotifyPane(AlertSeekerMethods alertSeekerMethods) {
         this.alertSeekerMethods = alertSeekerMethods;
     }
     @Override
@@ -31,7 +31,7 @@ public class LineSeekerAlertRenotifyLayout implements EditableLayout {
         return uiCompValueBinder;
     }
     @Override
-    public JComponent getLayoutPane() {
+    public JComponent getPane() {
 
         initComponents();
 

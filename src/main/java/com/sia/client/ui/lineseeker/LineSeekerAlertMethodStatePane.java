@@ -3,7 +3,6 @@ package com.sia.client.ui.lineseeker;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.config.Config;
 import com.sia.client.media.SoundPlayer;
-import com.sia.client.config.FontConfig;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.UrgentMessage;
 import com.sia.client.ui.comps.*;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import static com.sia.client.config.Utils.log;
 import static com.sia.client.config.Utils.showMessageDialog;
 
-public class LineSeekerAlertMethodStateLayout implements EditableLayout {
+public class LineSeekerAlertMethodStatePane implements EditablePane {
 
     private final JButton testsound = new JButton("Test Sound");
     private final JButton testpopup = new JButton("Test Popup");
@@ -33,12 +32,12 @@ public class LineSeekerAlertMethodStateLayout implements EditableLayout {
     private UICompValueBinder uiCompValueBinder;
     private final SpankyWindow spankyWindow;
 
-    public LineSeekerAlertMethodStateLayout(LineSeekerAlertMethodAttr attr,SpankyWindow spankyWindow) {
+    public LineSeekerAlertMethodStatePane(LineSeekerAlertMethodAttr attr, SpankyWindow spankyWindow) {
         this.attr = attr;
         this.spankyWindow = spankyWindow;
     }
     @Override
-    public JComponent getLayoutPane() {
+    public JComponent getPane() {
 
         initComponents(spankyWindow);
         JLabel titleLabel = new JLabel(attr.getAlertState());

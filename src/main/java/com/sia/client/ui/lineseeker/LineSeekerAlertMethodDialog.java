@@ -7,58 +7,57 @@ import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.comps.BookieTree;
-import com.sia.client.ui.comps.BookieTreeLayout;
-import com.sia.client.ui.comps.EditableLayout;
+import com.sia.client.ui.comps.BookieTreePane;
+import com.sia.client.ui.comps.EditablePane;
 import com.sia.client.ui.comps.ActionOnEditableLayouts;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implements ActionOnEditableLayouts {
 
-    private final Map<String, LineSeekerAlertMethodStateLayout> layoutMap = new HashMap<>();
+    private final Map<String, LineSeekerAlertMethodStatePane> layoutMap = new HashMap<>();
     private final Dimension verticalSpacing = new Dimension(0,1);
     private final JButton saveBtn = new JButton("Save");
     private final AlertSeekerMethods alertSeekerMethods;
-    private final LineSeekerAlertRenotifyLayout lineSeekerAlertRenotifyLayout;
+    private final LineSeekerAlertRenotifyPane lineSeekerAlertRenotifyLayout;
     private final int methodPanelWidth;
     private final int methodPaneHeight;
     private final int bookiePanelWidth;
     private final int bookiePanelWidtHeight;
     private final int renotifyHeight = 40;
     private final int savePanelHeight = 40;
-    private BookieTreeLayout bookieTreeLayout;
-    private java.util.List<EditableLayout> editableLayoutList;
+    private BookieTreePane bookieTreeLayout;
+    private java.util.List<EditablePane> editablePaneList;
 
     public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertSeekerMethods alertSeekerMethods) {
         super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
         this.alertSeekerMethods = alertSeekerMethods;
         int height = (int)SiaConst.UIProperties.LineAlertMethodDim.getHeight();
         saveBtn.addActionListener(this::persist);
-        lineSeekerAlertRenotifyLayout = new LineSeekerAlertRenotifyLayout(this.alertSeekerMethods);
+        lineSeekerAlertRenotifyLayout = new LineSeekerAlertRenotifyPane(this.alertSeekerMethods);
         bookiePanelWidtHeight = height -savePanelHeight-40;
         bookiePanelWidth = 225;
         methodPanelWidth = (int)SiaConst.UIProperties.LineAlertMethodDim.getWidth()-bookiePanelWidth-40;
         methodPaneHeight = (bookiePanelWidtHeight-renotifyHeight)/3;
     }
     @Override
-    public java.util.List<EditableLayout> getEditablelayout() {
-        if ( null== editableLayoutList) {
-            editableLayoutList = new ArrayList<>(5);
+    public java.util.List<EditablePane> getEditablelayout() {
+        if ( null== editablePaneList) {
+            editablePaneList = new ArrayList<>(5);
             for(AlertState alertState: AlertState.values()) {
-                LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
-                editableLayoutList.add(stateLayout);
+                LineSeekerAlertMethodStatePane stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+                editablePaneList.add(stateLayout);
             }
-            editableLayoutList.add(lineSeekerAlertRenotifyLayout);
-            editableLayoutList.add(bookieTreeLayout);
+            editablePaneList.add(lineSeekerAlertRenotifyLayout);
+            editablePaneList.add(bookieTreeLayout);
         }
-        return editableLayoutList;
+        return editablePaneList;
     }
     @Override
     protected JComponent getUserComponent() {
@@ -80,8 +79,8 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         return wrapper;
     }
     private JComponent makeBookiePanel() {
-        bookieTreeLayout = new BookieTreeLayout(new BookieTree(), Config.instance().getBookies());
-        JComponent sportsbooktreePanel = bookieTreeLayout.getLayoutPane();
+        bookieTreeLayout = new BookieTreePane(new BookieTree(), Config.instance().getBookies());
+        JComponent sportsbooktreePanel = bookieTreeLayout.getPane();
         Dimension preferredSize = new Dimension(bookiePanelWidth, bookiePanelWidtHeight);
         sportsbooktreePanel.setPreferredSize(preferredSize);
         return sportsbooktreePanel;
@@ -94,25 +93,25 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         userComponentLeft.setLayout(boxLayout);
         for(AlertState alertState: AlertState.values()) {
             userComponentLeft.add(Box.createRigidArea(verticalSpacing));
-            LineSeekerAlertMethodStateLayout stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
+            LineSeekerAlertMethodStatePane stateLayout = getLineSeekerAlertMethodStateLayout(alertState);
             TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator("",methodPanelWidth,methodPaneHeight,null,null);
             titledPanelGenerator.setTitleBarBgColor(Color.GRAY.brighter().brighter());
             titledPanelGenerator.setTitleBarFgColor(Color.BLACK);
-            titledPanelGenerator.setBodyComponent(stateLayout.getLayoutPane());
+            titledPanelGenerator.setBodyComponent(stateLayout.getPane());
             JComponent sectionPanel = titledPanelGenerator.getPanel();
             Utils.respectComponentSize(sectionPanel,new Dimension(methodPanelWidth,methodPaneHeight));
             userComponentLeft.add(sectionPanel);
         }
         //notify panel
-        JComponent renotifyComp = lineSeekerAlertRenotifyLayout.getLayoutPane();
+        JComponent renotifyComp = lineSeekerAlertRenotifyLayout.getPane();
         Utils.respectComponentSize(renotifyComp,new Dimension(methodPanelWidth,renotifyHeight));
         userComponentLeft.add(renotifyComp);
         return userComponentLeft;
     }
-    private LineSeekerAlertMethodStateLayout getLineSeekerAlertMethodStateLayout(AlertState alertState) {
+    private LineSeekerAlertMethodStatePane getLineSeekerAlertMethodStateLayout(AlertState alertState) {
         SportsTabPane stp = getSportsTabPane();
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
-        return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStateLayout(AlertAttrManager.getLineSeekerAlertMethodAttr(name),sw));
+        return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStatePane(AlertAttrManager.getLineSeekerAlertMethodAttr(name),sw));
     }
     private void persist(ActionEvent ae) {
         boolean status = persist();
