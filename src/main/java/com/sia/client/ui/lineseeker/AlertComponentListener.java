@@ -9,9 +9,9 @@ import java.awt.event.KeyListener;
 
 public class AlertComponentListener implements KeyListener, ActionListener, DocumentListener {
 
-    private final AlertLayout alertLayout;
-    public AlertComponentListener(AlertLayout alertLayout) {
-        this.alertLayout = alertLayout;
+    private final AlertPane alertPane;
+    public AlertComponentListener(AlertPane alertPane) {
+        this.alertPane = alertPane;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -47,14 +47,14 @@ public class AlertComponentListener implements KeyListener, ActionListener, Docu
         checkAndSetEditStatus();
     }
     private void checkAndSetEditStatus() {
-        alertLayout.setEditStatus(isConfigurationChanged());
+        alertPane.setEditStatus(isConfigurationChanged());
     }
     private boolean isConfigurationChanged() {
-        AlertConfig currentConfig = alertLayout.getAlertConfig();
+        AlertConfig currentConfig = alertPane.getAlertConfig();
         boolean changed = false;
         for(AlertSectionName alertSectionName: AlertSectionName.values()) {
             LineSeekerAttribute sectionAttr = currentConfig.getSectionAtrribute(alertSectionName);
-            SectionComponents sc = alertLayout.getSectionComponents(alertSectionName);
+            SectionComponents sc = alertPane.getSectionComponents(alertSectionName);
             if ( (changed=valueChanged(sectionAttr,sc))) {
                 break;
             }

@@ -2,7 +2,6 @@ package com.sia.client.ui.lineseeker;
 
 
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,7 +13,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class SectionLayout {
+public class SectionPane {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
@@ -22,7 +21,7 @@ public class SectionLayout {
     private final ColumnComponents rightColumn;
     private JPanel layoutPane;
 
-    public SectionLayout(SectionComponents spreadFieldGrp) {
+    public SectionPane(SectionComponents spreadFieldGrp) {
 
         this.leftColumn = spreadFieldGrp.leftColumn;
         this.rightColumn = spreadFieldGrp.rightColumn;

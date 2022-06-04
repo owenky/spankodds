@@ -8,7 +8,6 @@ import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
 import com.sia.client.ui.AbstractLayeredDialog;
 import com.sia.client.ui.AppController;
-import com.sia.client.ui.LineSeekerNode;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.games.GameComboBox;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Vector;
 
 
-public class AlertLayout extends AbstractLayeredDialog {
+public class AlertPane extends AbstractLayeredDialog {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
@@ -45,7 +44,7 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final JButton saveBtn = new JButton();
     private JComponent userComp;
 
-    public AlertLayout(SportsTabPane stp) {
+    public AlertPane(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
         AlertComponentListener alertComponentListener = new AlertComponentListener(this);
        this.setTitlePanelLeftComp(makeAlertComboBoxPanel());
@@ -135,9 +134,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         SectionComponents sc = getSectionComponents(sectionName);
         sc.setSectionCompValues(getAlertConfig().getSectionAtrribute(sectionName));
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sc.getSectionName().getDisplay(),totalWidth,rowHeight,sc.activateStatus,sc.useEquivalent);
-        SectionLayout sectionLayout = new SectionLayout(sc);
+        SectionPane sectionPane = new SectionPane(sc);
         sectionComponentsList.add(sc);
-        titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
+        titledPanelGenerator.setBodyComponent(sectionPane.getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent bottomControlSection() {
@@ -263,7 +262,7 @@ public class AlertLayout extends AbstractLayeredDialog {
                     Utils.showErrorMessageDialog(getSportsTabPane(),sw.toString());
                 } else {
                     alertsCombobox.addIfAbsent(selectedAlert,true);
-                    AlertLayout.this.setEditStatus(false);
+                    AlertPane.this.setEditStatus(false);
                 }
                 gameNumBox.setEnabled(false);
                 period.setEnabled(false);

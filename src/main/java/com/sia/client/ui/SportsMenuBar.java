@@ -1,13 +1,12 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Config;
-import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.lineseeker.AlertAttrManager;
-import com.sia.client.ui.lineseeker.AlertLayout;
+import com.sia.client.ui.lineseeker.AlertPane;
 import com.sia.client.ui.lineseeker.LineSeekerAlertMethodDialog;
 
 import javax.swing.*;
@@ -75,7 +74,7 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenu majorlinemove = new JMenu("Line Seekers");
         JMenuItem lineSeekerConfig = new JMenuItem("Configuration");
-        lineSeekerConfig.addActionListener(ae -> new AlertLayout(stb).show(AlertLayout.dialogPreferredSize));
+        lineSeekerConfig.addActionListener(ae -> new AlertPane(stb).show(AlertPane.dialogPreferredSize));
         JMenuItem lineSeekerMethod = new JMenuItem("Alert Method");
         lineSeekerMethod.addActionListener(this::openAlertMediaSettingDialog);
         majorlinemove.add(lineSeekerConfig);
