@@ -19,16 +19,19 @@ public class AlertConfig {
         this.gameId = gameId;
         this.period = period;
     }
-
+    @JsonProperty
     public int getGameId() {
         return gameId;
     }
+    @JsonProperty
     public Map<AlertSectionName, LineSeekerAttribute> getSectionMap() {
         return sectionMap;
     }
+    @JsonProperty
     public void setSectionMap(Map<AlertSectionName, LineSeekerAttribute> sectionMap) {
         this.sectionMap = sectionMap;
     }
+    @JsonProperty
     public AlertPeriod getPeriod() {
         return period;
     }
