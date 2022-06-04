@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ActionOnEditableLayouts {
 
-    List<EditableLayout> getEditablelayout();
+    List<EditablePane> getEditablelayout();
     default boolean validate() {
         boolean status = true;
-        for(EditableLayout editableLayout: getEditablelayout()) {
-            if (!editableLayout.validate() ) {
+        for(EditablePane editablePane : getEditablelayout()) {
+            if (!editablePane.validate() ) {
                 status = false;
                 break;
             }
@@ -21,9 +21,9 @@ public interface ActionOnEditableLayouts {
     default boolean persist()  {
         boolean status = validate();
         if ( status) {
-            for(EditableLayout editableLayout: getEditablelayout()) {
+            for(EditablePane editablePane : getEditablelayout()) {
                 try {
-                    editableLayout.persist();
+                    editablePane.persist();
                 } catch (IOException e) {
                     Utils.log(e);
                 }
@@ -32,16 +32,16 @@ public interface ActionOnEditableLayouts {
         return status;
     }
     default void updateLayout(){
-        for(EditableLayout editableLayout: getEditablelayout()) {
-            editableLayout.updateLayout();
+        for(EditablePane editablePane : getEditablelayout()) {
+            editablePane.updateLayout();
         }
     }
     default void close(){
-        for(EditableLayout editableLayout: getEditablelayout()) {
-            editableLayout.close();
+        for(EditablePane editablePane : getEditablelayout()) {
+            editablePane.close();
         }
     }
     default boolean isEdited() {
-        return getEditablelayout().stream().map(EditableLayout::isEdited).filter(edited->edited).findAny().orElse(false);
+        return getEditablelayout().stream().map(EditablePane::isEdited).filter(edited->edited).findAny().orElse(false);
     }
 }

@@ -6,6 +6,7 @@ import com.sia.client.config.Utils;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.TreeSelectionEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.Arrays;
@@ -93,6 +94,10 @@ public class UICompValueBinder {
     private CompValueChangedListener makeDefaultJCompValueChangedListener() {
         return new CompValueChangedListener() {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processEvent(e);
+            }
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 processEvent(e);

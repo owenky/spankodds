@@ -3,7 +3,7 @@ package com.sia.client.ui.comps;
 import javax.swing.*;
 import java.awt.*;
 
-public class BookieTreeLayout implements EditableLayout{
+public class BookieTreePane implements EditablePane {
 
     private final BookieTree bookieTree;
     private final JLabel editStatusLabel = new JLabel("");
@@ -13,7 +13,7 @@ public class BookieTreeLayout implements EditableLayout{
     private final SimpleValueWraper<String> bookies;
     private UICompValueBinder uiCompValueBinder;
 
-    public BookieTreeLayout(BookieTree bookieTree,SimpleValueWraper<String> bookies) {
+    public BookieTreePane(BookieTree bookieTree, SimpleValueWraper<String> bookies) {
         this.bookieTree = bookieTree;
         this.bookies = bookies;
         uiCompValueBinder =  UICompValueBinder.register(this,bookies,getOnValueChangedEventFunction()).bind("value",bookieTree);
@@ -25,7 +25,7 @@ public class BookieTreeLayout implements EditableLayout{
         }
     }
     @Override
-    public JComponent getLayoutPane() {
+    public JComponent getPane() {
         if ( null == sportsbooktreePanel) {
             sportsbooktreePanel = new JPanel();
             JPanel editStatusPanel = new JPanel();
