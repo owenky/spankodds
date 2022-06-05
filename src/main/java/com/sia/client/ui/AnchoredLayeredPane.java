@@ -1,7 +1,6 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Config;
-import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.comps.LinkButton;
@@ -127,6 +126,8 @@ public class AnchoredLayeredPane implements ComponentListener {
         if (null == userComponentScrollPane) {
             return;
         }
+
+
         userComponentScrollPane.removeMouseListener(mouseListener);
         if ( toHideOnMouseOut) {
             userComponentScrollPane.addMouseListener(mouseListener);
@@ -134,14 +135,42 @@ public class AnchoredLayeredPane implements ComponentListener {
         userComponentScrollPane.setVisible(true);
         layeredPane.add(userComponentScrollPane, layer_index);
 
-        Point layeredPaneLoc = layeredPane.getLocationOnScreen();
-
-        Point anchor_loc_ = anchorLocSupplier.get();
-        final int x_ = anchor_loc_.x - layeredPaneLoc.x;
-        final int y_ = anchor_loc_.y - layeredPaneLoc.y;
-        userComponentScrollPane.setBounds(x_, y_, userComponentScrollPane.getWidth(), userComponentScrollPane.getHeight());
+        Point adjustLoc = adjustAnchorLocation();
+        userComponentScrollPane.setBounds(adjustLoc.x, adjustLoc.y, userComponentScrollPane.getWidth(), userComponentScrollPane.getHeight());
         isOpened = true;
         prepareListening();
+    }
+    private Point adjustAnchorLocation() {
+        int adjustX;
+        int adjustY;
+
+        Point stpLoc = stp.getLocationOnScreen();
+        int maxX = stpLoc.x + stp.getWidth();
+        int maxY = stpLoc.y + stp.getHeight();
+
+        Point anchor_loc = anchorLocSupplier.get();
+
+        Point layeredPaneLoc = layeredPane.getLocationOnScreen();
+        final int preferredX = anchor_loc.x - layeredPaneLoc.x;
+        final int preferredY= anchor_loc.y - layeredPaneLoc.y;
+
+        if ( preferredX + userComponentScrollPane.getWidth() <= maxX) {
+            adjustX = preferredX;
+        } else if ( anchor_loc.x - userComponentScrollPane.getWidth() >= stpLoc.x) {
+            adjustX = anchor_loc.x - userComponentScrollPane.getWidth();
+        } else {
+            adjustX = stpLoc.x + (stp.getWidth() - userComponentScrollPane.getWidth() )/2;
+        }
+
+        if ( preferredY + userComponentScrollPane.getHeight() <= maxY) {
+            adjustY = preferredY;
+        } else if ( anchor_loc.y - userComponentScrollPane.getHeight() >= stpLoc.y) {
+            adjustY = anchor_loc.y - userComponentScrollPane.getHeight();
+        } else {
+            adjustY = stpLoc.y + (stp.getHeight() - userComponentScrollPane.getHeight() )/2;
+        }
+
+        return new Point(adjustX,adjustY);
     }
     private JScrollPane makeUserComponetScrollPane(JComponent userComponent) {
         JComponent containingComp;

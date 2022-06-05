@@ -24,7 +24,7 @@ public class GameHistPane extends AbstractLayeredDialog {
     public static void showHistPane(SportsTabPane stp,Point pointOnScreen, Game game,int bookieId) {
 
         GameHistPane gameHistPane = new GameHistPane(stp,game,bookieId);
-        gameHistPane.show(paneSize,true,()->pointOnScreen);
+        gameHistPane.show(paneSize,false,()->pointOnScreen);
     }
     public GameHistPane(SportsTabPane stp, Game game,int bookieId) {
         super(stp,game.getVisitorteam()+"/"+game.getHometeam(), SiaConst.LayedPaneIndex.SportConfigIndex);
