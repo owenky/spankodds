@@ -290,7 +290,19 @@ public class LineSeekerNode {
             }
 
             if (!html.equals("")) {
-
+                System.out.println("lineseekerflags...lineseekerwaitmin="+lineseekerwaitmin);
+                System.out.println("lineseekerflags...playgoodaudio="+playgoodaudio);
+                System.out.println("lineseekerflags...showgoodpopup="+showgoodpopup);
+                System.out.println("lineseekerflags...goodpopuplocation="+goodpopuplocation);
+                System.out.println("lineseekerflags...goodpopupseconds="+goodpopupseconds);
+                System.out.println("lineseekerflags...playbadaudio="+playbadaudio);
+                System.out.println("lineseekerflags...showbaddpopup="+showbadpopup);
+                System.out.println("lineseekerflags...badpopuplocation="+badpopuplocation);
+                System.out.println("lineseekerflags...badpopupseconds="+badpopupseconds);
+                System.out.println("lineseekerflags...playneutralaudio="+playneutralaudio);
+                System.out.println("lineseekerflags...showneutralpopup="+showneutralpopup);
+                System.out.println("lineseekerflags...neutralpopuplocation="+neutralpopuplocation);
+                System.out.println("lineseekerflags...neutralpopupseconds="+neutralpopupseconds);
                 if (html.indexOf("GOOD") != -1) {
                     if (playgoodaudio) {
                         new SoundPlayer(goodaudiofile);
@@ -334,10 +346,10 @@ public class LineSeekerNode {
         double thisvisitjuice = line.getCurrentvisitjuice();
         double thishomespread = line.getCurrenthomespread();
         double thishomejuice = line.getCurrenthomejuice();
-        String htmlvisit = "<html><body><H2>" + getVisitorspreadalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlvisit = "<html><body><H2>" + getVisitorspreadalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlvisit = htmlvisit + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;" + thisvisitspread + thisvisitjuice + "</td></tr>";
-        String htmlhome = "<html><body><H2>" + getHomespreadalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlhome = "<html><body><H2>" + getHomespreadalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomespread + thishomejuice + "</td></tr>";
 
@@ -378,10 +390,10 @@ public class LineSeekerNode {
         double thisvisitml = line.getCurrentvisitjuice();
         double thishomeml = line.getCurrenthomejuice();
 
-        String htmlvisit = "<html><body><H2>" + getVisitormlalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlvisit = "<html><body><H2>" + getVisitormlalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlvisit = htmlvisit + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;" + thisvisitml + "</td></tr>";
-        String htmlhome = "<html><body><H2>" + getHomemlalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlhome = "<html><body><H2>" + getHomemlalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomeml + "</td></tr>";
 
@@ -422,10 +434,10 @@ public class LineSeekerNode {
         double thisunder = line.getCurrentunder();
         double thisunderjuice = line.getCurrentunderjuice();
 
-        String htmlover = "<html><body><H2>" + getOveralerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlover = "<html><body><H2>" + getOveralerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlover = htmlover + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;OVER&nbsp;" + thisover + thisoverjuice + "</td></tr>";
-        String htmlunder = "<html><body><H2>" + getUnderalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlunder = "<html><body><H2>" + getUnderalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlunder = htmlunder + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;UNDER&nbsp;" + thisunder + thisunderjuice + "</td></tr>";
 
@@ -434,8 +446,10 @@ public class LineSeekerNode {
             System.out.println("using total math.."+line.getLeague_id()+".."+line.getPeriod()+"..."+thisover+thisoverjuice+".vs."+over+overjuice);
             if (LinesMoves.isLine1BetterThanLine2(thisover, thisoverjuice, over, overjuice, line.getLeague_id(), line.getPeriod(), "OVER", line.getGameid())) {
                 System.out.println("line1 is better now check.."+nowms+".."+lasttotalnotify);
-                if (nowms - lasttotalnotify > lineseekerwaitmin * 60 * 1000) {
+                if (nowms - lasttotalnotify > lineseekerwaitmin * 60 * 1000)
+                {
                     lasttotalnotify = nowms;
+                    System.out.println("RETURNING="+htmlover);
                     return htmlover;
                 }
             } else if (LinesMoves.isLine1BetterThanLine2(thisunder, thisunderjuice, under, underjuice, line.getLeague_id(), line.getPeriod(), "UNDER", line.getGameid())) {
@@ -467,10 +481,10 @@ public class LineSeekerNode {
         double thisawayunder = line.getCurrentvisitunder();
         double thisawayunderjuice = line.getCurrentvisitunderjuice();
 
-        String htmlover = "<html><body><H2>" + getAwayttoveralerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlover = "<html><body><H2>" + getAwayttoveralerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlover = htmlover + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;OVER&nbsp;" + thisawayover + thisawayoverjuice + "</td></tr>";
-        String htmlunder = "<html><body><H2>" + getAwayttunderalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlunder = "<html><body><H2>" + getAwayttunderalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlunder = htmlunder + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;UNDER&nbsp;" + thisawayunder + thisawayunderjuice + "</td></tr>";
 
@@ -510,10 +524,10 @@ public class LineSeekerNode {
         double thishomeunder = line.getCurrenthomeunder();
         double thishomeunderjuice = line.getCurrenthomeunderjuice();
 
-        String htmlover = "<html><body><H2>" + getHomettoveralerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlover = "<html><body><H2>" + getHomettoveralerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlover = htmlover + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;OVER&nbsp;" + thishomeover + thishomeoverjuice + "</td></tr>";
-        String htmlunder = "<html><body><H2>" + getHomettunderalerttype() + " " + "LINE SEEKER&nbsp;</H2>" +
+        String htmlunder = "<html><body><H2>" + getHomettunderalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlunder = htmlunder + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;UNDER&nbsp;" + thishomeunder + thishomeunderjuice + "</td></tr>";
 
