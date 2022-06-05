@@ -60,7 +60,7 @@ public class BestLines {
 						{
 
 
-							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid)) {
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid,false)) {
 								bvsl = sl;
 							}
 
@@ -88,7 +88,7 @@ public class BestLines {
 						double besthomespread = bhsl.getCurrenthomespread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid)) {
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid,true)) {
 								bhsl = sl;
 							}
 
@@ -514,6 +514,7 @@ public class BestLines {
 
 
     public static void calculatebestall(int gameid, int period) {
+
 		List<Bookie> shownbookies = AppController.getShownCols();
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 
@@ -568,7 +569,7 @@ public class BestLines {
 						double bestvisitspread = bvsl.getCurrentvisitspread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid)) {
+							if (LinesMoves.isLine1BetterThanLine2(visitspread, visitjuice, bestvisitspread, bestvisitjuice, leagueid, period, "SPREAD",gameid,false)) {
 								bvsl = sl;
 							}
 
@@ -595,7 +596,7 @@ public class BestLines {
 						double besthomespread = bhsl.getCurrenthomespread();
 						if (arr != null) // i have push chart lets use it for smart highlighting
 						{
-							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid)) {
+							if (LinesMoves.isLine1BetterThanLine2(homespread, homejuice, besthomespread, besthomejuice, leagueid, period, "SPREAD",gameid,true)) {
 								bhsl = sl;
 							}
 

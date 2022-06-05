@@ -623,7 +623,7 @@ public class LineAlertNode {
             {
 
 
-                if (LinesMoves.didNewLineMoveEnough(spreadpercentagemove, line.getPriorvisitspread(),line.getPriorvisitjuice(),line.getCurrentvisitspread(),line.getCurrentvisitjuice(),line.getLeague_id(),line.getPeriod(),"SPREAD"))
+                if (LinesMoves.didNewLineMoveEnough(spreadpercentagemove, line.getPriorvisitspread(),line.getPriorvisitjuice(),line.getCurrentvisitspread(),line.getCurrentvisitjuice(),line.getLeague_id(),line.getPeriod(),"SPREAD",false))
                 {
                     return shouldIAlertSpreadline(line);
                 }

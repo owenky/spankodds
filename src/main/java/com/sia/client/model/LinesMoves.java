@@ -1,5 +1,8 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.AppController;
+import com.sia.client.ui.Totalline;
+
 public class LinesMoves
 {
     static int debuggameid = 905;
@@ -30,6 +33,11 @@ public class LinesMoves
     static double[] mlbh1sides = new double[100];
     static double[] mlbh1totals = new double[100];
 
+    static double[] mlbVsides = new double[100];
+    static double[] mlbHsides = new double[100];
+    static double[] mlbVsidestotalfactor = new double[100];
+    static double[] mlbHsidestotalfactor = new double[100];
+
     static double[] nhlsides = new double[100];
     static double[] nhltotals = new double[100];
     static double[] nhlp1sides = new double[100];
@@ -40,8 +48,20 @@ public class LinesMoves
 
 
         mlbsides[0] =  .0000001;
-        mlbsides[1] =  .13;
-        mlbsides[2] =  .10;
+        mlbsides[1] =  .32;
+        mlbsides[2] =  .17;
+
+        mlbVsides[0] =  .0000001;
+        mlbVsides[1] =  .25;
+        mlbVsides[2] =  .19;
+
+
+
+        mlbHsides[0] =  .0000001;
+        mlbHsides[1] =  .32;
+        mlbHsides[2] =  .17;
+
+
 
         mlbh1sides[0] = .15;
         mlbh1sides[1] = .13;
@@ -78,11 +98,11 @@ public class LinesMoves
         nhlsides[1] = 0.30;
         nhlsides[2] = 0.15;
 
-        nhltotals[5] = 0.30;
-        nhltotals[6] = 0.20;
-        nhltotals[7] = 0.30;
-        nhltotals[8] = 0.20;
-        nhltotals[9] = 0.30;
+        nhltotals[5] = 0.23;
+        nhltotals[6] = 0.105;
+        nhltotals[7] = 0.24;
+        nhltotals[8] = 0.105;
+        nhltotals[9] = 0.21;
 
         nhlp1totals[1] = 0.40;
         nhlp1totals[2] = 0.40;
@@ -353,7 +373,14 @@ public class LinesMoves
 
     }
 
+    // only people that call this is to make sure array is not null
     public static double[] getleagueidArray(int leagueid,int period,String type)
+    {
+        return (getleagueidArray(leagueid,period,type,901,false));
+
+    }
+
+    public static double[] getleagueidArray(int leagueid,int period,String type,int gameid,boolean ishometeam)
     {
         if(!initialized)
         {
@@ -515,7 +542,24 @@ public class LinesMoves
             {
                 if(period == 0)
                 {
-                    arr = mlbsides;
+                    double total = 0;
+                    Totalline tl = AppController.getTotalline(604,gameid,0);
+                    if(tl != null)
+                    {
+                        total = tl.getCurrentover();
+                    }
+                    if(ishometeam)
+                    {
+                        arr = convertBaseballRunlineBasedOnTotal(mlbHsides,total,ishometeam);
+                    }
+                    else
+                    {
+                        arr = convertBaseballRunlineBasedOnTotal(mlbVsides,total,ishometeam);
+                    }
+                    if(gameid == 909 || gameid == 913 || gameid == 927)
+                    {
+                       // System.out.println(gameid + ".." + total + ".." + ishometeam + ".." + arr[1]);
+                    }
                 }
                 else if(period == 1)
                 {
@@ -588,6 +632,48 @@ public class LinesMoves
         return arr;
     }
 
+    public static double[] convertBaseballRunlineBasedOnTotal(double arr[],double total,boolean ishome)
+    {
+      if(total == 0)
+      {
+          return arr;
+      }
+      else if(ishome)
+      {
+          if(total <= 6.5) arr[1] = .369;
+          else if(total == 7) arr[1] = .383;
+          else if(total == 7.5) arr[1] = .343;
+          else if(total == 8) arr[1] = .339;
+          else if(total == 8.5) arr[1] = .328;
+          else if(total == 9) arr[1] = .322;
+          else if(total == 9.5) arr[1] = .296;
+          else if(total == 10) arr[1] = .265;
+          else if(total == 10.5) arr[1] = .284;
+          else if(total >= 11) arr[1] = .289;
+
+      }
+      else
+      {
+          if(total <= 6.5) arr[1] = .266;
+          else if(total == 7) arr[1] = .289;
+          else if(total == 7.5) arr[1] = .285;
+          else if(total == 8) arr[1] = .25;
+          else if(total == 8.5) arr[1] = .237;
+          else if(total == 9) arr[1] = .24;
+          else if(total == 9.5) arr[1] = .235;
+          else if(total == 10) arr[1] = .22;
+          else if(total == 10.5) arr[1] = .213;
+          else if(total == 11) arr[1] = .212;
+          else if(total == 11.5) arr[1] = .222;
+          else if(total == 12) arr[1] = .261;
+          else if(total >= 12.5) arr[1] = .235;
+
+      }
+
+      return arr;
+
+    }
+
     public static double percentageofjuicemove(double oldjuice,double newjuice)
     {
         double negfactor = 1.0;
@@ -651,7 +737,10 @@ public class LinesMoves
         }
         return percentmovefinal;
     }
-    public static double percentOfMove(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid)
+
+
+
+    public static double percentOfMove(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid,boolean ishometeam)
     {
         if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
         {
@@ -661,7 +750,7 @@ public class LinesMoves
 
         double[] arr = new double[100];
 
-        arr = getleagueidArray(leagueid,period,type);
+        arr = getleagueidArray(leagueid,period,type,gameid,ishometeam);
 
 
 
@@ -815,14 +904,18 @@ public class LinesMoves
 
     }
 
-
     public static boolean isLine1BetterThanLine2(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid)
+    {
+        return(isLine1BetterThanLine2(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid,false));
+    }
+
+    public static boolean isLine1BetterThanLine2(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid,boolean ishometeam)
     {
         if(oldjuice == 0)
         {
             return false;
         }
-        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid);
+        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type,gameid,ishometeam);
         if(movePercent > 0)
         {
             return true;
@@ -859,9 +952,16 @@ public class LinesMoves
         }
 
     }
+
     public static boolean didNewLineMoveEnough(double desiredPercent, double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type)
     {
-        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type,0);
+        return (didNewLineMoveEnough(desiredPercent,oldline,oldjuice,newline,newjuice,leagueid,period,type,false));
+    }
+
+
+    public static boolean didNewLineMoveEnough(double desiredPercent, double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,boolean ishometeam)
+    {
+        double movePercent = percentOfMove(oldline,oldjuice,newline,newjuice,leagueid,period,type,0,ishometeam);
         //System.out.println("MOVE ENOUGH? "+movePercent+">="+desiredPercent+".."+oldline+".."+oldjuice+".."+newline+".."+newjuice+".."+leagueid+".."+type);
         if(Math.abs(movePercent*100.00) >= desiredPercent)
         {

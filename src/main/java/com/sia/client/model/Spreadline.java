@@ -358,34 +358,50 @@ public class Spreadline extends Line {
         if (juice == -110) {
             retvalue = spread;
 
-        } else if (juice < 0) {
+        }
+        else if (juice < 0)
+        {
             juice = juice + 100;
             String juicestr = juice + "";
             if (juice == 0) {
                 retvalue = spread + "ev";
-            } else if (juice > -10) {
+            }
+            else if (juice > -10) {
                 juice = juice * -1;
                 juicestr = "-0" + juice;
                 retvalue = spread + "" + juicestr;
-            } else if (juice <= -100) // initial juice was  -200 or worse
+            }
+            else if (juice <= -100) // initial juice was  -200 or worse
             {
 
                 juice = juice - 100;
                 juicestr = "" + juice;
                 retvalue = spread + "" + juicestr;
-            } else {
+            }
+            else {
                 retvalue = spread + "" + juicestr;
 
             }
 
-        } else {
+        } else
+            {
             juice = juice - 100;
 
-            if (juice == 0) {
+            if (juice == 0)
+            {
                 retvalue = spread + "ev";
-            } else if (juice < 10) {
+            } else if (juice < 10)
+            {
                 retvalue = spread + "+0" + juice;
-            } else {
+            }
+            else if(juice >= 100) // even after conversion then addback
+            {
+                juice = juice+100;
+                retvalue = spread + "+" + juice;
+
+            }
+            else
+                {
                 retvalue = spread + "+" + juice;
 
             }
@@ -504,7 +520,14 @@ public class Spreadline extends Line {
                 retvalue = spread + "ev";
             } else if (juice < 10) {
                 retvalue = spread + "+0" + juice;
-            } else {
+            }
+            else if(juice >= 100) // even after conversion then addback
+            {
+                juice = juice+100;
+                retvalue = spread + "+" + juice;
+
+            }
+            else {
                 retvalue = spread + "+" + juice;
 
             }

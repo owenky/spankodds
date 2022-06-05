@@ -16,9 +16,9 @@ public class MqMessageProcessor implements TableModelListener {
     private final MessageConsumingScheduler<Game> gameConsumingScheculer;
     private final boolean doStats;
     private long lastUpdate = System.currentTimeMillis();
-    private final long initialDelayInMilliSeconds = 500L;
-    private final long periodInMilliSeconcs = 200L;
-    private final long uiUpdateInterval = 500L;
+    private final long initialDelayInMilliSeconds = 100L; // 500
+    private final long periodInMilliSeconcs = 100L; //200
+    private final long uiUpdateInterval = 100L; //500
     private volatile long lastTableUpdateTime = 0L;
 
     public static MqMessageProcessor getInstance() {
