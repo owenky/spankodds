@@ -35,7 +35,7 @@ public class LoginClient implements MessageListener {
 
     //private String brokerUrl = "failover:(ssl://localhost:61617)";
     //private String requestQueue = "spankodds.LOGIN";
-
+    private int messagecount = 0;
     public boolean loginresultback = false;
     Connection connection;
     boolean loggedin = false;
@@ -145,6 +145,7 @@ public class LoginClient implements MessageListener {
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
+            ++messagecount;
             String messageType = message.getStringProperty("messageType");
             //log("Messagetype is: "+message.getStringProperty("messageType"));
 
@@ -368,6 +369,7 @@ public class LoginClient implements MessageListener {
                 AppController.createLinesConsumer();
                 AppController.createChartChecker();
                 log("Unsubscribing....." + new java.util.Date());
+                log("Received "+messagecount+" messages");
                 consumer.close();
 
             }
