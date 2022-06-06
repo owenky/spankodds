@@ -359,7 +359,122 @@ public class LoginClient implements MessageListener {
                 AppController.addMoneyline(line);
 
 
-            } else if (messageType.equals("Unsubscribe")) {
+            }
+            // spanky new code
+            else if (messageType.equals("SpreadlineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++)
+                {
+                    text = mainarray[i];
+
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+                    Spreadline line = new Spreadline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
+                            Utils.parseTimestamp(array[6]),
+                            Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
+                            Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
+                            Integer.parseInt(array[17]), Integer.parseInt(array[18]));
+                    AppController.addSpreadline(line);
+                }
+
+            } else if (messageType.equals("TotallineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++)
+                {
+                    text = mainarray[i];
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+                    Totalline line = new Totalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
+                            Utils.parseTimestamp(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]),
+                            Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
+                            Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
+
+                            Integer.parseInt(array[17]), Integer.parseInt(array[18]));
+                    int period = Integer.parseInt(array[17]);
+
+                    AppController.addTotalline(line);
+                }
+
+            } else if (messageType.equals("TeamTotallineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++) {
+                    text = mainarray[i];
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+
+                    TeamTotalline line = new TeamTotalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
+                            Double.parseDouble(array[6]),
+                            Double.parseDouble(array[7]),
+                            Double.parseDouble(array[8]),
+                            Double.parseDouble(array[9]),
+
+                            Utils.parseTimestamp(array[10]),
+
+                            Double.parseDouble(array[11]),
+                            Double.parseDouble(array[12]),
+                            Double.parseDouble(array[13]),
+                            Double.parseDouble(array[14]),
+                            Double.parseDouble(array[15]),
+                            Double.parseDouble(array[16]),
+                            Double.parseDouble(array[17]),
+                            Double.parseDouble(array[18]),
+
+                            Utils.parseTimestamp(array[19]),
+
+                            Double.parseDouble(array[20]),
+                            Double.parseDouble(array[21]),
+                            Double.parseDouble(array[22]),
+                            Double.parseDouble(array[23]),
+                            Double.parseDouble(array[24]),
+                            Double.parseDouble(array[25]),
+                            Double.parseDouble(array[26]),
+                            Double.parseDouble(array[27]),
+
+                            Utils.parseTimestamp(array[28]),
+                            Integer.parseInt(array[29]),
+                            Integer.parseInt(array[30]));
+                    int period = Integer.parseInt(array[29]);
+
+                    AppController.addTeamTotalline(line);
+                }
+
+            } else if (messageType.equals("MoneylineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++)
+                {
+                    text = mainarray[i];
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+                    Moneyline line = new Moneyline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Utils.parseTimestamp(array[5]),
+                            Double.parseDouble(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]),
+                            Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
+                            Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
+
+                            Integer.parseInt(array[14]),
+                            Integer.parseInt(array[15]));
+                    int period = Integer.parseInt(array[14]);
+
+                    AppController.addMoneyline(line);
+                }
+
+            }
+
+
+
+
+            else if (messageType.equals("Unsubscribe")) {
 
                 AppController.createLineOpenerAlertNodeListFromUserPrefs();
                 AppController.createLimitNodeListFromUserPrefs();
