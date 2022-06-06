@@ -26,7 +26,7 @@ public class AnchoredLayeredPane implements ComponentListener {
 	private final JComponent anchoredParentComp;
     private final JLayeredPane layeredPane;
 	private final MouseAdapter mouseListener;
-    private JScrollPane userComponentScrollPane;
+    private JComponent userComponentScrollPane;
     private boolean toHideOnMouseOut;
     private boolean isOpened = false;
     private Supplier<Point> anchorLocSupplier;
@@ -172,12 +172,13 @@ public class AnchoredLayeredPane implements ComponentListener {
         Point layeredPaneLoc = layeredPane.getLocationOnScreen();
         return new Point(adjustX- layeredPaneLoc.x,adjustY-layeredPaneLoc.y);
     }
-    private JScrollPane makeUserComponetScrollPane(JComponent userComponent) {
-        JComponent containingComp;
+    private JComponent makeUserComponetScrollPane(JComponent userComponent) {
+
+        JPanel titlePanel;
         if ( null == title) {
-            containingComp = userComponent;
+            titlePanel = null;
         } else {
-            JPanel titlePanel = new JPanel();
+            titlePanel = new JPanel();
             titlePanel.setLayout(new BorderLayout());
             JLabel titleLabel = new JLabel(title);
             titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -186,12 +187,6 @@ public class AnchoredLayeredPane implements ComponentListener {
             titleLabel.setFont(titleFont);
 
             closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()));
-//            closeBtn.setOpaque(false);
-//            closeBtn.setBorder(BorderFactory.createEmptyBorder());
-//            closeBtn.setContentAreaFilled(false);
-//            JPanel btnPanel = new JPanel();
-//            btnPanel.setLayout(new BorderLayout());
-//            btnPanel.add(closeBtn,BorderLayout.EAST);
             if ( ! isCloseBtnAdded) {
                 eastPanel.add(closeBtn);
                 isCloseBtnAdded = true;
@@ -207,15 +202,21 @@ public class AnchoredLayeredPane implements ComponentListener {
 
             closeBtn.addActionListener(event-> close());
             titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
-
+        }
+        JScrollPane jScrollPane = new JScrollPane(userComponent);
+//        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
+        JComponent containingComp;
+        if ( null == titlePanel) {
+            containingComp = jScrollPane;
+        } else {
             containingComp = new JPanel();
             containingComp.setLayout(new BorderLayout());
             containingComp.add(titlePanel,BorderLayout.NORTH);
             containingComp.add(userComponent,BorderLayout.CENTER);
+            jScrollPane.setBorder(BorderFactory.createMatteBorder(1,1,1,1,(Icon)null));
         }
-        JScrollPane jScrollPane = new JScrollPane(containingComp);
-        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
-        return jScrollPane;
+        containingComp.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
+        return containingComp;
     }
     public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
         this.titlePanelLeftComp = titlePanelLeftComp;
