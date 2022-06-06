@@ -15,8 +15,11 @@ public abstract class AbstractLayeredDialog {
     abstract protected JComponent getUserComponent();
 
     public AbstractLayeredDialog(SportsTabPane stp,String title,int layer_index) {
-        anchoredLayeredPane = new AnchoredLayeredPane(stp,layer_index);
+       this(stp,layer_index);
         anchoredLayeredPane.setTitle(title);
+    }
+    public AbstractLayeredDialog(SportsTabPane stp,int layer_index) {
+        anchoredLayeredPane = new AnchoredLayeredPane(stp,layer_index);
         anchoredLayeredPane.setCloseValidor(() -> {
             if ( isEdited()) {
                 int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes?");
@@ -25,6 +28,9 @@ public abstract class AbstractLayeredDialog {
                 return true;
             }
         });
+    }
+    public void setTitle(String title){
+        anchoredLayeredPane.setTitle(title);
     }
     public AbstractLayeredDialog(SportsTabPane stp,String title) {
         anchoredLayeredPane = new AnchoredLayeredPane(stp);

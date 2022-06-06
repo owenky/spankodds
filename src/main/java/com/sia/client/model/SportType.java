@@ -138,7 +138,9 @@ public class SportType {
     public int getSportId() {
         return sportId;
     }
-
+    public int getIdentityLeagueId() {
+        return identityLeagueId;
+    }
     public String getIcon() {
         return icon;
     }

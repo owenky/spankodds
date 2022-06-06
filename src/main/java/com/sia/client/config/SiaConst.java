@@ -85,4 +85,5 @@ public abstract class SiaConst {
         String config = "config";
     }
     public static final String GameNumColIden = "Gm#";
+    public static final String DefaultViewName = "default";
 }

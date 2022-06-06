@@ -64,6 +64,9 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
         spankyWindowConfig.setTimesort(false);
         addListeners();
     }
+    public SpankyWindowConfig getSpankyWindowConfig() {
+        return this.spankyWindowConfig;
+    }
     public void showCurrent() {
         spankyWindowConfig.showCurrent();
     }

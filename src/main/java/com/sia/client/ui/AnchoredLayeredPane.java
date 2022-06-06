@@ -150,9 +150,8 @@ public class AnchoredLayeredPane implements ComponentListener {
 
         Point anchor_loc = anchorLocSupplier.get();
 
-        Point layeredPaneLoc = layeredPane.getLocationOnScreen();
-        final int preferredX = anchor_loc.x - layeredPaneLoc.x;
-        final int preferredY= anchor_loc.y - layeredPaneLoc.y;
+        final int preferredX = anchor_loc.x;
+        final int preferredY= anchor_loc.y;
 
         if ( preferredX + userComponentScrollPane.getWidth() <= maxX) {
             adjustX = preferredX;
@@ -170,7 +169,8 @@ public class AnchoredLayeredPane implements ComponentListener {
             adjustY = stpLoc.y + (stp.getHeight() - userComponentScrollPane.getHeight() )/2;
         }
 
-        return new Point(adjustX,adjustY);
+        Point layeredPaneLoc = layeredPane.getLocationOnScreen();
+        return new Point(adjustX- layeredPaneLoc.x,adjustY-layeredPaneLoc.y);
     }
     private JScrollPane makeUserComponetScrollPane(JComponent userComponent) {
         JComponent containingComp;

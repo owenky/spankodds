@@ -1,17 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.ImageFile;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.Game;
-import com.sia.client.model.Line;
-import com.sia.client.model.LineData;
-import com.sia.client.model.Moneyline;
-import com.sia.client.model.Sport;
-import com.sia.client.model.Spreadline;
-import com.sia.client.model.ViewValue;
+import com.sia.client.model.*;
 
-import java.awt.Color;
-import java.text.DecimalFormat;
+import java.awt.*;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -20,7 +13,7 @@ public class SpreadTotalView extends ViewValue {
     public static String ICON_UP = ImageFile.ICON_UP;
     public static String ICON_DOWN = ImageFile.ICON_DOWN;
     public static String ICON_BLANK = ImageFile.ICON_BLANK;
-    public String display = "default";
+    public String displayType = SiaConst.DefaultViewName;
     public int period = 0;
     Spreadline sl;
     Totalline tl;
@@ -56,7 +49,10 @@ public class SpreadTotalView extends ViewValue {
     private String bottomicon = ICON_BLANK;
     private long clearts;
     private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
+    private final DisplayTransformer displayTransformer;
+
     public SpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
+        displayTransformer = new DisplayTransformer(gid);
         if (bid >= 1000) {
             isopenerbookie = true;
             if(bid != 1000) {
@@ -71,7 +67,6 @@ public class SpreadTotalView extends ViewValue {
         id = new Random().nextInt();
         this.ltd = ltd;
         this.getCurrentBoxes();
-
     }
 
     public LineData[] getCurrentBoxes() {
@@ -82,26 +77,27 @@ public class SpreadTotalView extends ViewValue {
 
         }
 
-        if (display.equals("default")) {
-            Sport sp = getSport();
-            if (sp.getSport_id() == 3) // baseball
-            {
-                display = "totalbothmoney";
-            } else if (sp.getParentleague_id() == 9) // soccer
-            {
-                display = "totalmoney";
-            } else if (sp.getMoneylinedefault()) {
-                display = "justmoney";
-            } else {
-                display = "spreadtotal";
-            }
-        }
+//        if (display.equals("default")) {
+//            Sport sp = getSport();
+//            if (sp.getSport_id() == 3) // baseball
+//            {
+//                display = "totalbothmoney";
+//            } else if (sp.getParentleague_id() == 9) // soccer
+//            {
+//                display = "totalmoney";
+//            } else if (sp.getMoneylinedefault()) {
+//                display = "justmoney";
+//            } else {
+//                display = "spreadtotal";
+//            }
+//        }
         String topboxS = "";
         String bottomboxS = "";
 
-        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
-            period = 2;
-        }
+        period = displayTransformer.transformPeriod(period);
+//        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
+//            period = 2;
+//        }
 
         sl = AppController.getSpreadline(bid, gid, period);
         tl = AppController.getTotalline(bid, gid, period);
@@ -132,7 +128,7 @@ public class SpreadTotalView extends ViewValue {
         String whowasbettotal = "";
         String whowasbetmoney = "";
         String whowasbetteamtotal = "";
-        long tsnow = System.currentTimeMillis();
+//        long tsnow = System.currentTimeMillis();
         try {
             if (null != sl) {
                 visitspread = sl.getCurrentvisitspread();
@@ -247,7 +243,7 @@ public class SpreadTotalView extends ViewValue {
             log(ex);
         }
 
-
+        String display = displayTransformer.transformDefault(displayType);
         if (display.equals("spreadtotal")) {
             if (visitspread == -99999) {
                 topboxS = "";
@@ -1201,25 +1197,26 @@ public class SpreadTotalView extends ViewValue {
     }
 
     public LineData[] getOpenerBoxes() {
-        if (display.equals("default")) {
-            Sport sp = getSport();
-            if (sp.getSport_id() == 3) // baseball
-            {
-                display = "totalbothmoney";
-            } else if (sp.getParentleague_id() == 9) // soccer
-            {
-                display = "totalmoney";
-            } else if (sp.getMoneylinedefault()) {
-                display = "justmoney";
-            } else {
-                display = "spreadtotal";
-            }
-        }
+//        if (display.equals("default")) {
+//            Sport sp = getSport();
+//            if (sp.getSport_id() == 3) // baseball
+//            {
+//                display = "totalbothmoney";
+//            } else if (sp.getParentleague_id() == 9) // soccer
+//            {
+//                display = "totalmoney";
+//            } else if (sp.getMoneylinedefault()) {
+//                display = "justmoney";
+//            } else {
+//                display = "spreadtotal";
+//            }
+//        }
         String topboxS = "";
         String bottomboxS = "";
-        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
-            period = 2;
-        }
+        period = displayTransformer.transformPeriod(period);
+//        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
+//            period = 2;
+//        }
         sl = AppController.getSpreadline(bid, gid, period);
         tl = AppController.getTotalline(bid, gid, period);
         ml = AppController.getMoneyline(bid, gid, period);
@@ -1284,6 +1281,8 @@ public class SpreadTotalView extends ViewValue {
             visitmljuice = homemljuice = 99999;
             log(e);
         }
+
+        String display = displayTransformer.transformDefault(displayType);
         if (display.equals("spreadtotal")) {
             if (visitspread == 99999) {
                 topboxS = "";
@@ -1525,7 +1524,7 @@ public class SpreadTotalView extends ViewValue {
     }
 
     public void setDisplayType(String d) {
-        display = d;
+        displayType = d;
         boxes[0].setBackgroundColor(Color.WHITE);
         boxes[1].setBackgroundColor(Color.WHITE);
     }
@@ -1558,25 +1557,26 @@ public class SpreadTotalView extends ViewValue {
             priorboxes = getOpenerBoxes();
             return priorboxes;
         }
-        if (display.equals("default")) {
-            Sport sp = getSport();
-            if (sp.getSport_id() == 3) // baseball
-            {
-                display = "totalbothmoney";
-            } else if (sp.getParentleague_id() == 9) // soccer
-            {
-                display = "totalmoney";
-            } else if (sp.getMoneylinedefault()) {
-                display = "justmoney";
-            } else {
-                display = "spreadtotal";
-            }
-        }
+//        if (display.equals("default")) {
+//            Sport sp = getSport();
+//            if (sp.getSport_id() == 3) // baseball
+//            {
+//                display = "totalbothmoney";
+//            } else if (sp.getParentleague_id() == 9) // soccer
+//            {
+//                display = "totalmoney";
+//            } else if (sp.getMoneylinedefault()) {
+//                display = "justmoney";
+//            } else {
+//                display = "spreadtotal";
+//            }
+//        }
         String topboxS = "";
         String bottomboxS = "";
-        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
-            period = 2;
-        }
+        period = displayTransformer.transformPeriod(period);
+//        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
+//            period = 2;
+//        }
         sl = AppController.getSpreadline(bid, gid, period);
         tl = AppController.getTotalline(bid, gid, period);
         ml = AppController.getMoneyline(bid, gid, period);
@@ -1622,7 +1622,7 @@ public class SpreadTotalView extends ViewValue {
             visitover = homeover = 99999;
         }
 
-
+        String display = displayTransformer.transformDefault(displayType);
         if (display.equals("spreadtotal")) {
             if (visitspread == 99999) {
                 topboxS = "";
