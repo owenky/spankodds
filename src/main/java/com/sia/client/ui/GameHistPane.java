@@ -13,6 +13,7 @@ import javafx.scene.web.WebView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class GameHistPane extends AbstractLayeredDialog {
@@ -25,25 +26,20 @@ public class GameHistPane extends AbstractLayeredDialog {
     private String lineType;
     private String gameDateStr;
     private int period;
-
     private WebView webView;
+
     static {
         Platform.setImplicitExit(false);
     }
     public static void showHistPane(SportsTabPane stp,Point pointOnScreen, Game game,int bookieId) {
 
         GameHistPane gameHistPane = new GameHistPane(stp,game,bookieId);
-        gameHistPane.show(paneSize,true,()->pointOnScreen);
+        gameHistPane.show(paneSize,false,()->pointOnScreen);
     }
     public GameHistPane(SportsTabPane stp, Game game,int bookieId) {
         super(stp,SiaConst.LayedPaneIndex.SportConfigIndex);
         this.game = game;
         this.bookieId = bookieId;
-    }
-
-    @Override
-    protected JComponent getUserComponent() {
-        JFXPanel jFxPanel = new JFXPanel();
         DisplayTransformer displayTransformer = new DisplayTransformer(game.getGame_id());
         SpankyWindowConfig spankyWindowConfig = getSportsTabPane().getSpankyWindowConfig();
         lineType = displayTransformer.transformDefault(spankyWindowConfig.getDisplay());
@@ -52,6 +48,27 @@ public class GameHistPane extends AbstractLayeredDialog {
 //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
         String title = game.getVisitorteam()+"/"+game.getHometeam();
         setTitle(title);
+    }
+//    @Override
+//    protected JComponent getUserComponent() {
+//
+//        String url = "http://" + host + "/gamedetails/linehistorynew.jsp?bookieID=" + bookieId + "&gameNum=" + game.getGame_id() + "&period=" + period + "&lineType=" + lineType + "&strgameDate=" + gameDateStr;
+//        JEditorPane jep = new JEditorPane();
+//        jep.setEditable(false);
+//
+//        try {
+//            jep.setPage(url);
+//        }catch (IOException e) {
+//            jep.setContentType("text/html");
+//            jep.setText("<html>Could not load</html>");
+//        }
+//
+//        return jep;
+//
+//    }
+    @Override
+    protected JComponent getUserComponent() {
+        JFXPanel jFxPanel = new JFXPanel();
         Platform.runLater(() -> createGameHistScene(jFxPanel));
         return jFxPanel;
     }
@@ -63,7 +80,6 @@ public class GameHistPane extends AbstractLayeredDialog {
             webView = new WebView();
             root.getChildren().add(webView);
             jFxPanel.setScene(scene);
-
             webView.getEngine().load(url);
         }catch(Exception e) {
             Utils.log(e);

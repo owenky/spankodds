@@ -102,7 +102,7 @@ public class AnchoredLayeredPane implements ComponentListener {
             return;
         }
         this.toHideOnMouseOut = toHideOnMouseOut;
-        this.userComponentScrollPane = makeUserComponetScrollPane(userComponent);
+        this.userComponentScrollPane = makeUserComponetScrollPane(userComponent,size);
         if ( null != size) {
             userComponentScrollPane.setSize(size);
         }
@@ -172,7 +172,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         Point layeredPaneLoc = layeredPane.getLocationOnScreen();
         return new Point(adjustX- layeredPaneLoc.x,adjustY-layeredPaneLoc.y);
     }
-    private JComponent makeUserComponetScrollPane(JComponent userComponent) {
+    private JComponent makeUserComponetScrollPane(JComponent userComponent,Dimension size) {
 
         JPanel titlePanel;
         if ( null == title) {
@@ -212,7 +212,7 @@ public class AnchoredLayeredPane implements ComponentListener {
             containingComp = new JPanel();
             containingComp.setLayout(new BorderLayout());
             containingComp.add(titlePanel,BorderLayout.NORTH);
-            containingComp.add(userComponent,BorderLayout.CENTER);
+            containingComp.add(jScrollPane,BorderLayout.CENTER);
             jScrollPane.setBorder(BorderFactory.createMatteBorder(1,1,1,1,(Icon)null));
         }
         containingComp.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
