@@ -24,6 +24,28 @@ public class DisplayTransformer {
             } else {
                 display = "spreadtotal";
             }
+
+            // want to force display on certain prop types
+            Game g = getGame();
+            String team = g.getHometeam();
+            if(team.indexOf("Score") != -1)
+            {
+                display = "justmoney";
+            }
+            else if(team.indexOf("Points") != -1
+                    || team.indexOf("Rebounds") != -1
+                    || team.indexOf("Assists") != -1
+                    || team.indexOf("Assists") != -1
+                    || team.indexOf("Pts + Reb") != -1
+                    || team.indexOf("Reb + Ast") != -1
+                    || team.indexOf("Pts + Ast") != -1
+                    || team.indexOf("3 Pt FG") != -1
+                    || team.indexOf("Run+Hit+Err") != -1
+                       )
+            {
+                display = "justtotal";
+            }
+
         }
         return display;
     }
