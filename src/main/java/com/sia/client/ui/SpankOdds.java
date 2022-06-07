@@ -191,10 +191,12 @@ public class SpankOdds {
             SpankyWindow.setLocationaAndSize(frame,UIProperties.screenXmargin,UIProperties.screenYmargin);
             frame.populateTabPane();
             frame.setVisible(true);
-            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(AppController.getMainTabPane());
-            //anchoredLayeredPane.setTitle("Welcome!");
-            WelcomeImagePane wip = new WelcomeImagePane(anchoredLayeredPane);
-            wip.openAndCenter(new Dimension(700,700),false);
+
+           // AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(AppController.getMainTabPane());
+           // WelcomeImagePane wip = new WelcomeImagePane(anchoredLayeredPane);
+           // wip.openAndCenter(new Dimension(700,700),false);
+            Utils.checkAndRunInEDT(() -> new WelcomeMessage());
+
 
         } catch (Exception e) {
             log(e);
