@@ -105,7 +105,8 @@ public class SpankOdds {
                 return null==userName?"":userName;
             }
         };
-        loginPane.setBannerText("Spank Odds");
+        loginPane.setBanner(Utils.getImage("spankoddstextonsoft.png"));
+       // loginPane.setBannerText("Spank Odds");
 
         LoginListener loginListener = new LoginAdapter() {
             @Override
