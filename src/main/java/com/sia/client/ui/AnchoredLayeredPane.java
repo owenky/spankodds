@@ -145,7 +145,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         userComponentScrollPane.setVisible(true);
         layeredPane.add(userComponentScrollPane, layer_index);
 
-        Point adjustLoc = adjustAnchorLocation();
+        Point adjustLoc = adjustAnchorLocation(stp,userComponentScrollPane,layeredPane,anchorLocSupplier.get());
         userComponentScrollPane.setBounds(adjustLoc.x, adjustLoc.y, userComponentScrollPane.getWidth(), userComponentScrollPane.getHeight());
         isOpened = true;
         if ( null != jInteralFrame) {
@@ -153,33 +153,31 @@ public class AnchoredLayeredPane implements ComponentListener {
         }
         prepareListening();
     }
-    private Point adjustAnchorLocation() {
+    public static Point adjustAnchorLocation(Component parent, Component userComponent,Component layeredPane,Point preferredLoc) {
         int adjustX;
         int adjustY;
 
-        Point stpLoc = stp.getLocationOnScreen();
-        int maxX = stpLoc.x + stp.getWidth();
-        int maxY = stpLoc.y + stp.getHeight();
+        Point stpLoc = parent.getLocationOnScreen();
+        int maxX = stpLoc.x + parent.getWidth();
+        int maxY = stpLoc.y + parent.getHeight();
 
-        Point anchor_loc = anchorLocSupplier.get();
+        final int preferredX = preferredLoc.x;
+        final int preferredY= preferredLoc.y;
 
-        final int preferredX = anchor_loc.x;
-        final int preferredY= anchor_loc.y;
-
-        if ( preferredX + userComponentScrollPane.getWidth() <= maxX) {
+        if ( preferredX + userComponent.getWidth() <= maxX) {
             adjustX = preferredX;
-        } else if ( anchor_loc.x - userComponentScrollPane.getWidth() >= stpLoc.x) {
-            adjustX = anchor_loc.x - userComponentScrollPane.getWidth();
+        } else if ( preferredLoc.x - userComponent.getWidth() >= stpLoc.x) {
+            adjustX = preferredLoc.x - userComponent.getWidth();
         } else {
-            adjustX = stpLoc.x + (stp.getWidth() - userComponentScrollPane.getWidth() )/2;
+            adjustX = stpLoc.x + (parent.getWidth() - userComponent.getWidth() )/2;
         }
 
-        if ( preferredY + userComponentScrollPane.getHeight() <= maxY) {
+        if ( preferredY + userComponent.getHeight() <= maxY) {
             adjustY = preferredY;
-        } else if ( anchor_loc.y - userComponentScrollPane.getHeight() >= stpLoc.y) {
-            adjustY = anchor_loc.y - userComponentScrollPane.getHeight();
+        } else if ( preferredLoc.y - userComponent.getHeight() >= stpLoc.y) {
+            adjustY = preferredLoc.y - userComponent.getHeight();
         } else {
-            adjustY = stpLoc.y + (stp.getHeight() - userComponentScrollPane.getHeight() )/2;
+            adjustY = stpLoc.y + (parent.getHeight() - userComponent.getHeight() )/2;
         }
 
         Point layeredPaneLoc = layeredPane.getLocationOnScreen();

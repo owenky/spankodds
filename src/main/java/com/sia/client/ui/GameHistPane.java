@@ -4,13 +4,11 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.SpankyWindowConfig;
-import com.sia.client.ui.comps.EmbededFrame;
+import com.sia.client.ui.comps.WebViewPane;
 import com.sia.client.ui.control.SportsTabPane;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.web.WebView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class GameHistPane {
 
     private static final DateTimeFormatter gameDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final Dimension paneSize = new Dimension(800,500);
+    private static final Dimension paneSize = new Dimension(800, 500);
     private static final String host = "sof300732.com:9998";
     private final Game game;
     private final int bookieId;
@@ -32,11 +30,12 @@ public class GameHistPane {
     static {
         Platform.setImplicitExit(false);
     }
-    public static void showHistPane(SportsTabPane stp,Point pointOnScreen, Game game,int bookieId) {
 
-        GameHistPane gameHistPane = new GameHistPane(stp,game,bookieId);
-        if ( gameHistPane.embededMode) {
-            AbstractLayeredDialog embeded = new AbstractLayeredDialog(stp,null,SiaConst.LayedPaneIndex.SportDetailPaneIndex) {
+    public static void showHistPane(SportsTabPane stp, Point pointOnScreen, Game game, int bookieId) {
+
+        GameHistPane gameHistPane = new GameHistPane(stp, game, bookieId);
+        if (gameHistPane.embededMode) {
+            AbstractLayeredDialog embeded = new AbstractLayeredDialog(stp, null, SiaConst.LayedPaneIndex.SportDetailPaneIndex) {
                 @Override
                 protected JComponent getUserComponent() {
                     return gameHistPane.getUserComponent();
@@ -45,20 +44,26 @@ public class GameHistPane {
             embeded.setIsSinglePaneMode(false);
             embeded.setIsFloating(true);
             embeded.setTitle(gameHistPane.title);
-            embeded.show(paneSize,()->pointOnScreen);
+            embeded.show(paneSize, () -> pointOnScreen);
         } else {
             JFrame jFrame = new JFrame();
+            jFrame.setAlwaysOnTop(true);
             jFrame.setTitle(gameHistPane.title);
             jFrame.setPreferredSize(paneSize);
             jFrame.setLayout(new BorderLayout());
-            jFrame.add(new JScrollPane(gameHistPane.getUserComponent()),BorderLayout.CENTER);
+            JComponent userComponent = gameHistPane.getUserComponent();
+            userComponent.setPreferredSize(paneSize);
+            jFrame.add(userComponent, BorderLayout.CENTER);
             jFrame.pack();
-            Utils.centerComponent(jFrame);
+            SpankyWindow spankyWindow = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
+            Point adjustedLoc = AnchoredLayeredPane.adjustAnchorLocation(stp, jFrame,spankyWindow.getLayeredPane(),pointOnScreen);
+            jFrame.setLocation(adjustedLoc);
             jFrame.setVisible(true);
         }
 
     }
-    public GameHistPane(SportsTabPane stp, Game game,int bookieId) {
+
+    public GameHistPane(SportsTabPane stp, Game game, int bookieId) {
         this.game = game;
         this.bookieId = bookieId;
         DisplayTransformer displayTransformer = new DisplayTransformer(game.getGame_id());
@@ -67,25 +72,22 @@ public class GameHistPane {
         period = displayTransformer.transformPeriod(spankyWindowConfig.getPeriod());
         gameDateStr = gameDateFormatter.format(game.getGamedate());
         //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
-        title = game.getVisitorteam()+"/"+game.getHometeam();
+        title = game.getVisitorteam() + "/" + game.getHometeam();
     }
+
     protected JComponent getUserComponent() {
         JFXPanel jFxPanel = new JFXPanel();
         Platform.runLater(() -> createGameHistScene(jFxPanel));
         return jFxPanel;
     }
+
     private void createGameHistScene(JFXPanel jFxPanel) {
-        try {
-            String url = "http://" + host + "/gamedetails/linehistorynew.jsp?bookieID=" + bookieId + "&gameNum=" + game.getGame_id() + "&period=" + period + "&lineType=" + lineType + "&strgameDate=" + gameDateStr;
-            Group root = new Group();
-            Scene scene = new Scene(root);
-            WebView webView = new WebView();
-            root.getChildren().add(webView);
-            jFxPanel.setScene(scene);
-            webView.getEngine().load(url);
-        }catch(Exception e) {
-            Utils.log(e);
-        }
+
+        String url = "http://" + host + "/gamedetails/linehistorynew.jsp?bookieID=" + bookieId + "&gameNum=" + game.getGame_id() + "&period=" + period + "&lineType=" + lineType + "&strgameDate=" + gameDateStr;
+        WebViewPane root = new WebViewPane();
+        Scene scene = new Scene(root);
+        jFxPanel.setScene(scene);
+        root.loadUrl(url);
     }
     //    public static void main(String [] argv) {
 //        JDesktopPane jDesktopPane = new JDesktopPane();

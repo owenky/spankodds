@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.AccessableToGame;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
@@ -12,7 +13,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
+public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster, AccessableToGame<V> {
 
 	private final ColumnCustomizableTable<V> mainTable;
 	private final boolean hasRowNumber;
@@ -27,6 +28,10 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+	@Override
+	public V getGame(int rowModelIndex) {
+		return mainTable.getGame(rowModelIndex);
 	}
 	public void optimizeSize() {
 		//set jviewport (row header of jscroll pane of mainTable) preferred size
