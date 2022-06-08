@@ -105,7 +105,8 @@ public class SpankOdds {
                 return null==userName?"":userName;
             }
         };
-        loginPane.setBannerText("Spank Odds");
+        loginPane.setBanner(Utils.getImage("spankoddstextonsoft.png"));
+       // loginPane.setBannerText("Spank Odds");
 
         LoginListener loginListener = new LoginAdapter() {
             @Override
@@ -191,10 +192,12 @@ public class SpankOdds {
             SpankyWindow.setLocationaAndSize(frame,UIProperties.screenXmargin,UIProperties.screenYmargin);
             frame.populateTabPane();
             frame.setVisible(true);
-            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(AppController.getMainTabPane());
-            //anchoredLayeredPane.setTitle("Welcome!");
-            WelcomeImagePane wip = new WelcomeImagePane(anchoredLayeredPane);
-            wip.openAndCenter(new Dimension(700,700),false);
+
+           // AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(AppController.getMainTabPane());
+           // WelcomeImagePane wip = new WelcomeImagePane(anchoredLayeredPane);
+           // wip.openAndCenter(new Dimension(700,700),false);
+            Utils.checkAndRunInEDT(() -> new WelcomeMessage());
+
 
         } catch (Exception e) {
             log(e);

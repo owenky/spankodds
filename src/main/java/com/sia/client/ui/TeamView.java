@@ -87,6 +87,13 @@ public class TeamView extends ViewValue {
         ld1.setBackgroundColor(topcolor);
         ld2.setBackgroundColor(bottomcolor);
 
+        if(g.getVisitorpitcher() != null && !g.getVisitorpitcher().equals("") &&
+                g.getHomepitcher() != null && !g.getHomepitcher().equals("") )
+        {
+
+            setTooltiptext(g.getVisitorpitcher()+" vs. "+g.getHomepitcher());
+
+        }
 
         boxes[0] = ld1;
         boxes[1] = ld2;

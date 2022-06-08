@@ -867,6 +867,37 @@ public class LinesMoves
             System.out.println("********STARTING AT="+st+"..to="+en);
         }
 
+        // here we are going to do an override for baseball runlines since i still need to work on the math!
+
+        if(leagueid == 5
+                || leagueid == 848
+                || leagueid == 849
+                || leagueid == 850
+                || leagueid == 851
+                || leagueid == 852
+                || leagueid == 853
+                || leagueid == 899
+                || leagueid == 904
+                || leagueid == 920
+                || leagueid == 6
+                || leagueid == 785
+        ) {
+            Spreadline sl = AppController.getSpreadline(604, gameid, period);
+            double spread = 0;
+            if(sl != null) {
+                if (ishometeam) {
+                    spread = sl.getCurrenthomespread();
+                } else {
+                    spread = sl.getCurrentvisitspread();
+                }
+                if (spread != 0) {
+                    if (oldline != spread) {
+                        return -1;
+                    }
+                }
+            }
+        }
+
         for (double startline = st; startline < en; startline=startline+.5)
         {
             int positiveindex = 0;
@@ -900,6 +931,13 @@ public class LinesMoves
         }
        // System.out.println("juicepercent="+juicepercent+"\tlinepercent="+linepercent);
        // System.out.println("totalpercent="+totalpercent);
+
+
+
+
+
+
+
         return totalpercent;
 
     }
