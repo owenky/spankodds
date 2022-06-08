@@ -212,7 +212,12 @@ public class AnchoredLayeredPane implements ComponentListener {
         if ( userComponent instanceof RootPaneContainer) {
             scrollable = userComponent;
         } else {
-            scrollable = new JScrollPane(userComponent);
+            JScrollPane jScrollPane = new JScrollPane(userComponent);
+            jScrollPane.getViewport().setPreferredSize(userComponent.getPreferredSize());
+            jScrollPane.getViewport().setSize(userComponent.getPreferredSize());
+            jScrollPane.setPreferredSize(userComponent.getPreferredSize());
+            jScrollPane.setSize(userComponent.getPreferredSize());
+            scrollable = jScrollPane;
         }
 //        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         JComponent containingComp;
