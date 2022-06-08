@@ -21,11 +21,4 @@ public class EmbededFrame extends JInternalFrame {
 //            }
 //        });
 //    }
-    @Override
-    public void setVisible(boolean b) {
-        super.setVisible(b);
-        if ( b ) {
-            toFront();
-        }
-    }
 }

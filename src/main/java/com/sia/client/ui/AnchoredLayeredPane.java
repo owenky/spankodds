@@ -42,6 +42,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private boolean isCloseBtnAdded;
     private boolean isFloating = false;
     private boolean isSinglePaneMode = true;
+    private EmbededFrame jInteralFrame;
     private final java.util.List<Runnable> closeActions = new ArrayList<>();
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
@@ -147,6 +148,9 @@ public class AnchoredLayeredPane implements ComponentListener {
         Point adjustLoc = adjustAnchorLocation();
         userComponentScrollPane.setBounds(adjustLoc.x, adjustLoc.y, userComponentScrollPane.getWidth(), userComponentScrollPane.getHeight());
         isOpened = true;
+        if ( null != jInteralFrame) {
+            jInteralFrame.toFront();
+        }
         prepareListening();
     }
     private Point adjustAnchorLocation() {
@@ -195,7 +199,7 @@ public class AnchoredLayeredPane implements ComponentListener {
             containingComp = jScrollPane;
         } else {
             if ( isFloating ) {
-                EmbededFrame jInteralFrame = new EmbededFrame(title,true,true,true,true);
+                jInteralFrame = new EmbededFrame(title,true,true,true,true);
                 jInteralFrame.setLayout(new BorderLayout());
                 jInteralFrame.add(jScrollPane,BorderLayout.CENTER);
                 containingComp = jInteralFrame;
