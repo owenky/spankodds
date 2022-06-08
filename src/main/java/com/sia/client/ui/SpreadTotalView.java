@@ -139,7 +139,7 @@ public class SpreadTotalView extends ViewValue {
 
                 whowasbetspread = sl.getWhowasbet();
                 if (shouldGoRed(sl)) {
-                    spreadcolor = Color.RED;
+                    spreadcolor = LINECHANGERED;
                 } else if (clearts < sl.getCurrentts()) {
                     spreadcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
@@ -169,7 +169,7 @@ public class SpreadTotalView extends ViewValue {
                 underjuice = tl.getCurrentunderjuice();
                 whowasbettotal = tl.getWhowasbet();
                 if (shouldGoRed(tl)) {
-                    totalcolor = Color.RED;
+                    totalcolor = LINECHANGERED;
                 } else if (clearts < tl.getCurrentts()) {
                     totalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
@@ -194,7 +194,7 @@ public class SpreadTotalView extends ViewValue {
                 whowasbetmoney = ml.getWhowasbet();
 
                 if (shouldGoRed(ml)) {
-                    moneycolor = Color.RED;
+                    moneycolor = LINECHANGERED;
                 } else if (clearts < ml.getCurrentts()) {
                     moneycolor = Color.BLACK;
                 } else {
@@ -224,7 +224,7 @@ public class SpreadTotalView extends ViewValue {
                 homeunderjuice = ttl.getCurrenthomeunderjuice();
                 whowasbetteamtotal = ttl.getWhowasbet();
                 if (shouldGoRed(ttl)) {
-                    teamtotalcolor = Color.RED;
+                    teamtotalcolor = LINECHANGERED;
                 } else if (clearts < ttl.getCurrentts()) {
                     teamtotalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec

@@ -173,7 +173,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         if (null == sl) {
             spreadcolor = Color.WHITE;
         } else if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
-            spreadcolor = Color.RED;
+            spreadcolor = LINECHANGERED;
         } else if (clearts < sl.getCurrentts()) {
             spreadcolor = Color.BLACK;
             //owen took out cuz maionscreen refreshes every sec
@@ -193,7 +193,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         if (null == tl) {
             totalcolor = Color.WHITE;
         } else if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
-            totalcolor = Color.RED;
+            totalcolor = LINECHANGERED;
         } else if (clearts < tl.getCurrentts()) {
             totalcolor = Color.BLACK;
             //owen took out cuz maionscreen refreshes every sec
@@ -212,7 +212,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         if (null == ml) {
             moneycolor = Color.WHITE;
         } else if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
-            moneycolor = Color.RED;
+            moneycolor = LINECHANGERED;
         } else if (clearts < ml.getCurrentts()) {
             moneycolor = Color.BLACK;
             //owen took out cuz maionscreen refreshes every sec
@@ -229,7 +229,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         if (null == ttl) {
             teamtotalcolor = Color.WHITE;
         } else if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
-            teamtotalcolor = Color.RED;
+            teamtotalcolor = LINECHANGERED;
         }
         //else if(priortotalcolor != Color.WHITE)
         else if (clearts < ttl.getCurrentts()) {

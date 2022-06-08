@@ -60,7 +60,7 @@ public class LineAlertOpenerManager
         Game game = AppController.getGame(gid);
         Bookie b = AppController.getBookie(bid);
         Sport sport = AppController.getSportByLeagueId(game.getLeague_id());
-        if(sport == null)
+        if(sport == null || b == null)
         {
             return;
         }

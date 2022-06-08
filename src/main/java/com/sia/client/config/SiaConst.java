@@ -80,6 +80,7 @@ public abstract class SiaConst {
         Dimension LineAlertDim = new Dimension(1200,800);
         Dimension LineAlertMethodDim = new Dimension(900,720);
         Dimension CustomTab2Dim = new Dimension(1000,650);
+        Dimension DisplaySettingsDim = new Dimension(820,450);
     }
     public interface Serialization {
         String config = "config";

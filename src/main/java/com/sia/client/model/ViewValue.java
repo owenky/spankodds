@@ -1,6 +1,11 @@
 package com.sia.client.model;
 
+import java.awt.*;
+
 public class ViewValue {
+
+    public Color LINECHANGERED = new Color(255,0,0);
+
     private String tooltiptext;
     private String url;
 

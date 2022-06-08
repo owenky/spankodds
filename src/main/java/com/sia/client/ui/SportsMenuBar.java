@@ -61,10 +61,17 @@ public class SportsMenuBar extends JMenuBar {
             BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
             bcc2.openAndCenter(new Dimension(700,700),false);
         }));
-        JMenuItem bookiecolumn1 = new JMenuItem("Chart");
-        bookiecolumn1.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
+
+
+
+        JMenuItem displaysettings = new JMenuItem("Display Settings");
+        displaysettings.addActionListener(ae -> checkAndRunInEDT(() -> new UserDisplayGui(stb).show(UIProperties.DisplaySettingsDim)));
+        JMenuItem charting = new JMenuItem("Chart");
+        charting.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
+
         bookiemenu.add(bookiecolumn);
-        bookiemenu.add(bookiecolumn1);
+        bookiemenu.add(displaysettings);
+        bookiemenu.add(charting);
 
         add(linealertsmenu);
 
