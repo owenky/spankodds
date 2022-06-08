@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.comps.EmbededFrame;
 import com.sia.client.ui.comps.LinkButton;
 import com.sia.client.ui.control.SportsTabPane;
 
@@ -39,6 +40,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private final JPanel eastPanel;
     private final JButton closeBtn;
     private boolean isCloseBtnAdded;
+    private boolean isFloating = false;
     private boolean isSinglePaneMode = true;
     private final java.util.List<Runnable> closeActions = new ArrayList<>();
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
@@ -88,6 +90,9 @@ public class AnchoredLayeredPane implements ComponentListener {
 
         };
         openAndAnchoredAt(userComponent, actualSize,toHideOnMouseOut,anchorLocSupplier);
+    }
+    public void setIsFloating(boolean isFloating) {
+        this.isFloating = isFloating;
     }
     public void setIsSinglePaneMode(boolean isSinglePaneMode) {
         this.isSinglePaneMode = isSinglePaneMode;
@@ -178,60 +183,62 @@ public class AnchoredLayeredPane implements ComponentListener {
     }
     private JComponent makeUserComponetScrollPane(JComponent userComponent,Dimension size) {
 
-        JPanel titlePanel;
-        if ( null == title ) {
-            titlePanel = null;
-        } else {
-            titlePanel = new JPanel();
-            titlePanel.setLayout(new BorderLayout());
-            JLabel titleLabel = new JLabel(title);
-            titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            Font defaultFont = Config.instance().getFontConfig().getSelectedFont();
-            Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
-            titleLabel.setFont(titleFont);
+        JScrollPane jScrollPane = new JScrollPane(userComponent);
+        jScrollPane.getViewport().setPreferredSize(userComponent.getPreferredSize());
+        jScrollPane.getViewport().setSize(userComponent.getPreferredSize());
+        jScrollPane.setPreferredSize(userComponent.getPreferredSize());
+        jScrollPane.setSize(userComponent.getPreferredSize());
 
-            closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()));
-            if ( ! isCloseBtnAdded) {
-                eastPanel.add(closeBtn);
-                isCloseBtnAdded = true;
-            }
-
-            titlePanel.add(westPanel,BorderLayout.WEST);
-            titlePanel.add(eastPanel,BorderLayout.EAST);
-            titlePanel.add(titleLabel,BorderLayout.CENTER);
-            if ( null == eastPanel.getPreferredSize() && null != titlePanelLeftComp) {
-                Dimension preSize = titlePanelLeftComp.getPreferredSize();
-                eastPanel.setPreferredSize(preSize);
-            }
-
-            closeBtn.addActionListener(event-> close());
-            titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
-        }
-
-        JComponent scrollable;
-        if ( userComponent instanceof RootPaneContainer) {
-            scrollable = userComponent;
-        } else {
-            JScrollPane jScrollPane = new JScrollPane(userComponent);
-            jScrollPane.getViewport().setPreferredSize(userComponent.getPreferredSize());
-            jScrollPane.getViewport().setSize(userComponent.getPreferredSize());
-            jScrollPane.setPreferredSize(userComponent.getPreferredSize());
-            jScrollPane.setSize(userComponent.getPreferredSize());
-            scrollable = jScrollPane;
-        }
 //        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         JComponent containingComp;
-        if ( null == titlePanel) {
-            containingComp = scrollable;
+        if ( null == title) {
+            containingComp = jScrollPane;
         } else {
-            containingComp = new JPanel();
-            containingComp.setLayout(new BorderLayout());
-            containingComp.add(titlePanel,BorderLayout.NORTH);
-            containingComp.add(scrollable,BorderLayout.CENTER);
-            scrollable.setBorder(BorderFactory.createMatteBorder(1,1,1,1,(Icon)null));
+            if ( isFloating ) {
+                EmbededFrame jInteralFrame = new EmbededFrame(title,true,true,true,true);
+                jInteralFrame.setLayout(new BorderLayout());
+                jInteralFrame.add(jScrollPane,BorderLayout.CENTER);
+                containingComp = jInteralFrame;
+            } else {
+                JPanel titlePanel = makeTitlePanel();
+                containingComp = new JPanel();
+                containingComp.setLayout(new BorderLayout());
+                containingComp.add(titlePanel, BorderLayout.NORTH);
+                containingComp.add(jScrollPane, BorderLayout.CENTER);
+                jScrollPane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, (Icon) null));
+            }
         }
         containingComp.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         return containingComp;
+    }
+    private JPanel makeTitlePanel() {
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BorderLayout());
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        Font defaultFont = Config.instance().getFontConfig().getSelectedFont();
+        Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
+        titleLabel.setFont(titleFont);
+
+
+        closeBtn.setFont(new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()));
+        if ( ! isCloseBtnAdded) {
+            eastPanel.add(closeBtn);
+            isCloseBtnAdded = true;
+        }
+
+        titlePanel.add(westPanel,BorderLayout.WEST);
+        titlePanel.add(eastPanel,BorderLayout.EAST);
+        titlePanel.add(titleLabel,BorderLayout.CENTER);
+        if ( null == eastPanel.getPreferredSize() && null != titlePanelLeftComp) {
+            Dimension preSize = titlePanelLeftComp.getPreferredSize();
+            eastPanel.setPreferredSize(preSize);
+        }
+
+        closeBtn.addActionListener(event-> close());
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
+
+        return titlePanel;
     }
     public void setTitlePanelLeftComp(JComponent titlePanelLeftComp) {
         this.titlePanelLeftComp = titlePanelLeftComp;

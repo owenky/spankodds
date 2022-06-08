@@ -88,18 +88,16 @@ public class GameHistPane extends AbstractLayeredDialog {
         lineType = displayTransformer.transformDefault(spankyWindowConfig.getDisplay());
         period = displayTransformer.transformPeriod(spankyWindowConfig.getPeriod());
         gameDateStr = gameDateFormatter.format(game.getGamedate());
+        //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
+        String title = game.getVisitorteam()+"/"+game.getHometeam();
+        setTitle(title);
+        setIsFloating(true);
     }
     @Override
     protected JComponent getUserComponent() {
-        //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
-        String title = game.getVisitorteam()+"/"+game.getHometeam();
-        jInteralFrame = new EmbededFrame(title,true,true,true,true);
-        jInteralFrame.setLayout(new BorderLayout());
         JFXPanel jFxPanel = new JFXPanel();
-        jInteralFrame.add(new JScrollPane(jFxPanel),BorderLayout.CENTER);
         Platform.runLater(() -> createGameHistScene(jFxPanel));
-        jInteralFrame.setVisible(true);
-        return jInteralFrame;
+        return jFxPanel;
     }
     private void createGameHistScene(JFXPanel jFxPanel) {
         try {
