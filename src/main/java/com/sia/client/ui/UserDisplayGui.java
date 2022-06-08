@@ -99,7 +99,7 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     }
     @Override
     protected JComponent getUserComponent() {
-
+        savebutton.addActionListener(this);
         footballdefault = UserDisplaySettings.getFootballdefault();
         basketballdefault = UserDisplaySettings.getBasketballdefault();
         baseballdefault = UserDisplaySettings.getBaseballdefault();
@@ -514,37 +514,37 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
 
     public void actionPerformed(ActionEvent e)
     {
+        if(e.getSource() == savebutton)
+        {
+            UserDisplaySettings.setFootballdefault(display[footballcb.getSelectedIndex()]);
+            UserDisplaySettings.setBasketballdefault(display[basketballcb.getSelectedIndex()]);
+            UserDisplaySettings.setBaseballdefault(display[baseballcb.getSelectedIndex()]);
+            UserDisplaySettings.setHockeydefault(display[hockeycb.getSelectedIndex()]);
+            UserDisplaySettings.setFightingdefault(display[fightingcb.getSelectedIndex()]);
+            UserDisplaySettings.setSoccerdefault(display[soccercb.getSelectedIndex()]);
+            UserDisplaySettings.setAutoracingdefault(display[autoracingcb.getSelectedIndex()]);
+            UserDisplaySettings.setGolfdefault(display[golfcb.getSelectedIndex()]);
+            UserDisplaySettings.setTennisdefault(display[tenniscb.getSelectedIndex()]);
+
+            UserDisplaySettings.setFirstmoveseconds(Integer.parseInt(""+firstmovesecs.getSelectedItem()));
+            UserDisplaySettings.setSecondmoveseconds(Integer.parseInt(""+secondmovesecs.getSelectedItem()));
+
+
+            UserDisplaySettings.setFirstcolor(firstcolorChooserButton.getSelectedColor());
+            UserDisplaySettings.setSecondcolor(secondcolorChooserButton.getSelectedColor());
+            UserDisplaySettings.setThirdcolor(thirdcolorChooserButton.getSelectedColor());
+
+            close();
+
+
+        }
         if(e.getSource() instanceof JToggleButton)
         {
             ((JToggleButton)e.getSource()).toggle();
         }
     }
 
-    public void saveActionPerformed(ActionEvent e)
-    {
-        UserDisplaySettings.setFootballdefault(display[footballcb.getSelectedIndex()]);
-        UserDisplaySettings.setBasketballdefault(display[basketballcb.getSelectedIndex()]);
-        UserDisplaySettings.setBaseballdefault(display[baseballcb.getSelectedIndex()]);
-        UserDisplaySettings.setHockeydefault(display[hockeycb.getSelectedIndex()]);
-        UserDisplaySettings.setFightingdefault(display[fightingcb.getSelectedIndex()]);
-        UserDisplaySettings.setSoccerdefault(display[soccercb.getSelectedIndex()]);
-        UserDisplaySettings.setAutoracingdefault(display[autoracingcb.getSelectedIndex()]);
-        UserDisplaySettings.setGolfdefault(display[golfcb.getSelectedIndex()]);
-        UserDisplaySettings.setTennisdefault(display[tenniscb.getSelectedIndex()]);
 
-        UserDisplaySettings.setFirstmoveseconds(Integer.parseInt(""+firstmovesecs.getSelectedItem()));
-        UserDisplaySettings.setSecondmoveseconds(Integer.parseInt(""+secondmovesecs.getSelectedItem()));
-
-
-        UserDisplaySettings.setFirstcolor(firstcolorChooserButton.getSelectedColor());
-        UserDisplaySettings.setSecondcolor(secondcolorChooserButton.getSelectedColor());
-        UserDisplaySettings.setThirdcolor(thirdcolorChooserButton.getSelectedColor());
-
-       close();
-
-
-
-    }
 
 
 
