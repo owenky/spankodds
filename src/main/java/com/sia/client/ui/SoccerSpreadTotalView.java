@@ -1,13 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.Game;
-import com.sia.client.model.LineData;
-import com.sia.client.model.Moneyline;
-import com.sia.client.model.Sport;
-import com.sia.client.model.Spreadline;
-import com.sia.client.model.ViewValue;
+import com.sia.client.model.*;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -98,7 +92,8 @@ public class SoccerSpreadTotalView extends ViewValue {
         }
 
         if (display.equals("default")) {
-
+            display=UserDisplaySettings.getSoccerdefault();
+            /*
             if (sp.getSport_id() == 3) // baseball
             {
                 display = "totalbothmoney";
@@ -110,6 +105,8 @@ public class SoccerSpreadTotalView extends ViewValue {
             } else {
                 display = "spreadtotal";
             }
+            */
+
         }
         String topboxS = "";
         String bottomboxS = "";
@@ -172,10 +169,14 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == sl) {
             spreadcolor = Color.WHITE;
-        } else if (tsnow - sl.getCurrentts() <= 30000 && clearts < sl.getCurrentts()) {
-            spreadcolor = LINECHANGERED;
-        } else if (clearts < sl.getCurrentts()) {
-            spreadcolor = Color.BLACK;
+        } else if (tsnow - sl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 && clearts < sl.getCurrentts()) {
+            spreadcolor = UserDisplaySettings.getFirstcolor();
+        }
+        else if (tsnow - sl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < sl.getCurrentts()) {
+            spreadcolor = UserDisplaySettings.getSecondcolor();
+        }
+        else if (clearts < sl.getCurrentts()) {
+            spreadcolor = UserDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("S"+id);
         } else {
@@ -192,10 +193,14 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == tl) {
             totalcolor = Color.WHITE;
-        } else if (tsnow - tl.getCurrentts() <= 30000 && clearts < tl.getCurrentts()) {
-            totalcolor = LINECHANGERED;
-        } else if (clearts < tl.getCurrentts()) {
-            totalcolor = Color.BLACK;
+        } else if (tsnow - tl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000  && clearts < tl.getCurrentts()) {
+            totalcolor = UserDisplaySettings.getFirstcolor();
+        }
+        else if (tsnow - tl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < tl.getCurrentts()) {
+            totalcolor = UserDisplaySettings.getSecondcolor();
+        }
+        else if (clearts < tl.getCurrentts()) {
+            totalcolor = UserDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("T"+id);
         } else {
@@ -211,10 +216,14 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == ml) {
             moneycolor = Color.WHITE;
-        } else if (tsnow - ml.getCurrentts() <= 30000 && clearts < ml.getCurrentts()) {
-            moneycolor = LINECHANGERED;
-        } else if (clearts < ml.getCurrentts()) {
-            moneycolor = Color.BLACK;
+        } else if (tsnow - ml.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000  && clearts < ml.getCurrentts()) {
+            moneycolor = UserDisplaySettings.getFirstcolor();
+        }
+        else if (tsnow - ml.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < ml.getCurrentts()) {
+            moneycolor = UserDisplaySettings.getSecondcolor();
+        }
+        else if (clearts < ml.getCurrentts()) {
+            moneycolor = UserDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("M"+id);
         } else {
@@ -228,12 +237,15 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == ttl) {
             teamtotalcolor = Color.WHITE;
-        } else if (tsnow - ttl.getCurrentts() <= 30000 && clearts < ttl.getCurrentts()) {
-            teamtotalcolor = LINECHANGERED;
+        } else if (tsnow - ttl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000  && clearts < ttl.getCurrentts()) {
+            teamtotalcolor = UserDisplaySettings.getFirstcolor();
+        }
+        else if (tsnow - ttl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < ttl.getCurrentts()) {
+            teamtotalcolor = UserDisplaySettings.getSecondcolor();
         }
         //else if(priortotalcolor != Color.WHITE)
         else if (clearts < ttl.getCurrentts()) {
-            teamtotalcolor = Color.BLACK;
+            teamtotalcolor = UserDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("TT"+id);
         } else {

@@ -21,6 +21,47 @@ public  class UserDisplaySettings
     static Color secondcolor = Color.BLACK;
     static Color thirdcolor = Color.BLACK;
 
+    static boolean autofitdata = true;
+    static boolean showcpo = true;
+    static boolean showborderbestline = true;
+    static boolean showdirectionicons = true;
+
+    public static boolean isShowdirectionicons() {
+        return showdirectionicons;
+    }
+
+    public static void setShowdirectionicons(boolean showdirectionicons) {
+        UserDisplaySettings.showdirectionicons = showdirectionicons;
+    }
+
+
+
+    public static boolean isAutofitdata() {
+        return autofitdata;
+    }
+
+    public static void setAutofitdata(boolean autofitdata) {
+        UserDisplaySettings.autofitdata = autofitdata;
+    }
+
+    public static boolean isShowcpo() {
+        return showcpo;
+    }
+
+    public static void setShowcpo(boolean showcpo) {
+        UserDisplaySettings.showcpo = showcpo;
+    }
+
+    public static boolean isShowborderbestline() {
+        return showborderbestline;
+    }
+
+    public static void setShowborderbestline(boolean showborderbestline) {
+        UserDisplaySettings.showborderbestline = showborderbestline;
+    }
+
+
+
     public static String getFootballdefault() {
         return footballdefault;
     }

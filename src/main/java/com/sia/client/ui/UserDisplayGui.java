@@ -119,6 +119,11 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         secondcolorChooserButton = new ColorChooserButton(secondcolor);
         thirdcolorChooserButton = new ColorChooserButton(thirdcolor);
 
+        autofitcolumnsbutton.setEnable(UserDisplaySettings.isAutofitdata());
+        showcpotooltipbutton.setEnable(UserDisplaySettings.isShowcpo());
+        showlinedirectionmovebuttom.setEnable(UserDisplaySettings.isShowdirectionicons());
+        borderbestbutton.setEnable(UserDisplaySettings.isShowborderbestline());
+
         display[0] = "spreadtotal";
         display[1] = "totalmoney";
         display[2] = "totalbothmoney";
@@ -533,6 +538,13 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
             UserDisplaySettings.setFirstcolor(firstcolorChooserButton.getSelectedColor());
             UserDisplaySettings.setSecondcolor(secondcolorChooserButton.getSelectedColor());
             UserDisplaySettings.setThirdcolor(thirdcolorChooserButton.getSelectedColor());
+
+            UserDisplaySettings.setAutofitdata(autofitcolumnsbutton.isEnabled());
+            UserDisplaySettings.setShowcpo(showcpotooltipbutton.isEnabled());
+            UserDisplaySettings.setShowdirectionicons(showlinedirectionmovebuttom.isEnabled());
+            UserDisplaySettings.setShowborderbestline(borderbestbutton.isEnabled());
+
+
 
             close();
 

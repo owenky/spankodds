@@ -51,6 +51,8 @@ public class SpreadTotalView extends ViewValue {
     private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
     private final DisplayTransformer displayTransformer;
 
+
+
     public SpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
         displayTransformer = new DisplayTransformer(gid);
         if (bid >= 1000) {
@@ -138,10 +140,16 @@ public class SpreadTotalView extends ViewValue {
 
 
                 whowasbetspread = sl.getWhowasbet();
-                if (shouldGoRed(sl)) {
-                    spreadcolor = LINECHANGERED;
-                } else if (clearts < sl.getCurrentts()) {
-                    spreadcolor = Color.BLACK;
+                if (shouldGoRed(sl))
+                {
+                    spreadcolor = UserDisplaySettings.getFirstcolor();
+                }
+                else if (shouldGoSecondColor(sl))
+                {
+                    spreadcolor = UserDisplaySettings.getSecondcolor();
+                }
+                else if (clearts < sl.getCurrentts()) {
+                    spreadcolor = UserDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("S"+id);
                 } else {
@@ -168,9 +176,16 @@ public class SpreadTotalView extends ViewValue {
                 overjuice = tl.getCurrentoverjuice();
                 underjuice = tl.getCurrentunderjuice();
                 whowasbettotal = tl.getWhowasbet();
-                if (shouldGoRed(tl)) {
-                    totalcolor = LINECHANGERED;
-                } else if (clearts < tl.getCurrentts()) {
+
+                if (shouldGoRed(tl))
+                {
+                    totalcolor = UserDisplaySettings.getFirstcolor();
+                }
+                else if (shouldGoSecondColor(tl))
+                {
+                    totalcolor = UserDisplaySettings.getSecondcolor();
+                }
+                 else if (clearts < tl.getCurrentts()) {
                     totalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("T"+id);
@@ -193,9 +208,16 @@ public class SpreadTotalView extends ViewValue {
                 homemljuice = ml.getCurrenthomejuice();
                 whowasbetmoney = ml.getWhowasbet();
 
-                if (shouldGoRed(ml)) {
-                    moneycolor = LINECHANGERED;
-                } else if (clearts < ml.getCurrentts()) {
+                if (shouldGoRed(ml))
+                {
+                    moneycolor = UserDisplaySettings.getFirstcolor();
+                }
+                else if (shouldGoSecondColor(ml))
+                {
+                    moneycolor = UserDisplaySettings.getSecondcolor();
+                }
+                else if (clearts < ml.getCurrentts())
+                {
                     moneycolor = Color.BLACK;
                 } else {
                     moneycolor = Color.WHITE;
@@ -223,9 +245,16 @@ public class SpreadTotalView extends ViewValue {
                 visitunderjuice = ttl.getCurrentvisitunderjuice();
                 homeunderjuice = ttl.getCurrenthomeunderjuice();
                 whowasbetteamtotal = ttl.getWhowasbet();
-                if (shouldGoRed(ttl)) {
-                    teamtotalcolor = LINECHANGERED;
-                } else if (clearts < ttl.getCurrentts()) {
+
+                if (shouldGoRed(ttl))
+                {
+                    teamtotalcolor = UserDisplaySettings.getFirstcolor();
+                }
+                else if (shouldGoSecondColor(ttl))
+                {
+                    teamtotalcolor = UserDisplaySettings.getSecondcolor();
+                }
+               else if (clearts < ttl.getCurrentts()) {
                     teamtotalcolor = Color.BLACK;
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("TT"+id);
@@ -1013,25 +1042,38 @@ public class SpreadTotalView extends ViewValue {
                     }
 
                     limithtml = ""+sidelimit + " / " + totallimit + " / " + moneylimit;
+
+
+
                     if (!limithtml.equals("0 / 0 / 0"))
                     {
+                        if(!UserDisplaySettings.isShowcpo())
+                        {
+                            toptooltip = "";
+                            bottomtooltip = "";
+                        }
                         toptooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+toptooltip+"</table>";
                         bottomtooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+bottomtooltip+"</table>";
                         //setTooltiptext("<html><body>" + limithtml + "</body></html>");
                     }
-                    else
+                    else if(UserDisplaySettings.isShowcpo())
                     {
                         toptooltip = "<table>"+toptooltip+"</table>";
                         bottomtooltip = "<table>"+bottomtooltip+"</table>";
+                    }
+                    else
+                    {
+                        toptooltip = bottomtooltip = "";
                     }
                 }
                 linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display+"&strgameDate=";
                 setUrl(linehistoryurl);
 
-
-                toptooltip ="<html><body>"+toptooltip+"</body></html>";
-                bottomtooltip ="<html><body>"+bottomtooltip+"</body></html>";
-
+                if(toptooltip != null && !toptooltip.equals("") && bottomtooltip != null && !bottomtooltip.equals(""))
+                {
+                    toptooltip = "<html><body>" + toptooltip + "</body></html>";
+                    bottomtooltip = "<html><body>" + bottomtooltip + "</body></html>";
+                }
                 if(topboxS.equals(""))
                 {
                     toptooltip ="";
@@ -1816,9 +1858,19 @@ public class SpreadTotalView extends ViewValue {
     private boolean shouldGoRed(Line line) {
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
-        boolean isRed = (tsnow - curTime) <= 30000 && clearts <= curTime;
+        int ms = UserDisplaySettings.getFirstmoveseconds()*1000;
+        boolean isRed = (tsnow - curTime) <= ms && clearts <= curTime;
         Game game = getGame();
         return isRed;
+    }
+
+    private boolean shouldGoSecondColor(Line line) {
+        long tsnow = System.currentTimeMillis();
+        long curTime = line.getCurrentts();
+        int ms = UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000;
+        boolean issecondcolor = (tsnow - curTime) <= ms && clearts <= curTime;
+        Game game = getGame();
+        return issecondcolor;
     }
 
     public Game getGame() {

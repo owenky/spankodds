@@ -22,8 +22,10 @@ public class ChartView {
     Game g;
     int period;
     String item = "spreadtotal";
+    private DisplayTransformer displayTransformer = null;
 
-    public ChartView() {
+    public ChartView()
+        {
     }
 
     public ChartView(int gid) {
@@ -36,6 +38,7 @@ public class ChartView {
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);
+        displayTransformer = new DisplayTransformer(gid);
 
 
     }
@@ -61,7 +64,7 @@ public class ChartView {
                 if (!ChartChecker.getCl1().get(i).dataexists) {
                     break;
                 }
-
+                item = displayTransformer.transformDefault(item);
                 if (item.equals("default")) {
 
                     if (sp.getSport_id() == 3) // baseball

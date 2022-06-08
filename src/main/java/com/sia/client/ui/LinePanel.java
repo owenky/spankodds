@@ -6,6 +6,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SpankyWindowConfig;
+import com.sia.client.model.UserDisplaySettings;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -33,7 +34,8 @@ public class LinePanel extends JPanel {
     private static final MatteBorder bestunderborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
     private static final MatteBorder bestdrawborder = new MatteBorder(2, 2, 2, 2, new Color(255, 255, 0));
     private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(222, 235, 52));
-    private static final Color altcolor = new Color(204, 255, 229);
+  //  private static final Color altcolor = new Color(204, 255, 229);
+  private static final Color altcolor = new Color(215, 215, 215);
     private static final Color openercolor = Color.LIGHT_GRAY;
     private final static int leftPaddingSpace = 0;
     private final static int rightPaddingSpace = 0;
@@ -168,7 +170,7 @@ public class LinePanel extends JPanel {
 
             }
 
-            if (row % 2 == 1 && bgcolor == Color.WHITE) {
+            if (row % 2 == 0 && bgcolor == Color.WHITE) {
                 bgcolor = altcolor;
             }
             if (colcolor != null && !blackorred) {
@@ -190,6 +192,7 @@ public class LinePanel extends JPanel {
             if (ld.getBorder().contains("besthome")) {
                 top.setBorder(bestallborder);
             } else {
+
                 if(blackorred) {  top.setBorder(bestvisitborderblackorred);}
                 else { top.setBorder(bestvisitborder); }
 
@@ -210,16 +213,23 @@ public class LinePanel extends JPanel {
             if(blackorred) {  top.setBorder(bestunderborderblackorred);}
             else { top.setBorder(bestunderborder); }
 
-        } else if (ld.getBorder().contains("scalp")) {
-            top.setBorder(scalpborder);
         }
 
         else {
             top.setBorder(null);
         }
 
+        if(!UserDisplaySettings.isShowborderbestline())
+        {
+            top.setBorder(null);
+        }
+        if (ld.getBorder().contains("scalp"))
+        {
+            top.setBorder(scalpborder);
+        }
+
         top.setToolTipText(ld.getTooltip());
-        if(!useArrowIcons)
+        if(!UserDisplaySettings.isShowdirectionicons())
         {
             top.setIcon(null);
         }
@@ -255,7 +265,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 1 && bgcolor == Color.WHITE) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE) {
             bgcolor = altcolor;
         }
 
@@ -289,15 +299,23 @@ public class LinePanel extends JPanel {
             if(blackorred) {  bottom.setBorder(bestunderborderblackorred);}
             else { bottom.setBorder(bestunderborder); }
 
-        } else if (ld.getBorder().contains("scalp")) {
-            bottom.setBorder(scalpborder);
         }
-
         else {
             bottom.setBorder(null);
         }
+
+        if(!UserDisplaySettings.isShowborderbestline())
+        {
+            bottom.setBorder(null);
+        }
+        if (ld.getBorder().contains("scalp"))
+        {
+            bottom.setBorder(scalpborder);
+        }
+
+
         bottom.setToolTipText(ld.getTooltip());
-        if(!useArrowIcons)
+        if(!UserDisplaySettings.isShowdirectionicons())
         {
             bottom.setIcon(null);
         }
@@ -334,7 +352,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 1 && bgcolor == Color.WHITE) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE) {
             bgcolor = altcolor;
         }
 
@@ -374,6 +392,19 @@ public class LinePanel extends JPanel {
         } else {
             draw.setBorder(null);
         }
+
+        if(!UserDisplaySettings.isShowborderbestline())
+        {
+            draw.setBorder(null);
+        }
+
+
+
+        if(!UserDisplaySettings.isShowdirectionicons())
+        {
+            draw.setIcon(null);
+        }
+
     }
 
     private void setTotal(JTable table,LineData ld, int row, int col) {
@@ -406,7 +437,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 1 && bgcolor == Color.WHITE) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE) {
             bgcolor = altcolor;
         }
 
@@ -442,14 +473,25 @@ public class LinePanel extends JPanel {
             if(blackorred) {  total.setBorder(bestunderborderblackorred);}
             else { total.setBorder(bestunderborder); }
         }
-        else if (ld.getBorder().contains("scalp")) {
-            total.setBorder(scalpborder);
-        }
-
-        else {
+          else {
             total.setBorder(null);
         }
 
+
+        if(!UserDisplaySettings.isShowborderbestline())
+        {
+            total.setBorder(null);
+        }
+
+        if (ld.getBorder().contains("scalp"))
+        {
+            total.setBorder(scalpborder);
+        }
+
+        if(!UserDisplaySettings.isShowdirectionicons())
+        {
+            total.setIcon(null);
+        }
 
     }
 
