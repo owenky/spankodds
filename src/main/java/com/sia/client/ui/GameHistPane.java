@@ -13,7 +13,6 @@ import javafx.scene.web.WebView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class GameHistPane extends AbstractLayeredDialog {
@@ -27,6 +26,7 @@ public class GameHistPane extends AbstractLayeredDialog {
     private String gameDateStr;
     private int period;
     private WebView webView;
+    private JInternalFrame jInteralFrame;
 
     static {
         Platform.setImplicitExit(false);
@@ -34,43 +34,31 @@ public class GameHistPane extends AbstractLayeredDialog {
     public static void showHistPane(SportsTabPane stp,Point pointOnScreen, Game game,int bookieId) {
 
         GameHistPane gameHistPane = new GameHistPane(stp,game,bookieId);
-        gameHistPane.show(paneSize,false,()->pointOnScreen);
+        gameHistPane.setIsSinglePaneMode(false);
+        gameHistPane.show(paneSize,()->pointOnScreen);
+        gameHistPane.jInteralFrame.toFront();
     }
     public GameHistPane(SportsTabPane stp, Game game,int bookieId) {
-        super(stp,SiaConst.LayedPaneIndex.SportConfigIndex);
+        super(stp,null,SiaConst.LayedPaneIndex.SportDetailPaneIndex);
         this.game = game;
         this.bookieId = bookieId;
         DisplayTransformer displayTransformer = new DisplayTransformer(game.getGame_id());
-        SpankyWindowConfig spankyWindowConfig = getSportsTabPane().getSpankyWindowConfig();
+        SpankyWindowConfig spankyWindowConfig = stp.getSpankyWindowConfig();
         lineType = displayTransformer.transformDefault(spankyWindowConfig.getDisplay());
         period = displayTransformer.transformPeriod(spankyWindowConfig.getPeriod());
         gameDateStr = gameDateFormatter.format(game.getGamedate());
-//        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
-        String title = game.getVisitorteam()+"/"+game.getHometeam();
-        setTitle(title);
     }
-//    @Override
-//    protected JComponent getUserComponent() {
-//
-//        String url = "http://" + host + "/gamedetails/linehistorynew.jsp?bookieID=" + bookieId + "&gameNum=" + game.getGame_id() + "&period=" + period + "&lineType=" + lineType + "&strgameDate=" + gameDateStr;
-//        JEditorPane jep = new JEditorPane();
-//        jep.setEditable(false);
-//
-//        try {
-//            jep.setPage(url);
-//        }catch (IOException e) {
-//            jep.setContentType("text/html");
-//            jep.setText("<html>Could not load</html>");
-//        }
-//
-//        return jep;
-//
-//    }
     @Override
     protected JComponent getUserComponent() {
+        //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
+        String title = game.getVisitorteam()+"/"+game.getHometeam();
+        jInteralFrame = new JInternalFrame(title,true,true,true,true);
+        jInteralFrame.setLayout(new BorderLayout());
         JFXPanel jFxPanel = new JFXPanel();
+        jInteralFrame.add(new JScrollPane(jFxPanel),BorderLayout.CENTER);
         Platform.runLater(() -> createGameHistScene(jFxPanel));
-        return jFxPanel;
+        jInteralFrame.setVisible(true);
+        return jInteralFrame;
     }
     private void createGameHistScene(JFXPanel jFxPanel) {
         try {

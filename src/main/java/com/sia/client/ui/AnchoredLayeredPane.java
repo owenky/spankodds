@@ -39,6 +39,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private final JPanel eastPanel;
     private final JButton closeBtn;
     private boolean isCloseBtnAdded;
+    private boolean isSinglePaneMode = true;
     private final java.util.List<Runnable> closeActions = new ArrayList<>();
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
 
@@ -88,6 +89,9 @@ public class AnchoredLayeredPane implements ComponentListener {
         };
         openAndAnchoredAt(userComponent, actualSize,toHideOnMouseOut,anchorLocSupplier);
     }
+    public void setIsSinglePaneMode(boolean isSinglePaneMode) {
+        this.isSinglePaneMode = isSinglePaneMode;
+    }
     private Dimension calculateActualSize(Dimension selectedPaneDim,Dimension userDefinedSize) {
         int width = userDefinedSize.getWidth()<=0?Integer.MAX_VALUE:(int)userDefinedSize.getWidth();
         int height = userDefinedSize.getHeight()<=0?Integer.MAX_VALUE:(int)userDefinedSize.getHeight();
@@ -114,7 +118,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         //one AnchoredLayerPane per SpankyWindow and layer_index
         String key = getActiveMapKey();
         AnchoredLayeredPane oldPane = activeLayeredPaneMap.get(key);
-        if ( null != oldPane) {
+        if ( isSinglePaneMode && null != oldPane) {
             oldPane.close();
         }
         activeLayeredPaneMap.put(key,this);
@@ -175,7 +179,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private JComponent makeUserComponetScrollPane(JComponent userComponent,Dimension size) {
 
         JPanel titlePanel;
-        if ( null == title) {
+        if ( null == title ) {
             titlePanel = null;
         } else {
             titlePanel = new JPanel();
@@ -203,17 +207,23 @@ public class AnchoredLayeredPane implements ComponentListener {
             closeBtn.addActionListener(event-> close());
             titlePanel.setBorder(BorderFactory.createEmptyBorder(7, 5, 1, 7));
         }
-        JScrollPane jScrollPane = new JScrollPane(userComponent);
+
+        JComponent scrollable;
+        if ( userComponent instanceof RootPaneContainer) {
+            scrollable = userComponent;
+        } else {
+            scrollable = new JScrollPane(userComponent);
+        }
 //        jScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         JComponent containingComp;
         if ( null == titlePanel) {
-            containingComp = jScrollPane;
+            containingComp = scrollable;
         } else {
             containingComp = new JPanel();
             containingComp.setLayout(new BorderLayout());
             containingComp.add(titlePanel,BorderLayout.NORTH);
-            containingComp.add(jScrollPane,BorderLayout.CENTER);
-            jScrollPane.setBorder(BorderFactory.createMatteBorder(1,1,1,1,(Icon)null));
+            containingComp.add(scrollable,BorderLayout.CENTER);
+            scrollable.setBorder(BorderFactory.createMatteBorder(1,1,1,1,(Icon)null));
         }
         containingComp.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED),BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
         return containingComp;

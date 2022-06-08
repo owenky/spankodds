@@ -5,9 +5,7 @@ import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -116,13 +114,11 @@ public class SpankyWindow extends JFrame {
         SportsMenuBar smb = new SportsMenuBar(stp, tv);
 
         setJMenuBar(smb);
-
-        JPanel mainpanel = new JPanel();
-        mainpanel.setLayout(new BorderLayout(1,1));
-        mainpanel.add(tv, BorderLayout.PAGE_START);
-        mainpanel.add(stp, BorderLayout.CENTER);
-        setContentPane(mainpanel);
-        setSize(600, 600);
+        JDesktopPane desktopPane = new JDesktopPane();
+        desktopPane.setLayout(new BorderLayout());
+        desktopPane.add(tv, BorderLayout.PAGE_START);
+        desktopPane.add(stp,BorderLayout.CENTER);
+        setContentPane(desktopPane);
     }
     public TopView getTopView() {
         return this.tv;

@@ -29,6 +29,9 @@ public abstract class AbstractLayeredDialog {
             }
         });
     }
+    public void setIsSinglePaneMode(boolean isSinglePaneMode) {
+        anchoredLayeredPane.setIsSinglePaneMode(isSinglePaneMode);
+    }
     public void setTitle(String title){
         anchoredLayeredPane.setTitle(title);
     }
