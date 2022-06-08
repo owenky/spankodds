@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.SpankyWindowConfig;
+import com.sia.client.ui.comps.EmbededFrame;
 import com.sia.client.ui.control.SportsTabPane;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -31,6 +32,46 @@ public class GameHistPane extends AbstractLayeredDialog {
     static {
         Platform.setImplicitExit(false);
     }
+//    public static void main(String [] argv) {
+//        JDesktopPane jDesktopPane = new JDesktopPane();
+//        JFrame jFrame = new JFrame("Test Main Frame");
+//        jFrame.setLayeredPane(new JDesktopPane());
+//        jFrame.setContentPane(jDesktopPane);
+//
+//        JPanel bckPanel = new JPanel();
+//        bckPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+//        bckPanel.add(new JButton("test button"));
+//        jFrame.getContentPane().setLayout(new BorderLayout());
+//        jFrame.getContentPane().add(bckPanel,BorderLayout.CENTER);
+//
+//        JInternalFrame internalFrame = new EmbededFrame("HELLO",true,true,true,true);
+//        internalFrame.setLayout(new BorderLayout());
+//        internalFrame.add(new JTextField("internalFrame1"),BorderLayout.SOUTH);
+//        internalFrame.setPreferredSize(paneSize);
+//        internalFrame.toFront();
+//        internalFrame.setVisible(true);
+//
+//        JInternalFrame internalFrame2 = new EmbededFrame("HELLO2",true,true,true,true);
+//        internalFrame2.setLayout(new BorderLayout());
+//        internalFrame2.add(new JTextField("internalFrame12"),BorderLayout.SOUTH);
+//        internalFrame2.setPreferredSize(paneSize);
+//        internalFrame2.toFront();
+//        internalFrame2.setVisible(true);
+//
+//        JLayeredPane jLayeredPane = jFrame.getLayeredPane();
+//        jLayeredPane.add(internalFrame,100);
+//        jLayeredPane.add(internalFrame2,100);
+//        internalFrame.setBounds(10,10,300,300);
+//        internalFrame2.setBounds(20,20,300,300);
+//
+//        jFrame.setPreferredSize(new Dimension(1600, 800));
+//        jFrame.setLocation(100,100);
+//        jFrame.pack();
+//        jFrame.setVisible(true);
+//
+//
+//
+//    }
     public static void showHistPane(SportsTabPane stp,Point pointOnScreen, Game game,int bookieId) {
 
         GameHistPane gameHistPane = new GameHistPane(stp,game,bookieId);
@@ -52,7 +93,7 @@ public class GameHistPane extends AbstractLayeredDialog {
     protected JComponent getUserComponent() {
         //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
         String title = game.getVisitorteam()+"/"+game.getHometeam();
-        jInteralFrame = new JInternalFrame(title,true,true,true,true);
+        jInteralFrame = new EmbededFrame(title,true,true,true,true);
         jInteralFrame.setLayout(new BorderLayout());
         JFXPanel jFxPanel = new JFXPanel();
         jInteralFrame.add(new JScrollPane(jFxPanel),BorderLayout.CENTER);

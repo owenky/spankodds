@@ -118,6 +118,8 @@ public class SpankyWindow extends JFrame {
         desktopPane.setLayout(new BorderLayout());
         desktopPane.add(tv, BorderLayout.PAGE_START);
         desktopPane.add(stp,BorderLayout.CENTER);
+        //setLayeredPane must be called before setContentPane 06/07/2022
+        setLayeredPane(new JDesktopPane());
         setContentPane(desktopPane);
     }
     public TopView getTopView() {
