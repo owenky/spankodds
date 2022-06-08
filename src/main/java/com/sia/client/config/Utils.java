@@ -480,4 +480,10 @@ public abstract class Utils {
         }
         return numericPattern.matcher(str).matches();
     }
+    public static void centerComponent ( Component comp) {
+        Dimension preferredDim = comp.getPreferredSize();
+        Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+        Point location = new Point ((screenDim.width-preferredDim.width)/2, (screenDim.height-preferredDim.height)/2);
+        comp.setLocation(location);
+    }
 }

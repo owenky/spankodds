@@ -7,18 +7,18 @@ import javax.swing.event.InternalFrameEvent;
 public class EmbededFrame extends JInternalFrame {
 
     public EmbededFrame() {
-        init();
+//        init();
     }
     public EmbededFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
         super(title,resizable, closable, maximizable,iconifiable);
-        init();
+//        init();
     }
-    private void init() {
-        addInternalFrameListener(new InternalFrameAdapter() {
-            @Override
-            public void internalFrameIconified(InternalFrameEvent e) {
-
-            }
-        });
-    }
+//    private void init() {
+//        addInternalFrameListener(new InternalFrameAdapter() {
+//            @Override
+//            public void internalFrameIconified(InternalFrameEvent e) {
+//
+//            }
+//        });
+//    }
 }

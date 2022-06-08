@@ -29,6 +29,9 @@ public abstract class AbstractLayeredDialog {
             }
         });
     }
+    public void setIsFloating(boolean isFloating) {
+        anchoredLayeredPane.setIsFloating(isFloating);
+    }
     public void setIsSinglePaneMode(boolean isSinglePaneMode) {
         anchoredLayeredPane.setIsSinglePaneMode(isSinglePaneMode);
     }
