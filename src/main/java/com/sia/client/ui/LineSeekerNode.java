@@ -243,23 +243,29 @@ public class LineSeekerNode {
         Vector bookiecodes = new Vector();
         // load bookiecodes from LineSeekerConfig
         String bookies = AlertAttrManager.getBookies(); // bookie names ( NOT booke id) separated by ","
-        float lineseekerwaitmin = Float.parseFloat(Config.instance().getAlertSeekerMethods().getRenotifyInMinutes());
+        AlertSeekerMethods  alertSeekerMethods = Config.instance().getAlertSeekerMethods();
+        float lineseekerwaitmin = Float.parseFloat(alertSeekerMethods.getRenotifyInMinutes());
 
-        boolean playgoodaudio = false;
-        String goodaudiofile = "";
-        boolean showgoodpopup = false;
-        int goodpopuplocation = 5;
-        int goodpopupseconds = 10;
-        boolean playbadaudio = false;
-        String badaudiofile = "";
-        boolean showbadpopup = false;
-        int badpopuplocation = 5;
-        int badpopupseconds = 10;
-        boolean playneutralaudio = false;
-        String neutralaudiofile = "";
-        boolean showneutralpopup = false;
-        int neutralpopuplocation = 5;
-        int neutralpopupseconds = 10;
+        LineSeekerAlertMethodAttr goodAttr = alertSeekerMethods.getAlertMethodMap().get(AlertState.Good.name());
+        boolean playgoodaudio = goodAttr.getAudioEnabled();
+        String goodaudiofile = goodAttr.getSoundFile();
+        boolean showgoodpopup = goodAttr.getPopupEnabled();
+        int goodpopuplocation = goodAttr.getPopupLocation().getLocation();
+        int goodpopupseconds = Integer.parseInt(goodAttr.getPopupSeconds());
+
+        LineSeekerAlertMethodAttr badAttr = alertSeekerMethods.getAlertMethodMap().get(AlertState.Bad.name());
+        boolean playbadaudio = badAttr.getAudioEnabled();
+        String badaudiofile = badAttr.getSoundFile();
+        boolean showbadpopup = badAttr.getPopupEnabled();
+        int badpopuplocation = badAttr.getPopupLocation().getLocation();
+        int badpopupseconds = Integer.parseInt(badAttr.getPopupSeconds());
+
+        LineSeekerAlertMethodAttr neutralAttr = alertSeekerMethods.getAlertMethodMap().get(AlertState.Neutral.name());
+        boolean playneutralaudio = neutralAttr.getAudioEnabled();
+        String neutralaudiofile = neutralAttr.getSoundFile();
+        boolean showneutralpopup = neutralAttr.getPopupEnabled();
+        int neutralpopuplocation = neutralAttr.getPopupLocation().getLocation();
+        int neutralpopupseconds = Integer.parseInt(neutralAttr.getPopupSeconds());
 
         if(this.gameid == gameid && this.getPeriod().getOrder() == periodid) {
 

@@ -2,10 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
-import com.sia.client.model.BookieManager;
-import com.sia.client.model.Game;
-import com.sia.client.model.MainGameTableModel;
-import com.sia.client.model.SportType;
+import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
@@ -80,7 +77,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
         return SiaConst.SoccerLeagueId == g.getLeague_id();
     }
     /////////////////////////////////////////////////////////////////////////////////////////////
-    private static class MouseClickListener extends MouseAdapter {
+    public static class MouseClickListener extends MouseAdapter {
 
         private final int  windowIndex;
         public MouseClickListener(int  windowIndex) {
@@ -93,7 +90,8 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
             if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
                     || event.getButton() == MouseEvent.BUTTON3) {
 
-                MainGameTable table = (MainGameTable)event.getSource();
+                AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
+                JTable table = (JTable)accessableToGame;
                 Point point = event.getPoint();
                 int row = table.rowAtPoint(point);
                 int col = table.columnAtPoint(point);
@@ -104,7 +102,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
                 Integer bookieId = BookieManager.instance().getBookieId(bookieShortName);
                 if (  null != bookieId) {
                     SwingUtilities.convertPointToScreen(point,table);
-                    Game game = table.getModel().getGame(rowModelIndex);
+                    Game game = accessableToGame.getGame(rowModelIndex);
                     GameHistPane.showHistPane(stp,point,game,bookieId);
                 }
             }

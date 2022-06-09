@@ -1,0 +1,7 @@
+body {
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+.scroll-bar {
+    display: show
+}
