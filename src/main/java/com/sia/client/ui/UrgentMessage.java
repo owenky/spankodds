@@ -79,7 +79,7 @@ public class UrgentMessage {
         alert.setOwner(c);
         alert.setResizable(true);
         alert.setMovable(true);
-        alert.setTransient(false);
+        alert.setTransient(true);
         alert.setTimeout(ms);
         alert.setPopupBorder(BorderFactory.createLineBorder(new Color(10, 30, 106)));
 
