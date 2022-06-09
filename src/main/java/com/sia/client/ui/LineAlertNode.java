@@ -5,6 +5,7 @@ import com.sia.client.model.Line;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
+import com.sia.client.model.LinesMoves;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -617,17 +618,24 @@ public class LineAlertNode {
                 } else {
                     return false;
                 }
-            } else if (isspreadpercentagemove) {
-                if (false) // here it will be a complicated percentagemove check based on sport etc...
+            }
+            else if (isspreadpercentagemove)
+            {
+
+
+                if (LinesMoves.didNewLineMoveEnough(spreadpercentagemove, line.getPriorvisitspread(),line.getPriorvisitjuice(),line.getCurrentvisitspread(),line.getCurrentvisitjuice(),line.getLeague_id(),line.getPeriod(),"SPREAD",false))
                 {
                     return shouldIAlertSpreadline(line);
-                } else {
-                    return false;
-
                 }
-            } else {
-                return false;
+                else
+                    {
+                    return false;
+                   }
             }
+            else
+                {
+                return false;
+                }
 
 
         } catch (Exception ex) {
@@ -649,15 +657,21 @@ public class LineAlertNode {
                 } else {
                     return false;
                 }
-            } else if (istotalpercentagemove) {
-                if (false) // here it will be a complicated percentagemove check based on sport etc...
+            }
+            else if (istotalpercentagemove)
+            {
+                if (LinesMoves.didNewLineMoveEnough(totalpercentagemove, line.getPriorover(),line.getPrioroverjuice(),line.getCurrentover(),line.getCurrentoverjuice(),line.getLeague_id(),line.getPeriod(),"TOTAL"))
                 {
                     return shouldIAlertTotalline(line);
-                } else {
-                    return false;
-
                 }
-            } else {
+                else
+                {
+                    return false;
+                }
+
+            }
+            else
+            {
                 return false;
             }
 
@@ -680,13 +694,15 @@ public class LineAlertNode {
                     return false;
                 }
 
-            } else if (ismoneylinepercentagemove) {
-                if (false) // here it will be a complicated percentagemove check based on sport etc...
+            } else if (ismoneylinepercentagemove)
+            {
+                if (LinesMoves.didNewLineMoveEnough(moneylinepercentagemove, 0.0,line.getPriorvisitjuice(),0.0,line.getCurrentvisitjuice(),line.getLeague_id(),line.getPeriod(),"MONEYLINE"))
                 {
                     return shouldIAlertMoneyline(line);
-                } else {
+                }
+                else
+                {
                     return false;
-
                 }
             } else {
                 return false;
@@ -714,12 +730,13 @@ public class LineAlertNode {
                     return false;
                 }
             } else if (isteamtotalpercentagemove) {
-                if (false) // here it will be a complicated percentagemove check based on sport etc...
+                if (LinesMoves.didNewLineMoveEnough(totalpercentagemove, line.getPriorvisitover(),line.getPriorvisitoverjuice(),line.getCurrentvisitover(),line.getCurrentvisitoverjuice(),line.getLeague_id(),line.getPeriod(),"TEAMTOTAL"))
                 {
                     return shouldIAlertTeamTotalline(line);
-                } else {
+                }
+                else
+                {
                     return false;
-
                 }
             } else {
                 return false;

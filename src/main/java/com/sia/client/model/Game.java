@@ -29,26 +29,24 @@ public class Game implements KeyedObject,Cloneable {
     String shorthometeam;
     int currentvisitorscore;
     int currenthomescore;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return league_id == game.league_id && game_id == game.game_id && visitorgamenumber == game.visitorgamenumber && homegamenumber == game.homegamenumber && visitoraltgamenumber == game.visitoraltgamenumber && homealtgamenumber == game.homealtgamenumber && currentvisitorscore == game.currentvisitorscore && currenthomescore == game.currenthomescore && finalvisitorscore == game.finalvisitorscore && finalhomescore == game.finalhomescore && eventnumber == game.eventnumber && subleague_id == game.subleague_id && forprop == game.forprop && circled == game.circled && started == game.started && neutrallocation == game.neutrallocation && ingame == game.ingame && seriesprice == game.seriesprice && addedgame == game.addedgame && extragame == game.extragame && tba == game.tba && visitor_id == game.visitor_id && home_id == game.home_id && visitorlefthanded == game.visitorlefthanded && homelefthanded == game.homelefthanded && visitorscheduled == game.visitorscheduled && homescheduled == game.homescheduled && gamestatusts == game.gamestatusts && scorets == game.scorets && Objects.equals(gameDate, game.gameDate) && Objects.equals(gameTime, game.gameTime) && Objects.equals(visitorteam, game.visitorteam) && Objects.equals(hometeam, game.hometeam) && Objects.equals(shortvisitorteam, game.shortvisitorteam) && Objects.equals(shorthometeam, game.shorthometeam) && Objects.equals(injurynotes, game.injurynotes) && Objects.equals(refsumpires, game.refsumpires) && Objects.equals(lineups, game.lineups) && Objects.equals(weather, game.weather) && Objects.equals(location, game.location) && Objects.equals(status, game.status) && Objects.equals(period, game.period) && Objects.equals(specialnotes, game.specialnotes) && Objects.equals(description, game.description) && Objects.equals(visitornickname, game.visitornickname) && Objects.equals(homenickname, game.homenickname) && Objects.equals(visitorcity, game.visitorcity) && Objects.equals(homecity, game.homecity) && Objects.equals(visitorscoresupplemental, game.visitorscoresupplemental) && Objects.equals(homescoresupplemental, game.homescoresupplemental) && Objects.equals(visitorpitcher, game.visitorpitcher) && Objects.equals(homepitcher, game.homepitcher) && Objects.equals(timeremaining, game.timeremaining) && Objects.equals(tvstations, game.tvstations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(game_id);
+    }
+
     int finalvisitorscore;
     int finalhomescore;
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Game game = (Game) o;
-//        return league_id == game.league_id && game_id == game.game_id && visitorgamenumber == game.visitorgamenumber && homegamenumber == game.homegamenumber && visitoraltgamenumber == game.visitoraltgamenumber && homealtgamenumber == game.homealtgamenumber && currentvisitorscore == game.currentvisitorscore && currenthomescore == game.currenthomescore && finalvisitorscore == game.finalvisitorscore && finalhomescore == game.finalhomescore && eventnumber == game.eventnumber && subleague_id == game.subleague_id && forprop == game.forprop && circled == game.circled && started == game.started && neutrallocation == game.neutrallocation && ingame == game.ingame && seriesprice == game.seriesprice && addedgame == game.addedgame && extragame == game.extragame && tba == game.tba && visitor_id == game.visitor_id && home_id == game.home_id && visitorlefthanded == game.visitorlefthanded && homelefthanded == game.homelefthanded && visitorscheduled == game.visitorscheduled && homescheduled == game.homescheduled && gamestatusts == game.gamestatusts && scorets == game.scorets && Objects.equals(gameDate, game.gameDate) && Objects.equals(gameTime, game.gameTime) && Objects.equals(visitorteam, game.visitorteam) && Objects.equals(hometeam, game.hometeam) && Objects.equals(shortvisitorteam, game.shortvisitorteam) && Objects.equals(shorthometeam, game.shorthometeam) && Objects.equals(injurynotes, game.injurynotes) && Objects.equals(refsumpires, game.refsumpires) && Objects.equals(lineups, game.lineups) && Objects.equals(weather, game.weather) && Objects.equals(location, game.location) && Objects.equals(status, game.status) && Objects.equals(period, game.period) && Objects.equals(specialnotes, game.specialnotes) && Objects.equals(description, game.description) && Objects.equals(visitornickname, game.visitornickname) && Objects.equals(homenickname, game.homenickname) && Objects.equals(visitorcity, game.visitorcity) && Objects.equals(homecity, game.homecity) && Objects.equals(visitorscoresupplemental, game.visitorscoresupplemental) && Objects.equals(homescoresupplemental, game.homescoresupplemental) && Objects.equals(visitorpitcher, game.visitorpitcher) && Objects.equals(homepitcher, game.homepitcher) && Objects.equals(timeremaining, game.timeremaining) && Objects.equals(tvstations, game.tvstations);
-        return game_id == game.game_id;
-    }
-    @Override
-    public int hashCode() {
-//        return Objects.hash(league_id, game_id, visitorgamenumber, homegamenumber, visitoraltgamenumber, homealtgamenumber, gameDate, gameTime, visitorteam, hometeam, shortvisitorteam, shorthometeam, currentvisitorscore, currenthomescore, finalvisitorscore, finalhomescore, injurynotes, refsumpires, lineups, weather, location, status, period, specialnotes, eventnumber, subleague_id, description, forprop, circled, started, neutrallocation, ingame, seriesprice, addedgame, extragame, tba, visitornickname, homenickname, visitorcity, homecity, visitor_id, home_id, visitorscoresupplemental, homescoresupplemental, visitorpitcher, homepitcher, visitorlefthanded, homelefthanded, visitorscheduled, homescheduled, timeremaining, tvstations, gamestatusts, scorets);
-        return Objects.hash(game_id);
-    }
+
     @Override
     public Game clone() {
         try {
@@ -684,4 +682,10 @@ public class Game implements KeyedObject,Cloneable {
         System.out.println(localDateTime);
         System.out.println(formatter.format(g.getGametime()));
     }
+
+
+
+
+
+
 }

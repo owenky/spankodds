@@ -1,5 +1,7 @@
 package com.sia.client.ui.lineseeker;
 
+import com.sia.client.ui.comps.LinkButton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Enumeration;
@@ -11,7 +13,7 @@ public class ColumnComponents {
     public final JTextField juiceInput = new JTextField();
     private final ButtonGroup alertStateButtons = new ButtonGroup();
     public final JLabel titleLabel;
-    public final JButton clearBtn = new JButton("Clear");
+    public final JButton clearBtn = new LinkButton("Clear");
     public final AlertSectionName sectionName;
 
     public ColumnComponents(String columnTitle,AlertSectionName sectionName) {

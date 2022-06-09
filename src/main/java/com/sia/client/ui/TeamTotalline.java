@@ -100,7 +100,46 @@ public class TeamTotalline extends Line {
 
 
     }
+    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts,
+                         double pvo, double pvoj, double pvu, double pvuj, double pho, double phoj, double phu, double phuj, long pts,
+                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, long ots, int p,int mb) {
+        this();
+        currentvisitover = vo;
+        currentvisitoverjuice = voj;
+        currentvisitunder = vu;
+        currentvisitunderjuice = vuj;
+        currenthomeover = ho;
+        currenthomeoverjuice = hoj;
+        currenthomeunder = hu;
+        currenthomeunderjuice = huj;
+        currentts = ts;
 
+        priorvisitover = pvo;
+        priorvisitoverjuice = pvoj;
+        priorvisitunder = pvu;
+        priorvisitunderjuice = pvuj;
+        priorhomeover = pho;
+        priorhomeoverjuice = phoj;
+        priorhomeunder = phu;
+        priorhomeunderjuice = phuj;
+        priorts = pts;
+
+        openervisitover = ovo;
+        openervisitoverjuice = ovoj;
+        openervisitunder = ovu;
+        openervisitunderjuice = ovuj;
+        openerhomeover = oho;
+        openerhomeoverjuice = ohoj;
+        openerhomeunder = ohu;
+        openerhomeunderjuice = ohuj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit = mb;
+
+    }
     public boolean isBestVisitOver() {
         return isbestvisitover;
     }
@@ -152,19 +191,20 @@ public class TeamTotalline extends Line {
        // if (visitunderjuice != 0) {
             this.setCurrentvisitunder(visitunder);
             this.setCurrentvisitunderjuice(visitunderjuice);
-            this.setCurrentts(ts);
+            //why call this 4x this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenervisitunder(visitunder);
                 this.setOpenervisitunderjuice(visitunderjuice);
                 this.setOpenerts(ts);
+                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
             }
       //  }
 
        // if (homeoverjuice != 0) {
             this.setCurrenthomeover(homeover);
             this.setCurrenthomeoverjuice(homeoverjuice);
-            this.setCurrentts(ts);
+        //why call this 4x this.setCurrentts(ts);
 
 
             if (isopener) {
@@ -176,7 +216,7 @@ public class TeamTotalline extends Line {
       //  if (homeunderjuice != 0) {
             this.setCurrenthomeunder(homeunder);
             this.setCurrenthomeunderjuice(homeunderjuice);
-            this.setCurrentts(ts);
+        //why call this 4x this.setCurrentts(ts);
 
             if (isopener) {
                 this.setOpenerhomeunder(homeunder);
@@ -329,18 +369,20 @@ public class TeamTotalline extends Line {
 
     public String getShortPrintedTotal(double o, double oj, double u, double uj) {
 
-        String retvalue = o + "";
+        String retvalue = "";
+
         if (oj == 0) {
             return "";
         }
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
+
 
 
         double juice = 0;
-        if (oj == uj && oj == -110) {
-
+        if (oj == uj && oj == -110 && o==u) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue.replace(".0", "");
             char half = AsciiChar.getAscii(170);
 
@@ -350,9 +392,17 @@ public class TeamTotalline extends Line {
             retvalue = retvalue.replace(".75", "\u00BE");
             return retvalue;
         } else if (oj < uj) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "o";
             juice = oj;
         } else {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "u";
             juice = uj;
         }
@@ -433,18 +483,21 @@ public class TeamTotalline extends Line {
     }
 
     public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
-        String retvalue = o + "";
+        String retvalue = "";
+
         if (oj == 0) {
             return "";
         }
-        if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
-            retvalue = retvalue.substring(1);
-        }
+
+
 
 
         double juice = 0;
-        if (oj == uj && oj == -110) {
-
+        if (oj == uj && oj == -110 && o==u) {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue.replace(".0", "");
             char half = AsciiChar.getAscii(170);
 
@@ -454,9 +507,17 @@ public class TeamTotalline extends Line {
             retvalue = retvalue.replace(".75", "\u00BE");
             return retvalue;
         } else if (oj < uj) {
+            retvalue = u + "";
+            if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "u";
             juice = uj;
         } else {
+            retvalue = o + "";
+            if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
+                retvalue = retvalue.substring(1);
+            }
             retvalue = retvalue + "o";
             juice = oj;
         }
@@ -644,7 +705,60 @@ public class TeamTotalline extends Line {
     public void setOpenerhomeunderjuice(double openerhomeunderjuice) {
         this.openerhomeunderjuice = openerhomeunderjuice;
     }
+    @Override
+    public String getOpener()
+    {
+        String s = "";
+        if(getOpenervisitoverjuice()!= 0)
+        {
+            s = getOpenervisitover()+"o"+getOpenervisitoverjuice()+"<br>"+getOpenervisitunder()+"u"+getOpenervisitunderjuice();
+        }
+        if(getOpenerhomeoverjuice()!= 0)
+        {
+            s = s+"<br>"+getOpenerhomeover()+"o"+getOpenerhomeoverjuice()+"<br>"+getOpenerhomeunder()+"u"+getOpenerhomeunderjuice();
+        }
 
+
+
+        return s;
+    }
+
+    public String showAwayHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentVisitTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorVisitTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerVisitTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
+
+        return s;
+        }
+        catch(Exception ex)
+        {
+            log("ttlaway show history exception "+ex);
+        }
+        return "";
+
+    }
+    public String showHomeHistory()
+    {
+        try
+        {
+        String s =
+                "<tr><td>C:</td><td>"+getShortPrintedCurrentHomeTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
+                "<tr><td>P:</td><td>"+getShortPrintedPriorHomeTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
+                "<tr><td>O:</td><td>"+getShortPrintedOpenerHomeTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
+
+        return s;
+        }
+        catch(Exception ex)
+        {
+            log("ttlhome show history exception "+ex);
+        }
+        return "";
+
+    }
 
 }
 

@@ -6,6 +6,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.sia.client.config.Utils.log;
@@ -22,7 +24,16 @@ public class SoundPlayer {
 
 			playSound(Utils.getMediaResource(file),illcatch);
 	}
-	
+	public static void playSound(String filePath) throws MalformedURLException {
+		File file = new File(filePath);
+		URL fileUrl;
+		if ( file.exists()) {
+			fileUrl = file.toURI().toURL();
+		} else {
+			fileUrl = Utils.getMediaResource(filePath);
+		}
+		playSound(fileUrl,true);
+	}
 	public static synchronized void playSound(URL fileUrl, boolean illcatch) {
 		if ( enableSound ) {
 			long now = new java.util.Date().getTime();
@@ -35,7 +46,7 @@ public class SoundPlayer {
 				} catch (Exception ex) {
 					log("Error with playing sound. sourfile url=" + fileUrl);
 					log(ex);
-					if (illcatch) JOptionPane.showMessageDialog(null, "Error Playing Sound File!");
+					if (illcatch) JOptionPane.showMessageDialog(null, "Error Playing Sound File! "+fileUrl);
 
 				}
 			}

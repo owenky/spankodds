@@ -1,19 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst.SportName;
-import com.sia.client.model.AlertVector;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.BookieManager;
-import com.sia.client.model.Game;
-import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.Games;
-import com.sia.client.model.Line;
-import com.sia.client.model.Moneyline;
-import com.sia.client.model.NewLineListener;
-import com.sia.client.model.Sport;
-import com.sia.client.model.Spreadline;
-import com.sia.client.model.UrgentsConsumer;
-import com.sia.client.model.User;
+import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -21,22 +9,10 @@ import javax.jms.Connection;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.Color;
+import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
@@ -85,6 +61,20 @@ public class AppController {
     public static LineOpenerAlertNode tennis = new LineOpenerAlertNode(SportName.Tennis);
     public static LineOpenerAlertNode autoracing = new LineOpenerAlertNode(SportName.Auto_Racing);
     public static List<LineOpenerAlertNode> LineOpenerAlertNodeList = new ArrayList<>();
+
+    public static LimitNode footballlimitnode = new LimitNode(SportName.Football);
+    public static LimitNode basketballlimitnode = new LimitNode(SportName.Basketball);
+    public static LimitNode baseballlimitnode = new LimitNode(SportName.Baseball);
+    public static LimitNode hockeylimitnode = new LimitNode(SportName.Hockey);
+    public static LimitNode soccerlimitnode = new LimitNode(SportName.Soccer);
+    public static LimitNode fightinglimitnode = new LimitNode(SportName.Fighting);
+    public static LimitNode golflimitnode = new LimitNode(SportName.Golf);
+    public static LimitNode tennislimitnode = new LimitNode(SportName.Tennis);
+    public static LimitNode autoracinglimitnode = new LimitNode(SportName.Auto_Racing);
+    public static List<LimitNode> LimitNodeList = new ArrayList<>();
+
+
+
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
     public static Vector<String> SportsTabPaneVector = new Vector<>();
     private static Map<String, String> customTabsHash = new ConcurrentHashMap<>();
@@ -122,8 +112,17 @@ public class AppController {
     private static Map<String, TeamTotalline> liveteamtotals = new ConcurrentHashMap<>();
     private static Map<Integer, Color> bookiecolors = new ConcurrentHashMap<>();
     private static Map<Integer, Sport> leagueIdToSportMap = new HashMap<>();
+
+    public static Map<String, Bookie> bestvisitspread = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> besthomespread = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestvisitml = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> besthomeml = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestdrawml = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestover = new ConcurrentHashMap<>();
+    public static Map<String, Bookie> bestunder = new ConcurrentHashMap<>();
+
     private static final BookieManager bookieManager = BookieManager.instance();
-    private static Games games = new Games();
+    private static final Games games = Games.instance();
     private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
     public static void initializeSportsTabPaneVectorFromUser() {
@@ -174,6 +173,10 @@ public class AppController {
     }
 
     public static void initializeLineAlertVectorFromUser() {
+        if(User.instance().getLineAlerts() == null || User.instance().getLineAlerts().equals("") || User.instance().getLineAlerts().equals("a"))
+        {
+            return;
+        }
         String[] linealerts = User.instance().getLineAlerts().split("\\?");
         for (final String linealert : linealerts) {
             try {
@@ -293,8 +296,127 @@ public class AppController {
         LineOpenerAlertNodeList.add(tennis);
         LineOpenerAlertNodeList.add(autoracing);
     }
+    public static void createLimitNodeList() {
+        LimitNodeList.add(footballlimitnode);
+        LimitNodeList.add(basketballlimitnode);
+        LimitNodeList.add(baseballlimitnode);
+        LimitNodeList.add(hockeylimitnode);
+        LimitNodeList.add(soccerlimitnode);
+        LimitNodeList.add(fightinglimitnode);
+        LimitNodeList.add(golflimitnode);
+        LimitNodeList.add(tennislimitnode);
+        LimitNodeList.add(autoracinglimitnode);
+    }
+    public static void createLineOpenerAlertNodeListFromUserPrefs() {
+
+        String openerdata = getUser().getOpeneralert();
+        if(openerdata == null || openerdata.equals(""))
+        {
+            return;
+        }
+        String lans[] = openerdata.split("~");
+        for(int i = 0;i < lans.length; i++)
+        {
+            String[] items = lans[i].split("\\|");
+            if(items.length > 1)
+            {
+
+                 String[] sportcodeselements = items[1].split(",\\s* ");
+                List<String> sportcodeslist = Arrays.asList(sportcodeselements);
+                ArrayList<String> sportcodesarraylist = new ArrayList<String>(sportcodeslist);
+
+                String[] bookieselements = items[2].split(",\\s* ");
+                List<String> bookieslist = Arrays.asList(bookieselements);
+                ArrayList<String> bookiesarraylist = new ArrayList<String>(bookieslist);
 
 
+                LineOpenerAlertNode lan = new LineOpenerAlertNode(
+                        items[0],
+                        sportcodesarraylist,
+                        bookiesarraylist,
+                        Boolean.parseBoolean(items[3]),
+                        Boolean.parseBoolean(items[4]),
+                        Boolean.parseBoolean(items[5]),
+                        Boolean.parseBoolean(items[6]),
+                        Boolean.parseBoolean(items[7]),
+                        Boolean.parseBoolean(items[8]),
+                        Boolean.parseBoolean(items[9]),
+                        Boolean.parseBoolean(items[10]),
+                        Boolean.parseBoolean(items[11]),
+                        Boolean.parseBoolean(items[12]),
+                        Boolean.parseBoolean(items[13]),
+                        Boolean.parseBoolean(items[14]),
+                        Boolean.parseBoolean(items[15]),
+                        Integer.parseInt(items[16]),
+                        Integer.parseInt(items[17]),
+                        Double.parseDouble(items[18]),
+                        items[19],
+                        Boolean.parseBoolean(items[20]));
+                log("about to add opener="+lan);
+                LineOpenerAlertNodeList.set(i,lan);
+
+            }
+        }
+
+    }
+
+    public static void createLimitNodeListFromUserPrefs() {
+
+        String limitdata = getUser().getLimitchangeAlert();
+        String lans[] = limitdata.split("@");
+        for(int i = 0;i < lans.length; i++)
+        {
+            String[] items = lans[i].split("\\|");
+            if(items.length > 1)
+            {
+
+                String[] sportcodeselements = items[1].split(",\\s* ");
+                List<String> sportcodeslist = Arrays.asList(sportcodeselements);
+                ArrayList<String> sportcodesarraylist = new ArrayList<String>(sportcodeslist);
+
+                String[] bookieselements = items[2].split(",\\s* ");
+                List<String> bookieslist = Arrays.asList(bookieselements);
+                ArrayList<String> bookiesarraylist = new ArrayList<String>(bookieslist);
+
+
+                LimitNode lan = new LimitNode(
+                        items[0],
+                        sportcodesarraylist,
+                        bookiesarraylist,
+                        Boolean.parseBoolean(items[3]), //fg check
+                        Boolean.parseBoolean(items[4]),
+                        Boolean.parseBoolean(items[5]),
+                        Boolean.parseBoolean(items[6]),
+                        Boolean.parseBoolean(items[7]),
+                        Boolean.parseBoolean(items[8]),
+                        Boolean.parseBoolean(items[9]),
+                        Boolean.parseBoolean(items[10]),
+                        Boolean.parseBoolean(items[11]),
+                        Boolean.parseBoolean(items[12]),
+                        Boolean.parseBoolean(items[13]), //isttcheck
+                        Boolean.parseBoolean(items[14]),
+                        Boolean.parseBoolean(items[15]),
+                        Boolean.parseBoolean(items[16]),
+                        Boolean.parseBoolean(items[17]),
+                        Integer.parseInt(items[18]),
+                        Integer.parseInt(items[19]),
+                        Double.parseDouble(items[20]),
+                        items[21],
+                        items[22],
+                        Integer.parseInt(items[23]));
+
+
+
+
+
+
+                log("about to add limitnode="+lan);
+                LimitNodeList.set(i,lan);
+
+            }
+        }
+
+    }
     public static void addLineAlertNode(LineAlertNode lan) {
 
         checkAndRunInEDT(() -> linealertnodes.add(lan));
@@ -407,15 +529,12 @@ public class AppController {
         }
         return nwa;
     }
-
     public static Vector<String> getCustomTabsVec() {
         return customTabsVec;
     }
-
     public static Vector<LineAlertNode> getLineAlertNodes() {
         return linealertnodes;
     }
-
     public static SportsTabPane getMainTabPane() {
         return SpankyWindow.getFirstSpankyWindow().getSportsTabPane();
     }

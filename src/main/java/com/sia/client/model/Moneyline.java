@@ -1,6 +1,8 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.LineAlertManager;
+import com.sia.client.ui.LineAlertOpenerManager;
 
 import java.io.Serializable;
 
@@ -81,62 +83,108 @@ public class Moneyline extends Line implements Serializable {
 
 
     }
+    public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, double pvj, double phj, double pdj, long pts, double ovj, double ohj, double odj, long ots, int p,int mb) {
+        this();
+        currentvisitjuice = vj;
+        currenthomejuice = hj;
+        currentdrawjuice = dj;
+        currentts = ts;
 
+        priorvisitjuice = pvj;
+        priorhomejuice = phj;
+        priordrawjuice = pdj;
+        priorts = pts;
+
+        openervisitjuice = ovj;
+        openerhomejuice = ohj;
+        openerdrawjuice = odj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit = mb;
+
+    }
     public boolean isBestVisitMoney() {
         return isbestvisitmoney;
     }
 
-    public void setBestVisitMoney(boolean b) {
+    public void setBestVisitMoney(boolean b)
+    {
         isbestvisitmoney = b;
+       if(b)
+       {
+           AppController.bestvisitml.put(period+"-"+gameid,getBookieObject());
+       }
     }
 
     public boolean isBestHomeMoney() {
         return isbesthomemoney;
     }
 
-    public void setBestHomeMoney(boolean b) {
+    public void setBestHomeMoney(boolean b)
+    {
         isbesthomemoney = b;
+        if(b)
+        {
+            AppController.besthomeml.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public boolean isBestDrawMoney() {
         return isbestdrawmoney;
     }
 
-    public void setBestDrawMoney(boolean b) {
+    public void setBestDrawMoney(boolean b)
+    {
         isbestdrawmoney = b;
+        if(b)
+        {
+            AppController.bestdrawml.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public String recordMove(double visitjuice, double homejuice, double drawjuice, long ts, boolean isopener) {
 
-       // if (visitjuice != 0)
-      //  {
-            this.setCurrentvisitjuice(visitjuice);
-            this.setCurrentts(ts);
+
+
 
             if (isopener)
             {
                 this.setOpenervisitjuice(visitjuice);
-                this.setOpenerts(ts);
-            }
-      //  }
-      //  if (homejuice != 0)
-      //  {
-            this.setCurrenthomejuice(homejuice);
-            this.setCurrentts(ts);
-
-            if (isopener) {
                 this.setOpenerhomejuice(homejuice);
                 this.setOpenerts(ts);
             }
-       // }
-        if (drawjuice != 0) {
-            this.setCurrentdrawjuice(drawjuice);
-            this.setCurrentts(ts);
+            else if(gameid < 10000)
+            // if this is a half move i will throw away
+            {
+                if( visitjuice == this.getCurrentvisitjuice() || homejuice == this.getCurrenthomejuice())
 
-            if (isopener) {
+                {
+                    if(drawjuice != 0 && drawjuice == this.getCurrentdrawjuice() )
+                    {
+                      //  log("Throwout half moneyline =" + gameid + "..bookie=" +this.getBookieObject()+".."+visitjuice+"/"+homejuice+"/"+drawjuice+" vs."+this.getCurrentvisitjuice()+"/"+this.getCurrenthomejuice()+"/"+this.getCurrentdrawjuice());
+                      //  return "";
+                    }
+                }
+
+            }
+
+            this.setCurrentvisitjuice(visitjuice);
+
+            this.setCurrentts(ts);
+            this.setCurrenthomejuice(homejuice);
+
+        if (drawjuice != 0)
+        {
+            if (isopener)
+            {
                 this.setOpenerdrawjuice(drawjuice);
                 this.setOpenerts(ts);
+
             }
+            this.setCurrentdrawjuice(drawjuice);
         }
 
 
@@ -153,6 +201,12 @@ public class Moneyline extends Line implements Serializable {
             this.whowasbet = "";
             log(ex);
         }
+
+        if (isopener)
+        {
+            LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
+        }
+
 
         try {
             if (!this.whowasbet.equals("")) {
@@ -258,4 +312,48 @@ public class Moneyline extends Line implements Serializable {
         this.openerdrawjuice = openerdrawjuice;
     }
 
+    public String getShortPrintedCurrentMoneyline()
+    {
+        return getShortPrintedMoneyline(currentvisitjuice, currenthomejuice, currentdrawjuice);
+    }
+    public String getShortPrintedPriorMoneyline()
+    {
+        return getShortPrintedMoneyline(priorvisitjuice, priorhomejuice, priordrawjuice);
+    }
+    public String getShortPrintedOpenerMoneyline()
+    {
+        return getShortPrintedMoneyline(openervisitjuice, openerhomejuice, openerdrawjuice);
+    }
+    public String getShortPrintedMoneyline(double vjuice, double hjuice, double djuice)
+    {
+        double juice = min(vjuice,hjuice);
+        if(juice == -100 || juice == 100)
+        {
+            return "EVEN";
+        }
+        String juiceS = juice+"";
+        juiceS = juiceS.replace(".0", "");
+        return juiceS;
+
+    }
+
+    @Override
+    public String getOpener()
+    {
+        return getOpenervisitjuice()+"<br>"+getOpenerhomejuice();
+    }
+
+    public String showHistory() {
+        try {
+            String s =
+                    "<tr><td>C:</td><td>" + getShortPrintedCurrentMoneyline() + "</td><td>" + formatts(getCurrentts()) + "</td></tr>" +
+                    "<tr><td>P:</td><td>" + getShortPrintedPriorMoneyline() + "</td><td>" + formatts(getPriorts()) + "</td></tr>" +
+                    "<tr><td>O:</td><td>" + getShortPrintedOpenerMoneyline() + "</td><td>" + formatts(getOpenerts()) + "</td></tr>";
+
+            return s;
+        } catch (Exception ex) {
+            log("ml show history exception " + ex);
+        }
+        return "";
+    }
 }

@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 public abstract class KeyedObjectList<V extends KeyedObject> {
     private final Map<Integer,V> idToGameMap = new ConcurrentHashMap<>();
 
-    abstract protected V createInstance();
+    abstract protected V createElement();
 
     public KeyedObjectList() {
-        V blankGame = createInstance();
+        V blankGame = createElement();
         blankGame.setGame_id(SiaConst.BlankGameId);
         idToGameMap.put(SiaConst.BlankGameId,blankGame);
     }
@@ -38,6 +38,9 @@ public abstract class KeyedObjectList<V extends KeyedObject> {
     public void updateOrAdd(V g) {
         int gameId = g.getGame_id();
         idToGameMap.put(gameId,g);
+    }
+    public boolean containsGameId(String gameIdStr) {
+        return containsGameId(Integer.parseInt(gameIdStr));
     }
     public boolean containsGameId(int gameId) {
         return idToGameMap.containsKey(gameId);

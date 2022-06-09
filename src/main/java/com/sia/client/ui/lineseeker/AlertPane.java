@@ -2,6 +2,7 @@ package com.sia.client.ui.lineseeker;// Demonstrate BoxLayout and the Box class.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.SelectionItem;
@@ -24,9 +25,8 @@ import java.util.List;
 import java.util.Vector;
 
 
-public class AlertLayout extends AbstractLayeredDialog {
+public class AlertPane extends AbstractLayeredDialog {
 
-    private static final String editIndicator="*";
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final int totalWidth = 800;
     private static final int rowHeight =100;
@@ -38,15 +38,15 @@ public class AlertLayout extends AbstractLayeredDialog {
     private final GameComboBox gameNumBox = new GameComboBox();
     private JComboBox<AlertPeriod> period;
     private AlertConfig alertConfig;
-    private JLabel editStatusLabel = new JLabel();
-    private LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
+    private final JLabel editStatusLabel = new JLabel();
+    private final LineSeekerAlertComboBox alertsCombobox = new LineSeekerAlertComboBox();
     private final List<SectionComponents> sectionComponentsList;
-    private final AlertComponentListener alertComponentListener;
     private final JButton saveBtn = new JButton();
+    private JComponent userComp;
 
-    public AlertLayout(SportsTabPane stp) {
+    public AlertPane(SportsTabPane stp) {
        super(stp,"Line Seeker Alerts");
-       this.alertComponentListener = new AlertComponentListener(this);
+        AlertComponentListener alertComponentListener = new AlertComponentListener(this);
        this.setTitlePanelLeftComp(makeAlertComboBoxPanel());
        this.sectionComponentsList = new ArrayList<>();
         for(AlertSectionName alertSectionName: AlertSectionName.getSortedSectionNames()) {
@@ -54,7 +54,6 @@ public class AlertLayout extends AbstractLayeredDialog {
             sectionComps.addActionListener(alertComponentListener);
             sectionComponentsList.add(sectionComps);
         }
-        withCloseValidor(this::validateClose);
     }
     private JComponent makeAlertComboBoxPanel() {
         JPanel panel = new JPanel();
@@ -77,20 +76,22 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     @Override
     protected JComponent getUserComponent() {
-        alertsCombobox.loadAlerts();
-        gameNumBox.loadGames();
-        gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
-        JPanel userComp = createUserComp();
-        userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
-        userComp.add(controlSec());
-        List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
-        for(AlertSectionName alertSectionName:alertSectionNames ) {
-            userComp.add(getSectionComponent(alertSectionName));
+        if ( null == userComp ) {
+            alertsCombobox.loadAlerts();
+            gameNumBox.loadGames();
+            gameNumBox.setSelectedItem(GameSelectionItem.promptItem);
+            userComp = createUserComp();
+            userComp.setLayout(new BoxLayout(userComp, BoxLayout.Y_AXIS));
+            userComp.add(controlSec());
+            List<AlertSectionName> alertSectionNames = AlertSectionName.getSortedSectionNames();
+            for (AlertSectionName alertSectionName : alertSectionNames) {
+                userComp.add(getSectionComponent(alertSectionName));
+            }
+            userComp.add(bottomControlSection());
+            gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
+            alertsCombobox.addValueChangeListener(this::updateLayoutComponents);
+            this.setEditStatus(false);  //this is initial state, but  userComp.add(getSectionComponent(alertSectionName)) set edit status to true becuase of document listener. Override it. -- 05/11/2022
         }
-        userComp.add(bottomControlSection());
-        gameNumBox.addValueChangeListener(this::updateLineSeekerAlertSection);
-        alertsCombobox.addValueChangeListener(this::updateLayoutComponents);
-        this.setEditStatus(false);  //this is initial state, but  userComp.add(getSectionComponent(alertSectionName)) set edit status to true becuase of document listener. Override it. -- 05/11/2022
         return userComp;
     }
     private JComponent controlSec() {
@@ -133,9 +134,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         SectionComponents sc = getSectionComponents(sectionName);
         sc.setSectionCompValues(getAlertConfig().getSectionAtrribute(sectionName));
         TitledPanelGenerator titledPanelGenerator = new TitledPanelGenerator(sc.getSectionName().getDisplay(),totalWidth,rowHeight,sc.activateStatus,sc.useEquivalent);
-        SectionLayout sectionLayout = new SectionLayout(sc);
+        SectionPane sectionPane = new SectionPane(sc);
         sectionComponentsList.add(sc);
-        titledPanelGenerator.setBodyComponent(sectionLayout.getLayoutPane());
+        titledPanelGenerator.setBodyComponent(sectionPane.getLayoutPane());
         return titledPanelGenerator.getPanel();
     }
     private JComponent bottomControlSection() {
@@ -222,8 +223,8 @@ public class AlertLayout extends AbstractLayeredDialog {
     }
     private void saveCompValuesToAlertConfig(AlertConfig targetAlertConfig) {
         for(SectionComponents sc : sectionComponentsList) {
-            SectionAttribute sectionAttribute = targetAlertConfig.getSectionAtrribute(sc.getSectionName());
-            sc.updateSectionAttribute(sectionAttribute);
+            LineSeekerAttribute lineSeekerAttribute = targetAlertConfig.getSectionAtrribute(sc.getSectionName());
+            sc.updateSectionAttribute(lineSeekerAttribute);
         }
     }
     private void save(ActionEvent event) {
@@ -261,7 +262,7 @@ public class AlertLayout extends AbstractLayeredDialog {
                     Utils.showErrorMessageDialog(getSportsTabPane(),sw.toString());
                 } else {
                     alertsCombobox.addIfAbsent(selectedAlert,true);
-                    AlertLayout.this.setEditStatus(false);
+                    AlertPane.this.setEditStatus(false);
                 }
                 gameNumBox.setEnabled(false);
                 period.setEnabled(false);
@@ -320,7 +321,7 @@ public class AlertLayout extends AbstractLayeredDialog {
         setEditStatus(false);
     }
     public void setEditStatus(boolean status) {
-        String statusTxt = status?editIndicator:"";
+        String statusTxt = status?SiaConst.EditedIndicator:"";
         this.editStatusLabel.setText(statusTxt);
         this.alertsCombobox.setEnabled(!status);
         String tooltipText = status ?"To select another Alert, please save or delete this configuration.":"";
@@ -333,16 +334,9 @@ public class AlertLayout extends AbstractLayeredDialog {
         }
 
     }
-    private boolean validateClose() {
-        if ( isEdited()) {
-            int option = Utils.showOptions(getSportsTabPane(),"Do you want to discard changes to this alert configuration?");
-            return JOptionPane.YES_OPTION == option;
-        } else {
-            return true;
-        }
-    }
+    @Override
     public boolean isEdited() {
-        return editIndicator.equals(editStatusLabel.getText());
+        return SiaConst.EditedIndicator.equals(editStatusLabel.getText());
     }
     private static GridBagConstraints createDefaultGridBagConstraints() {
         GridBagConstraints c = new GridBagConstraints();

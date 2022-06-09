@@ -1,7 +1,9 @@
 package com.sia.client.model;
 
+import com.sia.client.ui.AppController;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
+import com.sia.client.ui.LineAlertOpenerManager;
 
 import static com.sia.client.config.Utils.log;
 
@@ -95,7 +97,33 @@ public class Spreadline extends Line {
 
 
     }
+    public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, double pvs, double pvj, double phs, double phj, long pts, double ovs, double ovj, double ohs, double ohj, long ots, int p,int mb) {
+        this();
 
+        currentvisitspread = vs;
+        currentvisitjuice = vj;
+        currenthomespread = hs;
+        currenthomejuice = hj;
+        currentts = ts;
+
+        priorvisitspread = pvs;
+        priorvisitjuice = pvj;
+        priorhomespread = phs;
+        priorhomejuice = phj;
+        priorts = pts;
+
+        openervisitspread = ovs;
+        openervisitjuice = ovj;
+        openerhomespread = ohs;
+        openerhomejuice = ohj;
+        openerts = ots;
+
+        gameid = gid;
+        bookieid = bid;
+        period = p;
+        limit  = mb;
+
+    }
     public static void main(String args[]) {
 //
 //
@@ -125,51 +153,60 @@ public class Spreadline extends Line {
         return isbestvisitspread;
     }
 
-    public void setBestVisitSpread(boolean b) {
+    public void setBestVisitSpread(boolean b)
+    {
         isbestvisitspread = b;
+        if(b)
+        {
+            AppController.bestvisitspread.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public boolean isBestHomeSpread() {
         return isbesthomespread;
     }
 
-    public void setBestHomeSpread(boolean b) {
+    public void setBestHomeSpread(boolean b)
+    {
         isbesthomespread = b;
+        if(b)
+        {
+            AppController.besthomespread.put(period+"-"+gameid,getBookieObject());
+        }
     }
 
     public String recordMove(double visitspread, double visitjuice, double homespread, double homejuice, long ts, boolean isopener) {
-        if(bookieid==880 & gameid == 345)
+
+        if (isopener)
         {
-         //   log("BAX TEST "+visitspread+".."+visitjuice+".."+homespread+".."+homejuice+".."+isopener);
+            this.setOpenervisitspread(visitspread);
+            this.setOpenervisitjuice(visitjuice);
+            this.setOpenerhomespread(homespread);
+            this.setOpenerhomejuice(homejuice);
+            this.setOpenerts(ts);
+
+        }
+        else if(gameid < 10000) // if this is a half move i will throw away
+        {
+            if( (visitspread == this.getCurrentvisitspread() && visitjuice == this.getCurrentvisitjuice())
+            ||  (homespread == this.getCurrenthomespread() && homejuice == this.getCurrenthomejuice())
+            )
+            {
+               // log("Throw out half spread=" + gameid + "..bookie=" +this.getBookieObject()+".."+visitspread+visitjuice+"/"+homespread+homejuice+"/ vs."+this.getCurrentvisitspread()+"/"+this.getCurrentvisitjuice()+"/"+this.getCurrenthomespread()+"/"+this.getCurrenthomejuice());
+               // return "";
+            }
 
         }
 
-       // if (visitjuice != 0)
-        //{
+
             this.setCurrentvisitspread(visitspread);
             this.setCurrentvisitjuice(visitjuice);
+        this.setCurrenthomespread(homespread);
+        this.setCurrenthomejuice(homejuice);
             this.setCurrentts(ts);
 
-            if (isopener)
-            {
-                this.setOpenervisitspread(visitspread);
-                this.setOpenervisitjuice(visitjuice);
-                this.setOpenerts(ts);
-            }
-       // }
-      //  if (homejuice != 0)
-       // {
-            this.setCurrenthomespread(homespread);
-            this.setCurrenthomejuice(homejuice);
-            this.setCurrentts(ts);
 
-            if (isopener)
-            {
-                this.setOpenerhomespread(homespread);
-                this.setOpenerhomejuice(homejuice);
-                this.setOpenerts(ts);
-            }
-      //  }
+
         try {
             if (this.getPriorvisitspread() < this.getCurrentvisitspread()) // -6 to -5  5 to 6
             {
@@ -195,6 +232,12 @@ public class Spreadline extends Line {
             this.whowasbet = "";
             log(ex);
         }
+
+        if (isopener)
+        {
+            LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
+        }
+
 
         try {
             if (!this.whowasbet.equals("")) {
@@ -268,8 +311,11 @@ public class Spreadline extends Line {
     }
 
     public String getShortPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
-
-
+        boolean debug = false;
+        if(period == 1 && gameid == 903 && bookieid==996 && debug)
+        {
+            System.out.println(bookieid+"...leagueid="+leagueid+"...SHORTPRINTEDSPREAD="+vspread+".."+vjuice+".vs."+hspread+".."+hjuice);
+        }
         String retvalue = "";
 		if (vjuice == 0) {
 			return "";
@@ -284,12 +330,20 @@ public class Spreadline extends Line {
         } else if (vspread > hspread) {
             spreadd = hspread;
             juice = hjuice;
-        } else // game is a pk
+        } else if(vspread == hspread && vspread == 0)// game is a pk
         {
             juice = min(vjuice, hjuice);
+        }
+        else // two positives most like two +.5
+        {
+            spreadd = vspread;
+            juice = vjuice;
 
         }
-        spreadd = spreadd * -1; // take out minus sign
+        if(spreadd < 0)
+        {
+            spreadd = spreadd * -1; // take out minus sign
+        }
 
         String spread = spreadd + "";
         if (spreadd < 1 && spreadd != 0 && spread.startsWith("0")) {
@@ -304,34 +358,50 @@ public class Spreadline extends Line {
         if (juice == -110) {
             retvalue = spread;
 
-        } else if (juice < 0) {
+        }
+        else if (juice < 0)
+        {
             juice = juice + 100;
             String juicestr = juice + "";
             if (juice == 0) {
                 retvalue = spread + "ev";
-            } else if (juice > -10) {
+            }
+            else if (juice > -10) {
                 juice = juice * -1;
                 juicestr = "-0" + juice;
                 retvalue = spread + "" + juicestr;
-            } else if (juice <= -100) // initial juice was  -200 or worse
+            }
+            else if (juice <= -100) // initial juice was  -200 or worse
             {
 
                 juice = juice - 100;
                 juicestr = "" + juice;
                 retvalue = spread + "" + juicestr;
-            } else {
+            }
+            else {
                 retvalue = spread + "" + juicestr;
 
             }
 
-        } else {
+        } else
+            {
             juice = juice - 100;
 
-            if (juice == 0) {
+            if (juice == 0)
+            {
                 retvalue = spread + "ev";
-            } else if (juice < 10) {
+            } else if (juice < 10)
+            {
                 retvalue = spread + "+0" + juice;
-            } else {
+            }
+            else if(juice >= 100) // even after conversion then addback
+            {
+                juice = juice+100;
+                retvalue = spread + "+" + juice;
+
+            }
+            else
+                {
                 retvalue = spread + "+" + juice;
 
             }
@@ -349,6 +419,12 @@ public class Spreadline extends Line {
             retvalue = ".75";
         }
         char half = AsciiChar.getAscii(170);
+
+        if(period == 1 && gameid == 903 && debug && bookieid==996)
+        {
+            System.out.println("retvalue="+retvalue);
+        }
+
 
         retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
@@ -370,12 +446,18 @@ public class Spreadline extends Line {
     }
 
     public String getOtherPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
-
-
+        boolean debug = false;
+        if(period == 1 && gameid == 903 && bookieid==996 && debug)
+        {
+            System.out.println(bookieid+"OTHERPRINTEDSPREAD="+vspread+".."+vjuice+".vs."+hspread+".."+hjuice);
+        }
         String retvalue = "";
 		if (vjuice == 0) {
 			return "";
 		}
+
+
+
         double spreadd = 0;
         double juice = 0;
         if (vspread < hspread) {
@@ -384,11 +466,19 @@ public class Spreadline extends Line {
         } else if (vspread > hspread) {
             spreadd = vspread;
             juice = vjuice;
-        } else // game is a pk
-        {
-            juice = max(vjuice, hjuice);
 
         }
+        else if(vspread == hspread && vspread == 0)// game is a pk
+        {
+            juice = max(vjuice, hjuice);
+        }
+        else // two positives or two negatives  most likely two +.5 for best column
+        {
+            spreadd = hspread;
+            juice = hjuice;
+
+        }
+
 
 
         String spread = spreadd + "";
@@ -430,7 +520,14 @@ public class Spreadline extends Line {
                 retvalue = spread + "ev";
             } else if (juice < 10) {
                 retvalue = spread + "+0" + juice;
-            } else {
+            }
+            else if(juice >= 100) // even after conversion then addback
+            {
+                juice = juice+100;
+                retvalue = spread + "+" + juice;
+
+            }
+            else {
                 retvalue = spread + "+" + juice;
 
             }
@@ -449,6 +546,12 @@ public class Spreadline extends Line {
         if (retvalue.equals("0.75") || retvalue.equals("0.750")) {
             retvalue = ".75";
         }
+        if(period == 1 && gameid == 903 && debug && bookieid==996)
+        {
+            System.out.println("retvalue="+retvalue);
+        }
+
+
         retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
         retvalue = retvalue.replace(".75", "\u00BE");
@@ -505,5 +608,29 @@ public class Spreadline extends Line {
         this.openerhomejuice = openerhomejuice;
     }
 
+    @Override
+    public String getOpener()
+    {
+        String s;
+        s = ""+getOpenervisitspread()+getOpenervisitjuice()+"<br>"+getOpenerhomespread()+getOpenerhomejuice();
+        return s;
+    }
+
+    public String showHistory()
+    {
+        try {
+            String s =
+                    "<tr><td>C:</td><td>" + getShortPrintedCurrentSpread() + "</td><td>" + formatts(getCurrentts()) + "</td></tr>" +
+                    "<tr><td>P:</td><td>" + getShortPrintedPriorSpread() + "</td><td>" + formatts(getPriorts()) + "</td></tr>" +
+                    "<tr><td>O:</td><td>" + getShortPrintedOpenerSpread() + "</td><td>" + formatts(getOpenerts()) + "</td></tr>";
+
+            return s;
+        }
+        catch(Exception ex)
+        {
+            log("spread show history exception "+ex);
+        }
+        return "";
+    }
 
 }

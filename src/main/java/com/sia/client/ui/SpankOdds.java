@@ -1,11 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.CheckThreadViolationRepaintManager;
-import com.sia.client.config.LocalConfig;
-import com.sia.client.config.Logger;
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.*;
 import com.sia.client.config.SiaConst.UIProperties;
-import com.sia.client.config.Utils;
 import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.LocalMessageLogger;
 import org.jdesktop.swingx.JXLoginPane;
@@ -18,10 +14,17 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RepaintManager;
 import javax.swing.ToolTipManager;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.net.DatagramSocket;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -32,6 +35,7 @@ public class SpankOdds {
     public static boolean getMessagesFromLog = false;
     private SpankyWindow frame;
     private String userName;
+    private static String ip;
 
     public static void main(String[] args) {
         getMessagesFromLog = Boolean.parseBoolean(System.getProperty("GetMesgFromLog"));
@@ -49,10 +53,23 @@ public class SpankOdds {
 
         InitialGameMessages.initMsgLoggingProps();
 
+        //spanky added ip lookup to pass to loginclient
+        try
+        {
+            URL whatismyip = new URL("http://checkip.amazonaws.com");
+            BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));
+            ip = in.readLine(); //you get the IP as a String
+        }
+        catch(Exception ex)
+        {
+            log(ex);
+        }
+
         AppController.createLineOpenerAlertNodeList();
+        AppController.createLimitNodeList();
         AppController.initializSpotsTabPaneVector();
-        ToolTipManager.sharedInstance().setInitialDelay(500);
-        ToolTipManager.sharedInstance().setDismissDelay(5000);
+        ToolTipManager.sharedInstance().setInitialDelay(0);
+        ToolTipManager.sharedInstance().setDismissDelay(30000);
         checkAndRunInEDT(() -> new SpankOdds().showLoginDialog(),true);
     }
 
@@ -78,7 +95,7 @@ public class SpankOdds {
         }
 
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        LoginClient client = new LoginClient();
+        LoginClient client = new LoginClient(ip);
         LocalPwdStore localPwdStore = new LocalPwdStore(LocalConfig.instance());
         LocalUserStore localUserStore = new LocalUserStore(LocalConfig.instance());
         final JXLoginPane loginPane = new JXLoginPane(null, localPwdStore, localUserStore) {
@@ -88,7 +105,8 @@ public class SpankOdds {
                 return null==userName?"":userName;
             }
         };
-        loginPane.setBannerText("Spank Odds");
+        loginPane.setBanner(Utils.getImage("spankoddstextonsoft.png"));
+       // loginPane.setBannerText("Spank Odds");
 
         LoginListener loginListener = new LoginAdapter() {
             @Override
@@ -96,6 +114,7 @@ public class SpankOdds {
                 frame = SpankyWindow.create("Spank Odds (" + SiaConst.Version + ")");
                 SpankOdds.this.userName = loginPane.getUserName();
                 InitialGameMessages.postDataLoading();
+                Config.instance().setOutOfSync();
                 SpankOdds.this.showGui();
             }
 
@@ -173,6 +192,13 @@ public class SpankOdds {
             SpankyWindow.setLocationaAndSize(frame,UIProperties.screenXmargin,UIProperties.screenYmargin);
             frame.populateTabPane();
             frame.setVisible(true);
+
+           // AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(AppController.getMainTabPane());
+           // WelcomeImagePane wip = new WelcomeImagePane(anchoredLayeredPane);
+           // wip.openAndCenter(new Dimension(700,700),false);
+            Utils.checkAndRunInEDT(() -> new WelcomeMessage());
+
+
         } catch (Exception e) {
             log(e);
             JOptionPane.showConfirmDialog(frame, "Error encountered, please contact customer service<br>\n" + e.getMessage(), "System Error", JOptionPane.YES_NO_OPTION);

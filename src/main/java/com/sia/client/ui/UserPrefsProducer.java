@@ -1,9 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
+import com.sia.client.config.FontConfig;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.SportType;
 import com.sia.client.model.User;
-import com.sia.client.ui.lineseeker.AlertAttrManager;
 
 import javax.jms.*;
 import java.awt.*;
@@ -37,6 +38,24 @@ public class UserPrefsProducer {
         } catch (Exception ex) {
             log(ex);
         }
+    }
+
+    public void sendUserPrefs(boolean logout)
+    {
+
+        if(true) // let server know you are logging out
+        {
+            try {
+                MapMessage mapMessage = session.createMapMessage();
+                mapMessage.setString("username", u.getUsername());
+                mapMessage.setString("logout", "true");
+                this.producer.send(mapMessage);
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+        sendUserPrefs();
+
     }
 
     public void sendUserPrefs() {
@@ -153,16 +172,14 @@ public class UserPrefsProducer {
             mapMessage.setString("bigearnalert", u.getBigearnAlert());
             mapMessage.setString("officialalert", u.getOfficialAlert());
             mapMessage.setString("startedalert", u.getStartedAlert());
+            mapMessage.setString("openeralert", u.getOpeneralert());
 
             mapMessage.setString("tabsindex", u.getTabsIndex());
 
             mapMessage.setString("linealerts", u.getLineAlerts());
 
-            //send line seeker alert
-            mapMessage.setString(SiaConst.Serialization.LineSeekerAlert, AlertAttrManager.serializeAlertAlertAttColl());
-
-            //send font configuration
-            mapMessage.setString(SiaConst.Serialization.Font, FontConfig.serialize());
+            //send config
+            mapMessage.setString(SiaConst.Serialization.config, Config.serialize());
             this.producer.send(mapMessage);
         } catch (Exception ex) {
             log(ex);

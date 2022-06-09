@@ -58,7 +58,7 @@ public class UrgentMessage {
         Alert alert = new Alert();
 
         JPanel rightPanel = new JPanel(new GridLayout(1, 2, 0, 0));
-//        JideButton closeButton = createButton(IconsFactory.getImageIcon(UrgentMessage.class, "close.png"));
+
         JideButton closeButton = createButton(Utils.getImageIcon(("close.png")));
         closeButton.addActionListener(e -> alert.hidePopupImmediately());
         rightPanel.add(closeButton);

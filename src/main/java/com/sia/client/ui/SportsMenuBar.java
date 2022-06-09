@@ -1,18 +1,17 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
-import com.sia.client.ui.lineseeker.AlertLayout;
+import com.sia.client.ui.lineseeker.AlertAttrManager;
+import com.sia.client.ui.lineseeker.AlertPane;
+import com.sia.client.ui.lineseeker.LineSeekerAlertMethodDialog;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
@@ -27,6 +26,7 @@ public class SportsMenuBar extends JMenuBar {
     private final JMenu tabsmenu = new JMenu("Tabs");
     private final JMenu windowmenu = new JMenu("Window");
     private final JMenu settingmenu = new JMenu("Setting");
+    private final JMenu reportmenu = new JMenu("Report");
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
@@ -40,13 +40,13 @@ public class SportsMenuBar extends JMenuBar {
         add(filemenu);
 
         JMenuItem storeprefs = new JMenuItem("Store User Prefs");
-        storeprefs.addActionListener(ev -> AppController.getUserPrefsProducer().sendUserPrefs());
+        storeprefs.addActionListener(ev -> AppController.getUserPrefsProducer().sendUserPrefs(false));
         filemenu.add(storeprefs);
 
         JMenuItem logout = new JMenuItem("Exit...");
         logout.addActionListener(ev -> {
             // need to store user prefs
-            AppController.getUserPrefsProducer().sendUserPrefs();
+            AppController.getUserPrefsProducer().sendUserPrefs(true);
             System.exit(0);
         });
         filemenu.add(logout);
@@ -72,15 +72,25 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem generallinealert = new JMenuItem("Line Moves");
         generallinealert.addActionListener(ae -> new LineAlert(stb).show(UIProperties.LineAlertDim));
 
-        JMenuItem majorlinemove = new JMenuItem("Line Seekers");
-        majorlinemove.addActionListener(ae -> new AlertLayout(stb).show(AlertLayout.dialogPreferredSize));
+        JMenu majorlinemove = new JMenu("Line Seekers");
+        JMenuItem lineSeekerConfig = new JMenuItem("Configuration");
+        lineSeekerConfig.addActionListener(ae -> new AlertPane(stb).show(AlertPane.dialogPreferredSize));
+        JMenuItem lineSeekerMethod = new JMenuItem("Alert Method");
+        lineSeekerMethod.addActionListener(this::openAlertMediaSettingDialog);
+        majorlinemove.add(lineSeekerConfig);
+        majorlinemove.add(lineSeekerMethod);
 
         JMenuItem openers = new JMenuItem("Openers");
         openers.addActionListener(ae -> new LineAlertOpeners(stb).show(UIProperties.LineAlertDim));
+
+
+        JMenuItem limitchange = new JMenuItem("Limit Changes");
+        limitchange.addActionListener(ae -> new LimitGui(stb).show(UIProperties.LineAlertDim));
+
         linealertsmenu.add(generallinealert);
         linealertsmenu.add(majorlinemove);
         linealertsmenu.add(openers);
-
+        linealertsmenu.add(limitchange);
 
         add(gamealertsmenu);
 
@@ -91,7 +101,7 @@ public class SportsMenuBar extends JMenuBar {
         JMenuItem officials = createGameAlertMenuItem("Officials");
         JMenuItem injuries = createGameAlertMenuItem("Injuries");
         JMenuItem timechange = createGameAlertMenuItem("Time Changes");
-        JMenuItem limitchange = createGameAlertMenuItem("Limit Changes");
+        //JMenuItem limitchange = createGameAlertMenuItem("Limit Changes");
 
         JMenuItem test = new JMenuItem("Test");
         test.addActionListener(ae -> {
@@ -117,8 +127,8 @@ public class SportsMenuBar extends JMenuBar {
         gamealertsmenu.add(officials);
         gamealertsmenu.add(injuries);
         gamealertsmenu.add(timechange);
-        gamealertsmenu.add(limitchange);
-        gamealertsmenu.add(test);
+       // gamealertsmenu.add(limitchange);
+       // gamealertsmenu.add(test);
         add(tabsmenu);
         populateTabsMenu();
 
@@ -130,8 +140,13 @@ public class SportsMenuBar extends JMenuBar {
         windowmenu.add(newwindow);
 
         add(settingmenu);
-        JMenu fontconfig = FontConfig.instance().createFontMenu();
+        JMenu fontconfig = Config.instance().getFontConfig().createFontMenu();
         settingmenu.add(fontconfig);
+    }
+    private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
+        LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb, AlertAttrManager.getAlertSeekerMethods());
+        lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim);
+        lineSeekerAlertMethodDialog.updateLayout();
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);

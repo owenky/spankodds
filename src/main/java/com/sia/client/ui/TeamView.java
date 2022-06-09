@@ -23,6 +23,7 @@ public class TeamView extends ViewValue {
     int gid;
     Game g;
     boolean shortteam;
+    String gamedescription = "";
 
     public TeamView(int gid, boolean shortteam) {
 
@@ -30,7 +31,8 @@ public class TeamView extends ViewValue {
         this.gid = gid;
         this.shortteam = shortteam;
         g = AppController.getGame(gid);
-        setTooltiptext(g.getDescription());
+        gamedescription = g.getDescription();
+        setTooltiptext(gamedescription);
     }
 
     public void clearColors() {
@@ -75,8 +77,24 @@ public class TeamView extends ViewValue {
             ld2.setData(g.getHometeam());
 
         }
+
+        gamedescription = g.getDescription();
+       // System.out.println("gamedescription="+gamedescription);
+       // ld1.setTooltip(gamedescription);
+       // ld2.setTooltip(gamedescription);
+
+
         ld1.setBackgroundColor(topcolor);
         ld2.setBackgroundColor(bottomcolor);
+
+        if(g.getVisitorpitcher() != null && !g.getVisitorpitcher().equals("") &&
+                g.getHomepitcher() != null && !g.getHomepitcher().equals("") )
+        {
+
+            setTooltiptext(g.getVisitorpitcher()+" vs. "+g.getHomepitcher());
+
+        }
+
         boxes[0] = ld1;
         boxes[1] = ld2;
         //return boxes;

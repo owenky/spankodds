@@ -2,6 +2,8 @@ package com.sia.client.model;
 
 import com.sia.client.config.Utils;
 import com.sia.client.ui.AppController;
+import com.sia.client.ui.SpankyWindow;
+import com.sia.client.ui.UrgentMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -12,6 +14,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.swing.*;
 
 import static com.sia.client.config.Utils.log;
 
@@ -42,15 +45,74 @@ public class UrgentsConsumer implements MessageListener {
     }
     @Override
     public void onMessage(Message message) {
+        String messageType = "";
         Utils.ensureNotEdtThread();
         try {
             mapMessage = (MapMessage) message;
-            String changeType = mapMessage.getStringProperty("messageType");
-            log("changeType:"+changeType+", message="+message);
-            String mesg = String.valueOf(message);
-            addMessageToAlertVector(mesg);
+            messageType = mapMessage.getStringProperty("messageType");
+            if(messageType.equals("Logout"))
+            {
+                String username = mapMessage.getString("username");
+                String loginkey = mapMessage.getString("loginkey");
+                //long thislogintime = mapMessage.getLong("logintime");
+                if(AppController.getUser().getUsername().equals(username)) // duplicate login?
+                {
+                    long userlogintime = AppController.getUser().getLoginTime();
+                    long nowms = System.currentTimeMillis();
+                    System.out.println(userlogintime+".."+nowms);
+                    long diff = Math.abs(userlogintime - nowms);
+                    //if(diff > 30000)
+                    System.out.println("loginkey="+loginkey);
+                    System.out.println("prevloginkey="+AppController.getUser().getLoginKey());
+                    if(!AppController.getUser().getLoginKey().equals(loginkey))
+                    {
+                        // no longer doing this
+                      //  AppController.getUserPrefsProducer().sendUserPrefs(true);
 
-        } catch (Exception e) {
+
+
+                        new Thread(new Runnable()
+                        {
+                            public void run()
+                            {
+                                try
+                                {
+                                    Thread.sleep(30000);
+                                    System.out.println("exit by timeout..");
+                                    System.exit(0);
+
+                                }
+                                catch ( Exception ex )
+                                {
+                                    log(ex);
+                                }
+                            }
+                        }).start();
+                        JOptionPane.showMessageDialog(SpankyWindow.getFirstSpankyWindow(), "Another instance of SpankOdds has logged in. You will now be logged out.",
+                                "Attention!", JOptionPane.WARNING_MESSAGE);
+                        System.out.println("exit by confirmation..");
+                        System.exit(0);
+
+                    }
+
+                }
+            }
+            else if(messageType.equals("Urgent")) // force show!
+            {
+                log("messageType:" + messageType + ", message=" + message);
+                String mesg = mapMessage.getString("urgentmessage");
+
+                addMessageToAlertVector(mesg);
+
+                new UrgentMessage("<HTML><H2>URGENT MESSAGE</H2>" +mesg+
+                        "</HTML>", 20000, 2, AppController.getMainTabPane());
+
+            }
+
+
+
+        } catch (Exception e)
+        {
             log(e);
         }
     }

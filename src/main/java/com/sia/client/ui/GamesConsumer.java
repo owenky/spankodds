@@ -227,20 +227,68 @@ public class GamesConsumer implements MessageListener {
 
             } else if (messagetype.equals("NEWORUPDATE2")) // this comes from deleteyesterdaygamesandpublish whith a few additional flags
             {
-
+                //log("just received neworupdate2");
                 String data = textMessage.getText();
                 String [] fields = GameUtils.parseGameString(data);
                 Game g = new Game();
                 GameUtils.setGameProperty(g,fields);
                 Game oldGame = AppController.getGame(g.getGame_id());
+
+
+                // frank i changed code here because neworupdate2 does not receive
+                // all of the game attributes in this message...
+                // thus comparing game object equality will always return false
+                // it also makes previous non null values null
+                // let me know if my change is ok...
+                // also let me know where else use you compare equality of games
+
+
+                /*
+                    //OLD CODE
+
                 boolean changed = ! g.equals(oldGame);
-                if ( changed) {
-                    if ( null != oldGame) {
+
+                if ( changed)
+                {
+                    if ( null != oldGame)
+                    {
                         moveIfGameGroupChanged(oldGame, g);
                     }
                     AppController.pushGameToCache(g);
                     MqMessageProcessor.getInstance().addGame(g);
                 }
+                // END OLD CODE
+                 */
+                // NEW CODE
+                GameStatus oldStatus = null;
+                if(oldGame!= null)
+                {
+                    oldStatus = GameStatus.getGameStatus(oldGame);
+                    // stored old status now copy new stuff into oldGame object
+                    GameUtils.setGameProperty(oldGame,fields);
+                }
+
+
+                GameStatus newStatus = GameStatus.getGameStatus(g);
+
+
+
+                // only use oldgame with new values going forward
+                    if ( null != oldGame)
+                    {
+                        moveIfGameGroupChanged(oldGame,oldStatus,newStatus);
+                        AppController.pushGameToCache(oldGame);
+                        MqMessageProcessor.getInstance().addGame(oldGame);
+                    }
+                    else
+                    {
+                        log("OLD GAME IS NULL!?!?");
+                        AppController.pushGameToCache(g);
+                        MqMessageProcessor.getInstance().addGame(g);
+                    }
+
+                    // END NEW CODE
+
             } else if (messagetype.equals("REMOVE")) {
                 String data = textMessage.getText(); // this is gamenumber
                 String[] gameidarr = data.split("~");
@@ -264,6 +312,14 @@ public class GamesConsumer implements MessageListener {
         //check if game status changes
         GameStatus oldStatus = GameStatus.getGameStatus(oldGame);
         GameStatus newStatus = GameStatus.getGameStatus(newGame);
+        if ( ! Objects.equals(oldStatus,newStatus)) {
+            GameGroupHeader newGameGroupHeader = null == newStatus?GameUtils.createGameGroupHeader(newGame):newStatus.getGroupHeader();
+            AppController.pushGameToCache(newGame);
+            AppController.moveGameToThisHeader(newGame,newGameGroupHeader);
+        }
+    }
+    private void moveIfGameGroupChanged(Game newGame,GameStatus oldStatus,GameStatus newStatus) {
+
         if ( ! Objects.equals(oldStatus,newStatus)) {
             GameGroupHeader newGameGroupHeader = null == newStatus?GameUtils.createGameGroupHeader(newGame):newStatus.getGroupHeader();
             AppController.pushGameToCache(newGame);

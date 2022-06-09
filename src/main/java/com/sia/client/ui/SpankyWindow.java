@@ -5,14 +5,8 @@ import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
@@ -28,6 +22,7 @@ public class SpankyWindow extends JFrame {
 
     public static final List<SpankyWindow> winList = new ArrayList<>();
     private static final String spankoddsicon = "spanky.jpg";
+    private static final String spankoddsiconnew = "spankoddsrgb.png";
     private static final AtomicInteger counter = new AtomicInteger(0);
     private final SportsTabPane stp;
     private final TopView tv;
@@ -43,8 +38,9 @@ public class SpankyWindow extends JFrame {
         instance.setName(String.valueOf(windowIndex));
         winList.add(instance);
         try {
-            URL imgResource = Utils.getMediaResource(spankoddsicon);
+            URL imgResource = Utils.getMediaResource(spankoddsiconnew);
             Image spankyimage = ImageIO.read(imgResource);
+           // spankyimage =  Utils.getImage(spankoddsiconnew);
             instance.setIconImage(spankyimage);
         } catch (Exception ex) {
             log(ex);
@@ -55,13 +51,26 @@ public class SpankyWindow extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 if ( 1==winList.size()) {
-                    int result = JOptionPane.showConfirmDialog(instance, "Do you want to exit ?",
-                            "alert", JOptionPane.OK_CANCEL_OPTION);
+
+                    JOptionPane optionPane = new JOptionPane("Do you want to exit ?",
+                            JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+                    JDialog dialog = optionPane.createDialog("Alert");
+                    dialog.setAlwaysOnTop(true);
+                    dialog.setVisible(true);
+                    dialog.dispose();
+
+                    Object  selectedValue = optionPane.getValue();
+                    int result;
+                    if ( selectedValue instanceof Integer) {
+                        result = (Integer)selectedValue;
+                    } else {
+                        result = JOptionPane.OK_OPTION;
+                    }
                     if (  JOptionPane.CANCEL_OPTION ==  result ) {
                         return;
                     }
 
-                    AppController.getUserPrefsProducer().sendUserPrefs();
+                    AppController.getUserPrefsProducer().sendUserPrefs(true);
                 }
                 instance.unBindAlertsComp();
                 log("closing SpankyWindow instance "+instance.getName());
@@ -114,13 +123,13 @@ public class SpankyWindow extends JFrame {
         SportsMenuBar smb = new SportsMenuBar(stp, tv);
 
         setJMenuBar(smb);
-
-        JPanel mainpanel = new JPanel();
-        mainpanel.setLayout(new BorderLayout(1,1));
-        mainpanel.add(tv, BorderLayout.PAGE_START);
-        mainpanel.add(stp, BorderLayout.CENTER);
-        setContentPane(mainpanel);
-        setSize(600, 600);
+//        JDesktopPane desktopPane = new JDesktopPane();
+        Container desktopPane = getContentPane();
+        desktopPane.setLayout(new BorderLayout());
+        desktopPane.add(tv, BorderLayout.PAGE_START);
+        desktopPane.add(stp,BorderLayout.CENTER);
+        //setLayeredPane must be called before setContentPane 06/07/2022
+//        setLayeredPane(new JDesktopPane());
     }
     public TopView getTopView() {
         return this.tv;

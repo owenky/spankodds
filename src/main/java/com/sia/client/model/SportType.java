@@ -4,6 +4,7 @@ import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankOdds;
+import com.sia.client.ui.SportConfigurator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -137,7 +138,9 @@ public class SportType {
     public int getSportId() {
         return sportId;
     }
-
+    public int getIdentityLeagueId() {
+        return identityLeagueId;
+    }
     public String getIcon() {
         return icon;
     }
@@ -151,7 +154,7 @@ public class SportType {
         return this.comingDays;
     }
     public void setComingDays(int comingDays) {
-        this.comingDays = comingDays;
+        this.comingDays = SportConfigurator.getEffectiveMaxShowDays(comingDays);
     }
     public void setLeagueFilter(LeagueFilter leagueFilter) {
         this.leagueFilter = leagueFilter;
@@ -243,7 +246,9 @@ public class SportType {
     public boolean shouldSelect(Game game) {
        String err = GameUtils.checkError(game);
        if ( null != err) {
-           log(err);
+          if(!err.equals("")) {
+              log(err);
+          }
            return false;
        }
         return  isLeagueSelected(game) && isGameNear(game) && isMyType(game);

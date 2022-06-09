@@ -1,32 +1,38 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.model.LineData;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SpankyWindowConfig;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 
 import static com.sia.client.config.Utils.log;
 
 public class LinePanel extends JPanel {
-    private static final MatteBorder bestvisitborder = new MatteBorder(1, 1, 1, 1, new Color(103, 52, 235));
-    private static final MatteBorder besthomeborder = new MatteBorder(1, 1, 1, 1, new Color(103, 52, 235));
-    private static final MatteBorder bestoverborder = new MatteBorder(1, 1, 1, 1, new Color(103, 52, 235));
-    private static final MatteBorder bestunderborder = new MatteBorder(1, 1, 1, 1, new Color(103, 52, 235));
-    private static final MatteBorder bestdrawborder = new MatteBorder(1, 1, 1, 1, new Color(183, 52, 235));
-    private static final MatteBorder bestallborder = new MatteBorder(1, 1, 1, 1, new Color(222, 235, 52));
+    // 183 52 235
+    private boolean useArrowIcons = true;
+    private static int topthickness = 2;
+    private static int bottomthickness = 2;
+    private static int rightthickness = 1;
+    private static int leftthickness = 1;
+    private static final MatteBorder scalpbordertop = new MatteBorder(2, 2, 0, 2, new Color(0 ,102, 0));
+    private static final MatteBorder scalpborderbottom = new MatteBorder(0, 2, 2, 2, new Color(0 ,102, 0));
+    private static final MatteBorder scalpborder = new MatteBorder(2, 2, 2, 2, new Color(0 ,102, 0));
+    private static final MatteBorder bestvisitborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51,0, 0));
+    private static final MatteBorder besthomeborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51, 0, 0));
+    private static final MatteBorder bestoverborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51 ,0, 0));
+    private static final MatteBorder bestunderborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51 ,0, 0));
+    private static final MatteBorder bestvisitborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder besthomeborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder bestoverborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder bestunderborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
+    private static final MatteBorder bestdrawborder = new MatteBorder(2, 2, 2, 2, new Color(255, 255, 0));
+    private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(222, 235, 52));
     private static final Color altcolor = new Color(204, 255, 229);
     private static final Color openercolor = Color.LIGHT_GRAY;
     private final static int leftPaddingSpace = 0;
@@ -73,9 +79,9 @@ public class LinePanel extends JPanel {
         bottomPanel = createContainingComponent(bottom,leftPaddingSpace,rightPaddingSpace);
         drawPanel = createContainingComponent(draw,leftPaddingSpace,rightPaddingSpace);
         totalPanel = createContainingComponent(total,leftPaddingSpace,rightPaddingSpace);
-
+        //setToolTipText("linepaneltooltiptext");
 //        Font myfont = new Font("Arial", Font.PLAIN, 12);
-        Font myfont = FontConfig.instance().getSelectedFont().deriveFont(Font.PLAIN);
+        Font myfont = Config.instance().getFontConfig().getSelectedFont().deriveFont(Font.PLAIN);
         top.setFont(myfont);
         bottom.setFont(myfont);
         draw.setFont(myfont);
@@ -92,6 +98,16 @@ public class LinePanel extends JPanel {
         total.setHorizontalTextPosition(textAlignment);
 
         this.setOpaque(true);
+
+
+
+
+
+
+
+
+
+
     }
     public void setSoccerLines(JTable table,SoccerSpreadTotalView stv, int row, int col) {
 
@@ -122,8 +138,9 @@ public class LinePanel extends JPanel {
     }
 
     public void setTop(JTable table,LineData ld, int row, int col) {
+        boolean blackorred = false;
         try {
-            boolean blackorred = false;
+
             top.setText(ld.getData());
             String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
@@ -173,7 +190,9 @@ public class LinePanel extends JPanel {
             if (ld.getBorder().contains("besthome")) {
                 top.setBorder(bestallborder);
             } else {
-                top.setBorder(bestvisitborder);
+                if(blackorred) {  top.setBorder(bestvisitborderblackorred);}
+                else { top.setBorder(bestvisitborder); }
+
 
             }
         } else if (ld.getBorder().contains("besthome")) {
@@ -183,17 +202,27 @@ public class LinePanel extends JPanel {
             if (ld.getBorder().contains("bestunder")) {
                 top.setBorder(bestallborder);
             } else {
-                top.setBorder(bestoverborder);
+                if(blackorred) {  top.setBorder(bestoverborderblackorred);}
+                else { top.setBorder(bestoverborder); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            top.setBorder(bestunderborder);
+            if(blackorred) {  top.setBorder(bestunderborderblackorred);}
+            else { top.setBorder(bestunderborder); }
 
-        } else {
+        } else if (ld.getBorder().contains("scalp")) {
+            top.setBorder(scalpborder);
+        }
+
+        else {
             top.setBorder(null);
         }
 
-
+        top.setToolTipText(ld.getTooltip());
+        if(!useArrowIcons)
+        {
+            top.setIcon(null);
+        }
     }
 
     public void setBottom(JTable table,LineData ld, int row, int col) {
@@ -242,25 +271,36 @@ public class LinePanel extends JPanel {
             if (ld.getBorder().contains("besthome")) {
                 bottom.setBorder(bestallborder);
             } else {
-                bottom.setBorder(bestvisitborder);
+                if(blackorred) {  bottom.setBorder(bestvisitborderblackorred);}
+                else { bottom.setBorder(bestvisitborder); }
             }
         } else if (ld.getBorder().contains("besthome")) {
-            bottom.setBorder(besthomeborder);
+            if(blackorred) {  bottom.setBorder(besthomeborderblackorred);}
+            else { bottom.setBorder(besthomeborder); }
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
                 bottom.setBorder(bestallborder);
             } else {
-                bottom.setBorder(bestoverborder);
+                if(blackorred) {  bottom.setBorder(bestoverborderblackorred);}
+                else { bottom.setBorder(bestoverborder); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            bottom.setBorder(bestunderborder);
+            if(blackorred) {  bottom.setBorder(bestunderborderblackorred);}
+            else { bottom.setBorder(bestunderborder); }
 
-        } else {
-            bottom.setBorder(null);
+        } else if (ld.getBorder().contains("scalp")) {
+            bottom.setBorder(scalpborder);
         }
 
-
+        else {
+            bottom.setBorder(null);
+        }
+        bottom.setToolTipText(ld.getTooltip());
+        if(!useArrowIcons)
+        {
+            bottom.setIcon(null);
+        }
     }
 
     private void setDraw(JTable table,LineData ld, int row, int col) {
@@ -310,19 +350,23 @@ public class LinePanel extends JPanel {
             if (ld.getBorder().contains("besthome")) {
                 draw.setBorder(bestallborder);
             } else {
-                draw.setBorder(bestvisitborder);
+                if(blackorred) {  draw.setBorder(bestvisitborderblackorred);}
+                else { draw.setBorder(bestvisitborder); }
             }
         } else if (ld.getBorder().contains("besthome")) {
-            draw.setBorder(besthomeborder);
+            if(blackorred) {  draw.setBorder(besthomeborderblackorred);}
+            else { draw.setBorder(besthomeborder); }
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
                 draw.setBorder(bestallborder);
             } else {
-                draw.setBorder(bestoverborder);
+                if(blackorred) {  draw.setBorder(bestoverborderblackorred);}
+                else { draw.setBorder(bestoverborder); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            draw.setBorder(bestunderborder);
+            if(blackorred) {  draw.setBorder(bestunderborderblackorred);}
+            else { draw.setBorder(bestunderborder); }
 
         } else if (ld.getBorder().contains("bestdraw")) {
             draw.setBorder(bestdrawborder);
@@ -378,22 +422,31 @@ public class LinePanel extends JPanel {
             if (ld.getBorder().contains("besthome")) {
                 total.setBorder(bestallborder);
             } else {
-                total.setBorder(bestvisitborder);
+                if(blackorred) {  total.setBorder(bestvisitborderblackorred);}
+                else { total.setBorder(bestvisitborder); }
 
 
             }
         } else if (ld.getBorder().contains("besthome")) {
-            total.setBorder(besthomeborder);
+            if(blackorred) {  total.setBorder(besthomeborderblackorred);}
+            else { total.setBorder(besthomeborder); }
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
                 total.setBorder(bestallborder);
             } else {
-                total.setBorder(bestoverborder);
+                if(blackorred) {  total.setBorder(bestoverborderblackorred);}
+                else { total.setBorder(bestoverborder); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            total.setBorder(bestunderborder);
-        } else {
+            if(blackorred) {  total.setBorder(bestunderborderblackorred);}
+            else { total.setBorder(bestunderborder); }
+        }
+        else if (ld.getBorder().contains("scalp")) {
+            total.setBorder(scalpborder);
+        }
+
+        else {
             total.setBorder(null);
         }
 
@@ -403,6 +456,7 @@ public class LinePanel extends JPanel {
     public void setLines(JTable table,SpreadTotalView stv, int row, int col) {
         LineData[] boxes;
         try {
+            boolean bothscalps = false;
             SpankyWindowConfig spankyWindowConfig = ((MainGameTableModel)table.getModel()).getSpankyWindowConfig();
             stv.setDisplayType(spankyWindowConfig.getDisplay());
             stv.setPeriodType(spankyWindowConfig.getPeriod());
@@ -415,8 +469,20 @@ public class LinePanel extends JPanel {
             } else {
                 boxes = stv.getCurrentBoxes();
             }
+            if(boxes[0].getBorder().equals(boxes[1].getBorder()) && boxes[0].getBorder().equals("scalp"))
+            {
+                bothscalps = true;
+                boxes[0].setBorder("");
+                boxes[1].setBorder("");
+            }
             setTop(table,boxes[0], row, col);
             setBottom(table,boxes[1], row, col);
+            if(bothscalps)
+            {
+                top.setBorder(scalpbordertop);
+                bottom.setBorder(scalpborderbottom);
+            }
+
         } catch (Exception ex) {
             log("ERROR=..." + stv + "..row=" + row + "...col=" + col);
             log(ex);

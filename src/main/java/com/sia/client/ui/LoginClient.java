@@ -1,8 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sia.client.config.*;
 import com.sia.client.model.Bookie;
 import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
@@ -22,6 +21,7 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import java.io.IOException;
 import java.util.UUID;
 
 import static com.sia.client.config.Utils.log;
@@ -35,7 +35,7 @@ public class LoginClient implements MessageListener {
 
     //private String brokerUrl = "failover:(ssl://localhost:61617)";
     //private String requestQueue = "spankodds.LOGIN";
-
+    private int messagecount = 0;
     public boolean loginresultback = false;
     Connection connection;
     boolean loggedin = false;
@@ -43,14 +43,17 @@ public class LoginClient implements MessageListener {
     private MessageProducer producer;
     private MessageConsumer consumer;
     private Destination tempDest;
+    private String ip = "";
+
 
     public LoginClient() {
         try {
             AppController.addBookie(new Bookie(990, "Details", "Dtals", "", ""));
             AppController.addBookie(new Bookie(991, "Time", "Time", "", ""));
-            AppController.addBookie(new Bookie(992, "Gm#", "Gm#", "", ""));
+            AppController.addBookie(new Bookie(992, SiaConst.GameNumColIden, SiaConst.GameNumColIden, "", ""));
             AppController.addBookie(new Bookie(993, "Team", "Team", "", ""));
             AppController.addBookie(new Bookie(994, "Chart", "Chart", "", ""));
+            AppController.addBookie(new Bookie(996, "*Best", "*Best", "", ""));
             //should i add chart bookie here????
             connection = AppController.getGuestConnection();
 
@@ -73,7 +76,12 @@ public class LoginClient implements MessageListener {
             log(ex);
         }
     }
+    public LoginClient(String ip)
+    {
+        this();
+        this.ip = ip;
 
+    }
     public static void main(String[] args) throws Exception {
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
@@ -105,6 +113,7 @@ public class LoginClient implements MessageListener {
         MapMessage mapMessage = session.createMapMessage();
         mapMessage.setString("username", username);
         mapMessage.setString("password", password);
+        mapMessage.setString("ip", ip);
 
         mapMessage.setJMSReplyTo(tempDest);
 
@@ -136,6 +145,7 @@ public class LoginClient implements MessageListener {
     public void onMessage(Message message) {
         Utils.ensureNotEdtThread();
         try {
+            ++messagecount;
             String messageType = message.getStringProperty("messageType");
             //log("Messagetype is: "+message.getStringProperty("messageType"));
 
@@ -197,14 +207,25 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setBookieColumnsChanged(text);
-            } else if (SiaConst.Serialization.LineSeekerAlert.equals(messageType)) {
+             } else if ( messageType.equals("openeralert")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                AlertAttrManager.deSerializeAlertAlertAttColl(text);
-            } else if (SiaConst.Serialization.Font.equals(messageType)) {
+                AppController.getUser().setOpeneralert(text);
+            }
+            else if ( messageType.equals("loginkey")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
-                FontConfig.deSerialize(text);
+                AppController.getUser().setLoginKey(text);
+            } else if (SiaConst.Serialization.config.equals(messageType)) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                Utils.checkAndRunInEDT(()-> {
+                    try {
+                        Config.deSerialize(text);
+                    }  catch (IOException e) {
+                        Utils.log(e);
+                    }
+                });
             } else if (messageType.equals("QueueCredentials")) {
                 setLoginResultBack(true);
                 TextMessage textMessage = (TextMessage) message;
@@ -255,7 +276,7 @@ public class LoginClient implements MessageListener {
                         Utils.parseTimestamp(array[6]),
                         Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
                         Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
-                        Integer.parseInt(array[17]));
+                        Integer.parseInt(array[17]),Integer.parseInt(array[18]));
                 AppController.addSpreadline(line);
                 //setLoginResultBack(true);
                 //owen took out 7/11/20 and moved back to loginconnection
@@ -271,7 +292,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
                         Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
 
-                        Integer.parseInt(array[17]));
+                        Integer.parseInt(array[17]),Integer.parseInt(array[18]));
                 int period = Integer.parseInt(array[17]);
 
                 AppController.addTotalline(line);
@@ -313,7 +334,8 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[27]),
 
                         Utils.parseTimestamp(array[28]),
-                        Integer.parseInt(array[29]));
+                        Integer.parseInt(array[29]),
+                        Integer.parseInt(array[30]));
                 int period = Integer.parseInt(array[29]);
 
                 AppController.addTeamTotalline(line);
@@ -330,20 +352,139 @@ public class LoginClient implements MessageListener {
                         Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
                         Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
 
-                        Integer.parseInt(array[14]));
+                        Integer.parseInt(array[14]),
+                        Integer.parseInt(array[15]));
                 int period = Integer.parseInt(array[14]);
 
                 AppController.addMoneyline(line);
 
 
-            } else if (messageType.equals("Unsubscribe")) {
+            }
+            // spanky new code
+            else if (messageType.equals("SpreadlineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++)
+                {
+                    text = mainarray[i];
 
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+                    Spreadline line = new Spreadline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
+                            Utils.parseTimestamp(array[6]),
+                            Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
+                            Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
+                            Integer.parseInt(array[17]), Integer.parseInt(array[18]));
+                    AppController.addSpreadline(line);
+                }
+
+            } else if (messageType.equals("TotallineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++)
+                {
+                    text = mainarray[i];
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+                    Totalline line = new Totalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
+                            Utils.parseTimestamp(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]),
+                            Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
+                            Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
+
+                            Integer.parseInt(array[17]), Integer.parseInt(array[18]));
+                    int period = Integer.parseInt(array[17]);
+
+                    AppController.addTotalline(line);
+                }
+
+            } else if (messageType.equals("TeamTotallineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++) {
+                    text = mainarray[i];
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+
+                    TeamTotalline line = new TeamTotalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
+                            Double.parseDouble(array[6]),
+                            Double.parseDouble(array[7]),
+                            Double.parseDouble(array[8]),
+                            Double.parseDouble(array[9]),
+
+                            Utils.parseTimestamp(array[10]),
+
+                            Double.parseDouble(array[11]),
+                            Double.parseDouble(array[12]),
+                            Double.parseDouble(array[13]),
+                            Double.parseDouble(array[14]),
+                            Double.parseDouble(array[15]),
+                            Double.parseDouble(array[16]),
+                            Double.parseDouble(array[17]),
+                            Double.parseDouble(array[18]),
+
+                            Utils.parseTimestamp(array[19]),
+
+                            Double.parseDouble(array[20]),
+                            Double.parseDouble(array[21]),
+                            Double.parseDouble(array[22]),
+                            Double.parseDouble(array[23]),
+                            Double.parseDouble(array[24]),
+                            Double.parseDouble(array[25]),
+                            Double.parseDouble(array[26]),
+                            Double.parseDouble(array[27]),
+
+                            Utils.parseTimestamp(array[28]),
+                            Integer.parseInt(array[29]),
+                            Integer.parseInt(array[30]));
+                    int period = Integer.parseInt(array[29]);
+
+                    AppController.addTeamTotalline(line);
+                }
+
+            } else if (messageType.equals("MoneylineALL")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                String[] mainarray = text.split("\\|");
+                for(int i=0; i < mainarray.length-1; i++)
+                {
+                    text = mainarray[i];
+                    String[] array = text.split(SiaConst.MessageDelimiter);
+
+                    Moneyline line = new Moneyline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                            Double.parseDouble(array[3]), Double.parseDouble(array[4]), Utils.parseTimestamp(array[5]),
+                            Double.parseDouble(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]),
+                            Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
+                            Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
+
+                            Integer.parseInt(array[14]),
+                            Integer.parseInt(array[15]));
+                    int period = Integer.parseInt(array[14]);
+
+                    AppController.addMoneyline(line);
+                }
+
+            }
+
+
+
+
+            else if (messageType.equals("Unsubscribe")) {
+
+                AppController.createLineOpenerAlertNodeListFromUserPrefs();
+                AppController.createLimitNodeListFromUserPrefs();
                 AppController.createGamesConsumer();
                 AppController.createScoresConsumer();
                 AppController.createUrgentsConsumer();
                 AppController.createLinesConsumer();
                 AppController.createChartChecker();
                 log("Unsubscribing....." + new java.util.Date());
+                log("Received "+messagecount+" messages");
                 consumer.close();
 
             }

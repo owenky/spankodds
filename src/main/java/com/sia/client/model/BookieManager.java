@@ -89,6 +89,14 @@ public class BookieManager {
         }
         return bookiesVec;
     }
+    public void reset() {
+        if ( null != shownCols) {
+            shownCols.clear();
+        }
+        if ( null != fixedCols) {
+            fixedCols.clear();
+        }
+    }
     public Iterator<Bookie> iterator() {
         return bookiesVec.iterator();
     }

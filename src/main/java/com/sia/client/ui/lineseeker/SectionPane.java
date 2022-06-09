@@ -2,7 +2,6 @@ package com.sia.client.ui.lineseeker;
 
 
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,20 +13,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class SectionLayout {
+public class SectionPane {
 
     private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     private static final Dimension DefaultSpacingWidth = new Dimension(240,20);
     private final ColumnComponents leftColumn;
     private final ColumnComponents rightColumn;
-    private final JCheckBox useEquivalent;
     private JPanel layoutPane;
 
-    public SectionLayout(SectionComponents spreadFieldGrp) {
+    public SectionPane(SectionComponents spreadFieldGrp) {
 
         this.leftColumn = spreadFieldGrp.leftColumn;
         this.rightColumn = spreadFieldGrp.rightColumn;
-        this.useEquivalent = spreadFieldGrp.useEquivalent;
     }
 
     public JComponent getLayoutPane() {
@@ -112,17 +109,6 @@ public class SectionLayout {
             JComponent radioGrpRight = makeRadioGroup(rightColumn);
             c.gridx = 4;
             layoutPane.add(radioGrpRight, c);
-
-//            //new row -- check box
-//            c.gridy++;
-//
-//            c.gridx = 0;
-//            c.gridwidth = 7;
-//            c.anchor = GridBagConstraints.CENTER;
-//            if(null == useEquivalent.getLabel() || "".equals(useEquivalent.getLabel().trim())) {
-//                useEquivalent.setLabel(useEquivalent.getName());
-//            }
-//            layoutPane.add(useEquivalent, c);
         }
         return layoutPane;
     }

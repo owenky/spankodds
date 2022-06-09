@@ -1,4 +1,4 @@
-package com.sia.client.ui;
+package com.sia.client.config;
 
 import org.junit.Before;
 import org.junit.Test;

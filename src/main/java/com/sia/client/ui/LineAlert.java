@@ -2015,6 +2015,9 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
                 box1.add(sportsbooktreePanel);
                 box1.add(linealertname);
                 box1.add(saveBut);
+                for(int k=0; k <10;k++) {
+                    box1.add(new JLabel("  "));
+                }
                 box1.revalidate();
                 box1.repaint();
 
@@ -2323,6 +2326,9 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
             box1.add(linealertname);
             box1.add(saveBut);
             box1.add(removeBut);
+            for(int k=0; k <8;k++) {
+                box1.add(new JLabel("  "));
+            }
             box1.revalidate();
             box1.repaint();
 

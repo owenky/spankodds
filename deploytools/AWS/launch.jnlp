@@ -9,7 +9,8 @@
 		<title>Spank Odds</title>
 		<vendor>Sports Information Analysis</vendor>
 		<homepage href="http://app1.sof300732.com.s3.us-east-1.amazonaws.com/index.html"/>
-
+		<!-- icon kind="splash" href="splashScreen.jpg" / -->
+		<icon kind="shortcut" href="spankoddsrgb.png" width="64" height="64"/>
 	</information>
 	<resources>
 		<property name="jnlp.packEnabled" value="true" />	<j2se version="1.8.0_00+" href=" http://java.sun.com/products/autodl/j2se" initial-heap-size="64m" max-heap-size="512m" java-vm-args="-dsa -Xnoclassgc  -verbose:gc -Xrunhprof:heap=sites -d32" />

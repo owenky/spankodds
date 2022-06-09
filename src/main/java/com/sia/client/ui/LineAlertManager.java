@@ -7,9 +7,12 @@ import com.sia.client.model.Moneyline;
 import com.sia.client.model.Sport;
 import com.sia.client.model.Spreadline;
 
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
+
+// this manages both linealerts and line seekers
 
 public class LineAlertManager {
     public static void checkMove(Line line) {
@@ -212,6 +215,21 @@ public class LineAlertManager {
             }
 
 
+        }
+
+        List<LineSeekerNode> lineseekernodes = LineSeekerNode.getAllNodes();
+        //log(linealertnodes.size());
+        for (int i = 0; i < lineseekernodes.size(); i++)
+        {
+            try {
+                LineSeekerNode lsn =  lineseekernodes.get(i);
+                lsn.doesthislinequalify(line);
+
+                }
+            catch (Exception ex)
+            {
+                log(ex);
+            }
         }
 
     }

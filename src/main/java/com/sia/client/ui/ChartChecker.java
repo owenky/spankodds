@@ -126,89 +126,100 @@ public class ChartChecker {
                     count1++;
                     String s = sc.next();
                     int ln = s.charAt(0);
-                    if (ln == 13) {
+                    if (ln == 13)  // carriage return
+                    {
                         break;
                     }
-                    String[] s1 = s.split(",", 13);
+                   // String[] s1 = s.split(",", 13);
+                    String[] s1 = s.split(",");
                     ChartData2 cd = new ChartData2();
                     if (s1.length < 13) {
-                        errormsg = "Data not proper at line-" + count1 + " please check your Local File";
-                        //new ShowError().setVisible(true);
-                        cl.clear();
-                        //Thread.currentThread().stop();
-                        return;
-                    }
-                    gn = Integer.parseInt(s1[0]);
-                    p = Integer.parseInt(s1[1]);
-                    cd.gn = gn;
-                    cd.p = p;
-                    int found = 0;
-                    Iterator<ChartData2> itr = cl.iterator();
-                    while (itr.hasNext()) {
-                        ChartData2 cd2 = itr.next();
-                        if (cd2.gn == gn && cd2.p == p) {
-                            found = 1;
-                            break;
-                        } else {
-                            continue;
-                        }
-                    }
-                    if (found == 1) {
                         continue;
-                    } else {
-                        cl.add(cd);
+                        //errormsg = "Data not proper at line-" + count1 + " please check your Local File";
+                        //cl.clear();
+                        //return;
                     }
+                    try {
+                        gn = Integer.parseInt(s1[0]);
+                        p = Integer.parseInt(s1[1]);
+                        cd.gn = gn;
+                        cd.p = p;
+                        int found = 0;
+                        Iterator<ChartData2> itr = cl.iterator();
+                        while (itr.hasNext()) {
+                            ChartData2 cd2 = itr.next();
+                            if (cd2.gn == gn && cd2.p == p) {
+                                found = 1;
+                                break;
+                            } else {
+                                continue;
+                            }
+                        }
+                        if (found == 1) {
+                            continue;
+                        } else {
+                            cl.add(cd);
+                        }
+
+                    }
+                    catch (Exception ex) {}
                 }
                 sc.close();
+
+
                 filename = AppController.getUser().getChartFileName();
                 File f1 = new File(filename);
                 Scanner sc1 = new Scanner(f1);
                 sc1.useDelimiter("\n");
                 count2 = 0;
                 while (sc1.hasNext()) {
-                    count2++;
-                    String s = sc1.next();
-                    int idx = s.length() - 1;
-                    int asc = s.charAt(idx);
-                    int ln = (int) s.charAt(0);
-                    if (ln == 13) {
-                        break;
-                    }
-                    if (asc == 13) {
-                        StringBuilder sb = new StringBuilder(s);
-                        sb.insert(s.length() - 1, ',');
-                        s = sb.toString();
-                    }
-                    String[] s1 = s.split(",", 14);
-                    gn = Integer.parseInt(s1[0]);
-                    p = Integer.parseInt(s1[1]);
-                    asa = Integer.parseInt(s1[2]);
-                    hsa = Integer.parseInt(s1[3]);
-                    oa = Integer.parseInt(s1[4]);
-                    ua = Integer.parseInt(s1[5]);
-                    ama = Integer.parseInt(s1[6]);
-                    hma = Integer.parseInt(s1[7]);
-                    dma = Integer.parseInt(s1[8]);
-                    aTToa = Integer.parseInt(s1[9]);
-                    aTTua = Integer.parseInt(s1[10]);
-                    hTToa = Integer.parseInt(s1[11]);
-                    hTTua = Integer.parseInt(s1[12]);
-                    for (int i = 0; i < cl.size(); i++) {
-                        if (cl.get(i).gn == gn && cl.get(i).p == p) {
-                            cl.get(i).asaT = cl.get(i).asaT + asa;
-                            cl.get(i).hsaT = cl.get(i).hsaT + hsa;
-                            cl.get(i).oaT = cl.get(i).oaT + oa;
-                            cl.get(i).uaT = cl.get(i).uaT + ua;
-                            cl.get(i).amaT = cl.get(i).amaT + ama;
-                            cl.get(i).hmaT = cl.get(i).hmaT + hma;
-                            cl.get(i).drawMamt = dma;
-                            cl.get(i).aoaT = cl.get(i).aoaT + aTToa;
-                            cl.get(i).auaT = cl.get(i).auaT + aTTua;
-                            cl.get(i).hoaT = cl.get(i).hoaT + hTToa;
-                            cl.get(i).huaT = cl.get(i).huaT + hTTua;
+                    try {
+                        count2++;
+                        String s = sc1.next();
+                        int idx = s.length() - 1;
+                        int asc = s.charAt(idx);
+                        int ln = (int) s.charAt(0);
+                        if (ln == 13) {
+                            break;
                         }
-                    }
+                        if (asc == 13) {
+                            StringBuilder sb = new StringBuilder(s);
+                            sb.insert(s.length() - 1, ',');
+                            s = sb.toString();
+                        }
+                        //String[] s1 = s.split(",", 14);
+                        String[] s1 = s.split(",");
+                        gn = Integer.parseInt(s1[0]);
+                        p = Integer.parseInt(s1[1]);
+                        asa = Integer.parseInt(s1[2]);
+                        hsa = Integer.parseInt(s1[3]);
+                        oa = Integer.parseInt(s1[4]);
+                        ua = Integer.parseInt(s1[5]);
+                        ama = Integer.parseInt(s1[6]);
+                        hma = Integer.parseInt(s1[7]);
+                        dma = Integer.parseInt(s1[8]);
+                        aTToa = Integer.parseInt(s1[9]);
+                        aTTua = Integer.parseInt(s1[10]);
+                        hTToa = Integer.parseInt(s1[11]);
+                        hTTua = Integer.parseInt(s1[12]);
+                        for (int i = 0; i < cl.size(); i++) {
+                            if (cl.get(i).gn == gn && cl.get(i).p == p) {
+                                cl.get(i).asaT = cl.get(i).asaT + asa;
+                                cl.get(i).hsaT = cl.get(i).hsaT + hsa;
+                                cl.get(i).oaT = cl.get(i).oaT + oa;
+                                cl.get(i).uaT = cl.get(i).uaT + ua;
+                                cl.get(i).amaT = cl.get(i).amaT + ama;
+                                cl.get(i).hmaT = cl.get(i).hmaT + hma;
+                                cl.get(i).drawMamt = dma;
+                                cl.get(i).aoaT = cl.get(i).aoaT + aTToa;
+                                cl.get(i).auaT = cl.get(i).auaT + aTTua;
+                                cl.get(i).hoaT = cl.get(i).hoaT + hTToa;
+                                cl.get(i).huaT = cl.get(i).huaT + hTTua;
+                            }
+                        }
 
+                    }
+                    catch(Exception ex) {}
                 }
 
                 sc1.close();
@@ -414,7 +425,7 @@ public class ChartChecker {
 
 
         } catch (Exception ex) {
-            log(ex);
+            log("exception reading chart file "+ex);
         }
     }
 
@@ -454,7 +465,8 @@ public class ChartChecker {
                 if (ln == 13) {
                     break;
                 }
-                String[] s1 = s.split(",", 13);
+               // String[] s1 = s.split(",", 13);
+                String[] s1 = s.split(",");
                 ChartData2 cd = new ChartData2();
                 if (s1.length < 13) {
                     errormsg = "Data not proper at line please check your Url File";
@@ -500,7 +512,8 @@ public class ChartChecker {
                     sb.insert(s.length() - 1, ',');
                     s = sb.toString();
                 }
-                String[] s1 = s.split(",", 14);
+                //String[] s1 = s.split(",", 14);
+                String[] s1 = s.split(",");
                 int gn = Integer.parseInt(s1[0]);
                 int p = Integer.parseInt(s1[1]);
                 int asa = Integer.parseInt(s1[2]);

@@ -42,6 +42,12 @@ public class User {
 
     private String tabsindex;
     private String linealerts;
+    private String loginkey;
+
+
+
+    private String openeralert;
+
     private static User instance = new User();
 
     public static User instance() {
@@ -149,6 +155,13 @@ public class User {
         linealerts = s;
     }
 
+    public String getLoginKey() {
+        return loginkey;
+    }
+
+    public void setLoginKey(String s) {
+        loginkey = s;
+    }
 
     public int getChartMinAmtNotify() {
         return chartminamtnotify;
@@ -306,6 +319,16 @@ public class User {
     public String getBookieTitles() {
         return bookieTitles;
     }
+
+    public String getOpeneralert() {
+        return openeralert;
+    }
+
+    public void setOpeneralert(String openeralert) {
+        this.openeralert = openeralert;
+    }
+
+
     // this method will send the login server all of the user preferences for the server
     // to store in its database
     public void notifyServerUserPreferences() {

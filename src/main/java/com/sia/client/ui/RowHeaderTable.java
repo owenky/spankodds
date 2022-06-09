@@ -1,19 +1,19 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
+import com.sia.client.model.AccessableToGame;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.ToolTipManager;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster {
+public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster, AccessableToGame<V> {
 
 	private final ColumnCustomizableTable<V> mainTable;
 	private final boolean hasRowNumber;
@@ -28,6 +28,10 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+	@Override
+	public V getGame(int rowModelIndex) {
+		return mainTable.getGame(rowModelIndex);
 	}
 	public void optimizeSize() {
 		//set jviewport (row header of jscroll pane of mainTable) preferred size
@@ -51,10 +55,51 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		}
 		return headerCellRenderer;
 	}
+
 	@Override
-	public String getToolTipText(MouseEvent e) {
-		return Utils.getTableCellToolTipText(this,e);
+	public String getToolTipText(MouseEvent e)
+	{
+		// spanky 5/26/22 implemented deep tooltip for jlabel line history
+		String tip = Utils.getTableCellToolTipText(this, e);
+
+
+		if(tip != null)
+		{
+			//System.out.println("returning "+tip);
+			return tip;
+		}
+		Point p = e.getPoint();
+
+		// Locate the renderer under the event location
+		int hitColumnIndex = columnAtPoint(p);
+		int hitRowIndex = rowAtPoint(p);
+
+		if (hitColumnIndex != -1 && hitRowIndex != -1)
+		{
+			TableCellRenderer renderer = getCellRenderer(hitRowIndex, hitColumnIndex);
+			Component component = prepareRenderer(renderer, hitRowIndex, hitColumnIndex);
+			Rectangle cellRect = getCellRect(hitRowIndex, hitColumnIndex, false);
+
+			component.setBounds(cellRect);
+			component.validate();
+			component.doLayout();
+			p.translate(-cellRect.x, -cellRect.y);
+			//System.out.println("x="+cellRect.x+"...y="+cellRect.y);
+			//Component comp = component.getComponentAt(p);
+			Component comp = SwingUtilities.getDeepestComponentAt(component, p.x, p.y);
+			if (comp instanceof JLabel)
+			{
+			//	System.out.println("its a jlabel!! "+comp.getClass()+".."+((JComponent) comp).getToolTipText());
+				tip = ((JLabel) comp).getToolTipText();
+			}
+		}
+
+		return tip;
+
+
 	}
+
+
 	@Override
 	public void setRowMargin(int rowMargin) {
 		//don't set row margin, use main table's row margin

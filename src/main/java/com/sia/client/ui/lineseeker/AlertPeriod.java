@@ -23,4 +23,9 @@ public enum AlertPeriod {
     }
     private final String display;
     private final int order;
+
+
+    public int getOrder() {
+        return order;
+    }
 }

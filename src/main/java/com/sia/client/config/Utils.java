@@ -1,5 +1,7 @@
 package com.sia.client.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sia.client.model.ViewValue;
 
 import javax.jms.MapMessage;
@@ -27,9 +29,17 @@ public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
+    private static ObjectMapper objectMapper;
     public static Logger logger;
 
 
+    public static synchronized ObjectMapper getObjectMapper() {
+        if ( null == objectMapper) {
+            objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        }
+        return objectMapper;
+    }
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
     }
@@ -182,6 +192,10 @@ public abstract class Utils {
     public static int showOptions(Component parentComponent, Object message) throws HeadlessException {
 
         return JOptionPane.showConfirmDialog(parentComponent,message,"Confirmation", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null);
+    }
+    public static void respectComponentSize(JComponent comp, Dimension dim) {
+        comp.setPreferredSize(dim);
+        comp.setMaximumSize(dim);
     }
     public static void ensureNotEdtThread() {
         if ( SwingUtilities.isEventDispatchThread()) {
@@ -465,5 +479,11 @@ public abstract class Utils {
             return false;
         }
         return numericPattern.matcher(str).matches();
+    }
+    public static void centerComponent ( Component comp) {
+        Dimension preferredDim = comp.getPreferredSize();
+        Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+        Point location = new Point ((screenDim.width-preferredDim.width)/2, (screenDim.height-preferredDim.height)/2);
+        comp.setLocation(location);
     }
 }
