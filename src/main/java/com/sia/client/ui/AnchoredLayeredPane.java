@@ -51,7 +51,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         this.layer_index = layer_index;
         this.anchoredParentComp = anchoredParentComp;
         mouseListener = new HideOnMouseOutListener();
-        layeredPane = getJLayeredPane();
+        layeredPane = getJLayeredPane(anchoredParentComp);
         westPanel = new JPanel();
         eastPanel = new JPanel();
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.LINE_AXIS));
@@ -284,15 +284,15 @@ public class AnchoredLayeredPane implements ComponentListener {
         layeredPane.repaint();
     }
 
-    private JLayeredPane getJLayeredPane() {
+    public static JLayeredPane getJLayeredPane(Component anchoredParentComp) {
         Component root_comp_ = SwingUtilities.getRoot(anchoredParentComp);
         if (root_comp_ == null) {
-            root_comp_ = getTopContainer();
+            root_comp_ = getTopContainer(anchoredParentComp);
         }
         JRootPane rootPane_ = SwingUtilities.getRootPane(root_comp_);
         return rootPane_.getLayeredPane();
     }
-    private Component getTopContainer() {
+    private static Component getTopContainer(Component anchoredParentComp) {
 
         Component topContainer = anchoredParentComp.getParent();
         while (!(topContainer instanceof JFrame)) {

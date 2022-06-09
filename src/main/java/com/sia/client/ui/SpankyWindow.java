@@ -51,8 +51,21 @@ public class SpankyWindow extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 if ( 1==winList.size()) {
-                    int result = JOptionPane.showConfirmDialog(instance, "Do you want to exit ?",
-                            "alert", JOptionPane.OK_CANCEL_OPTION);
+
+                    JOptionPane optionPane = new JOptionPane("Do you want to exit ?",
+                            JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+                    JDialog dialog = optionPane.createDialog("Alert");
+                    dialog.setAlwaysOnTop(true);
+                    dialog.setVisible(true);
+                    dialog.dispose();
+
+                    Object  selectedValue = optionPane.getValue();
+                    int result;
+                    if ( selectedValue instanceof Integer) {
+                        result = (Integer)selectedValue;
+                    } else {
+                        result = JOptionPane.OK_OPTION;
+                    }
                     if (  JOptionPane.CANCEL_OPTION ==  result ) {
                         return;
                     }

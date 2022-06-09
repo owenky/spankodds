@@ -1,7 +1,6 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.Utils;
 import com.sia.client.model.Game;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.ui.comps.WebViewPane;
@@ -55,10 +54,9 @@ public class GameHistPane {
             userComponent.setPreferredSize(paneSize);
             jFrame.add(userComponent, BorderLayout.CENTER);
             jFrame.pack();
-            SpankyWindow spankyWindow = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
-            Point adjustedLoc = AnchoredLayeredPane.adjustAnchorLocation(stp, jFrame,spankyWindow.getLayeredPane(),pointOnScreen);
-            jFrame.setLocation(adjustedLoc);
             jFrame.setVisible(true);
+            Point adjustedLoc = AnchoredLayeredPane.adjustAnchorLocation(stp, jFrame,AnchoredLayeredPane.getJLayeredPane(userComponent),pointOnScreen);
+            jFrame.setLocation(adjustedLoc);
         }
 
     }
