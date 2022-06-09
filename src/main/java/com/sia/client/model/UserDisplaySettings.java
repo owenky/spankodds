@@ -26,6 +26,47 @@ public  class UserDisplaySettings
     static boolean showborderbestline = true;
     static boolean showdirectionicons = true;
 
+    static boolean showaltcolor = true;
+    static Color altcolor = new Color(215, 215, 215);
+
+
+    static Color openercolor = Color.GRAY;
+    static Color lastcolor = Color.BLUE;
+
+    public static boolean isShowaltcolor() {
+        return showaltcolor;
+    }
+
+    public static void setShowaltcolor(boolean showaltcolor) {
+        UserDisplaySettings.showaltcolor = showaltcolor;
+    }
+
+    public static Color getAltcolor() {
+        return altcolor;
+    }
+
+    public static void setAltcolor(Color altcolor) {
+        UserDisplaySettings.altcolor = altcolor;
+    }
+
+    public static Color getOpenercolor() {
+        return openercolor;
+    }
+
+    public static void setOpenercolor(Color openercolor) {
+        UserDisplaySettings.openercolor = openercolor;
+    }
+
+    public static Color getLastcolor() {
+        return lastcolor;
+    }
+
+    public static void setLastcolor(Color lastcolor) {
+        UserDisplaySettings.lastcolor = lastcolor;
+    }
+
+
+
     public static boolean isShowdirectionicons() {
         return showdirectionicons;
     }

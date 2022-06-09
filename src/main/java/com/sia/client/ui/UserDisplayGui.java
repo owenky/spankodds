@@ -51,6 +51,9 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     Color firstcolor;
     Color secondcolor;
     Color thirdcolor;
+    Color altcolor;
+    Color openercolor;
+    Color lastcolor;
 
     private static final String ximage="blocking.jpg";
     private static final String checkimage="unblocking.jpg";
@@ -63,6 +66,10 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     ColorChooserButton firstcolorChooserButton;
     ColorChooserButton secondcolorChooserButton;
     ColorChooserButton thirdcolorChooserButton;
+
+    ColorChooserButton altcolorChooserButton;
+    ColorChooserButton openercolorChooserButton;
+    ColorChooserButton lastcolorChooserButton;
 
 
     JComboBox firstmovesecs;
@@ -90,9 +97,12 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
 
 
     JToggleButton autofitcolumnsbutton = new JToggleButton("autofitcolumns",checkimage,"Click to stop columns from autofitting",ximage,"Click to enable columns to auto fit");
-    JToggleButton showcpotooltipbutton = new JToggleButton("showcpotooltip",checkimage,"Click to disbale C/P/O line history",ximage,"Click to enabale C/P/O line history");
-    JToggleButton showlinedirectionmovebuttom = new JToggleButton("showlinedirectionmove",checkimage,"Click to disbale line direction move",ximage,"Click to enable line direction move");
-    JToggleButton borderbestbutton = new JToggleButton("borderbest",checkimage,"Click to disbale bordering best line",ximage,"Click to enable bordering best line");
+    JToggleButton showcpotooltipbutton = new JToggleButton("showcpotooltip",checkimage,"Click to disable C/P/O line history",ximage,"Click to enable C/P/O line history");
+    JToggleButton showlinedirectionmovebuttom = new JToggleButton("showlinedirectionmove",checkimage,"Click to disable line direction move",ximage,"Click to enable line direction move");
+
+
+    JToggleButton borderbestbutton = new JToggleButton("borderbest",checkimage,"Click to disable bordering best line",ximage,"Click to enable bordering best line");
+    JToggleButton altcolorbutton = new JToggleButton("altcolor",checkimage,"Click to disable altering coloring rows",ximage,"Click to enable altering coloring rows");
 
     public UserDisplayGui(SportsTabPane stp) {
         super(stp,"Display Settings");
@@ -115,14 +125,22 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         secondcolor = UserDisplaySettings.getSecondcolor();
         thirdcolor = UserDisplaySettings.getThirdcolor();
 
+        altcolor = UserDisplaySettings.getAltcolor();
+        openercolor = UserDisplaySettings.getOpenercolor();
+        lastcolor = UserDisplaySettings.getLastcolor();
+
         firstcolorChooserButton = new ColorChooserButton(firstcolor);
         secondcolorChooserButton = new ColorChooserButton(secondcolor);
         thirdcolorChooserButton = new ColorChooserButton(thirdcolor);
+        openercolorChooserButton = new ColorChooserButton(openercolor);
+        lastcolorChooserButton = new ColorChooserButton(lastcolor);
+        altcolorChooserButton = new ColorChooserButton(altcolor);
 
         autofitcolumnsbutton.setEnable(UserDisplaySettings.isAutofitdata());
         showcpotooltipbutton.setEnable(UserDisplaySettings.isShowcpo());
         showlinedirectionmovebuttom.setEnable(UserDisplaySettings.isShowdirectionicons());
         borderbestbutton.setEnable(UserDisplaySettings.isShowborderbestline());
+        altcolorbutton.setEnable(UserDisplaySettings.isShowaltcolor());
 
         display[0] = "spreadtotal";
         display[1] = "totalmoney";
@@ -195,6 +213,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
 
+        JPanel panel3 = new JPanel();
+
 
 
 
@@ -214,7 +234,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel2.setLayout(new GridBagLayout());
 
 
-
+        panel3.setBorder(BorderFactory.createEtchedBorder());
+        panel3.setLayout(new GridBagLayout());
 
 
 
@@ -227,6 +248,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         JLabel showcurrentpreviousopenertooltip = new JLabel("  Show Curr/Prev/Open on MouseOver?");
         JLabel showlinemovedirection = new JLabel("  Show Line Move Direction Icons?");
         JLabel borderbest = new JLabel("  Show Border for Best Line?");
+
+        JLabel altcolorlabel = new JLabel("Have Rows Alternating Color? - ");
 
 
 
@@ -420,6 +443,18 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         c.gridwidth = 1;
         panel2.add(bestpanel, c);
 
+        c.gridy = 8;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        panel2.add(altcolorbutton, c);
+        c.gridx = 4;
+        c.gridwidth = 3;
+        panel2.add(altcolorlabel, c);
+        c.gridx = 7;
+        c.gridwidth = 1;
+        panel2.add(altcolorChooserButton, c);
+
+
         GridBagConstraints c2 = new GridBagConstraints();
 
 
@@ -465,6 +500,36 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel.add(thirdcolorChooserButton  , c2);
 
 
+JLabel openercolorlabel = new JLabel("Opener Button Color - ");
+        JLabel lastcolorlabel = new JLabel("Last Button Color - ");
+        GridBagConstraints c3 = new GridBagConstraints();
+
+
+        c3.gridheight = 2;
+
+        // c2.anchor = GridBagConstraints.EAST;
+
+        c3.gridy = 0;
+        c3.gridx = 0;
+        c3.gridwidth = 4;
+        panel3.add(openercolorlabel, c3);
+        c3.anchor = GridBagConstraints.WEST;
+        c3.gridx = 5;
+        c3.gridwidth = 1;
+        panel3.add(openercolorChooserButton, c3);
+
+        c3.gridy = 2;
+        c3.gridx = 0;
+        c3.gridwidth = 4;
+        panel3.add(lastcolorlabel, c3);
+        c3.anchor = GridBagConstraints.WEST;
+        c3.gridx = 5;
+        c3.gridwidth = 1;
+        panel3.add(lastcolorChooserButton, c3);
+
+
+
+
 
 
         //************************end of panel*******************
@@ -485,12 +550,15 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         showcpotooltipbutton.addActionListener(this);
         showlinedirectionmovebuttom.addActionListener(this);
         borderbestbutton.addActionListener(this);
+        altcolorbutton.addActionListener(this);
         box1.add(new JLabel("Default Line Display                               "));
         box1.add(panel1);
         box2.add(new JLabel("Line Yes/No Display Options                                        "));
         box2.add(panel2);
         box2.add(new JLabel("Color Line Moves                                        "));
         box2.add(panel);
+        box2.add(new JLabel("Opener/Last Colors                                      "));
+        box2.add(panel3);
         box2.add(savebutton);
         // Add the boxes to the content pane.
         userComponent.add(box1);
@@ -539,10 +607,16 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
             UserDisplaySettings.setSecondcolor(secondcolorChooserButton.getSelectedColor());
             UserDisplaySettings.setThirdcolor(thirdcolorChooserButton.getSelectedColor());
 
+            UserDisplaySettings.setAltcolor(altcolorChooserButton.getSelectedColor());
+            UserDisplaySettings.setOpenercolor(openercolorChooserButton.getSelectedColor());
+            UserDisplaySettings.setLastcolor(lastcolorChooserButton.getSelectedColor());
+
             UserDisplaySettings.setAutofitdata(autofitcolumnsbutton.isEnabled());
             UserDisplaySettings.setShowcpo(showcpotooltipbutton.isEnabled());
             UserDisplaySettings.setShowdirectionicons(showlinedirectionmovebuttom.isEnabled());
             UserDisplaySettings.setShowborderbestline(borderbestbutton.isEnabled());
+
+            UserDisplaySettings.setShowaltcolor(altcolorbutton.isEnabled());
 
 
 

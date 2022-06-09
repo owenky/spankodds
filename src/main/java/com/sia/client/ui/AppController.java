@@ -469,7 +469,10 @@ public class AppController {
                 column.setPreferredWidth(40);
             } else if (b.getBookie_id() == 992) {
                 column.setPreferredWidth(45);
-            } else if (b.getBookie_id() == 993) {
+            }
+            else if (b.getBookie_id() == 995) {
+                column.setPreferredWidth(45);
+            }else if (b.getBookie_id() == 993) {
 
                 column.setPreferredWidth(150);
 

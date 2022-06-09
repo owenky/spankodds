@@ -115,7 +115,7 @@ public class GamesConsumer implements MessageListener {
                 try {
                     seriesprice = game.isSeriesprice();
                 } catch (Exception ex) {
-                    log(ex);
+                    log("series price exception "+ex);
                 }
 
                 if ((!oldvpitcher.equals(game.getVisitorpitcher()) && !oldvpitcher.equals("") && !game.getVisitorpitcher().equalsIgnoreCase("UNDECIDED"))
@@ -185,7 +185,7 @@ public class GamesConsumer implements MessageListener {
                             }
                         }
                     } catch (Exception ex) {
-                        log(ex);
+                        log("exception in splitting="+arr[5]+".."+ex);
                     }
 
                     if (goodsport) {
