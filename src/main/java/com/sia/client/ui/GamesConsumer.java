@@ -74,6 +74,7 @@ public class GamesConsumer implements MessageListener {
 
     public void processMessage(TextMessage textMessage) {
         try {
+            String data = "";
             String leagueid;
             String messagetype = textMessage.getStringProperty("messageType");
             String repaintstr = textMessage.getStringProperty("repaint");
@@ -86,149 +87,155 @@ public class GamesConsumer implements MessageListener {
                 leagueid = "";
             }
 
-            if ("NEWORUPDATE".equals(messagetype)) {
-
-                String data = textMessage.getText();
-                String [] fields = GameUtils.parseGameString(data);
-                int gameid = Integer.parseInt(fields[0]);
-                Game oldGame = AppController.getGame(gameid);
-                Game game;
-                if ( null != oldGame) {
-                    game = oldGame.clone();
-                } else {
-                    game = new Game();
-                }
-                GameUtils.setGameProperty(game,fields);
-
-                if ( null != oldGame ) {
-                    oldvpitcher = oldGame.getVisitorpitcher();
-                    oldhpitcher = oldGame.getHomepitcher();
-                    oldgametime = oldGame.getGametime();
-
-                }
-//                log("new game! " + data);
-                AppController.pushGameToCache(game);
-                MqMessageProcessor.getInstance().addGame(game);
-                Sport s = AppController.getSportByLeagueId(game.getLeague_id());
-
-                boolean seriesprice = false;
+            if ("NEWORUPDATE".equals(messagetype))
+            {
                 try {
-                    seriesprice = game.isSeriesprice();
-                } catch (Exception ex) {
-                    log("series price exception "+ex);
-                }
+                    data = textMessage.getText();
+                    String[] fields = GameUtils.parseGameString(data);
+                    int gameid = Integer.parseInt(fields[0]);
+                    Game oldGame = AppController.getGame(gameid);
+                    Game game;
+                    if (null != oldGame) {
+                        game = oldGame.clone();
+                    } else {
+                        game = new Game();
+                    }
+                    GameUtils.setGameProperty(game, fields);
 
-                if ((!oldvpitcher.equals(game.getVisitorpitcher()) && !oldvpitcher.equals("") && !game.getVisitorpitcher().equalsIgnoreCase("UNDECIDED"))
-                        || (!oldhpitcher.equals(game.getHomepitcher()) && !oldhpitcher.equals("") && !game.getHomepitcher().equalsIgnoreCase("UNDECIDED"))
-                ) { //pitching change
-                    int popupsecs = 15;
-                    int location = 2;
-                    String hrmin = AppController.getCurrentHoursMinutes();
-                    String teaminfo = game.getVisitorgamenumber() + "-" + game.getShortvisitorteam() + "@" + game.getHomegamenumber() + "-" + game.getShorthometeam();
+                    if (null != oldGame) {
+                        oldvpitcher = oldGame.getVisitorpitcher();
+                        oldhpitcher = oldGame.getHomepitcher();
+                        oldgametime = oldGame.getGametime();
+
+                    }
+//                log("new game! " + data);
+                    AppController.pushGameToCache(game);
+                    MqMessageProcessor.getInstance().addGame(game);
+                    Sport s = AppController.getSportByLeagueId(game.getLeague_id());
+
+                    boolean seriesprice = false;
+                    try {
+                        seriesprice = game.isSeriesprice();
+                    } catch (Exception ex) {
+                        log("series price exception " + ex);
+                    }
+
+                    if ((!oldvpitcher.equals(game.getVisitorpitcher()) && !oldvpitcher.equals("") && !game.getVisitorpitcher().equalsIgnoreCase("UNDECIDED"))
+                            || (!oldhpitcher.equals(game.getHomepitcher()) && !oldhpitcher.equals("") && !game.getHomepitcher().equalsIgnoreCase("UNDECIDED"))
+                    ) { //pitching change
+                        int popupsecs = 15;
+                        int location = 2;
+                        String hrmin = AppController.getCurrentHoursMinutes();
+                        String teaminfo = game.getVisitorgamenumber() + "-" + game.getShortvisitorteam() + "@" + game.getHomegamenumber() + "-" + game.getShorthometeam();
 
 //                    String popalertname = "Alert at:" + hrmin + "\nPitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 //                    AppController.alertsVector.addElement(popalertname);
-                    String mesg = "Pitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
-                    AppController.addAlert(hrmin, mesg);
+                        String mesg = "Pitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                        AppController.addAlert(hrmin, mesg);
 
-                    new UrgentMessage("<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
-                            s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                        new UrgentMessage("<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
+                                s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
 
-                            "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" +game.getVisitorpitcher() + "</TD></TR>" +
-                            "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR>" +
+                                "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
+                                "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR>" +
 
-                            "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
+                                "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
 
 
-                    //playSound("pitchingchange.wav");
-                    new SoundPlayer("pitchingchange.wav");
+                        //playSound("pitchingchange.wav");
+                        new SoundPlayer("pitchingchange.wav");
 
-                    String tc = new java.util.Date() + "..PITCHING CHANGE!!!<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
-                            s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                        String tc = new java.util.Date() + "..PITCHING CHANGE!!!<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
+                                s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
 
-                            "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
-                            "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR></TABLE></FONT></HTML>";
-                    try {
-                        //what is the use of the statement? 05/01/2022
+                                "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
+                                "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR></TABLE></FONT></HTML>";
+                        try {
+                            //what is the use of the statement? 05/01/2022
 //                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
-                    } catch (Exception ex) {
-                        log(ex);
-                    }
-                    log(tc);
-                }
-
-                if (!seriesprice && oldgametime != null && !"".equals(oldgametime) && !oldgametime.toString().equals(game.getGametime().toString())) // time change
-                {
-
-                    String prefs = AppController.getUser().getTimechangeAlert();
-                    String[] arr = prefs.split("\\|");
-                    boolean popup = false;
-                    boolean sound = false;
-                    int popupsecs = 15;
-                    int location = 6;
-                    String audiofile = "";
-                    String[] sports;
-                    boolean goodsport = false;
-
-                    popup = Utils.parse(arr[0],popup);
-                    sound =  Utils.parse(arr[1],sound);
-                    popupsecs = Utils.parse(arr[2],popupsecs);
-                    location = Utils.parse(arr[3],location);
-                    audiofile = arr[4];
-
-                    try {
-                        sports = arr[5].split(",");
-                        for (String sportid : sports) {
-                            if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname()) || sportid.equalsIgnoreCase("All Sports")) {
-                                goodsport = true;
-                                break;
-                            }
+                        } catch (Exception ex) {
+                            log(ex);
                         }
-                    } catch (Exception ex) {
-                        log("exception in splitting="+arr[5]+".."+ex);
-                    }
-
-                    if (goodsport) {
-                        if (popup) {
-
-                            String hrmin = AppController.getCurrentHoursMinutes();
-                            String teaminfo = game.getVisitorgamenumber() + "-" + game.getShortvisitorteam() + "@" + game.getHomegamenumber() + "-" + game.getShorthometeam();
-                            String mesg = "Time Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + game.getGametime();
-                            AppController.addAlert(hrmin, mesg);
-
-                            new UrgentMessage("<HTML><H1>Time Change</H1><FONT COLOR=BLUE>" +
-                                    s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
-
-                                    "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD></TR>" +
-                                    "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD></TR>" +
-                                    "<TR><TD>From " + oldgametime + "</TD><TD>to " + game.getGametime() + "</TD></TR>" +
-                                    "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
-
-
-                        }
-
-                        if (sound) {
-                            if (audiofile.equals("")) {
-                                new SoundPlayer("timechange.wav");
-                            } else {
-                                new SoundPlayer(audiofile);
-                            }
-                        }
-
-                    }
-                    String tc = new java.util.Date() + "..TIME CHANGE!!! " + game.getVisitorgamenumber() + "..old=" + oldgametime + "...new=" + game.getGametime();
-                    try {
-//                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
                         log(tc);
-                    } catch (Exception ex) {
-                        log(ex);
+                    }
+
+                    if (!seriesprice && oldgametime != null && !"".equals(oldgametime) && !oldgametime.toString().equals(game.getGametime().toString())) // time change
+                    {
+
+                        String prefs = AppController.getUser().getTimechangeAlert();
+                        String[] arr = prefs.split("\\|");
+                        boolean popup = false;
+                        boolean sound = false;
+                        int popupsecs = 15;
+                        int location = 6;
+                        String audiofile = "";
+                        String[] sports;
+                        boolean goodsport = false;
+
+                        popup = Utils.parse(arr[0], popup);
+                        sound = Utils.parse(arr[1], sound);
+                        popupsecs = Utils.parse(arr[2], popupsecs);
+                        location = Utils.parse(arr[3], location);
+                        audiofile = arr[4];
+
+                        try {
+                            sports = arr[5].split(",");
+                            for (String sportid : sports) {
+                                if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname()) || sportid.equalsIgnoreCase("All Sports")) {
+                                    goodsport = true;
+                                    break;
+                                }
+                            }
+                        } catch (Exception ex) {
+                            log("exception in splitting=" + arr[5] + ".." + ex);
+                        }
+
+                        if (goodsport) {
+                            if (popup) {
+
+                                String hrmin = AppController.getCurrentHoursMinutes();
+                                String teaminfo = game.getVisitorgamenumber() + "-" + game.getShortvisitorteam() + "@" + game.getHomegamenumber() + "-" + game.getShorthometeam();
+                                String mesg = "Time Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + game.getGametime();
+                                AppController.addAlert(hrmin, mesg);
+
+                                new UrgentMessage("<HTML><H1>Time Change</H1><FONT COLOR=BLUE>" +
+                                        s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+
+                                        "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD></TR>" +
+                                        "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD></TR>" +
+                                        "<TR><TD>From " + oldgametime + "</TD><TD>to " + game.getGametime() + "</TD></TR>" +
+                                        "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
+
+
+                            }
+
+                            if (sound) {
+                                if (audiofile.equals("")) {
+                                    new SoundPlayer("timechange.wav");
+                                } else {
+                                    new SoundPlayer(audiofile);
+                                }
+                            }
+
+                        }
+                        String tc = new java.util.Date() + "..TIME CHANGE!!! " + game.getVisitorgamenumber() + "..old=" + oldgametime + "...new=" + game.getGametime();
+                        try {
+//                        writeToFile("c:\\spankoddsclient2\\timechanges.txt", tc, true);
+                            log(tc);
+                        } catch (Exception ex) {
+                            log(ex);
+                        }
                     }
                 }
+                catch(Exception ex)
+                {
+                    log("Games Consumer EXCEPTION DATA="+data+".."+ex);
 
+                }
             } else if (messagetype.equals("NEWORUPDATE2")) // this comes from deleteyesterdaygamesandpublish whith a few additional flags
             {
                 //log("just received neworupdate2");
-                String data = textMessage.getText();
+                data = textMessage.getText();
                 String [] fields = GameUtils.parseGameString(data);
                 Game g = new Game();
                 GameUtils.setGameProperty(g,fields);
@@ -290,7 +297,7 @@ public class GamesConsumer implements MessageListener {
                     // END NEW CODE
 
             } else if (messagetype.equals("REMOVE")) {
-                String data = textMessage.getText(); // this is gamenumber
+                data = textMessage.getText(); // this is gamenumber
                 String[] gameidarr = data.split("~");
                 log("GamesConsumer: REMOVE game ids " + data);
                 AppController.removeGamesAndCleanup(gameidarr);
