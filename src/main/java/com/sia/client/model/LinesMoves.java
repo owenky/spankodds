@@ -6,7 +6,7 @@ import com.sia.client.ui.Totalline;
 public class LinesMoves
 {
     static int debuggameid = 959;
-    static boolean debug = true;
+    static boolean debug = false;
     static boolean initialized = false;
     static double[] cfsides = new double[100];
     static double[] cftotals = new double[100];
