@@ -25,6 +25,7 @@ public class Config {
     private AlertSeekerMethods alertSeekerMethods = new AlertSeekerMethods();
     private SimpleValueWraper<String> bookies;
     private FontConfig fontConfig;
+    private ColumnDisplaySetting columnDisplaySetting;
     @JsonIgnore
     private boolean syncStatus = true;
     private static final Config instance;
@@ -88,6 +89,17 @@ public class Config {
         });
 
     }
+    @JsonProperty
+    public ColumnDisplaySetting getColumnDisplaySetting() {
+        if ( null == columnDisplaySetting) {
+            columnDisplaySetting = new ColumnDisplaySetting();
+        }
+        return columnDisplaySetting;
+    }
+    @JsonProperty
+    public void setColumnDisplaySetting(ColumnDisplaySetting columnDisplaySetting) {
+        this.columnDisplaySetting = columnDisplaySetting;
+    }
     @JsonIgnore
     public void setOutOfSync() {
         this.syncStatus = false;
@@ -95,6 +107,7 @@ public class Config {
     public static String serialize() throws JsonProcessingException {
         return Utils.getObjectMapper().writeValueAsString(instance);
     }
+
     public static void deSerialize(String str) throws IOException {
         if ( null != str && 0 < str.length()) {
             ObjectMapper objectMapper = Utils.getObjectMapper();

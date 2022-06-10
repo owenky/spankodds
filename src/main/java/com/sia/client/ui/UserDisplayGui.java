@@ -1,40 +1,25 @@
 package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
-import com.jidesoft.swing.*;
+import com.sia.client.config.ColumnDisplaySetting;
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
-import com.sia.client.media.SoundPlayer;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.Sport;
-import com.sia.client.model.SportType;
 import com.sia.client.model.UserDisplaySettings;
-import com.sia.client.ui.comps.PopupLocationConfig;
+import com.sia.client.ui.comps.SbtToggleButton;
+import com.sia.client.ui.comps.UICompValueBinder;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.File;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.sia.client.config.Utils.log;
-import static com.sia.client.config.Utils.showMessageDialog;
-
-public class UserDisplayGui extends AbstractLayeredDialog implements ActionListener
-{
+public class UserDisplayGui extends AbstractLayerFrame implements ActionListener{
 
 
     String footballdefault;
@@ -52,8 +37,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     Color secondcolor;
     Color thirdcolor;
 
-    private static final String ximage="blocking.jpg";
-    private static final String checkimage="unblocking.jpg";
+    private static final String ximage = "blocking.jpg";
+    private static final String checkimage = "unblocking.jpg";
 
     String[] secslist = new String[120];
 
@@ -69,7 +54,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     JComboBox secondmovesecs;
 
 
-
     JComboBox footballcb;
     JComboBox basketballcb;
     JComboBox baseballcb;
@@ -80,26 +64,29 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     JComboBox golfcb;
     JComboBox tenniscb;
 
-    JButton savebutton =  new JButton("Save");
+    JButton savebutton = new JButton("Save");
 
-
-
-    private static final MatteBorder bestborder = new MatteBorder(2, 1, 2, 1, new Color(51,0, 0));
+    private static final MatteBorder bestborder = new MatteBorder(2, 1, 2, 1, new Color(51, 0, 0));
     private String[] display = new String[8];
     private String[] display2 = new String[8];
 
 
-    JToggleButton autofitcolumnsbutton = new JToggleButton("autofitcolumns",checkimage,"Click to stop columns from autofitting",ximage,"Click to enable columns to auto fit");
-    JToggleButton showcpotooltipbutton = new JToggleButton("showcpotooltip",checkimage,"Click to disbale C/P/O line history",ximage,"Click to enabale C/P/O line history");
-    JToggleButton showlinedirectionmovebuttom = new JToggleButton("showlinedirectionmove",checkimage,"Click to disbale line direction move",ximage,"Click to enable line direction move");
-    JToggleButton borderbestbutton = new JToggleButton("borderbest",checkimage,"Click to disbale bordering best line",ximage,"Click to enable bordering best line");
+    SbtToggleButton autofitcolumnsbutton = new SbtToggleButton("autofitcolumns", checkimage, "Click to stop columns from autofitting", ximage, "Click to enable columns to auto fit");
+    JToggleButton showcpotooltipbutton = new JToggleButton("showcpotooltip", checkimage, "Click to disbale C/P/O line history", ximage, "Click to enabale C/P/O line history");
+    JToggleButton showlinedirectionmovebuttom = new JToggleButton("showlinedirectionmove", checkimage, "Click to disbale line direction move", ximage, "Click to enable line direction move");
+    JToggleButton borderbestbutton = new JToggleButton("borderbest", checkimage, "Click to disbale bordering best line", ximage, "Click to enable bordering best line");
+
+    private final ColumnDisplaySetting columnDisplaySetting = Config.instance().getColumnDisplaySetting();
+    private final JLabel editStatusLabel = new JLabel();
 
     public UserDisplayGui(SportsTabPane stp) {
-        super(stp,"Display Settings");
+        super(stp, "Display Settings");
     }
+
     @Override
     protected JComponent getUserComponent() {
-        savebutton.addActionListener(this);
+//        savebutton.addActionListener(this);
+        savebutton.addActionListener(this::save);
         footballdefault = UserDisplaySettings.getFootballdefault();
         basketballdefault = UserDisplaySettings.getBasketballdefault();
         baseballdefault = UserDisplaySettings.getBaseballdefault();
@@ -148,8 +135,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         }
 
 
-
-
         firstmovesecs = new JComboBox(secslist);
         secondmovesecs = new JComboBox(secslist);
 
@@ -163,11 +148,11 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         golfcb = new JComboBox(display2);
         tenniscb = new JComboBox(display2);
 
-        firstmovesecs.setSelectedIndex(firstmoveseconds-1);
-        secondmovesecs.setSelectedIndex(secondmoveseconds-1);
+        firstmovesecs.setSelectedIndex(firstmoveseconds - 1);
+        secondmovesecs.setSelectedIndex(secondmoveseconds - 1);
 
 
-        List<String> abcd  = Arrays.asList(display);
+        List<String> abcd = Arrays.asList(display);
         footballcb.setSelectedIndex(abcd.indexOf(footballdefault));
         basketballcb.setSelectedIndex(abcd.indexOf(basketballdefault));
         baseballcb.setSelectedIndex(abcd.indexOf(baseballdefault));
@@ -177,12 +162,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         autoracingcb.setSelectedIndex(abcd.indexOf(autoracingdefault));
         golfcb.setSelectedIndex(abcd.indexOf(golfdefault));
         tenniscb.setSelectedIndex(abcd.indexOf(tennisdefault));
-
-
-
-
-
-
 
 
         LookAndFeelFactory.installJideExtension();
@@ -196,14 +175,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         JPanel panel2 = new JPanel();
 
 
-
-
-
-
-
-
-
-
         panel.setBorder(BorderFactory.createEtchedBorder());
         panel.setLayout(new GridBagLayout());
 
@@ -212,11 +183,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
 
         panel2.setBorder(BorderFactory.createEtchedBorder());
         panel2.setLayout(new GridBagLayout());
-
-
-
-
-
 
 
         Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -229,11 +195,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         JLabel borderbest = new JLabel("  Show Border for Best Line?");
 
 
-
-
-
-        JLabel uplabel = new JLabel( Utils.getImageIcon(SiaConst.ImageFile.ICON_UP));
-        JLabel downlabel = new JLabel( Utils.getImageIcon(SiaConst.ImageFile.ICON_DOWN));
+        JLabel uplabel = new JLabel(Utils.getImageIcon(SiaConst.ImageFile.ICON_UP));
+        JLabel downlabel = new JLabel(Utils.getImageIcon(SiaConst.ImageFile.ICON_DOWN));
         JPanel updownpanel = new JPanel();
         updownpanel.setBackground(Color.BLACK);
         updownpanel.add(uplabel);
@@ -297,7 +260,7 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         c1.gridwidth = 4;
         panel1.add(football, c1);
         c1.gridx = 5;
-        c1.gridwidth =4;
+        c1.gridwidth = 4;
         panel1.add(footballcb, c1);
 
 
@@ -366,17 +329,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel1.add(tenniscb, c1);
 
 
-
-
-
-
-
-
-
-
-
-
-
         c.anchor = GridBagConstraints.WEST;
         c.gridheight = 2;
         c.gridy = 0;
@@ -394,8 +346,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         c.gridx = 4;
         c.gridwidth = 4;
         panel2.add(showcurrentpreviousopenertooltip, c);
-
-
 
 
         c.gridy = 4;
@@ -445,26 +395,24 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel.add(firstmovesecs, c2);
         c2.gridx = 5;
         c2.gridwidth = 4;
-        panel.add(secondcolorpart2 , c2);
+        panel.add(secondcolorpart2, c2);
         c2.gridx = 9;
         c2.gridwidth = 1;
-        panel.add(secondcolorChooserButton  , c2);
+        panel.add(secondcolorChooserButton, c2);
 
         c2.gridy = 4;
         c2.gridx = 0;
         c2.gridwidth = 3;
-        panel.add(thirdcolorpart1 , c2);
+        panel.add(thirdcolorpart1, c2);
         c2.gridx = 4;
         c2.gridwidth = 1;
-        panel.add(secondmovesecs , c2);
+        panel.add(secondmovesecs, c2);
         c2.gridx = 5;
         c2.gridwidth = 4;
-        panel.add(thirdcolorpart2  , c2);
+        panel.add(thirdcolorpart2, c2);
         c2.gridx = 9;
         c2.gridwidth = 1;
-        panel.add(thirdcolorChooserButton  , c2);
-
-
+        panel.add(thirdcolorChooserButton, c2);
 
 
         //************************end of panel*******************
@@ -481,7 +429,7 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        autofitcolumnsbutton.addActionListener(this);
+//        autofitcolumnsbutton.addActionListener(this);
         showcpotooltipbutton.addActionListener(this);
         showlinedirectionmovebuttom.addActionListener(this);
         borderbestbutton.addActionListener(this);
@@ -498,13 +446,10 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
 
         firstcolorChooserButton.addColorChangedListener(new ColorChangedListener() {
             @Override
-            public void colorChanged(Color newColor)
-            {
-                System.out.println("new first color is "+newColor);
+            public void colorChanged(Color newColor) {
+                System.out.println("new first color is " + newColor);
             }
         });
-
-
 
 
         return userComponent;
@@ -512,15 +457,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
     }
 
 
-
-
-
-
-
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getSource() == savebutton)
-        {
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == savebutton) {
             UserDisplaySettings.setFootballdefault(display[footballcb.getSelectedIndex()]);
             UserDisplaySettings.setBasketballdefault(display[basketballcb.getSelectedIndex()]);
             UserDisplaySettings.setBaseballdefault(display[baseballcb.getSelectedIndex()]);
@@ -531,8 +469,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
             UserDisplaySettings.setGolfdefault(display[golfcb.getSelectedIndex()]);
             UserDisplaySettings.setTennisdefault(display[tenniscb.getSelectedIndex()]);
 
-            UserDisplaySettings.setFirstmoveseconds(Integer.parseInt(""+firstmovesecs.getSelectedItem()));
-            UserDisplaySettings.setSecondmoveseconds(Integer.parseInt(""+secondmovesecs.getSelectedItem()));
+            UserDisplaySettings.setFirstmoveseconds(Integer.parseInt("" + firstmovesecs.getSelectedItem()));
+            UserDisplaySettings.setSecondmoveseconds(Integer.parseInt("" + secondmovesecs.getSelectedItem()));
 
 
             UserDisplaySettings.setFirstcolor(firstcolorChooserButton.getSelectedColor());
@@ -545,20 +483,27 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
             UserDisplaySettings.setShowborderbestline(borderbestbutton.isEnabled());
 
 
-
-            close();
+            closePanes();
 
 
         }
-        if(e.getSource() instanceof JToggleButton)
-        {
-            ((JToggleButton)e.getSource()).toggle();
+        if (e.getSource() instanceof JToggleButton) {
+            ((JToggleButton) e.getSource()).toggle();
         }
     }
 
 
-
-
-
+    @Override
+    public JLabel getEditStatusLabel() {
+        return editStatusLabel;
+    }
+    @Override
+    protected ColumnDisplaySetting getBindingObject() {
+         return columnDisplaySetting;
+    }
+    @Override
+    protected void bindProperties(UICompValueBinder uiCompValueBinder) {
+        uiCompValueBinder.bind("autoFit",autofitcolumnsbutton);
+    }
 }
 

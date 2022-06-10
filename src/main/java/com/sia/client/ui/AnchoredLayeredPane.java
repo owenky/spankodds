@@ -198,6 +198,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         } else {
             if ( isFloating ) {
                 jInteralFrame = new EmbededFrame(title,true,true,true,true);
+                jInteralFrame.setCloseValidor(closeValidor);
                 jInteralFrame.setLayout(new BorderLayout());
                 jInteralFrame.add(jScrollPane,BorderLayout.CENTER);
                 containingComp = jInteralFrame;

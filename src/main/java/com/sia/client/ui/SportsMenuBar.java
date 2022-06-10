@@ -153,7 +153,6 @@ public class SportsMenuBar extends JMenuBar {
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
         LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb, AlertAttrManager.getAlertSeekerMethods());
         lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim);
-        lineSeekerAlertMethodDialog.updateLayout();
     }
     private JMenuItem createGameAlertMenuItem(String command) {
         JMenuItem menuItem = new JMenuItem(command);

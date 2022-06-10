@@ -598,7 +598,7 @@ public class CustomTab2 extends AbstractLayeredDialog {
                 };
             }
             SpankyWindow.applyToAllWindows(consumer);
-            close();
+            closePanes();
         }
     }
     private void setMainScreenProperties(MainScreen ms) {

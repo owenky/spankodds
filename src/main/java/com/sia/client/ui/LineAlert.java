@@ -673,7 +673,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
 
         removeBut.addActionListener(ae -> {
             AppController.removeLineAlertNode(lan);
-            close();
+            closePanes();
         });
 
         saveBut.addActionListener(ae -> {
@@ -900,7 +900,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
             } else {
                 AppController.addLineAlertNode(lan2);
             }
-            close();
+            closePanes();
         });
 
         JPanel testbutPanel = new JPanel(new GridLayout(0, 2, 2, 2));
