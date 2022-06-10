@@ -100,7 +100,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
                 TableColumn tc = table.getColumnModel().getColumn(colModelIndex);
                 String bookieShortName = String.valueOf(tc.getHeaderValue());
                 Integer bookieId = BookieManager.instance().getBookieId(bookieShortName);
-                if (  null != bookieId) {
+                if (  null != bookieId && bookieId < 990) {
                     SwingUtilities.convertPointToScreen(point,table);
                     Game game = accessableToGame.getGame(rowModelIndex);
                     GameHistPane.showHistPane(stp,point,game,bookieId);
