@@ -38,7 +38,7 @@ public class ChartView {
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);
-        displayTransformer = new DisplayTransformer(gid);
+
 
 
     }
@@ -53,7 +53,7 @@ public class ChartView {
     }
 
     public void setCurrentBoxes() {
-
+        displayTransformer = new DisplayTransformer(gid);
         ld1.setData("");
         ld2.setData("");
         ld1.setIconPath(ICON_BLANK);
