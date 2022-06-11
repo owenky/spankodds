@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.sia.client.model.Games;
-import com.sia.client.ui.comps.ActionableOnChanged;
+import com.sia.client.model.UserDisplaySettings;
 import com.sia.client.ui.comps.SimpleValueWraper;
 import com.sia.client.ui.lineseeker.AlertConfig;
 import com.sia.client.ui.lineseeker.AlertSeekerMethods;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class Config {
@@ -25,6 +24,7 @@ public class Config {
     private AlertSeekerMethods alertSeekerMethods = new AlertSeekerMethods();
     private SimpleValueWraper<String> bookies;
     private FontConfig fontConfig;
+    private UserDisplaySettings userDisplaySettings;
     @JsonIgnore
     private boolean syncStatus = true;
     private static final Config instance;
@@ -88,16 +88,28 @@ public class Config {
         });
 
     }
+    @JsonProperty
+    public UserDisplaySettings getUserDisplaySettings() {
+        if ( null == userDisplaySettings) {
+            userDisplaySettings = new UserDisplaySettings();
+        }
+        return userDisplaySettings;
+    }
+    @JsonProperty
+    public void setUserDisplaySettings(UserDisplaySettings userDisplaySettings) {
+        this.userDisplaySettings = userDisplaySettings;
+    }
     @JsonIgnore
     public void setOutOfSync() {
         this.syncStatus = false;
     }
     public static String serialize() throws JsonProcessingException {
-        return Utils.getObjectMapper().writeValueAsString(instance);
+        return OmFactory.getObjectMapper().writeValueAsString(instance);
     }
+
     public static void deSerialize(String str) throws IOException {
         if ( null != str && 0 < str.length()) {
-            ObjectMapper objectMapper = Utils.getObjectMapper();
+            ObjectMapper objectMapper = OmFactory.getObjectMapper();
             ObjectReader objectReader = objectMapper.readerForUpdating(instance);
             objectReader.readValue(str, instance.getClass());
         }

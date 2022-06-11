@@ -2,16 +2,13 @@ package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.*;
-import com.jidesoft.tree.TreeUtils;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
-import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.comps.PopupLocationConfig;
 import com.sia.client.ui.control.SportsTabPane;
-import com.sia.client.ui.lineseeker.LineSeekerAlertMethodAttr;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -26,8 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 import java.util.List;
 
