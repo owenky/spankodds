@@ -25,7 +25,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	private boolean isRequired = false;
 	private boolean isNewItemAllowed = false;
 	private boolean shouldFireItemStateChanged = true;
-	private boolean toFireValueChangedEvent = true; // toFireValueChangedEvent==trueʱ��fireValueChangedEvent()�Żᱻ����
+	private boolean toFireValueChangedEvent = true;
 	private final List<ValueChangedListener> valueChangedListeners = new ArrayList<>();
 	private DefaultComboBoxListener defaultListener;
 	private boolean shouldHaveBlankItem = true;

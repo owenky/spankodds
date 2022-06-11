@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 import com.sia.client.model.Sport;
@@ -9,6 +10,7 @@ import com.sia.client.model.UserDisplaySettings;
 public class DisplayTransformer {
 
     private final int gameId;
+    private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
 
     public DisplayTransformer(int gameId) {
         this.gameId = gameId;
@@ -31,40 +33,40 @@ public class DisplayTransformer {
 
             if (sp.getSportname().equals(SiaConst.SportName.Football))
             {
-                display = UserDisplaySettings.getFootballdefault();
+                display = userDisplaySettings.getFootballdefault();
 
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Basketball))
             {
-                display = UserDisplaySettings.getBasketballdefault();
+                display = userDisplaySettings.getBasketballdefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Baseball))
             {
-                display = UserDisplaySettings.getBaseballdefault();
+                display = userDisplaySettings.getBaseballdefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Hockey))
             {
-                display = UserDisplaySettings.getHockeydefault();
+                display = userDisplaySettings.getHockeydefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Fighting))
             {
-                display = UserDisplaySettings.getFightingdefault();
+                display = userDisplaySettings.getFightingdefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Soccer))
             {
-                display = UserDisplaySettings.getSoccerdefault();
+                display = userDisplaySettings.getSoccerdefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Auto_Racing))
             {
-                display = UserDisplaySettings.getAutoracingdefault();
+                display = userDisplaySettings.getAutoracingdefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Golf))
             {
-                display = UserDisplaySettings.getGolfdefault();
+                display = userDisplaySettings.getGolfdefault();
             }
             else if (sp.getSportname().equals(SiaConst.SportName.Tennis))
             {
-                display = UserDisplaySettings.getTennisdefault();
+                display = userDisplaySettings.getTennisdefault();
             }
             else
             {

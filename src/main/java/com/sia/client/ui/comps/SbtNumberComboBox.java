@@ -37,7 +37,11 @@ public class SbtNumberComboBox extends SBTComboBox<Number, NumberSelectionItem> 
     }
     @Override
     public Number getValue() {
-        return ((NumberSelectionItem)super.getValue()).getKeyValue();
+        Object selectedvalue = super.getValue();
+        if ( null != selectedvalue ) {
+            selectedvalue = ((NumberSelectionItem) selectedvalue).getKeyValue();
+        }
+        return (Number)selectedvalue;
     }
     @Override
     public void setValue(Object obj) {

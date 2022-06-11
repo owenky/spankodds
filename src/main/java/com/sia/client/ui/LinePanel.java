@@ -49,6 +49,7 @@ public class LinePanel extends JPanel {
     final JComponent bottomPanel;
     final JComponent drawPanel;
     final JComponent totalPanel;
+    private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
 
 
     public LinePanel() {
@@ -219,7 +220,7 @@ public class LinePanel extends JPanel {
             top.setBorder(null);
         }
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             top.setBorder(null);
         }
@@ -229,7 +230,7 @@ public class LinePanel extends JPanel {
         }
 
         top.setToolTipText(ld.getTooltip());
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             top.setIcon(null);
         }
@@ -304,7 +305,7 @@ public class LinePanel extends JPanel {
             bottom.setBorder(null);
         }
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             bottom.setBorder(null);
         }
@@ -315,7 +316,7 @@ public class LinePanel extends JPanel {
 
 
         bottom.setToolTipText(ld.getTooltip());
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             bottom.setIcon(null);
         }
@@ -393,14 +394,14 @@ public class LinePanel extends JPanel {
             draw.setBorder(null);
         }
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             draw.setBorder(null);
         }
 
 
 
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             draw.setIcon(null);
         }
@@ -478,7 +479,7 @@ public class LinePanel extends JPanel {
         }
 
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             total.setBorder(null);
         }
@@ -488,7 +489,7 @@ public class LinePanel extends JPanel {
             total.setBorder(scalpborder);
         }
 
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             total.setIcon(null);
         }

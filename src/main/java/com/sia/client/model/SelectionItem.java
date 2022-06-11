@@ -58,9 +58,12 @@ public class SelectionItem<T> implements Comparable<SelectionItem<T>> {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		SelectionItem<?> that = (SelectionItem<?>) o;
-		return keyValue.equals(that.keyValue);
+		if ( o instanceof SelectionItem ) {
+			SelectionItem<?> that = (SelectionItem<?>) o;
+			return keyValue.equals(that.keyValue);
+		} else {
+			return keyValue.equals(String.valueOf(o));
+		}
 	}
 
 	@Override

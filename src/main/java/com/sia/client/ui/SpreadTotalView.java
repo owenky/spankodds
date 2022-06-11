@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.ImageFile;
 import com.sia.client.model.*;
@@ -50,6 +51,7 @@ public class SpreadTotalView extends ViewValue {
     private long clearts;
     private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
     private final DisplayTransformer displayTransformer;
+    private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
 
 
 
@@ -142,14 +144,14 @@ public class SpreadTotalView extends ViewValue {
                 whowasbetspread = sl.getWhowasbet();
                 if (shouldGoRed(sl))
                 {
-                    spreadcolor = UserDisplaySettings.getFirstcolor();
+                    spreadcolor = userDisplaySettings.getFirstcolor();
                 }
                 else if (shouldGoSecondColor(sl))
                 {
-                    spreadcolor = UserDisplaySettings.getSecondcolor();
+                    spreadcolor = userDisplaySettings.getSecondcolor();
                 }
                 else if (clearts < sl.getCurrentts()) {
-                    spreadcolor = UserDisplaySettings.getThirdcolor();
+                    spreadcolor = userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("S"+id);
                 } else {
@@ -179,11 +181,11 @@ public class SpreadTotalView extends ViewValue {
 
                 if (shouldGoRed(tl))
                 {
-                    totalcolor = UserDisplaySettings.getFirstcolor();
+                    totalcolor = userDisplaySettings.getFirstcolor();
                 }
                 else if (shouldGoSecondColor(tl))
                 {
-                    totalcolor = UserDisplaySettings.getSecondcolor();
+                    totalcolor = userDisplaySettings.getSecondcolor();
                 }
                  else if (clearts < tl.getCurrentts()) {
                     totalcolor = Color.BLACK;
@@ -210,11 +212,11 @@ public class SpreadTotalView extends ViewValue {
 
                 if (shouldGoRed(ml))
                 {
-                    moneycolor = UserDisplaySettings.getFirstcolor();
+                    moneycolor = userDisplaySettings.getFirstcolor();
                 }
                 else if (shouldGoSecondColor(ml))
                 {
-                    moneycolor = UserDisplaySettings.getSecondcolor();
+                    moneycolor = userDisplaySettings.getSecondcolor();
                 }
                 else if (clearts < ml.getCurrentts())
                 {
@@ -248,11 +250,11 @@ public class SpreadTotalView extends ViewValue {
 
                 if (shouldGoRed(ttl))
                 {
-                    teamtotalcolor = UserDisplaySettings.getFirstcolor();
+                    teamtotalcolor = userDisplaySettings.getFirstcolor();
                 }
                 else if (shouldGoSecondColor(ttl))
                 {
-                    teamtotalcolor = UserDisplaySettings.getSecondcolor();
+                    teamtotalcolor = userDisplaySettings.getSecondcolor();
                 }
                else if (clearts < ttl.getCurrentts()) {
                     teamtotalcolor = Color.BLACK;
@@ -1047,7 +1049,7 @@ public class SpreadTotalView extends ViewValue {
 
                     if (!limithtml.equals("0 / 0 / 0"))
                     {
-                        if(!UserDisplaySettings.isShowcpo())
+                        if(!userDisplaySettings.getShowcpo())
                         {
                             toptooltip = "";
                             bottomtooltip = "";
@@ -1056,7 +1058,7 @@ public class SpreadTotalView extends ViewValue {
                         bottomtooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+bottomtooltip+"</table>";
                         //setTooltiptext("<html><body>" + limithtml + "</body></html>");
                     }
-                    else if(UserDisplaySettings.isShowcpo())
+                    else if(userDisplaySettings.getShowcpo())
                     {
                         toptooltip = "<table>"+toptooltip+"</table>";
                         bottomtooltip = "<table>"+bottomtooltip+"</table>";
@@ -1858,7 +1860,7 @@ public class SpreadTotalView extends ViewValue {
     private boolean shouldGoRed(Line line) {
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
-        int ms = UserDisplaySettings.getFirstmoveseconds()*1000;
+        int ms = userDisplaySettings.getFirstmoveseconds()*1000;
         boolean isRed = (tsnow - curTime) <= ms && clearts <= curTime;
         Game game = getGame();
         return isRed;
@@ -1867,7 +1869,7 @@ public class SpreadTotalView extends ViewValue {
     private boolean shouldGoSecondColor(Line line) {
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
-        int ms = UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000;
+        int ms = userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000;
         boolean issecondcolor = (tsnow - curTime) <= ms && clearts <= curTime;
         Game game = getGame();
         return issecondcolor;

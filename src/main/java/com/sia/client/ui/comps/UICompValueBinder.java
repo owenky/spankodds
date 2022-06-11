@@ -2,7 +2,7 @@ package com.sia.client.ui.comps;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.sia.client.config.Utils;
+import com.sia.client.config.OmFactory;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.TreeSelectionEvent;
@@ -52,7 +52,7 @@ public class UICompValueBinder {
         return this;
     }
     public void persistJComponentValues() throws IOException {
-        ObjectMapper objectMapper = Utils.getObjectMapper();
+        ObjectMapper objectMapper = OmFactory.getObjectMapper();
         Map<String,Object> valueMap = new HashMap<>();
         for(String name: name2UiCompMap.keySet()) {
             ActionableOnChanged comp = name2UiCompMap.get(name);
@@ -64,7 +64,7 @@ public class UICompValueBinder {
         objectReader.readValue(json,data.getClass());
     }
     public void updateJComponentValues()  {
-        ObjectMapper objectMapper = Utils.getObjectMapper();
+        ObjectMapper objectMapper = OmFactory.getObjectMapper();
         Map<?,?> valuesMap = objectMapper.convertValue(data,Map.class);
         for(String name: name2UiCompMap.keySet()) {
             Object value = valuesMap.get(name);
@@ -74,7 +74,7 @@ public class UICompValueBinder {
     }
     public boolean areValuesChanged() {
         boolean isChanged = false;
-        ObjectMapper objectMapper = Utils.getObjectMapper();
+        ObjectMapper objectMapper = OmFactory.getObjectMapper();
         Map<?,?> existingValueMap = objectMapper.convertValue(data,Map.class);
         for(String name: name2UiCompMap.keySet()) {
             ActionableOnChanged comp = name2UiCompMap.get(name);
