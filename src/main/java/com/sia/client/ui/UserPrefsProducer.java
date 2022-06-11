@@ -84,7 +84,7 @@ public class UserPrefsProducer {
             Enumeration<String> tabsenum = tabsvec.elements();
             while (tabsenum.hasMoreElements()) {
                 String tab = "" + tabsenum.nextElement();
-
+                System.out.println("tab="+tab);
                 tabsindex = tabsindex + tab + ",";
             }
             if (tabsindex.length() > 0) {

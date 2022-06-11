@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -24,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 
@@ -133,22 +135,47 @@ public class TableColumnPopupMenu{
         log("change column color, headervalue is " + headerValue+", column index="+tableColumnIndex);
 
         JColorChooser chooser = new JColorChooser();
+        for (AbstractColorChooserPanel p : chooser.getChooserPanels())
+        {
+            //System.out.println("color panel="+p.getDisplayName());
+            if (p.getDisplayName().equals("HSV") || p.getDisplayName().equals("HSL") || p.getDisplayName().equals("CMYK"))
+            {
+                chooser.removeChooserPanel(p);
+            }
+        }
 
+        /*
         chooser.getSelectionModel().addChangeListener(arg0 -> {
             Color color2 = chooser.getColor();
             log("change column color, new color:"+color2);
         });
+        */
+        ActionListener okListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Color color = chooser.getColor();
+                if(color != null && color != Color.WHITE)
+                {
+                    log("color chosen was " + color);
+                    Integer bookieid = AppController.getBookieId(headerValue.toString());
+                    AppController.putColor(bookieid, color);
+                    MainGameTableModel model = ((MainGameTable)table).getModel();
+                    TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
+                    model.fireTableChanged(tme);
 
+                }
+
+            }
+        };
 
         JDialog dialog = JColorChooser.createDialog(null, headerValue + " Color",
-                true, chooser, null, null);
+                true, chooser, okListener, null);
 
 
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         Point p = menuBar.getLocationOnScreen();
         dialog.setLocation(p.x, p.y + menuBar.getSize().height);
         dialog.setVisible(true);
-
+/*
         Color color = chooser.getColor();
         if (color != null) {
             log("color chosen was " + color);
@@ -158,6 +185,8 @@ public class TableColumnPopupMenu{
             TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
             model.fireTableChanged(tme);
         }
+        */
+
     }
     public void hideMenu() {
         Utils.removeItemListeners(closeItem);
