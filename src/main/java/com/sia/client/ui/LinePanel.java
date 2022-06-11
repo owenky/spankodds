@@ -36,7 +36,8 @@ public class LinePanel extends JPanel {
     private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(222, 235, 52));
   //  private static final Color altcolor = new Color(204, 255, 229);
   //private static final Color altcolor = new Color(215, 215, 215);
-  private static final Color altcolor = UserDisplaySettings.getAltcolor();
+    private static final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
+    private static final Color altcolor = userDisplaySettings.getAltcolor();
     private static final Color openercolor = Color.LIGHT_GRAY;
     private final static int leftPaddingSpace = 0;
     private final static int rightPaddingSpace = 0;
@@ -50,7 +51,7 @@ public class LinePanel extends JPanel {
     final JComponent bottomPanel;
     final JComponent drawPanel;
     final JComponent totalPanel;
-    private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
+
 
 
     public LinePanel() {
@@ -172,7 +173,7 @@ public class LinePanel extends JPanel {
 
             }
 
-            if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+            if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
                 bgcolor = altcolor;
 
             }
@@ -268,7 +269,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
         }
 
@@ -355,7 +356,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
         }
 
@@ -440,7 +441,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
         }
 

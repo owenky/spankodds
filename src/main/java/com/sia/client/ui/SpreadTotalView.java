@@ -1501,8 +1501,8 @@ public class SpreadTotalView extends ViewValue {
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
         if (!isopenerbookie) {
-            ld1.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld2.setBackgroundColor(UserDisplaySettings.getOpenercolor());
+            ld1.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld2.setBackgroundColor(userDisplaySettings.getOpenercolor());
         } else {
             ld1.setBackgroundColor(Color.LIGHT_GRAY);
             ld2.setBackgroundColor(Color.LIGHT_GRAY);
@@ -1843,8 +1843,8 @@ public class SpreadTotalView extends ViewValue {
         ld2.setIconPath(null);
         ld1.setData(topboxS);
         ld2.setData(bottomboxS);
-        ld1.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld2.setBackgroundColor(UserDisplaySettings.getLastcolor());
+        ld1.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld2.setBackgroundColor(userDisplaySettings.getLastcolor());
         ld1.setBorder("");
         ld2.setBorder("");
         priorboxes[0] = ld1;

@@ -1,207 +1,113 @@
 package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
-import com.jidesoft.swing.*;
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
-import com.sia.client.media.SoundPlayer;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.Sport;
-import com.sia.client.model.SportType;
+import com.sia.client.model.PropItem;
 import com.sia.client.model.UserDisplaySettings;
-import com.sia.client.ui.comps.PopupLocationConfig;
+import com.sia.client.ui.comps.PropItemComboBox;
+import com.sia.client.ui.comps.SbtStringComboBox;
+import com.sia.client.ui.comps.UICompValueBinder;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.File;
-import java.util.*;
-import java.util.List;
 
-import static com.sia.client.config.Utils.log;
-import static com.sia.client.config.Utils.showMessageDialog;
+public class UserDisplayGui extends AbstractLayerFrame {
 
-public class UserDisplayGui extends AbstractLayeredDialog implements ActionListener
-{
-
-
-    String footballdefault;
-    String basketballdefault;
-    String baseballdefault;
-    String hockeydefault;
-    String fightingdefault;
-    String soccerdefault;
-    String autoracingdefault;
-    String golfdefault;
-    String tennisdefault;
-    int firstmoveseconds;
-    int secondmoveseconds;
-    Color firstcolor;
-    Color secondcolor;
-    Color thirdcolor;
-    Color altcolor;
-    Color openercolor;
-    Color lastcolor;
-
-    private static final String ximage="blocking.jpg";
-    private static final String checkimage="unblocking.jpg";
-
-    String[] secslist = new String[120];
+    private static final String ximage = "blocking.jpg";
+    private static final String checkimage = "unblocking.jpg";
+    private static final int maxSecs = 120;
+    private static final String[] secArr = new String[maxSecs];
 
     private Box box1 = Box.createVerticalBox();
     private Box box2 = Box.createVerticalBox();
     private Box box3 = Box.createVerticalBox();
-    ColorChooserButton firstcolorChooserButton;
-    ColorChooserButton secondcolorChooserButton;
-    ColorChooserButton thirdcolorChooserButton;
+    private ColorChooserButton firstcolorChooserButton;
+    private ColorChooserButton secondcolorChooserButton;
+    private ColorChooserButton thirdcolorChooserButton;
 
-    ColorChooserButton altcolorChooserButton;
-    ColorChooserButton openercolorChooserButton;
-    ColorChooserButton lastcolorChooserButton;
-
-
-    JComboBox firstmovesecs;
-    JComboBox secondmovesecs;
+    private ColorChooserButton altcolorChooserButton;
+    private ColorChooserButton openercolorChooserButton;
+    private ColorChooserButton lastcolorChooserButton;
 
 
-
-    JComboBox footballcb;
-    JComboBox basketballcb;
-    JComboBox baseballcb;
-    JComboBox hockeycb;
-    JComboBox fightingcb;
-    JComboBox soccercb;
-    JComboBox autoracingcb;
-    JComboBox golfcb;
-    JComboBox tenniscb;
-
-    JButton savebutton =  new JButton("Save");
+    private SbtStringComboBox firstmovesecs;
+    private SbtStringComboBox secondmovesecs;
 
 
+    private PropItemComboBox footballcb;
+    private PropItemComboBox  basketballcb;
+    private PropItemComboBox  baseballcb;
+    private PropItemComboBox  hockeycb;
+    private PropItemComboBox  fightingcb;
+    private PropItemComboBox  soccercb;
+    private PropItemComboBox  autoracingcb;
+    private PropItemComboBox  golfcb;
+    private PropItemComboBox  tenniscb;
 
-    private static final MatteBorder bestborder = new MatteBorder(2, 1, 2, 1, new Color(51,0, 0));
-    private String[] display = new String[8];
-    private String[] display2 = new String[8];
+    private final JButton savebutton = new JButton("Save");
 
 
-    JToggleButton autofitcolumnsbutton = new JToggleButton("autofitcolumns",checkimage,"Click to stop columns from autofitting",ximage,"Click to enable columns to auto fit");
-    JToggleButton showcpotooltipbutton = new JToggleButton("showcpotooltip",checkimage,"Click to disable C/P/O line history",ximage,"Click to enable C/P/O line history");
-    JToggleButton showlinedirectionmovebuttom = new JToggleButton("showlinedirectionmove",checkimage,"Click to disable line direction move",ximage,"Click to enable line direction move");
+    private static final MatteBorder bestborder = new MatteBorder(2, 1, 2, 1, new Color(51, 0, 0));
+    private static final PropItem[] items =  new PropItem[] {
+            new PropItem( "spreadtotal","Sides & Totals"),
+            new PropItem( "totalmoney","Totals & ML"),
+            new PropItem( "totalbothmoney","Totals & Both ML"),
+            new PropItem( "justspread","Just Sides"),
+            new PropItem( "justtotal","Just Totals"),
+            new PropItem( "justmoney","Just ML"),
+            new PropItem( "awayteamtotal","Away TT"),
+            new PropItem( "hometeamtotal","Home TT")
+    };
+    JToggleButton autofitcolumnsbutton = new JToggleButton("autofitcolumns", checkimage, "Click to stop columns from autofitting", ximage, "Click to enable columns to auto fit");
+    JToggleButton showcpotooltipbutton = new JToggleButton("showcpotooltip", checkimage, "Click to disable C/P/O line history", ximage, "Click to enable C/P/O line history");
+    JToggleButton showlinedirectionmovebuttom = new JToggleButton("showlinedirectionmove", checkimage, "Click to disable line direction move", ximage, "Click to enable line direction move");
 
 
-    JToggleButton borderbestbutton = new JToggleButton("borderbest",checkimage,"Click to disable bordering best line",ximage,"Click to enable bordering best line");
-    JToggleButton altcolorbutton = new JToggleButton("altcolor",checkimage,"Click to disable altering coloring rows",ximage,"Click to enable altering coloring rows");
+    JToggleButton borderbestbutton = new JToggleButton("borderbest", checkimage, "Click to disable bordering best line", ximage, "Click to enable bordering best line");
+    JToggleButton altcolorbutton = new JToggleButton("altcolor", checkimage, "Click to disable altering coloring rows", ximage, "Click to enable altering coloring rows");
+
+    private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
+    private final JLabel editStatusLabel = new JLabel();
+
+    static {
+        for ( int i=1;i<=maxSecs;i++) {
+            secArr[i-1]=String.valueOf(i);
+        }
+    }
 
     public UserDisplayGui(SportsTabPane stp) {
-        super(stp,"Display Settings");
+        super(stp, "Display Settings");
+        init();
+    }
+    private void init() {
+        savebutton.addActionListener(this::save);
+        firstcolorChooserButton = new ColorChooserButton(Color.RED);
+        secondcolorChooserButton = new ColorChooserButton(Color.RED);
+        thirdcolorChooserButton = new ColorChooserButton(Color.RED);
+        altcolorChooserButton= new ColorChooserButton(Color.RED);
+        openercolorChooserButton= new ColorChooserButton(Color.RED);
+        lastcolorChooserButton= new ColorChooserButton(Color.RED);
+
+        firstmovesecs = new SbtStringComboBox(secArr);
+        secondmovesecs = new SbtStringComboBox(secArr);
+
+        footballcb = new PropItemComboBox(items);
+        basketballcb = new PropItemComboBox(items);
+        baseballcb = new PropItemComboBox(items);
+        hockeycb = new PropItemComboBox(items);
+        fightingcb = new PropItemComboBox(items);
+        soccercb = new PropItemComboBox(items);
+        autoracingcb = new PropItemComboBox(items);
+        golfcb = new PropItemComboBox(items);
+        tenniscb = new PropItemComboBox(items);
     }
     @Override
     protected JComponent getUserComponent() {
-        savebutton.addActionListener(this);
-        footballdefault = UserDisplaySettings.getFootballdefault();
-        basketballdefault = UserDisplaySettings.getBasketballdefault();
-        baseballdefault = UserDisplaySettings.getBaseballdefault();
-        hockeydefault = UserDisplaySettings.getHockeydefault();
-        fightingdefault = UserDisplaySettings.getFightingdefault();
-        soccerdefault = UserDisplaySettings.getSoccerdefault();
-        autoracingdefault = UserDisplaySettings.getAutoracingdefault();
-        golfdefault = UserDisplaySettings.getGolfdefault();
-        tennisdefault = UserDisplaySettings.getTennisdefault();
-        firstmoveseconds = UserDisplaySettings.getFirstmoveseconds();
-        secondmoveseconds = UserDisplaySettings.getSecondmoveseconds();
-        firstcolor = UserDisplaySettings.getFirstcolor();
-        secondcolor = UserDisplaySettings.getSecondcolor();
-        thirdcolor = UserDisplaySettings.getThirdcolor();
-
-        altcolor = UserDisplaySettings.getAltcolor();
-        openercolor = UserDisplaySettings.getOpenercolor();
-        lastcolor = UserDisplaySettings.getLastcolor();
-
-        firstcolorChooserButton = new ColorChooserButton(firstcolor);
-        secondcolorChooserButton = new ColorChooserButton(secondcolor);
-        thirdcolorChooserButton = new ColorChooserButton(thirdcolor);
-        openercolorChooserButton = new ColorChooserButton(openercolor);
-        lastcolorChooserButton = new ColorChooserButton(lastcolor);
-        altcolorChooserButton = new ColorChooserButton(altcolor);
-
-        autofitcolumnsbutton.setEnable(UserDisplaySettings.isAutofitdata());
-        showcpotooltipbutton.setEnable(UserDisplaySettings.isShowcpo());
-        showlinedirectionmovebuttom.setEnable(UserDisplaySettings.isShowdirectionicons());
-        borderbestbutton.setEnable(UserDisplaySettings.isShowborderbestline());
-        altcolorbutton.setEnable(UserDisplaySettings.isShowaltcolor());
-
-        display[0] = "spreadtotal";
-        display[1] = "totalmoney";
-        display[2] = "totalbothmoney";
-        display[3] = "justspread";
-        display[4] = "justtotal";
-        display[5] = "justmoney";
-        display[6] = "awayteamtotal";
-        display[7] = "hometeamtotal";
-
-
-        display2[0] = "Sides & Totals";
-        display2[1] = "Totals & ML";
-        display2[2] = "Totals & Both ML";
-        display2[3] = "Just Sides";
-        display2[4] = "Just Totals";
-        display2[5] = "Just ML";
-        display2[6] = "Away TT";
-        display2[7] = "Home TT";
-
-        for (int v = 1; v <= 120; v++) {
-            secslist[v - 1] = v + "";
-        }
-
-
-
-
-        firstmovesecs = new JComboBox(secslist);
-        secondmovesecs = new JComboBox(secslist);
-
-        footballcb = new JComboBox(display2);
-        basketballcb = new JComboBox(display2);
-        baseballcb = new JComboBox(display2);
-        hockeycb = new JComboBox(display2);
-        fightingcb = new JComboBox(display2);
-        soccercb = new JComboBox(display2);
-        autoracingcb = new JComboBox(display2);
-        golfcb = new JComboBox(display2);
-        tenniscb = new JComboBox(display2);
-
-        firstmovesecs.setSelectedIndex(firstmoveseconds-1);
-        secondmovesecs.setSelectedIndex(secondmoveseconds-1);
-
-
-        List<String> abcd  = Arrays.asList(display);
-        footballcb.setSelectedIndex(abcd.indexOf(footballdefault));
-        basketballcb.setSelectedIndex(abcd.indexOf(basketballdefault));
-        baseballcb.setSelectedIndex(abcd.indexOf(baseballdefault));
-        hockeycb.setSelectedIndex(abcd.indexOf(hockeydefault));
-        fightingcb.setSelectedIndex(abcd.indexOf(fightingdefault));
-        soccercb.setSelectedIndex(abcd.indexOf(soccerdefault));
-        autoracingcb.setSelectedIndex(abcd.indexOf(autoracingdefault));
-        golfcb.setSelectedIndex(abcd.indexOf(golfdefault));
-        tenniscb.setSelectedIndex(abcd.indexOf(tennisdefault));
-
-
-
-
-
-
-
 
         LookAndFeelFactory.installJideExtension();
         // Create a new JFrame container.
@@ -214,14 +120,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         JPanel panel2 = new JPanel();
 
         JPanel panel3 = new JPanel();
-
-
-
-
-
-
-
-
 
 
         panel.setBorder(BorderFactory.createEtchedBorder());
@@ -238,8 +136,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel3.setLayout(new GridBagLayout());
 
 
-
-
         Border blackline = BorderFactory.createLineBorder(Color.black);
         GridBagConstraints c = new GridBagConstraints();
 
@@ -252,11 +148,8 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         JLabel altcolorlabel = new JLabel("Have Rows Alternating Color? - ");
 
 
-
-
-
-        JLabel uplabel = new JLabel( Utils.getImageIcon(SiaConst.ImageFile.ICON_UP));
-        JLabel downlabel = new JLabel( Utils.getImageIcon(SiaConst.ImageFile.ICON_DOWN));
+        JLabel uplabel = new JLabel(Utils.getImageIcon(SiaConst.ImageFile.ICON_UP));
+        JLabel downlabel = new JLabel(Utils.getImageIcon(SiaConst.ImageFile.ICON_DOWN));
         JPanel updownpanel = new JPanel();
         updownpanel.setBackground(Color.BLACK);
         updownpanel.add(uplabel);
@@ -320,7 +213,7 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         c1.gridwidth = 4;
         panel1.add(football, c1);
         c1.gridx = 5;
-        c1.gridwidth =4;
+        c1.gridwidth = 4;
         panel1.add(footballcb, c1);
 
 
@@ -389,17 +282,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel1.add(tenniscb, c1);
 
 
-
-
-
-
-
-
-
-
-
-
-
         c.anchor = GridBagConstraints.WEST;
         c.gridheight = 2;
         c.gridy = 0;
@@ -417,8 +299,6 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         c.gridx = 4;
         c.gridwidth = 4;
         panel2.add(showcurrentpreviousopenertooltip, c);
-
-
 
 
         c.gridy = 4;
@@ -480,27 +360,27 @@ public class UserDisplayGui extends AbstractLayeredDialog implements ActionListe
         panel.add(firstmovesecs, c2);
         c2.gridx = 5;
         c2.gridwidth = 4;
-        panel.add(secondcolorpart2 , c2);
+        panel.add(secondcolorpart2, c2);
         c2.gridx = 9;
         c2.gridwidth = 1;
-        panel.add(secondcolorChooserButton  , c2);
+        panel.add(secondcolorChooserButton, c2);
 
         c2.gridy = 4;
         c2.gridx = 0;
         c2.gridwidth = 3;
-        panel.add(thirdcolorpart1 , c2);
+        panel.add(thirdcolorpart1, c2);
         c2.gridx = 4;
         c2.gridwidth = 1;
-        panel.add(secondmovesecs , c2);
+        panel.add(secondmovesecs, c2);
         c2.gridx = 5;
         c2.gridwidth = 4;
-        panel.add(thirdcolorpart2  , c2);
+        panel.add(thirdcolorpart2, c2);
         c2.gridx = 9;
         c2.gridwidth = 1;
-        panel.add(thirdcolorChooserButton  , c2);
+        panel.add(thirdcolorChooserButton, c2);
 
 
-JLabel openercolorlabel = new JLabel("Opener Button Color - ");
+        JLabel openercolorlabel = new JLabel("Opener Button Color - ");
         JLabel lastcolorlabel = new JLabel("Last Button Color - ");
         GridBagConstraints c3 = new GridBagConstraints();
 
@@ -528,10 +408,6 @@ JLabel openercolorlabel = new JLabel("Opener Button Color - ");
         panel3.add(lastcolorChooserButton, c3);
 
 
-
-
-
-
         //************************end of panel*******************
 
 
@@ -546,11 +422,6 @@ JLabel openercolorlabel = new JLabel("Opener Button Color - ");
         box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        autofitcolumnsbutton.addActionListener(this);
-        showcpotooltipbutton.addActionListener(this);
-        showlinedirectionmovebuttom.addActionListener(this);
-        borderbestbutton.addActionListener(this);
-        altcolorbutton.addActionListener(this);
         box1.add(new JLabel("Default Line Display                               "));
         box1.add(panel1);
         box2.add(new JLabel("Line Yes/No Display Options                                        "));
@@ -564,75 +435,40 @@ JLabel openercolorlabel = new JLabel("Opener Button Color - ");
         userComponent.add(box1);
         userComponent.add(box2);
 
-        firstcolorChooserButton.addColorChangedListener(new ColorChangedListener() {
-            @Override
-            public void colorChanged(Color newColor)
-            {
-                System.out.println("new first color is "+newColor);
-            }
-        });
-
-
-
-
         return userComponent;
 //*******end of cons***********
     }
-
-
-
-
-
-
-
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getSource() == savebutton)
-        {
-            UserDisplaySettings.setFootballdefault(display[footballcb.getSelectedIndex()]);
-            UserDisplaySettings.setBasketballdefault(display[basketballcb.getSelectedIndex()]);
-            UserDisplaySettings.setBaseballdefault(display[baseballcb.getSelectedIndex()]);
-            UserDisplaySettings.setHockeydefault(display[hockeycb.getSelectedIndex()]);
-            UserDisplaySettings.setFightingdefault(display[fightingcb.getSelectedIndex()]);
-            UserDisplaySettings.setSoccerdefault(display[soccercb.getSelectedIndex()]);
-            UserDisplaySettings.setAutoracingdefault(display[autoracingcb.getSelectedIndex()]);
-            UserDisplaySettings.setGolfdefault(display[golfcb.getSelectedIndex()]);
-            UserDisplaySettings.setTennisdefault(display[tenniscb.getSelectedIndex()]);
-
-            UserDisplaySettings.setFirstmoveseconds(Integer.parseInt(""+firstmovesecs.getSelectedItem()));
-            UserDisplaySettings.setSecondmoveseconds(Integer.parseInt(""+secondmovesecs.getSelectedItem()));
-
-
-            UserDisplaySettings.setFirstcolor(firstcolorChooserButton.getSelectedColor());
-            UserDisplaySettings.setSecondcolor(secondcolorChooserButton.getSelectedColor());
-            UserDisplaySettings.setThirdcolor(thirdcolorChooserButton.getSelectedColor());
-
-            UserDisplaySettings.setAltcolor(altcolorChooserButton.getSelectedColor());
-            UserDisplaySettings.setOpenercolor(openercolorChooserButton.getSelectedColor());
-            UserDisplaySettings.setLastcolor(lastcolorChooserButton.getSelectedColor());
-
-            UserDisplaySettings.setAutofitdata(autofitcolumnsbutton.isEnabled());
-            UserDisplaySettings.setShowcpo(showcpotooltipbutton.isEnabled());
-            UserDisplaySettings.setShowdirectionicons(showlinedirectionmovebuttom.isEnabled());
-            UserDisplaySettings.setShowborderbestline(borderbestbutton.isEnabled());
-
-            UserDisplaySettings.setShowaltcolor(altcolorbutton.isEnabled());
-
-
-
-            close();
-
-
-        }
-        if(e.getSource() instanceof JToggleButton)
-        {
-            ((JToggleButton)e.getSource()).toggle();
-        }
+    @Override
+    public JLabel getEditStatusLabel() {
+        return editStatusLabel;
     }
+    @Override
+    protected void bindProperties(UICompValueBinder uiCompValueBinder) {
+        uiCompValueBinder.withPersistenceObject(userDisplaySettings)
+                .bindCompProp("autofitdata",autofitcolumnsbutton)
+                .bindCompProp("showcpo",showcpotooltipbutton)
+                .bindCompProp("showdirectionicons",showlinedirectionmovebuttom)
+                .bindCompProp("showborderbestline",borderbestbutton)
+                .bindCompProp("showaltcolor",altcolorbutton)
+                .bindCompProp("firstcolor",firstcolorChooserButton)
+                .bindCompProp("secondcolor",secondcolorChooserButton)
+                .bindCompProp("thirdcolor",thirdcolorChooserButton)
+                .bindCompProp("footballdefault",footballcb)
+                .bindCompProp("basketballdefault",basketballcb)
+                .bindCompProp("baseballdefault",baseballcb)
+                .bindCompProp("hockeydefault",hockeycb)
+                .bindCompProp("fightingdefault",fightingcb)
+                .bindCompProp("soccerdefault",soccercb)
+                .bindCompProp("autoracingdefault",autoracingcb)
+                .bindCompProp("golfdefault",golfcb)
+                .bindCompProp("tennisdefault",tenniscb)
+                .bindCompProp("firstmoveseconds",firstmovesecs)
+                .bindCompProp("secondmoveseconds",secondmovesecs)
+                .bindCompProp("altcolor",altcolorChooserButton)
+                .bindCompProp("openercolor",openercolorChooserButton)
+                .bindCompProp("lastcolor",lastcolorChooserButton);
 
-
-
-
+    }
 
 }
 

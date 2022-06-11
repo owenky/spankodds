@@ -4,8 +4,7 @@ import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.*;
 
-import java.awt.Color;
-import java.text.DecimalFormat;
+import java.awt.*;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -1182,10 +1181,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         ld3.setData(drawboxS);
         ld4.setData(totalboxS);
         if (!isopenerbookie) {
-            ld1.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld2.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld3.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld4.setBackgroundColor(UserDisplaySettings.getOpenercolor());
+            ld1.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld2.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld3.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld4.setBackgroundColor(userDisplaySettings.getOpenercolor());
         } else {
             ld1.setBackgroundColor(Color.LIGHT_GRAY);
             ld2.setBackgroundColor(Color.LIGHT_GRAY);
@@ -1595,10 +1594,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         ld3.setData(drawboxS);
         ld4.setData(totalboxS);
 
-        ld1.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld2.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld3.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld4.setBackgroundColor(UserDisplaySettings.getLastcolor());
+        ld1.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld2.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld3.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld4.setBackgroundColor(userDisplaySettings.getLastcolor());
 
 
         ld1.setBorder("");
