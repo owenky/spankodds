@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
@@ -147,7 +146,7 @@ public class AppController {
 
     public static boolean isReadyForMessageProcessing() {
         CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
-        return Config.instance().getUserDisplaySettings().getAutofitdata() && 0 == messageProcessingLatch.getCount();
+        return  0 == messageProcessingLatch.getCount();
 
     }
 

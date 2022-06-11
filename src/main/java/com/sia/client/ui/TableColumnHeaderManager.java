@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MqMessageProcessor;
@@ -172,7 +173,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         if (TableUtils.toRebuildCache(e) ) {
             mainTable.getColumnAdjusterManager().clear();
             if (mainTable.isShowing()) {
-                adjustComumns();
+                if ( Config.instance().getUserDisplaySettings().getAutofitdata()) {
+                    adjustComumns();
+                }
                 reconfigHeaderRow();
                 invokeDrawColumnHeaders();
             }
@@ -182,7 +185,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
         if ( mainTable.isShowing() ) {
-            if ( ! evt.getValueIsAdjusting() && Integer.MIN_VALUE != horizontalScrollBarAdjustmentValue) {
+            if (Config.instance().getUserDisplaySettings().getAutofitdata() && ! evt.getValueIsAdjusting() && Integer.MIN_VALUE != horizontalScrollBarAdjustmentValue) {
                 adjustComumns();
             }
 

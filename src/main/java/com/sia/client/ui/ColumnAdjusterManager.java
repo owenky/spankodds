@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.ColumnAdjustPreparer.AdjustRegion;
 
@@ -114,7 +115,7 @@ new Exception("Column adjust is callled").printStackTrace();
         private final List<ColumnAdjusterManager> columnAdjusterManagerList = new ArrayList<>();
         @Override
         public void actionPerformed(final ActionEvent e) {
-            if ( AppController.isReadyForMessageProcessing()) {
+            if ( Config.instance().getUserDisplaySettings().getAutofitdata() && AppController.isReadyForMessageProcessing()) {
                 for (ColumnAdjusterManager manager : columnAdjusterManagerList) {
                     if (manager.mainTable.isShowing()) {
                         manager.adjustColumns();
