@@ -744,7 +744,7 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
                 checkednodes3.clear();
 
             }
-            closePanes();
+            close();
         });
 
         // Create three vertical boxes.

@@ -198,7 +198,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         } else {
             if ( isFloating ) {
                 jInteralFrame = new EmbededFrame(title,true,true,true,true);
-                jInteralFrame.setCloseValidor(closeValidor);
+                jInteralFrame.setCloseAction(this::close);
                 jInteralFrame.setLayout(new BorderLayout());
                 jInteralFrame.add(jScrollPane,BorderLayout.CENTER);
                 containingComp = jInteralFrame;
@@ -256,7 +256,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         eastPanel.add(Box.createRigidArea(new Dimension(15, 0)));
         eastPanel.add(closeBtn);
     }
-    public void close() {
+    public boolean close() {
         boolean toClose;
         try {
             toClose = (null == closeValidor || closeValidor.call());
@@ -269,10 +269,12 @@ public class AnchoredLayeredPane implements ComponentListener {
             isOpened = false;
             anchoredParentComp.removeComponentListener(this);
             activeLayeredPaneMap.remove(this.getActiveMapKey(), this);
+
+            for(Runnable r: closeActions) {
+                r.run();
+            }
         }
-        for(Runnable r: closeActions) {
-            r.run();
-        }
+        return toClose;
     }
     protected final void hide() {
         if ( null == userComponentScrollPane) {

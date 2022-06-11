@@ -610,7 +610,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
                 checkednodes3.clear();
 
             }
-            closePanes();
+            close();
         });
 
         // Create three vertical boxes.

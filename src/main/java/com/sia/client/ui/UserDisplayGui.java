@@ -385,32 +385,29 @@ public class UserDisplayGui extends AbstractLayerFrame {
         return editStatusLabel;
     }
     @Override
-    protected UserDisplaySettings getBindingObject() {
-         return userDisplaySettings;
-    }
-    @Override
     protected void bindProperties(UICompValueBinder uiCompValueBinder) {
-        uiCompValueBinder.bind("autofitdata",autofitcolumnsbutton);
-        uiCompValueBinder.bind("showcpo",showcpotooltipbutton);
-        uiCompValueBinder.bind("showdirectionicons",showlinedirectionmovebuttom);
-        uiCompValueBinder.bind("showborderbestline",borderbestbutton);
+        uiCompValueBinder.withPersistenceObject(userDisplaySettings)
+        .bindCompProp("autofitdata",autofitcolumnsbutton)
+        .bindCompProp("showcpo",showcpotooltipbutton)
+        .bindCompProp("showdirectionicons",showlinedirectionmovebuttom)
+        .bindCompProp("showborderbestline",borderbestbutton)
 
-        uiCompValueBinder.bind("firstcolor",firstcolorChooserButton);
-        uiCompValueBinder.bind("secondcolor",secondcolorChooserButton);
-        uiCompValueBinder.bind("thirdcolor",thirdcolorChooserButton);
+        .bindCompProp("firstcolor",firstcolorChooserButton)
+        .bindCompProp("secondcolor",secondcolorChooserButton)
+        .bindCompProp("thirdcolor",thirdcolorChooserButton)
 
-        uiCompValueBinder.bind("footballdefault",footballcb);
-        uiCompValueBinder.bind("basketballdefault",basketballcb);
-        uiCompValueBinder.bind("baseballdefault",baseballcb);
-        uiCompValueBinder.bind("hockeydefault",hockeycb);
-        uiCompValueBinder.bind("fightingdefault",fightingcb);
-        uiCompValueBinder.bind("soccerdefault",soccercb);
-        uiCompValueBinder.bind("autoracingdefault",autoracingcb);
-        uiCompValueBinder.bind("golfdefault",golfcb);
-        uiCompValueBinder.bind("tennisdefault",tenniscb);
+        .bindCompProp("footballdefault",footballcb)
+        .bindCompProp("basketballdefault",basketballcb)
+        .bindCompProp("baseballdefault",baseballcb)
+        .bindCompProp("hockeydefault",hockeycb)
+        .bindCompProp("fightingdefault",fightingcb)
+        .bindCompProp("soccerdefault",soccercb)
+        .bindCompProp("autoracingdefault",autoracingcb)
+        .bindCompProp("golfdefault",golfcb)
+        .bindCompProp("tennisdefault",tenniscb)
 
-        uiCompValueBinder.bind("firstmoveseconds",firstmovesecs);
-        uiCompValueBinder.bind("secondmoveseconds",secondmovesecs);
+        .bindCompProp("firstmoveseconds",firstmovesecs)
+        .bindCompProp("secondmoveseconds",secondmovesecs);
     }
 }
 

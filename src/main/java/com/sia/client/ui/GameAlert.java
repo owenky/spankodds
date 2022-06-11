@@ -473,7 +473,7 @@ public class GameAlert  extends AbstractLayeredDialog {
             } else if (alerttype.equalsIgnoreCase("Limit Change")) {
                 AppController.getUser().setLimitchangeAlert(newuserprefs);
             }
-            closePanes();
+            close();
         });
 
         JPanel testbutPanel = new JPanel(new GridLayout(0, 2, 2, 2));

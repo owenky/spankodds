@@ -19,8 +19,10 @@ public interface ActionOnEditablePanes {
         }
         return status;
     }
-    default boolean save(ActionEvent ae)  {
-        return persistPanes();
+    default void savePanes()  {
+        persistPanes();
+        clearPanes();
+
     }
     default boolean persistPanes()  {
         boolean status = validatePanes();
@@ -40,9 +42,9 @@ public interface ActionOnEditablePanes {
             editablePane.updateLayout();
         }
     }
-    default void closePanes(){
+    default void clearPanes(){
         for(EditablePane editablePane : getEditablePanes()) {
-            editablePane.close();
+            editablePane.clear();
         }
     }
     default boolean isAnyPaneEdited() {

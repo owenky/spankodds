@@ -5,11 +5,12 @@ import com.sia.client.config.Utils;
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
+import java.beans.PropertyVetoException;
 import java.util.concurrent.Callable;
 
 public class EmbededFrame extends JInternalFrame {
 
-    private Callable<Boolean> closeValidor;
+    private Callable<Boolean> closeAction;
     public EmbededFrame() {
         init();
     }
@@ -17,10 +18,11 @@ public class EmbededFrame extends JInternalFrame {
         super(title,resizable, closable, maximizable,iconifiable);
         init();
     }
-    public void setCloseValidor(Callable<Boolean> closeValidor) {
-        this.closeValidor = closeValidor;
+    public void setCloseAction(Callable<Boolean> closeAction) {
+        this.closeAction = closeAction;
     }
     private void init() {
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addInternalFrameListener(new InternalFrameAdapter() {
 //            @Override
 //            public void internalFrameIconified(InternalFrameEvent e) {
@@ -30,9 +32,9 @@ public class EmbededFrame extends JInternalFrame {
                 public void internalFrameClosing(InternalFrameEvent e) {
 
                     boolean toClose;
-                    if ( null != closeValidor) {
+                    if ( null != closeAction) {
                         try {
-                            toClose = closeValidor.call();
+                            toClose = closeAction.call();
                         } catch (Exception ex) {
                             Utils.log(ex);
                             toClose = true;

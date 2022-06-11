@@ -1,10 +1,10 @@
 package com.sia.client.ui;
 
 import com.sia.client.ui.comps.ActionOnEditablePanes;
-import com.sia.client.ui.comps.EditablePane;
 import com.sia.client.ui.control.SportsTabPane;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.function.Supplier;
 
 public abstract class AbstractLayerEditablePanes extends AbstractLayeredDialog implements ActionOnEditablePanes {
@@ -21,6 +21,10 @@ public abstract class AbstractLayerEditablePanes extends AbstractLayeredDialog i
         super(stp, layer_index);
     }
 
+    public void save(ActionEvent ae) {
+        savePanes();
+        close();
+    }
     @Override
     public void show(Dimension dim) {
         super.show(dim);
@@ -40,9 +44,9 @@ public abstract class AbstractLayerEditablePanes extends AbstractLayeredDialog i
     }
 
     @Override
-    public void closePanes() {
-        super.closePanes();
-        ActionOnEditablePanes.super.closePanes();
+    public void close() {
+        super.close();
+        ActionOnEditablePanes.super.clearPanes();
     }
 
     @Override

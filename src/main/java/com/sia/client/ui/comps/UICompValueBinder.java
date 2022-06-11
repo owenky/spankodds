@@ -17,37 +17,40 @@ import java.util.function.Function;
 
 public class UICompValueBinder {
 
-    private final Object data;
+    private Object persistenceObject;
     private static final Map<Integer,UICompValueBinder> identityHashCode2BinderMap = new HashMap<>();
     private final Map<String,ActionableOnChanged> name2UiCompMap = new HashMap<>();
     private final CompValueChangedListener compValueChangedListener;
     private final Function<Object,Void> onValueChangedEvent;
 
-    public static synchronized UICompValueBinder register(Object containingObj, Object data, Function<Object,Void> onValueChangedEvent) {
-        int identityHashCode = System.identityHashCode(containingObj);
-        return identityHashCode2BinderMap.computeIfAbsent(identityHashCode,(key)->new UICompValueBinder(data,onValueChangedEvent));
+    public static synchronized UICompValueBinder register(Object IdentityObject, Function<Object,Void> onValueChangedEvent) {
+        int identityHashCode = System.identityHashCode(IdentityObject);
+        return identityHashCode2BinderMap.computeIfAbsent(identityHashCode,(key)->new UICompValueBinder(onValueChangedEvent));
     }
-    public static UICompValueBinder getBinder(Object containingObj) {
-        int identityHashCode = System.identityHashCode(containingObj);
-        return identityHashCode2BinderMap.get(identityHashCode);
-    }
-    public static UICompValueBinder rmBinder(Object containingObj) {
+//    public static UICompValueBinder getBinder(Object containingObj) {
+//        int identityHashCode = System.identityHashCode(containingObj);
+//        return identityHashCode2BinderMap.get(identityHashCode);
+//    }
+    public static UICompValueBinder unregister(Object containingObj) {
         int identityHashCode = System.identityHashCode(containingObj);
         return identityHashCode2BinderMap.remove(identityHashCode);
     }
-    private UICompValueBinder(Object data, Function<Object,Void> onValueChangedEvent) {
-        this.data = data;
+    private UICompValueBinder(Function<Object,Void> onValueChangedEvent) {
         this.onValueChangedEvent = onValueChangedEvent;
         this.compValueChangedListener = makeDefaultJCompValueChangedListener();
     }
-    public UICompValueBinder bind(String dataFieldName, ActionableOnChanged uiComponent) {
+    public UICompValueBinder withPersistenceObject(Object persistenceObject) {
+        this.persistenceObject = persistenceObject;
+        return this;
+    }
+    public UICompValueBinder bindCompProp(String propName, ActionableOnChanged uiComponent) {
         if ( null != compValueChangedListener) {
-            if ( name2UiCompMap.containsKey(dataFieldName)) {
-                ActionableOnChanged oldComp = name2UiCompMap.get(dataFieldName);
+            if ( name2UiCompMap.containsKey(propName)) {
+                ActionableOnChanged oldComp = name2UiCompMap.get(propName);
                 oldComp.rmListener(compValueChangedListener);
             }
             uiComponent.addListener(compValueChangedListener);
-            name2UiCompMap.put(dataFieldName, uiComponent);
+            name2UiCompMap.put(propName, uiComponent);
         }
         return this;
     }
@@ -59,13 +62,13 @@ public class UICompValueBinder {
             Object value = comp.getValue();
             valueMap.put(name,value);
         }
-        ObjectReader objectReader = objectMapper.readerForUpdating(data);
+        ObjectReader objectReader = objectMapper.readerForUpdating(persistenceObject);
         String json = objectMapper.writeValueAsString(valueMap);
-        objectReader.readValue(json,data.getClass());
+        objectReader.readValue(json, persistenceObject.getClass());
     }
     public void updateJComponentValues()  {
         ObjectMapper objectMapper = OmFactory.getObjectMapper();
-        Map<?,?> valuesMap = objectMapper.convertValue(data,Map.class);
+        Map<?,?> valuesMap = objectMapper.convertValue(persistenceObject,Map.class);
         for(String name: name2UiCompMap.keySet()) {
             Object value = valuesMap.get(name);
             ActionableOnChanged comp = name2UiCompMap.get(name);
@@ -75,7 +78,7 @@ public class UICompValueBinder {
     public boolean areValuesChanged() {
         boolean isChanged = false;
         ObjectMapper objectMapper = OmFactory.getObjectMapper();
-        Map<?,?> existingValueMap = objectMapper.convertValue(data,Map.class);
+        Map<?,?> existingValueMap = objectMapper.convertValue(persistenceObject,Map.class);
         for(String name: name2UiCompMap.keySet()) {
             ActionableOnChanged comp = name2UiCompMap.get(name);
             String componentValue = String.valueOf(comp.getValue());

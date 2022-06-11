@@ -13,7 +13,6 @@ public abstract class AbstractLayerFrame extends AbstractLayerEditablePanes {
     private List<EditablePane> editablePanes;
     private UICompValueBinder uiCompValueBinder;
 
-    protected abstract Object getBindingObject();
     protected abstract JLabel getEditStatusLabel();
     protected abstract void bindProperties(UICompValueBinder binder);
 
@@ -43,7 +42,7 @@ public abstract class AbstractLayerFrame extends AbstractLayerEditablePanes {
                 @Override
                 public UICompValueBinder getJComponentBinder() {
                     if ( null == uiCompValueBinder) {
-                        uiCompValueBinder = UICompValueBinder.register(AbstractLayerFrame.this,getBindingObject(),getOnValueChangedEventFunction());
+                        uiCompValueBinder = UICompValueBinder.register(AbstractLayerFrame.this,getOnValueChangedEventFunction());
                         bindProperties(uiCompValueBinder);
                     }
                     return uiCompValueBinder;

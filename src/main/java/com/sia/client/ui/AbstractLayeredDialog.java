@@ -64,7 +64,7 @@ public abstract class AbstractLayeredDialog {
     public AnchoredLayeredPane getAnchoredLayeredPane() {
         return anchoredLayeredPane;
     }
-    public void closePanes() {
+    public void close() {
         this.anchoredLayeredPane.close();
     }
     public void setCloseValidor(Callable<Boolean> closeValidor) {
