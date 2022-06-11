@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.ui.comps.WebViewPane;
@@ -70,7 +71,9 @@ public class GameHistPane {
         period = displayTransformer.transformPeriod(spankyWindowConfig.getPeriod());
         gameDateStr = gameDateFormatter.format(game.getGamedate());
         //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
-        title = game.getVisitorteam() + "/" + game.getHometeam();
+        Bookie b = AppController.getBookie(bookieId);
+
+        title = b.getShortname()+" - "+game.getGame_id()+" "+game.getVisitorteam() + "/" + game.getHometeam();
     }
 
     protected JComponent getUserComponent() {

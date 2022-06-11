@@ -5,7 +5,7 @@ import com.sia.client.ui.Totalline;
 
 public class LinesMoves
 {
-    static int debuggameid = 905;
+    static int debuggameid = 959;
     static boolean debug = false;
     static boolean initialized = false;
     static double[] cfsides = new double[100];
@@ -742,7 +742,7 @@ public class LinesMoves
 
     public static double percentOfMove(double oldline,double oldjuice,double newline,double newjuice,int leagueid,int period,String type,int gameid,boolean ishometeam)
     {
-        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
+        if(leagueid == 5 && period == 0 && type.equals("UNDER") && gameid == debuggameid && debug)
         {
            System.out.println("oldline=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice);
         }
@@ -761,7 +761,7 @@ public class LinesMoves
         if( type.equals("MONEYLINE") || ( oldline == newline && type.equals("SPREAD")) || ( oldline-newline == 0 &&   (  type.equals("TOTAL") || type.equals("OVER") || type.equals("UNDER") || type.equals("TTOVER") || type.equals("TTUNDER")         )  )) // difference == 0
         {
             juicepercent = percentageofjuicemove(oldjuice,newjuice);
-            if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
+            if(leagueid == 5 && period == 0 && type.equals("UNDER") && gameid == debuggameid && debug)
             {
                 System.out.println("juicepercent="+juicepercent);
             }
@@ -862,14 +862,14 @@ public class LinesMoves
             st = en;
             en = temp;
         }
-        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
+        if(leagueid == 5 && period == 0 && type.equals("UNDER") && gameid == debuggameid && debug)
         {
             System.out.println("********STARTING AT="+st+"..to="+en);
         }
 
         // here we are going to do an override for baseball runlines since i still need to work on the math!
 
-        if(leagueid == 5
+        if(type.equals("SPREAD") && (leagueid == 5
                 || leagueid == 848
                 || leagueid == 849
                 || leagueid == 850
@@ -881,7 +881,7 @@ public class LinesMoves
                 || leagueid == 920
                 || leagueid == 6
                 || leagueid == 785
-        ) {
+        )) {
             Spreadline sl = AppController.getSpreadline(604, gameid, period);
             double spread = 0;
             if(sl != null) {
@@ -910,7 +910,7 @@ public class LinesMoves
                 }
 
                 prob = prob + arr[positiveindex] / 2.0 * negativefactor;
-                if (leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug) {
+                if (leagueid == 5 && period == 0 && type.equals("UNDER") && gameid == debuggameid && debug) {
                     System.out.println("forloop...ol=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice + ".." + index + ".." + arr[positiveindex] / 2.0 * negativefactor);
                 }
 
@@ -925,7 +925,7 @@ public class LinesMoves
         //prob = prob *negativefactor;
         double linepercent = (prob-.5)/.5; // use 50% and no vig
         double totalpercent = juicepercent+linepercent;
-        if(leagueid == 5 && period == 1 && type.equals("SPREAD") && gameid == debuggameid && debug)
+        if(leagueid == 5 && period == 0 && type.equals("UNDER") && gameid == debuggameid && debug)
         {
             System.out.println("totalpercent="+totalpercent);
         }

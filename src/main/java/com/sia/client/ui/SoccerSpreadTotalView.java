@@ -1182,10 +1182,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         ld3.setData(drawboxS);
         ld4.setData(totalboxS);
         if (!isopenerbookie) {
-            ld1.setBackgroundColor(Color.GRAY);
-            ld2.setBackgroundColor(Color.GRAY);
-            ld3.setBackgroundColor(Color.GRAY);
-            ld4.setBackgroundColor(Color.GRAY);
+            ld1.setBackgroundColor(UserDisplaySettings.getOpenercolor());
+            ld2.setBackgroundColor(UserDisplaySettings.getOpenercolor());
+            ld3.setBackgroundColor(UserDisplaySettings.getOpenercolor());
+            ld4.setBackgroundColor(UserDisplaySettings.getOpenercolor());
         } else {
             ld1.setBackgroundColor(Color.LIGHT_GRAY);
             ld2.setBackgroundColor(Color.LIGHT_GRAY);
@@ -1595,10 +1595,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         ld3.setData(drawboxS);
         ld4.setData(totalboxS);
 
-        ld1.setBackgroundColor(Color.BLUE);
-        ld2.setBackgroundColor(Color.BLUE);
-        ld3.setBackgroundColor(Color.BLUE);
-        ld4.setBackgroundColor(Color.BLUE);
+        ld1.setBackgroundColor(UserDisplaySettings.getLastcolor());
+        ld2.setBackgroundColor(UserDisplaySettings.getLastcolor());
+        ld3.setBackgroundColor(UserDisplaySettings.getLastcolor());
+        ld4.setBackgroundColor(UserDisplaySettings.getLastcolor());
 
 
         ld1.setBorder("");

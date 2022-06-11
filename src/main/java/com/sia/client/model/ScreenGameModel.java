@@ -107,7 +107,10 @@ public class ScreenGameModel {
                 column.setPreferredWidth(60);
             } else if (b.getBookie_id() == 994) {
                 column.setPreferredWidth(80);
-            } else if (b.getBookie_id() == 991) {
+            } else if (b.getBookie_id() == 995) {
+                column.setPreferredWidth(60);
+            }
+            else if (b.getBookie_id() == 991) {
                 column.setPreferredWidth(40);
             } else if (b.getBookie_id() == 992) {
                 column.setPreferredWidth(45);

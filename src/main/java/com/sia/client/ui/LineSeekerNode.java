@@ -269,7 +269,7 @@ public class LineSeekerNode {
         int neutralpopuplocation = neutralAttr.getPopupLocation().getLocation();
         int neutralpopupseconds = Integer.parseInt(neutralAttr.getPopupSeconds());
 
-        if(this.gameid == gameid && this.getPeriod().getOrder() == periodid) {
+        if(this.gameid == gameid && this.getPeriod().getOrder() == periodid && b != null) {
 
             //  if (bookiecodes.contains("" + bookieid)) {
 

@@ -135,7 +135,11 @@ public class LinesTableData extends TableSection<Game> {
 
         } else if (bookieid == 993) {
             value = new TeamView(gameid, screenProperty.getSpankyWindowConfig().isShortteam());
-        } else if (bookieid == 994) {
+        }
+        else if (bookieid == 995) {
+            value = ""; // to be filled in later
+        }
+        else if (bookieid == 994) {
             if (leagueID == 9) {
                 value = new SoccerChartView(gameid);
             } else {
