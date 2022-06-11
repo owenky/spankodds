@@ -141,7 +141,7 @@ public class AlertPane extends AbstractLayeredDialog {
     }
     private JComponent bottomControlSection() {
         JButton clsBtn = new JButton("Close");
-        clsBtn.addActionListener(this::save);
+        clsBtn.addActionListener(e->close());
 
         saveBtn.setText(saveBtnText);
         saveBtn.addActionListener(this::save);
