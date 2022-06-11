@@ -2,6 +2,7 @@ package com.sia.client.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.sia.client.model.ViewValue;
 
 import javax.jms.MapMessage;
@@ -29,17 +30,8 @@ public abstract class Utils {
 
     private static final ExecutorService executorService =Executors.newWorkStealingPool(2);
     private static final Map<String, SoftReference<ImageIcon>> imageIconCache = new HashMap<>();
-    private static ObjectMapper objectMapper;
     public static Logger logger;
 
-
-    public static synchronized ObjectMapper getObjectMapper() {
-        if ( null == objectMapper) {
-            objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        }
-        return objectMapper;
-    }
     public static URL getMediaResource(String resourceName) {
         return getResource(SiaConst.ImgPath+resourceName);
     }

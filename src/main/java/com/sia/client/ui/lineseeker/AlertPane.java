@@ -45,7 +45,7 @@ public class AlertPane extends AbstractLayeredDialog {
     private JComponent userComp;
 
     public AlertPane(SportsTabPane stp) {
-       super(stp,"Line Seeker Alerts");
+       super(stp,"Line Seeker Alerts",SiaConst.LayedPaneIndex.SportConfigIndex);
         AlertComponentListener alertComponentListener = new AlertComponentListener(this);
        this.setTitlePanelLeftComp(makeAlertComboBoxPanel());
        this.sectionComponentsList = new ArrayList<>();
@@ -141,7 +141,7 @@ public class AlertPane extends AbstractLayeredDialog {
     }
     private JComponent bottomControlSection() {
         JButton clsBtn = new JButton("Close");
-        clsBtn.addActionListener((event)->this.close());
+        clsBtn.addActionListener(e->close());
 
         saveBtn.setText(saveBtnText);
         saveBtn.addActionListener(this::save);

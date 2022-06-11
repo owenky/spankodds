@@ -6,6 +6,7 @@ import com.sia.client.ui.comps.ActionableOnChanged;
 import com.sia.client.ui.comps.CompValueChangedListener;
 
 import javax.swing.*;
+import javax.swing.plaf.ComboBoxUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 	private boolean isRequired = false;
 	private boolean isNewItemAllowed = false;
 	private boolean shouldFireItemStateChanged = true;
-	private boolean toFireValueChangedEvent = true; // toFireValueChangedEvent==trueʱ��fireValueChangedEvent()�Żᱻ����
+	private boolean toFireValueChangedEvent = true;
 	private final List<ValueChangedListener> valueChangedListeners = new ArrayList<>();
 	private DefaultComboBoxListener defaultListener;
 	private boolean shouldHaveBlankItem = true;
@@ -43,6 +44,15 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		init();
 		FilterComboBoxModel<K,T> model = new FilterComboBoxModel<>(this.selectionConvertor);
 		setModel(model);
+	}
+	@Override
+	public void setUI(ComboBoxUI ui) {
+		if ( ui instanceof SBTComboBoxUI) {
+			super.setUI(ui);
+		} else {
+			Utils.log("Warning, ui is not SBTComboBoxUI ");
+			super.setUI(new SBTComboBoxUI());
+		}
 	}
 	public SelectionConvertor<K,T> getSelectionConvertor() {
 		return selectionConvertor;
@@ -350,7 +360,7 @@ public abstract class SBTComboBox<K,T extends SelectionItem<K>> extends JComboBo
 		dm_.setSelectedItem(item);
 		dm_.setChangeContentsTogger(true);
 
-		int firstMatchedSelection; // ��һ��������ƥ����к�
+		int firstMatchedSelection;
 		if (item instanceof SelectionItem) {
 			firstMatchedSelection = dm_.getFirstMatchedItemIndex(((SelectionItem<?>) item).getDisplay());
 		} else {

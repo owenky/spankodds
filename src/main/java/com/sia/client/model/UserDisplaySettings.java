@@ -1,222 +1,281 @@
 package com.sia.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.awt.*;
 
-public  class UserDisplaySettings
-{
-    static String footballdefault = "spreadtotal";
-    static String basketballdefault =  "spreadtotal";
-    static String baseballdefault =  "totalbothmoney";
-    static String hockeydefault = "totalbothmoney";
-    static String fightingdefault = "totalbothmoney";
-    static String soccerdefault = "spreadtotal";
-    static String autoracingdefault = "justmoney";
-    static String golfdefault ="justmoney";
-    static String tennisdefault = "justmoney";
+public class UserDisplaySettings {
 
-    static int firstmoveseconds =30;
-    static int secondmoveseconds = 5;
+    private String footballdefault;
+    private String basketballdefault;
+    private String baseballdefault;
+    private String hockeydefault;
+    private String fightingdefault;
+    private String soccerdefault;
+    private String autoracingdefault;
+    private String golfdefault;
+    private String tennisdefault;
 
-    static Color firstcolor = Color.RED;
-    static Color secondcolor = Color.BLACK;
-    static Color thirdcolor = Color.BLACK;
+    private int firstmoveseconds ;
+    private int secondmoveseconds;
 
-    static boolean autofitdata = true;
-    static boolean showcpo = true;
-    static boolean showborderbestline = true;
-    static boolean showdirectionicons = true;
+    private Color firstcolor;
+    private Color secondcolor;
+    private Color thirdcolor;
 
-    static boolean showaltcolor = true;
-    static Color altcolor = new Color(215, 215, 215);
+    private Boolean autofitdata;
+    private Boolean showcpo;
+    private Boolean showborderbestline;
+    private Boolean showdirectionicons;
 
+    private Boolean showaltcolor;
+    private Color altcolor;
 
-    static Color openercolor = Color.GRAY;
-    static Color lastcolor = Color.BLUE;
+    private Color openercolor;
+    private Color lastcolor;
 
-    public static boolean isShowaltcolor() {
+    public Boolean getShowaltcolor() {
+        if ( null == showaltcolor) {
+            showaltcolor = true;
+        }
         return showaltcolor;
     }
 
-    public static void setShowaltcolor(boolean showaltcolor) {
-        UserDisplaySettings.showaltcolor = showaltcolor;
+    public void setShowaltcolor(Boolean showaltcolor) {
+        this.showaltcolor = showaltcolor;
     }
 
-    public static Color getAltcolor() {
+    public Color getAltcolor() {
+        if ( null == altcolor ) {
+            altcolor = new Color(215, 215, 215);
+        }
         return altcolor;
     }
 
-    public static void setAltcolor(Color altcolor) {
-        UserDisplaySettings.altcolor = altcolor;
+    public void setAltcolor(Color altcolor) {
+        this.altcolor = altcolor;
     }
 
-    public static Color getOpenercolor() {
+    public Color getOpenercolor() {
+        if( null == openercolor) {
+            openercolor = Color.GRAY;
+        }
         return openercolor;
     }
 
-    public static void setOpenercolor(Color openercolor) {
-        UserDisplaySettings.openercolor = openercolor;
+    public void setOpenercolor(Color openercolor) {
+        this.openercolor = openercolor;
     }
 
-    public static Color getLastcolor() {
+    public Color getLastcolor() {
+        if ( null == lastcolor) {
+            lastcolor = Color.BLUE;
+        }
         return lastcolor;
     }
 
-    public static void setLastcolor(Color lastcolor) {
-        UserDisplaySettings.lastcolor = lastcolor;
+    public void setLastcolor(Color lastcolor) {
+        this.lastcolor = lastcolor;
     }
 
-
-
-    public static boolean isShowdirectionicons() {
-        return showdirectionicons;
-    }
-
-    public static void setShowdirectionicons(boolean showdirectionicons) {
-        UserDisplaySettings.showdirectionicons = showdirectionicons;
-    }
-
-
-
-    public static boolean isAutofitdata() {
-        return autofitdata;
-    }
-
-    public static void setAutofitdata(boolean autofitdata) {
-        UserDisplaySettings.autofitdata = autofitdata;
-    }
-
-    public static boolean isShowcpo() {
-        return showcpo;
-    }
-
-    public static void setShowcpo(boolean showcpo) {
-        UserDisplaySettings.showcpo = showcpo;
-    }
-
-    public static boolean isShowborderbestline() {
-        return showborderbestline;
-    }
-
-    public static void setShowborderbestline(boolean showborderbestline) {
-        UserDisplaySettings.showborderbestline = showborderbestline;
-    }
-
-
-
-    public static String getFootballdefault() {
+    @JsonProperty
+    public String getFootballdefault() {
+        if ( null == footballdefault) {
+            footballdefault = "spreadtotal";
+        }
         return footballdefault;
     }
-
-    public static void setFootballdefault(String footballdefault) {
-        UserDisplaySettings.footballdefault = footballdefault;
+    @JsonProperty
+    public void setFootballdefault(String footballdefault) {
+        this.footballdefault = footballdefault;
     }
-
-    public static String getBasketballdefault() {
+    @JsonProperty
+    public String getBasketballdefault() {
+        if ( null == basketballdefault) {
+            basketballdefault = "spreadtotal";
+        }
         return basketballdefault;
     }
-
-    public static void setBasketballdefault(String basketballdefault) {
-        UserDisplaySettings.basketballdefault = basketballdefault;
+    @JsonProperty
+    public void setBasketballdefault(String basketballdefault) {
+        this.basketballdefault = basketballdefault;
     }
-
-    public static String getBaseballdefault() {
+    @JsonProperty
+    public String getBaseballdefault() {
+        if ( null == baseballdefault) {
+            baseballdefault = "totalbothmoney";
+        }
         return baseballdefault;
     }
-
-    public static void setBaseballdefault(String baseballdefault) {
-        UserDisplaySettings.baseballdefault = baseballdefault;
+    @JsonProperty
+    public void setBaseballdefault(String baseballdefault) {
+        this.baseballdefault = baseballdefault;
     }
-
-    public static String getHockeydefault() {
+    @JsonProperty
+    public String getHockeydefault() {
+        if ( null == hockeydefault) {
+            hockeydefault = "totalbothmoney";
+        }
         return hockeydefault;
     }
-
-    public static void setHockeydefault(String hockeydefault) {
-        UserDisplaySettings.hockeydefault = hockeydefault;
+    @JsonProperty
+    public void setHockeydefault(String hockeydefault) {
+        this.hockeydefault = hockeydefault;
     }
-
-    public static String getFightingdefault() {
+    @JsonProperty
+    public String getFightingdefault() {
+        if ( null == fightingdefault) {
+            fightingdefault = "totalbothmoney";
+        }
         return fightingdefault;
     }
-
-    public static void setFightingdefault(String fightingdefault) {
-        UserDisplaySettings.fightingdefault = fightingdefault;
+    @JsonIgnore
+    public void setFightingdefault(String fightingdefault) {
+        this.fightingdefault = fightingdefault;
     }
-
-    public static String getSoccerdefault() {
+    @JsonProperty
+    public String getSoccerdefault() {
+        if ( null == soccerdefault) {
+            soccerdefault = "spreadtotal";
+        }
         return soccerdefault;
     }
-
-    public static void setSoccerdefault(String soccerdefault) {
-        UserDisplaySettings.soccerdefault = soccerdefault;
+    @JsonProperty
+    public void setSoccerdefault(String soccerdefault) {
+        this.soccerdefault = soccerdefault;
     }
-
-    public static String getAutoracingdefault() {
+    @JsonProperty
+    public String getAutoracingdefault() {
+        if ( null == autoracingdefault) {
+            autoracingdefault = "justmoney";
+        }
         return autoracingdefault;
     }
-
-    public static void setAutoracingdefault(String autoracingdefault) {
-        UserDisplaySettings.autoracingdefault = autoracingdefault;
+    @JsonProperty
+    public void setAutoracingdefault(String autoracingdefault) {
+        this.autoracingdefault = autoracingdefault;
     }
-
-    public static String getGolfdefault() {
+    @JsonProperty
+    public String getGolfdefault() {
+        if ( null == golfdefault) {
+            golfdefault = "justmoney";
+        }
         return golfdefault;
     }
-
-    public static void setGolfdefault(String golfdefault) {
-        UserDisplaySettings.golfdefault = golfdefault;
+    @JsonProperty
+    public void setGolfdefault(String golfdefault) {
+        this.golfdefault = golfdefault;
     }
-
-    public static String getTennisdefault() {
+    @JsonProperty
+    public String getTennisdefault() {
+        if ( null == tennisdefault) {
+            tennisdefault = "justmoney";
+        }
         return tennisdefault;
     }
-
-    public static void setTennisdefault(String tennisdefault) {
-        UserDisplaySettings.tennisdefault = tennisdefault;
+    @JsonProperty
+    public void setTennisdefault(String tennisdefault) {
+        this.tennisdefault = tennisdefault;
     }
-
-    public static int getFirstmoveseconds() {
+    @JsonProperty
+    public int getFirstmoveseconds() {
+        if ( 0 == firstmoveseconds) {
+            firstmoveseconds = 30;
+        }
         return firstmoveseconds;
     }
-
-    public static void setFirstmoveseconds(int firstmoveseconds) {
-        UserDisplaySettings.firstmoveseconds = firstmoveseconds;
+    @JsonProperty
+    public void setFirstmoveseconds(int firstmoveseconds) {
+        this.firstmoveseconds = firstmoveseconds;
     }
-
-    public static int getSecondmoveseconds() {
+    @JsonProperty
+    public int getSecondmoveseconds() {
+        if ( 0 == secondmoveseconds) {
+            secondmoveseconds = 5;
+        }
         return secondmoveseconds;
     }
-
-    public static void setSecondmoveseconds(int secondmoveseconds) {
-        UserDisplaySettings.secondmoveseconds = secondmoveseconds;
+    @JsonProperty
+    public void setSecondmoveseconds(int secondmoveseconds) {
+        this.secondmoveseconds = secondmoveseconds;
     }
-
-    public static Color getFirstcolor() {
+    @JsonProperty
+    public Color getFirstcolor() {
+        if ( null == firstcolor) {
+            firstcolor = Color.RED;
+        }
         return firstcolor;
     }
-
-    public static void setFirstcolor(Color firstcolor) {
-        UserDisplaySettings.firstcolor = firstcolor;
+    @JsonProperty
+    public void setFirstcolor(Color firstcolor) {
+        this.firstcolor = firstcolor;
     }
-
-    public static Color getSecondcolor() {
+    @JsonProperty
+    public Color getSecondcolor() {
+        if ( null == secondcolor ) {
+            secondcolor =  Color.BLACK;
+        }
         return secondcolor;
     }
-
-    public static void setSecondcolor(Color secondcolor) {
-        UserDisplaySettings.secondcolor = secondcolor;
+    @JsonProperty
+    public void setSecondcolor(Color secondcolor) {
+        this.secondcolor = secondcolor;
     }
-
-    public static Color getThirdcolor() {
+    @JsonProperty
+    public Color getThirdcolor() {
+        if ( null == thirdcolor ) {
+            thirdcolor =  Color.BLACK;
+        }
         return thirdcolor;
     }
-
-    public static void setThirdcolor(Color thirdcolor) {
-        UserDisplaySettings.thirdcolor = thirdcolor;
+    @JsonProperty
+    public void setThirdcolor(Color thirdcolor) {
+        this.thirdcolor = thirdcolor;
     }
-
-
-
-
+    @JsonProperty
+    public boolean getAutofitdata() {
+        if ( null == autofitdata) {
+            autofitdata = true;
+        }
+        return autofitdata;
+    }
+    @JsonProperty
+    public void setAutofitdata(Boolean autofitdata) {
+        this.autofitdata = autofitdata;
+    }
+    @JsonProperty
+    public boolean getShowcpo() {
+        if ( null == showcpo) {
+            showcpo = true;
+        }
+        return showcpo;
+    }
+    @JsonProperty
+    public void setShowcpo(Boolean showcpo) {
+        this.showcpo = showcpo;
+    }
+    @JsonProperty
+    public boolean getShowborderbestline() {
+        if ( null == showborderbestline) {
+            showborderbestline = true;
+        }
+        return showborderbestline;
+    }
+    @JsonProperty
+    public void setShowborderbestline(Boolean showborderbestline) {
+        this.showborderbestline = showborderbestline;
+    }
+    @JsonProperty
+    public boolean getShowdirectionicons() {
+        if ( null == showdirectionicons) {
+            showdirectionicons = true;
+        }
+        return showdirectionicons;
+    }
+    @JsonProperty
+    public void setShowdirectionicons(Boolean showdirectionicons) {
+        this.showdirectionicons = showdirectionicons;
+    }
 
 }

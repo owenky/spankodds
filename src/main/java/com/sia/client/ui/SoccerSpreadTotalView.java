@@ -1,10 +1,10 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.*;
 
-import java.awt.Color;
-import java.text.DecimalFormat;
+import java.awt.*;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -56,10 +56,10 @@ public class SoccerSpreadTotalView extends ViewValue {
     String totalborder = "";
     LinesTableData ltd;
     boolean showcomebacks = false;
-
-
     boolean isopenerbookie = false;
     private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
+    private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
+
     public SoccerSpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
         if (bid >= 1000) {
             isopenerbookie = true;
@@ -92,7 +92,7 @@ public class SoccerSpreadTotalView extends ViewValue {
         }
 
         if (display.equals("default")) {
-            display=UserDisplaySettings.getSoccerdefault();
+            display=userDisplaySettings.getSoccerdefault();
             /*
             if (sp.getSport_id() == 3) // baseball
             {
@@ -169,14 +169,14 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == sl) {
             spreadcolor = Color.WHITE;
-        } else if (tsnow - sl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 && clearts < sl.getCurrentts()) {
-            spreadcolor = UserDisplaySettings.getFirstcolor();
+        } else if (tsnow - sl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 && clearts < sl.getCurrentts()) {
+            spreadcolor = userDisplaySettings.getFirstcolor();
         }
-        else if (tsnow - sl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < sl.getCurrentts()) {
-            spreadcolor = UserDisplaySettings.getSecondcolor();
+        else if (tsnow - sl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000  && clearts < sl.getCurrentts()) {
+            spreadcolor = userDisplaySettings.getSecondcolor();
         }
         else if (clearts < sl.getCurrentts()) {
-            spreadcolor = UserDisplaySettings.getThirdcolor();
+            spreadcolor = userDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("S"+id);
         } else {
@@ -193,14 +193,14 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == tl) {
             totalcolor = Color.WHITE;
-        } else if (tsnow - tl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000  && clearts < tl.getCurrentts()) {
-            totalcolor = UserDisplaySettings.getFirstcolor();
+        } else if (tsnow - tl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000  && clearts < tl.getCurrentts()) {
+            totalcolor = userDisplaySettings.getFirstcolor();
         }
-        else if (tsnow - tl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < tl.getCurrentts()) {
-            totalcolor = UserDisplaySettings.getSecondcolor();
+        else if (tsnow - tl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000  && clearts < tl.getCurrentts()) {
+            totalcolor = userDisplaySettings.getSecondcolor();
         }
         else if (clearts < tl.getCurrentts()) {
-            totalcolor = UserDisplaySettings.getThirdcolor();
+            totalcolor = userDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("T"+id);
         } else {
@@ -216,14 +216,14 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == ml) {
             moneycolor = Color.WHITE;
-        } else if (tsnow - ml.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000  && clearts < ml.getCurrentts()) {
-            moneycolor = UserDisplaySettings.getFirstcolor();
+        } else if (tsnow - ml.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000  && clearts < ml.getCurrentts()) {
+            moneycolor = userDisplaySettings.getFirstcolor();
         }
-        else if (tsnow - ml.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < ml.getCurrentts()) {
-            moneycolor = UserDisplaySettings.getSecondcolor();
+        else if (tsnow - ml.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000  && clearts < ml.getCurrentts()) {
+            moneycolor = userDisplaySettings.getSecondcolor();
         }
         else if (clearts < ml.getCurrentts()) {
-            moneycolor = UserDisplaySettings.getThirdcolor();
+            moneycolor = userDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("M"+id);
         } else {
@@ -237,15 +237,15 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == ttl) {
             teamtotalcolor = Color.WHITE;
-        } else if (tsnow - ttl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000  && clearts < ttl.getCurrentts()) {
-            teamtotalcolor = UserDisplaySettings.getFirstcolor();
+        } else if (tsnow - ttl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000  && clearts < ttl.getCurrentts()) {
+            teamtotalcolor = userDisplaySettings.getFirstcolor();
         }
-        else if (tsnow - ttl.getCurrentts() <= UserDisplaySettings.getFirstmoveseconds()*1000 + UserDisplaySettings.getSecondmoveseconds()*1000  && clearts < ttl.getCurrentts()) {
-            teamtotalcolor = UserDisplaySettings.getSecondcolor();
+        else if (tsnow - ttl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000  && clearts < ttl.getCurrentts()) {
+            teamtotalcolor = userDisplaySettings.getSecondcolor();
         }
         //else if(priortotalcolor != Color.WHITE)
         else if (clearts < ttl.getCurrentts()) {
-            teamtotalcolor = UserDisplaySettings.getThirdcolor();
+            teamtotalcolor = userDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("TT"+id);
         } else {
@@ -1181,10 +1181,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         ld3.setData(drawboxS);
         ld4.setData(totalboxS);
         if (!isopenerbookie) {
-            ld1.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld2.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld3.setBackgroundColor(UserDisplaySettings.getOpenercolor());
-            ld4.setBackgroundColor(UserDisplaySettings.getOpenercolor());
+            ld1.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld2.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld3.setBackgroundColor(userDisplaySettings.getOpenercolor());
+            ld4.setBackgroundColor(userDisplaySettings.getOpenercolor());
         } else {
             ld1.setBackgroundColor(Color.LIGHT_GRAY);
             ld2.setBackgroundColor(Color.LIGHT_GRAY);
@@ -1594,10 +1594,10 @@ public class SoccerSpreadTotalView extends ViewValue {
         ld3.setData(drawboxS);
         ld4.setData(totalboxS);
 
-        ld1.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld2.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld3.setBackgroundColor(UserDisplaySettings.getLastcolor());
-        ld4.setBackgroundColor(UserDisplaySettings.getLastcolor());
+        ld1.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld2.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld3.setBackgroundColor(userDisplaySettings.getLastcolor());
+        ld4.setBackgroundColor(userDisplaySettings.getLastcolor());
 
 
         ld1.setBorder("");

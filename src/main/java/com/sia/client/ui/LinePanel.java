@@ -36,7 +36,8 @@ public class LinePanel extends JPanel {
     private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(222, 235, 52));
   //  private static final Color altcolor = new Color(204, 255, 229);
   //private static final Color altcolor = new Color(215, 215, 215);
-  private static final Color altcolor = UserDisplaySettings.getAltcolor();
+    private static final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
+    private static final Color altcolor = userDisplaySettings.getAltcolor();
     private static final Color openercolor = Color.LIGHT_GRAY;
     private final static int leftPaddingSpace = 0;
     private final static int rightPaddingSpace = 0;
@@ -50,6 +51,7 @@ public class LinePanel extends JPanel {
     final JComponent bottomPanel;
     final JComponent drawPanel;
     final JComponent totalPanel;
+
 
 
     public LinePanel() {
@@ -171,7 +173,7 @@ public class LinePanel extends JPanel {
 
             }
 
-            if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+            if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
                 bgcolor = altcolor;
 
             }
@@ -221,7 +223,7 @@ public class LinePanel extends JPanel {
             top.setBorder(null);
         }
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             top.setBorder(null);
         }
@@ -231,7 +233,7 @@ public class LinePanel extends JPanel {
         }
 
         top.setToolTipText(ld.getTooltip());
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             top.setIcon(null);
         }
@@ -267,7 +269,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
         }
 
@@ -306,7 +308,7 @@ public class LinePanel extends JPanel {
             bottom.setBorder(null);
         }
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             bottom.setBorder(null);
         }
@@ -317,7 +319,7 @@ public class LinePanel extends JPanel {
 
 
         bottom.setToolTipText(ld.getTooltip());
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             bottom.setIcon(null);
         }
@@ -354,7 +356,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
         }
 
@@ -395,14 +397,14 @@ public class LinePanel extends JPanel {
             draw.setBorder(null);
         }
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             draw.setBorder(null);
         }
 
 
 
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             draw.setIcon(null);
         }
@@ -439,7 +441,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && UserDisplaySettings.isShowaltcolor()) {
+        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
         }
 
@@ -480,7 +482,7 @@ public class LinePanel extends JPanel {
         }
 
 
-        if(!UserDisplaySettings.isShowborderbestline())
+        if(!userDisplaySettings.getShowborderbestline())
         {
             total.setBorder(null);
         }
@@ -490,7 +492,7 @@ public class LinePanel extends JPanel {
             total.setBorder(scalpborder);
         }
 
-        if(!UserDisplaySettings.isShowdirectionicons())
+        if(!userDisplaySettings.getShowdirectionicons())
         {
             total.setIcon(null);
         }

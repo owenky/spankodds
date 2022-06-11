@@ -193,10 +193,10 @@ public class LineSeekerAlertMethodStatePane implements EditablePane {
     @Override
     public UICompValueBinder getJComponentBinder() {
         if ( null == uiCompValueBinder) {
-            uiCompValueBinder = UICompValueBinder.register(this,attr,getOnValueChangedEventFunction());
-            uiCompValueBinder.bind("audioEnabled",audiocheckbox).bind("soundFile",soundSrc)
-                    .bind("popupEnabled",popupcheckbox).bind("popupSeconds",popupsecsComboBox)
-                    .bind("popupLocation",popupLocationConfig);
+            uiCompValueBinder = UICompValueBinder.register(this,getOnValueChangedEventFunction()).withPersistenceObject(attr)
+                .bindCompProp("audioEnabled",audiocheckbox).bindCompProp("soundFile",soundSrc)
+                    .bindCompProp("popupEnabled",popupcheckbox).bindCompProp("popupSeconds",popupsecsComboBox)
+                    .bindCompProp("popupLocation",popupLocationConfig);
         }
         return uiCompValueBinder;
     }

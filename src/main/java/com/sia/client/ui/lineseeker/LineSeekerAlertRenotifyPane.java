@@ -25,8 +25,8 @@ public class LineSeekerAlertRenotifyPane implements EditablePane {
     @Override
     public UICompValueBinder getJComponentBinder() {
         if ( null == uiCompValueBinder) {
-            uiCompValueBinder = UICompValueBinder.register(this,alertSeekerMethods,getOnValueChangedEventFunction());
-            uiCompValueBinder.bind("renotifyInMinutes",renotifyComboBox);
+            uiCompValueBinder = UICompValueBinder.register(this,getOnValueChangedEventFunction());
+            uiCompValueBinder.bindCompProp("renotifyInMinutes",renotifyComboBox).withPersistenceObject(alertSeekerMethods);
         }
         return uiCompValueBinder;
     }
