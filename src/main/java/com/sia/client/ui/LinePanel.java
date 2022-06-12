@@ -160,7 +160,7 @@ public class LinePanel extends JPanel {
                 fgcolor = getFgColor(bgcolor);
             }
 
-            if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
+            if (!iswhite(bgcolor)  && bgcolor != altcolor && bgcolor != openercolor) {
                 blackorred = true;
                 top.setIcon(Utils.getImageIcon(ld.getIconPath()));
                 fgcolor = getFgColor(bgcolor);//Color.WHITE;
@@ -174,7 +174,7 @@ public class LinePanel extends JPanel {
 
             }
 
-            if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
+            if (row % 2 == 0 && iswhite(bgcolor) && userDisplaySettings.getShowaltcolor()) {
                 bgcolor = altcolor;
                 fgcolor = getFgColor(bgcolor);
 
@@ -260,7 +260,7 @@ public class LinePanel extends JPanel {
             fgcolor = getFgColor(bgcolor);
         }
 
-        if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
+        if ( !iswhite(bgcolor) && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
             fgcolor = getFgColor(bgcolor);//Color.WHITE;
             bottom.setIcon(Utils.getImageIcon(ld.getIconPath()));
@@ -273,7 +273,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
+        if (row % 2 == 0 &&  iswhite(bgcolor) && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
             fgcolor = getFgColor(bgcolor);
         }
@@ -282,7 +282,18 @@ public class LinePanel extends JPanel {
             bgcolor = colcolor;
             fgcolor = getFgColor(bgcolor);
         }
-
+        //debug
+        /*
+        if(col == 7 && row <= 10)
+        {
+            boolean white = false;
+           if(bgcolor == Color.WHITE)
+           {
+               white = true;
+           }
+            System.out.println(row+" bottom bgcolor="+bgcolor.getRed()+".."+bgcolor.getGreen()+".."+bgcolor.getBlue()+".."+white);
+        }
+        */
         bottomPanel.setBackground(bgcolor);
         bottom.setBackground(bgcolor);
         bottom.setForeground(fgcolor);
@@ -349,7 +360,7 @@ public class LinePanel extends JPanel {
             fgcolor = getFgColor(bgcolor);
         }
 
-        if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
+        if ( !iswhite(bgcolor) && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
             fgcolor = getFgColor(bgcolor);//Color.WHITE;
             draw.setIcon(Utils.getImageIcon(ld.getIconPath()));
@@ -363,7 +374,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
+        if (row % 2 == 0 &&  iswhite(bgcolor) && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
             fgcolor = getFgColor(bgcolor);
         }
@@ -438,7 +449,7 @@ public class LinePanel extends JPanel {
             fgcolor = getFgColor(bgcolor);
         }
 
-        if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
+        if ( !iswhite(bgcolor) && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
             fgcolor = getFgColor(bgcolor);//Color.WHITE;
             total.setIcon(Utils.getImageIcon(ld.getIconPath()));
@@ -451,7 +462,7 @@ public class LinePanel extends JPanel {
             }
 
         }
-        if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
+        if (row % 2 == 0 &&  iswhite(bgcolor) && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
             fgcolor = getFgColor(bgcolor);
         }
@@ -708,5 +719,26 @@ public class LinePanel extends JPanel {
 
     }
 
-
+private boolean iswhite(Color color)
+{
+    if(color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+    private boolean isblack(Color color)
+    {
+        if(color.getRed() == 0 && color.getGreen() == 0 && color.getBlue() == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
