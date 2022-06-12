@@ -14,7 +14,13 @@ import com.sia.client.ui.control.SportsTabPane;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
+import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Vector;
+
+import static com.sia.client.config.Utils.log;
 
 public class UserDisplayGui extends AbstractLayerFrame {
 
@@ -51,6 +57,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
     private final JButton savebutton = new JButton("Save");
 
+    private final JButton clearcolorbutton = new JButton("Clear Column Colors");
+
 
     private static final MatteBorder bestborder = new MatteBorder(2, 1, 2, 1, new Color(51, 0, 0));
     private static final PropItem[] items =  new PropItem[] {
@@ -86,6 +94,23 @@ public class UserDisplayGui extends AbstractLayerFrame {
     }
     private void init() {
         savebutton.addActionListener(this::save);
+
+        clearcolorbutton.addActionListener(ae -> {
+            try {
+                int result = JOptionPane.showConfirmDialog(null,"Are You Sure You Would Like To Clear All Column Colors?","Column Colors",JOptionPane.YES_NO_OPTION);
+                if(result == JOptionPane.YES_OPTION)
+                {
+                    AppController.clearColumnColors();
+                }
+
+
+            } catch (Exception e)
+            {
+                log("Error clear colors.."+e);
+
+            }
+
+        });
         firstcolorChooserButton = new ColorChooserButton(Color.RED);
         secondcolorChooserButton = new ColorChooserButton(Color.RED);
         thirdcolorChooserButton = new ColorChooserButton(Color.RED);
@@ -120,6 +145,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
         JPanel panel2 = new JPanel();
 
         JPanel panel3 = new JPanel();
+        JPanel panel4 = new JPanel();
+        JPanel panelempty = new JPanel();
 
 
         panel.setBorder(BorderFactory.createEtchedBorder());
@@ -134,6 +161,12 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
         panel3.setBorder(BorderFactory.createEtchedBorder());
         panel3.setLayout(new GridBagLayout());
+
+        panel4.setBorder(BorderFactory.createEtchedBorder());
+        panel4.setLayout(new GridBagLayout());
+
+        panelempty.setLayout(new GridBagLayout());
+
 
 
         Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -282,6 +315,20 @@ public class UserDisplayGui extends AbstractLayerFrame {
         panel1.add(tenniscb, c1);
 
 
+        GridBagConstraints c8 = new GridBagConstraints();
+
+
+        c8.gridheight = 2;
+
+
+        c8.anchor = GridBagConstraints.CENTER;
+        c8.gridy = 0;
+        c8.gridx = 0;
+        c8.gridwidth = 4;
+        panel4.add(clearcolorbutton, c8);
+
+
+
         c.anchor = GridBagConstraints.WEST;
         c.gridheight = 2;
         c.gridy = 0;
@@ -407,6 +454,16 @@ public class UserDisplayGui extends AbstractLayerFrame {
         c3.gridwidth = 1;
         panel3.add(lastcolorChooserButton, c3);
 
+        GridBagConstraints cempty = new GridBagConstraints();
+        cempty.gridy = 0;
+        cempty.gridx = 0;
+        cempty.gridwidth = 4;
+        cempty.gridheight = 15;
+        panelempty.add(new JLabel("                                            "), cempty);
+        cempty.gridy = 15;
+        cempty.gridx = 0;
+        panelempty.add(new JLabel("                                            "), cempty);
+
 
         //************************end of panel*******************
 
@@ -424,6 +481,13 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
         box1.add(new JLabel("Default Line Display                               "));
         box1.add(panel1);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panelempty);
+
+        box1.add(panel4);
         box2.add(new JLabel("Line Yes/No Display Options                                        "));
         box2.add(panel2);
         box2.add(new JLabel("Color Line Moves                                        "));

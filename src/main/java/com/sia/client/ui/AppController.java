@@ -946,6 +946,9 @@ public class AppController {
     public static Color getColor(Integer bookieid) {
         return bookiecolors.get(bookieid);
     }
+    public static void clearColumnColors() {
+        bookiecolors.clear();
+    }
 
     public static void putColor(Integer bookieid, Color color) {
         bookiecolors.put(bookieid, color);
