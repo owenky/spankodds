@@ -28,6 +28,7 @@ public class LinesConsumer implements MessageListener {
     //private static String brokerURL = "failover:(ssl://71.172.25.164:61617)";
     private transient Connection connection;
     private transient Session session;
+    private long lastmessagets = 0;
 
     public LinesConsumer(ActiveMQConnectionFactory factory, Connection connection, String linesconsumerqueue) throws JMSException {
 
@@ -58,7 +59,27 @@ public class LinesConsumer implements MessageListener {
 
     public void processMessage(MapMessage mapMessage) {
         int gameid = 0;
+
         try {
+            String username = mapMessage.getString("username");
+            if(!username.equals("") && !username.equals(AppController.getUser().getUsername()))
+            {
+                // ignore this message
+                return;
+            }
+            long messagets = mapMessage.getJMSTimestamp();
+            if(lastmessagets != 0 && Math.abs(messagets - lastmessagets) > 60000)
+            {
+                System.out.println("HOUSTON WE HAVE A PROBLEM!\n\n\n");
+                System.out.println("NEED TO LOAD DATA FROM "+lastmessagets);
+                // use dishoutinitialdata thread but instead pass flag to use linespublisher instead
+                lastmessagets = messagets;
+                AppController.getUserPrefsProducer().helpsyncme(lastmessagets);
+            }
+            else
+            {
+                lastmessagets = messagets;
+            }
             gameid = mapMessage.getInt("gameid");
             if (0 == gameid) {
                 return;
