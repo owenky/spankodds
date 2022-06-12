@@ -73,8 +73,9 @@ public class LinesConsumer implements MessageListener {
                 System.out.println("HOUSTON WE HAVE A PROBLEM!\n\n\n");
                 System.out.println("NEED TO LOAD DATA FROM "+lastmessagets);
                 // use dishoutinitialdata thread but instead pass flag to use linespublisher instead
-                lastmessagets = messagets;
                 AppController.getUserPrefsProducer().helpsyncme(lastmessagets);
+                lastmessagets = messagets;
+
             }
             else
             {
