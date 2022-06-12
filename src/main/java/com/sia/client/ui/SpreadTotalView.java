@@ -188,7 +188,7 @@ public class SpreadTotalView extends ViewValue {
                     totalcolor = userDisplaySettings.getSecondcolor();
                 }
                  else if (clearts < tl.getCurrentts()) {
-                    totalcolor = Color.BLACK;
+                    totalcolor = userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("T"+id);
                 } else {
@@ -220,7 +220,7 @@ public class SpreadTotalView extends ViewValue {
                 }
                 else if (clearts < ml.getCurrentts())
                 {
-                    moneycolor = Color.BLACK;
+                    moneycolor = userDisplaySettings.getThirdcolor();
                 } else {
                     moneycolor = Color.WHITE;
                 }
@@ -257,7 +257,7 @@ public class SpreadTotalView extends ViewValue {
                     teamtotalcolor = userDisplaySettings.getSecondcolor();
                 }
                else if (clearts < ttl.getCurrentts()) {
-                    teamtotalcolor = Color.BLACK;
+                    teamtotalcolor =userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("TT"+id);
                 } else {
