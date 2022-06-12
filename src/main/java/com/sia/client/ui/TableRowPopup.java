@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TableRowPopup {
 
@@ -14,6 +16,7 @@ public class TableRowPopup {
     private int rowViewIndex;
     private int columnViewIndex;
     private JPopupMenu jPopupMenu;
+    private static final Map<String, Map<Integer,Integer>> hiddenRows = new HashMap<>();
     private static TableRowPopup instance = new TableRowPopup();
 
     public static TableRowPopup instance() {
@@ -55,7 +58,11 @@ public class TableRowPopup {
 
         ColumnCustomizableTable<?> mainGameTable = getMainGameTable();
         for(int rViewIndex: getSelectedRows()) {
+            int originalRowHeight = mainGameTable.getRowHeight(rViewIndex);
+            int gameId = mainGameTable.getGame(mainGameTable.convertRowIndexToModel(rViewIndex)).getGame_id();
             mainGameTable.setRowHeight(rViewIndex, SiaConst.Ui.HiddenRowHeight);
+            Map<Integer,Integer> hiddenRowsByTable = hiddenRows.computeIfAbsent(mainGameTable.getName(),(name)->new HashMap<>());
+            hiddenRowsByTable.put(gameId,originalRowHeight);
         }
         reConfigHeaderRow();
         jPopupMenu.setVisible(false);

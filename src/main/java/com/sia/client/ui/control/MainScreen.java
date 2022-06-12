@@ -122,6 +122,10 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         mainGameTable = new MainGameTable(model);
         mainGameTable.setIntercellSpacing(new Dimension(4, 2));
         mainGameTable.setName(getName());
+        mainGameTable.setCellSelectionEnabled(true);
+        mainGameTable.setRowSelectionAllowed(true);
+        mainGameTable.getRowHeaderTable().setCellSelectionEnabled(true);
+        mainGameTable.getRowHeaderTable().setRowSelectionAllowed(true);
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = Config.instance().getFontConfig().getSelectedFont().deriveFont(Font.BOLD, 11);
         tableHeader.setFont(headerFont);

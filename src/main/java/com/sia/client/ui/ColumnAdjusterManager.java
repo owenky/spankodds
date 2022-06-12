@@ -49,7 +49,7 @@ public class ColumnAdjusterManager {
         clearAdjustRegions();
     }
     public synchronized void adjustColumns() {
-new Exception("Column adjust is callled").printStackTrace();
+//new Exception("Column adjust is callled").printStackTrace();
         long now = System.currentTimeMillis();
         if (SiaConst.ColumnWidthRefreshRate <= (now-lastAdjustingTime)) {
             if ( 0 == mainTableAdjustRegions.size()) {
