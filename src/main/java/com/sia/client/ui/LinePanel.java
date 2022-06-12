@@ -24,20 +24,20 @@ public class LinePanel extends JPanel {
     private static final MatteBorder scalpbordertop = new MatteBorder(2, 2, 0, 2, new Color(0 ,102, 0));
     private static final MatteBorder scalpborderbottom = new MatteBorder(0, 2, 2, 2, new Color(0 ,102, 0));
     private static final MatteBorder scalpborder = new MatteBorder(2, 2, 2, 2, new Color(0 ,102, 0));
-    private static final MatteBorder bestvisitborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51,0, 0));
-    private static final MatteBorder besthomeborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51, 0, 0));
-    private static final MatteBorder bestoverborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51 ,0, 0));
-    private static final MatteBorder bestunderborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(51 ,0, 0));
-    private static final MatteBorder bestvisitborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
-    private static final MatteBorder besthomeborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
-    private static final MatteBorder bestoverborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
-    private static final MatteBorder bestunderborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 0));
-    private static final MatteBorder bestdrawborder = new MatteBorder(2, 2, 2, 2, new Color(255, 255, 0));
-    private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(222, 235, 52));
+    private static final MatteBorder bestvisitborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(0,0, 0));
+    private static final MatteBorder besthomeborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(0, 0, 0));
+    private static final MatteBorder bestoverborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(0 ,0, 0));
+    private static final MatteBorder bestunderborder = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(0 ,0, 0));
+    private static final MatteBorder bestvisitborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 255));
+    private static final MatteBorder besthomeborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 255));
+    private static final MatteBorder bestoverborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 255));
+    private static final MatteBorder bestunderborderblackorred = new MatteBorder(topthickness, leftthickness, bottomthickness, rightthickness, new Color(255,255, 255));
+    private static final MatteBorder bestdrawborder = new MatteBorder(2, 2, 2, 2, new Color(255, 255, 255));
+    private static final MatteBorder bestallborder = new MatteBorder(2, 2, 2, 2, new Color(255, 255, 0));
   //  private static final Color altcolor = new Color(204, 255, 229);
   //private static final Color altcolor = new Color(215, 215, 215);
     private static final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
-    private static final Color altcolor = userDisplaySettings.getAltcolor();
+    private static  Color altcolor = userDisplaySettings.getAltcolor();
     private static final Color openercolor = Color.LIGHT_GRAY;
     private final static int leftPaddingSpace = 0;
     private final static int rightPaddingSpace = 0;
@@ -143,6 +143,9 @@ public class LinePanel extends JPanel {
     }
 
     public void setTop(JTable table,LineData ld, int row, int col) {
+        altcolor = userDisplaySettings.getAltcolor();
+        Color bgcolor = ld.getBackgroundColor();
+        Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
         boolean blackorred = false;
         try {
 
@@ -152,8 +155,7 @@ public class LinePanel extends JPanel {
             Integer bookieid = AppController.getBookieId(bookie);
             Color colcolor = AppController.getColor(bookieid);
 
-            Color bgcolor = ld.getBackgroundColor();
-            Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
+
 
             if (ld.getData().equals("") && bgcolor != openercolor) {
                 bgcolor = Color.WHITE;
@@ -197,28 +199,29 @@ public class LinePanel extends JPanel {
 
         if (ld.getBorder().contains("bestvisit")) {
             if (ld.getBorder().contains("besthome")) {
-                top.setBorder(bestallborder);
+               // top.setBorder(bestallborder);
+                top.setBorder(getBorder(fgcolor));
             } else {
 
-                if(blackorred) {  top.setBorder(bestvisitborderblackorred);}
-                else { top.setBorder(bestvisitborder); }
+                if(blackorred) {   top.setBorder(getBorder(fgcolor)); }
+                else { top.setBorder(getBorder(fgcolor)); }
 
 
             }
         } else if (ld.getBorder().contains("besthome")) {
-            top.setBorder(besthomeborder);
+            top.setBorder(getBorder(fgcolor));
 
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
-                top.setBorder(bestallborder);
+                top.setBorder(getBorder(fgcolor));
             } else {
-                if(blackorred) {  top.setBorder(bestoverborderblackorred);}
-                else { top.setBorder(bestoverborder); }
+                if(blackorred) {  top.setBorder(getBorder(fgcolor));}
+                else { top.setBorder(getBorder(fgcolor)); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            if(blackorred) {  top.setBorder(bestunderborderblackorred);}
-            else { top.setBorder(bestunderborder); }
+            if(blackorred) {   top.setBorder(getBorder(fgcolor));}
+            else {  top.setBorder(getBorder(fgcolor)); }
 
         }
 
@@ -243,7 +246,7 @@ public class LinePanel extends JPanel {
     }
 
     public void setBottom(JTable table,LineData ld, int row, int col) {
-
+        altcolor = userDisplaySettings.getAltcolor();
         boolean blackorred = false;
         bottom.setText(ld.getData());
 
@@ -300,25 +303,26 @@ public class LinePanel extends JPanel {
 
         if (ld.getBorder().contains("bestvisit")) {
             if (ld.getBorder().contains("besthome")) {
-                bottom.setBorder(bestallborder);
+
+                bottom.setBorder(getBorder(fgcolor));
             } else {
-                if(blackorred) {  bottom.setBorder(bestvisitborderblackorred);}
-                else { bottom.setBorder(bestvisitborder); }
+                if(blackorred) {   bottom.setBorder(getBorder(fgcolor));}
+                else {  bottom.setBorder(getBorder(fgcolor)); }
             }
         } else if (ld.getBorder().contains("besthome")) {
-            if(blackorred) {  bottom.setBorder(besthomeborderblackorred);}
-            else { bottom.setBorder(besthomeborder); }
+            if(blackorred) {   bottom.setBorder(getBorder(fgcolor));}
+            else {  bottom.setBorder(getBorder(fgcolor)); }
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
-                bottom.setBorder(bestallborder);
+                bottom.setBorder(getBorder(fgcolor));
             } else {
-                if(blackorred) {  bottom.setBorder(bestoverborderblackorred);}
-                else { bottom.setBorder(bestoverborder); }
+                if(blackorred) {  bottom.setBorder(getBorder(fgcolor));}
+                else {  bottom.setBorder(getBorder(fgcolor)); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            if(blackorred) {  bottom.setBorder(bestunderborderblackorred);}
-            else { bottom.setBorder(bestunderborder); }
+            if(blackorred) {  bottom.setBorder(getBorder(fgcolor));}
+            else {  bottom.setBorder(getBorder(fgcolor)); }
 
         }
         else {
@@ -343,7 +347,7 @@ public class LinePanel extends JPanel {
     }
 
     private void setDraw(JTable table,LineData ld, int row, int col) {
-
+        altcolor = userDisplaySettings.getAltcolor();
         boolean blackorred = false;
         draw.setText(ld.getData());
 
@@ -390,28 +394,29 @@ public class LinePanel extends JPanel {
 
         if (ld.getBorder().contains("bestvisit")) {
             if (ld.getBorder().contains("besthome")) {
-                draw.setBorder(bestallborder);
+
+                draw.setBorder(getBorder(fgcolor));
             } else {
-                if(blackorred) {  draw.setBorder(bestvisitborderblackorred);}
-                else { draw.setBorder(bestvisitborder); }
+                if(blackorred) {  draw.setBorder(getBorder(fgcolor));}
+                else { draw.setBorder(getBorder(fgcolor)); }
             }
         } else if (ld.getBorder().contains("besthome")) {
-            if(blackorred) {  draw.setBorder(besthomeborderblackorred);}
-            else { draw.setBorder(besthomeborder); }
+            if(blackorred) { draw.setBorder(getBorder(fgcolor));}
+            else { draw.setBorder(getBorder(fgcolor)); }
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
-                draw.setBorder(bestallborder);
+                draw.setBorder(getBorder(fgcolor));
             } else {
-                if(blackorred) {  draw.setBorder(bestoverborderblackorred);}
-                else { draw.setBorder(bestoverborder); }
+                if(blackorred) {  draw.setBorder(getBorder(fgcolor));}
+                else { draw.setBorder(getBorder(fgcolor)); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            if(blackorred) {  draw.setBorder(bestunderborderblackorred);}
-            else { draw.setBorder(bestunderborder); }
+            if(blackorred) {  draw.setBorder(getBorder(fgcolor));}
+            else { draw.setBorder(getBorder(fgcolor)); }
 
         } else if (ld.getBorder().contains("bestdraw")) {
-            draw.setBorder(bestdrawborder);
+            draw.setBorder(getBorder(fgcolor));
 
         } else {
             draw.setBorder(null);
@@ -432,7 +437,7 @@ public class LinePanel extends JPanel {
     }
 
     private void setTotal(JTable table,LineData ld, int row, int col) {
-
+        altcolor = userDisplaySettings.getAltcolor();
         boolean blackorred = false;
         total.setText(ld.getData());
 
@@ -478,27 +483,28 @@ public class LinePanel extends JPanel {
 
         if (ld.getBorder().contains("bestvisit")) {
             if (ld.getBorder().contains("besthome")) {
-                total.setBorder(bestallborder);
+                total.setBorder(getBorder(fgcolor));
+
             } else {
-                if(blackorred) {  total.setBorder(bestvisitborderblackorred);}
-                else { total.setBorder(bestvisitborder); }
+                if(blackorred) {   total.setBorder(getBorder(fgcolor));}
+                else {  total.setBorder(getBorder(fgcolor)); }
 
 
             }
         } else if (ld.getBorder().contains("besthome")) {
-            if(blackorred) {  total.setBorder(besthomeborderblackorred);}
-            else { total.setBorder(besthomeborder); }
+            if(blackorred) {  total.setBorder(getBorder(fgcolor));}
+            else {  total.setBorder(getBorder(fgcolor)); }
         } else if (ld.getBorder().contains("bestover")) {
             if (ld.getBorder().contains("bestunder")) {
-                total.setBorder(bestallborder);
+                total.setBorder(getBorder(fgcolor));
             } else {
-                if(blackorred) {  total.setBorder(bestoverborderblackorred);}
-                else { total.setBorder(bestoverborder); }
+                if(blackorred) {   total.setBorder(getBorder(fgcolor));}
+                else {  total.setBorder(getBorder(fgcolor)); }
             }
 
         } else if (ld.getBorder().contains("bestunder")) {
-            if(blackorred) {  total.setBorder(bestunderborderblackorred);}
-            else { total.setBorder(bestunderborder); }
+            if(blackorred) {   total.setBorder(getBorder(fgcolor));}
+            else {  total.setBorder(getBorder(fgcolor)); }
         }
           else {
             total.setBorder(null);
@@ -739,6 +745,22 @@ private boolean iswhite(Color color)
         else
         {
             return false;
+        }
+    }
+    private MatteBorder getBorder(Color fgcolor)
+    {
+        if(isblack(fgcolor))
+        {
+            return bestvisitborder;
+        }
+        else if(iswhite(fgcolor))
+        {
+            return bestvisitborderblackorred;
+        }
+        else
+        {
+            return bestvisitborder;
+
         }
     }
 }
