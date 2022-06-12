@@ -6,20 +6,43 @@ import com.sia.client.model.Game;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TableUtils {
 
+    public static List<JComponent> getChildren(JComponent comp) {
+        List<JComponent> children = new ArrayList<>();
+        List<JComponent> parents = new ArrayList<>();
+        parents.add(comp);
+        for (int i=0;i<parents.size();i++) {
+            JComponent next = parents.get(i);
+            if ( next != comp) {
+                children.add(next);
+            }
+            while(next.getComponents().length > 0) {
+                Component[] myChildern = next.getComponents();
+                boolean firstFound = false;
+                for(Component c: myChildern) {
+                    if ( c instanceof JComponent) {
+                        if ( ! firstFound ) {
+                            next = (JComponent) c;
+                            children.add(next);
+                            firstFound = true;
+                        } else {
+                            parents.add((JComponent)c);
+                        }
+                    }
+                }
+            }
+        }
+        return children;
+    }
     public static <V extends KeyedObject> JComponent configTableLockColumns(ColumnCustomizableTable<V> mainTable, int lockedColumnBoundaryIndex) {
 
         int windowIndex = mainTable.getModel().getSpankyWindowConfig().getWindowIndex();
