@@ -12,10 +12,22 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class TableUtils {
 
+    public static void highLightCellWhenRowSelected(JTable jtable, JComponent cellRender,int rowViewIndex,Color highLightColor) {
+        boolean isRowSelected = jtable.isRowSelected(rowViewIndex);
+        List<JComponent> children = TableUtils.getChildren(cellRender);
+
+        System.out.println("jtable="+jtable.getClass().getName()+", selectedRow="+ Arrays.toString(jtable.getSelectedRows()));
+
+        for(JComponent jcomp: children) {
+            jcomp.setOpaque( ! isRowSelected);
+        }
+        cellRender.setBackground(highLightColor);
+    }
     public static List<JComponent> getChildren(JComponent comp) {
         List<JComponent> children = new ArrayList<>();
         List<JComponent> parents = new ArrayList<>();

@@ -1,7 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.AccessableToGame;
+import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
@@ -55,7 +57,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		}
 		return headerCellRenderer;
 	}
-
 	@Override
 	public String getToolTipText(MouseEvent e)
 	{
@@ -107,18 +108,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	@Override
 	public boolean getAutoCreateColumnsFromModel() {
 		return true;
-	}
-	@Override
-	public final void removeRowSelectionInterval(int index0, int index1){
-		super.removeRowSelectionInterval(index0, index1);
-	}
-	@Override
-	public final void addRowSelectionInterval(int index0, int index1){
-		super.addRowSelectionInterval(index0, index1);
-	}
-	@Override
-	public boolean isRowSelected(int row) {
-		return mainTable.isRowSelected(row);
 	}
 	@Override
 	public void createDefaultColumnsFromModel() {

@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.TableCellRendererProvider;
@@ -36,12 +37,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         JPanel cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
-        if ( isSelected) {
-            List<JComponent> children = TableUtils.getChildren(cellRender);
-            for(JComponent jcomp: children) {
-                jcomp.setOpaque(false);
-            }
-        }
+        TableUtils.highLightCellWhenRowSelected(table,cellRender,row, SiaConst.Ui.ROW_SELECTED_COLOR);
         return cellRender;
     }
     private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
