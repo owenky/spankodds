@@ -153,16 +153,17 @@ public class LinePanel extends JPanel {
             Color colcolor = AppController.getColor(bookieid);
 
             Color bgcolor = ld.getBackgroundColor();
-            Color fgcolor = Color.BLACK;
+            Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
 
             if (ld.getData().equals("") && bgcolor != openercolor) {
                 bgcolor = Color.WHITE;
+                fgcolor = getFgColor(bgcolor);
             }
 
             if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
                 blackorred = true;
                 top.setIcon(Utils.getImageIcon(ld.getIconPath()));
-                fgcolor = Color.WHITE;
+                fgcolor = getFgColor(bgcolor);//Color.WHITE;
             } else {
                 if (ld.getData().equals("")) {
                     top.setIcon(null);
@@ -175,10 +176,12 @@ public class LinePanel extends JPanel {
 
             if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
                 bgcolor = altcolor;
+                fgcolor = getFgColor(bgcolor);
 
             }
             if (colcolor != null && !blackorred) {
                 bgcolor = colcolor;
+                fgcolor = getFgColor(bgcolor);
             }
 
             topPanel.setBackground(bgcolor);
@@ -250,15 +253,16 @@ public class LinePanel extends JPanel {
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
-        Color fgcolor = Color.BLACK;
+        Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
 
         if (ld.getData().equals("") && bgcolor != openercolor) {
             bgcolor = Color.WHITE;
+            fgcolor = getFgColor(bgcolor);
         }
 
         if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
-            fgcolor = Color.WHITE;
+            fgcolor = getFgColor(bgcolor);//Color.WHITE;
             bottom.setIcon(Utils.getImageIcon(ld.getIconPath()));
         } else {
             if (ld.getData().equals("")) {
@@ -271,10 +275,12 @@ public class LinePanel extends JPanel {
         }
         if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
+            fgcolor = getFgColor(bgcolor);
         }
 
         if (colcolor != null && !blackorred) {
             bgcolor = colcolor;
+            fgcolor = getFgColor(bgcolor);
         }
 
         bottomPanel.setBackground(bgcolor);
@@ -336,15 +342,16 @@ public class LinePanel extends JPanel {
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
-        Color fgcolor = Color.BLACK;
+        Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
 
         if (ld.getData().equals("") && bgcolor != openercolor) {
             bgcolor = Color.WHITE;
+            fgcolor = getFgColor(bgcolor);
         }
 
         if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
-            fgcolor = Color.WHITE;
+            fgcolor = getFgColor(bgcolor);//Color.WHITE;
             draw.setIcon(Utils.getImageIcon(ld.getIconPath()));
         } else {
 
@@ -358,10 +365,12 @@ public class LinePanel extends JPanel {
         }
         if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
+            fgcolor = getFgColor(bgcolor);
         }
 
         if (colcolor != null && !blackorred) {
             bgcolor = colcolor;
+            fgcolor = getFgColor(bgcolor);
         }
 
         drawPanel.setBackground(bgcolor);
@@ -422,15 +431,16 @@ public class LinePanel extends JPanel {
         Color colcolor = AppController.getColor(bookieid);
 
         Color bgcolor = ld.getBackgroundColor();
-        Color fgcolor = Color.BLACK;
+        Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
 
         if (ld.getData().equals("") && bgcolor != openercolor) {
             bgcolor = Color.WHITE;
+            fgcolor = getFgColor(bgcolor);
         }
 
         if (bgcolor != Color.WHITE && bgcolor != altcolor && bgcolor != openercolor) {
             blackorred = true;
-            fgcolor = Color.WHITE;
+            fgcolor = getFgColor(bgcolor);//Color.WHITE;
             total.setIcon(Utils.getImageIcon(ld.getIconPath()));
         } else {
             if (ld.getData().equals("")) {
@@ -443,10 +453,12 @@ public class LinePanel extends JPanel {
         }
         if (row % 2 == 0 && bgcolor == Color.WHITE && userDisplaySettings.getShowaltcolor()) {
             bgcolor = altcolor;
+            fgcolor = getFgColor(bgcolor);
         }
 
         if (colcolor != null && !blackorred) {
             bgcolor = colcolor;
+            fgcolor = getFgColor(bgcolor);
         }
 
         totalPanel.setBackground(bgcolor);
@@ -677,4 +689,24 @@ public class LinePanel extends JPanel {
 
         return containingPanel;
     }
+    private Color getFgColor(Color bgcolor)
+    {
+
+        int r = bgcolor.getRed();
+        int g = bgcolor.getGreen();
+        int b = bgcolor.getBlue();
+        double fgnum = ((r*299)+(g*587)+(b*114))/1000;
+        if (fgnum >= 128)
+        {
+            return Color.BLACK;
+        }
+        else
+            {
+            return Color.WHITE;
+            }
+
+
+    }
+
+
 }
