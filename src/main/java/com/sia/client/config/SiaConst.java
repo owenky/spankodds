@@ -37,6 +37,8 @@ public abstract class SiaConst {
         Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
         Cursor CURSOR_BUSY = new Cursor(Cursor.WAIT_CURSOR);
         Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
+
+        int HiddenRowHeight = 1;
     }
     public interface SportName {
         String Football = "Football";
