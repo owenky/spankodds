@@ -25,6 +25,14 @@ public class TableRowPopup {
     public static TableRowPopup instance() {
         return instance;
     }
+    public static boolean isHiddenRow(String tableName, int gameId) {
+        boolean isHiddenRow = false;
+        Map<Integer,Integer> hiddenRowsByTable = hiddenRows.get(tableName);
+        if ( null != hiddenRowsByTable) {
+            isHiddenRow = null != hiddenRowsByTable.get(gameId);
+        }
+        return isHiddenRow;
+    }
     private TableRowPopup() {
         init();
     }

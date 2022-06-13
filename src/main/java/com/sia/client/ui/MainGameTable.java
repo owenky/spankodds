@@ -49,6 +49,10 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     @Override
     protected int computeRowHeight(int rowModelIndex) {
         int rowHeight;
+        Game game = getGame(rowModelIndex);
+        if ( TableRowPopup.isHiddenRow(getName(), game.getGame_id())) {
+            return SiaConst.Ui.HiddenRowHeight;
+        }
 
         if ( ! getModel().getSportType().isPredifined()) {
             //for customized sport, stage table section contains mixed sport type games.
