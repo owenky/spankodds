@@ -61,11 +61,13 @@ public class TableRowPopup {
 
         ColumnCustomizableTable<?> mainGameTable = getMainGameTable();
         for(int rViewIndex: getSelectedRows()) {
-            int originalRowHeight = mainGameTable.getRowHeight(rViewIndex);
             int gameId = mainGameTable.getGame(mainGameTable.convertRowIndexToModel(rViewIndex)).getGame_id();
-            mainGameTable.setRowHeight(rViewIndex, SiaConst.Ui.HiddenRowHeight);
-            Map<Integer,Integer> hiddenRowsByTable = hiddenRows.computeIfAbsent(mainGameTable.getName(),(name)->new HashMap<>());
-            hiddenRowsByTable.put(gameId,originalRowHeight);
+            if ( gameId > 0) { //don't hide header row
+                int originalRowHeight = mainGameTable.getRowHeight(rViewIndex);
+                mainGameTable.setRowHeight(rViewIndex, SiaConst.Ui.HiddenRowHeight);
+                Map<Integer, Integer> hiddenRowsByTable = hiddenRows.computeIfAbsent(mainGameTable.getName(), (name) -> new HashMap<>());
+                hiddenRowsByTable.put(gameId, originalRowHeight);
+            }
         }
         reConfigHeaderRow();
         jPopupMenu.setVisible(false);
@@ -84,6 +86,7 @@ public class TableRowPopup {
                 mainGameTable.setRowHeight(rViewIndex, originalHeight);
             }
         }
+        reConfigHeaderRow();
         jPopupMenu.setVisible(false);
     }
     private void highlightRows(ActionEvent ae) {
