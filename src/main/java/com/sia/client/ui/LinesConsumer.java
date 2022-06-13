@@ -62,10 +62,17 @@ public class LinesConsumer implements MessageListener {
 
         try {
             String username = mapMessage.getString("username");
-            if(!username.equals("") && !username.equals(AppController.getUser().getUsername()))
+            if(!username.equals(""))
             {
-                // ignore this message
-                return;
+                //log("Rescue mission");
+                if(!username.equals(AppController.getUser().getUsername()))
+                {
+                    return;
+                }
+                else
+                {
+
+                }
             }
             long messagets = mapMessage.getJMSTimestamp();
             if(lastmessagets != 0 && Math.abs(messagets - lastmessagets) > 60000)
