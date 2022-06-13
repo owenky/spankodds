@@ -34,47 +34,47 @@ public class UserDisplaySettings {
 
     private Color openercolor;
     private Color lastcolor;
-
+    @JsonProperty
     public Boolean getShowaltcolor() {
         if ( null == showaltcolor) {
             showaltcolor = true;
         }
         return showaltcolor;
     }
-
+    @JsonProperty
     public void setShowaltcolor(Boolean showaltcolor) {
         this.showaltcolor = showaltcolor;
     }
-
+    @JsonProperty
     public Color getAltcolor() {
         if ( null == altcolor ) {
             altcolor = new Color(215, 215, 215);
         }
         return altcolor;
     }
-
+    @JsonProperty
     public void setAltcolor(Color altcolor) {
         this.altcolor = altcolor;
     }
-
+    @JsonProperty
     public Color getOpenercolor() {
         if( null == openercolor) {
             openercolor = Color.GRAY;
         }
         return openercolor;
     }
-
+    @JsonProperty
     public void setOpenercolor(Color openercolor) {
         this.openercolor = openercolor;
     }
-
+    @JsonProperty
     public Color getLastcolor() {
         if ( null == lastcolor) {
             lastcolor = Color.BLUE;
         }
         return lastcolor;
     }
-
+    @JsonProperty
     public void setLastcolor(Color lastcolor) {
         this.lastcolor = lastcolor;
     }

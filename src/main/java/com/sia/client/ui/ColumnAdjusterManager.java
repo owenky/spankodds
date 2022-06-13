@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.ColumnAdjustPreparer.AdjustRegion;
 
@@ -48,6 +49,7 @@ public class ColumnAdjusterManager {
         clearAdjustRegions();
     }
     public synchronized void adjustColumns() {
+//new Exception("Column adjust is callled").printStackTrace();
         long now = System.currentTimeMillis();
         if (SiaConst.ColumnWidthRefreshRate <= (now-lastAdjustingTime)) {
             if ( 0 == mainTableAdjustRegions.size()) {
@@ -113,7 +115,7 @@ public class ColumnAdjusterManager {
         private final List<ColumnAdjusterManager> columnAdjusterManagerList = new ArrayList<>();
         @Override
         public void actionPerformed(final ActionEvent e) {
-            if ( AppController.isReadyForMessageProcessing()) {
+            if ( Config.instance().getUserDisplaySettings().getAutofitdata() && AppController.isReadyForMessageProcessing()) {
                 for (ColumnAdjusterManager manager : columnAdjusterManagerList) {
                     if (manager.mainTable.isShowing()) {
                         manager.adjustColumns();

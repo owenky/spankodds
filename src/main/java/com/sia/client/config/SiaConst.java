@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.42)";
+    public static final String Version="(v21.20.10.43)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -34,9 +34,12 @@ public abstract class SiaConst {
         Color COLOR_UNDERLINE = new java.awt.Color(121, 124, 128);
         Color COLOR_TEXT_SELECTION_BCK = new java.awt.Color(49, 106, 197);
         Color COLOR_TEXT_SELECTION_FORE = new java.awt.Color(255, 255, 255);
+        Color ROW_SELECTED_COLOR = new java.awt.Color(100, 100, 255);
         Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
         Cursor CURSOR_BUSY = new Cursor(Cursor.WAIT_CURSOR);
         Cursor CURSOR_HAND = new Cursor(Cursor.HAND_CURSOR);
+
+        int HiddenRowHeight = 1;
     }
     public interface SportName {
         String Football = "Football";

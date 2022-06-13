@@ -104,6 +104,11 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
                     SwingUtilities.convertPointToScreen(point,table);
                     Game game = accessableToGame.getGame(rowModelIndex);
                     GameHistPane.showHistPane(stp,point,game,bookieId);
+                } else {
+                    TableRowPopup tableRowPopup = TableRowPopup.instance();
+                    tableRowPopup.setJtable(table);
+                    tableRowPopup.setPointAtTable(point);
+                    tableRowPopup.show();
                 }
             }
         }

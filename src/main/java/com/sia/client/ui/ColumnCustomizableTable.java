@@ -252,8 +252,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return headerCellRenderer;
     }
-
     public JScrollPane getTableScrollPane() {
+
         if (null == tableScrollPane) {
             tableScrollPane = new JScrollPane(this);
         }

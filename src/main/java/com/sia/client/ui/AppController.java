@@ -146,7 +146,7 @@ public class AppController {
 
     public static boolean isReadyForMessageProcessing() {
         CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
-        return 0 == messageProcessingLatch.getCount();
+        return  0 == messageProcessingLatch.getCount();
 
     }
 
