@@ -40,6 +40,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
     private ColorChooserButton openercolorChooserButton;
     private ColorChooserButton lastcolorChooserButton;
 
+    private ColorChooserButton rowhighlightcolorChooserButton;
+
 
     private SbtStringComboBox firstmovesecs;
     private SbtStringComboBox secondmovesecs;
@@ -79,6 +81,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
     JToggleButton borderbestbutton = new JToggleButton("borderbest", checkimage, "Click to disable bordering best line", ximage, "Click to enable bordering best line");
     JToggleButton altcolorbutton = new JToggleButton("altcolor", checkimage, "Click to disable altering coloring rows", ximage, "Click to enable altering coloring rows");
 
+    JToggleButton soccerquarterlinebutton = new JToggleButton("soccerquarterlines", checkimage, "Click to show .25 and .75 instead of \u00BC and \u00BE", ximage, "Click to show \u00BC and \u00BE instead of .25 and .75");
+
     private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
     private final JLabel editStatusLabel = new JLabel();
 
@@ -117,6 +121,7 @@ public class UserDisplayGui extends AbstractLayerFrame {
         altcolorChooserButton= new ColorChooserButton(Color.RED);
         openercolorChooserButton= new ColorChooserButton(Color.RED);
         lastcolorChooserButton= new ColorChooserButton(Color.RED);
+        rowhighlightcolorChooserButton= new ColorChooserButton(Color.RED);
 
         firstmovesecs = new SbtStringComboBox(secArr);
         secondmovesecs = new SbtStringComboBox(secArr);
@@ -179,6 +184,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
         JLabel borderbest = new JLabel("  Show Border for Best Line?");
 
         JLabel altcolorlabel = new JLabel("Have Rows Alternating Color? - ");
+
+        JLabel soccerquarterlabel = new JLabel("Display \u00BC and \u00BE for Soccer");
 
 
         JLabel uplabel = new JLabel(Utils.getImageIcon(SiaConst.ImageFile.ICON_UP));
@@ -381,6 +388,15 @@ public class UserDisplayGui extends AbstractLayerFrame {
         c.gridwidth = 1;
         panel2.add(altcolorChooserButton, c);
 
+        c.gridy = 10;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        panel2.add(soccerquarterlinebutton, c);
+        c.gridx = 4;
+        c.gridwidth = 3;
+        panel2.add(soccerquarterlabel, c);
+
+
 
         GridBagConstraints c2 = new GridBagConstraints();
 
@@ -429,6 +445,7 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
         JLabel openercolorlabel = new JLabel("Opener Button Color - ");
         JLabel lastcolorlabel = new JLabel("Last Button Color - ");
+        JLabel rowhighlightcolorlabel = new JLabel("Row Highlight Color - ");
         GridBagConstraints c3 = new GridBagConstraints();
 
 
@@ -453,6 +470,15 @@ public class UserDisplayGui extends AbstractLayerFrame {
         c3.gridx = 5;
         c3.gridwidth = 1;
         panel3.add(lastcolorChooserButton, c3);
+
+        c3.gridy = 4;
+        c3.gridx = 0;
+        c3.gridwidth = 4;
+        panel3.add(rowhighlightcolorlabel, c3);
+        c3.anchor = GridBagConstraints.WEST;
+        c3.gridx = 5;
+        c3.gridwidth = 1;
+        panel3.add(rowhighlightcolorChooserButton, c3);
 
         GridBagConstraints cempty = new GridBagConstraints();
         cempty.gridy = 0;
@@ -492,7 +518,7 @@ public class UserDisplayGui extends AbstractLayerFrame {
         box2.add(panel2);
         box2.add(new JLabel("Color Line Moves                                        "));
         box2.add(panel);
-        box2.add(new JLabel("Opener/Last Colors                                      "));
+        box2.add(new JLabel("Colors                                                  "));
         box2.add(panel3);
         box2.add(savebutton);
         // Add the boxes to the content pane.
@@ -530,6 +556,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
                 .bindCompProp("secondmoveseconds",secondmovesecs)
                 .bindCompProp("altcolor",altcolorChooserButton)
                 .bindCompProp("openercolor",openercolorChooserButton)
+                .bindCompProp("rowhighlightcolor",rowhighlightcolorChooserButton)
+                .bindCompProp("soccerquarter",soccerquarterlinebutton)
                 .bindCompProp("lastcolor",lastcolorChooserButton);
 
     }

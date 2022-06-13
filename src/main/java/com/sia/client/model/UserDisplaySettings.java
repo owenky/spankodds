@@ -29,11 +29,18 @@ public class UserDisplaySettings {
     private Boolean showborderbestline;
     private Boolean showdirectionicons;
 
+
+    private Boolean soccerquarter;
+
     private Boolean showaltcolor;
     private Color altcolor;
 
     private Color openercolor;
     private Color lastcolor;
+
+
+
+    private Color rowhighlightcolor;
     @JsonProperty
     public Boolean getShowaltcolor() {
         if ( null == showaltcolor) {
@@ -77,6 +84,20 @@ public class UserDisplaySettings {
     @JsonProperty
     public void setLastcolor(Color lastcolor) {
         this.lastcolor = lastcolor;
+    }
+
+    @JsonProperty
+    public Color getRowhighlightcolor()
+    {
+        if ( null == rowhighlightcolor) {
+            rowhighlightcolor = Color.BLUE;
+        }
+        return rowhighlightcolor;
+    }
+
+    @JsonProperty
+    public void setRowhighlightcolor(Color rowhighlightcolor) {
+        this.rowhighlightcolor = rowhighlightcolor;
     }
 
     @JsonProperty
@@ -244,6 +265,23 @@ public class UserDisplaySettings {
     public void setAutofitdata(Boolean autofitdata) {
         this.autofitdata = autofitdata;
     }
+
+    @JsonProperty
+    public Boolean getSoccerquarter() {
+        if ( null == soccerquarter) {
+            soccerquarter = true;
+        }
+       return soccerquarter;
+    }
+
+    @JsonProperty
+    public void setSoccerquarter(Boolean soccerquarter) {
+        this.soccerquarter = soccerquarter;
+    }
+
+
+
+
     @JsonProperty
     public boolean getShowcpo() {
         if ( null == showcpo) {
@@ -251,6 +289,7 @@ public class UserDisplaySettings {
         }
         return showcpo;
     }
+
     @JsonProperty
     public void setShowcpo(Boolean showcpo) {
         this.showcpo = showcpo;

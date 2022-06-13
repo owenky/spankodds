@@ -37,7 +37,11 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         JPanel cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
-        TableUtils.highLightCellWhenRowSelected(table,cellRender,row, SiaConst.Ui.ROW_SELECTED_COLOR);
+        //old
+        //TableUtils.highLightCellWhenRowSelected(table,cellRender,row, SiaConst.Ui.ROW_SELECTED_COLOR);
+        //new
+        TableUtils.highLightCellWhenRowSelected(table,cellRender,row, AppController.getUserDisplaySettings().getRowhighlightcolor());
+
         return cellRender;
     }
     private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
