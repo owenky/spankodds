@@ -75,7 +75,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, screenGameModel.getAllTableColumns());
         if (sportType.equals(SportType.Soccer)) {
-            tableSection.setRowHeight(SiaConst.SoccerRowheight);
+            tableSection.setRowHeight(Config.instance().getFontConfig().getSoccerRowHeight());
         }
         return tableSection;
     }

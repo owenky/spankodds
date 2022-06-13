@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
@@ -137,7 +138,7 @@ public class ScreenGameModel {
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, screenProperty, newgamegroupvec, gameGroupHeader, allColumns);
         if (sportType.equals(SportType.Soccer)) {
-            tableSection.setRowHeight(SiaConst.SoccerRowheight);
+            tableSection.setRowHeight(Config.instance().getFontConfig().getSoccerRowHeight());
         }
         return tableSection;
     }

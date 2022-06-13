@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.*;
@@ -60,9 +61,9 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
             Game g  = getModel().getGame(rowModelIndex);
             boolean isSoccer = SiaConst.SoccerLeagueId == g.getLeague_id();
             if ( isSoccer) {
-                rowHeight = SiaConst.SoccerRowheight;
+                rowHeight = Config.instance().getFontConfig().getSoccerRowHeight();
             } else {
-                rowHeight = SiaConst.NormalRowheight;
+                rowHeight = Config.instance().getFontConfig().getNormalRowHeight();
             }
 
         } else {

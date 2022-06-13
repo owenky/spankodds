@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.*;
@@ -151,7 +152,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         if (null != section && null != section.linesTableData) {
             rowHeight = section.linesTableData.getRowHeight();
         } else {
-            rowHeight = SiaConst.NormalRowheight;
+            rowHeight = Config.instance().getFontConfig().getNormalRowHeight();
         }
         return rowHeight;
     }

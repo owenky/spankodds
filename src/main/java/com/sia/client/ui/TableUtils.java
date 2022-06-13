@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
@@ -117,14 +118,14 @@ public abstract class TableUtils {
         return rtn;
     }
     public static int calTableSectionRowHeight(List<Game> games) {
-        int tableSectionRowHeight = SiaConst.NormalRowheight;
+        int tableSectionRowHeight = Config.instance().getFontConfig().getNormalRowHeight();
         if ( null != games) {
             for(Game g: games) {
                 if ( null == g) {
                     continue;
                 }
                 if (SiaConst.SoccerLeagueId == g.getLeague_id()) {
-                    tableSectionRowHeight = SiaConst.SoccerRowheight;
+                    tableSectionRowHeight = Config.instance().getFontConfig().getSoccerRowHeight();
                 }
                 break;
             }

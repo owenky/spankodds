@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
@@ -89,7 +90,8 @@ public class TableRowPopup {
                 Game game = (Game)mainGameTable.getGame(mainGameTable.convertRowIndexToModel(rViewIndex));
                 Integer originalHeight = hiddenRowsByTable.remove(game.getGame_id());
                 if ( null == originalHeight) {
-                    originalHeight = SportType.Soccer.getSportId() == GameUtils.getSport(game).getSport_id()? SiaConst.SoccerRowheight:SiaConst.NormalRowheight;
+                    originalHeight = SportType.Soccer.getSportId() == GameUtils.getSport(game).getSport_id()?
+                            Config.instance().getFontConfig().getSoccerRowHeight():Config.instance().getFontConfig().getNormalRowHeight();
                 }
                 mainGameTable.setRowHeight(rViewIndex, originalHeight);
             }
