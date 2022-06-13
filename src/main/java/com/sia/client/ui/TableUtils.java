@@ -21,8 +21,6 @@ public abstract class TableUtils {
         boolean isRowSelected = jtable.isRowSelected(rowViewIndex);
         List<JComponent> children = TableUtils.getChildren(cellRender);
 
-        System.out.println("jtable="+jtable.getClass().getName()+", selectedRow="+ Arrays.toString(jtable.getSelectedRows()));
-
         for(JComponent jcomp: children) {
             jcomp.setOpaque( ! isRowSelected);
         }

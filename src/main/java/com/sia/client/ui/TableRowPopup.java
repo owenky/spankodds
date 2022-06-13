@@ -1,6 +1,9 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.Game;
+import com.sia.client.model.SportType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +38,7 @@ public class TableRowPopup {
         highlightRowsItem.addActionListener(this::highlightRows);
 
         jPopupMenu.add(hideRowsItem);
-//        jPopupMenu.add(unHideRowsItem);
+        jPopupMenu.add(unHideRowsItem);
 //        jPopupMenu.add(highlightRowsItem);
     }
     public void setJtable(JTable jtable) {
@@ -68,7 +71,19 @@ public class TableRowPopup {
         jPopupMenu.setVisible(false);
     }
     private void unHideRows(ActionEvent ae) {
-
+        ColumnCustomizableTable<?> mainGameTable = getMainGameTable();
+        Map<Integer,Integer> hiddenRowsByTable = hiddenRows.computeIfAbsent(mainGameTable.getName(),(name)->new HashMap<>());
+        for(int rViewIndex: getSelectedRows()) {
+            int rowHeight = mainGameTable.getRowHeight(rViewIndex);
+            if ( SiaConst.Ui.HiddenRowHeight == rowHeight) {
+                Game game = (Game)mainGameTable.getGame(mainGameTable.convertRowIndexToModel(rViewIndex));
+                Integer originalHeight = hiddenRowsByTable.remove(game.getGame_id());
+                if ( null == originalHeight) {
+                    originalHeight = SportType.Soccer.getSportId() == GameUtils.getSport(game).getSport_id()? SiaConst.SoccerRowheight:SiaConst.NormalRowheight;
+                }
+                mainGameTable.setRowHeight(rViewIndex, originalHeight);
+            }
+        }
         jPopupMenu.setVisible(false);
     }
     private void highlightRows(ActionEvent ae) {
