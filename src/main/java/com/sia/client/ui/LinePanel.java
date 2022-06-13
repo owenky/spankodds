@@ -15,7 +15,7 @@ import java.awt.*;
 import static com.sia.client.config.Utils.log;
 
 public class LinePanel extends JPanel {
-    // 183 52 235
+    // 183 52 235 ..
     private boolean useArrowIcons = true;
     private static int topthickness = 2;
     private static int bottomthickness = 2;
