@@ -954,6 +954,9 @@ public class AppController {
     public static Color getColor(Integer bookieid) {
         return bookiecolors.get(bookieid);
     }
+    public static void removeColor(Integer bookieid) {
+        bookiecolors.remove(bookieid);
+    }
     public static void clearColumnColors() {
         bookiecolors.clear();
     }
