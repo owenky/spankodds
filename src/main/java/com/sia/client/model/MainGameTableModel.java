@@ -9,14 +9,7 @@ import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
@@ -34,7 +27,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
         stageStrs.add(SiaConst.InGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
-    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,Vector<TableColumn> allColumns) {
+    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,List<TableColumn> allColumns) {
         super(screenProperty,allColumns);
         this.sportType = sportType;
         AppController.addNewLineListener(this);
@@ -50,7 +43,7 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
             LinesTableData tblSection = (LinesTableData)findTableSectionByGameid(line.getGameid());
             if (null != tblSection) {
                 if ( tblSection.isGameHidden(line.getGameid())) {
-System.out.println("rebuild modle");
+Utils.log("rebuild modle");
                     tblSection.activateGame(game);
                     buildIndexMappingCache(true);
                     Runnable r = () -> fireTableChanged(new TableModelEvent(this, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
