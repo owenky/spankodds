@@ -15,6 +15,7 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -137,8 +138,31 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
         invokeDrawColumnHeaders();
+        adjustTableWidthAndSaveColumnWidth();
     }
+    private void adjustTableWidthAndSaveColumnWidth() {
+        JTable sourceTable;
+        TableColumn tc;
+        if(null != (tc=mainTable.getTableHeader().getResizingColumn()) ) {
+            sourceTable = mainTable;
+        } else {
+            tc = mainTable.getRowHeaderTable().getTableHeader().getResizingColumn();
+            sourceTable = mainTable.getRowHeaderTable();
+        }
 
+        if ( null != tc) {
+            Config.instance().getColumnSettings().setColumnWidth(tc.getHeaderValue(), tc.getWidth());
+            if (sourceTable == mainTable.getRowHeaderTable()) {
+                int totalWidth = 0;
+                TableColumnModel tcm = mainTable.getRowHeaderTable().getColumnModel();
+                for (int i = 0; i < tcm.getColumnCount(); i++) {
+                    TableColumn tblCol = tcm.getColumn(i);
+                    totalWidth += tblCol.getWidth();
+                }
+                mainTable.getRowHeaderTable().optimizeTableWidth(totalWidth);
+            }
+        }
+    }
     @Override
     public void columnSelectionChanged(final ListSelectionEvent e) {
 

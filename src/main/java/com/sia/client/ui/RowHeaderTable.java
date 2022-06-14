@@ -51,6 +51,11 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		mainTable.getTableScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		mainTable.getTableScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	}
+	public void optimizeTableWidth(int width) {
+		Dimension rowHeaderTableDim = new Dimension(width, mainTable.getPreferredSize().height);
+		getParent().setPreferredSize(rowHeaderTableDim);
+		getParent().setSize(rowHeaderTableDim);
+	}
 	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
 	}

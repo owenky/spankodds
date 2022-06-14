@@ -42,7 +42,7 @@ public class ColumnSettings {
         return width;
     }
     @JsonIgnore
-    public void setColumnWidth(String columnName,Integer width) {
-        columnWidthMap.put(columnName,width);
+    public void setColumnWidth(Object columnName,Integer width) {
+        columnWidthMap.put(String.valueOf(columnName),width);
     }
 }
