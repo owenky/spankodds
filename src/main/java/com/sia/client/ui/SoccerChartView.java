@@ -24,7 +24,7 @@ public class SoccerChartView {
     Sport sp;
     int period;
     String item = "spreadtotal";
-    private final DisplayTransformer displayTransformer;
+    private DisplayTransformer displayTransformer;
 
     public SoccerChartView(int gid) {
 
@@ -36,7 +36,7 @@ public class SoccerChartView {
         this.getCurrentBoxes();
         //this.setAndGetPriorBoxes(bid,gid);
         //this.setAndGetOpenerBoxes(bid,gid);
-        displayTransformer = new DisplayTransformer(gid);
+
 
     }
 
@@ -54,7 +54,7 @@ public class SoccerChartView {
         ld2.setData("");
         ld3.setData("");
         ld4.setData("");
-
+        displayTransformer = new DisplayTransformer(gid);
         for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
             if ((ChartChecker.getCl1().get(i).gn == gid) && (ChartChecker.getCl1().get(i).p == period)) {
                 if (!ChartChecker.getCl1().get(i).dataexists) {

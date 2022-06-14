@@ -426,9 +426,11 @@ public class Spreadline extends Line {
         }
 
 
-        retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
-        retvalue = retvalue.replace(".75", "\u00BE");
+        if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+            retvalue = retvalue.replace(".25", "\u00BC");
+            retvalue = retvalue.replace(".75", "\u00BE");
+        }
         return retvalue;
 
     }
@@ -551,10 +553,12 @@ public class Spreadline extends Line {
             System.out.println("retvalue="+retvalue);
         }
 
-
-        retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
-        retvalue = retvalue.replace(".75", "\u00BE");
+        if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+            retvalue = retvalue.replace(".25", "\u00BC");
+            retvalue = retvalue.replace(".75", "\u00BE");
+        }
+
         return retvalue;
 
     }

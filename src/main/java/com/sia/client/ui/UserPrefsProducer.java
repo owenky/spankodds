@@ -40,6 +40,21 @@ public class UserPrefsProducer {
         }
     }
 
+    public void helpsyncme(long lastmessagets)
+    {
+
+            System.out.println("running help sync me...");
+            try {
+                MapMessage mapMessage = session.createMapMessage();
+                mapMessage.setString("username", u.getUsername());
+                mapMessage.setLong("lastmessagets", lastmessagets);
+                this.producer.send(mapMessage);
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+
+
     public void sendUserPrefs(boolean logout)
     {
 
@@ -82,9 +97,10 @@ public class UserPrefsProducer {
             String tabsindex = "";
             Vector<String> tabsvec = AppController.getMainTabVec();
             Enumeration<String> tabsenum = tabsvec.elements();
+            int i = 0;
             while (tabsenum.hasMoreElements()) {
                 String tab = "" + tabsenum.nextElement();
-
+                System.out.println(i+++" tab="+tab);
                 tabsindex = tabsindex + tab + ",";
             }
             if (tabsindex.length() > 0) {

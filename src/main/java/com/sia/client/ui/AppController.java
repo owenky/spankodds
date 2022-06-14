@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
@@ -125,6 +126,8 @@ public class AppController {
     private static final Games games = Games.instance();
     private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
+
+
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = User.instance().getTabsIndex().split(",");
         for (int i = 0; i < tabsindex.length; i++) {
@@ -133,6 +136,11 @@ public class AppController {
             SportsTabPaneVector.add(tabsindex[i]);
 
         }
+    }
+
+    public static UserDisplaySettings getUserDisplaySettings()
+    {
+        return Config.instance().getUserDisplaySettings();
     }
 
     public static void signalWindowLoading() {
@@ -945,6 +953,9 @@ public class AppController {
 
     public static Color getColor(Integer bookieid) {
         return bookiecolors.get(bookieid);
+    }
+    public static void clearColumnColors() {
+        bookiecolors.clear();
     }
 
     public static void putColor(Integer bookieid, Color color) {

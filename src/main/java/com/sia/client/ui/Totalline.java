@@ -300,9 +300,11 @@ public class Totalline extends Line implements Serializable {
             char half = AsciiChar.getAscii(170);
 
 
-            retvalue = retvalue.replace(".25", "\u00BC");
             retvalue = retvalue.replace(".5", "\u00BD");
-            retvalue = retvalue.replace(".75", "\u00BE");
+            if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+                retvalue = retvalue.replace(".25", "\u00BC");
+                retvalue = retvalue.replace(".75", "\u00BE");
+            }
             return retvalue;
         } else if (oj < uj) {
             retvalue = o + "";
@@ -360,9 +362,11 @@ public class Totalline extends Line implements Serializable {
         retvalue = retvalue.replace(".0", "");
         char half = AsciiChar.getAscii(170);
 
-        retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
-        retvalue = retvalue.replace(".75", "\u00BE");
+        if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+            retvalue = retvalue.replace(".25", "\u00BC");
+            retvalue = retvalue.replace(".75", "\u00BE");
+        }
         return retvalue;
 
     }
@@ -401,9 +405,11 @@ public class Totalline extends Line implements Serializable {
             char half = AsciiChar.getAscii(170);
 
 
-            retvalue = retvalue.replace(".25", "\u00BC");
             retvalue = retvalue.replace(".5", "\u00BD");
-            retvalue = retvalue.replace(".75", "\u00BE");
+            if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+                retvalue = retvalue.replace(".25", "\u00BC");
+                retvalue = retvalue.replace(".75", "\u00BE");
+            }
             return retvalue;
         } else if (oj < uj) {
             retvalue = u + "";
@@ -459,9 +465,11 @@ public class Totalline extends Line implements Serializable {
 
         char half = AsciiChar.getAscii(170);
 
-        retvalue = retvalue.replace(".25", "\u00BC");
         retvalue = retvalue.replace(".5", "\u00BD");
-        retvalue = retvalue.replace(".75", "\u00BE");
+        if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+            retvalue = retvalue.replace(".25", "\u00BC");
+            retvalue = retvalue.replace(".75", "\u00BE");
+        }
         return retvalue;
 
     }
