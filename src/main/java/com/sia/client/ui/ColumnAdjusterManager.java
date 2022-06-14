@@ -49,32 +49,34 @@ public class ColumnAdjusterManager {
         clearAdjustRegions();
     }
     public synchronized void adjustColumns() {
+        if ( Config.instance().getUserDisplaySettings().getAutofitdata() ) {
 //new Exception("Column adjust is callled").printStackTrace();
-        long now = System.currentTimeMillis();
-        if (SiaConst.ColumnWidthRefreshRate <= (now-lastAdjustingTime)) {
-            if ( 0 == mainTableAdjustRegions.size()) {
+            long now = System.currentTimeMillis();
+            if (SiaConst.ColumnWidthRefreshRate <= (now - lastAdjustingTime)) {
+                if (0 == mainTableAdjustRegions.size()) {
+                    accumulateRegions();
+                }
+
+                for (AdjustRegion region : mainTableAdjustRegions) {
+                    getMainTableColumnAdjuster().adjustColumns(region);
+                }
+
+                for (AdjustRegion region : rowHeaderTableAdjustRegions) {
+                    getRowHeaderTableColumnAdjuster().adjustColumns(region);
+                }
+
+                if (rowHeaderTableAdjustRegions.size() > 0) {
+                    RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
+                    rowHeaderTable.optimizeSize();
+                }
+                long timeConsumed = System.currentTimeMillis() - now;
+//            consoleLogPeek("ColumnAdjusterManager::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
+                lastAdjustingTime = now;
+                accumulatedCnt = 0;
+                clearAdjustRegions();
+            } else {
                 accumulateRegions();
             }
-
-            for (AdjustRegion region : mainTableAdjustRegions) {
-                getMainTableColumnAdjuster().adjustColumns(region);
-            }
-
-            for (AdjustRegion region : rowHeaderTableAdjustRegions) {
-                getRowHeaderTableColumnAdjuster().adjustColumns(region);
-            }
-
-            if (rowHeaderTableAdjustRegions.size() > 0) {
-                RowHeaderTable<?> rowHeaderTable = mainTable.getRowHeaderTable();
-                rowHeaderTable.optimizeSize();
-            }
-            long timeConsumed = System.currentTimeMillis()-now;
-//            consoleLogPeek("ColumnAdjusterManager::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
-            lastAdjustingTime = now;
-            accumulatedCnt = 0;
-            clearAdjustRegions();
-        } else {
-            accumulateRegions();
         }
     }
     private void accumulateRegions() {
@@ -115,7 +117,7 @@ public class ColumnAdjusterManager {
         private final List<ColumnAdjusterManager> columnAdjusterManagerList = new ArrayList<>();
         @Override
         public void actionPerformed(final ActionEvent e) {
-            if ( Config.instance().getUserDisplaySettings().getAutofitdata() && AppController.isReadyForMessageProcessing()) {
+            if ( AppController.isReadyForMessageProcessing()) {
                 for (ColumnAdjusterManager manager : columnAdjusterManagerList) {
                     if (manager.mainTable.isShowing()) {
                         manager.adjustColumns();
