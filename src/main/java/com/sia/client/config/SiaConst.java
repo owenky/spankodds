@@ -23,6 +23,7 @@ public abstract class SiaConst {
     public static final double DefaultSpread = -99999d;
     public static final double DefaultOver = 99999d;
     public static final int ColumnWidthRefreshRate = 2500;
+    public static final int DefaultColumnWidth = 50;
     public static final int DataRefreshRate = 500;
     public static final String DefaultGameTimeZone = "US/Eastern";
     public static final long diffBetweenEasternAndUTC = 5*3600*1000L;

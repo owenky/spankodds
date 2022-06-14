@@ -70,6 +70,9 @@ public abstract class TableUtils {
         // Put rowHeaderTable in a viewport that we can control.
         JViewport jv = new JViewport();
         jv.setView(rowHeaderTable);
+        Dimension rowHeaderTableDim = new Dimension(rowHeaderTable.getPreferredWidth(), mainTable.getPreferredSize().height);
+        jv.setPreferredSize(rowHeaderTableDim);
+        jv.setSize(rowHeaderTableDim);
 //        jv.setPreferredSize(rowHeaderTable.getMaximumSize());
 
 

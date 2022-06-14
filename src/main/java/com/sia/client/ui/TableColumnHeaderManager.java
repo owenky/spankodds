@@ -185,7 +185,7 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent evt) {
         if ( mainTable.isShowing() ) {
-            if (Config.instance().getUserDisplaySettings().getAutofitdata() && ! evt.getValueIsAdjusting() && Integer.MIN_VALUE != horizontalScrollBarAdjustmentValue) {
+            if ( ! evt.getValueIsAdjusting() && Integer.MIN_VALUE != horizontalScrollBarAdjustmentValue) {
                 adjustComumns();
             }
 

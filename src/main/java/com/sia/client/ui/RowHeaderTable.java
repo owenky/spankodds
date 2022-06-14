@@ -21,6 +21,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	private final boolean hasRowNumber;
 	private TableCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
+	private int preferredWidth;
 
 	public RowHeaderTable(ColumnCustomizableTable<V> mainTable, boolean hasRowNumber) {
 		super(mainTable.getModel());
@@ -30,6 +31,14 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		this.setAutoCreateColumnsFromModel(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+	@Override
+	public void setPreferredSize(Dimension dim) {
+		super.setPreferredSize(dim);
+	}
+	@Override
+	public void setSize(Dimension dim) {
+		super.setSize(dim);
 	}
 	@Override
 	public V getGame(int rowModelIndex) {
@@ -128,12 +137,18 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 			addColumn(theColumn_);
 		}
 
+		preferredWidth = 0;
 		List<Integer> lockColumns = mainTable.getLockedColumns();
 		if ( null != lockColumns) {
 			for (Integer tcIndex : lockColumns) {
-				cm.addColumn( mainTable.getColumnFromDataModel(tcIndex));
+				TableColumn tc = mainTable.getColumnFromDataModel(tcIndex);
+				cm.addColumn( tc);
+				preferredWidth += tc.getPreferredWidth();
 			}
 		}
+	}
+	public int getPreferredWidth() {
+		return preferredWidth;
 	}
 	@Override
 	public boolean isCellEditable(int row, int col) {

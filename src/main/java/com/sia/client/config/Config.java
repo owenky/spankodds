@@ -25,6 +25,7 @@ public class Config {
     private SimpleValueWraper<String> bookies;
     private FontConfig fontConfig;
     private UserDisplaySettings userDisplaySettings;
+    private ColumnSettings columnSettings;
     @JsonIgnore
     private boolean syncStatus = true;
     private static final Config instance;
@@ -98,6 +99,17 @@ public class Config {
     @JsonProperty
     public void setUserDisplaySettings(UserDisplaySettings userDisplaySettings) {
         this.userDisplaySettings = userDisplaySettings;
+    }
+    @JsonProperty
+    public ColumnSettings getColumnSettings() {
+        if ( null == columnSettings) {
+            columnSettings = new ColumnSettings();
+        }
+        return columnSettings;
+    }
+    @JsonProperty
+    public void setColumnSettings(ColumnSettings columnSettings) {
+        this.columnSettings = columnSettings;
     }
     @JsonIgnore
     public void setOutOfSync() {
