@@ -88,6 +88,7 @@ public class UrgentMessage {
         hideAnimation.setFunctionFade(CustomAnimation.FUNC_POW_HALF);
         alert.setHideAnimation(hideAnimation);
         alert.showPopup(where);
+        ag.remove(alert);
     }
 
     private static JideButton createButton(Icon icon) {
