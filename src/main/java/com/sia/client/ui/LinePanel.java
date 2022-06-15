@@ -148,8 +148,8 @@ public class LinePanel extends JPanel {
         Color fgcolor = getFgColor(bgcolor);//Color.BLACK;
         boolean blackorred = false;
         try {
-
-            top.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
+            top.setText(ld.getData());
+            //top.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
             String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
 
             Integer bookieid = AppController.getBookieId(bookie);
@@ -248,7 +248,8 @@ public class LinePanel extends JPanel {
     public void setBottom(JTable table,LineData ld, int row, int col) {
         altcolor = userDisplaySettings.getAltcolor();
         boolean blackorred = false;
-        bottom.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
+        bottom.setText(ld.getData());
+       //bottom.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
         //bottom.setText(ld.getData());
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
@@ -350,7 +351,8 @@ public class LinePanel extends JPanel {
     private void setDraw(JTable table,LineData ld, int row, int col) {
         altcolor = userDisplaySettings.getAltcolor();
         boolean blackorred = false;
-        draw.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
+        draw.setText(ld.getData());
+        //draw.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
         //draw.setText(ld.getData());
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
@@ -441,7 +443,8 @@ public class LinePanel extends JPanel {
     private void setTotal(JTable table,LineData ld, int row, int col) {
         altcolor = userDisplaySettings.getAltcolor();
         boolean blackorred = false;
-        total.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
+        total.setText(ld.getData());
+        //total.setText("<html><body style=\"white-space:nowrap\">"+ld.getData()+"</body></html>");
         //total.setText(ld.getData());
 
         String bookie = table.getColumnModel().getColumn(col).getHeaderValue().toString();
