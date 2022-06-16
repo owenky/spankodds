@@ -5,6 +5,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.Game;
 import com.sia.client.model.KeyedObject;
+import com.sia.client.model.UserDisplaySettings;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
@@ -21,11 +22,25 @@ public abstract class TableUtils {
     public static void highLightCellWhenRowSelected(JTable jtable, JComponent cellRender,int rowViewIndex,Color highLightColor) {
         boolean isRowSelected = jtable.isRowSelected(rowViewIndex);
         List<JComponent> children = TableUtils.getChildren(cellRender);
-
+        UserDisplaySettings uds = AppController.getUserDisplaySettings();
         for(JComponent jcomp: children) {
-            jcomp.setOpaque( ! isRowSelected);
+            // jcomp.setOpaque( ! isRowSelected);
+            if(isRowSelected)
+            {
+                if(jcomp instanceof JLabel && !jcomp.getBackground().equals(uds.getFirstcolor()) &&
+                        !jcomp.getBackground().equals(uds.getSecondcolor()) &&
+                        !jcomp.getBackground().equals(uds.getThirdcolor())
+                )
+                {
+                    jcomp.setBackground(highLightColor);
+                    jcomp.setForeground(getFgColor(highLightColor));
+                }
+
+            }
+
         }
-        cellRender.setBackground(highLightColor);
+       // cellRender.setBackground(highLightColor);
+
     }
     public static List<JComponent> getChildren(JComponent comp) {
         List<JComponent> children = new ArrayList<>();
@@ -170,5 +185,23 @@ public abstract class TableUtils {
             }
             super.setVisible(visible);
         }
+    }
+    private static Color getFgColor(Color bgcolor)
+    {
+
+        int r = bgcolor.getRed();
+        int g = bgcolor.getGreen();
+        int b = bgcolor.getBlue();
+        double fgnum = ((r*299)+(g*587)+(b*114))/1000;
+        if (fgnum >= 128)
+        {
+            return Color.BLACK;
+        }
+        else
+        {
+            return Color.WHITE;
+        }
+
+
     }
 }

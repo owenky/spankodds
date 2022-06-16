@@ -5,28 +5,15 @@ import com.sia.client.config.Utils;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 import static com.sia.client.config.Utils.log;
@@ -42,6 +29,8 @@ public class TableColumnPopupMenu{
     private JMenuItem closeItem;
     private int tableColumnIndex;
     private JPanel menuBar;
+    private JButton newresetbutton = new JButton("Restore");
+
     private static TableColumnPopupMenu oldTableColumnPopupMenu=null;
 
     public static TableColumnPopupMenu of(SportsTabPane stp,JTable table) {
@@ -150,6 +139,9 @@ public class TableColumnPopupMenu{
             log("change column color, new color:"+color2);
         });
         */
+
+
+
         ActionListener okListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Color color = chooser.getColor();
@@ -162,6 +154,7 @@ public class TableColumnPopupMenu{
                     TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
                     model.fireTableChanged(tme);
 
+
                 }
 
             }
@@ -169,6 +162,45 @@ public class TableColumnPopupMenu{
 
         JDialog dialog = JColorChooser.createDialog(null, headerValue + " Color",
                 true, chooser, okListener, null);
+
+        Locale locale = dialog.getLocale();
+        String resetString = UIManager.getString("ColorChooser.resetText", locale);
+
+        Container contentPane = dialog.getContentPane();
+        JPanel buttonPanel = null;
+        for (Component c : contentPane.getComponents()) {
+            if (c instanceof JPanel) {
+                buttonPanel = (JPanel) c;
+            }
+        }
+
+        JButton resetButton = null;
+        if (buttonPanel != null) {
+            for (Component b : buttonPanel.getComponents()) {
+                if (b instanceof JButton) {
+                    JButton button = (JButton) b;
+                    if (resetString.equals(button.getText())) {
+                        resetButton = button;
+                        break;
+                    }
+                }
+            }
+            if (resetButton != null) {
+                buttonPanel.remove(resetButton);
+                buttonPanel.add(newresetbutton);
+            }
+        }
+
+        newresetbutton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Integer bookieid = AppController.getBookieId(headerValue.toString());
+                AppController.removeColor(bookieid);
+                MainGameTableModel model = ((MainGameTable)table).getModel();
+                TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
+                model.fireTableChanged(tme);
+                dialog.dispose();
+            }
+        } );
 
 
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);

@@ -79,7 +79,7 @@ public class UrgentMessage {
         alert.setOwner(c);
         alert.setResizable(true);
         alert.setMovable(true);
-        alert.setTransient(true);
+        alert.setTransient(false);
         alert.setTimeout(ms);
         alert.setPopupBorder(BorderFactory.createLineBorder(new Color(10, 30, 106)));
 
@@ -88,6 +88,7 @@ public class UrgentMessage {
         hideAnimation.setFunctionFade(CustomAnimation.FUNC_POW_HALF);
         alert.setHideAnimation(hideAnimation);
         alert.showPopup(where);
+        ag.remove(alert);
     }
 
     private static JideButton createButton(Icon icon) {

@@ -58,7 +58,10 @@ public class ChartView {
         ld2.setData("");
         ld1.setIconPath(ICON_BLANK);
         ld2.setIconPath(ICON_BLANK);
-        for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
+        for (int i = 0; i < ChartChecker.getCl1().size(); i++)
+       {
+        try
+        {
 
             if (ChartChecker.getCl1().get(i).gn == gid && ChartChecker.getCl1().get(i).p == period) {
                 if (!ChartChecker.getCl1().get(i).dataexists) {
@@ -146,6 +149,11 @@ public class ChartView {
 
             }
         }
+        catch(Exception ex)
+        {
+            System.out.println("exception chart view "+ex);
+        }
+       }
         boxes[0] = ld1;
         boxes[1] = ld2;
         //	ld1.setBackgroundColor(topcolor);
