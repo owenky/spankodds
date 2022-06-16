@@ -7,7 +7,7 @@ public class RowHeaderGameTable extends RowHeaderTable<Game>{
     public RowHeaderGameTable(MainGameTable mainTable,boolean hasRowNumber) {
         super(mainTable,hasRowNumber);
         setSelectionModel(mainTable.getSelectionModel());
-        this.addMouseListener(new MainGameTable.MouseClickListener(getWindowIndex()));
+        this.addMouseListener(new MouseClickListener(getWindowIndex()));
     }
     public int getWindowIndex() {
         return ((MainGameTable)getMainTable()).getWindowIndex();

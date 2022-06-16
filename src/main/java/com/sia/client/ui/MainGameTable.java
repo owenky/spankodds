@@ -81,41 +81,4 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
         Game g  = getModel().getGame(rowModelIndex);
         return SiaConst.SoccerLeagueId == g.getLeague_id();
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    public static class MouseClickListener extends MouseAdapter {
-
-        private final int  windowIndex;
-        public MouseClickListener(int  windowIndex) {
-            this.windowIndex = windowIndex;
-        }
-        @Override
-        public void mouseClicked(MouseEvent event) {
-            // for double click or right click, show game details
-            SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
-            if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
-                    || event.getButton() == MouseEvent.BUTTON3) {
-
-                AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
-                JTable table = (JTable)accessableToGame;
-                Point point = event.getPoint();
-                int row = table.rowAtPoint(point);
-                int col = table.columnAtPoint(point);
-                int rowModelIndex = table.convertRowIndexToModel(row);
-                int colModelIndex = table.convertRowIndexToModel(col);
-                TableColumn tc = table.getColumnModel().getColumn(colModelIndex);
-                String bookieShortName = String.valueOf(tc.getHeaderValue());
-                Integer bookieId = BookieManager.instance().getBookieId(bookieShortName);
-                if (  null != bookieId && bookieId < 990) {
-                    SwingUtilities.convertPointToScreen(point,table);
-                    Game game = accessableToGame.getGame(rowModelIndex);
-                    GameHistPane.showHistPane(stp,point,game,bookieId);
-                } else {
-                    TableRowPopup tableRowPopup = TableRowPopup.instance();
-                    tableRowPopup.setJtable(table);
-                    tableRowPopup.setPointAtTable(point);
-                    tableRowPopup.show();
-                }
-            }
-        }
-    }
 }
