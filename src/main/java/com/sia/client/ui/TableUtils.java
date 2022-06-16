@@ -27,6 +27,7 @@ public abstract class TableUtils {
             // jcomp.setOpaque( ! isRowSelected);
             if(isRowSelected)
             {
+
                 if(jcomp instanceof JLabel && !jcomp.getBackground().equals(uds.getFirstcolor()) &&
                         !jcomp.getBackground().equals(uds.getSecondcolor()) &&
                         !jcomp.getBackground().equals(uds.getThirdcolor())
