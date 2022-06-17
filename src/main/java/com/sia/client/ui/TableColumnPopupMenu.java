@@ -150,9 +150,14 @@ public class TableColumnPopupMenu{
                     log("color chosen was " + color);
                     Integer bookieid = AppController.getBookieId(headerValue.toString());
                     AppController.putColor(bookieid, color);
-                    MainGameTableModel model = ((MainGameTable)table).getModel();
-                    TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
-                    model.fireTableChanged(tme);
+                    try {
+                        MainGameTableModel model = ((MainGameTable) table).getModel();
+                        TableModelEvent tme = new TableModelEvent(model, 0, Integer.MAX_VALUE, model.getAllColumns().size(), TableModelEvent.UPDATE);
+                        model.fireTableChanged(tme);
+
+                    }
+                    catch(Exception ex) {}
+
 
 
                 }
@@ -195,9 +200,13 @@ public class TableColumnPopupMenu{
             public void actionPerformed(ActionEvent e) {
                 Integer bookieid = AppController.getBookieId(headerValue.toString());
                 AppController.removeColor(bookieid);
+                try
+                {
                 MainGameTableModel model = ((MainGameTable)table).getModel();
                 TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
                 model.fireTableChanged(tme);
+                 }
+                    catch(Exception ex) {}
                 dialog.dispose();
             }
         } );
