@@ -68,10 +68,12 @@ public class SportsMenuBar extends JMenuBar {
         displaysettings.addActionListener(ae -> checkAndRunInEDT(() -> new UserDisplayGui(stb).show(UIProperties.DisplaySettingsDim)));
         JMenuItem charting = new JMenuItem("Chart");
         charting.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
-
+        JMenuItem consensusgui = new JMenuItem("Consensus Setup");
+        consensusgui.addActionListener(ae -> checkAndRunInEDT(() -> new ConsensusMakerGui(stb).show(UIProperties.LineAlertDim)));
         bookiemenu.add(bookiecolumn);
         bookiemenu.add(displaysettings);
         bookiemenu.add(charting);
+        bookiemenu.add(consensusgui);
 
         add(linealertsmenu);
 

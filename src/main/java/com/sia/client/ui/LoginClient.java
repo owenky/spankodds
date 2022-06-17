@@ -55,6 +55,7 @@ public class LoginClient implements MessageListener {
             AppController.addBookie(new Bookie(994, "*Chart", "*Chart", "", ""));
             //AppController.addBookie(new Bookie(995, "*Notes", "*Notes", "", ""));
             AppController.addBookie(new Bookie(996, "*Best", "*Best", "", ""));
+            AppController.addBookie(new Bookie(997, "*Consensus", "*Cnus", "", ""));
             //should i add chart bookie here????
             connection = AppController.getGuestConnection();
 

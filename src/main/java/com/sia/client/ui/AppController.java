@@ -31,6 +31,7 @@ public class AppController {
     public static Vector<LineAlertNode> linealertnodes = new Vector<>();
     public static Vector<SportsMenuBar> menubars = new Vector<>();
     public static Vector<Sport> sportsVec = new Vector<>();
+    public static Hashtable<String,ConsensusMakerSettings> cmshash = new Hashtable<>();
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
@@ -126,7 +127,54 @@ public class AppController {
     private static final Games games = Games.instance();
     private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
+    public static Hashtable getConsensusMakerSettings()
+    {
+        return cmshash;
+    }
+    public static ConsensusMakerSettings getConsensusMakerSettingsForThisGame(int gameid)
+    {
+        ConsensusMakerSettings returncms = null;
+        Game g = getGame(gameid);
+        int leagueid = g.getLeague_id();
+        Enumeration enum2 = cmshash.elements();
+        while(enum2.hasMoreElements())
+        {
+            ConsensusMakerSettings cms = (ConsensusMakerSettings) enum2.nextElement();
+            if(cms.getSportsVec().contains(leagueid+""))
+            {
+                returncms = cms;
+                break;
 
+            }
+        }
+        return returncms;
+    }
+    public static void addConsensusMakerSetting(ConsensusMakerSettings cms)
+    {
+        String newname = "MyConsensusSetting-";
+        if(cms.getName().equals(""))
+        {
+            for(int i=1; i <100; i++)
+            {
+                if(cmshash.get(newname+i) == null)
+                {
+                    cms.setName(newname+i);
+                    cmshash.put(cms.getName(),cms);
+                    break;
+                }
+
+            }
+        }
+        else
+        {
+            cmshash.put(cms.getName(),cms);
+        }
+
+    }
+    public static void removeConsensusMakerSetting(ConsensusMakerSettings cms)
+    {
+        cmshash.remove(cms.getName());
+    }
 
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = User.instance().getTabsIndex().split(",");

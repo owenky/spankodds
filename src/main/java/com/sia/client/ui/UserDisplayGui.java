@@ -4,6 +4,7 @@ import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.model.Bookie;
 import com.sia.client.model.PropItem;
 import com.sia.client.model.UserDisplaySettings;
 import com.sia.client.ui.comps.PropItemComboBox;
@@ -18,6 +19,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
@@ -28,6 +30,7 @@ public class UserDisplayGui extends AbstractLayerFrame {
     private static final String checkimage = "unblocking.jpg";
     private static final int maxSecs = 120;
     private static final String[] secArr = new String[maxSecs];
+
 
     private Box box1 = Box.createVerticalBox();
     private Box box2 = Box.createVerticalBox();
@@ -45,6 +48,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
     private SbtStringComboBox firstmovesecs;
     private SbtStringComboBox secondmovesecs;
+
+    private JSpinner bookiecolumnsizes = new JSpinner(new SpinnerNumberModel(65, 50, 80, 1));
 
 
     private PropItemComboBox footballcb;
@@ -105,6 +110,16 @@ public class UserDisplayGui extends AbstractLayerFrame {
                 if(result == JOptionPane.YES_OPTION)
                 {
                     AppController.clearColumnColors();
+                    /*
+                    List<Bookie> shown = AppController.getShownCols();
+                    for (Bookie b : shown)
+                    {
+                        log("shown adding " + b);
+                        Config.instance().getColumnSettings().setColumnWidth(b.getShortname(), (Integer)bookiecolumnsizes.getValue());
+                    }
+                    */
+
+                   // Config.instance().setColumnSettings(null);
                 }
 
 
@@ -151,6 +166,7 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
         JPanel panel3 = new JPanel();
         JPanel panel4 = new JPanel();
+        JPanel panel5 = new JPanel();
         JPanel panelempty = new JPanel();
 
 
@@ -169,6 +185,9 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
         panel4.setBorder(BorderFactory.createEtchedBorder());
         panel4.setLayout(new GridBagLayout());
+
+        panel5.setBorder(BorderFactory.createEtchedBorder());
+        panel5.setLayout(new GridBagLayout());
 
         panelempty.setLayout(new GridBagLayout());
 
@@ -225,6 +244,7 @@ public class UserDisplayGui extends AbstractLayerFrame {
         JLabel thirdcolorpart1 = new JLabel("Finally, After ");
         JLabel thirdcolorpart2 = new JLabel("seconds, Use Color - ");
 
+        JLabel columnsizeslabel = new JLabel("Change All Column Sizes to : ");
 
 /*
         autofitcolumnsbutton.setBorder(blackline);
@@ -334,7 +354,22 @@ public class UserDisplayGui extends AbstractLayerFrame {
         c8.gridwidth = 4;
         panel4.add(clearcolorbutton, c8);
 
+/*
+        GridBagConstraints c9 = new GridBagConstraints();
 
+        c9.anchor = GridBagConstraints.WEST;
+        c9.gridheight = 2;
+
+
+        c9.gridy =0;
+        c9.gridx = 0;
+        c9.gridwidth = 4;
+        panel5.add(columnsizeslabel, c9);
+        c9.gridy = 2;
+        c9.gridx = 6;
+        c9.gridwidth = 2;
+        panel5.add(bookiecolumnsizes, c9);
+*/
 
         c.anchor = GridBagConstraints.WEST;
         c.gridheight = 2;
@@ -514,6 +549,12 @@ public class UserDisplayGui extends AbstractLayerFrame {
         box1.add(panelempty);
 
         box1.add(panel4);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panelempty);
+        box1.add(panel5);
         box2.add(new JLabel("Line Yes/No Display Options                                        "));
         box2.add(panel2);
         box2.add(new JLabel("Color Line Moves                                        "));

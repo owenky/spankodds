@@ -1027,6 +1027,21 @@ public class SpreadTotalView extends ViewValue {
                    // setTooltiptext("<html><body>" +besthtml + "</body></html>");
                     toptooltip = bottomtooltip = "<html><body>" +besthtml + "</body></html>";
                 }
+                else if(bid == 997 )
+                {
+                    String consensushtml = "" ;
+                    ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gid);
+                    if(cms == null)
+                    {
+
+                    }
+                    else
+                    {
+                        consensushtml =  cms.gethtmlbreakdown();
+                    }
+
+                    setTooltiptext("<html><body>" +consensushtml + "</body></html>");
+                }
                 else
                 {
                     String limithtml = "";
