@@ -57,7 +57,8 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
     private JComboBox cmscombobox;
 
     private JLabel totallabel = new JLabel("");
-    private JLabel errorlabel = new JLabel("");
+
+    private JLabel errorlabel = new JLabel("            ");
 
     private JLabel linetype = new JLabel("LINE TYPE");
     private JLabel notify = new JLabel("NOTIFY");
@@ -93,6 +94,7 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
     }
     @Override
     protected JComponent getUserComponent() {
+        totallabel.setFont(new Font("Verdana", Font.PLAIN, 18));
         percentagespanel.setLayout(new GridBagLayout());
         percentagespanel.setBorder(BorderFactory.createEtchedBorder());
         int index=0;
@@ -180,10 +182,12 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
 
                         }
                         sportselected = sportselected + id + ",";
+
                         leagueidsvec.add(id);
 
 
                     }
+                    System.out.println("sportsselectedfromgui="+sportselected);
                 }
 
                 cms.setSportsVec(leagueidsvec);
@@ -312,14 +316,17 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
             else
             {
                // System.out.println("entering illegal...");
-                Vector thisvec = thiscms.getSportsVec();
-                Enumeration enum11 = thisvec.elements();
-                while(enum11.hasMoreElements())
-                {
-                    String sid = (String)enum11.nextElement();
-                    illegalsports.add(sid);
-                    //log("Adding illegal="+sid);
+
+                String[] illegalsportsarr = thiscms.getSportsselected().split(",");
+                for (final String s : illegalsportsarr) {
+                    try {
+                        illegalsports.add("" + s);
+                    } catch (Exception ex) {
+                        log(ex);
+                    }
                 }
+
+
 
             }
         }
@@ -416,7 +423,7 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
 
        // selectedPanel = new JPanel(new BoxLayout(selectedPanel,BoxLayout.PAGE_AXIS));
         JScrollPane sp = new JScrollPane(selectedList);
-        sp.setPreferredSize(new Dimension(200,550));
+        sp.setPreferredSize(new Dimension(200,600));
         selectedPanel.add(sp);
 
 
@@ -561,13 +568,18 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
                 box3.add(selectedPanel);
         //box3.add(new JSeparator(SwingConstants.HORIZONTAL));
                 //box3.add(totallabel);
-
+        JPanel errorPanel = new JPanel();
+       errorPanel.add(errorlabel);
+       // box2.add(totallabel);
                 box2.add(percentagespanel);
         box2.add(new JSeparator(SwingConstants.HORIZONTAL));
                 //box2.add(totallabel);
 
+                JPanel totalPanel = new JPanel();
+                totalPanel.add(totallabel);
+
                 JPanel buttonPanel = new JPanel();
-                buttonPanel.add(errorlabel);
+                //buttonPanel.add(errorlabel);
                 buttonPanel.add(set);
                 if(showdelbutton)
                 {
@@ -575,7 +587,12 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
                 }
                 //horizontalBox.add(errorlabel);
                 //horizontalBox.add(buttonPanel);
-                box2.add(buttonPanel);
+                JPanel bottomPanel = new JPanel(new GridLayout(0, 2));
+                bottomPanel.add(totalPanel);
+                 bottomPanel.add(buttonPanel);
+
+             //   box2.add(buttonPanel);
+                  box2.add(bottomPanel);
 
 
 
@@ -584,7 +601,7 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
 
 
                 box1.add(treePanel);
-                box1.add(totallabel);
+                box1.add(errorPanel);
 
                 box1.revalidate();
                 box1.repaint();
@@ -644,7 +661,8 @@ private void sumAllSpinners(Hashtable sporthash)
         total = total+val;
     }
 
-    totallabel.setText("<html><h2>Total %= "+total+"</h2></html>");
+    totallabel.setText("Total %= "+total+"%");
+
 
     if(total == 100)
     {
@@ -658,6 +676,7 @@ private void sumAllSpinners(Hashtable sporthash)
     box2.revalidate();
     box3.revalidate();
 }
+Hashtable allsportsidforsportname = new Hashtable();
 
     public TreeModel createSportTreeModel() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("All Sports");
@@ -666,6 +685,8 @@ private void sumAllSpinners(Hashtable sporthash)
         SportType [] preDefinedSportTypes = SportType.getPreDefinedSports();
         for(SportType st: preDefinedSportTypes) {
             root.add(new DefaultMutableTreeNode(st.getSportName()));
+            allsportsidforsportname.put(st.getSportName(),"");
+            leaguenameidhash.put(st.getSportName(),"");
         }
         DefaultMutableTreeNode horse = new DefaultMutableTreeNode("Horse");
 //        DefaultMutableTreeNode esport = new DefaultMutableTreeNode("E-Sport");
@@ -691,13 +712,18 @@ private void sumAllSpinners(Hashtable sporthash)
                 tempnode.add(child);
 
                 leaguenameidhash.put(value.getLeaguename(), "" + value.getLeague_id());
+                String leagueids = (String)leaguenameidhash.get(value.getSportname());
+                leagueids = leagueids+value.getLeague_id()+",";
+                leaguenameidhash.put(value.getSportname(),leagueids);
+
+                log("sport name="+value.getSportname()+"..leaguename="+value.getLeaguename());
                 if (checkedsports.contains("" + value.getLeague_id()) || checkedsports.contains(value.getSportname())
                         || checkedsports.contains("All Sports"))
                 {
                     checkednodes.add(child);
 
                 }
-                log("sport name="+value.getSportname()+"..");
+
                 if (illegalsports.contains("" + value.getLeague_id()) || illegalsports.contains(value.getSportname())
                         || illegalsports.contains("All Sports"))
                 {

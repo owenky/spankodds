@@ -54,7 +54,7 @@ public class SportsMenuBar extends JMenuBar {
 
         add(bookiemenu);
 
-        JMenuItem bookiecolumn = new JMenuItem("Manage");
+        JMenuItem bookiecolumn = new JMenuItem("Bookies");
         bookiecolumn.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
             AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
             anchoredLayeredPane.setTitle("Bookie Management");
@@ -66,10 +66,10 @@ public class SportsMenuBar extends JMenuBar {
 
         JMenuItem displaysettings = new JMenuItem("Display Settings");
         displaysettings.addActionListener(ae -> checkAndRunInEDT(() -> new UserDisplayGui(stb).show(UIProperties.DisplaySettingsDim)));
-        JMenuItem charting = new JMenuItem("Chart");
+        JMenuItem charting = new JMenuItem("Chart Setup");
         charting.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
         JMenuItem consensusgui = new JMenuItem("Consensus Setup");
-        consensusgui.addActionListener(ae -> checkAndRunInEDT(() -> new ConsensusMakerGui(stb).show(UIProperties.LineAlertDim)));
+        consensusgui.addActionListener(ae -> checkAndRunInEDT(() -> new ConsensusMakerGui(stb).show(new Dimension(1200,750))));
         bookiemenu.add(bookiecolumn);
         bookiemenu.add(displaysettings);
         bookiemenu.add(charting);

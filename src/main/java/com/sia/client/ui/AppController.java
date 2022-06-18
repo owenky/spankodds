@@ -131,6 +131,17 @@ public class AppController {
     {
         return cmshash;
     }
+    public static String getConsensusMakerSettingsAsString()
+    {
+        String cmsstring = "";
+        Enumeration enum99 = cmshash.elements();
+        while(enum99.hasMoreElements())
+        {
+            ConsensusMakerSettings cms = (ConsensusMakerSettings) enum99.nextElement();
+            cmsstring = cmsstring+cms.getDelimitedString()+"~";
+        }
+        return cmsstring;
+    }
     public static ConsensusMakerSettings getConsensusMakerSettingsForThisGame(int gameid)
     {
         ConsensusMakerSettings returncms = null;
@@ -175,7 +186,30 @@ public class AppController {
     {
         cmshash.remove(cms.getName());
     }
+    public static void createConsensusMakerSettings() {
 
+        String cmsdata = getUser().getConsensussettings();
+        if(cmsdata == null || cmsdata.equals(""))
+        {
+            return;
+        }
+        String lans[] = cmsdata.split("~");
+        for(int i = 0;i < lans.length; i++)
+        {
+
+            String[] items = lans[i].split("\\|");
+            if(items.length > 1)
+            {
+                String name = items[0];
+                String sportslist = items[1];
+                String percentages = items[2];
+
+                addConsensusMakerSetting(new ConsensusMakerSettings(name,sportslist,percentages));
+
+            }
+        }
+
+    }
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = User.instance().getTabsIndex().split(",");
         for (int i = 0; i < tabsindex.length; i++) {
@@ -363,6 +397,10 @@ public class AppController {
         LimitNodeList.add(tennislimitnode);
         LimitNodeList.add(autoracinglimitnode);
     }
+
+
+
+
     public static void createLineOpenerAlertNodeListFromUserPrefs() {
 
         String openerdata = getUser().getOpeneralert();

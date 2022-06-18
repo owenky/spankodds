@@ -214,6 +214,11 @@ public class LoginClient implements MessageListener {
                 String text = textMessage.getText();
                 AppController.getUser().setOpeneralert(text);
             }
+            else if ( messageType.equals("consensussettings")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                AppController.getUser().setConsensussettings(text);
+            }
             else if ( messageType.equals("loginkey")) {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
@@ -480,6 +485,7 @@ public class LoginClient implements MessageListener {
 
                 AppController.createLineOpenerAlertNodeListFromUserPrefs();
                 AppController.createLimitNodeListFromUserPrefs();
+                AppController.createConsensusMakerSettings();
                 AppController.createGamesConsumer();
                 AppController.createScoresConsumer();
                 AppController.createUrgentsConsumer();

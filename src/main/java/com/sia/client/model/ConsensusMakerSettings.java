@@ -6,6 +6,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import static com.sia.client.config.Utils.log;
+
 public class ConsensusMakerSettings
 {
 
@@ -26,6 +28,59 @@ public class ConsensusMakerSettings
     public ConsensusMakerSettings(String name)
     {
         this.name = name;
+    }
+    public ConsensusMakerSettings(String name,String sportslist,String bookiespercentages)
+    {
+        this.name = name;
+        System.out.println("sportslist="+sportslist);
+        sportslist = sportslist.replaceAll(",,",",");
+        this.sportsselected = sportslist;
+        sportsVec.clear();
+        String[] sports = sportslist.split(",");
+        for (String s : sports) {
+            try {
+                if(!s.equals("")) {
+                    sportsVec.add("" + s);
+                }
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+
+        String[] bookieswithpercentages = bookiespercentages.split(",");
+        for (String s : bookieswithpercentages)
+        {
+            try {
+                String[] vals = s.split("=");
+                setValue(vals[0],Integer.parseInt(vals[1]));
+            } catch (Exception ex) {
+                log(ex);
+            }
+        }
+
+    }
+
+    public String getDelimitedString()
+    {
+        Enumeration enum99 = bookievalues.keys();
+        String bookievaluestr = "";
+        String bookieid = "";
+        while(enum99.hasMoreElements()) {
+            try {
+                bookieid = (String) enum99.nextElement();
+                if (bookievalues.get(bookieid) != null) {
+                    int percentage = (int) bookievalues.get(bookieid);
+                    if (percentage > 0) {
+                        bookievaluestr = bookievaluestr + bookieid + "=" + percentage + ",";
+                    }
+                }
+            } catch (Exception ex) {
+                System.out.println("exception cms bookieid=" + bookieid + ".." + ex);
+            }
+        }
+
+        String ret = getName()+"|"+getSportsselected()+"|"+bookievaluestr;
+            return ret;
 
     }
     public  int getValue(int bookieid)

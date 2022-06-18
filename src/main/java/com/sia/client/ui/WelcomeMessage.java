@@ -68,7 +68,7 @@ public class WelcomeMessage
         alert.setResizable(false);
         alert.setMovable(false);
         alert.setTransient(false);
-        alert.setTimeout(3000);
+        alert.setTimeout(2000);
         alert.setPopupBorder(BorderFactory.createLineBorder(new Color(10, 30, 106)));
 
         CustomAnimation showAnimation = new CustomAnimation();
