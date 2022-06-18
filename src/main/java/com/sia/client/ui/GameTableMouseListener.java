@@ -1,7 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.Config;
-import com.sia.client.config.RowSelection;
 import com.sia.client.model.AccessableToGame;
 import com.sia.client.model.BookieManager;
 import com.sia.client.model.Game;
