@@ -5,6 +5,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.*;
 
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableCellRenderer;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
@@ -20,6 +21,11 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     }
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
+    }
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        super.valueChanged(e);
+        TableUtils.updateRowSelection(this,e);
     }
     @Override
     public void setName(String name) {

@@ -25,30 +25,31 @@ public class GameTableMouseListener extends MouseAdapter implements ListSelectio
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-
+//        Object source = e.getSource();
+//        System.out.println("source="+source);
     }
     @Override
     public void mousePressed(MouseEvent event) {
-        if ( event.getButton() == MouseEvent.BUTTON1) {
-            JTable table = (JTable)event.getSource();
-            Point point = event.getPoint();
-            int row = table.rowAtPoint(point);
-            RowSelection rowSelection = Config.instance().getRowSelection();
-            AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
-            int gameId = accessableToGame.getGame(table.convertRowIndexToModel(row)).getGame_id();
-            if ( rowSelection.isRowSelected(table.getName(),gameId)) {
-                table.removeRowSelectionInterval(row,row);
-                rowSelection.clearSelectedRows(table.getName());
-            } else {
-                rowSelection.clearSelectedRows(table.getName());
-                rowSelection.addSelectedRows(table.getName(),gameId);
-            }
-        }
+//        if ( event.getButton() == MouseEvent.BUTTON1) {
+//            JTable table = (JTable)event.getSource();
+//            Point point = event.getPoint();
+//            int row = table.rowAtPoint(point);
+//            RowSelection rowSelection = Config.instance().getRowSelection();
+//            AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
+//            int gameId = accessableToGame.getGame(table.convertRowIndexToModel(row)).getGame_id();
+//            if ( rowSelection.isGameSelected(table,gameId)) {
+//                table.removeRowSelectionInterval(row,row);
+//                rowSelection.clearSelectedGames(table);
+//            } else {
+//                rowSelection.clearSelectedGames(table);
+//                rowSelection.addSelectedGames(table,gameId);
+//            }
+//        }
     }
     @Override
     public void mouseClicked(MouseEvent event) {
         // for double click or right click, show game details
-        SportsTabPane stp = TableUtils.findSportsTabPaneParent((JTable)event.getSource());
+        SportsTabPane stp = TableUtils.findParent((JTable)event.getSource(),SportsTabPane.class);
          if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
                 || event.getButton() == MouseEvent.BUTTON3) {
 
