@@ -26,6 +26,7 @@ public class Config {
     private FontConfig fontConfig;
     private UserDisplaySettings userDisplaySettings;
     private ColumnSettings columnSettings;
+    private RowSelection rowSelection;
     @JsonIgnore
     private boolean syncStatus = true;
     private static final Config instance;
@@ -36,6 +37,17 @@ public class Config {
     }
     public static Config instance() {
         return instance;
+    }
+    @JsonProperty
+    public RowSelection getRowSelection() {
+        if ( null == rowSelection) {
+            rowSelection = new RowSelection();
+        }
+        return rowSelection;
+    }
+    @JsonProperty
+    public void setRowSelection(RowSelection rowSelection) {
+        this.rowSelection = rowSelection;
     }
     @JsonProperty
     public synchronized Map<String, AlertConfig> getAlertAttrMap() {

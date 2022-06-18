@@ -4,14 +4,9 @@ import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.*;
-import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
@@ -22,10 +17,15 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     public MainGameTable(MainGameTableModel tm) {
         super(false,tm);
         sporetType = tm.getSportType();
-        this.addMouseListener(new MouseClickListener(getWindowIndex()));
+        this.addMouseListener(GameTableMouseListener.instance());
     }
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
+    }
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        super.valueChanged(e);
+        TableUtils.updateRowSelection(this,e);
     }
     @Override
     public void setName(String name) {
@@ -80,42 +80,5 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
         int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
         Game g  = getModel().getGame(rowModelIndex);
         return SiaConst.SoccerLeagueId == g.getLeague_id();
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    public static class MouseClickListener extends MouseAdapter {
-
-        private final int  windowIndex;
-        public MouseClickListener(int  windowIndex) {
-            this.windowIndex = windowIndex;
-        }
-        @Override
-        public void mouseClicked(MouseEvent event) {
-            // for double click or right click, show game details
-            SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
-            if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
-                    || event.getButton() == MouseEvent.BUTTON3) {
-
-                AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
-                JTable table = (JTable)accessableToGame;
-                Point point = event.getPoint();
-                int row = table.rowAtPoint(point);
-                int col = table.columnAtPoint(point);
-                int rowModelIndex = table.convertRowIndexToModel(row);
-                int colModelIndex = table.convertRowIndexToModel(col);
-                TableColumn tc = table.getColumnModel().getColumn(colModelIndex);
-                String bookieShortName = String.valueOf(tc.getHeaderValue());
-                Integer bookieId = BookieManager.instance().getBookieId(bookieShortName);
-                if (  null != bookieId && bookieId < 990) {
-                    SwingUtilities.convertPointToScreen(point,table);
-                    Game game = accessableToGame.getGame(rowModelIndex);
-                    GameHistPane.showHistPane(stp,point,game,bookieId);
-                } else {
-                    TableRowPopup tableRowPopup = TableRowPopup.instance();
-                    tableRowPopup.setJtable(table);
-                    tableRowPopup.setPointAtTable(point);
-                    tableRowPopup.show();
-                }
-            }
-        }
     }
 }

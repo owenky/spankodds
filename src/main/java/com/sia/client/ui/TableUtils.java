@@ -1,24 +1,71 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Config;
+import com.sia.client.config.RowSelection;
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.model.Game;
-import com.sia.client.model.KeyedObject;
-import com.sia.client.model.UserDisplaySettings;
+import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public abstract class TableUtils {
 
+    public static void updateRowSelection(ColumnCustomizableTable<?> gameTable, ListSelectionEvent e) {
+        ListSelectionModel listSelectionModel = (ListSelectionModel)e.getSource();
+        RowSelection rowSelection = Config.instance().getRowSelection();
+        rowSelection.clearSelectedGames(gameTable);
+        int beginIndex = listSelectionModel.getMinSelectionIndex();
+        int endIndex = listSelectionModel.getMaxSelectionIndex();
+        List<Integer> selectedGameIdList = new ArrayList<>(endIndex-beginIndex+1);
+        for(int i=beginIndex;i<=endIndex;i++) {
+            if ( listSelectionModel.isSelectedIndex(i)) {
+                int modelIndex = gameTable.convertRowIndexToModel(i);
+                int gameId = gameTable.getGame(modelIndex).getGame_id();
+                selectedGameIdList.add(gameId);
+            }
+        }
+        rowSelection.addSelectedGames(gameTable,selectedGameIdList.toArray(new Integer [0]));
+    }
+    public static void selectRowsFromConfig(ColumnCustomizableTable<?> gameTable) {
+        RowSelection rowSelection = Config.instance().getRowSelection();
+        Collection<Integer> selectedGameIds = rowSelection.getSelectedGameIds(gameTable);
+        int remaining = selectedGameIds.size();
+        for(int viewIndex=0;viewIndex<gameTable.getRowCount();viewIndex++) {
+            int modelIndex = gameTable.convertRowIndexToModel(viewIndex);
+            int gameId = gameTable.getGame(modelIndex).getGame_id();
+            if ( selectedGameIds.contains(gameId)) {
+                gameTable.addRowSelectionInterval(viewIndex,viewIndex);
+                if ( 0 == (--remaining)){
+                    break;
+                }
+
+            }
+        }
+    }
+    public static <T> T findParent(JComponent jComponent,Class<T> parentClass) {
+        Component parent = jComponent;
+        do {
+            if ( parent.getClass().equals(parentClass) ) {
+                break;
+            }
+            parent = parent.getParent();
+        }while ( ! (parent instanceof JFrame ));
+
+        if (  parent.getClass().equals(parentClass)  ) {
+            return (T)parent;
+        } else {
+            return null;
+        }
+    }
     public static void highLightCellWhenRowSelected(JTable jtable, JComponent cellRender,int rowViewIndex,Color highLightColor) {
         boolean isRowSelected = jtable.isRowSelected(rowViewIndex);
         List<JComponent> children = TableUtils.getChildren(cellRender);

@@ -2,6 +2,7 @@ package com.sia.client.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sia.client.ui.AppController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,32 +10,32 @@ import java.util.Map;
 public class ColumnSettings {
 
     @JsonProperty
-    private Map<String,Integer> columnWidthMap = new HashMap<>();
-    private static final Map<String,Integer> defaultColumnWidthMap = new HashMap<>();
+    private Map<Integer,Integer> columnWidthMap = new HashMap<>();
+    private static final Map<Integer,Integer> defaultColumnWidthMap = new HashMap<>();
 
     static {
-        defaultColumnWidthMap.put("Details",60);  //60
-        defaultColumnWidthMap.put("Dtals",60);   //60
-        defaultColumnWidthMap.put("*Chart",80); //80
-        defaultColumnWidthMap.put("Time",40);  //40
-        defaultColumnWidthMap.put("Gm#",45);   //45
-        defaultColumnWidthMap.put("Team",45); //30
+        defaultColumnWidthMap.put(990,60);  //Details
+        defaultColumnWidthMap.put(994,80); //*Chart
+        defaultColumnWidthMap.put(991,40);  //Time
+        defaultColumnWidthMap.put(992,45);   //Gm#
+        defaultColumnWidthMap.put(993,30); //Team
     }
 
     @JsonProperty
-    public Map<String, Integer> getColumnWidthMap() {
+    public Map<Integer, Integer> getColumnWidthMap() {
         return columnWidthMap;
     }
     @JsonProperty
-    public void setColumnWidthMap(Map<String, Integer> columnWidthMap) {
+    public void setColumnWidthMap(Map<Integer, Integer> columnWidthMap) {
         this.columnWidthMap = columnWidthMap;
     }
     @JsonIgnore
     public int getColumnWidth(Object columnHeaderValue) {
         String columnName = String.valueOf(columnHeaderValue);
-        Integer width = columnWidthMap.get(columnName);
+        int bookieId = AppController.getBookieId(String.valueOf(columnName));
+        Integer width = columnWidthMap.get(bookieId);
         if ( null == width) {
-            width = defaultColumnWidthMap.get(columnName);
+            width = defaultColumnWidthMap.get(bookieId);
             if ( null == width) {
                 width = SiaConst.DefaultColumnWidth;
             }
@@ -43,6 +44,7 @@ public class ColumnSettings {
     }
     @JsonIgnore
     public void setColumnWidth(Object columnName,Integer width) {
-        columnWidthMap.put(String.valueOf(columnName),width);
+        int bookieId = AppController.getBookieId(String.valueOf(columnName));
+        columnWidthMap.put(bookieId,width);
     }
 }
