@@ -1,11 +1,9 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Config;
+import com.sia.client.config.RowSelection;
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.ColumnCustomizableDataModel;
-import com.sia.client.model.Game;
-import com.sia.client.model.KeyedObject;
-import com.sia.client.model.UserDisplaySettings;
+import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
@@ -19,8 +17,29 @@ import java.util.List;
 
 public abstract class TableUtils {
 
+    public static SportsTabPane findSportsTabPaneParent(JComponent jComponent) {
+        Component parent = jComponent;
+        do {
+            if ( parent instanceof SportsTabPane) {
+                break;
+            }
+            parent = parent.getParent();
+        }while ( ! (parent instanceof JFrame ));
+
+        if ( parent instanceof SportsTabPane) {
+            return (SportsTabPane)parent;
+        } else {
+            return null;
+        }
+    }
     public static void highLightCellWhenRowSelected(JTable jtable, JComponent cellRender,int rowViewIndex,Color highLightColor) {
-        boolean isRowSelected = jtable.isRowSelected(rowViewIndex);
+        RowSelection rowSelection = Config.instance().getRowSelection();
+        AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)jtable;
+        int gameId = accessableToGame.getGame(jtable.convertRowIndexToModel(rowViewIndex)).getGame_id();
+        boolean isRowSelected = rowSelection.isRowSelected(jtable.getName(),gameId);
+        if ( isRowSelected && ! jtable.isRowSelected(rowViewIndex)) {
+            jtable.addRowSelectionInterval(rowViewIndex,rowViewIndex);
+        }
         List<JComponent> children = TableUtils.getChildren(cellRender);
         UserDisplaySettings uds = AppController.getUserDisplaySettings();
         for(JComponent jcomp: children) {

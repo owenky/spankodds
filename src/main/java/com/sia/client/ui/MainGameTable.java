@@ -16,7 +16,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     public MainGameTable(MainGameTableModel tm) {
         super(false,tm);
         sporetType = tm.getSportType();
-        this.addMouseListener(new GameTableMouseListener(getWindowIndex()));
+        this.addMouseListener(GameTableMouseListener.instance());
     }
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();

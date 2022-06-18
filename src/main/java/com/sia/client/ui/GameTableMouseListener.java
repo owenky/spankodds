@@ -1,21 +1,31 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
+import com.sia.client.config.RowSelection;
 import com.sia.client.model.AccessableToGame;
 import com.sia.client.model.BookieManager;
 import com.sia.client.model.Game;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class GameTableMouseListener extends MouseAdapter {
+public class GameTableMouseListener extends MouseAdapter implements ListSelectionListener {
 
-    private final int  windowIndex;
-    public GameTableMouseListener(int  windowIndex) {
-        this.windowIndex = windowIndex;
+    public static GameTableMouseListener instance() {
+        return LazyInitHolder.instance;
+    }
+    private GameTableMouseListener() {
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+
     }
     @Override
     public void mousePressed(MouseEvent event) {
@@ -23,17 +33,22 @@ public class GameTableMouseListener extends MouseAdapter {
             JTable table = (JTable)event.getSource();
             Point point = event.getPoint();
             int row = table.rowAtPoint(point);
-            if ( table.isRowSelected(row)) {
+            RowSelection rowSelection = Config.instance().getRowSelection();
+            AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
+            int gameId = accessableToGame.getGame(table.convertRowIndexToModel(row)).getGame_id();
+            if ( rowSelection.isRowSelected(table.getName(),gameId)) {
                 table.removeRowSelectionInterval(row,row);
+                rowSelection.clearSelectedRows(table.getName());
             } else {
-                table.addRowSelectionInterval(row,row);
+                rowSelection.clearSelectedRows(table.getName());
+                rowSelection.addSelectedRows(table.getName(),gameId);
             }
         }
     }
     @Override
     public void mouseClicked(MouseEvent event) {
         // for double click or right click, show game details
-        SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
+        SportsTabPane stp = TableUtils.findSportsTabPaneParent((JTable)event.getSource());
          if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
                 || event.getButton() == MouseEvent.BUTTON3) {
 
@@ -58,5 +73,10 @@ public class GameTableMouseListener extends MouseAdapter {
                 tableRowPopup.show();
             }
         }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    private static abstract class LazyInitHolder {
+        private static final GameTableMouseListener instance = new GameTableMouseListener();
     }
 }
