@@ -11,17 +11,15 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MouseClickListener extends MouseAdapter {
+public class GameTableMouseListener extends MouseAdapter {
 
     private final int  windowIndex;
-    public MouseClickListener(int  windowIndex) {
+    public GameTableMouseListener(int  windowIndex) {
         this.windowIndex = windowIndex;
     }
     @Override
-    public void mouseClicked(MouseEvent event) {
-        // for double click or right click, show game details
-        SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
-        if ( 1 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1) {
+    public void mousePressed(MouseEvent event) {
+        if ( event.getButton() == MouseEvent.BUTTON1) {
             JTable table = (JTable)event.getSource();
             Point point = event.getPoint();
             int row = table.rowAtPoint(point);
@@ -30,8 +28,13 @@ public class MouseClickListener extends MouseAdapter {
             } else {
                 table.addRowSelectionInterval(row,row);
             }
-
-        }  else if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
+        }
+    }
+    @Override
+    public void mouseClicked(MouseEvent event) {
+        // for double click or right click, show game details
+        SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
+         if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
                 || event.getButton() == MouseEvent.BUTTON3) {
 
             AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();

@@ -4,14 +4,8 @@ import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.*;
-import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
@@ -22,7 +16,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     public MainGameTable(MainGameTableModel tm) {
         super(false,tm);
         sporetType = tm.getSportType();
-        this.addMouseListener(new MouseClickListener(getWindowIndex()));
+        this.addMouseListener(new GameTableMouseListener(getWindowIndex()));
     }
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
