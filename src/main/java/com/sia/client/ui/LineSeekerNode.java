@@ -142,9 +142,9 @@ public class LineSeekerNode {
             LineSeekerAttribute mlAttr = alertConfig.getSectionAtrribute(AlertSectionName.mLineName);
             moneylinecheck = mlAttr.isActivateStatus();
             usemoneylinematheq = mlAttr.isUseEquivalent();
-            visitorml = Double.parseDouble(mlAttr.getVisitorColumn().getLineInput());
+            visitorml = Double.parseDouble(mlAttr.getVisitorColumn().getJuiceInput());
             visitormlalerttype = mlAttr.getVisitorColumn().getAlertState().name();
-            homeml = Double.parseDouble(mlAttr.getHomeColumn().getLineInput());
+            homeml = Double.parseDouble(mlAttr.getHomeColumn().getJuiceInput());
             homemlalerttype = mlAttr.getHomeColumn().getAlertState().name();
 
             LineSeekerAttribute awayAttr = alertConfig.getSectionAtrribute(AlertSectionName.awayName);
