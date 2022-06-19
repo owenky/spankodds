@@ -17,7 +17,7 @@ public class SectionComponents {
         useEquivalent = new JCheckBox("Use Mathematical Equivalent");
         activateStatus = new JCheckBox("Activate");
         activateStatus.setName(activateStatus.getText());  //name is used for rendered in TitledPanelGenerator, it should be same as its text.
-        activateStatus.setSelected(true);
+        activateStatus.setSelected(false);
     }
     public void addActionListener(AlertComponentListener l) {
         leftColumn.addInputListener(l);

@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.*;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
@@ -104,7 +105,7 @@ public class LineAlertOpeners extends AbstractLayeredDialog implements ItemListe
     DefaultListModel eventsModel = new DefaultListModel();
 
     public LineAlertOpeners(SportsTabPane stp) {
-        super(stp,"Openers Line Alerts");
+        super(stp,"Openers Line Alerts", SiaConst.OPENERHELPURL);
     }
     @Override
     protected JComponent getUserComponent() {

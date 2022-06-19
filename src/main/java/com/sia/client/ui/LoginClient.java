@@ -55,6 +55,7 @@ public class LoginClient implements MessageListener {
             AppController.addBookie(new Bookie(994, "*Chart", "*Chart", "", ""));
             //AppController.addBookie(new Bookie(995, "*Notes", "*Notes", "", ""));
             AppController.addBookie(new Bookie(996, "*Best", "*Best", "", ""));
+            AppController.addBookie(new Bookie(997, "*Consensus", "*Cnus", "", ""));
             //should i add chart bookie here????
             connection = AppController.getGuestConnection();
 
@@ -212,6 +213,11 @@ public class LoginClient implements MessageListener {
                 TextMessage textMessage = (TextMessage) message;
                 String text = textMessage.getText();
                 AppController.getUser().setOpeneralert(text);
+            }
+            else if ( messageType.equals("consensussettings")) {
+                TextMessage textMessage = (TextMessage) message;
+                String text = textMessage.getText();
+                AppController.getUser().setConsensussettings(text);
             }
             else if ( messageType.equals("loginkey")) {
                 TextMessage textMessage = (TextMessage) message;
@@ -479,6 +485,7 @@ public class LoginClient implements MessageListener {
 
                 AppController.createLineOpenerAlertNodeListFromUserPrefs();
                 AppController.createLimitNodeListFromUserPrefs();
+                AppController.createConsensusMakerSettings();
                 AppController.createGamesConsumer();
                 AppController.createScoresConsumer();
                 AppController.createUrgentsConsumer();

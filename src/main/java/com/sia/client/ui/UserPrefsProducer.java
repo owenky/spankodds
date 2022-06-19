@@ -163,6 +163,9 @@ public class UserPrefsProducer {
             mapMessage.setString("fixedcolumnprefs", u.getFixedColumnPrefs());
             mapMessage.setString("columncolors", u.getColumnColors());
             mapMessage.setString("bookiecolumnchanges", u.getBookieColumnsChanged());
+            String cmsstring = AppController.getConsensusMakerSettingsAsString();
+            log("cmsstring="+cmsstring);
+            mapMessage.setString("consensussettings", cmsstring);
 
             Arrays.stream(SportType.getPreDefinedSports()).forEach(st -> {
                 try {

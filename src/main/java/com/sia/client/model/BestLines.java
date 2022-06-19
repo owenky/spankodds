@@ -4,8 +4,11 @@ import com.sia.client.ui.AppController;
 import com.sia.client.ui.TeamTotalline;
 import com.sia.client.ui.Totalline;
 
+import javax.swing.tree.TreePath;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import static com.sia.client.config.Utils.log;
 
@@ -13,7 +16,98 @@ import static com.sia.client.config.Utils.log;
 public class BestLines {
 
 	static int bestbookieid = 996;
-    public static void calculatebestspread(int gameid, int period) {
+	static int consensusbookieid = 997;
+
+
+
+	public static void calculateconsensusspread(int gameid, int period)
+	{
+		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
+		if(cms == null)
+		{
+			return;
+		}
+		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+		Vector<Spreadline> spreadlinevec = new Vector();
+		Iterator iter = bookiesvec.iterator();
+		while(iter.hasNext())
+		{
+			Bookie b = (Bookie)iter.next();
+			spreadlinevec.add(AppController.getSpreadline(b.getBookie_id(),gameid,period));
+		}
+	}
+	public static void calculateconsensustotal(int gameid, int period)
+	{
+		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
+		if(cms == null)
+		{
+			return;
+		}
+		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+		Vector<Totalline>totallinevec = new Vector();
+		Iterator iter = bookiesvec.iterator();
+		while(iter.hasNext())
+		{
+			Bookie b = (Bookie)iter.next();
+			totallinevec.add(AppController.getTotalline(b.getBookie_id(),gameid,period));
+		}
+	}
+	public static void calculateconsensusmoney(int gameid, int period)
+	{
+		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
+		if(cms == null)
+		{
+			return;
+		}
+		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+		Vector<Moneyline>moneylinevec = new Vector();
+		Iterator iter = bookiesvec.iterator();
+		while(iter.hasNext())
+		{
+			Bookie b = (Bookie)iter.next();
+			moneylinevec.add(AppController.getMoneyline(b.getBookie_id(),gameid,period));
+		}
+
+		//
+
+		Iterator iterline = moneylinevec.iterator();
+		double percentage = 100.00;
+		double deadpercentages = 0.0;
+		while(iterline.hasNext())
+		{
+			Moneyline ml = (Moneyline)iter.next();
+			Bookie b = ml.getBookieObject();
+			if(ml.getCurrentvisitjuice() == 0 || ml.getCurrenthomejuice() == 0)
+			{
+				double thisbmpercent = Double.parseDouble(""+cms.getValue(b.getBookie_id()));
+				deadpercentages = deadpercentages + thisbmpercent;
+
+				//adjust every percentage by percentage/(1-deadpercentage)
+				//make sure this line is not factored in
+			}
+		}
+
+	}
+	public static void calculateconsensusteamtotal(int gameid, int period)
+	{
+		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
+		if(cms == null)
+		{
+			return;
+		}
+		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+		Vector<TeamTotalline>teamtotallinevec = new Vector();
+		Iterator iter = bookiesvec.iterator();
+		while(iter.hasNext())
+		{
+			Bookie b = (Bookie)iter.next();
+			teamtotallinevec.add(AppController.getTeamTotalline(b.getBookie_id(),gameid,period));
+		}
+	}
+
+
+    public static void calculatebestspread(int gameid, int period)
+	{
 		List<Bookie> shownbookies = AppController.getShownCols();
 		List<Bookie> fixedbookies = AppController.getFixedCols();
 

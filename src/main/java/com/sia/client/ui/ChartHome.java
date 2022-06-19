@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.User;
 import com.sia.client.ui.control.SportsTabPane;
 
@@ -39,6 +40,7 @@ public class ChartHome  {
     public ChartHome(SportsTabPane stp) {
         anchoredLayeredPane = new AnchoredLayeredPane(stp);
         anchoredLayeredPane.setTitle("Chart");
+        anchoredLayeredPane.setHelpUrl(SiaConst.CHARTHELPURL);
     }
     public void show() {
         anchoredLayeredPane.openAndCenter(getUserComponent(),new Dimension(600,350),false);

@@ -34,7 +34,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayerEditablePanes {
     private java.util.List<EditablePane> editablePaneList;
 
     public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertSeekerMethods alertSeekerMethods) {
-        super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
+        super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex,SiaConst.LINESEEKERHELPURL);
         this.alertSeekerMethods = alertSeekerMethods;
         int height = (int)SiaConst.UIProperties.LineAlertMethodDim.getHeight();
         saveBtn.addActionListener(this::save);

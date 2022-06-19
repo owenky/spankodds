@@ -884,7 +884,8 @@ public class LinesMoves
         )) {
             Spreadline sl = AppController.getSpreadline(604, gameid, period);
             double spread = 0;
-            if(sl != null) {
+            if(sl != null)
+            {
                 if (ishometeam) {
                     spread = sl.getCurrenthomespread();
                 } else {
@@ -895,6 +896,25 @@ public class LinesMoves
                         return -1;
                     }
                 }
+            }
+            else
+            {
+                sl = AppController.getSpreadline(817, gameid, period);
+                if(sl != null)
+                {
+                    if (ishometeam) {
+                        spread = sl.getCurrenthomespread();
+                    } else {
+                        spread = sl.getCurrentvisitspread();
+                    }
+                    if (spread != 0) {
+                        if (oldline != spread) {
+                            return -1;
+                        }
+                    }
+                }
+
+
             }
         }
 

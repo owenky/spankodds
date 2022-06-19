@@ -5,6 +5,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.*;
 
 import java.awt.*;
+import java.util.Hashtable;
 import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
@@ -777,6 +778,21 @@ public class SoccerSpreadTotalView extends ViewValue {
 
                     besthtml = besthtml+"</table>";
                     setTooltiptext("<html><body>" +besthtml + "</body></html>");
+                }
+                else if(bid == 997 )
+                {
+                    String consensushtml = "" ;
+                    ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gid);
+                    if(cms == null)
+                    {
+
+                       }
+                    else
+                    {
+                        consensushtml =  cms.gethtmlbreakdown();
+                    }
+
+                    setTooltiptext("<html><body>" +consensushtml + "</body></html>");
                 }
                 else {
                     String limithtml = "";

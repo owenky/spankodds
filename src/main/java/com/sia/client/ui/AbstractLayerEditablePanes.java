@@ -9,6 +9,10 @@ import java.util.function.Supplier;
 
 public abstract class AbstractLayerEditablePanes extends AbstractLayeredDialog implements ActionOnEditablePanes {
 
+    public AbstractLayerEditablePanes(SportsTabPane stp, String title, int layer_index,String helpurl) {
+        super(stp, title, layer_index,helpurl);
+    }
+
     public AbstractLayerEditablePanes(SportsTabPane stp, String title, int layer_index) {
         super(stp, title, layer_index);
     }

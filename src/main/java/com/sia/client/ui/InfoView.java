@@ -25,7 +25,13 @@ public class InfoView {
 
         this.gid = gid;
         Game g = AppController.getGame(gid);
-        s = AppController.getSportByLeagueId(g.getLeague_id());
+        if(g.getLeague_id() == 9) {
+            s = AppController.getSportByLeagueId(g.getSubleague_id());
+        }
+        else
+        {
+            s = AppController.getSportByLeagueId(g.getLeague_id());
+        }
     }
 
     public void clearColors() {
@@ -48,9 +54,8 @@ public class InfoView {
 
         Game g = AppController.getGame(gid);
         if ((g.getStatus() == null || g.getStatus().equalsIgnoreCase("NULL") || g.getStatus().equals("")) && (g.getTimeremaining() == null || g.getTimeremaining().equalsIgnoreCase("") || g.getTimeremaining().equalsIgnoreCase("NULL"))) {
+                ld1.setData(s.getLeagueabbr());
 
-
-            ld1.setData(s.getLeagueabbr());
             ld2.setData("I W L");
             ld2.setTooltip("Injury/Weather/Lineups Coming soon");
             ld1.setBackgroundColor(topcolor);

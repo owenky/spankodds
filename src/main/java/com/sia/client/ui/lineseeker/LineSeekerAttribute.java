@@ -5,7 +5,7 @@ public class LineSeekerAttribute {
     private ColumnAttributes homeColumn;
     private ColumnAttributes visitorColumn;
     private boolean useEquivalent = true;
-    private boolean activateStatus = true;
+    private boolean activateStatus = false;
     private AlertSectionName sectionName;
 
     public synchronized ColumnAttributes getHomeColumn() {
