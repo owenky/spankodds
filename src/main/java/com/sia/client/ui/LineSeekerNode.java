@@ -349,6 +349,10 @@ public class LineSeekerNode {
 
 
     public String shouldIAlertSpreadline(Spreadline line) {
+        if(visitorspread == 0 && homespread == 0 && visitorjuice == -110 && homejuice == -110) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
         double thisvisitspread = line.getCurrentvisitspread();
         double thisvisitjuice = line.getCurrentvisitjuice();
@@ -393,6 +397,10 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertMoneyline(Moneyline line) {
+        if(visitorml == -110 && homeml == -110) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
 
         double thisvisitml = line.getCurrentvisitjuice();
@@ -405,7 +413,8 @@ public class LineSeekerNode {
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomeml + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
-
+        System.out.println("VISITML.."+thisvisitml+"..is better than?"+visitorml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
+        System.out.println("HOMEML.."+thishomeml+"..is better than?"+homeml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
         if (isUsespreadmatheq()) {
             if (LinesMoves.isLine1BetterThanLine2(0, thisvisitml, 0, visitorml, line.getLeague_id(), line.getPeriod(), "MONEYLINE", line.getGameid())) {
                 if (nowms - lastmoneylinenotify > lineseekerwaitmin * 60 * 1000) {
@@ -436,6 +445,12 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertTotalline(Totalline line) {
+
+        if(over == 0 && under == 0) // default
+        {
+            return "";
+        }
+
         long nowms = System.currentTimeMillis();
         double thisover = line.getCurrentover();
         double thisoverjuice = line.getCurrentoverjuice();
@@ -483,6 +498,10 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertAwayTeamTotalline(TeamTotalline line) {
+        if(awayttover == 0 && awayttunder == 0) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
         double thisawayover = line.getCurrentvisitover();
         double thisawayoverjuice = line.getCurrentvisitoverjuice();
@@ -526,6 +545,10 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertHomeTeamTotalline(TeamTotalline line) {
+        if(homettover == 0 && homettunder == 0) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
         double thishomeover = line.getCurrenthomeover();
         double thishomeoverjuice = line.getCurrenthomeoverjuice();

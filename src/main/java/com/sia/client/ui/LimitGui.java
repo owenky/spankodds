@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.*;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
@@ -118,7 +119,7 @@ public class LimitGui extends AbstractLayeredDialog implements ItemListener {
     DefaultListModel eventsModel = new DefaultListModel();
 
     public LimitGui(SportsTabPane stp) {
-        super(stp,"Limit Change Alerts");
+        super(stp,"Limit Change Alerts", SiaConst.LIMITCHANGEHELPURL);
     }
     @Override
     protected JComponent getUserComponent() {

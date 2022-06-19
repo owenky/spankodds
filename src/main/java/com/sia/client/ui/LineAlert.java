@@ -6,6 +6,7 @@ import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
@@ -207,7 +208,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
 
 
     public LineAlert(SportsTabPane stp) {
-       super(stp,"Line Alerts");
+       super(stp,"Line Alerts", SiaConst.LINEMOVESHELPURL);
     }
     @Override
     protected JComponent getUserComponent() {

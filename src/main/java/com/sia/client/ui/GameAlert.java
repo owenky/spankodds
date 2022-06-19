@@ -72,15 +72,17 @@ public class GameAlert  extends AbstractLayeredDialog {
     private CheckBoxTree _tree;
     private Hashtable leaguenameidhash = new Hashtable();
     private final String alerttype;
-
-    public GameAlert(SportsTabPane stp,String atype) {
+    private String helpurl = "";
+    public GameAlert(SportsTabPane stp,String atype,String url) {
         super(stp, atype + " Alerts");
         alerttype = atype;
+        helpurl = url;
     }
     @Override
     protected JComponent getUserComponent() {
         JPanel userComponent = new JPanel();
         JFrame jfrm1 = SpankyWindow.findSpankyWindow(getAnchoredLayeredPane().getSportsTabPane().getWindowIndex());
+        getAnchoredLayeredPane().setHelpUrl(helpurl);
         String userpref = "";
 
             System.out.println("ALERTTYPE="+alerttype);

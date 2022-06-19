@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.*;
 import com.jidesoft.tree.TreeUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.Bookie;
@@ -90,7 +91,7 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
     DefaultListModel eventsModel = new DefaultListModel();
 
     public ConsensusMakerGui(SportsTabPane stp) {
-        super(stp,"Consensus Line Setup");
+        super(stp,"Consensus Line Setup", SiaConst.CONSENSUSHELPURL);
     }
     @Override
     protected JComponent getUserComponent() {
