@@ -19,6 +19,11 @@ public class RowHeaderGameTable extends RowHeaderTable<Game>{
         super.valueChanged(e);
         TableUtils.updateRowSelection(getMainTable(),e);
     }
+    // force ctrl key down when mouse click a row by setting toggle=true
+    @Override
+    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+        super.changeSelection(rowIndex,columnIndex,true,extend);
+    }
     public int getWindowIndex() {
         return ((MainGameTable)getMainTable()).getWindowIndex();
     }
