@@ -298,19 +298,19 @@ public class LineSeekerNode {
             }
 
             if (!html.equals("")) {
-                System.out.println("lineseekerflags...lineseekerwaitmin="+lineseekerwaitmin);
-                System.out.println("lineseekerflags...playgoodaudio="+playgoodaudio);
-                System.out.println("lineseekerflags...showgoodpopup="+showgoodpopup);
-                System.out.println("lineseekerflags...goodpopuplocation="+goodpopuplocation);
-                System.out.println("lineseekerflags...goodpopupseconds="+goodpopupseconds);
-                System.out.println("lineseekerflags...playbadaudio="+playbadaudio);
-                System.out.println("lineseekerflags...showbaddpopup="+showbadpopup);
-                System.out.println("lineseekerflags...badpopuplocation="+badpopuplocation);
-                System.out.println("lineseekerflags...badpopupseconds="+badpopupseconds);
-                System.out.println("lineseekerflags...playneutralaudio="+playneutralaudio);
-                System.out.println("lineseekerflags...showneutralpopup="+showneutralpopup);
-                System.out.println("lineseekerflags...neutralpopuplocation="+neutralpopuplocation);
-                System.out.println("lineseekerflags...neutralpopupseconds="+neutralpopupseconds);
+              //  System.out.println("lineseekerflags...lineseekerwaitmin="+lineseekerwaitmin);
+              //  System.out.println("lineseekerflags...playgoodaudio="+playgoodaudio);
+              //  System.out.println("lineseekerflags...showgoodpopup="+showgoodpopup);
+              //  System.out.println("lineseekerflags...goodpopuplocation="+goodpopuplocation);
+             //   System.out.println("lineseekerflags...goodpopupseconds="+goodpopupseconds);
+              //  System.out.println("lineseekerflags...playbadaudio="+playbadaudio);
+              //  System.out.println("lineseekerflags...showbaddpopup="+showbadpopup);
+              //  System.out.println("lineseekerflags...badpopuplocation="+badpopuplocation);
+              //  System.out.println("lineseekerflags...badpopupseconds="+badpopupseconds);
+              //  System.out.println("lineseekerflags...playneutralaudio="+playneutralaudio);
+              //  System.out.println("lineseekerflags...showneutralpopup="+showneutralpopup);
+              //  System.out.println("lineseekerflags...neutralpopuplocation="+neutralpopuplocation);
+              //  System.out.println("lineseekerflags...neutralpopupseconds="+neutralpopupseconds);
                 if (html.indexOf("GOOD") != -1) {
                     if (playgoodaudio) {
                         new SoundPlayer(goodaudiofile);
@@ -413,8 +413,8 @@ public class LineSeekerNode {
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
         htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomeml + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
-        System.out.println("VISITML.."+thisvisitml+"..is better than?"+visitorml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
-        System.out.println("HOMEML.."+thishomeml+"..is better than?"+homeml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
+        //System.out.println("VISITML.."+thisvisitml+"..is better than?"+visitorml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
+        //System.out.println("HOMEML.."+thishomeml+"..is better than?"+homeml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
         if (isUsespreadmatheq()) {
             if (LinesMoves.isLine1BetterThanLine2(0, thisvisitml, 0, visitorml, line.getLeague_id(), line.getPeriod(), "MONEYLINE", line.getGameid())) {
                 if (nowms - lastmoneylinenotify > lineseekerwaitmin * 60 * 1000) {
