@@ -8,6 +8,7 @@ import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -324,6 +325,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             }
             MainScreen ms = (MainScreen) stb.getSelectedComponent();
             ms.getDataModels().sortGamesForAllTableSections();
+            ms.getColumnCustomizableTable().getModel().refreshTable();
         });
 
         addBookieBut.addActionListener(ae -> {

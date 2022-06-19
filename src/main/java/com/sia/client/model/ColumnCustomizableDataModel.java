@@ -142,6 +142,9 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         }
 
     }
+    public void refreshTable() {
+        fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
+    }
     public void fireTableChanged(TableModelEvent e) {
         try {
             RowSelection rowSelection = Config.instance().getRowSelection();
