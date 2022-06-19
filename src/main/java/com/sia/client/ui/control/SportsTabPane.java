@@ -13,11 +13,7 @@ import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.MainScreenRefresh;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.TestExecutor;
-import com.sia.client.ui.AppController;
-import com.sia.client.ui.CustomTab2;
-import com.sia.client.ui.SpankOdds;
-import com.sia.client.ui.SpankyWindow;
-import com.sia.client.ui.SportCustomTab;
+import com.sia.client.ui.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;

@@ -62,7 +62,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     public void done() {
         try {
             if ( null != err) {
-                showLoadingPrompt();
+                showPrompt(err);
             } else if ( ! isCancelled()) {
                 mainScreen.createColumnCustomizableTable(mainGameTableModel);
                 MainGameTable mainGameTable = mainScreen.getColumnCustomizableTable();

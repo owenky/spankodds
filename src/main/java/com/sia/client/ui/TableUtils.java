@@ -20,6 +20,9 @@ import java.util.Set;
 public abstract class TableUtils {
 
     public static void updateRowSelection(ColumnCustomizableTable<?> gameTable, ListSelectionEvent e) {
+        if ( e.getValueIsAdjusting()) {
+            return;
+        }
         ListSelectionModel listSelectionModel = (ListSelectionModel)e.getSource();
         RowSelection rowSelection = Config.instance().getRowSelection();
         rowSelection.clearSelectedGames(gameTable);
