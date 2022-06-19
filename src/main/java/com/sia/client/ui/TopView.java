@@ -339,16 +339,14 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 if (shrinkTeamBut.getText().equals("Short Team")) {
                     stb.setShort(true);
                     shrinkTeamBut.setText("Long Team");
-                    stb.rebuildMainScreen();
                 } else {
                     stb.setShort(false);
                     shrinkTeamBut.setText("Short Team");
-                    stb.rebuildMainScreen();
                 }
+//                stb.rebuildMainScreen();
+                stb.resetCurrentScreenStates();
             }
         });
-
-
         alertBut.addActionListener(ae -> {
             UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
         });
