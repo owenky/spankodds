@@ -30,10 +30,12 @@ public abstract class TableUtils {
             if ( listSelectionModel.isSelectedIndex(i)) {
                 int modelIndex = gameTable.convertRowIndexToModel(i);
                 int gameId = gameTable.getGame(modelIndex).getGame_id();
-                selectedGameIdList.add(gameId);
+                if ( 0 < gameId) {
+                    selectedGameIdList.add(gameId);
+                }
             }
         }
-        rowSelection.addSelectedGames(gameTable,selectedGameIdList.toArray(new Integer [0]));
+        rowSelection.addSelectedGames(gameTable,selectedGameIdList);
     }
     public static void selectRowsFromConfig(ColumnCustomizableTable<?> gameTable) {
         RowSelection rowSelection = Config.instance().getRowSelection();

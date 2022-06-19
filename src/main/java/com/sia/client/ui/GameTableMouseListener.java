@@ -48,8 +48,9 @@ public class GameTableMouseListener extends MouseAdapter implements ListSelectio
     public void mouseClicked(MouseEvent event) {
         // for double click or right click, show game details
         SportsTabPane stp = TableUtils.findParent((JTable)event.getSource(),SportsTabPane.class);
-         if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
-                || event.getButton() == MouseEvent.BUTTON3) {
+         if (
+//                 (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1) ||
+                event.getButton() == MouseEvent.BUTTON3) {
 
             AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
             JTable table = (JTable)accessableToGame;

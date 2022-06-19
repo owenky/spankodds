@@ -27,8 +27,12 @@ public class RowSelection {
     }
     @JsonIgnore
     public void addSelectedGames(JComponent table, Integer ... gameIds) {
+        addSelectedGames(table,Arrays.asList(gameIds));
+    }
+    @JsonIgnore
+    public void addSelectedGames(JComponent table, List<Integer> gameIds) {
         Set<Integer> selectedRows = selectedGamesBySportId.computeIfAbsent(getSportId(table), (key)->new HashSet<>());
-        selectedRows.addAll(Arrays.asList(gameIds));
+        selectedRows.addAll(gameIds);
     }
     @JsonIgnore
     public void removeSelectedGames(JComponent table, Integer ... gameIds) {
