@@ -41,7 +41,7 @@ public class TableRowPopup {
         jPopupMenu = new JPopupMenu();
         JMenuItem hideRowsItem = new JMenuItem("Hide Selected Rows");
         JMenuItem unHideRowsItem = new JMenuItem("Un-hide Selected Rows");
-        JMenuItem clearHighlightItem = new JMenuItem("Clear Highlighted Rows");
+        JMenuItem clearHighlightItem = new JMenuItem("Clear Highlights");
         hideRowsItem.addActionListener(this::hideRows);
         unHideRowsItem.addActionListener(this::unHideRows);
         clearHighlightItem.addActionListener(this::clearHightlightedRows);
