@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Comparator;
 
 public class GameTimeSorter implements Comparator<Game> {
@@ -33,7 +34,9 @@ public class GameTimeSorter implements Comparator<Game> {
             return 1;
         }
 
-        return g1.getGametime().isBefore(g2.getGametime())?-1:1;
+        LocalTime time1 = g1.getGametime();
+        LocalTime time2 = g2.getGametime();
+        return time1.isBefore(time2)?-1:time1.isAfter(time2)?1:0;
     }
 }
  
