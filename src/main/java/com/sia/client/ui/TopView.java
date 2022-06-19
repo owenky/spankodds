@@ -215,7 +215,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action totalsonlyaction = new AbstractAction("TotalsOnly") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log("totals only button pressed");
                 cb.setSelectedIndex(5);
 
 
@@ -233,7 +232,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action clearaction = new AbstractAction("Clear") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log("clear button pressed");
                 Component comp = stb.getSelectedComponent();
                 if (comp instanceof MainScreen) {
                     ((MainScreen) comp).setClearTime(new java.util.Date().getTime());
@@ -252,7 +250,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action clearallaction = new AbstractAction("Clear All") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log("clear all button pressedAAA");
                 long ct = (new java.util.Date()).getTime();
                 MainScreen ms = (MainScreen) stb.getSelectedComponent();
                 ms.setClearTime(ct);
@@ -268,14 +265,12 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
 
         adjustcolsBut.addActionListener(ae -> {
-            log("ajustcols button pressed");
             MainScreen ms = (MainScreen) stb.getSelectedComponent();
             ms.adjustcols();
         });
         Action lastaction = new AbstractAction("Last") {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                log("last button pressed");
                 if (lastBut.getText().equals("Current")) {
                     lastBut.setText("Last");
                     stb.setLast(false);
@@ -300,7 +295,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         Action openeraction = new AbstractAction("Opener") {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                log("opener button pressed");
                 if (openerBut.getText().equals("Current")) {
                     openerBut.setText("Opener");
                     stb.setOpener(false);
@@ -328,7 +322,8 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 stb.setSort(false);
                 sortBut.setText("Time sort");
             }
-            ((MainScreen) stb.getSelectedComponent()).getDataModels().sortGamesForAllTableSections();
+            MainScreen ms = (MainScreen) stb.getSelectedComponent();
+            ms.getDataModels().sortGamesForAllTableSections();
         });
 
         addBookieBut.addActionListener(ae -> {
@@ -341,21 +336,17 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         //owen this one we will have to repaint somehow
         shrinkTeamBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                log("shrinkTeamBut button pressed");
                 if (shrinkTeamBut.getText().equals("Short Team")) {
                     stb.setShort(true);
                     shrinkTeamBut.setText("Long Team");
-                    stb.rebuildMainScreen();
                 } else {
                     stb.setShort(false);
                     shrinkTeamBut.setText("Short Team");
-                    stb.rebuildMainScreen();
-
                 }
+//                stb.rebuildMainScreen();
+                stb.resetCurrentScreenStates();
             }
         });
-
-
         alertBut.addActionListener(ae -> {
             UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
         });

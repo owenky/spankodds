@@ -10,12 +10,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -149,9 +144,12 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     }
     public void fireTableChanged(TableModelEvent e) {
         try {
+            RowSelection rowSelection = Config.instance().getRowSelection();
+            rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),true);
             delegator.fireTableChanged(e);
+            rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),false);
         } catch(Exception ex) {
-            String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getName()+", window index="
+            String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getSportName()+", window index="
                     +this.getSpankyWindowConfig().getWindowIndex();
             log(errMs,ex);
         }

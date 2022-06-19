@@ -2,6 +2,7 @@ package com.sia.client.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sia.client.model.SportType;
 import com.sia.client.ui.TableUtils;
 import com.sia.client.ui.control.MainScreen;
 
@@ -10,7 +11,10 @@ import java.util.*;
 
 public class RowSelection {
 
+    @JsonProperty
     private Map<Integer, Set<Integer>> selectedGamesBySportId = new HashMap<>();
+    @JsonIgnore
+    private Set<String> lockedSportNames = new HashSet<>();
 
     @JsonProperty
     public Map<Integer, Set<Integer>> getSelectedGamesBySportId() {
@@ -22,7 +26,7 @@ public class RowSelection {
     }
     @JsonIgnore
     public boolean isGameSelected(JComponent table , int gameId) {
-        Set<Integer> selectedRows = selectedGamesBySportId.get(getSportId(table));
+        Set<Integer> selectedRows = selectedGamesBySportId.get(getSport(table).getSportId());
         return null != selectedRows && selectedRows.contains(gameId);
     }
     @JsonIgnore
@@ -31,30 +35,47 @@ public class RowSelection {
     }
     @JsonIgnore
     public void addSelectedGames(JComponent table, List<Integer> gameIds) {
-        Set<Integer> selectedRows = selectedGamesBySportId.computeIfAbsent(getSportId(table), (key)->new HashSet<>());
-        selectedRows.addAll(gameIds);
+        SportType st = getSport(table);
+        if ( ! lockedSportNames.contains(st.getSportName())) {
+            Set<Integer> selectedRows = selectedGamesBySportId.computeIfAbsent(st.getSportId(), (key) -> new HashSet<>());
+            selectedRows.addAll(gameIds);
+        }
     }
     @JsonIgnore
     public void removeSelectedGames(JComponent table, Integer ... gameIds) {
-        Set<Integer> selectedRows = selectedGamesBySportId.get(getSportId(table));
-        if ( null != selectedRows) {
-            Arrays.asList(gameIds).forEach(selectedRows::remove);
+        SportType st = getSport(table);
+        if ( ! lockedSportNames.contains(st.getSportName())) {
+            Set<Integer> selectedRows = selectedGamesBySportId.get(st.getSportId());
+            if (null != selectedRows) {
+                Arrays.asList(gameIds).forEach(selectedRows::remove);
+            }
         }
     }
     @JsonIgnore
     public void clearSelectedGames(JComponent table) {
-        Set<Integer> selectedRows = selectedGamesBySportId.get(getSportId(table));
-        if ( null != selectedRows) {
-            selectedRows.clear();
+        SportType st = getSport(table);
+        if ( ! lockedSportNames.contains(st.getSportName())) {
+            Set<Integer> selectedRows = selectedGamesBySportId.get(st.getSportId());
+            if (null != selectedRows) {
+                selectedRows.clear();
+            }
         }
     }
     @JsonIgnore
     public Collection<Integer> getSelectedGameIds(JComponent table) {
-        Set<Integer> selectedRows = selectedGamesBySportId.get(getSportId(table));
+        Set<Integer> selectedRows = selectedGamesBySportId.get(getSport(table).getSportId());
         return null!=selectedRows?new HashSet<>(selectedRows):new HashSet<>();
     }
-    private static Integer getSportId(JComponent jcomponent) {
+    @JsonIgnore
+    public void setSportRowSelectionLocked(String sportName,boolean locked) {
+        if ( locked) {
+            lockedSportNames.add(sportName);
+        } else {
+            lockedSportNames.remove(sportName);
+        }
+    }
+    private static SportType getSport(JComponent jcomponent) {
         MainScreen mainScreen = TableUtils.findParent(jcomponent,MainScreen.class);
-        return mainScreen.getSportType().getSportId();
+        return mainScreen.getSportType();
     }
 }
