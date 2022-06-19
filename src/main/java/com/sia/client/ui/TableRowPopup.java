@@ -41,14 +41,14 @@ public class TableRowPopup {
         jPopupMenu = new JPopupMenu();
         JMenuItem hideRowsItem = new JMenuItem("Hide Selected Rows");
         JMenuItem unHideRowsItem = new JMenuItem("Un-hide Selected Rows");
-        JMenuItem highlightRowsItem = new JMenuItem("Highlight Selected Rows");
+        JMenuItem clearHighlightItem = new JMenuItem("Clear Highlighted Rows");
         hideRowsItem.addActionListener(this::hideRows);
         unHideRowsItem.addActionListener(this::unHideRows);
-        highlightRowsItem.addActionListener(this::highlightRows);
+        clearHighlightItem.addActionListener(this::clearHightlightedRows);
 
         jPopupMenu.add(hideRowsItem);
         jPopupMenu.add(unHideRowsItem);
-//        jPopupMenu.add(highlightRowsItem);
+        jPopupMenu.add(clearHighlightItem);
     }
     public void setJtable(JTable jtable) {
         this.jtable = jtable;
@@ -99,8 +99,8 @@ public class TableRowPopup {
         reConfigHeaderRow();
         jPopupMenu.setVisible(false);
     }
-    private void highlightRows(ActionEvent ae) {
-
+    private void clearHightlightedRows(ActionEvent ae) {
+        jtable.clearSelection();
         jPopupMenu.setVisible(false);
     }
     private ColumnCustomizableTable<?> getMainGameTable() {
