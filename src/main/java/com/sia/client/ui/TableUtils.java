@@ -80,15 +80,18 @@ public abstract class TableUtils {
             if(isRowSelected)
             {
 
-                if(jcomp instanceof JLabel && !jcomp.getBackground().equals(uds.getFirstcolor()) &&
-                        !jcomp.getBackground().equals(uds.getSecondcolor()) &&
-                        !jcomp.getBackground().equals(uds.getThirdcolor())
-                )
-                {
-                    jcomp.setBackground(highLightColor);
-                    jcomp.setForeground(getFgColor(highLightColor));
-                }
+                if(jcomp instanceof JLabel) {
+                    if (iswhite(jcomp.getBackground()) || (
 
+                            (!jcomp.getBackground().equals(uds.getFirstcolor())) &&
+                                    (!jcomp.getBackground().equals(uds.getSecondcolor())) &&
+                                    (!jcomp.getBackground().equals(uds.getThirdcolor())))
+                        )
+                    {
+                        jcomp.setBackground(highLightColor);
+                        jcomp.setForeground(getFgColor(highLightColor));
+                    }
+                }
             }
 
         }
@@ -256,5 +259,17 @@ public abstract class TableUtils {
         }
 
 
+    }
+
+    protected static boolean iswhite(Color color)
+    {
+        if(color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
