@@ -170,13 +170,16 @@ public class SoccerSpreadTotalView extends ViewValue {
 
         if (null == sl) {
             spreadcolor = Color.WHITE;
-        } else if (tsnow - sl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 && clearts < sl.getCurrentts()) {
+        } else if (tsnow - sl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 && clearts < sl.getCurrentts()) //&& !iswhite(userDisplaySettings.getFirstcolor()))
+        {
             spreadcolor = userDisplaySettings.getFirstcolor();
         }
-        else if (tsnow - sl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000  && clearts < sl.getCurrentts()) {
+        else if (tsnow - sl.getCurrentts() <= userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000  && clearts < sl.getCurrentts())// && !iswhite(userDisplaySettings.getSecondcolor()))
+        {
             spreadcolor = userDisplaySettings.getSecondcolor();
         }
-        else if (clearts < sl.getCurrentts()) {
+        else if (clearts < sl.getCurrentts())// && !iswhite(userDisplaySettings.getThirdcolor()))
+        {
             spreadcolor = userDisplaySettings.getThirdcolor();
             //owen took out cuz maionscreen refreshes every sec
             //FireThreadManager.remove("S"+id);

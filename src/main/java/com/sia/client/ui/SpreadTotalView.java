@@ -145,12 +145,14 @@ public class SpreadTotalView extends ViewValue {
                 if (shouldGoRed(sl))
                 {
                     spreadcolor = userDisplaySettings.getFirstcolor();
+
                 }
                 else if (shouldGoSecondColor(sl))
                 {
                     spreadcolor = userDisplaySettings.getSecondcolor();
                 }
-                else if (clearts < sl.getCurrentts()) {
+                else if (clearts < sl.getCurrentts())// && !iswhite(userDisplaySettings.getThirdcolor()))
+                {
                     spreadcolor = userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("S"+id);
@@ -1873,21 +1875,21 @@ public class SpreadTotalView extends ViewValue {
     }
 
     private boolean shouldGoRed(Line line) {
+       // if(iswhite(userDisplaySettings.getFirstcolor())) return false;
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
         int ms = userDisplaySettings.getFirstmoveseconds()*1000;
         boolean isRed = (tsnow - curTime) <= ms && clearts <= curTime;
-        Game game = getGame();
         return isRed;
     }
 
     private boolean shouldGoSecondColor(Line line) {
+      //  if(iswhite(userDisplaySettings.getSecondcolor())) return false;
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
         int ms = userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000;
         boolean issecondcolor = (tsnow - curTime) <= ms && clearts <= curTime;
-        Game game = getGame();
-        return issecondcolor;
+         return issecondcolor;
     }
 
     public Game getGame() {

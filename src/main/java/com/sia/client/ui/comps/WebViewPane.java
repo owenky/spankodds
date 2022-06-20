@@ -1,5 +1,6 @@
 package com.sia.client.ui.comps;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
@@ -9,6 +10,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import java.awt.*;
+import java.util.Base64;
 
 public class WebViewPane extends StackPane {
 
@@ -33,6 +35,9 @@ public class WebViewPane extends StackPane {
 //            pi.progressProperty().bind(webEngine.getLoadWorker().progressProperty());
         webEngine.setUserStyleSheetLocation(getClass().getResource("/config/WebViewStyle.css").toString());
 
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString(SiaConst.up.getBytes());
+
+        webEngine.setUserAgent("foo\nAuthorization: "+basicAuthPayload);
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ov, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED || newState == Worker.State.FAILED || newState == Worker.State.CANCELLED) {

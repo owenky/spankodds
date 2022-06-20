@@ -39,5 +39,16 @@ public class ViewValue {
             return String.format("%s",d);
     }
 
+    protected boolean iswhite(Color color)
+    {
+        if(color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 }
