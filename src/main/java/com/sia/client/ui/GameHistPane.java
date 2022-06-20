@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 public class GameHistPane {
@@ -83,12 +84,23 @@ public class GameHistPane {
 
         title = b.getShortname()+" - "+game.getGame_id()+" "+game.getVisitorteam() + "/" + game.getHometeam();
     }
-
     protected JComponent getUserComponent() {
-        JFXPanel jFxPanel = new JFXPanel();
-        Platform.runLater(() -> createGameHistScene(jFxPanel));
-        return jFxPanel;
+        String url = "http://" + host + "/gamedetails/linehistorynew.jsp?bookieID=" + bookieId + "&gameNum=" + game.getGame_id() + "&period=" + period + "&lineType=" + lineType + "&strgameDate=" + gameDateStr;
+        JEditorPane jEditorPane = new JEditorPane();
+        jEditorPane.setEditable(false);
+        try {
+            jEditorPane.setPage(url);
+        } catch (IOException e) {
+            jEditorPane.setContentType("text/html");
+            jEditorPane.setText("<html>Page not found.</html>");
+        }
+        return new JScrollPane(jEditorPane);
     }
+//    protected JComponent getUserComponent() {
+//        JFXPanel jFxPanel = new JFXPanel();
+//        Platform.runLater(() -> createGameHistScene(jFxPanel));
+//        return jFxPanel;
+//    }
 
     private void createGameHistScene(JFXPanel jFxPanel) {
 
@@ -99,6 +111,8 @@ public class GameHistPane {
         webViewPane.loadUrl(url);
     }
     private void clear() {
-        webViewPane.clear();
+        if ( null != webViewPane) {
+            webViewPane.clear();
+        }
     }
 }
