@@ -106,5 +106,6 @@ public abstract class SiaConst {
     public static final String INJURIESHELPURL = "www.spankodds.com";
     public static final String TIMECHANGESHELPURL = "www.spankodds.com";
     public static final String GENERALHELPURL = "www.spankodds.com";
+    public static final String up = "general:fruitl00ps";
 
 }
