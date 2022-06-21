@@ -119,15 +119,18 @@ public class ConsensusMakerSettings
         return bookiesvec;
     }
 
-   public boolean isLeagueIncluded(int leagueid)
-   {
-       if(sportsVec.contains(leagueid+""))
-       {
-           return true;
-       }
-       return false;
-
-   }
+    public boolean isLeagueIncluded(String leagueid)
+    {
+        String[] leagues = getSportsselected().split(",");
+        for(int i=0;i < leagues.length; i++)
+        {
+            if(leagueid.equals(leagues[i]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public String getName() {
         return name;
@@ -183,12 +186,17 @@ public class ConsensusMakerSettings
     public String getsportsselectedhtmlbreakdown()
     {
         String html = "<table border=1><th bgcolor=yellow><u>"+this.toString()+"</u></th>";
-        Enumeration enum99 = sportsVec.elements();
-       String leagueid = "";
-        while(enum99.hasMoreElements())
+
+        String[] sports = getSportsselected().split(",");
+
+        //Enumeration enum99 = sportsVec.elements();
+        String leagueid = "";
+        //while(enum99.hasMoreElements())
+        for(int i= 0; i < sports.length; i++)
         {
             try {
-               leagueid = (String)enum99.nextElement();
+                //leagueid = (String)enum99.nextElement();
+                leagueid = sports[i];
                 Sport s = AppController.getSportByLeagueId(Integer.parseInt(leagueid));
                 html = html + "<tr><td>" + s.getLeaguename()+ "</td></tr>";
             }
