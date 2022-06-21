@@ -18,91 +18,524 @@ public class BestLines {
 	static int bestbookieid = 996;
 	static int consensusbookieid = 997;
 
+	static double upanddownforalt = 1.0;
 
 
 	public static void calculateconsensusspread(int gameid, int period)
 	{
+		double defaulthold = .0454;
+		if(AppController.getUserDisplaySettings().getConsensusnovig())
+		{
+			defaulthold = 0;
+		}
+		Game g = AppController.getGame(gameid);
+		int leagueid = g.getLeague_id();
+		double[] pusharray = LinesMoves.getleagueidArray(leagueid,period,"SPREAD");
+		if(pusharray == null) return;
+		int bookloop;
+		double althigh;
+		double altlow;
+		double bestalthigh;
+		double bestaltlow;
 		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
 		if(cms == null)
 		{
 			return;
 		}
 		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+
+		if(bookiesvec.size() == 0) return;
 		Vector<Spreadline> spreadlinevec = new Vector();
+		Vector spreadlineweightsvec = new Vector();
 		Iterator iter = bookiesvec.iterator();
-		while(iter.hasNext())
-		{
-			Bookie b = (Bookie)iter.next();
-			spreadlinevec.add(AppController.getSpreadline(b.getBookie_id(),gameid,period));
-		}
-	}
-	public static void calculateconsensustotal(int gameid, int period)
-	{
-		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
-		if(cms == null)
-		{
-			return;
-		}
-		Vector<Bookie> bookiesvec = cms.getBookiesVec();
-		Vector<Totalline>totallinevec = new Vector();
-		Iterator iter = bookiesvec.iterator();
-		while(iter.hasNext())
-		{
-			Bookie b = (Bookie)iter.next();
-			totallinevec.add(AppController.getTotalline(b.getBookie_id(),gameid,period));
-		}
-	}
-	public static void calculateconsensusmoney(int gameid, int period)
-	{
-		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
-		if(cms == null)
-		{
-			return;
-		}
-		Vector<Bookie> bookiesvec = cms.getBookiesVec();
-		Vector<Moneyline>moneylinevec = new Vector();
-		Iterator iter = bookiesvec.iterator();
-		while(iter.hasNext())
-		{
-			Bookie b = (Bookie)iter.next();
-			moneylinevec.add(AppController.getMoneyline(b.getBookie_id(),gameid,period));
-		}
-
-		//
-
-		Iterator iterline = moneylinevec.iterator();
-		double percentage = 100.00;
 		double deadpercentages = 0.0;
-		while(iterline.hasNext())
+		Vector visitorssvec = new Vector();
+		while(iter.hasNext())
 		{
-			Moneyline ml = (Moneyline)iter.next();
-			Bookie b = ml.getBookieObject();
-			if(ml.getCurrentvisitjuice() == 0 || ml.getCurrenthomejuice() == 0)
+			Bookie b = (Bookie)iter.next();
+			Spreadline sl = AppController.getSpreadline(b.getBookie_id(),gameid,period);
+			if(sl == null || sl.getCurrentvisitjuice() == 0 || sl.getCurrenthomejuice() == 0)
 			{
-				double thisbmpercent = Double.parseDouble(""+cms.getValue(b.getBookie_id()));
+				int thisbmpercent = cms.getValue(b.getBookie_id());
 				deadpercentages = deadpercentages + thisbmpercent;
 
 				//adjust every percentage by percentage/(1-deadpercentage)
 				//make sure this line is not factored in
 			}
+			else
+			{
+				spreadlinevec.add(sl);
+				visitorssvec.add(sl.getCurrentvisitspread());
+				spreadlineweightsvec.add((double)cms.getValue(b.getBookie_id()));
+			}
+		}
+		if(visitorssvec.size() == 0) return;
+		double baseindex = mode(visitorssvec);
+		double bestbaseindex = baseindex;
+		if(deadpercentages != 0)
+		{
+			double adjustment = 100-deadpercentages;
+			if(gameid == 25)
+			{
+				log("adjustment="+adjustment);
+			}
+			Vector spreadlineweightsvecadjusted = new Vector();
+			Iterator iter2 = spreadlineweightsvec.iterator();
+			while(iter2.hasNext())
+			{
+				double weight = (double)iter2.next();
+				weight = 100*weight/adjustment;
+				spreadlineweightsvecadjusted.add(weight);
+			}
+			spreadlineweightsvec = spreadlineweightsvecadjusted;
 		}
 
+		double convertedwinrates[] = new double[spreadlineweightsvec.size()];
+		double bookwinrates[] = new double[spreadlineweightsvec.size()];
+		double spankywinrate = 0;
+		for(int i =0; i < spreadlineweightsvec.size(); i++)
+		{
+			//spank left off
+			Spreadline sl = spreadlinevec.elementAt(i);
+			double[] doublearr = {sl.getCurrentvisitjuice(),sl.getCurrenthomejuice()};
+			bookwinrates[i] = marketToWinRate(doublearr);
+			convertedwinrates[i] = newWinRate(sl.getCurrentvisitspread(),bookwinrates[i],baseindex,pusharray);
+			if(gameid == 25)
+			{
+				//log(i+"conv win rate="+convertedwinrates[i]+"..weight="+totallineweightsvec.elementAt(i));
+			}
+		}
+		for(int i =0; i < spreadlineweightsvec.size(); i++)
+		{
+			spankywinrate = spankywinrate + convertedwinrates[i]*(double)spreadlineweightsvec.elementAt(i)/100.00;
+		}
+
+		for(double i= .5; i <= upanddownforalt; i = i+.5)
+		{
+			althigh = newWinRate(baseindex,spankywinrate,baseindex+upanddownforalt,pusharray);
+			altlow = newWinRate(baseindex,spankywinrate,baseindex-upanddownforalt,pusharray);
+			if(Math.abs(.5-althigh) < Math.abs(.5-spankywinrate))
+			{
+				bestbaseindex = baseindex+upanddownforalt;
+				spankywinrate = althigh;
+			}
+			if(Math.abs(.5-altlow) < Math.abs(.5-spankywinrate))
+			{
+				bestbaseindex = baseindex-upanddownforalt;
+				spankywinrate = altlow;
+			}
+		}
+
+
+
+
+		//double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		Spreadline consensussl = AppController.getSpreadline(consensusbookieid, gameid, period);
+		double visitspread = bestbaseindex;
+		double homespread = bestbaseindex*-1;
+		if(consensussl == null)
+		{
+			AppController.addSpreadline(new Spreadline(gameid,consensusbookieid,visitspread,spankymoneyline[0],homespread,spankymoneyline[1],0,period));
+		}
+		else
+		{
+			consensussl.setCurrentvisitspread(visitspread);
+			consensussl.setCurrentvisitjuice(spankymoneyline[0]);
+			consensussl.setCurrenthomespread(homespread);
+			consensussl.setCurrenthomejuice(spankymoneyline[1]);
+		}
+		if(gameid >= 901 && gameid <= 999)
+		{
+			//log(gameid+"..cms="+bestbaseindex+"o"+spankymoneyline[0]+"/u"+spankymoneyline[1]);
+		}
+
+
+
 	}
-	public static void calculateconsensusteamtotal(int gameid, int period)
+	public static void calculateconsensustotal(int gameid, int period)
 	{
+		double defaulthold = .0454;
+		if(AppController.getUserDisplaySettings().getConsensusnovig())
+		{
+			defaulthold = 0;
+		}
+		Game g = AppController.getGame(gameid);
+		int leagueid = g.getLeague_id();
+		double[] pusharray = LinesMoves.getleagueidArray(leagueid,period,"TOTAL");
+		if(pusharray == null) return;
+		int bookloop;
+		double althigh;
+		double altlow;
+		double bestalthigh;
+		double bestaltlow;
+
 		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
 		if(cms == null)
 		{
 			return;
 		}
 		Vector<Bookie> bookiesvec = cms.getBookiesVec();
-		Vector<TeamTotalline>teamtotallinevec = new Vector();
+		if(bookiesvec.size() == 0) return;
+		Vector<Totalline>totallinevec = new Vector();
+		Vector totallineweightsvec = new Vector();
 		Iterator iter = bookiesvec.iterator();
+		double deadpercentages = 0.0;
+		Vector oversvec = new Vector();
 		while(iter.hasNext())
 		{
 			Bookie b = (Bookie)iter.next();
-			teamtotallinevec.add(AppController.getTeamTotalline(b.getBookie_id(),gameid,period));
+			Totalline tl = AppController.getTotalline(b.getBookie_id(),gameid,period);
+			if(tl == null || tl.getCurrentoverjuice() == 0 || tl.getCurrentunderjuice() == 0)
+			{
+				int thisbmpercent = cms.getValue(b.getBookie_id());
+				deadpercentages = deadpercentages + thisbmpercent;
+
+				//adjust every percentage by percentage/(1-deadpercentage)
+				//make sure this line is not factored in
+			}
+			else
+			{
+				totallinevec.add(tl);
+				oversvec.add(tl.getCurrentover());
+				totallineweightsvec.add((double)cms.getValue(b.getBookie_id()));
+			}
 		}
+		if(oversvec.size() == 0) return;
+		double baseindex = mode(oversvec);
+		double bestbaseindex = baseindex;
+		if(deadpercentages != 0)
+		{
+			double adjustment = 100-deadpercentages;
+			if(gameid == 25)
+			{
+				log("adjustment="+adjustment);
+			}
+			Vector totallineweightsvecadjusted = new Vector();
+			Iterator iter2 = totallineweightsvec.iterator();
+			while(iter2.hasNext())
+			{
+				double weight = (double)iter2.next();
+				weight = 100*weight/adjustment;
+				totallineweightsvecadjusted.add(weight);
+			}
+			totallineweightsvec = totallineweightsvecadjusted;
+		}
+
+		double convertedwinrates[] = new double[totallineweightsvec.size()];
+		double bookwinrates[] = new double[totallineweightsvec.size()];
+		double spankywinrate = 0;
+		for(int i =0; i < totallineweightsvec.size(); i++)
+		{
+			//spank left off
+			Totalline tl = totallinevec.elementAt(i);
+			double[] doublearr = {tl.getCurrentoverjuice(),tl.getCurrentunderjuice()};
+			bookwinrates[i] = marketToWinRate(doublearr);
+			convertedwinrates[i] = newWinRate(tl.getCurrentover(),bookwinrates[i],baseindex,pusharray);
+			if(gameid == 25)
+			{
+				//log(i+"conv win rate="+convertedwinrates[i]+"..weight="+totallineweightsvec.elementAt(i));
+			}
+		}
+		for(int i =0; i < totallineweightsvec.size(); i++)
+		{
+			spankywinrate = spankywinrate + convertedwinrates[i]*(double)totallineweightsvec.elementAt(i)/100.00;
+		}
+
+		for(double i= .5; i <= upanddownforalt; i = i+.5)
+		{
+			althigh = newWinRate(baseindex,spankywinrate,baseindex+upanddownforalt,pusharray);
+			altlow = newWinRate(baseindex,spankywinrate,baseindex-upanddownforalt,pusharray);
+			if(Math.abs(.5-althigh) < Math.abs(.5-spankywinrate))
+			{
+				bestbaseindex = baseindex+upanddownforalt;
+				spankywinrate = althigh;
+			}
+			if(Math.abs(.5-altlow) < Math.abs(.5-spankywinrate))
+			{
+				bestbaseindex = baseindex-upanddownforalt;
+				spankywinrate = altlow;
+			}
+		}
+
+
+
+
+		//double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		Totalline consensustl = AppController.getTotalline(consensusbookieid, gameid, period);
+		if(consensustl == null)
+		{
+			AppController.addTotalline(new Totalline(gameid,consensusbookieid,bestbaseindex,spankymoneyline[0],bestbaseindex,spankymoneyline[1],0,period));
+		}
+		else
+		{
+			consensustl.setCurrentover(bestbaseindex);
+			consensustl.setCurrentunder(bestbaseindex);
+			consensustl.setCurrentoverjuice(spankymoneyline[0]);
+			consensustl.setCurrentunderjuice(spankymoneyline[1]);
+
+		}
+		if(gameid >= 901 && gameid <= 999)
+		{
+			//log(gameid+"..cms="+bestbaseindex+"o"+spankymoneyline[0]+"/u"+spankymoneyline[1]);
+		}
+
+	}
+	public static void calculateconsensusmoney(int gameid, int period)
+	{
+		double defaulthold = .0454;
+		if(AppController.getUserDisplaySettings().getConsensusnovig())
+		{
+			defaulthold = 0;
+		}
+		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
+
+		if(cms == null)
+		{
+			return;
+		}
+		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+		if(bookiesvec.size() == 0) return;
+		Vector<Moneyline>moneylinevec = new Vector();
+		Vector moneylineweightsvec = new Vector();
+		Iterator iter = bookiesvec.iterator();
+		double deadpercentages = 0.0;
+		while(iter.hasNext())
+		{
+			Bookie b = (Bookie)iter.next();
+			Moneyline ml = AppController.getMoneyline(b.getBookie_id(),gameid,period);
+			if(ml == null || ml.getCurrentvisitjuice() == 0 || ml.getCurrenthomejuice() == 0)
+			{
+				int thisbmpercent = cms.getValue(b.getBookie_id());
+				deadpercentages = deadpercentages + thisbmpercent;
+
+				//adjust every percentage by percentage/(1-deadpercentage)
+				//make sure this line is not factored in
+			}
+			else
+			{
+				moneylinevec.add(ml);
+				moneylineweightsvec.add((double)cms.getValue(b.getBookie_id()));
+			}
+		}
+		if(moneylinevec.size() == 0) return;
+		if(gameid == 25)
+		{
+			log("deadpercentages="+deadpercentages);
+		}
+		if(deadpercentages != 0)
+		{
+			double adjustment = 100-deadpercentages;
+			if(gameid == 25)
+			{
+				log("adjustment="+adjustment);
+			}
+			Vector moneylineweightsvecadjusted = new Vector();
+			Iterator iter2 = moneylineweightsvec.iterator();
+			while(iter2.hasNext())
+			{
+				double weight = (double)iter2.next();
+				weight = 100*weight/adjustment;
+				moneylineweightsvecadjusted.add(weight);
+			}
+			moneylineweightsvec = moneylineweightsvecadjusted;
+		}
+
+		double convertedwinrates[] = new double[moneylineweightsvec.size()];
+		double spankywinrate = 0;
+	 for(int i =0; i < moneylineweightsvec.size(); i++)
+	 {
+	 	Moneyline ml = moneylinevec.elementAt(i);
+		 double[] doublearr = {ml.getCurrentvisitjuice(),ml.getCurrenthomejuice()};
+	 	convertedwinrates[i] = marketToWinRate(doublearr);
+		 if(gameid == 25)
+		 {
+			 log(i+"conv win rate="+convertedwinrates[i]+"..weight="+moneylineweightsvec.elementAt(i));
+		 }
+	 }
+		for(int i =0; i < moneylineweightsvec.size(); i++)
+		{
+			spankywinrate = spankywinrate + convertedwinrates[i]*(double)moneylineweightsvec.elementAt(i)/100.00;
+		}
+		//double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		Moneyline consensusml = AppController.getMoneyline(consensusbookieid, gameid, period);
+		if(consensusml == null)
+		{
+			AppController.addMoneyline(new Moneyline(gameid,consensusbookieid,spankymoneyline[0],spankymoneyline[1],-99999,0,period));
+		}
+		else
+		{
+			consensusml.setCurrentvisitjuice(spankymoneyline[0]);
+			consensusml.setCurrenthomejuice(spankymoneyline[1]);
+
+		}
+		if(gameid == 25)
+		{
+			log("cms="+spankymoneyline[0]+"/"+spankymoneyline[1]);
+		}
+
+	}
+	public static void calculateconsensusteamtotal(int gameid, int period)
+	{
+		double defaulthold = .0454;
+		if(AppController.getUserDisplaySettings().getConsensusnovig())
+		{
+			defaulthold = 0;
+		}
+		Game g = AppController.getGame(gameid);
+		int leagueid = g.getLeague_id();
+		double[] pusharray = LinesMoves.getleagueidArray(leagueid,period,"TEAMTOTAL");
+		if(pusharray == null) return;
+		int bookloop;
+		double althighvisit;
+		double altlowvisit;
+		double bestalthighvisit;
+		double bestaltlowvisit;
+		double althighhome;
+		double altlowhome;
+		double bestalthighhome;
+		double bestaltlowhome;
+
+		ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gameid);
+		if(cms == null)
+		{
+			return;
+		}
+		Vector<Bookie> bookiesvec = cms.getBookiesVec();
+		if(bookiesvec.size() == 0) return;
+		Vector<TeamTotalline>teamtotallinevec = new Vector();
+		Vector teamtotallineweightsvec = new Vector();
+		Iterator iter = bookiesvec.iterator();
+		double deadpercentages = 0.0;
+		Vector visitoversvec = new Vector();
+		Vector homeoversvec = new Vector();
+		while(iter.hasNext())
+		{
+			Bookie b = (Bookie)iter.next();
+			TeamTotalline tl = AppController.getTeamTotalline(b.getBookie_id(),gameid,period);
+			if(tl == null || tl.getCurrentvisitoverjuice() == 0 || tl.getCurrentvisitunderjuice() == 0
+			|| tl.getCurrenthomeoverjuice() == 0 || tl.getCurrenthomeunderjuice() == 0)
+			{
+				int thisbmpercent = cms.getValue(b.getBookie_id());
+				deadpercentages = deadpercentages + thisbmpercent;
+
+				//adjust every percentage by percentage/(1-deadpercentage)
+				//make sure this line is not factored in
+			}
+			else
+			{
+				teamtotallinevec.add(tl);
+				visitoversvec.add(tl.getCurrentvisitover());
+				homeoversvec.add(tl.getCurrenthomeover());
+				teamtotallineweightsvec.add((double)cms.getValue(b.getBookie_id()));
+			}
+		}
+		if(visitoversvec.size() == 0) return;
+		if(homeoversvec.size() == 0) return;
+		double baseindexvisit = mode(visitoversvec);
+		double bestbaseindexvisit = baseindexvisit;
+		double baseindexhome = mode(homeoversvec);
+		double bestbaseindexhome = baseindexhome;
+		if(deadpercentages != 0)
+		{
+			double adjustment = 100-deadpercentages;
+
+			Vector teamtotallineweightsvecadjusted = new Vector();
+			Iterator iter2 = teamtotallineweightsvec.iterator();
+			while(iter2.hasNext())
+			{
+				double weight = (double)iter2.next();
+				weight = 100*weight/adjustment;
+				teamtotallineweightsvecadjusted.add(weight);
+			}
+			teamtotallineweightsvec = teamtotallineweightsvecadjusted;
+		}
+
+		double convertedwinratesvisit[] = new double[teamtotallineweightsvec.size()];
+		double bookwinratesvisit[] = new double[teamtotallineweightsvec.size()];
+		double spankywinratevisit = 0;
+		double convertedwinrateshome[] = new double[teamtotallineweightsvec.size()];
+		double bookwinrateshome[] = new double[teamtotallineweightsvec.size()];
+		double spankywinratehome = 0;
+		for(int i =0; i < teamtotallineweightsvec.size(); i++)
+		{
+			//spank left off
+			TeamTotalline tl = teamtotallinevec.elementAt(i);
+			double[] doublearrvisit = {tl.getCurrentvisitoverjuice(),tl.getCurrentvisitunderjuice()};
+			bookwinratesvisit[i] = marketToWinRate(doublearrvisit);
+			convertedwinratesvisit[i] = newWinRate(tl.getCurrentvisitover(),bookwinratesvisit[i],baseindexvisit,pusharray);
+			double[] doublearrhome = {tl.getCurrenthomeoverjuice(),tl.getCurrenthomeunderjuice()};
+			bookwinrateshome[i] = marketToWinRate(doublearrhome);
+			convertedwinrateshome[i] = newWinRate(tl.getCurrenthomeover(),bookwinrateshome[i],baseindexhome,pusharray);
+
+		}
+		for(int i =0; i < teamtotallineweightsvec.size(); i++)
+		{
+			spankywinratevisit = spankywinratevisit + convertedwinratesvisit[i]*(double)teamtotallineweightsvec.elementAt(i)/100.00;
+			spankywinratehome = spankywinratehome + convertedwinrateshome[i]*(double)teamtotallineweightsvec.elementAt(i)/100.00;
+		}
+
+		for(double i= .5; i <= upanddownforalt; i = i+.5)
+		{
+			althighvisit = newWinRate(baseindexvisit,spankywinratevisit,baseindexvisit+upanddownforalt,pusharray);
+			altlowvisit = newWinRate(baseindexvisit,spankywinratevisit,baseindexvisit-upanddownforalt,pusharray);
+			if(Math.abs(.5-althighvisit) < Math.abs(.5-spankywinratevisit))
+			{
+				bestbaseindexvisit = baseindexvisit+upanddownforalt;
+				spankywinratevisit = althighvisit;
+			}
+			if(Math.abs(.5-altlowvisit) < Math.abs(.5-spankywinratevisit))
+			{
+				bestbaseindexvisit = baseindexvisit-upanddownforalt;
+				spankywinratevisit = altlowvisit;
+			}
+			althighhome = newWinRate(baseindexhome,spankywinratehome,baseindexhome+upanddownforalt,pusharray);
+			altlowhome = newWinRate(baseindexhome,spankywinratehome,baseindexhome-upanddownforalt,pusharray);
+			if(Math.abs(.5-althighhome) < Math.abs(.5-spankywinratehome))
+			{
+				bestbaseindexhome = baseindexhome+upanddownforalt;
+				spankywinratehome = althighhome;
+			}
+			if(Math.abs(.5-altlowhome) < Math.abs(.5-spankywinratehome))
+			{
+				bestbaseindexhome = baseindexhome-upanddownforalt;
+				spankywinratehome = altlowhome;
+			}
+
+		}
+
+
+
+
+		//double[] spankymoneyline = winRateToMoneyLine(spankywinrate,defaulthold);
+		double[] spankymoneylinevisit = winRateToMoneyLine(spankywinratevisit,defaulthold);
+		double[] spankymoneylinehome = winRateToMoneyLine(spankywinratehome,defaulthold);
+		TeamTotalline consensustl = AppController.getTeamTotalline(consensusbookieid, gameid, period);
+		if(consensustl == null)
+		{
+			AppController.addTeamTotalline(new TeamTotalline(gameid,consensusbookieid,bestbaseindexvisit,spankymoneylinevisit[0],bestbaseindexvisit,spankymoneylinevisit[1],bestbaseindexhome,spankymoneylinehome[0],bestbaseindexhome,spankymoneylinehome[1],0,period));
+		}
+		else
+		{
+			consensustl.setCurrentvisitover(bestbaseindexvisit);
+			consensustl.setCurrentvisitunder(bestbaseindexvisit);
+			consensustl.setCurrentvisitoverjuice(spankymoneylinevisit[0]);
+			consensustl.setCurrentvisitunderjuice(spankymoneylinevisit[1]);
+			consensustl.setCurrenthomeover(bestbaseindexhome);
+			consensustl.setCurrenthomeunder(bestbaseindexhome);
+			consensustl.setCurrenthomeoverjuice(spankymoneylinehome[0]);
+			consensustl.setCurrenthomeunderjuice(spankymoneylinehome[1]);
+
+		}
+		if(gameid >= 901 && gameid <= 999)
+		{
+			//log(gameid+"..cms="+bestbaseindex+"o"+spankymoneyline[0]+"/u"+spankymoneyline[1]);
+		}
+
+
+		// still need to implement
 	}
 
 
@@ -1113,7 +1546,148 @@ public class BestLines {
 //            //log("gameid="+gameid+"..bhsl="+bhsl.getBookieid()+"..bhsl="+bhsl.getCurrenthomespread()+bhsl.getCurrenthomejuice());
 //        }
 
+
+		calculateconsensusspread(gameid,period);
+		calculateconsensustotal(gameid,period);
+		calculateconsensusmoney(gameid,period);
+		calculateconsensusteamtotal(gameid,period);
+
     }
+
+	public static double winRateToMoneyLine(double w)
+	{
+		if( w>= .5)
+		{
+			return Math.round(-100*w/(1-w));
+		}
+		else
+		{
+			return Math.round(100*(1-w)/w);
+		}
+	}
+
+	public static double[] winRateToMoneyLine(double winp, double hold)
+	{
+		double[] retvalue = new double[2];
+		double w1 = winp+hold/2.0;
+		double w2 = (1-winp)+hold/2.0;
+		retvalue[0] = winRateToMoneyLine(w1);
+		retvalue[1] = winRateToMoneyLine(w2);
+
+		return retvalue;
+	}
+
+	public static double moneyLineToWinRate(double ml)
+	{
+		if(ml >= 100)
+		{
+			return 100/(100+ml);
+		}
+		else if(ml <= -100)
+		{
+			return ml/(ml-100);
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	public static double marketToWinRate(double[] mls)
+	{
+		double w1 = moneyLineToWinRate(mls[0]);
+		double w2 = moneyLineToWinRate(mls[1]);
+		return w1/(w1+w2);
+	}
+
+
+
+	public static double newWinRate(double oldindex,double oldwinrate,double newindex,double[] pusharray)
+	{
+
+		int startpoint = (int)Math.round(oldindex*2);
+		int lastpoint = (int)Math.round(newindex*2);
+		int pusindex;
+		int pushloop;
+		int pushtarget=0;
+		int stepdir;
+		double gains = 0;
+
+
+		if(startpoint < lastpoint)
+		{
+			stepdir = 1;
+		}
+		else if(startpoint > lastpoint)
+		{
+			stepdir = -1;
+		}
+		else // they're the same
+		{
+			return oldwinrate;
+		}
+
+		pushloop = startpoint;
+		while(pushloop != lastpoint)
+		{
+			pushloop = pushloop +stepdir;
+			if(pushloop/2 == ((double)pushloop)/2)
+			{
+				if(stepdir  == 1)
+				{
+					pushtarget = Math.abs(pushloop/2);
+				}
+				else if(stepdir == -1)
+				{
+					pushtarget = Math.abs(pushloop)/2;
+				}
+				gains = gains +pusharray[pushtarget]/2/(1-pusharray[pushtarget]);
+			}
+			else
+			{
+				pushtarget = Math.abs(pushloop)/2;
+				gains = gains +pusharray[pushtarget]/2;
+			}
+		}
+		if(newindex > oldindex)
+		{
+			return oldwinrate+gains;
+		}
+		else
+		{
+			return oldwinrate - gains;
+		}
+	}
+
+	public static double newWinRate(double oldindex,Moneyline line,double newindex,double[] pusharray)
+	{
+		double[] doublearr = {line.getCurrentvisitjuice(),line.getCurrenthomejuice()};
+		return newWinRate(oldindex, marketToWinRate(doublearr),newindex,pusharray);
+
+	}
+	public static double mode(Vector items) {
+
+		double[] a = new double[items.size()];
+		for (int i = 0; i < items.size(); ++i)
+		{
+			a[i] = (double)items.elementAt(i);
+		}
+		double maxValue = a[0];
+		int maxCount = 0;
+
+		for (int i = 0; i < a.length; ++i) {
+			int count = 0;
+			for (int j = 0; j < a.length; ++j) {
+				if (a[j] == a[i]) ++count;
+			}
+			if (count > maxCount) {
+				maxCount = count;
+				maxValue = a[i];
+			}
+		}
+
+		return maxValue;
+	}
 
 
 }

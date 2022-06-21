@@ -217,6 +217,7 @@ public class Moneyline extends Line implements Serializable {
         }
 
         BestLines.calculatebestmoney(gameid, period);
+        BestLines.calculateconsensusmoney(gameid, period);
         return this.whowasbet;
 
 

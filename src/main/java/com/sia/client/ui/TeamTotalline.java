@@ -262,6 +262,7 @@ public class TeamTotalline extends Line {
 
 
         BestLines.calculatebestteamtotal(gameid, period);
+        BestLines.calculateconsensusteamtotal(gameid, period);
         return whowasbet;
 
     }

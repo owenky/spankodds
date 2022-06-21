@@ -104,12 +104,19 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
 
         Hashtable cmshash = AppController.getConsensusMakerSettings();
         Enumeration enum98 = cmshash.elements();
+        String html = "<html><table><tr>";
         while(enum98.hasMoreElements())
         {
+            html = html+"<td align=top valign=top>";
+            ConsensusMakerSettings cmsi = (ConsensusMakerSettings)enum98.nextElement();
+            html = html+cmsi.getsportsselectedhtmlbreakdown()+"</td>";
 
-            cmsvec.add((ConsensusMakerSettings) enum98.nextElement());
+
+            cmsvec.add(cmsi);
 
         }
+        html = html +"</tr></table>";
+        JLabel htmllabel = new JLabel(html);
         //sportlist[9] = "Auto Racing";
         cmscombobox = new JComboBox(cmsvec);
         //cmscombobox.setMaximumRowCount(cmshash.size());
@@ -205,7 +212,12 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
                 }
 
             AppController.addConsensusMakerSetting(cms);
-
+                SpankyWindow.applyToAllWindows((tp)-> {
+                    SpankyWindow sw = SpankyWindow.findSpankyWindow(tp.getWindowIndex());
+                    sw.revalidate();
+                    sw.repaint();
+                    sw.getSportsTabPane().rebuildMainScreen();
+                });
 
 
             } catch (Exception e) {
@@ -239,10 +251,23 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
         box3.setBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        JPanel pan1 = new JPanel(new FlowLayout());
+        JPanel pan2 = new JPanel(new FlowLayout());
 
+
+        pan1.add(createnewbutton);
+        pan1.add(new JLabel("           OR           "));
+        pan1.add(cmscombobox);
+        pan2.add(htmllabel);
+
+        /*
         box1.add(createnewbutton);
         box2.add(new JLabel("           OR           "));
         box3.add(cmscombobox);
+        box3.add(htmllabel);
+*/
+        box1.add(pan1);
+        box1.add(pan2);
 
 
         selectedList.revalidate();
@@ -250,10 +275,10 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
         selectedList.setEnabled(false);
 
         // Add the boxes to the content pane.
-       // userComponent.add(box1);
         userComponent.add(box1);
-        userComponent.add(box2);
-        userComponent.add(box3);
+       // userComponent.add(box1);
+       // userComponent.add(box2);
+       // userComponent.add(box3);
 
 
 
@@ -284,6 +309,8 @@ public class ConsensusMakerGui extends AbstractLayeredDialog implements ActionLi
             {
                 return;
             }
+
+
             cms = (ConsensusMakerSettings) cmscombobox.getSelectedItem();
             showdelbutton = true;
 
