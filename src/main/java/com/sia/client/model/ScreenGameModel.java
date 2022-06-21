@@ -3,6 +3,7 @@ package com.sia.client.model;
 import com.sia.client.config.ColumnSettings;
 import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.LineRenderer;
 import com.sia.client.ui.LinesTableData;
@@ -77,8 +78,9 @@ public class ScreenGameModel {
     private List<TableColumn> createColumns() {
         List<Bookie> newBookiesVec = AppController.getBookiesVec();
         List<Bookie> hiddencols = AppController.getHiddenCols();
-        List<TableColumn> result = new ArrayList<>(newBookiesVec.size());
+        List<TableColumn> result = new ArrayList<>(newBookiesVec.size()+1);
 
+        result.add(createNoteColumn());
         for (int k = 0; k < newBookiesVec.size(); k++) {
             Bookie b = newBookiesVec.get(k);
 
@@ -87,7 +89,7 @@ public class ScreenGameModel {
             }
             TableColumn column;
 
-            column = new TableColumn(k, 30, null, null) {
+            column = new TableColumn(k+1, 30, null, null) {
                 @Override
                 public TableCellRenderer getCellRenderer() {
                     //deferred construction of TableCellRenderer to avoid EDT vialation when building model in worker thread -- 2021-12-12
@@ -100,31 +102,6 @@ public class ScreenGameModel {
 
             column.setHeaderValue(b.getShortname());
             column.setIdentifier(b.getBookie_id());
-//            if (b.getBookie_id() == 990) {
-//                column.setPreferredWidth(60);
-//            } else if (b.getBookie_id() == 994) {
-//                column.setPreferredWidth(80);
-//            } else if (b.getBookie_id() == 995) {
-//                column.setPreferredWidth(60);
-//            }
-//            else if (b.getBookie_id() == 991) {
-//                column.setPreferredWidth(40);
-//            } else if (b.getBookie_id() == 992) {
-//                column.setPreferredWidth(45);
-//            } else if (b.getBookie_id() == 993) {
-//                if (screenProperty.getSpankyWindowConfig().isShortteam()) {
-//                    column.setPreferredWidth(30);
-//                } else {
-//                    column.setPreferredWidth(screenProperty.getCurrentmaxlength() * 7);
-//                }
-//
-//            } else if (b.getBookie_id() > 1000) {
-//                column.setMinWidth(10);
-//                column.setPreferredWidth(65);
-//            } else {
-//                column.setMinWidth(10);
-//                column.setPreferredWidth(30);
-//            }
             ColumnSettings columnSettings = Config.instance().getColumnSettings();
             column.setPreferredWidth(columnSettings.getColumnWidth(column.getHeaderValue()));
             result.add(column);
@@ -132,7 +109,12 @@ public class ScreenGameModel {
 
         return result;
     }
-
+    private TableColumn createNoteColumn() {
+        TableColumn tc = new TableColumn(0,30,null,null);
+        tc.setHeaderValue(SiaConst.NodeColumnHeader);
+        tc.setIdentifier(BookieManager.NoteColumnBookieId);
+        return tc;
+    }
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, screenProperty, newgamegroupvec, gameGroupHeader, allColumns);
         if (sportType.equals(SportType.Soccer)) {

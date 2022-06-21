@@ -20,13 +20,15 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick, 1, userRenderBorderColr);
     private final TableCellRendererProvider tableCellRendererProvider;
-    private final JLabel headerCellRender = new JLabel();
+    private static final JLabel headerCellRender = new JLabel();
+    private static final JPanel render = new JPanel();
+    private static final JLabel noteRender = new JLabel();
 
     public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProperty columnHeaderProperty ){
         this.tableCellRendererProvider = tableCellRendererProvider;
-        this.headerCellRender.setOpaque(true);
-        this.headerCellRender.setBackground(columnHeaderProperty.getHeaderBackground());
-        this.headerCellRender.setBorder(BorderFactory.createEmptyBorder());
+        headerCellRender.setOpaque(true);
+        headerCellRender.setBackground(columnHeaderProperty.getHeaderBackground());
+        headerCellRender.setBorder(BorderFactory.createEmptyBorder());
     }
 
     @Override
@@ -34,6 +36,9 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
         if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
+        }   else if ( table instanceof RowHeaderGameTable && ((RowHeaderGameTable)table).isNoteColumn(column) ) {
+            noteRender.setText(null==value?"":String.valueOf(value));
+            return noteRender;
         }
         Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         JPanel cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
@@ -46,7 +51,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     }
     private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
 
-        JPanel render = new JPanel();
+        render.removeAll();
 
         BorderLayout bl = new BorderLayout();
         render.setLayout(bl);

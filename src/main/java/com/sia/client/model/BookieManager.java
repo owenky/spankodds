@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class BookieManager {
 
+    public static final int NoteColumnBookieId;
     private static final String key_value_separator = "=";
     private static final List<String> defaultFixedColList;
     private static final List<String> defaultShownColList;
@@ -24,11 +25,12 @@ public class BookieManager {
 
     static {
         Integer [] fixedColArr = {994, 990, 991, 992, 993, 1017};
-        defaultFixedColList = Arrays.asList(fixedColArr).stream().map(String::valueOf).collect(Collectors.toList());
+        defaultFixedColList = Arrays.stream(fixedColArr).map(String::valueOf).collect(Collectors.toList());
         Integer [] shownColArr = {17, 620, 271, 880, 42, 299, 46, 256, 16, 140, 320, 33, 20, 19, 205, 107, 175, 133, 14, 41, 53, 71, 70, 72, 99, 57, 188,
                 214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017,
                 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017};
-        defaultShownColList =  Arrays.asList(shownColArr).stream().map(String::valueOf).collect(Collectors.toList());
+        defaultShownColList =  Arrays.stream(shownColArr).map(String::valueOf).collect(Collectors.toList());
+        NoteColumnBookieId = Arrays.stream(shownColArr).reduce(Integer.MIN_VALUE, Math::max) +1;
     }
 
     public static BookieManager instance() {

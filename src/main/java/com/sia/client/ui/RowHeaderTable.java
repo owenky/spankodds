@@ -1,9 +1,7 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.model.AccessableToGame;
-import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
@@ -13,6 +11,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster, AccessableToGame<V> {
@@ -113,8 +112,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 
 
 	}
-
-
 	@Override
 	public void setRowMargin(int rowMargin) {
 		//don't set row margin, use main table's row margin
@@ -136,21 +133,30 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		if ( mainTable == null){
 			return;
 		}
-
+		preferredWidth = 0;
 		if ( hasRowNumber) {
 			TableColumn theColumn_ = cm.getRowNoColumn();
 			addColumn(theColumn_);
+			preferredWidth +=  theColumn_.getPreferredWidth();
 		}
 
-		preferredWidth = 0;
-		List<Integer> lockColumns = mainTable.getLockedColumns();
-		if ( null != lockColumns) {
-			for (Integer tcIndex : lockColumns) {
-				TableColumn tc = mainTable.getColumnFromDataModel(tcIndex);
-				cm.addColumn( tc);
-				preferredWidth += tc.getPreferredWidth();
-			}
+		for (TableColumn tc : getColumns()) {
+			cm.addColumn( tc);
+			preferredWidth += tc.getPreferredWidth();
 		}
+	}
+	protected List<TableColumn> getColumns() {
+		List<Integer> lockColumns = mainTable.getLockedColumns();
+		if ( null == lockColumns) {
+			lockColumns = new ArrayList<>(0);
+		}
+		List<TableColumn> columns = new ArrayList<>(lockColumns.size()+1);
+
+		for (Integer tcIndex : lockColumns) {
+			TableColumn tc = mainTable.getColumnFromDataModel(tcIndex);
+			columns.add(tc);
+		}
+		return columns;
 	}
 	public int getPreferredWidth() {
 		return preferredWidth;
@@ -212,12 +218,4 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	public String toString() {
 		return getName();
 	}
-//	@Override
-//	public void tableChanged(TableModelEvent e) {
-//		super.tableChanged(e);
-//		if ( (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) &&  null != mainTable  ) {
-//			//super method discard row model, need to re-config row height
-//			mainTable.configHeaderRow();
-//		}
-//	}
 }
