@@ -33,6 +33,11 @@ public class UserDisplaySettings {
     private Boolean soccerquarter;
 
     private Boolean showaltcolor;
+
+    private Boolean consensusnovig;
+    private Boolean besttiestotheleft;
+
+
     private Color altcolor;
 
     private Color openercolor;
@@ -254,6 +259,35 @@ public class UserDisplaySettings {
     public void setThirdcolor(Color thirdcolor) {
         this.thirdcolor = thirdcolor;
     }
+
+    @JsonProperty
+    public Boolean getConsensusnovig() {
+        if ( null == consensusnovig) {
+            consensusnovig = true;
+        }
+        return consensusnovig;
+    }
+
+    @JsonProperty
+    public void setConsensusnovig(Boolean consensusnovig) {
+        this.consensusnovig = consensusnovig;
+    }
+
+    @JsonProperty
+    public Boolean getBesttiestotheleft() {
+        if ( null == besttiestotheleft) {
+            besttiestotheleft = true;
+        }
+        return besttiestotheleft;
+    }
+
+    @JsonProperty
+    public void setBesttiestotheleft(Boolean besttiestotheleft) {
+        this.besttiestotheleft = besttiestotheleft;
+    }
+
+
+
     @JsonProperty
     public boolean getAutofitdata() {
         if ( null == autofitdata) {

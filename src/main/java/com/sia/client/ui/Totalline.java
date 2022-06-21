@@ -211,6 +211,7 @@ public class Totalline extends Line implements Serializable {
 
 
         BestLines.calculatebesttotal(gameid, period);
+        BestLines.calculateconsensustotal(gameid, period);
         return this.whowasbet;
 
     }
@@ -288,7 +289,10 @@ public class Totalline extends Line implements Serializable {
             return "";
         }
 
-
+        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
+        {
+           // System.out.println("short in "+o+""+oj+".."+u+""+uj);
+        }
 
         double juice = 0;
         if (oj == uj && oj == -110 && o==u) {
@@ -367,6 +371,11 @@ public class Totalline extends Line implements Serializable {
             retvalue = retvalue.replace(".25", "\u00BC");
             retvalue = retvalue.replace(".75", "\u00BE");
         }
+
+        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
+        {
+           // System.out.println("short out"+retvalue);
+        }
         return retvalue;
 
     }
@@ -387,6 +396,12 @@ public class Totalline extends Line implements Serializable {
     }
 
     public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
+
+        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
+        {
+            //System.out.println("other in "+o+""+oj+".."+u+""+uj);
+        }
+
         String retvalue = "";
 
         if (uj == 0) {
@@ -470,6 +485,12 @@ public class Totalline extends Line implements Serializable {
             retvalue = retvalue.replace(".25", "\u00BC");
             retvalue = retvalue.replace(".75", "\u00BE");
         }
+        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
+        {
+          //  System.out.println("other out"+retvalue);
+        }
+
+
         return retvalue;
 
     }

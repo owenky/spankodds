@@ -248,6 +248,7 @@ public class Spreadline extends Line {
         }
 
         BestLines.calculatebestspread(gameid, period);
+        BestLines.calculateconsensusspread(gameid, period);
         return sl.whowasbet;
 
 

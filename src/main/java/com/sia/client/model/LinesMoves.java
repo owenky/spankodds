@@ -978,6 +978,10 @@ public class LinesMoves
         {
             return true;
         }
+        else if (movePercent == 0 && !AppController.getUserDisplaySettings().getBesttiestotheleft())
+        {
+            return true;
+        }
         else
         {
             return false;
@@ -992,9 +996,20 @@ public class LinesMoves
         }
         if(type.indexOf("OVER") != -1)
         {
-            if (oldline <= newline && oldjuice >= newjuice) {
-                return true;
-            } else {
+            if (oldline <= newline && oldjuice >= newjuice)
+            {
+                if (oldline == newline && oldjuice == newjuice  && !AppController.getUserDisplaySettings().getBesttiestotheleft())
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+            }
+            else
+                {
                 return false;
             }
 
@@ -1002,9 +1017,17 @@ public class LinesMoves
         }
         else
         {
-            if (oldline >= newline && oldjuice >= newjuice) {
-                return true;
-            } else {
+            if (oldline >= newline && oldjuice >= newjuice)
+            {
+                if (oldline == newline && oldjuice == newjuice && !AppController.getUserDisplaySettings().getBesttiestotheleft()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            else
+                {
                 return false;
             }
         }

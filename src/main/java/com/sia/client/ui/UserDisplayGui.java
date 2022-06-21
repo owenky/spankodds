@@ -88,6 +88,9 @@ public class UserDisplayGui extends AbstractLayerFrame {
 
     JToggleButton soccerquarterlinebutton = new JToggleButton("soccerquarterlines", checkimage, "Click to show .25 and .75 instead of \u00BC and \u00BE", ximage, "Click to show \u00BC and \u00BE instead of .25 and .75");
 
+    JToggleButton consenssusnovigbutton = new JToggleButton("consensusnovig", checkimage, "Click to attach vig to Consensus Line", ximage, "Click to Remove Vig From Consensus Line");
+    JToggleButton besttiestotheleftbutton = new JToggleButton("besttiestotheleft", checkimage, "Click to have most right best line highlighted", ximage, "Click to have most left best line highlighted");
+
     private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
     private final JLabel editStatusLabel = new JLabel();
 
@@ -103,7 +106,15 @@ public class UserDisplayGui extends AbstractLayerFrame {
     }
     private void init() {
         savebutton.addActionListener(this::save);
+        savebutton.addActionListener(ae -> {
 
+        SpankyWindow.applyToAllWindows((tp)-> {
+            SpankyWindow sw = SpankyWindow.findSpankyWindow(tp.getWindowIndex());
+            sw.revalidate();
+            sw.repaint();
+            sw.getSportsTabPane().rebuildMainScreen();
+        });
+        });
         clearcolorbutton.addActionListener(ae -> {
             try {
                 int result = JOptionPane.showConfirmDialog(null,"Are You Sure You Would Like To Clear All Column Colors?","Column Colors",JOptionPane.YES_NO_OPTION);
@@ -205,6 +216,9 @@ public class UserDisplayGui extends AbstractLayerFrame {
         JLabel altcolorlabel = new JLabel("Have Rows Alternating Color? - ");
 
         JLabel soccerquarterlabel = new JLabel("Display \u00BC and \u00BE for Soccer");
+
+        JLabel consensusnoviglabel = new JLabel("Remove Vig From Consensus Line?");
+        JLabel besttiestotheleftlabel = new JLabel("Most Left Best Line Highlighted");
 
 
         JLabel uplabel = new JLabel(Utils.getImageIcon(SiaConst.ImageFile.ICON_UP));
@@ -415,6 +429,16 @@ public class UserDisplayGui extends AbstractLayerFrame {
         c.gridy = 8;
         c.gridx = 0;
         c.gridwidth = 2;
+        panel2.add(besttiestotheleftbutton, c);
+        c.gridx = 4;
+        c.gridwidth = 3;
+        panel2.add(besttiestotheleftlabel, c);
+
+
+
+        c.gridy = 10;
+        c.gridx = 0;
+        c.gridwidth = 2;
         panel2.add(altcolorbutton, c);
         c.gridx = 4;
         c.gridwidth = 3;
@@ -423,13 +447,21 @@ public class UserDisplayGui extends AbstractLayerFrame {
         c.gridwidth = 1;
         panel2.add(altcolorChooserButton, c);
 
-        c.gridy = 10;
+        c.gridy = 12;
         c.gridx = 0;
         c.gridwidth = 2;
         panel2.add(soccerquarterlinebutton, c);
         c.gridx = 4;
         c.gridwidth = 3;
         panel2.add(soccerquarterlabel, c);
+
+        c.gridy = 14;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        panel2.add(consenssusnovigbutton, c);
+        c.gridx = 4;
+        c.gridwidth = 3;
+        panel2.add(consensusnoviglabel, c);
 
 
 
@@ -599,6 +631,8 @@ public class UserDisplayGui extends AbstractLayerFrame {
                 .bindCompProp("openercolor",openercolorChooserButton)
                 .bindCompProp("rowhighlightcolor",rowhighlightcolorChooserButton)
                 .bindCompProp("soccerquarter",soccerquarterlinebutton)
+                .bindCompProp("consensusnovig",consenssusnovigbutton)
+                .bindCompProp("besttiestotheleft",besttiestotheleftbutton)
                 .bindCompProp("lastcolor",lastcolorChooserButton);
 
     }

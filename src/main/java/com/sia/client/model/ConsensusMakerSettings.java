@@ -159,16 +159,17 @@ public class ConsensusMakerSettings
 
     public String gethtmlbreakdown()
     {
-        String html = "<table>";
+        String html = "<table border=1>";
         Enumeration enum99 = bookievalues.keys();
         String bookieid = "";
         while(enum99.hasMoreElements())
         {
             try {
                 bookieid = (String)enum99.nextElement();
-                String bookmaker = AppController.getBookie(Integer.parseInt(bookieid)).getShortname();
-                String percentage = (String)bookievalues.get(bookieid);
-                html = html + "<tr><td>" + bookmaker + "</td><td>" + percentage + "</td></tr>";
+                String bookmaker = (AppController.getBookie(Integer.parseInt(bookieid))).getShortname();
+                int percentage = (int)bookievalues.get(bookieid);
+                if(percentage > 0)
+                html = html + "<tr><td>" + bookmaker + "</td><td>" + percentage + "%</td></tr>";
             }
             catch(Exception ex)
             {
@@ -179,7 +180,26 @@ public class ConsensusMakerSettings
         return html;
     }
 
-
+    public String getsportsselectedhtmlbreakdown()
+    {
+        String html = "<table border=1><th bgcolor=yellow><u>"+this.toString()+"</u></th>";
+        Enumeration enum99 = sportsVec.elements();
+       String leagueid = "";
+        while(enum99.hasMoreElements())
+        {
+            try {
+               leagueid = (String)enum99.nextElement();
+                Sport s = AppController.getSportByLeagueId(Integer.parseInt(leagueid));
+                html = html + "<tr><td>" + s.getLeaguename()+ "</td></tr>";
+            }
+            catch(Exception ex)
+            {
+                System.out.println("error getting leagueid "+leagueid+".."+ex);
+            }
+        }
+        html = html+"</table>";
+        return html;
+    }
     public void setBookievalues(Hashtable bookievalues) {
         this.bookievalues = bookievalues;
     }
