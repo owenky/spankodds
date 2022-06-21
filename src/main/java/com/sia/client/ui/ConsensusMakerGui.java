@@ -741,10 +741,16 @@ Hashtable allsportsidforsportname = new Hashtable();
 
                 leaguenameidhash.put(value.getLeaguename(), "" + value.getLeague_id());
                 String leagueids = (String)leaguenameidhash.get(value.getSportname());
-                leagueids = leagueids+value.getLeague_id()+",";
+                log("before sport name="+value.getSportname()+"..leaguename="+value.getLeaguename()+".."+value.getLeague_id()+"..idstillnow="+leagueids);
+                if(!leagueids.equals(""+value.getLeague_id())) // used for sports with one id
+                {
+                    leagueids = leagueids + value.getLeague_id() + ",";
+
+                }
+
                 leaguenameidhash.put(value.getSportname(),leagueids);
 
-                log("sport name="+value.getSportname()+"..leaguename="+value.getLeaguename());
+                log("after sport name="+value.getSportname()+"..leaguename="+value.getLeaguename()+".."+value.getLeague_id()+"..idstillnow="+leagueids);
                 if (checkedsports.contains("" + value.getLeague_id()) || checkedsports.contains(value.getSportname())
                         || checkedsports.contains("All Sports"))
                 {
