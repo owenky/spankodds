@@ -67,6 +67,7 @@ public class LinesMoves
         mlbh1sides[1] = .13;
         mlbh1sides[2] = .10;
 
+        /*
         mlbtotals[5] = .140; // made up
         mlbtotals[6] = .082; // made up
         mlbtotals[7] = .124;
@@ -82,6 +83,24 @@ public class LinesMoves
         mlbtotals[17] = .079; // made up
         mlbtotals[18] = .055; // made up
         mlbtotals[19] = .079; // made up
+*/
+//elihu
+        mlbtotals[5] = .140; // made up
+        mlbtotals[6] = .083; // made up
+        mlbtotals[7] = .118;
+        mlbtotals[8] = .081;
+        mlbtotals[9] = .111;
+        mlbtotals[10] = .07;
+        mlbtotals[11] = .090;
+        mlbtotals[12] = .061;
+        mlbtotals[13] = .083;
+        mlbtotals[14] = .055; // made up
+        mlbtotals[15] = .079; // made up
+        mlbtotals[16] = .055; // made up
+        mlbtotals[17] = .079; // made up
+        mlbtotals[18] = .055; // made up
+        mlbtotals[19] = .079; // made up
+
 
         mlbh1totals[4] = .14;
         mlbh1totals[5] = .12;
