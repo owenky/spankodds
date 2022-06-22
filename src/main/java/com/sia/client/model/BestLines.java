@@ -95,7 +95,7 @@ public class BestLines {
 		double spankywinrate = 0;
 		for(int i =0; i < spreadlineweightsvec.size(); i++)
 		{
-			//spank left off
+
 			Spreadline sl = spreadlinevec.elementAt(i);
 			double[] doublearr = {sl.getCurrentvisitjuice(),sl.getCurrenthomejuice()};
 			bookwinrates[i] = marketToWinRate(doublearr);
@@ -111,19 +111,19 @@ public class BestLines {
 		}
 
 
-		String sportname = AppController.getSportByLeagueId(leagueid).getSportname();
+	String sportname = AppController.getSportByLeagueId(leagueid).getSportname();
 	if(!sportname.equalsIgnoreCase("Baseball") && !sportname.equalsIgnoreCase("Hockey"))
 	{
 		for (double i = .5; i <= upanddownforalt; i = i + .5)
 		{
-			althigh = newWinRate(baseindex, spankywinrate, baseindex + upanddownforalt, pusharray);
-			altlow = newWinRate(baseindex, spankywinrate, baseindex - upanddownforalt, pusharray);
+			althigh = newWinRate(baseindex, spankywinrate, baseindex + i, pusharray);
+			altlow = newWinRate(baseindex, spankywinrate, baseindex - i, pusharray);
 			if (Math.abs(.5 - althigh) < Math.abs(.5 - spankywinrate)) {
-				bestbaseindex = baseindex + upanddownforalt;
+				bestbaseindex = baseindex + i;
 				spankywinrate = althigh;
 			}
 			if (Math.abs(.5 - altlow) < Math.abs(.5 - spankywinrate)) {
-				bestbaseindex = baseindex - upanddownforalt;
+				bestbaseindex = baseindex - i;
 				spankywinrate = altlow;
 			}
 		}
