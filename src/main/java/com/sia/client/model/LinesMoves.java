@@ -101,15 +101,15 @@ public class LinesMoves
         mlbtotals[18] = .055; // made up
         mlbtotals[19] = .079; // made up
 
-
-        mlbh1totals[4] = .14;
-        mlbh1totals[5] = .12;
-        mlbh1totals[6] = .12; // made up
-        mlbh1totals[7] = .10; // made up
-        mlbh1totals[8] = .10; // made up
-        mlbh1totals[9] = .10; // made up
-        mlbh1totals[10] = .10; // made up
-        mlbh1totals[11] = .10; // made up
+        mlbh1totals[4] = .155;
+        mlbh1totals[4] = .129;
+        mlbh1totals[5] = .106;
+        mlbh1totals[6] = .106;
+        mlbh1totals[7] = .055;
+        mlbh1totals[8] = .04; // made up
+        mlbh1totals[9] = .03; // made up
+        mlbh1totals[10] = .02; // made up
+        mlbh1totals[11] = .01; // made up
 
 
         // made up all hockey push data
