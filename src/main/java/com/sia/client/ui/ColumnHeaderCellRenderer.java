@@ -4,6 +4,7 @@ import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.TableCellRendererProvider;
+import com.sia.client.model.UserDisplaySettings;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -23,6 +24,12 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private static final JLabel headerCellRender = new JLabel();
     private static final JPanel render = new JPanel();
     private static final JLabel noteRender = new JLabel();
+    private static final Color [] rowAltColors;
+
+    static {
+        UserDisplaySettings uds = AppController.getUserDisplaySettings();
+        rowAltColors = new Color[] {Color.WHITE,uds.getAltcolor()};
+    }
 
     public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProperty columnHeaderProperty ){
         this.tableCellRendererProvider = tableCellRendererProvider;
@@ -34,17 +41,19 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 
+        JComponent cellRender;
         if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
         }   else if ( TableUtils.isNoteColumn(table,column) ) {
             noteRender.setText(null==value?"":String.valueOf(value));
-            return noteRender;
+            int colorIndex = (row-1)%rowAltColors.length;
+            if ( colorIndex < 0) colorIndex = 0;
+            noteRender.setBackground(rowAltColors[colorIndex]);
+            cellRender = noteRender;
+        } else {
+            Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
         }
-        Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        JPanel cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
-        //old
-        //TableUtils.highLightCellWhenRowSelected(table,cellRender,row, SiaConst.Ui.ROW_SELECTED_COLOR);
-        //new
         TableUtils.highLightCellWhenRowSelected(table,cellRender,row, AppController.getUserDisplaySettings().getRowhighlightcolor());
 
         return cellRender;
