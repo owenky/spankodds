@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.model.*;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
@@ -57,8 +58,8 @@ public class CustomTab2 extends AbstractLayeredDialog {
     private final int activeSportsTabPaneIndex;
     private final JPanel panel = new JPanel();
 
-    public CustomTab2(SportsTabPane stp,String title,int activeSportsTabPaneIndex) {
-        super(stp,title);
+    public CustomTab2(SportsTabPane stp, String title, int activeSportsTabPaneIndex) {
+        super(stp,title,SiaConst.CUSTOMTABHELPURL);
         this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
         tabname = new JTextField(10);
         tabname.setDocument(new JTextFieldLimit(10));
@@ -82,7 +83,7 @@ public class CustomTab2 extends AbstractLayeredDialog {
         initScreen();
     }
     public CustomTab2(SportsTabPane stp,String title,int activeSportsTabPaneIndex, String tabnamestr, int tabindex) {
-        super(stp,title);
+        super(stp,title,SiaConst.CUSTOMTABHELPURL);
         this.activeSportsTabPaneIndex = activeSportsTabPaneIndex;
 //        this.tabindex = tabindex;
 

@@ -92,20 +92,24 @@ public abstract class SiaConst {
 
     public static final String CONSENSUSHELPURL = "www.spankodds.com";
     public static final String MANAGEBOOKIEHELPURL = "www.spankodds.com";
-    public static final String DISPLAYSETTINGSHELPURL = "www.spankodds.com";
     public static final String CHARTHELPURL = "www.spankodds.com";
     public static final String LINEMOVESHELPURL = "www.spankodds.com";
     public static final String LINESEEKERHELPURL = "www.spankodds.com";
     public static final String OPENERHELPURL = "www.spankodds.com";
     public static final String LIMITCHANGEHELPURL = "www.spankodds.com";
-    public static final String STARTEDHELPURL = "www.spankodds.com";
-    public static final String FINALHELPURL = "www.spankodds.com";
-    public static final String HALFTIMEHELPURL = "www.spankodds.com";
-    public static final String LINEUPSHELPURL = "www.spankodds.com";
-    public static final String OFFICIALSHELPURL = "www.spankodds.com";
-    public static final String INJURIESHELPURL = "www.spankodds.com";
-    public static final String TIMECHANGESHELPURL = "www.spankodds.com";
     public static final String GENERALHELPURL = "www.spankodds.com";
+    public static final String CUSTOMTABHELPURL = "www.spankodds.com";
+
+
+    public static final String GAMEALERTHELPURL = "www.spankodds.com";
+    public static final String STARTEDHELPURL = GAMEALERTHELPURL;
+    public static final String FINALHELPURL = GAMEALERTHELPURL;
+    public static final String HALFTIMEHELPURL = GAMEALERTHELPURL;
+    public static final String LINEUPSHELPURL = GAMEALERTHELPURL;
+    public static final String OFFICIALSHELPURL = GAMEALERTHELPURL;
+    public static final String INJURIESHELPURL = GAMEALERTHELPURL;
+    public static final String TIMECHANGESHELPURL = GAMEALERTHELPURL;
+
     public static final String up = "general:fruitl00ps";
 
 }

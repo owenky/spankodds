@@ -31,7 +31,9 @@ public class SportsMenuBar extends JMenuBar {
     private final JMenu tabsmenu = new JMenu("Tabs");
     private final JMenu windowmenu = new JMenu("Window");
     private final JMenu settingmenu = new JMenu("Setting");
+    private final JMenu helpmenu = new JMenu("Help");
     private final JMenu reportmenu = new JMenu("Report");
+
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
@@ -53,20 +55,11 @@ public class SportsMenuBar extends JMenuBar {
         filemenu.add(storeprefs);
 
 
-        JMenuItem helpvideo = new JMenuItem("Help",new ImageIcon(Utils.getMediaResource("video-query.png")));
-        helpvideo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI(SiaConst.GENERALHELPURL));
-                } catch (URISyntaxException | IOException ex) {
-                    System.out.println("error opening up url="+SiaConst.GENERALHELPURL);
-                }
-            }
-        } );
 
 
 
-        filemenu.add(helpvideo);
+
+       // filemenu.add(helpvideo);
 
 
 
@@ -182,6 +175,22 @@ public class SportsMenuBar extends JMenuBar {
         add(settingmenu);
         JMenu fontconfig = Config.instance().getFontConfig().createFontMenu();
         settingmenu.add(fontconfig);
+
+        add(helpmenu);
+
+        JMenuItem helpvideo = new JMenuItem("Help",new ImageIcon(Utils.getMediaResource("video-query.png")));
+        helpvideo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI(SiaConst.GENERALHELPURL));
+                } catch (URISyntaxException | IOException ex) {
+                    System.out.println("error opening up url="+SiaConst.GENERALHELPURL);
+                }
+            }
+        } );
+
+        helpmenu.add(helpvideo);
+
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
         LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb, AlertAttrManager.getAlertSeekerMethods());
