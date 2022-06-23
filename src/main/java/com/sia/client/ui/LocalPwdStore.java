@@ -16,7 +16,7 @@ public class LocalPwdStore extends PasswordStore {
     public boolean set(final String user, final String s1, final char[] chars) {
         config.updateCredential(user,new String(chars));
         try {
-            config.save();
+            config.save(user); // this will save user as 1st item in config file
             return true;
         } catch (IOException e) {
             Utils.log(e);

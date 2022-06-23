@@ -106,8 +106,8 @@ public class SpankOdds {
             }
         };
         loginPane.setBanner(Utils.getImage("spankoddstextonsoft.png"));
-       // loginPane.setBannerText("Spank Odds");
-
+        // loginPane.setBannerText("Spank Odds");
+        loginPane.setUserName(localUserStore.getLastUserName());
         LoginListener loginListener = new LoginAdapter() {
             @Override
             public void loginSucceeded(LoginEvent source) {
@@ -135,6 +135,8 @@ public class SpankOdds {
                     //Platform.runLater(new Runnable() { @Override public void run() {lbllogin.setText("Processing...");}});
                     //
                     client.login(name, String.valueOf(password));
+                    localUserStore.removeUserName(name);
+                    localPwdStore.set(name,"",password);
                     Thread.sleep(1000);
 
                 } catch (Exception ex) {
