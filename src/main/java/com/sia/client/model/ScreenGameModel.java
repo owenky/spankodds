@@ -3,7 +3,6 @@ package com.sia.client.model;
 import com.sia.client.config.ColumnSettings;
 import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.LineRenderer;
 import com.sia.client.ui.LinesTableData;
@@ -78,7 +77,7 @@ public class ScreenGameModel {
     private List<TableColumn> createColumns() {
         List<Bookie> newBookiesVec = AppController.getBookiesVec();
         List<Bookie> hiddencols = AppController.getHiddenCols();
-        List<TableColumn> result = new ArrayList<>(newBookiesVec.size()+1);
+        List<TableColumn> result = new ArrayList<>(newBookiesVec.size());
 
         for (int k = 0; k < newBookiesVec.size(); k++) {
             Bookie b = newBookiesVec.get(k);
@@ -88,7 +87,7 @@ public class ScreenGameModel {
             }
             TableColumn column;
 
-            column = new TableColumn(k+1, 30, null, null) {
+            column = new TableColumn(k, 30, null, null) {
                 @Override
                 public TableCellRenderer getCellRenderer() {
                     //deferred construction of TableCellRenderer to avoid EDT vialation when building model in worker thread -- 2021-12-12
@@ -108,6 +107,7 @@ public class ScreenGameModel {
 
         return result;
     }
+
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, screenProperty, newgamegroupvec, gameGroupHeader, allColumns);
         if (sportType.equals(SportType.Soccer)) {
