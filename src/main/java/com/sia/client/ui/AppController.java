@@ -151,7 +151,8 @@ public class AppController {
         while(enum2.hasMoreElements())
         {
             ConsensusMakerSettings cms = (ConsensusMakerSettings) enum2.nextElement();
-            if(cms.getSportsVec().contains(leagueid+""))
+            if(cms.isLeagueIncluded(""+leagueid))
+
             {
                 returncms = cms;
                 break;

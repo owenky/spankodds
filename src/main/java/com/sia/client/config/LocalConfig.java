@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Vector;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class LocalConfig {
     private static final String userPwdSeparator = ":";
     private static final String configFileName=System.getProperty("java.io.tmpdir")+"spankodds.config";
     private final Properties properties;
-    private final Set<String> users;
+    private final Vector<String> users; // changed from HashSet to maintain order of items read
     private final Map<String,String> user2pwd;
 
     public static LocalConfig instance() {
@@ -41,7 +41,7 @@ public class LocalConfig {
 
         String credentialStr = properties.getProperty(UserKey,"");
         String [] credentials = credentialStr.split(userSeparateStr);
-        users = new HashSet<>(credentials.length);
+        users = new Vector(credentials.length);
         user2pwd = new HashMap<>(credentials.length);
         for (final String credential : credentials) {
             if ( ! "".equals(credential.trim())) {
@@ -104,6 +104,20 @@ public class LocalConfig {
         StringBuilder credentialStr = new StringBuilder();
         for(String usr: users) {
             if ( ! "".equals(usr)) {
+                credentialStr.append(usr).append(userPwdSeparator).append(user2pwd.get(usr)).append(userSeparateStr);
+            }
+        }
+        properties.setProperty(UserKey,credentialStr.toString());
+        try (final OutputStream outputstream
+                     = new FileOutputStream(configFileName)) {
+            properties.store(outputstream,null);
+        }
+    }
+    public void save(String username) throws IOException { // this will put last logged username in front
+        StringBuilder credentialStr = new StringBuilder();
+        credentialStr.append(username).append(userPwdSeparator).append(user2pwd.get(username)).append(userSeparateStr);
+        for(String usr: users) {
+            if ( ! "".equals(usr) && !username.equals(usr)) {
                 credentialStr.append(usr).append(userPwdSeparator).append(user2pwd.get(usr)).append(userSeparateStr);
             }
         }
