@@ -1,11 +1,9 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.Game;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.TableColumn;
 
 public class RowHeaderGameTable extends RowHeaderTable<Game>{
 
@@ -15,10 +13,6 @@ public class RowHeaderGameTable extends RowHeaderTable<Game>{
         setSelectionModel(listSelectionModel);
         this.addMouseListener(GameTableMouseListener.instance());
         listSelectionModel.addListSelectionListener(GameTableMouseListener.instance());
-    }
-    public boolean isNoteColumn(int colViewIndex) {
-        TableColumn tc = getColumnModel().getColumn(colViewIndex);
-        return SiaConst.NodeColumnHeader.equals(tc.getHeaderValue());
     }
     @Override
     public void valueChanged(ListSelectionEvent e) {

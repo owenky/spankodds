@@ -19,6 +19,10 @@ import java.util.Set;
 
 public abstract class TableUtils {
 
+    public static boolean isNoteColumn(JTable table, int columnIndex) {
+        TableColumn tc = table.getColumnModel().getColumn(columnIndex);
+        return tc.getIdentifier() instanceof Integer && (Integer)tc.getIdentifier() == SiaConst.NoteColumnBookieId;
+    }
     public static void updateRowSelection(ColumnCustomizableTable<?> gameTable, ListSelectionEvent e) {
         if ( e.getValueIsAdjusting()) {
             return;

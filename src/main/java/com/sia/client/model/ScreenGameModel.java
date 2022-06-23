@@ -80,7 +80,6 @@ public class ScreenGameModel {
         List<Bookie> hiddencols = AppController.getHiddenCols();
         List<TableColumn> result = new ArrayList<>(newBookiesVec.size()+1);
 
-        result.add(createNoteColumn());
         for (int k = 0; k < newBookiesVec.size(); k++) {
             Bookie b = newBookiesVec.get(k);
 
@@ -108,12 +107,6 @@ public class ScreenGameModel {
         }
 
         return result;
-    }
-    private TableColumn createNoteColumn() {
-        TableColumn tc = new TableColumn(0,30,null,null);
-        tc.setHeaderValue(SiaConst.NodeColumnHeader);
-        tc.setIdentifier(BookieManager.NoteColumnBookieId);
-        return tc;
     }
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
         LinesTableData tableSection = new LinesTableData(sportType, screenProperty, newgamegroupvec, gameGroupHeader, allColumns);

@@ -2,7 +2,6 @@ package com.sia.client.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sia.client.model.BookieManager;
 import com.sia.client.ui.AppController;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class ColumnSettings {
         defaultColumnWidthMap.put(991,40);  //Time
         defaultColumnWidthMap.put(992,45);   //Gm#
         defaultColumnWidthMap.put(993,30); //Team
-        defaultColumnWidthMap.put(BookieManager.NoteColumnBookieId,40); //Note
+        defaultColumnWidthMap.put(SiaConst.NoteColumnBookieId,40); //Note
     }
 
     @JsonProperty

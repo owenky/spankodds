@@ -36,7 +36,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
         if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
-        }   else if ( table instanceof RowHeaderGameTable && ((RowHeaderGameTable)table).isNoteColumn(column) ) {
+        }   else if ( TableUtils.isNoteColumn(table,column) ) {
             noteRender.setText(null==value?"":String.valueOf(value));
             return noteRender;
         }
