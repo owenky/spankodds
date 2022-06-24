@@ -23,7 +23,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private final TableCellRendererProvider tableCellRendererProvider;
     private static final JLabel headerCellRender = new JLabel();
     private static final JPanel render = new JPanel();
-    private static final JLabel noteRender = new JLabel();
+    private static final JLabel noteRender = new NoteColumnRenderer();
     private static final Color [] rowAltColors;
 
     static {
@@ -49,6 +49,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
             int colorIndex = (row-1)%rowAltColors.length;
             if ( colorIndex < 0) colorIndex = 0;
             noteRender.setBackground(rowAltColors[colorIndex]);
+            setBorder(noteRender,table.getColumnCount(),column);
             cellRender = noteRender;
         } else {
             Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -58,14 +59,17 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
         return cellRender;
     }
-    private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
+    private static JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
 
         render.removeAll();
-
         BorderLayout bl = new BorderLayout();
         render.setLayout(bl);
-
         render.add(userComponent,BorderLayout.CENTER);
+        userComponent.setBorder(BorderFactory.createEmptyBorder());
+        setBorder(render,colCount,col);
+        return render;
+    }
+    private static void setBorder(JComponent jcomponent, int colCount, int col) {
 
         Border renderBorder;
         if (0 == col) {
@@ -75,8 +79,13 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         } else {
             renderBorder = userRenderBorderNormal;
         }
-        userComponent.setBorder(BorderFactory.createEmptyBorder());
-        render.setBorder(renderBorder);
-        return render;
+        jcomponent.setBorder(renderBorder);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////
+    private static class NoteColumnRenderer extends JLabel {
+        public NoteColumnRenderer() {
+            setOpaque(true);
+            setBorder(BorderFactory.createLineBorder(Color.gray));
+        }
     }
 }
