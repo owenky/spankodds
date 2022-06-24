@@ -73,12 +73,9 @@ public class InfoView {
             ld2.setBackgroundColor(Color.RED);
 
         } else {
-            if (g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)) {
-                ld1.setData(" " + g.getCurrentvisitorscore() + " " + makenullblank(g.getTimeremaining()));
-                ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus().toUpperCase());
-                ld1.setBackgroundColor(Color.RED);
-                ld2.setBackgroundColor(Color.RED);
-            } else if (g.getStatus().equalsIgnoreCase("Win")) {
+            ld1.setTooltip(g.getVisitorscoresupplemental()+g.getHomescoresupplemental());
+            ld2.setTooltip(g.getVisitorscoresupplemental()+g.getHomescoresupplemental());
+            if (g.getStatus().equalsIgnoreCase("Win")) {
                 ld1.setData(" ");
                 ld2.setData(" " + g.getStatus().toUpperCase());
                 ld1.setBackgroundColor(Color.RED);
@@ -95,14 +92,29 @@ public class InfoView {
                 ld1.setBackgroundColor(Color.RED);
                 ld2.setBackgroundColor(Color.RED);
 
-            } else {
-                if (g.getLeague_id() == 928 || g.getLeague_id() == 929 || g.getLeague_id() == 930) {
-                    ld1.setData(" " + g.getVisitorscoresupplemental());
-                    ld2.setData(" " + g.getHomescoresupplemental());
-                    ld1.setBackgroundColor(green);
-                    ld2.setBackgroundColor(green);
+            }
+           else if (g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)) {
+                if(g.getLeague_id() == 12)
+                {
+                    ld1.setTooltip("");
+                    ld2.setTooltip("");
+                    ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+ " " + g.getTimeremaining());
+                    ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+ " F");
+                    ld1.setBackgroundColor(Color.RED);
+                    ld2.setBackgroundColor(Color.RED);
 
-                } else if (g.getStatus().equalsIgnoreCase("Time")) {
+                }
+               else {
+
+
+                    ld1.setData(" " + g.getCurrentvisitorscore() + " " + makenullblank(g.getTimeremaining()));
+                    ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus().toUpperCase());
+                    ld1.setBackgroundColor(Color.RED);
+                    ld2.setBackgroundColor(Color.RED);
+                }
+            }  else {
+                //if (g.getLeague_id() == 928 || g.getLeague_id() == 929 || g.getLeague_id() == 930)
+                 if (g.getStatus().equalsIgnoreCase("Time")) {
 
                     ld1.setData(" " + g.getCurrentvisitorscore() + " " + displayHalftimeCountdown());
                     ld2.setData(" " + g.getCurrenthomescore() + " H/T");
@@ -111,10 +123,24 @@ public class InfoView {
 
 
                 } else {
-                    ld1.setData(" " + g.getCurrentvisitorscore() + " " + g.getTimeremaining());
-                    ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus());
-                    ld1.setBackgroundColor(green);
-                    ld2.setBackgroundColor(green);
+                     if(g.getLeague_id() == 12)
+                     {
+                         ld1.setTooltip("");
+                         ld2.setTooltip("");
+                         ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+ " " + g.getTimeremaining());
+                         ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+ " " + g.getStatus());
+                         ld1.setBackgroundColor(green);
+                         ld2.setBackgroundColor(green);
+
+                     }
+                     else {
+
+
+                         ld1.setData(" " + g.getCurrentvisitorscore() + " " + g.getTimeremaining());
+                         ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus());
+                         ld1.setBackgroundColor(green);
+                         ld2.setBackgroundColor(green);
+                     }
                 }
 
 
