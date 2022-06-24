@@ -100,31 +100,6 @@ public class ScreenGameModel {
 
             column.setHeaderValue(b.getShortname());
             column.setIdentifier(b.getBookie_id());
-//            if (b.getBookie_id() == 990) {
-//                column.setPreferredWidth(60);
-//            } else if (b.getBookie_id() == 994) {
-//                column.setPreferredWidth(80);
-//            } else if (b.getBookie_id() == 995) {
-//                column.setPreferredWidth(60);
-//            }
-//            else if (b.getBookie_id() == 991) {
-//                column.setPreferredWidth(40);
-//            } else if (b.getBookie_id() == 992) {
-//                column.setPreferredWidth(45);
-//            } else if (b.getBookie_id() == 993) {
-//                if (screenProperty.getSpankyWindowConfig().isShortteam()) {
-//                    column.setPreferredWidth(30);
-//                } else {
-//                    column.setPreferredWidth(screenProperty.getCurrentmaxlength() * 7);
-//                }
-//
-//            } else if (b.getBookie_id() > 1000) {
-//                column.setMinWidth(10);
-//                column.setPreferredWidth(65);
-//            } else {
-//                column.setMinWidth(10);
-//                column.setPreferredWidth(30);
-//            }
             ColumnSettings columnSettings = Config.instance().getColumnSettings();
             column.setPreferredWidth(columnSettings.getColumnWidth(column.getHeaderValue()));
             result.add(column);

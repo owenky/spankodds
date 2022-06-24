@@ -3,13 +3,19 @@ package com.sia.client.ui;
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
-import com.sia.client.model.*;
+import com.sia.client.model.Game;
+import com.sia.client.model.MainGameTableModel;
+import com.sia.client.model.SportType;
+import com.sia.client.ui.comps.NodeCellEditor;
 
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
+    private final TableCellEditor tableCellEditor = new NodeCellEditor();
     private final LineRenderer soccerLineRenderer = new LineRenderer(SportName.Soccer);
     private final LineRenderer lineRenderer = new LineRenderer();
     private final SportType sporetType;
@@ -75,6 +81,14 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
             rowHeight = super.computeRowHeight(rowModelIndex);
         }
         return rowHeight;
+    }
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        return TableUtils.isCellEditable(this,row,col);
+    }
+    @Override
+    public TableCellEditor getCellEditor(int row, int column) {
+        return tableCellEditor;
     }
     private boolean isSoccer(int rowViewIndex) {
         if ( sporetType.equals(SportType.Soccer)) {

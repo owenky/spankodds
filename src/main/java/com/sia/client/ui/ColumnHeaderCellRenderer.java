@@ -1,16 +1,15 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.TableCellRendererProvider;
+import com.sia.client.model.UserDisplaySettings;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.util.List;
 
 public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
@@ -20,38 +19,55 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
     private static final Border userRenderBorderFirstCol = new MatteBorder(0, userRenderBorderThick, userRenderBorderThick, userRenderBorderThick, userRenderBorderColr);
     private static final Border userRenderBorderLastCol = new MatteBorder(0, 0, userRenderBorderThick, 1, userRenderBorderColr);
     private final TableCellRendererProvider tableCellRendererProvider;
-    private final JLabel headerCellRender = new JLabel();
+    private static final JLabel headerCellRender = new JLabel();
+    private static final JPanel render = new JPanel();
+    private static final JLabel noteRender = new NoteColumnRenderer();
+    private static final Color [] rowAltColors;
+
+    static {
+        UserDisplaySettings uds = AppController.getUserDisplaySettings();
+        rowAltColors = new Color[] {Color.WHITE,uds.getAltcolor()};
+    }
 
     public ColumnHeaderCellRenderer(TableCellRendererProvider tableCellRendererProvider, ColumnHeaderProperty columnHeaderProperty ){
         this.tableCellRendererProvider = tableCellRendererProvider;
-        this.headerCellRender.setOpaque(true);
-        this.headerCellRender.setBackground(columnHeaderProperty.getHeaderBackground());
-        this.headerCellRender.setBorder(BorderFactory.createEmptyBorder());
+        headerCellRender.setOpaque(true);
+        headerCellRender.setBackground(columnHeaderProperty.getHeaderBackground());
+        headerCellRender.setBorder(BorderFactory.createEmptyBorder());
     }
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 
+        JComponent cellRender;
         if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
+        }   else if ( TableUtils.isNoteColumn(table,column) ) {
+            noteRender.setText(null==value?"":String.valueOf(value));
+            int colorIndex = (row-1)%rowAltColors.length;
+            if ( colorIndex < 0) colorIndex = 0;
+            noteRender.setBackground(rowAltColors[colorIndex]);
+            setBorder(noteRender,table.getColumnCount(),column);
+            cellRender = noteRender;
+        } else {
+            Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
         }
-        Component userComponent = tableCellRendererProvider.apply(row, column).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        JPanel cellRender = createJPanelWithPadding((JComponent) userComponent, table.getRowCount(), table.getColumnCount(), row, column);
-        //old
-        //TableUtils.highLightCellWhenRowSelected(table,cellRender,row, SiaConst.Ui.ROW_SELECTED_COLOR);
-        //new
         TableUtils.highLightCellWhenRowSelected(table,cellRender,row, AppController.getUserDisplaySettings().getRowhighlightcolor());
 
         return cellRender;
     }
-    private JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
+    private static JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
 
-        JPanel render = new JPanel();
-
+        render.removeAll();
         BorderLayout bl = new BorderLayout();
         render.setLayout(bl);
-
         render.add(userComponent,BorderLayout.CENTER);
+        userComponent.setBorder(BorderFactory.createEmptyBorder());
+        setBorder(render,colCount,col);
+        return render;
+    }
+    private static void setBorder(JComponent jcomponent, int colCount, int col) {
 
         Border renderBorder;
         if (0 == col) {
@@ -61,8 +77,13 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         } else {
             renderBorder = userRenderBorderNormal;
         }
-        userComponent.setBorder(BorderFactory.createEmptyBorder());
-        render.setBorder(renderBorder);
-        return render;
+        jcomponent.setBorder(renderBorder);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////
+    private static class NoteColumnRenderer extends JLabel {
+        public NoteColumnRenderer() {
+            setOpaque(true);
+            setBorder(BorderFactory.createLineBorder(Color.gray));
+        }
     }
 }

@@ -23,19 +23,26 @@ public class BookieManager {
     private int numfixedcols;
 
     static {
-        Integer [] fixedColArr = {994, 990, 991, 992, 993, 1017};
-        defaultFixedColList = Arrays.asList(fixedColArr).stream().map(String::valueOf).collect(Collectors.toList());
+        Integer [] fixedColArr = {995,994, 990, 991, 992, 993, 1017};
+        defaultFixedColList = Arrays.stream(fixedColArr).map(String::valueOf).collect(Collectors.toList());
         Integer [] shownColArr = {17, 620, 271, 880, 42, 299, 46, 256, 16, 140, 320, 33, 20, 19, 205, 107, 175, 133, 14, 41, 53, 71, 70, 72, 99, 57, 188,
                 214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017,
-                994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017};
-        defaultShownColList =  Arrays.asList(shownColArr).stream().map(String::valueOf).collect(Collectors.toList());
+                994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017, 995,994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017};
+        defaultShownColList =  Arrays.stream(shownColArr).map(String::valueOf).collect(Collectors.toList());
     }
 
     public static BookieManager instance() {
         return LazyInitHolder.instance;
     }
     private BookieManager() {
-
+        addBookie(new Bookie(990, "Details", "Dtals", "", ""));
+        addBookie(new Bookie(991, "Time", "Time", "", ""));
+        addBookie(new Bookie(992, SiaConst.GameNumColIden, SiaConst.GameNumColIden, "", ""));
+        addBookie(new Bookie(993, "Team", "Team", "", ""));
+        addBookie(new Bookie(994, "*Chart", "*Chart", "", ""));
+        addBookie(new Bookie(SiaConst.NoteColumnBookieId, "*Notes", "*Notes", "", ""));
+        addBookie(new Bookie(996, "*Best", "*Best", "", ""));
+        addBookie(new Bookie(997, "*Consensus", "*Cnus", "", ""));
     }
     public int getNumFixedCols() {
         return numfixedcols;
