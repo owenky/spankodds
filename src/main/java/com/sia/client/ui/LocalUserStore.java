@@ -52,7 +52,7 @@ public class LocalUserStore extends UserNameStore {
     public String getLastUserName()
     {
         String[] un = config.getUserNames();
-        if(un.length >0) return un[0];
+        if(un != null && un.length >0) return un[0];
         else return "";
     }
 
