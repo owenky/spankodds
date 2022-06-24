@@ -6,6 +6,7 @@ import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -160,10 +161,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	}
 	public int getPreferredWidth() {
 		return preferredWidth;
-	}
-	@Override
-	public boolean isCellEditable(int row, int col) {
-		return false;
 	}
 	@Override
     public TableColumnModel createDefaultColumnModel() {

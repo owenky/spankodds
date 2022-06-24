@@ -1,6 +1,5 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.TableCellRendererProvider;
@@ -11,7 +10,6 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.util.List;
 
 public class ColumnHeaderCellRenderer implements TableCellRenderer {
 

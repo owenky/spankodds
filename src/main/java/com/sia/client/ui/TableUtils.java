@@ -15,10 +15,24 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public abstract class TableUtils {
 
+    public static boolean isCellEditable(JTable table, int row, int column) {
+        int modelColIndex = table.convertColumnIndexToModel(column);
+        TableColumn tc = table.getColumnModel().getColumn(modelColIndex);
+        if ( null != tc.getIdentifier() && tc.getIdentifier().equals(SiaConst.NoteColumnBookieId) ) {
+
+            if ( table instanceof AccessableToGame) {
+                int rowModelIndex = table.convertRowIndexToModel(row);
+                return ((AccessableToGame)table).getGame(rowModelIndex).getGame_id() >0;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
     public static boolean isNoteColumn(JTable table, int columnIndex) {
         TableColumn tc = table.getColumnModel().getColumn(columnIndex);
         return tc.getIdentifier() instanceof Integer && (Integer) tc.getIdentifier() == SiaConst.NoteColumnBookieId;
