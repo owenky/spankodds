@@ -2,9 +2,7 @@ package com.sia.client.media;
 
 import com.sia.client.config.Utils;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -41,6 +39,13 @@ public class SoundPlayer {
 				try {
 					AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileUrl);
 					Clip clip = AudioSystem.getClip();
+					// need the following to avoid memory leak
+					clip.addLineListener(new LineListener() {
+						public void update(LineEvent myLineEvent) {
+							if (myLineEvent.getType() == LineEvent.Type.STOP)
+								clip.close();
+						}
+					});
 					clip.open(audioInputStream);
 					clip.start();
 				} catch (Exception ex) {
