@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.Utils;
+import com.sia.client.media.SoundPlayer;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.UrgentMessage;
@@ -106,10 +107,88 @@ public class UrgentsConsumer implements MessageListener {
 
                 new UrgentMessage("<HTML><H2>URGENT MESSAGE</H2>" +mesg+
                         "</HTML>", 20000, 2, AppController.getMainTabPane());
+            }
+            else // game related
+            {
+                String prefs = "";
+                String mesg = "";
+
+                int gameid = mapMessage.getInt("gameid");
+                Game g = AppController.getGame(gameid);
+
+                Sport s = AppController.getSportByLeagueId(g.getLeague_id());
+
+                if (messageType.equals("Injury"))
+                {
+                    prefs = AppController.getUser().getInjuryAlert();
+                    log("messageType:" + messageType + ", message=" + message);
+                    mesg = mapMessage.getString("urgentmessage");
+                    addMessageToAlertVector(mesg);
+                }
+                else if (messageType.equals("Officials"))
+                {
+
+                    prefs = AppController.getUser().getOfficialAlert();
+                    log("messageType:" + messageType + ", message=" + message);
+                    mesg = mapMessage.getString("urgentmessage");
+                    addMessageToAlertVector(mesg);
+                }
+                else if (messageType.equals("Lineups"))
+                {
+                    prefs = AppController.getUser().getLineupAlert();
+                    log("messageType:" + messageType + ", message=" + message);
+                    mesg = mapMessage.getString("urgentmessage");
+                    addMessageToAlertVector(mesg);
+                }
+                else
+                {
+                    return;
+                }
+
+
+
+                String[] arr = prefs.split("\\|");
+                boolean popup = false;
+                boolean sound = false;
+                int popupsecs = 15;
+                int location = 6;
+                String audiofile = "";
+                String[] sports;
+                boolean goodsport = false;
+
+                popup = Utils.parse(arr[0], popup);
+                sound = Utils.parse(arr[1], sound);
+                popupsecs = Utils.parse(arr[2], popupsecs);
+                location = Utils.parse(arr[3], location);
+                audiofile = arr[4];
+
+                try {
+                    sports = arr[5].split(",");
+                    for (String sportid : sports) {
+                        if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname()) || sportid.equalsIgnoreCase("All Sports")) {
+                            goodsport = true;
+                            break;
+                        }
+                    }
+                } catch (Exception ex) {
+                    log("exception in splitting=" + arr[5] + ".." + ex);
+                }
+
+
+                if (goodsport)
+                {
+                    if (popup)
+                    {
+                        new UrgentMessage("<HTML><H2>"+messageType.toUpperCase()+"</H2>"+mesg, popupsecs * 1000, location, AppController.getMainTabPane());
+                    }
+                    if (sound)
+                    {
+                        new SoundPlayer(audiofile);
+                    }
+                }
+
 
             }
-
-
 
         } catch (Exception e)
         {

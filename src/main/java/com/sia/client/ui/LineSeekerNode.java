@@ -311,6 +311,12 @@ public class LineSeekerNode {
               //  System.out.println("lineseekerflags...showneutralpopup="+showneutralpopup);
               //  System.out.println("lineseekerflags...neutralpopuplocation="+neutralpopuplocation);
               //  System.out.println("lineseekerflags...neutralpopupseconds="+neutralpopupseconds);
+                String mesg = html;
+                mesg = mesg.replaceAll("<H2>","<table><tr><td>");
+                mesg = mesg.replaceAll("</H2>","</td></tr></table>");
+                mesg = mesg.replaceAll("<br>","");
+                String hrmin = AppController.getCurrentHoursMinutes();
+                AppController.addAlert(hrmin,mesg);
                 if (html.indexOf("GOOD") != -1) {
                     if (playgoodaudio) {
                         new SoundPlayer(goodaudiofile);

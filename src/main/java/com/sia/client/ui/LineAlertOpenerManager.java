@@ -75,16 +75,16 @@ public class LineAlertOpenerManager
         }
         if(!leagueids.contains(""+leagueidtocheck))
         {
-            log("Opener but leagueid not included "+leagueidtocheck);
-            log(""+leagueids.toString());
+      //      log("Opener but leagueid not included "+leagueidtocheck);
+       //     log(""+leagueids.toString());
             return;
         }
         //step2 check if bookie id is checked off in sport
          ArrayList bookieschecked = (ArrayList)bookieidsBySport.get(sportname);
         if(!bookieschecked.contains(bid+""))
         {
-            log("Opener but bookie not included "+b+".."+b.getBookie_id());
-            log(""+bookieschecked.toString());
+         //   log("Opener but bookie not included "+b+".."+b.getBookie_id());
+        //    log(""+bookieschecked.toString());
             return;
         }
         //step 3 check if game period is checked off
@@ -102,7 +102,7 @@ public class LineAlertOpenerManager
         }
         else
         {
-            log("Opener but period not included "+period);
+        //    log("Opener but period not included "+period);
             return;
         }
         //step4 check if linetype is good
@@ -117,7 +117,7 @@ public class LineAlertOpenerManager
         }
         else
         {
-            log("Opener but type not included "+line.getType());
+        //    log("Opener but type not included "+line.getType());
             return;
         }
         // step 5 make sure we don't violate the renotify

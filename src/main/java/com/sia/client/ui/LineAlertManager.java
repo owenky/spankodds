@@ -16,6 +16,8 @@ import static com.sia.client.config.Utils.log;
 
 public class LineAlertManager {
     public static void checkMove(Line line) {
+        String hrmin = AppController.getCurrentHoursMinutes();
+        String mesg = "";
         if (line == null) {
             return;
         }
@@ -70,18 +72,22 @@ public class LineAlertManager {
                         if (a && b) {
                             continue; // this means both sides were hit so ignore it
                         }
+                        mesg = html;
+                        mesg = mesg.substring(mesg.lastIndexOf("<table>"));
+                        mesg = s.getLeaguename() + " " + g.getGameString()+mesg;
+
+                        AppController.addAlert(hrmin,mesg);
                         if (lan.isspreadplayaudio) {
                             new SoundPlayer(lan.spreadaudiofilename);
                         }
                         if (lan.isspreadshowpopup) {
 
-                            String hrmin = AppController.getCurrentHoursMinutes();
+
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
 //                            String popalertname = "Alert at:" + hrmin + "Spreadline Move Alert:" + lan.getName() + "," + teaminfo;
 //                            AppController.alertsVector.addElement(popalertname);
-                            String mesg = "Spreadline Move Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.addAlert(hrmin,mesg);
+
 
                             new UrgentMessage(html, lan.spreadpopupsecs * 1000, lan.spreadpopuplocation, AppController.getMainTabPane());
 
@@ -113,17 +119,20 @@ public class LineAlertManager {
                         if (a && b) {
                             continue; // this means both sides were hit so ignore it
                         }
+                        mesg = html;
+                        mesg = mesg.substring(mesg.lastIndexOf("<table>"));
+                        mesg = s.getLeaguename() + " " + g.getGameString()+mesg;
+                        AppController.addAlert(hrmin,mesg);
                         if (lan.istotalplayaudio) {
                             new SoundPlayer(lan.totalaudiofilename);
                         }
                         if (lan.istotalshowpopup) {
-                            String hrmin = AppController.getCurrentHoursMinutes();
+
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
 //                            String popalertname = "Alert at:" + hrmin + "\nTotalline Move Alert:" + lan.getName() + "," + teaminfo;
 //                            AppController.alertsVector.addElement(popalertname);
-                            String mesg = "Totalline Move Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.addAlert(hrmin,mesg);
+
 
                             new UrgentMessage(html, lan.totalpopupsecs * 1000, lan.totalpopuplocation, AppController.getMainTabPane());
                         }
@@ -153,17 +162,20 @@ public class LineAlertManager {
                         if (a && b) {
                             continue; // this means both sides were hit so ignore it
                         }
+                        mesg = html;
+                        mesg = mesg.substring(mesg.lastIndexOf("<table>"));
+                        mesg = s.getLeaguename() + " " + g.getGameString()+mesg;
+                        AppController.addAlert(hrmin,mesg);
                         if (lan.isteamtotalplayaudio) {
                             new SoundPlayer(lan.teamtotalaudiofilename);
                         }
                         if (lan.isteamtotalshowpopup) {
-                            String hrmin = AppController.getCurrentHoursMinutes();
+
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
 //                            String popalertname = "Alert at:" + hrmin + "\nTeamTotalline Alert:" + lan.getName() + "," + teaminfo;
 //                            AppController.alertsVector.addElement(popalertname);
-                            String mesg = "TeamTotalline Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.addAlert(hrmin,mesg);
+
 
                             new UrgentMessage(html, lan.teamtotalpopupsecs * 1000, lan.teamtotalpopuplocation, AppController.getMainTabPane());
                         }
@@ -192,18 +204,21 @@ public class LineAlertManager {
                         if (a && b) {
                             continue; // this means both sides were hit so ignore it
                         }
+                        mesg = html;
+                        mesg = mesg.substring(mesg.lastIndexOf("<table>"));
+                        mesg = s.getLeaguename() + " " + g.getGameString()+mesg;
+                        AppController.addAlert(hrmin,mesg);
                         if (lan.ismoneylineplayaudio) {
                             new SoundPlayer(lan.moneylineaudiofilename);
                         }
                         if (lan.ismoneylineshowpopup) {
 
-                            String hrmin = AppController.getCurrentHoursMinutes();
+
                             String teaminfo = g.getVisitorgamenumber() + "-" + g.getShortvisitorteam() + "@" + g.getHomegamenumber() + "-" + g.getShorthometeam();
 
 //                            String popalertname = "Alert at:" + hrmin + "\nMoneyline Alert:" + lan.getName() + "," + teaminfo;
 //                            AppController.alertsVector.addElement(popalertname);
-                            String mesg = "Moneyline Alert:" + lan.getName() + "," + teaminfo;
-                            AppController.addAlert(hrmin,mesg);
+
 
 
                             new UrgentMessage(html, lan.moneylinepopupsecs * 1000, lan.moneylinepopuplocation, AppController.getMainTabPane());
