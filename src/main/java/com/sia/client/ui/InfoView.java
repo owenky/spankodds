@@ -98,8 +98,39 @@ public class InfoView {
                 {
                     ld1.setTooltip("");
                     ld2.setTooltip("");
-                    ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+ " " );
-                    ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+ " F");
+                    String[] vscores = g.getVisitorscoresupplemental().split(",");
+                    String[] hscores = g.getHomescoresupplemental().split(",");
+                    int vwins = 0;
+                    int hwins = 0;
+                    String vwin = "";
+                    String hwin = "";
+                    for(int i = 0; i < vscores.length; i++)
+                    {
+                        if(Integer.parseInt(vscores[i]) > Integer.parseInt(hscores[i]))
+                        {
+                            vwins++;
+                        }
+                        else
+                        {
+                            hwins++;
+                        }
+                    }
+                    if(vwins >  hwins)
+                    {
+                        vwin = "WIN";
+                        hwin = "   ";
+                    }
+                    else if(hwins > vwins)
+                    {
+                        vwin = "   ";
+                        hwin = "WIN";
+                    }
+                    else
+                    {
+                        vwin = hwin = "TIE";
+                    }
+                    ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+" "+vwin);
+                    ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+" "+hwin);
                     ld1.setBackgroundColor(Color.RED);
                     ld2.setBackgroundColor(Color.RED);
 
