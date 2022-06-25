@@ -98,7 +98,7 @@ public class InfoView {
                 {
                     ld1.setTooltip("");
                     ld2.setTooltip("");
-                    ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+ " " + g.getTimeremaining());
+                    ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+ " " );
                     ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+ " F");
                     ld1.setBackgroundColor(Color.RED);
                     ld2.setBackgroundColor(Color.RED);
