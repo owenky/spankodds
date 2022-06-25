@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.AsciiChar;
 import com.sia.client.ui.LineAlertManager;
@@ -313,7 +314,7 @@ public class Spreadline extends Line {
 
     public String getShortPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
         boolean debug = false;
-        if(period == 1 && gameid == 903 && bookieid==996 && debug)
+        if(period == 0 && gameid == 951 && bookieid==599 && debug)
         {
             System.out.println(bookieid+"...leagueid="+leagueid+"...SHORTPRINTEDSPREAD="+vspread+".."+vjuice+".vs."+hspread+".."+hjuice);
         }
@@ -325,7 +326,12 @@ public class Spreadline extends Line {
 
         double spreadd = 0;
         double juice = 0;
-        if (vspread < hspread) {
+        if(vspread > 0 && hspread >0)
+        {
+            spreadd = vspread;
+            juice = vjuice;
+        }
+        else if (vspread < hspread) {
             spreadd = vspread;
             juice = vjuice;
         } else if (vspread > hspread) {
@@ -421,7 +427,7 @@ public class Spreadline extends Line {
         }
         char half = AsciiChar.getAscii(170);
 
-        if(period == 1 && gameid == 903 && debug && bookieid==996)
+        if(period == 0 && gameid == 951 && debug && bookieid==599)
         {
             System.out.println("retvalue="+retvalue);
         }
@@ -450,7 +456,7 @@ public class Spreadline extends Line {
 
     public String getOtherPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
         boolean debug = false;
-        if(period == 1 && gameid == 903 && bookieid==996 && debug)
+        if(period == 0 && gameid == 951 && bookieid==599 && debug)
         {
             System.out.println(bookieid+"OTHERPRINTEDSPREAD="+vspread+".."+vjuice+".vs."+hspread+".."+hjuice);
         }
@@ -463,7 +469,13 @@ public class Spreadline extends Line {
 
         double spreadd = 0;
         double juice = 0;
-        if (vspread < hspread) {
+        if(vspread > 0 && hspread >0)
+        {
+            spreadd = hspread;
+            juice = hjuice;
+        }
+
+        else if (vspread < hspread) {
             spreadd = hspread;
             juice = hjuice;
         } else if (vspread > hspread) {
@@ -549,7 +561,7 @@ public class Spreadline extends Line {
         if (retvalue.equals("0.75") || retvalue.equals("0.750")) {
             retvalue = ".75";
         }
-        if(period == 1 && gameid == 903 && debug && bookieid==996)
+        if(period == 0 && gameid == 951 && bookieid==599 && debug)
         {
             System.out.println("retvalue="+retvalue);
         }

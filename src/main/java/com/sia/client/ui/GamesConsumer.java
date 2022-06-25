@@ -123,28 +123,70 @@ public class GamesConsumer implements MessageListener {
                     if ((!oldvpitcher.equals(game.getVisitorpitcher()) && !oldvpitcher.equals("") && !game.getVisitorpitcher().equalsIgnoreCase("UNDECIDED"))
                             || (!oldhpitcher.equals(game.getHomepitcher()) && !oldhpitcher.equals("") && !game.getHomepitcher().equalsIgnoreCase("UNDECIDED"))
                     ) { //pitching change
+
+                        String prefs = AppController.getUser().getInjuryAlert();
+                        String[] arr = prefs.split("\\|");
+                        boolean popup = false;
+                        boolean sound = false;
                         int popupsecs = 15;
-                        int location = 2;
+                        int location = 6;
+                        String audiofile = "";
+                        String[] sports;
+                        boolean goodsport = false;
+
+                        popup = Utils.parse(arr[0], popup);
+                        sound = Utils.parse(arr[1], sound);
+                        popupsecs = Utils.parse(arr[2], popupsecs);
+                        location = Utils.parse(arr[3], location);
+                        audiofile = arr[4];
+
+                        try {
+                            sports = arr[5].split(",");
+                            for (String sportid : sports) {
+                                if (sportid.equals("" + s.getLeague_id()) || sportid.equals(s.getSportname()) || sportid.equalsIgnoreCase("All Sports")) {
+                                    goodsport = true;
+                                    break;
+                                }
+                            }
+                        } catch (Exception ex) {
+                            log("exception in splitting=" + arr[5] + ".." + ex);
+                        }
+
+
+
+
+
+
+
+
+
                         String hrmin = AppController.getCurrentHoursMinutes();
                         String teaminfo = game.getVisitorgamenumber() + "-" + game.getShortvisitorteam() + "@" + game.getHomegamenumber() + "-" + game.getShorthometeam();
 
 //                    String popalertname = "Alert at:" + hrmin + "\nPitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
 //                    AppController.alertsVector.addElement(popalertname);
-                        String mesg = "Pitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
-                        AppController.addAlert(hrmin, mesg);
 
-                        new UrgentMessage("<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
-                                s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
+                        if (goodsport) {
 
-                                "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
-                                "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR>" +
+                            String mesg = "Pitching Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo;
+                            AppController.addAlert(hrmin, mesg);
 
-                                "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
+                            if (popup) {
+                                new UrgentMessage("<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
+                                        s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
 
+                                        "<TR><TD>" + game.getVisitorgamenumber() + "</TD><TD>" + game.getVisitorteam() + "</TD><TD>" + game.getVisitorpitcher() + "</TD></TR>" +
+                                        "<TR><TD>" + game.getHomegamenumber() + "</TD><TD>" + game.getHometeam() + "</TD><TD>" + game.getHomepitcher() + "</TD></TR>" +
 
-                        //playSound("pitchingchange.wav");
-                        new SoundPlayer("pitchingchange.wav");
+                                        "</TABLE></FONT></HTML>", popupsecs * 1000, location, AppController.getMainTabPane());
 
+                            }
+                            //playSound("pitchingchange.wav");
+                            if (sound) {
+                                new SoundPlayer("pitchingchange.wav");
+                            }
+
+                        }
                         String tc = new java.util.Date() + "..PITCHING CHANGE!!!<HTML><H1>Pitching Change</H1><FONT COLOR=BLUE>" +
                                 s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
 
@@ -191,13 +233,13 @@ public class GamesConsumer implements MessageListener {
                         }
 
                         if (goodsport) {
-                            if (popup) {
+
 
                                 String hrmin = AppController.getCurrentHoursMinutes();
                                 String teaminfo = game.getVisitorgamenumber() + "-" + game.getShortvisitorteam() + "@" + game.getHomegamenumber() + "-" + game.getShorthometeam();
                                 String mesg = "Time Change:" + s.getSportname() + "," + s.getLeaguename() + "," + teaminfo + " From " + oldgametime + "to " + game.getGametime();
                                 AppController.addAlert(hrmin, mesg);
-
+                            if (popup) {
                                 new UrgentMessage("<HTML><H1>Time Change</H1><FONT COLOR=BLUE>" +
                                         s.getLeaguename() + "<BR><TABLE cellspacing=5 cellpadding=5>" +
 
