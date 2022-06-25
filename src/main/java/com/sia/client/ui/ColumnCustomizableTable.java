@@ -340,11 +340,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
 
     @Override
     public void addColumn(TableColumn tc) {
-//        super.addColumn(tc);
-//        tc.setModelIndex(allColumns.size());
-//        //placed after super
-//        allColumns.add(tc);
-//        needToCreateColumnModel = true;
         throw new IllegalArgumentException("This method not supported.");
     }
 
@@ -352,7 +347,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public Object getValueAt(int row, int col) {
         return super.getValueAt(row, col);
     }
-
     @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);

@@ -31,7 +31,6 @@ public class TableColumnManager
     private final JTable table;
     private final SportsTabPane stp;
     private TableColumnModel tcm;
-//    private boolean menuPopup;
     private String fixed;
     private List<TableColumn> allColumns;
 
@@ -84,16 +83,6 @@ public class TableColumnManager
             allColumns.add(tcm.getColumn(i));
         }
     }
-//
-//    /**
-//     * Get the popup support.
-//     *
-//     * @returns the popup support
-//     */
-//    public boolean isMenuPopup() {
-//        return menuPopup;
-//    }
-
     /**
      * Add/remove support for a popup menu to the table header. The popup
      * menu will give the user control over which columns are visible.

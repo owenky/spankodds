@@ -24,7 +24,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private boolean toConfigHeaderRow = false;
-//    private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
     private final ScreenProperty screenProperty;
@@ -47,12 +46,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public ScreenProperty getScreenProperty() {
         return screenProperty;
     }
-//    public void setDetroyed(boolean isDetroyed) {
-//        this.isDetroyed = isDetroyed;
-//    }
-//    public boolean isDetroyed() {
-//        return isDetroyed;
-//    }
     public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
         this.toConfigHeaderRow = toConfigHeaderRow;
     }

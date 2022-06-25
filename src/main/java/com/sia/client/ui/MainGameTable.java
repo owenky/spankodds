@@ -1,14 +1,13 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Config;
+import com.sia.client.config.GameNotes;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.model.Game;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.comps.NodeCellEditor;
 
-import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -16,8 +15,6 @@ import javax.swing.table.TableCellRenderer;
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
     private final TableCellEditor tableCellEditor = new NodeCellEditor();
-    private final LineRenderer soccerLineRenderer = new LineRenderer(SportName.Soccer);
-    private final LineRenderer lineRenderer = new LineRenderer();
     private final SportType sporetType;
 
     public MainGameTable(MainGameTableModel tm) {
@@ -52,7 +49,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     }
     @Override
     public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colViewIndex) {
-         return isSoccer(rowViewIndex)? soccerLineRenderer:lineRenderer;
+         return isSoccer(rowViewIndex)? LineRenderer.soccerInstance():LineRenderer.instance();
     }
     @Override
     public LinesTableData getLinesTableData(int row) {
@@ -89,6 +86,15 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     @Override
     public TableCellEditor getCellEditor(int row, int column) {
         return tableCellEditor;
+    }
+    @Override
+    public void setValueAt(Object value,int row, int column) {
+        if ( TableUtils.isNoteColumn(this,column)) {
+            int rowModelIndex = convertRowIndexToModel(row);
+            int gameId = getGame(rowModelIndex).getGame_id();
+            GameNotes gameNotes = Config.instance().getGameNotes();
+            gameNotes.addNote(gameId,String.valueOf(value));
+        }
     }
     private boolean isSoccer(int rowViewIndex) {
         if ( sporetType.equals(SportType.Soccer)) {

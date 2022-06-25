@@ -3,141 +3,127 @@ package com.sia.client.ui;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.GameGroupHeader;
 
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.*;
 
 import static com.sia.client.config.Utils.log;
 
 public class LineRenderer implements TableCellRenderer {
 
-    private final LinePanel teamLinePanel;
-    private final LinePanel spreadTotalPanel;
-    private final LinePanel gameNumbersPanel;
-    private final LinePanel soccerNumbersPanel;
-    private final LinePanel soccerLinePanel;
-    private final LinePanel timePanel;
-    private final LinePanel chartPanel;
-    private final LinePanel soccerChartPanel;
-    private final LinePanel infoPanel;
-    private final LinePanel headerPanel;
-    private final String name;
-    private final JComponent headerCellRenderComp;
+    private final LinePanel teamLinePanel = new LinePanel();
+    private final LinePanel spreadTotalPanel = new LinePanel();
+    private final LinePanel gameNumbersPanel = new LinePanel();
+    private final LinePanel soccerNumbersPanel = new LinePanel();
+    private final LinePanel soccerLinePanel = new LinePanel();
+    private final LinePanel timePanel = new LinePanel();
+    private final LinePanel chartPanel = new LinePanel();
+    private final LinePanel soccerChartPanel = new LinePanel();
+    private final LinePanel infoPanel = new LinePanel();
+    private final LinePanel headerPanel = new LinePanel();
+    private final JLabel headerCellRenderComp = new JLabel();
 
-    public LineRenderer() {
-        this(null);
+    public static LineRenderer instance() {
+        return LazyInitHolder.instance;
     }
+    public static LineRenderer soccerInstance() {
+        return LazyInitHolder.soccerInstance;
+    }
+    private LineRenderer() {
+        initTeamLinePanel();
+        initSpreadTotalPanel();
+        initGameNumbersPanel();
+        initSoccerNumbersPanel();
+        initSoccerLinePanel();
+        initTimePanel();
+        initChartPanel();
+        initSoccerChartPanel();
+        initInfoPanel();
+        initHeaderPanel();
+        initHeaderCellRenderComp();
+    }
+    private LineRenderer(String name) {
+        this();
+        setName(name);
+    }
+    private void setName(String name) {
+        teamLinePanel.setName(name);
+        spreadTotalPanel.setName(name);
+        gameNumbersPanel.setName(name);
+        soccerNumbersPanel.setName(name);
+        soccerLinePanel.setName(name);
+        timePanel.setName(name);
+        chartPanel.setName(name);
+        soccerChartPanel.setName(name);
+        infoPanel.setName(name);
+        headerPanel.setName(name);
+        headerCellRenderComp.setName(name);
+    }
+    private void initSoccerLinePanel() {
+        soccerLinePanel.top.setIconTextGap(1);
+        soccerLinePanel.bottom.setIconTextGap(1);
+        soccerLinePanel.draw.setIconTextGap(1);
+        soccerLinePanel.total.setIconTextGap(1);
+        soccerLinePanel.top.setHorizontalAlignment(SwingConstants.RIGHT);
+        soccerLinePanel.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
+        soccerLinePanel.draw.setHorizontalAlignment(SwingConstants.RIGHT);
+        soccerLinePanel.total.setHorizontalAlignment(SwingConstants.RIGHT);
+    }
+    private void initHeaderCellRenderComp() {
+        headerCellRenderComp.setOpaque(true);
+        headerCellRenderComp.setBackground(SiaConst.DefaultHeaderColor);
+        headerCellRenderComp.setBorder(BorderFactory.createEmptyBorder());
+    }
+    private void initHeaderPanel() {
+        headerPanel.top.setHorizontalAlignment(SwingConstants.LEFT);
+        headerPanel.bottom.setHorizontalAlignment(SwingConstants.LEFT);
+    }
+    private void initInfoPanel() {
+        infoPanel.top.setHorizontalAlignment(SwingConstants.LEFT);
+        infoPanel.topPanel.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
+        infoPanel.bottom.setHorizontalAlignment(SwingConstants.LEFT);
+    }
+    private void initSoccerChartPanel() {
+        soccerChartPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+        soccerChartPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        soccerChartPanel.draw.setHorizontalAlignment(SwingConstants.CENTER);
+        soccerChartPanel.total.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+    private void initChartPanel() {
+        chartPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+        chartPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+    private void initTimePanel() {
+        timePanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+        timePanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+    private void initSoccerNumbersPanel() {
+        soccerNumbersPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+        soccerNumbersPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        soccerNumbersPanel.draw.setHorizontalAlignment(SwingConstants.CENTER);
+        soccerNumbersPanel.total.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+    private void initGameNumbersPanel() {
+        gameNumbersPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+        gameNumbersPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+    private void initSpreadTotalPanel() {
+        spreadTotalPanel.top.setIconTextGap(1);
+        spreadTotalPanel.bottom.setIconTextGap(1);
+        spreadTotalPanel.top.setHorizontalAlignment(SwingConstants.RIGHT);
+        spreadTotalPanel.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
+    }
+    private void initTeamLinePanel() {
+        teamLinePanel.top.setHorizontalAlignment(SwingConstants.LEFT);
+        teamLinePanel.bottom.setHorizontalAlignment(SwingConstants.LEFT);
 
-    public LineRenderer(String name) {
-        this.name = name;
-        teamLinePanel = createTeamLinePanel(name);
-        spreadTotalPanel = createSpreadTotalPanel(name);
-        gameNumbersPanel = createGameNumbersPanel(name);
-        soccerNumbersPanel = createSoccerNumbersPanel(name);
-        soccerLinePanel = createSoccerLinePanel(name);
-        timePanel = createTimePanel(name);
-        chartPanel = createChartPanel(name);
-        soccerChartPanel = createSoccerChartPanel(name);
-        infoPanel = createInfoPanel(name);
-        headerPanel = createHeaderPanel(name);
-        headerCellRenderComp = createHeaderCellRenderComp();
-    }
-    private LinePanel createSoccerLinePanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setIconTextGap(1);
-        lp.bottom.setIconTextGap(1);
-        lp.draw.setIconTextGap(1);
-        lp.total.setIconTextGap(1);
-        lp.top.setHorizontalAlignment(SwingConstants.RIGHT);
-        lp.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
-        lp.draw.setHorizontalAlignment(SwingConstants.RIGHT);
-        lp.total.setHorizontalAlignment(SwingConstants.RIGHT);
+        teamLinePanel.top.setHorizontalTextPosition(SwingConstants.RIGHT);
+        teamLinePanel.bottom.setHorizontalTextPosition(SwingConstants.RIGHT);
 
-        return lp;
-    }
-    private JComponent createHeaderCellRenderComp() {
-        JLabel rtn = new JLabel();
-        rtn.setOpaque(true);
-        rtn.setBackground(SiaConst.DefaultHeaderColor);
-        rtn.setBorder(BorderFactory.createEmptyBorder());
-        return rtn;
-    }
-    private LinePanel createHeaderPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.LEFT);
-        lp.bottom.setHorizontalAlignment(SwingConstants.LEFT);
-
-        return lp;
-    }
-    private LinePanel createInfoPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.LEFT);
-        lp.topPanel.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
-        lp.bottom.setHorizontalAlignment(SwingConstants.LEFT);
-        return lp;
-    }
-    private LinePanel createSoccerChartPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.draw.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.total.setHorizontalAlignment(SwingConstants.CENTER);
-
-        return lp;
-    }
-    private LinePanel createChartPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-
-        return lp;
-    }
-    private LinePanel createTimePanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-        return lp;
-    }
-    private LinePanel createSoccerNumbersPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.draw.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.total.setHorizontalAlignment(SwingConstants.CENTER);
-        return lp;
-    }
-    private LinePanel createGameNumbersPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.CENTER);
-        lp.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-        return lp;
-    }
-    private LinePanel createSpreadTotalPanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setIconTextGap(1);
-        lp.bottom.setIconTextGap(1);
-        lp.top.setHorizontalAlignment(SwingConstants.RIGHT);
-        lp.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
-        return lp;
-    }
-    private LinePanel createTeamLinePanel(String name) {
-        LinePanel lp = new LinePanel(name);
-        lp.top.setHorizontalAlignment(SwingConstants.LEFT);
-        lp.bottom.setHorizontalAlignment(SwingConstants.LEFT);
-
-        lp.top.setHorizontalTextPosition(SwingConstants.RIGHT);
-        lp.bottom.setHorizontalTextPosition(SwingConstants.RIGHT);
-
-        lp.draw.setHorizontalAlignment(SwingConstants.LEFT);
-        lp.total.setHorizontalAlignment(SwingConstants.LEFT);
-        lp.draw.setHorizontalTextPosition(SwingConstants.RIGHT);
-        lp.total.setHorizontalTextPosition(SwingConstants.RIGHT);
-        return lp;
+        teamLinePanel.draw.setHorizontalAlignment(SwingConstants.LEFT);
+        teamLinePanel.total.setHorizontalAlignment(SwingConstants.LEFT);
+        teamLinePanel.draw.setHorizontalTextPosition(SwingConstants.RIGHT);
+        teamLinePanel.total.setHorizontalTextPosition(SwingConstants.RIGHT);
     }
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -186,8 +172,12 @@ public class LineRenderer implements TableCellRenderer {
             rtn = headerCellRenderComp;
         }  else {
             log(new IllegalStateException("Illegal value:"+value));
-            rtn = createTeamLinePanel(name);
+            rtn = infoPanel;
         }
         return rtn;
+    }
+    private static class LazyInitHolder {
+        private static final LineRenderer instance = new LineRenderer();
+        private static final LineRenderer soccerInstance = new LineRenderer(SiaConst.SportName.Soccer);
     }
 }

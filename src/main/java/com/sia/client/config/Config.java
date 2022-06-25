@@ -26,6 +26,7 @@ public class Config {
     private FontConfig fontConfig;
     private UserDisplaySettings userDisplaySettings;
     private ColumnSettings columnSettings;
+    private GameNotes gameNotes;
     private RowSelection rowSelection;
     @JsonIgnore
     private boolean syncStatus = true;
@@ -37,6 +38,17 @@ public class Config {
     }
     public static Config instance() {
         return instance;
+    }
+    @JsonProperty
+    public GameNotes getGameNotes() {
+        if ( null == gameNotes) {
+            gameNotes = new GameNotes();
+        }
+        return gameNotes;
+    }
+    @JsonProperty
+    public void setGameNotes(GameNotes gameNotes) {
+        this.gameNotes = gameNotes;
     }
     @JsonProperty
     public RowSelection getRowSelection() {
@@ -100,6 +112,12 @@ public class Config {
             alertAttrMap.remove(key);
         });
 
+        if ( null != gameNotes) {
+            gameNotes.syncWithGames();
+        }
+        if ( null != rowSelection) {
+            rowSelection.syncWithGames();;
+        }
     }
     @JsonProperty
     public UserDisplaySettings getUserDisplaySettings() {

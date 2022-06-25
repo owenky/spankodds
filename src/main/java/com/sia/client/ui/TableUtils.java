@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.ColumnSettings;
 import com.sia.client.config.Config;
 import com.sia.client.config.RowSelection;
 import com.sia.client.config.SiaConst;
@@ -9,6 +10,7 @@ import com.sia.client.ui.control.SportsTabPane;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -19,9 +21,8 @@ import java.util.List;
 public abstract class TableUtils {
 
     public static boolean isCellEditable(JTable table, int row, int column) {
-        int modelColIndex = table.convertColumnIndexToModel(column);
-        TableColumn tc = table.getColumnModel().getColumn(modelColIndex);
-        if ( null != tc.getIdentifier() && tc.getIdentifier().equals(SiaConst.NoteColumnBookieId) ) {
+
+        if ( isNoteColumn(table,column)) {
 
             if ( table instanceof AccessableToGame) {
                 int rowModelIndex = table.convertRowIndexToModel(row);
@@ -179,7 +180,7 @@ public abstract class TableUtils {
         mainTable.getTableColumnHeaderManager().installListeners();
         //add table column header listeners
         new TableColumnManager(stp, mainTable, "");
-        new TableColumnManager(stp, mainTable.getRowHeaderTable(), "fixed");
+        new TableColumnManager(stp, mainTable.getRowHeaderTable(), "fixed");1
         return container;
     }
 
