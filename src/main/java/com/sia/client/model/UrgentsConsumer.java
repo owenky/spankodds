@@ -104,7 +104,7 @@ public class UrgentsConsumer implements MessageListener {
                 String mesg = mapMessage.getString("urgentmessage");
 
                 addMessageToAlertVector(mesg);
-
+                new SoundPlayer("urgentmessage.wav");
                 new UrgentMessage("<HTML><H2>URGENT MESSAGE</H2>" +mesg+
                         "</HTML>", 20000, 2, AppController.getMainTabPane());
             }
