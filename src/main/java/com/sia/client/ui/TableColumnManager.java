@@ -321,12 +321,6 @@ public class TableColumnManager implements java.awt.event.MouseListener, javax.s
             return;
         }
         TableColumnModel tcm = (TableColumnModel)e.getSource();
-        //  A table column has been moved one position to the left or right
-        //  in the view of the table so we need to update the manager to
-        //  track the new location
-
-        int index = e.getToIndex();
-        TableColumn movedColumn = tcm.getColumn(index);
 
         for(int i=e.getFromIndex();i<=e.getToIndex();i++) {
             TableColumn tc = tcm.getColumn(i);
@@ -338,12 +332,6 @@ public class TableColumnManager implements java.awt.event.MouseListener, javax.s
         oldColumnList.add(e.getToIndex(),movedBookie);
         String newBookieStr = oldColumnList.stream().map(b-> b.getBookie_id() + "=" + b.getShortname()).collect(Collectors.joining(","));
 
-
-//        if (fixed.equals("")) {
-//            AppController.getUser().setBookieColumnPrefs(columnString.substring(1));
-//        } else {
-//            AppController.getUser().setFixedColumnPrefs(columnString.substring(1));
-//        }
         AppController.getUser().setBookieColumnPrefs(newBookieStr);
         BookieManager.instance().reset();
     }
