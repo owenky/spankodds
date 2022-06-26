@@ -196,7 +196,7 @@ public class BookieManager {
         //cols can be in the format of ["17=Pincl", "620=Sp411", "271=Circa", "880=Bax", "42=Hiltn", +46 more] or ["17,620,271,880,42...."]
         //if column name is rename, id has former format. -- 2021-01-24
         String[] strArr = User.instance().getBookieColumnPrefs().split(",");
-        List<String> list = Arrays.stream(strArr).map(s-> s.split("=")[0]).map(s->s.trim()).filter(Utils::isIntegerString).collect(Collectors.toList());
+        List<String> list = Arrays.stream(strArr).map(s-> s.split("=")[0]).map(String::trim).filter(Utils::isIntegerString).collect(Collectors.toList());
         if ( 0 == list.size()) {
             return defaultShownColList;
         } else {

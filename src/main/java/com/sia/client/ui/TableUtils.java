@@ -179,8 +179,10 @@ public abstract class TableUtils {
 
         mainTable.getTableColumnHeaderManager().installListeners();
         //add table column header listeners
-        new TableColumnManager(stp, mainTable, "");
-        new TableColumnManager(stp, mainTable.getRowHeaderTable(), "fixed");1
+//        new TableColumnManager(stp, mainTable, "");
+//        new TableColumnManager(stp, mainTable.getRowHeaderTable(), "fixed");
+        TableColumnManager.instance().installListeners(mainTable);
+        TableColumnManager.instance().installListeners(mainTable.getRowHeaderTable());
         return container;
     }
 
