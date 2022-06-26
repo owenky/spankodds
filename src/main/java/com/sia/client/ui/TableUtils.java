@@ -81,13 +81,13 @@ public abstract class TableUtils {
     public static <T> T findParent(JComponent jComponent, Class<T> parentClass) {
         Component parent = jComponent;
         do {
-            if (parent.getClass().equals(parentClass)) {
+            if ( null== parent || parentClass.isAssignableFrom(parent.getClass())) {
                 break;
             }
             parent = parent.getParent();
         } while (!(parent instanceof JFrame));
 
-        if (parent.getClass().equals(parentClass)) {
+        if ( null != parent && parent.getClass().equals(parentClass)) {
             return (T) parent;
         } else {
             return null;

@@ -56,7 +56,11 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
         TableSection<V> r = ltdSrhStruct.linesTableData;
-        return r.getValueAt((rowModelIndex-ltdSrhStruct.offset),colModelIndex);
+        if ( null != r) {
+            return r.getValueAt((rowModelIndex - ltdSrhStruct.offset), colModelIndex);
+        } else {
+            return null;
+        }
     }
     @Override
     public final int getRowCount() {

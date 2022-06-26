@@ -256,7 +256,7 @@ public class TableColumnManager implements java.awt.event.MouseListener, javax.s
     private void checkForPopup(MouseEvent e) {
         if (e.isPopupTrigger()) {
             JTableHeader header = (JTableHeader) e.getComponent();
-            JTable table = TableUtils.findParent(header,JTable.class);
+            JTable table = header.getTable();
             SportsTabPane stp = TableUtils.findParent(table,SportsTabPane.class);
             int column = header.columnAtPoint(e.getPoint());
             checkAndRunInEDT(() -> showPopup(column,stp,table));
