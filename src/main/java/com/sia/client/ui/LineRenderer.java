@@ -11,16 +11,16 @@ import static com.sia.client.config.Utils.log;
 
 public class LineRenderer implements TableCellRenderer {
 
-    private final LinePanel teamLinePanel = new LinePanel();
-    private final LinePanel spreadTotalPanel = new LinePanel();
-    private final LinePanel gameNumbersPanel = new LinePanel();
-    private final LinePanel soccerNumbersPanel = new LinePanel();
-    private final LinePanel soccerLinePanel = new LinePanel();
-    private final LinePanel timePanel = new LinePanel();
-    private final LinePanel chartPanel = new LinePanel();
-    private final LinePanel soccerChartPanel = new LinePanel();
-    private final LinePanel infoPanel = new LinePanel();
-    private final LinePanel headerPanel = new LinePanel();
+    private final LinePanel teamLinePanel = LinePanel.instance();
+    private final LinePanel spreadTotalPanel = LinePanel.instance();
+    private final LinePanel gameNumbersPanel = LinePanel.instance();
+    private final LinePanel soccerNumbersPanel = LinePanel.soccerInstance();
+    private final LinePanel soccerLinePanel = LinePanel.soccerInstance();
+    private final LinePanel timePanel = LinePanel.instance();
+    private final LinePanel chartPanel = LinePanel.instance();
+    private final LinePanel soccerChartPanel = LinePanel.soccerInstance();
+    private final LinePanel infoPanel = LinePanel.instance();
+    private final LinePanel headerPanel = LinePanel.instance();
     private final JLabel headerCellRenderComp = new JLabel();
 
     public static LineRenderer instance() {
