@@ -690,6 +690,19 @@ public class LinePanel extends JPanel {
         }
 
     }
+
+    public void setInfo2(JTable table,InfoView2 stv, int row, int col) {
+        LineData[] boxes = stv.getCurrentBoxes();
+        setTop(table,boxes[0], row, col);
+        setBottom(table,boxes[1], row, col);
+        if (isSoccer()) {
+            LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
+            setDraw(table,blank, row, col);
+            setTotal(table,blank, row, col);
+        }
+
+    }
+
     private static JComponent createContainingComponent(JComponent comp,int leftPadding, int rightPadding) {
         JPanel containingPanel = new JPanel();
         Dimension leftPaddingDim = new Dimension(leftPadding,0);

@@ -124,7 +124,10 @@ public class LinesTableData extends TableSection<Game> {
         Object value;
         if ( 990 == bookieid) {
             value = new InfoView(gameid);
-        } else if (bookieid == 991) {
+        } else if (bookieid == 998) {
+            value = new InfoView2(gameid);
+        }
+        else if (bookieid == 991) {
             value = new TimeView(gameid);
         } else if (bookieid == 992) {
             if (leagueID == 9) {
