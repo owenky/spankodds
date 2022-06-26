@@ -33,7 +33,7 @@ public class ScreenGameModel {
         GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(sportType, gameFilter,true);
         Map<GameGroupHeader, Vector<Game>> headerListMap = gameGroupAggregator.aggregate();
         updateCurrentMaxLength(headerListMap);
-        allColumns = createColumns();
+        allColumns = createAllColumns();
         headerMap = new HashMap<>(headerListMap.size());
 
         boolean timesort = GameUtils.isTimeSort(screenProperty.getSpankyWindowConfig().isTimesort(), sportType.isTimeSort());
@@ -74,7 +74,7 @@ public class ScreenGameModel {
                 });
     }
 
-    private List<TableColumn> createColumns() {
+    public static List<TableColumn> createAllColumns() {
         List<Bookie> newBookiesVec = AppController.getBookiesVec();
         List<Bookie> hiddencols = AppController.getHiddenCols();
         List<TableColumn> result = new ArrayList<>(newBookiesVec.size());
@@ -92,7 +92,7 @@ public class ScreenGameModel {
                 public TableCellRenderer getCellRenderer() {
                     //deferred construction of TableCellRenderer to avoid EDT vialation when building model in worker thread -- 2021-12-12
                     if (null == cellRenderer) {
-                        cellRenderer = new LineRenderer();
+                        cellRenderer = LineRenderer.instance();
                     }
                     return cellRenderer;
                 }

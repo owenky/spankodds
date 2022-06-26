@@ -7,9 +7,6 @@ import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -50,8 +47,6 @@ public class AppController {
     public static UserPrefsProducer userPrefsProducer;
     public static ChartChecker chartchecker;
     public static long clearalltime;
-    public static DefaultTableColumnModel columnmodel;
-    public static DefaultTableColumnModel fixedcolumnmodel;
     public static NewWindowAction nwa;
     public static LineOpenerAlertNode football = new LineOpenerAlertNode(SportName.Football);
     public static LineOpenerAlertNode basketball = new LineOpenerAlertNode(SportName.Basketball);
@@ -537,67 +532,6 @@ public class AppController {
         }
         return true;
     }
-
-    public static TableColumnModel getColumnModel() {
-        if (columnmodel == null) {
-            createColumnModel();
-        }
-        return columnmodel;
-    }
-
-    public static void createColumnModel() {
-        List<Bookie> newBookiesVec = getBookiesVec();
-        columnmodel = new DefaultTableColumnModel();
-        fixedcolumnmodel = new DefaultTableColumnModel();
-        for (int k = 0; k < newBookiesVec.size(); k++) {
-            Bookie b = newBookiesVec.get(k);
-            LineRenderer lr = new LineRenderer();
-            //renderers.add(lr);
-            TableColumn column;
-
-            column = new TableColumn(k, 30, lr, null);
-            column.setHeaderValue(b.getShortname() + "");
-            column.setIdentifier("" + b.getBookie_id());
-            if (b.getBookie_id() == 990) {
-                column.setPreferredWidth(54);
-            } else if (b.getBookie_id() == 991) {
-                column.setPreferredWidth(40);
-            } else if (b.getBookie_id() == 992) {
-                column.setPreferredWidth(45);
-            }
-            else if (b.getBookie_id() == 995) {
-                column.setPreferredWidth(45);
-            }else if (b.getBookie_id() == 993) {
-
-                column.setPreferredWidth(150);
-
-            } else {
-                //column.setPreferredWidth(50) ;
-                column.setMinWidth(10);
-                column.setPreferredWidth(10);
-            }
-            columnmodel.addColumn(column);
-
-        }
-        // here i'm adding a blank column
-        TableColumn blankcol = new TableColumn(newBookiesVec.size(), 10, null, null);
-        blankcol.setHeaderValue("");
-        blankcol.setIdentifier("9999999");
-
-        blankcol.setMaxWidth(30);
-        blankcol.setPreferredWidth(30);
-        columnmodel.addColumn(blankcol);
-
-
-        for (int i = 0; i < AppController.getNumFixedCols(); i++) {
-            TableColumn column = columnmodel.getColumn(0);
-            columnmodel.removeColumn(column);
-            fixedcolumnmodel.addColumn(column);
-        }
-
-
-    }
-
     public static List<Bookie> getBookiesVec() {
         return bookieManager.getBookiesVec();
     }
@@ -614,12 +548,6 @@ public class AppController {
         return bookieManager.reorderBookiesVec();
     }
 
-    public static TableColumnModel getFixedColumnModel() {
-        if (fixedcolumnmodel == null) {
-            createColumnModel();
-        }
-        return fixedcolumnmodel;
-    }
 
     public static NewWindowAction getNewWindowAction() {
         if (nwa == null) {

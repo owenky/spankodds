@@ -2,12 +2,14 @@ package com.sia.client.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sia.client.model.Games;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.TableUtils;
 import com.sia.client.ui.control.MainScreen;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RowSelection {
 
@@ -72,6 +74,18 @@ public class RowSelection {
             lockedSportNames.add(sportName);
         } else {
             lockedSportNames.remove(sportName);
+        }
+    }
+    @JsonIgnore
+    public void syncWithGames() {
+        for(Set<Integer> gamesBySport: selectedGamesBySportId.values()) {
+            List<Integer> obsoleteGameIds = gamesBySport.stream()
+                    .filter(key-> ! Games.instance().containsGameId(key))
+                    .collect(Collectors.toList());
+
+            obsoleteGameIds.forEach(key-> {
+                gamesBySport.remove(key);
+            });
         }
     }
     private static SportType getSport(JComponent jcomponent) {
