@@ -1,15 +1,12 @@
 package com.sia.client.ui;
 
 import com.sia.client.model.Game;
-import com.sia.client.ui.comps.NodeCellEditor;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.TableCellEditor;
 
 public class RowHeaderGameTable extends RowHeaderTable<Game>{
 
-    private final TableCellEditor tableCellEditor = new NodeCellEditor();
     public RowHeaderGameTable(MainGameTable mainTable,boolean hasRowNumber) {
         super(mainTable,hasRowNumber);
         ListSelectionModel listSelectionModel = mainTable.getSelectionModel();
@@ -30,10 +27,6 @@ public class RowHeaderGameTable extends RowHeaderTable<Game>{
     @Override
     public boolean isCellEditable(int row, int col) {
         return TableUtils.isCellEditable(this,row,col);
-    }
-    @Override
-    public TableCellEditor getCellEditor(int row, int column) {
-        return tableCellEditor;
     }
     public int getWindowIndex() {
         return ((MainGameTable)getMainTable()).getWindowIndex();

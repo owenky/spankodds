@@ -9,8 +9,9 @@ import java.awt.*;
 public class NodeCellEditor extends AbstractCellEditor implements TableCellEditor {
 
     private final TextComponent editorComponent;
-    private final Dimension editorComponentSize = new Dimension(100,100);
+    private final Dimension editorComponentSize = new Dimension(500,100);
     private final JTextField editorIndicator;
+    private JLayeredPane jLayeredPane;
     public NodeCellEditor() {
         super();
         editorIndicator = new JTextField();
@@ -23,14 +24,17 @@ public class NodeCellEditor extends AbstractCellEditor implements TableCellEdito
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         Rectangle rectangle = table.getCellRect(row,column,true);
+        Point tblLocation =table.getLocationOnScreen();
+        Point popupLocation = new Point(tblLocation.x+rectangle.x, tblLocation.y+rectangle.y+table.getRowHeight(row));
         editorComponent.setText(String.valueOf(value));
         JRootPane rootPane_ = SwingUtilities.getRootPane(table);
-        JLayeredPane jLayeredPane = rootPane_.getLayeredPane();
+        jLayeredPane = rootPane_.getLayeredPane();
+        Point layerPaneLoc= jLayeredPane.getLocationOnScreen();
         if ( jLayeredPane.getIndexOf(editorComponent) <  0) {
             jLayeredPane.add(editorComponent, SiaConst.LayedPaneIndex.NoteColumnEditorIndex);
         }
         editorComponent.setVisible(true);
-        editorComponent.setBounds(rectangle.x,rectangle.y+rectangle.height,editorComponentSize.width,editorComponentSize.height);
+        editorComponent.setBounds(popupLocation.x-layerPaneLoc.x,popupLocation.y-layerPaneLoc.y,editorComponentSize.width,editorComponentSize.height);
         return editorIndicator;
     }
     @Override
@@ -41,6 +45,9 @@ public class NodeCellEditor extends AbstractCellEditor implements TableCellEdito
     public boolean stopCellEditing() {
         boolean status = super.stopCellEditing();
         editorComponent.setVisible(false);
+        if ( null != jLayeredPane) {
+            jLayeredPane.remove(editorComponent);
+        }
         return status;
     }
 }

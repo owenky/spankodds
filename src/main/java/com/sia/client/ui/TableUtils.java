@@ -21,24 +21,16 @@ import java.util.List;
 public abstract class TableUtils {
 
     public static boolean isCellEditable(JTable table, int row, int column) {
-
-        if ( isNoteColumn(table,column)) {
-
-            if ( table instanceof AccessableToGame) {
-                int rowModelIndex = table.convertRowIndexToModel(row);
-                return ((AccessableToGame)table).getGame(rowModelIndex).getGame_id() >0;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
+        TableColumn tc = table.getColumnModel().getColumn(column);
+        return null != tc.getCellEditor();
     }
     public static boolean isNoteColumn(JTable table, int columnIndex) {
         TableColumn tc = table.getColumnModel().getColumn(columnIndex);
+        return isNoteColumn(tc);
+    }
+    public static boolean isNoteColumn(TableColumn tc) {
         return tc.getIdentifier() instanceof Integer && (Integer) tc.getIdentifier() == SiaConst.NoteColumnBookieId;
     }
-
     public static void updateRowSelection(ColumnCustomizableTable<?> gameTable, ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
             return;

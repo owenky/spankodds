@@ -109,7 +109,14 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
-        throw new IllegalStateException("Pending implementation");
+        TableColumn tc = getAllColumns().get(colModelIndex);
+        if ( TableUtils.isNoteColumn(tc)) {
+            int gameId = getGame(rowModelIndex).getGame_id();
+            GameNotes gameNotes = Config.instance().getGameNotes();
+            gameNotes.addNote(gameId,String.valueOf(value));
+        } else {
+            throw new IllegalStateException("Pending implementation");
+        }
     }
     public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
         flushUpdate();

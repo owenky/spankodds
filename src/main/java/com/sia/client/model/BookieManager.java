@@ -2,7 +2,9 @@ package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.ui.comps.NodeCellEditor;
 
+import javax.swing.table.TableCellEditor;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ public class BookieManager {
     private static final List<String> defaultFixedColList;
     private static final List<String> defaultShownColList;
     private final Map<Integer,String> changedBookieMap = new HashMap<>();
+    private static final Map<Integer,Class<? extends TableCellEditor>> columnEditorMap = new HashMap<>();
     private final Map<Integer, Bookie> bookieCache = new ConcurrentHashMap<>();
     private Map<String, Integer> bookieshortnameids = new ConcurrentHashMap<>();
     private List<Bookie> openerbookiesVec = new Vector<>();
@@ -23,16 +26,20 @@ public class BookieManager {
     private int numfixedcols;
 
     static {
-        Integer [] fixedColArr = {995,994, 990, 991, 992, 993, 1017};
+        Integer [] fixedColArr = {SiaConst.NoteColumnBookieId,994, 990, 991, 992, 993, 1017};
         defaultFixedColList = Arrays.stream(fixedColArr).map(String::valueOf).collect(Collectors.toList());
         Integer [] shownColArr = {17, 620, 271, 880, 42, 299, 46, 256, 16, 140, 320, 33, 20, 19, 205, 107, 175, 133, 14, 41, 53, 71, 70, 72, 99, 57, 188,
-                214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017,
-                994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017, 995,994, 990, 991, 992, 993, 1017, 994, 990, 991, 992, 993, 1017};
+                214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, SiaConst.NoteColumnBookieId};
         defaultShownColList =  Arrays.stream(shownColArr).map(String::valueOf).collect(Collectors.toList());
+
+        columnEditorMap.put(SiaConst.NoteColumnBookieId, NodeCellEditor.class);
     }
 
     public static BookieManager instance() {
         return LazyInitHolder.instance;
+    }
+    public static Class<? extends TableCellEditor> getTableCellEditor(int bookieId) {
+        return columnEditorMap.get(bookieId);
     }
     private BookieManager() {
         addBookie(new Bookie(990, "Details", "Dtals", "", ""));

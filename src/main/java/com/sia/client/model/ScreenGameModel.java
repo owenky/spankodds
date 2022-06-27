@@ -1,14 +1,14 @@
 package com.sia.client.model;
 
-import com.sia.client.config.ColumnSettings;
-import com.sia.client.config.Config;
-import com.sia.client.config.GameUtils;
+import com.sia.client.config.*;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.LineRenderer;
 import com.sia.client.ui.LinesTableData;
 
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
 
@@ -102,7 +102,22 @@ public class ScreenGameModel {
             column.setIdentifier(b.getBookie_id());
             ColumnSettings columnSettings = Config.instance().getColumnSettings();
             column.setPreferredWidth(columnSettings.getColumnWidth(column.getHeaderValue()));
+
+            TableCellEditor tableCellEditor;
+            Class<? extends TableCellEditor> editorClass = BookieManager.getTableCellEditor(b.bookie_id);
+            if ( null != editorClass) {
+                try {
+                    tableCellEditor = editorClass.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    Utils.log(e);
+                    tableCellEditor = null;
+                }
+            } else {
+                tableCellEditor = null;
+            }
+            column.setCellEditor(tableCellEditor);
             result.add(column);
+
         }
 
         return result;
