@@ -56,6 +56,7 @@ public class LinePanel extends JPanel {
     public static LinePanel instance(boolean toIncludeTotalAndDraw) {
         return new LinePanel(toIncludeTotalAndDraw);
     }
+
     private LinePanel(boolean toIncludeTotalAndDraw) {
         this(SwingConstants.RIGHT, toIncludeTotalAndDraw);
     }
@@ -709,6 +710,18 @@ public class LinePanel extends JPanel {
 
     }
 
+    public void setInfo2(JTable table, InfoView2 stv, int row, int col) {
+        LineData[] boxes = stv.getCurrentBoxes();
+        setTop(table, boxes[0], row, col);
+        setBottom(table, boxes[1], row, col);
+        if (isSoccer()) {
+            LineData blank = new LineData(ICON_BLANK, "", Color.WHITE);
+            setDraw(table, blank, row, col);
+            setTotal(table, blank, row, col);
+        }
+
+    }
+
     private static JComponent createContainingComponent(JComponent comp, int leftPadding, int rightPadding) {
         JPanel containingPanel = new JPanel();
         Dimension leftPaddingDim = new Dimension(leftPadding, 0);
@@ -744,6 +757,7 @@ public class LinePanel extends JPanel {
             return Color.WHITE;
         }
     }
+
     private boolean iswhite(Color color) {
         if (color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255) {
             return true;
@@ -759,6 +773,7 @@ public class LinePanel extends JPanel {
             return false;
         }
     }
+
     private MatteBorder getBorder(Color fgcolor) {
         if (isblack(fgcolor)) {
             return bestvisitborder;

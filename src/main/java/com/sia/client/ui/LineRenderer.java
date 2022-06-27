@@ -17,6 +17,7 @@ public class LineRenderer implements TableCellRenderer {
     private final LinePanel timePanel;
     private final LinePanel chartPanel;
     private final LinePanel infoPanel;
+    private final LinePanel info2Panel;
     private final LinePanel headerPanel;
     private final JLabel headerCellRenderComp = new JLabel();
     private final boolean toIncludeDrawAndTotal;
@@ -35,6 +36,7 @@ public class LineRenderer implements TableCellRenderer {
         timePanel = LinePanel.instance(toIncludeDrawAndTotal);
         chartPanel = LinePanel.instance(toIncludeDrawAndTotal);
         infoPanel = LinePanel.instance(toIncludeDrawAndTotal);
+        info2Panel = LinePanel.instance(toIncludeDrawAndTotal);
         headerPanel = LinePanel.instance(toIncludeDrawAndTotal);
 
         initTeamLinePanel();
@@ -43,6 +45,7 @@ public class LineRenderer implements TableCellRenderer {
         initTimePanel();
         initChartPanel();
         initInfoPanel();
+        initInfo2Panel();
         initHeaderPanel();
         initHeaderCellRenderComp();
     }
@@ -59,6 +62,11 @@ public class LineRenderer implements TableCellRenderer {
         infoPanel.top.setHorizontalAlignment(SwingConstants.LEFT);
         infoPanel.topPanel.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
         infoPanel.bottom.setHorizontalAlignment(SwingConstants.LEFT);
+    }
+    private void initInfo2Panel() {
+        info2Panel.top.setHorizontalAlignment(SwingConstants.LEFT);
+        info2Panel.topPanel.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
+        info2Panel.bottom.setHorizontalAlignment(SwingConstants.LEFT);
     }
     private void initChartPanel() {
         if ( toIncludeDrawAndTotal ) {
@@ -155,7 +163,11 @@ public class LineRenderer implements TableCellRenderer {
         } else if (value instanceof InfoView) {
             infoPanel.setInfo(table,(InfoView) value, row, column);
             rtn = infoPanel;
-        } else if (value instanceof HeaderView) {
+        }else if (value instanceof InfoView2) {
+            info2Panel.setInfo2(table,(InfoView2) value, row, column);
+            rtn = info2Panel;
+        }
+        else if (value instanceof HeaderView) {
             headerPanel.setHeader(table,(HeaderView) value, row, column);
             rtn = headerPanel;
         } else if (value instanceof GameGroupHeader) {
