@@ -53,13 +53,8 @@ public class LinePanel extends JPanel {
     final JComponent totalPanel;
     private final boolean toIncludeTotalAndDraw;
 
-    public static LinePanel instance() {
-//        return LazyInitHolder.instance;
-        return new LinePanel(false);
-    }
-    public static LinePanel soccerInstance() {
-//        return LazyInitHolder.soccerInstance;
-        return new LinePanel(true);
+    public static LinePanel instance(boolean toIncludeTotalAndDraw) {
+        return new LinePanel(toIncludeTotalAndDraw);
     }
     private LinePanel(boolean toIncludeTotalAndDraw) {
         this(SwingConstants.RIGHT, toIncludeTotalAndDraw);
@@ -631,7 +626,8 @@ public class LinePanel extends JPanel {
     }
 
     private boolean isSoccer() {
-        return SportName.Soccer.equalsIgnoreCase(getName());
+//        return SportName.Soccer.equalsIgnoreCase(getName());
+        return toIncludeTotalAndDraw;
     }
 
     public void setTime(JTable table, TimeView stv, int row, int col) {
@@ -773,9 +769,4 @@ public class LinePanel extends JPanel {
 
         }
     }
-//    /////////////////////////////////////////////////////////////////////////////////////////////
-//    private static class LazyInitHolder {
-//        private static final LinePanel instance = new LinePanel(false);
-//        private static final LinePanel soccerInstance = new LinePanel(true);
-//    }
 }

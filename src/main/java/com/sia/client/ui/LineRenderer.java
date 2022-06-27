@@ -11,17 +11,15 @@ import static com.sia.client.config.Utils.log;
 
 public class LineRenderer implements TableCellRenderer {
 
-    private final LinePanel teamLinePanel = LinePanel.instance();
-    private final LinePanel spreadTotalPanel = LinePanel.instance();
-    private final LinePanel gameNumbersPanel = LinePanel.instance();
-    private final LinePanel soccerNumbersPanel = LinePanel.soccerInstance();
-    private final LinePanel soccerLinePanel = LinePanel.soccerInstance();
-    private final LinePanel timePanel = LinePanel.instance();
-    private final LinePanel chartPanel = LinePanel.instance();
-    private final LinePanel soccerChartPanel = LinePanel.soccerInstance();
-    private final LinePanel infoPanel = LinePanel.instance();
-    private final LinePanel headerPanel = LinePanel.instance();
+    private final LinePanel teamLinePanel;
+    private final LinePanel spreadTotalPanel;
+    private final LinePanel gameNumbersPanel;
+    private final LinePanel timePanel;
+    private final LinePanel chartPanel;
+    private final LinePanel infoPanel;
+    private final LinePanel headerPanel;
     private final JLabel headerCellRenderComp = new JLabel();
+    private final boolean toIncludeDrawAndTotal;
 
     public static LineRenderer instance() {
         return LazyInitHolder.instance;
@@ -29,45 +27,24 @@ public class LineRenderer implements TableCellRenderer {
     public static LineRenderer soccerInstance() {
         return LazyInitHolder.soccerInstance;
     }
-    private LineRenderer() {
+    private LineRenderer(boolean toIncludeDrawAndTotal) {
+        this.toIncludeDrawAndTotal = toIncludeDrawAndTotal;
+        teamLinePanel = LinePanel.instance(toIncludeDrawAndTotal);
+        spreadTotalPanel = LinePanel.instance(toIncludeDrawAndTotal);
+        gameNumbersPanel = LinePanel.instance(toIncludeDrawAndTotal);
+        timePanel = LinePanel.instance(toIncludeDrawAndTotal);
+        chartPanel = LinePanel.instance(toIncludeDrawAndTotal);
+        infoPanel = LinePanel.instance(toIncludeDrawAndTotal);
+        headerPanel = LinePanel.instance(toIncludeDrawAndTotal);
+
         initTeamLinePanel();
         initSpreadTotalPanel();
         initGameNumbersPanel();
-        initSoccerNumbersPanel();
-        initSoccerLinePanel();
         initTimePanel();
         initChartPanel();
-        initSoccerChartPanel();
         initInfoPanel();
         initHeaderPanel();
         initHeaderCellRenderComp();
-    }
-    private LineRenderer(String name) {
-        this();
-        setName(name);
-    }
-    private void setName(String name) {
-        teamLinePanel.setName(name);
-        spreadTotalPanel.setName(name);
-        gameNumbersPanel.setName(name);
-        soccerNumbersPanel.setName(name);
-        soccerLinePanel.setName(name);
-        timePanel.setName(name);
-        chartPanel.setName(name);
-        soccerChartPanel.setName(name);
-        infoPanel.setName(name);
-        headerPanel.setName(name);
-        headerCellRenderComp.setName(name);
-    }
-    private void initSoccerLinePanel() {
-        soccerLinePanel.top.setIconTextGap(1);
-        soccerLinePanel.bottom.setIconTextGap(1);
-        soccerLinePanel.draw.setIconTextGap(1);
-        soccerLinePanel.total.setIconTextGap(1);
-        soccerLinePanel.top.setHorizontalAlignment(SwingConstants.RIGHT);
-        soccerLinePanel.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
-        soccerLinePanel.draw.setHorizontalAlignment(SwingConstants.RIGHT);
-        soccerLinePanel.total.setHorizontalAlignment(SwingConstants.RIGHT);
     }
     private void initHeaderCellRenderComp() {
         headerCellRenderComp.setOpaque(true);
@@ -83,35 +60,48 @@ public class LineRenderer implements TableCellRenderer {
         infoPanel.topPanel.setBorder(BorderFactory.createMatteBorder(-1, -1, 1, -1, Color.BLACK));
         infoPanel.bottom.setHorizontalAlignment(SwingConstants.LEFT);
     }
-    private void initSoccerChartPanel() {
-        soccerChartPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
-        soccerChartPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-        soccerChartPanel.draw.setHorizontalAlignment(SwingConstants.CENTER);
-        soccerChartPanel.total.setHorizontalAlignment(SwingConstants.CENTER);
-    }
     private void initChartPanel() {
-        chartPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
-        chartPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        if ( toIncludeDrawAndTotal ) {
+            chartPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+            chartPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+            chartPanel.draw.setHorizontalAlignment(SwingConstants.CENTER);
+            chartPanel.total.setHorizontalAlignment(SwingConstants.CENTER);
+        } else {
+            chartPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+            chartPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        }
     }
     private void initTimePanel() {
         timePanel.top.setHorizontalAlignment(SwingConstants.CENTER);
         timePanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    private void initSoccerNumbersPanel() {
-        soccerNumbersPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
-        soccerNumbersPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
-        soccerNumbersPanel.draw.setHorizontalAlignment(SwingConstants.CENTER);
-        soccerNumbersPanel.total.setHorizontalAlignment(SwingConstants.CENTER);
-    }
     private void initGameNumbersPanel() {
-        gameNumbersPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
-        gameNumbersPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        if ( toIncludeDrawAndTotal ) {
+            gameNumbersPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+            gameNumbersPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+            gameNumbersPanel.draw.setHorizontalAlignment(SwingConstants.CENTER);
+            gameNumbersPanel.total.setHorizontalAlignment(SwingConstants.CENTER);
+        } else {
+            gameNumbersPanel.top.setHorizontalAlignment(SwingConstants.CENTER);
+            gameNumbersPanel.bottom.setHorizontalAlignment(SwingConstants.CENTER);
+        }
     }
     private void initSpreadTotalPanel() {
-        spreadTotalPanel.top.setIconTextGap(1);
-        spreadTotalPanel.bottom.setIconTextGap(1);
-        spreadTotalPanel.top.setHorizontalAlignment(SwingConstants.RIGHT);
-        spreadTotalPanel.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
+        if ( toIncludeDrawAndTotal) {
+            spreadTotalPanel.top.setIconTextGap(1);
+            spreadTotalPanel.bottom.setIconTextGap(1);
+            spreadTotalPanel.draw.setIconTextGap(1);
+            spreadTotalPanel.total.setIconTextGap(1);
+            spreadTotalPanel.top.setHorizontalAlignment(SwingConstants.RIGHT);
+            spreadTotalPanel.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
+            spreadTotalPanel.draw.setHorizontalAlignment(SwingConstants.RIGHT);
+            spreadTotalPanel.total.setHorizontalAlignment(SwingConstants.RIGHT);
+        } else {
+            spreadTotalPanel.top.setIconTextGap(1);
+            spreadTotalPanel.bottom.setIconTextGap(1);
+            spreadTotalPanel.top.setHorizontalAlignment(SwingConstants.RIGHT);
+            spreadTotalPanel.bottom.setHorizontalAlignment(SwingConstants.RIGHT);
+        }
     }
     private void initTeamLinePanel() {
         teamLinePanel.top.setHorizontalAlignment(SwingConstants.LEFT);
@@ -142,8 +132,8 @@ public class LineRenderer implements TableCellRenderer {
             spreadTotalPanel.setLines(table,(SpreadTotalView) value, row, column);
             rtn = spreadTotalPanel;
         } else if (value instanceof SoccerSpreadTotalView) {
-            soccerLinePanel.setSoccerLines(table,(SoccerSpreadTotalView) value, row, column);
-            rtn = soccerLinePanel;
+            spreadTotalPanel.setSoccerLines(table,(SoccerSpreadTotalView) value, row, column);
+            rtn = spreadTotalPanel;
         } else if (value instanceof TeamView) {
             teamLinePanel.setTeams(table,(TeamView) value, row, column);
             rtn = teamLinePanel;
@@ -151,8 +141,8 @@ public class LineRenderer implements TableCellRenderer {
             gameNumbersPanel.setGamenumbers(table,(GameNumberView) value, row, column);
             rtn = gameNumbersPanel;
         } else if (value instanceof SoccerGameNumberView) {
-            soccerNumbersPanel.setSoccerGamenumbers(table,(SoccerGameNumberView) value, row, column);
-            rtn = soccerNumbersPanel;
+            gameNumbersPanel.setSoccerGamenumbers(table,(SoccerGameNumberView) value, row, column);
+            rtn = gameNumbersPanel;
         } else if (value instanceof TimeView) {
             timePanel.setTime(table,(TimeView) value, row, column);
             rtn = timePanel;
@@ -160,8 +150,8 @@ public class LineRenderer implements TableCellRenderer {
             chartPanel.setChart(table,(ChartView) value, row, column);
             rtn = chartPanel;
         } else if (value instanceof SoccerChartView) {
-            soccerChartPanel.setSoccerChart(table,(SoccerChartView) value, row, column);
-            rtn = soccerChartPanel;
+            chartPanel.setSoccerChart(table,(SoccerChartView) value, row, column);
+            rtn = chartPanel;
         } else if (value instanceof InfoView) {
             infoPanel.setInfo(table,(InfoView) value, row, column);
             rtn = infoPanel;
@@ -177,7 +167,7 @@ public class LineRenderer implements TableCellRenderer {
         return rtn;
     }
     private static class LazyInitHolder {
-        private static final LineRenderer instance = new LineRenderer();
-        private static final LineRenderer soccerInstance = new LineRenderer(SiaConst.SportName.Soccer);
+        private static final LineRenderer instance = new LineRenderer(false);
+        private static final LineRenderer soccerInstance = new LineRenderer(true);
     }
 }
