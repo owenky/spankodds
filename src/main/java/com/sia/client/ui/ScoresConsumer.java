@@ -107,7 +107,8 @@ public class ScoresConsumer implements MessageListener {
     public void processMessage(MapMessage mapMessage) {
         try {
             String changetype = mapMessage.getStringProperty("messageType");
-            if (changetype.equals("ScoreChange")) {
+            if (changetype.equals("ScoreChange"))
+            {
                 int gameid = mapMessage.getInt("eventnumber");
 //                log("ScoreConsumer::processMessage: gameid=" + gameid);
                 Utils.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
@@ -188,6 +189,89 @@ public class ScoresConsumer implements MessageListener {
                     g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
                             scorets, currenthomescore, homescoresupplemental);
 //                    AppController.addOrUpdateGame(g);
+                    MqMessageProcessor.getInstance().addGame(g);
+
+                } else {
+//                    g = new Game();
+//                    g.updateScore(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
+//                            scorets, currenthomescore, homescoresupplemental);
+//                    AppController.addGame(g);
+//                    scoreMessageProcessor.addMessage(g);
+                    //should not add if game id not found from cache, because new Game() does not give game critical game info like date, and league -- 2021-10-30
+                    log("Warning: null game found for game id:" + gameid);
+                }
+            }
+            else if (changetype.equals("ScoreChange2"))
+            {
+                int gameid = mapMessage.getInt("eventnumber");
+//                log("ScoreConsumer::processMessage: gameid=" + gameid);
+                Utils.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
+
+                String period = "";
+                String timer = "";
+                String status = "";
+                long gamestatuslong = 100;
+                int currentvisitorscore = 0;
+                String visitorscoresupplemental = "";
+                long scorets = 100;
+                int currenthomescore = 0;
+                String homescoresupplemental = "";
+
+
+                try {
+                    period = mapMessage.getString("period");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    timer = mapMessage.getString("timer");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    status = mapMessage.getString("status");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    gamestatuslong = mapMessage.getLong("gamestatusts");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    currentvisitorscore = mapMessage.getInt("currentvisitorscore");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    visitorscoresupplemental = mapMessage.getString("visitorscoresupplemental");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    scorets = mapMessage.getLong("scorets");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    currenthomescore = mapMessage.getInt("currenthomescore");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+                try {
+                    homescoresupplemental = mapMessage.getString("homescoresupplemental");
+                } catch (Exception ex) {
+                    log(ex);
+                }
+
+                final Game g = AppController.getGame(gameid);
+                if (g != null)
+                {
+
+
+                    g.updateScore2(period, timer, status, gamestatuslong, currentvisitorscore, visitorscoresupplemental,
+                            scorets, currenthomescore, homescoresupplemental);
+
                     MqMessageProcessor.getInstance().addGame(g);
 
                 } else {

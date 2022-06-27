@@ -43,6 +43,7 @@ public class BookieManager {
         addBookie(new Bookie(SiaConst.NoteColumnBookieId, "*Notes", "*Notes", "", ""));
         addBookie(new Bookie(996, "*Best", "*Best", "", ""));
         addBookie(new Bookie(997, "*Consensus", "*Cnus", "", ""));
+        addBookie(new Bookie(998, "*Details2", "*Dtals2", "", ""));
     }
     public int getNumFixedCols() {
         return numfixedcols;

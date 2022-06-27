@@ -97,6 +97,18 @@ public class Game implements KeyedObject,Cloneable {
     long gamestatusts;
     long scorets;
 
+
+
+
+    int currentvisitorscore2;
+    int currenthomescore2;
+    String visitorscoresupplemental2;
+    String homescoresupplemental2;
+    String status2;
+    String timeremaining2;
+    long gamestatusts2;
+    long scorets2;
+
     public Game() {
         setStatus("");
         timeremaining = "";
@@ -197,6 +209,19 @@ public class Game implements KeyedObject,Cloneable {
         this.scorets = scorets;
         this.currenthomescore = currenthomescore;
         this.homescoresupplemental = homescoresupplemental;
+
+    }
+    public void updateScore2(String period, String timer, String status, long gamestatusts, int currentvisitorscore, String visitorscoresupplemental,
+                            long scorets, int currenthomescore, String homescoresupplemental) {
+        //this.period = period;
+        this.timeremaining2 = timer;
+        setStatus2(status);
+        this.gamestatusts2 = gamestatusts;
+        this.currentvisitorscore2 = currentvisitorscore;
+        this.visitorscoresupplemental2 = visitorscoresupplemental;
+        this.scorets2 = scorets;
+        this.currenthomescore2 = currenthomescore;
+        this.homescoresupplemental2 = homescoresupplemental;
 
     }
     public long getGamestatusts() {
@@ -672,6 +697,73 @@ public class Game implements KeyedObject,Cloneable {
     public boolean isInStage() {
         return isInFinal() || isHalfTime() || isInProgress() || isSeriesprice() ||  isIngame();
     }
+
+    public int getCurrentvisitorscore2() {
+        return currentvisitorscore2;
+    }
+
+    public void setCurrentvisitorscore2(int currentvisitorscore2) {
+        this.currentvisitorscore2 = currentvisitorscore2;
+    }
+
+    public int getCurrenthomescore2() {
+        return currenthomescore2;
+    }
+
+    public void setCurrenthomescore2(int currenthomescore2) {
+        this.currenthomescore2 = currenthomescore2;
+    }
+
+    public String getVisitorscoresupplemental2() {
+        return visitorscoresupplemental2;
+    }
+
+    public void setVisitorscoresupplemental2(String visitorscoresupplemental2) {
+        this.visitorscoresupplemental2 = visitorscoresupplemental2;
+    }
+
+    public String getHomescoresupplemental2() {
+        return homescoresupplemental2;
+    }
+
+    public void setHomescoresupplemental2(String homescoresupplemental2) {
+        this.homescoresupplemental2 = homescoresupplemental2;
+    }
+
+    public String getStatus2() {
+        return status2;
+    }
+
+    public void setStatus2(String status2) {
+        this.status2 = status2;
+    }
+
+    public String getTimeremaining2() {
+        return timeremaining2;
+    }
+
+    public void setTimeremaining2(String timeremaining2) {
+        this.timeremaining2 = timeremaining2;
+    }
+
+    public long getScorets2() {
+        return scorets2;
+    }
+
+    public void setScorets2(long scorets2) {
+        this.scorets2 = scorets2;
+    }
+    public long getGamestatusts2() {
+        return gamestatusts2;
+    }
+
+    public void setGamestatusts2(long gamestatusts2) {
+        this.gamestatusts2 = gamestatusts2;
+    }
+
+
+
+
     public static void main(String [] argv) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
         java.util.Date date = new java.util.Date(1651879800000L);

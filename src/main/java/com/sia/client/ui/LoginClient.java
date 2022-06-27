@@ -117,6 +117,9 @@ public class LoginClient implements MessageListener {
         mapMessage.setString("username", username);
         mapMessage.setString("password", password);
         mapMessage.setString("ip", ip);
+        String javaversion = System.getProperty("java.version");
+        log("java version="+javaversion);
+        mapMessage.setString("javaversion",javaversion );
 
         mapMessage.setJMSReplyTo(tempDest);
 
