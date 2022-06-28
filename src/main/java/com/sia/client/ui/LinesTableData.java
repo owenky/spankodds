@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Game;
@@ -106,7 +107,12 @@ public class LinesTableData extends TableSection<Game> {
             Object value;
             if (SiaConst.BlankGameId == gameid) {
                 value = getGameGroupHeader();
-            } else {
+            } else if ( TableUtils.isNoteColumn(tc)) {
+                value = Config.instance().getGameNotes().getNote(gameid);
+                if ( null == value){
+                    value="";
+                }
+            }  else {
                 value = getCellValue(tc, g);
             }
             rowData.add(value);

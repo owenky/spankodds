@@ -111,9 +111,15 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
         TableColumn tc = getAllColumns().get(colModelIndex);
         if ( TableUtils.isNoteColumn(tc)) {
-            int gameId = getGame(rowModelIndex).getGame_id();
+            V game = getGame(rowModelIndex);
+            int gameId = game.getGame_id();
             GameNotes gameNotes = Config.instance().getGameNotes();
             gameNotes.addNote(gameId,String.valueOf(value));
+
+            //update model value.
+            LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
+            TableSection<V> section = ltdSrhStruct.linesTableData;
+            addGameToTableSection(section,game);
         } else {
             throw new IllegalStateException("Pending implementation");
         }

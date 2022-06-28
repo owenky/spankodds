@@ -44,4 +44,8 @@ public class GameNotes {
             gameNodes.remove(key);
         });
     }
+    @JsonIgnore
+    public String getNote(Integer gameId) {
+        return gameNodes.get(gameId);
+    }
 }

@@ -22,7 +22,14 @@ public abstract class TableUtils {
 
     public static boolean isCellEditable(JTable table, int row, int column) {
         TableColumn tc = table.getColumnModel().getColumn(column);
-        return null != tc.getCellEditor();
+        if ( null == tc.getCellEditor()) {
+            return false;
+        } else if ( table instanceof AccessableToGame){
+            int rowModelIndex = table.convertRowIndexToModel(row);
+            return  0 < ((AccessableToGame)table).getGame(rowModelIndex).getGame_id();
+        } else {
+            return false;
+        }
     }
     public static boolean isNoteColumn(JTable table, int columnIndex) {
         TableColumn tc = table.getColumnModel().getColumn(columnIndex);
