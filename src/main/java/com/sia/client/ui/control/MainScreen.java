@@ -2,7 +2,6 @@ package com.sia.client.ui.control;
 
 import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.*;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
@@ -44,7 +43,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public MainGameTableModel buildModel() {
 
         screenGameModel.build();
-        MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,screenGameModel.getAllTableColumns());
+        MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,screenGameModel.getBookieColumnModel());
         model.buildCustomTabGameGroupHeader();
 
         Collection<LinesTableData> tableSections = screenGameModel.getTableSections();
@@ -73,7 +72,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
        return null == mainGameTable? null: mainGameTable.getModel();
     }
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
-        LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, screenGameModel.getAllTableColumns());
+        LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, screenGameModel.getBookieColumnModel());
         if (sportType.equals(SportType.Soccer)) {
             tableSection.setRowHeight(Config.instance().getFontConfig().getSoccerRowHeight());
         }

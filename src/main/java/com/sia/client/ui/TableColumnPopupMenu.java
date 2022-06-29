@@ -152,7 +152,7 @@ public class TableColumnPopupMenu{
                     AppController.putColor(bookieid, color);
                     try {
                         MainGameTableModel model = ((MainGameTable) table).getModel();
-                        TableModelEvent tme = new TableModelEvent(model, 0, Integer.MAX_VALUE, model.getAllColumns().size(), TableModelEvent.UPDATE);
+                        TableModelEvent tme = new TableModelEvent(model, 0, Integer.MAX_VALUE, model.getBookieColumnModel().size(), TableModelEvent.UPDATE);
                         model.fireTableChanged(tme);
 
                     }
@@ -203,7 +203,7 @@ public class TableColumnPopupMenu{
                 try
                 {
                 MainGameTableModel model = ((MainGameTable)table).getModel();
-                TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getAllColumns().size(),TableModelEvent.UPDATE);
+                TableModelEvent tme = new TableModelEvent(model,0,Integer.MAX_VALUE,model.getBookieColumnModel().size(),TableModelEvent.UPDATE);
                 model.fireTableChanged(tme);
                  }
                     catch(Exception ex) {}

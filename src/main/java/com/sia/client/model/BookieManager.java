@@ -111,6 +111,7 @@ public class BookieManager {
         if ( null != fixedCols) {
             fixedCols.clear();
         }
+        BookieColumnsImpl.instance().reset();
     }
     public Iterator<Bookie> iterator() {
         return bookiesVec.iterator();
@@ -119,11 +120,9 @@ public class BookieManager {
         return bookieshortnameids.get(sn);
     }
     public int reorderBookiesVec() {
-        User u = User.instance();
         int fixedcolsint = 0;
         List<Bookie> newVec = new ArrayList<>();
-        fixedCols.clear();
-        shownCols.clear();
+        reset();
         hiddenCols.clear();
         List<String> fixedcols = getFixedColumnStr();
         for (String id : fixedcols) {

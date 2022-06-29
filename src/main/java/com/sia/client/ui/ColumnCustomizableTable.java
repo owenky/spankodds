@@ -4,7 +4,6 @@ import com.sia.client.config.Config;
 import com.sia.client.config.Utils;
 import com.sia.client.model.*;
 import com.sia.client.model.ColumnCustomizableDataModel.LtdSrhStruct;
-import com.sia.client.ui.control.MainScreen;
 import com.sun.javafx.collections.ImmutableObservableList;
 
 import javax.swing.*;
@@ -303,7 +302,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     }
 
     public TableColumn getColumnFromDataModel(int colModelIndex) {
-        return getModel().getAllColumns().get(colModelIndex);
+        return getModel().getBookieColumnModel().get(colModelIndex);
     }
 
     public void removeLockedColumnIndex(Integer... lockedColumnIndexArr) {
@@ -328,14 +327,14 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             cm.removeColumn(cm.getColumn(0));
         }
 
-        List<TableColumn> allColumns = getModel().getAllColumns();
-        for (TableColumn tc : allColumns) {
+        BookieColumnModel bookieColumnModel = getModel().getBookieColumnModel();
+        for (int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn tc = bookieColumnModel.get(i);
             if (null != lockedColumnIndex && !lockedColumnIndex.contains(tc.getModelIndex())) {
                 cm.addColumn(tc);
             }
         }
         needToCreateColumnModel = false;
-
     }
 
     @Override

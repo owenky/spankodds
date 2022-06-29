@@ -20,7 +20,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
 
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
-    private final List<TableColumn> allColumns;
+    private final BookieColumnModel bookieColumnModel;
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private boolean toConfigHeaderRow = false;
@@ -28,10 +28,10 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     private final GameBatchUpdator gameBatchUpdator;
     private final ScreenProperty screenProperty;
 
-    public ColumnCustomizableDataModel(ScreenProperty screenProperty,List<TableColumn> allColumns) {
+    public ColumnCustomizableDataModel(ScreenProperty screenProperty,BookieColumnModel bookieColumnModel) {
         this.screenProperty = screenProperty;
-        this.allColumns = allColumns;
-        validateAndFixColumnModelIndex(allColumns);
+        this.bookieColumnModel = bookieColumnModel;
+        validateAndFixColumnModelIndex(bookieColumnModel);
         gameBatchUpdator = GameBatchUpdator.instance();
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
@@ -72,14 +72,14 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public int getColumnCount() {
-        return allColumns.size();
+        return bookieColumnModel.size();
     }
 
     @Override
     public String getColumnName(final int columnIndex) {
-        Object columnName =  allColumns.get(columnIndex).getHeaderValue();
+        Object columnName =  bookieColumnModel.get(columnIndex).getHeaderValue();
         if ( null == columnName) {
-            columnName = allColumns.get(columnIndex).getIdentifier();
+            columnName = bookieColumnModel.get(columnIndex).getIdentifier();
         }
         if ( null == columnName) {
             columnName = "";
@@ -109,7 +109,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
-        TableColumn tc = getAllColumns().get(colModelIndex);
+        TableColumn tc = getBookieColumnModel().get(colModelIndex);
         if ( TableUtils.isNoteColumn(tc)) {
             V game = getGame(rowModelIndex);
             int gameId = game.getGame_id();
@@ -181,8 +181,8 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     public TableSection<V> findTableSectionByGameid(int gameId) {
         return getTableSections().stream().filter(ts-> ts.containsGame(gameId)).findAny().orElse(null);
     }
-    public List<TableColumn> getAllColumns() {
-        return this.allColumns;
+    public BookieColumnModel getBookieColumnModel() {
+        return this.bookieColumnModel;
     }
     public Integer getRowKey(int rowModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
@@ -402,17 +402,18 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             l.processTableSectionChanged();
         }
     }
-    private static void validateAndFixColumnModelIndex(List<TableColumn> allColumns) {
-        if ( ! validateColumnIndex(allColumns)) {
-            for( int i=0;i<allColumns.size();i++) {
-                allColumns.get(i).setModelIndex(i);
+    private static void validateAndFixColumnModelIndex(BookieColumnModel bookieColumnModel) {
+        if ( ! validateColumnIndex(bookieColumnModel)) {
+            for( int i=0;i<bookieColumnModel.size();i++) {
+                bookieColumnModel.get(i).setModelIndex(i);
             }
         }
     }
-    private static boolean validateColumnIndex(List<TableColumn> allColumns) {
+    private static boolean validateColumnIndex(BookieColumnModel bookieColumnModel) {
         int modelIndex0Count=0;
         boolean status = true;
-        for(TableColumn tc: allColumns) {
+        for(int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn tc = bookieColumnModel.get(i);
             if ( 0 == tc.getModelIndex()) {
                 if ( ++modelIndex0Count > 1) {
                     status = false;

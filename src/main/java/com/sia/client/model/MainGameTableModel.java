@@ -8,7 +8,6 @@ import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
-import javax.swing.table.TableColumn;
 import java.util.*;
 import java.util.function.Function;
 
@@ -27,8 +26,8 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
         stageStrs.add(SiaConst.InGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
-    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,List<TableColumn> allColumns) {
-        super(screenProperty,allColumns);
+    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,BookieColumnModel bookieColumnModel) {
+        super(screenProperty,bookieColumnModel);
         this.sportType = sportType;
         AppController.addNewLineListener(this);
     }
@@ -185,7 +184,7 @@ Utils.log("rebuild modle");
         String header = gameGroupHeader.getGameGroupHeaderStr();
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
-            rtn = new LinesTableData(sportType,getScreenProperty(), new Vector<>(),gameGroupHeader,getAllColumns());
+            rtn = new LinesTableData(sportType,getScreenProperty(), new Vector<>(),gameGroupHeader, getBookieColumnModel());
             sections.add(rtn);
         } else {
             rtn = null;

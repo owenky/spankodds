@@ -2,42 +2,28 @@ package com.sia.client.ui;
 
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
-import com.sia.client.model.BestLines;
-import com.sia.client.model.Game;
-import com.sia.client.model.GameDateSorter;
-import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.GameNumSorter;
-import com.sia.client.model.Games;
-import com.sia.client.model.LineGames;
-import com.sia.client.model.ScreenProperty;
-import com.sia.client.model.SportType;
-import com.sia.client.model.TableSection;
+import com.sia.client.model.*;
 
 import javax.swing.table.TableColumn;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 
 import static com.sia.client.config.Utils.log;
 
 public class LinesTableData extends TableSection<Game> {
 
     private final SportType sportType;
-    private final List<TableColumn> columns;
+    private final BookieColumnModel bookieColumnModel;
     private final ScreenProperty screenProperty;
 
-    public LinesTableData(SportType sportType, ScreenProperty screenProperty, Vector<Game> gameVec, GameGroupHeader gameGroupHeader, List<TableColumn> columns) {
-        this(sportType,screenProperty, gameVec, gameGroupHeader, AppController.getGames(), columns);
+    public LinesTableData(SportType sportType, ScreenProperty screenProperty, Vector<Game> gameVec, GameGroupHeader gameGroupHeader, BookieColumnModel bookieColumnModel) {
+        this(sportType,screenProperty, gameVec, gameGroupHeader, AppController.getGames(), bookieColumnModel);
     }
-    public LinesTableData(SportType sportType,ScreenProperty screenProperty, Vector<Game> gameVec,GameGroupHeader gameGroupHeader, Games gameCache, List<TableColumn> columns) {
+    public LinesTableData(SportType sportType,ScreenProperty screenProperty, Vector<Game> gameVec,GameGroupHeader gameGroupHeader, Games gameCache, BookieColumnModel bookieColumnModel) {
         super(gameGroupHeader,gameCache, sportType.isShowHeaders(), gameVec);
         this.sportType = sportType;
         this.screenProperty = screenProperty;
-        this.columns = columns;
+        this.bookieColumnModel = bookieColumnModel;
     }
     @Override
     protected boolean toAddToModel(Game g) {
@@ -101,9 +87,10 @@ public class LinesTableData extends TableSection<Game> {
     }
 
     private List<Object> makeGameRowData(Game g) {
-        List<Object> rowData = new ArrayList<>(columns.size());
+        List<Object> rowData = new ArrayList<>(bookieColumnModel.size());
         int gameid = g.getGame_id();
-        for (TableColumn tc : columns) {
+        for (int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn tc = bookieColumnModel.get(i);
             Object value;
             if (SiaConst.BlankGameId == gameid) {
                 value = getGameGroupHeader();

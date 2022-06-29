@@ -48,7 +48,7 @@ public class TableProperties {
     }
     public void rebuild() {
         ScreenProperty screenProperty = new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false));
-        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(screenProperty,makeColumns(colCount));
+        ColumnCustomizableDataModel<TestGame> tm = new ColumnCustomizableDataModel<>(screenProperty,TestDataModel.createTestBookieColumnModel(makeColumns(colCount)));
         table = new ColumnCustomizableTable<TestGame>(false,tm) {
 
             @Override
