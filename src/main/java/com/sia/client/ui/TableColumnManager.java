@@ -33,11 +33,20 @@ public class TableColumnManager implements java.awt.event.MouseListener, javax.s
 //    private String fixed;
 //    private List<TableColumn> allColumns;
 
+    private int movingColumnFrom;
+    private int movingColumnTo;
+    private TableColumnModel movingTableColumnModel;
+
     public static TableColumnManager instance() {
         return LazyInitHolder.instance;
     }
     private TableColumnManager() {
-
+        resetColumnMovingProp();
+    }
+    private void resetColumnMovingProp() {
+        movingColumnFrom = -1;
+        movingColumnTo = -1;
+        movingTableColumnModel = null;
     }
     public void installListeners(JTable table) {
         TableColumnModel tcm = table.getColumnModel();
@@ -245,6 +254,7 @@ public class TableColumnManager implements java.awt.event.MouseListener, javax.s
     @Override
     public void mouseReleased(MouseEvent e) {
         checkForPopup(e);
+        fireColumnOrderChanged();
     }
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -316,24 +326,28 @@ public class TableColumnManager implements java.awt.event.MouseListener, javax.s
     }
     @Override
     public void columnMoved(TableColumnModelEvent e) {
+        if ( 0 > movingColumnFrom) {
+            movingColumnFrom = e.getFromIndex();
+        }
+        movingColumnTo = e.getToIndex();
+        movingTableColumnModel = (TableColumnModel) e.getSource();
+    }
+    private void fireColumnOrderChanged() {
 
-        if (e.getFromIndex() == e.getToIndex()) {
+        if ( null == movingTableColumnModel ||  movingColumnFrom == movingColumnTo) {
             return;
         }
-        TableColumnModel tcm = (TableColumnModel)e.getSource();
 
-        for(int i=e.getFromIndex();i<=e.getToIndex();i++) {
-            TableColumn tc = tcm.getColumn(i);
-            tc.setModelIndex(i);
-        }
 
         List<Bookie> oldColumnList = BookieManager.instance().getShownCols();
-        Bookie movedBookie = oldColumnList.remove(e.getFromIndex());
-        oldColumnList.add(e.getToIndex(),movedBookie);
+        Bookie movedBookie = oldColumnList.remove(movingColumnFrom);
+        oldColumnList.add(movingColumnTo,movedBookie);
         String newBookieStr = oldColumnList.stream().map(b-> b.getBookie_id() + "=" + b.getShortname()).collect(Collectors.joining(","));
 
         AppController.getUser().setBookieColumnPrefs(newBookieStr);
         BookieManager.instance().reset();
+
+        resetColumnMovingProp();
     }
     @Override
     public void columnMarginChanged(ChangeEvent e) {
