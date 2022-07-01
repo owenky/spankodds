@@ -145,6 +145,7 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         if (TableUtils.toRebuildCache(e) || toConfigHeaderRow()) {
             long begin = System.currentTimeMillis();
             buildIndexMappingCache(false);
+            setToConfigHeaderRow(false);
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
             this.gameBatchUpdator.flush(e);
         } else {

@@ -2,7 +2,7 @@ package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
-import com.sia.client.ui.comps.NodeCellEditor;
+import com.sia.client.ui.comps.NoteCellEditor;
 
 import javax.swing.table.TableCellEditor;
 import java.util.*;
@@ -32,7 +32,7 @@ public class BookieManager {
                 214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, SiaConst.NoteColumnBookieId};
         defaultShownColList =  Arrays.stream(shownColArr).map(String::valueOf).collect(Collectors.toList());
 
-        columnEditorMap.put(SiaConst.NoteColumnBookieId, NodeCellEditor.class);
+        columnEditorMap.put(SiaConst.NoteColumnBookieId, NoteCellEditor.class);
     }
 
     public static BookieManager instance() {

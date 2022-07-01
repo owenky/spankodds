@@ -21,11 +21,6 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
     }
-    // force ctrl key down when mouse click a row by setting toggle=true
-    @Override
-    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
-        super.changeSelection(rowIndex,columnIndex,true,extend);
-    }
     @Override
     public void valueChanged(ListSelectionEvent e) {
         super.valueChanged(e);
@@ -78,6 +73,13 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     @Override
     public boolean isCellEditable(int row, int col) {
         return TableUtils.isCellEditable(this,row,col);
+    }
+    // force ctrl key down when mouse click a row by setting toggle=true
+    @Override
+    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+        if ( ! this.isCellEditable(rowIndex,columnIndex)) {
+            super.changeSelection(rowIndex, columnIndex, true, extend);
+        }
     }
     private boolean isSoccer(int rowViewIndex) {
         if ( sporetType.equals(SportType.Soccer)) {

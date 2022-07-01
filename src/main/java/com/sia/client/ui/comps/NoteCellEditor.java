@@ -6,13 +6,13 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 
-public class NodeCellEditor extends AbstractCellEditor implements TableCellEditor {
+public class NoteCellEditor extends AbstractCellEditor implements TableCellEditor {
 
     private final TextComponent editorComponent;
     private final Dimension editorComponentSize = new Dimension(500,100);
     private final JTextField editorIndicator;
     private JLayeredPane jLayeredPane;
-    public NodeCellEditor() {
+    public NoteCellEditor() {
         super();
         editorIndicator = new JTextField();
         editorIndicator.setEditable(false);
@@ -33,7 +33,7 @@ public class NodeCellEditor extends AbstractCellEditor implements TableCellEdito
         if ( jLayeredPane.getIndexOf(editorComponent) <  0) {
             jLayeredPane.add(editorComponent, SiaConst.LayedPaneIndex.NoteColumnEditorIndex);
         }
-        editorComponent.setVisible(true);
+            editorComponent.setVisible(true);
         editorComponent.setBounds(popupLocation.x-layerPaneLoc.x,popupLocation.y-layerPaneLoc.y,editorComponentSize.width,editorComponentSize.height);
         return editorIndicator;
     }

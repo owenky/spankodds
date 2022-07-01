@@ -22,7 +22,9 @@ public class RowHeaderGameTable extends RowHeaderTable<Game>{
     // force ctrl key down when mouse click a row by setting toggle=true
     @Override
     public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
-        super.changeSelection(rowIndex,columnIndex,true,extend);
+        if ( ! this.isCellEditable(rowIndex,columnIndex)) {
+            super.changeSelection(rowIndex, columnIndex, true, extend);
+        }
     }
     @Override
     public boolean isCellEditable(int row, int col) {

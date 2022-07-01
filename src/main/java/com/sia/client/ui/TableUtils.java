@@ -47,7 +47,7 @@ public abstract class TableUtils {
         rowSelection.clearSelectedGames(gameTable);
         int beginIndex = listSelectionModel.getMinSelectionIndex();
         int endIndex = listSelectionModel.getMaxSelectionIndex();
-        List<Integer> selectedGameIdList = new ArrayList<>(endIndex - beginIndex + 1);
+        List<Integer> selectedGameIdList = new ArrayList<>(endIndex - beginIndex+1);
         for (int i = beginIndex; i <= endIndex; i++) {
             if (listSelectionModel.isSelectedIndex(i)) {
                 int modelIndex = gameTable.convertRowIndexToModel(i);
