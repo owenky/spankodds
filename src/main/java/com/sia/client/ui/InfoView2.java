@@ -106,14 +106,14 @@ public class InfoView2 {
                     String hwin = "";
                     for(int i = 0; i < vscores.length; i++)
                     {
-                        if(Integer.parseInt(vscores[i]) > Integer.parseInt(hscores[i]))
-                        {
-                            vwins++;
+                        try {
+                            if (Integer.parseInt(vscores[i]) > Integer.parseInt(hscores[i])) {
+                                vwins++;
+                            } else {
+                                hwins++;
+                            }
                         }
-                        else
-                        {
-                            hwins++;
-                        }
+                        catch(Exception ex) { System.out.println("not int"+ex);}
                     }
                     if(vwins >  hwins)
                     {
