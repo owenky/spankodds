@@ -8,7 +8,6 @@ import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -145,133 +144,76 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
 // 1st HALF NOT VISIBLE USED TO SELECT 1st HALF FROM COMBO BOX!
 
-        Action firsthalfaction = new AbstractAction("1st half") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        ActionListener al = (e)-> {
                 log("1st half button pressed");
                 periodcb.setSelectedIndex(1);
-
-
-            }
         };
-        firsthalfaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_2, 0));
-
-        this.getActionMap().put("1sthalfAction", firsthalfaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) firsthalfaction.getValue(Action.ACCELERATOR_KEY), "1sthalfAction");
+        ShortCut.registerShortCutAction(this, ShortCut.FirstHalf,al);
 
 // FULL GAME NOT VISIBLE USED TO SELECT FULL GAME FROM COMBO BOX!
 
-        Action fullgameaction = new AbstractAction("Full Game") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)->  {
                 log("full game button pressed");
                 periodcb.setSelectedIndex(0);
-
-
-            }
         };
-        fullgameaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_G, 0));
-
-        this.getActionMap().put("fullgameAction", fullgameaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) fullgameaction.getValue(Action.ACCELERATOR_KEY), "fullgameAction");
+        ShortCut.registerShortCutAction(this, ShortCut.FullGame,al);
 
 // USED TO SELECT DEFAULT VIEW FROM COMBO BOX!
 
-        Action defaultviewaction = new AbstractAction("DefaultView") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)-> {
                 log("defaultview button pressed");
                 cb.setSelectedIndex(0);
-
-
-            }
         };
-        defaultviewaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, 0));
-
-        this.getActionMap().put("defaultviewaction", defaultviewaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) defaultviewaction.getValue(Action.ACCELERATOR_KEY), "defaultviewaction");
+        ShortCut.registerShortCutAction(this, ShortCut.DefaultView,al);
 
 // USED TO SELECT SIDES ONLY FROM COMBO BOX!
 
-        Action sidesonlyaction = new AbstractAction("SidesOnly") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)->{
                 log("sides only button pressed");
                 cb.setSelectedIndex(4);
-
-
-            }
         };
-        sidesonlyaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_3, 0));
-
-        this.getActionMap().put("sidesonlyaction", sidesonlyaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) sidesonlyaction.getValue(Action.ACCELERATOR_KEY), "sidesonlyaction");
+        ShortCut.registerShortCutAction(this, ShortCut.SidesOnly,al);
 
 // USED TO SELECT TOTALS ONLY FROM COMBO BOX!
 
-        Action totalsonlyaction = new AbstractAction("TotalsOnly") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)->  {
                 cb.setSelectedIndex(5);
-
-
-            }
         };
-        totalsonlyaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_4, 0));
-
-        this.getActionMap().put("totalsonlyaction", totalsonlyaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) totalsonlyaction.getValue(Action.ACCELERATOR_KEY), "totalsonlyaction");
+        ShortCut.registerShortCutAction(this, ShortCut.TotalsOnly,al);
 
 
 // CLEAR BUTTON
-
-        Action clearaction = new AbstractAction("Clear") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)-> {
                 Component comp = stb.getSelectedComponent();
                 if (comp instanceof MainScreen) {
                     ((MainScreen) comp).setClearTime(new java.util.Date().getTime());
                 }
-            }
         };
-        clearaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));
-        clearBut = new JButton(clearaction);
-        clearBut.getActionMap().put("clearAction", clearaction);
-        clearBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) clearaction.getValue(Action.ACCELERATOR_KEY), "clearAction");
+        clearBut = new JButton("Clear");
+        Action action = ShortCut.registerShortCutAction(clearBut, ShortCut.Clear,al);
+        clearBut.setAction(action);
 
 
 // CLEAR ALL BUTTON
 
-        Action clearallaction = new AbstractAction("Clear All") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)-> {
                 long ct = (new java.util.Date()).getTime();
                 MainScreen ms = (MainScreen) stb.getSelectedComponent();
                 ms.setClearTime(ct);
                 AppController.setClearAllTime(ct);
                 AppController.clearAll();
-            }
         };
-        clearallaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, 0));
-        clearAllBut = new JButton(clearallaction);
-        clearAllBut.getActionMap().put("clearAllAction", clearallaction);
-        clearAllBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) clearallaction.getValue(Action.ACCELERATOR_KEY), "clearAllAction");
-
+        clearAllBut = new JButton("Clear All");
+        action = ShortCut.registerShortCutAction(clearAllBut, ShortCut.ClearAll,al);
+        clearAllBut.setAction(action);
 
         adjustcolsBut.addActionListener(ae -> {
             MainScreen ms = (MainScreen) stb.getSelectedComponent();
             ms.adjustcols();
         });
-        Action lastaction = new AbstractAction("Last") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+
+
+        al = (e)-> {
                 if (lastBut.getText().equals("Current")) {
                     lastBut.setText("Last");
                     stb.setLast(false);
@@ -282,17 +224,14 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                     stb.setLast(true);
                 }
                 stb.resetCurrentScreenStates();
-
-            }
         };
-        lastBut = new JButton(lastaction);
 
-        lastaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0));
+        lastBut = new JButton("Last");
+        action = ShortCut.registerShortCutAction(lastBut, ShortCut.Last,al);
+        lastBut.setAction(action);
 
-        lastBut.getActionMap().put("lastAction", lastaction);
-        lastBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) lastaction.getValue(Action.ACCELERATOR_KEY), "lastAction");
-
+        continue to use ShortCut.registerShortCutActin to reduce code redundance
+         1. NOTE: button text is diff from action name, the ShortCut.registerShortCutActin use action name for button text which has space between 2 words.
         Action openeraction = new AbstractAction("Opener") {
             @Override
             public void actionPerformed(ActionEvent e) {
