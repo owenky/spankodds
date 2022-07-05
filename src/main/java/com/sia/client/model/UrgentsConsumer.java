@@ -89,9 +89,10 @@ public class UrgentsConsumer implements MessageListener {
                                 }
                             }
                         }).start();
-                        JOptionPane.showMessageDialog(SpankyWindow.getFirstSpankyWindow(), "Another instance of SpankOdds has logged in. You will now be logged out.",
+                        Runnable r =  ()->JOptionPane.showMessageDialog(SpankyWindow.getFirstSpankyWindow(), "Another instance of SpankOdds has logged in. You will now be logged out.",
                                 "Attention!", JOptionPane.WARNING_MESSAGE);
-                        System.out.println("exit by confirmation..");
+                        SwingUtilities.invokeAndWait(r);
+//                        System.out.println("exit by confirmation..");
                         System.exit(0);
 
                     }
