@@ -9,10 +9,15 @@ import static com.sia.client.config.Utils.log;
 
 public enum ShortCut {
 
+    Opener(KeyEvent.VK_O),
     DefaultView(KeyEvent.VK_1),
     FirstHalf(KeyEvent.VK_2),
     SidesOnly(KeyEvent.VK_3),
     TotalsOnly(KeyEvent.VK_4),
+    Sort(KeyEvent.VK_5),    //new
+    AddBookie(KeyEvent.VK_6),    //new
+    ShrinkTeam(KeyEvent.VK_7),    //new
+    Alert(KeyEvent.VK_8),    //new
     Clear(KeyEvent.VK_C),
     FullGame(KeyEvent.VK_G),
     Last(KeyEvent.VK_Q),

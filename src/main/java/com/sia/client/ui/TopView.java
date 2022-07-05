@@ -9,9 +9,10 @@ import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class TopView extends JPanel implements ItemListener, Cloneable {
@@ -230,13 +231,9 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
         action = ShortCut.registerShortCutAction(lastBut, ShortCut.Last,al);
         lastBut.setAction(action);
 
-        continue to use ShortCut.registerShortCutActin to reduce code redundance
-         1. NOTE: button text is diff from action name, the ShortCut.registerShortCutActin use action name for button text which has space between 2 words.
-        Action openeraction = new AbstractAction("Opener") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)-> {
                 if (openerBut.getText().equals("Current")) {
-                    openerBut.setText("Opener");
+                    openerBut.setText("");
                     stb.setOpener(false);
                     stb.showCurrent();
                 } else {
@@ -245,15 +242,12 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                     stb.setOpener(true);
                 }
                 stb.resetCurrentScreenStates();
-            }
         };
-        openerBut = new JButton(openeraction);
-        openeraction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, 0));
+        openerBut = new JButton("Opener");
+        action = ShortCut.registerShortCutAction(lastBut, ShortCut.Opener,al);
+        openerBut.setAction(action);
 
-        openerBut.getActionMap().put("openerAction", openeraction);
-        openerBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) openeraction.getValue(Action.ACCELERATOR_KEY), "openerAction");
-        sortBut.addActionListener(ae -> {
+        al = (e)-> {
             log("sort button pressed");
             if (sortBut.getText().equals("Time sort")) {
                 stb.setSort(true);
@@ -265,18 +259,19 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
             MainScreen ms = (MainScreen) stb.getSelectedComponent();
             ms.getDataModels().sortGamesForAllTableSections();
             ms.getColumnCustomizableTable().getModel().refreshTable();
-        });
+        };
+        action = ShortCut.registerShortCutAction(sortBut, ShortCut.Sort,al);
+        sortBut.setAction(action);
 
-        addBookieBut.addActionListener(ae -> {
-            checkAndRunInEDT(() -> {
-                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
-                BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
-            });
-        });
+        al = (e)-> {
+            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
+            BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
+        };
+        action = ShortCut.registerShortCutAction(addBookieBut, ShortCut.AddBookie,al);
+        addBookieBut.setAction(action);
 
         //owen this one we will have to repaint somehow
-        shrinkTeamBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+        al = (e)-> {
                 if (shrinkTeamBut.getText().equals("Short Team")) {
                     stb.setShort(true);
                     shrinkTeamBut.setText("Long Team");
@@ -286,11 +281,15 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 }
 //                stb.rebuildMainScreen();
                 stb.resetCurrentScreenStates();
-            }
-        });
-        alertBut.addActionListener(ae -> {
+        };
+        action = ShortCut.registerShortCutAction(shrinkTeamBut, ShortCut.ShrinkTeam,al);
+        shrinkTeamBut.setAction(action);
+
+        al = (e)-> {
             UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
-        });
+        };
+        action = ShortCut.registerShortCutAction(alertBut, ShortCut.Alert,al);
+        alertBut.setAction(action);
 
     }
 
