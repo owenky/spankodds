@@ -203,15 +203,8 @@ public abstract class OngoingGameMessages {
         LocalMessageLogger.localMessageClock.set(ltd);
         String type = strs[1];
         String messageText = strs[2];
-        boolean toContinue=false;
-        for(String keyword: InitialGameMessages.filters) {
-            if ( text.contains(keyword)) {
-                toContinue=true;
-                break;
-            }
-        }
-
-        if ( ! toContinue && 0 < InitialGameMessages.filters.length) {
+        boolean toContinue=InitialGameMessages.mesgFilterType.test(messageText);
+        if ( ! toContinue ) {
             return;
         }
 

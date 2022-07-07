@@ -3,6 +3,8 @@ package com.sia.client.simulator;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst.TestProperties;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
+import com.sia.client.simulator.filter.MesgFilterType;
+import com.sia.client.simulator.filter.MessageFilterFactory;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankOdds;
 
@@ -31,7 +33,7 @@ public abstract class InitialGameMessages {
     public static boolean shouldLogMesg = false;
     public static boolean shouldRunSimulator; //set by System Property
     public static boolean Debug;
-    public static String [] filters;
+    public static MesgFilterType mesgFilterType;
     public static String MesgDir;
     public static Set<MessageType> interestedMessageTypes;
     private static List<String> buffer = new ArrayList<>();
@@ -48,12 +50,9 @@ public abstract class InitialGameMessages {
         MesgDir = null==mesgDir?TestProperties.DefaultMesgDir:mesgDir;
         shouldLogMesg = Boolean.parseBoolean(System.getProperty("LogMesg"));
         shouldRunSimulator = Boolean.parseBoolean(System.getProperty("RunSimulator"));
-        String filterStr = System.getProperty("Filter");
-        if ( null == filterStr) {
-            filters = new String [0];
-        } else {
-            filters = filterStr.split(",");
-        }
+
+        mesgFilterType = MessageFilterFactory.parse(System.getProperty("Filter"));
+
         String interestedMesgTypeStr = System.getProperty("InterestedMessageTypes");
 
         interestedMessageTypes = configInterestedMessageTypes(interestedMesgTypeStr);
