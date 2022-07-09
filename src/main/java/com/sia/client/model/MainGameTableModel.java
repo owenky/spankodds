@@ -41,13 +41,20 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
         if ( null != game && SportType.findAllTypesByGame(game).contains(sportType) ) {
             LinesTableData tblSection = (LinesTableData)findTableSectionByGameid(line.getGameid());
             if (null != tblSection) {
+                int firstRow;
+                int lastRow;
                 if ( tblSection.isGameHidden(line.getGameid())) {
-Utils.log("rebuild modle");
+Utils.log("MainGameTableModel::processNewLines, rebuild modle");
                     tblSection.activateGame(game);
                     buildIndexMappingCache(true);
-                    Runnable r = () -> fireTableChanged(new TableModelEvent(this, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
-                    Utils.checkAndRunInEDT(r);
+                    firstRow = 0;
+                    lastRow = Integer.MAX_VALUE;
+                } else {
+                    firstRow = this.getRowModelIndexByGameId(tblSection,game.getGame_id());
+                    lastRow = firstRow;
                 }
+                Runnable r = () -> fireTableChanged(new TableModelEvent(this, firstRow,lastRow , 0, TableModelEvent.UPDATE));
+                Utils.checkAndRunInEDT(r);
             }
         }
     }
