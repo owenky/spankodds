@@ -214,7 +214,7 @@ public abstract class OngoingGameMessages {
         if ( ! toContinue){
             return;
         }
-        log(messageText);
+//        log("OngoingGameMessages: "+messageText);
         MessageDispatcher messageDispatcher;
         Message message;
         if (MessageType.Line.name().equals(type)) {
