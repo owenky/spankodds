@@ -199,8 +199,6 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
         al = (e)-> {
                 long ct = (new java.util.Date()).getTime();
-                MainScreen ms = (MainScreen) stb.getSelectedComponent();
-                ms.setClearTime(ct);
                 AppController.setClearAllTime(ct);
                 AppController.clearAll();
         };
