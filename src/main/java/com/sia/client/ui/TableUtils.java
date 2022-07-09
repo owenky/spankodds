@@ -177,9 +177,6 @@ public abstract class TableUtils {
         container.add(tableScrollPane.getHorizontalScrollBar(), BorderLayout.SOUTH);
 
         mainTable.getTableColumnHeaderManager().installListeners();
-        //add table column header listeners
-//        new TableColumnManager(stp, mainTable, "");
-//        new TableColumnManager(stp, mainTable.getRowHeaderTable(), "fixed");
         TableColumnManager.instance().installListeners(mainTable);
         TableColumnManager.instance().installListeners(mainTable.getRowHeaderTable());
         return container;
@@ -188,7 +185,9 @@ public abstract class TableUtils {
     public static void processTableModelEvent(ColumnCustomizableDataModel<?> tm) {
         tm.processTableModelEvent(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
     }
-
+    public static void flushTableModelEvent(ColumnCustomizableDataModel<?> tm) {
+        tm.flushUpdate(new TableModelEvent(tm, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
+    }
     public static boolean toRebuildCache(TableModelEvent e) {
         if (null == e) {
             return true;
