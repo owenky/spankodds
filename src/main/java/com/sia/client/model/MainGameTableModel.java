@@ -124,7 +124,7 @@ Utils.log("rebuild modle");
         for (TableSection<Game> linesTableData : gameLines) {
             ((LinesTableData)linesTableData).clearColors();
         }
-        TableUtils.processTableModelEvent(this);
+        TableUtils.flushTableModelEvent(this);
     }
     public SportType getSportType() {
         return this.sportType;
