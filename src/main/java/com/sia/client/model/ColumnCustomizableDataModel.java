@@ -227,7 +227,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         } else {
             log( new Exception("can't find LinesTableData for header:"+targetGameGroupHeader));
         }
-
+        this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
     }
     protected void addGameToTableSection(TableSection<V> ltd, V game) {
 
