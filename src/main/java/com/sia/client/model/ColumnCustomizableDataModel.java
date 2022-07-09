@@ -139,7 +139,10 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         this.processTableModelEvent(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void flushUpdate() {
-        this.gameBatchUpdator.flush();
+        flushUpdate(null);
+    }
+    public void flushUpdate(TableModelEvent e) {
+        this.gameBatchUpdator.flush(e);
     }
     public void processTableModelEvent(TableModelEvent e) {
         if (TableUtils.toRebuildCache(e) || toConfigHeaderRow()) {
