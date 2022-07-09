@@ -7,7 +7,7 @@ import com.sia.client.model.Sport;
 
 import java.awt.Color;
 
-public class ChartView {
+public class ChartView implements ViewWithColor {
 
     public static String ICON_UP = ImageFile.ICON_UP;
     public static String ICON_DOWN = ImageFile.ICON_DOWN;
@@ -24,13 +24,10 @@ public class ChartView {
     String item = "spreadtotal";
     private DisplayTransformer displayTransformer = null;
 
-    public ChartView()
-        {
+    public ChartView() {
     }
 
     public ChartView(int gid) {
-
-
         this.gid = gid;
 
         g = AppController.getGame(gid);
@@ -40,9 +37,7 @@ public class ChartView {
         //this.setAndGetOpenerBoxes(bid,gid);
 
 
-
     }
-
     public LineData[] getCurrentBoxes() {
         if (g.getStatus().equalsIgnoreCase("Time") && period == 0) {
             //log("setting period=2 for gameid="+g.getGame_id());
@@ -58,102 +53,98 @@ public class ChartView {
         ld2.setData("");
         ld1.setIconPath(ICON_BLANK);
         ld2.setIconPath(ICON_BLANK);
-        for (int i = 0; i < ChartChecker.getCl1().size(); i++)
-       {
-        try
-        {
+        for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
+            try {
 
-            if (ChartChecker.getCl1().get(i).gn == gid && ChartChecker.getCl1().get(i).p == period) {
-                if (!ChartChecker.getCl1().get(i).dataexists) {
-                    break;
-                }
-                item = displayTransformer.transformDefault(item);
-                if (item.equals("default")) {
-
-                    if (sp.getSport_id() == 3) // baseball
-                    {
-                        item = "totalbothmoney";
-                    } else if (sp.getParentleague_id() == 9) // soccer
-                    {
-                        item = "totalmoney";
-                    } else if (sp.getMoneylinedefault()) {
-                        item = "justmoney";
-                    } else {
-                        item = "spreadtotal";
+                if (ChartChecker.getCl1().get(i).gn == gid && ChartChecker.getCl1().get(i).p == period) {
+                    if (!ChartChecker.getCl1().get(i).dataexists) {
+                        break;
                     }
+                    item = displayTransformer.transformDefault(item);
+                    if (item.equals("default")) {
+
+                        if (sp.getSport_id() == 3) // baseball
+                        {
+                            item = "totalbothmoney";
+                        } else if (sp.getParentleague_id() == 9) // soccer
+                        {
+                            item = "totalmoney";
+                        } else if (sp.getMoneylinedefault()) {
+                            item = "justmoney";
+                        } else {
+                            item = "spreadtotal";
+                        }
+                    }
+
+                    if (item.equals("spreadtotal")) {
+                        ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
+                        ld2.setIconPath(ChartChecker.getCl1().get(i).totalicon);
+                        ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
+                        ld2.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
+                        ld1.setData(ChartChecker.getCl1().get(i).NDS);
+                        ld2.setData(ChartChecker.getCl1().get(i).NDT);
+
+                        //boxes[0] = ld1;
+                        //boxes[1] = ld2;
+                    } else if (item.equals("totalmoney") || item.equals("totalbothmoney")) {
+                        ld1.setIconPath(ChartChecker.getCl1().get(i).totalicon);
+                        ld2.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
+                        ld1.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
+                        ld2.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
+                        ld1.setData(ChartChecker.getCl1().get(i).NDT);
+                        ld2.setData(ChartChecker.getCl1().get(i).NDM);
+
+                        //boxes[0] = ld1;
+                        //boxes[1] = ld2;
+                    } else if (item.equals("justspread")) {
+                        ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
+                        ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
+                        ld2.setBackgroundColor(Color.WHITE);
+                        ld1.setData(ChartChecker.getCl1().get(i).NDS);
+                        ld2.setData("");
+
+                        //boxes[0] = ld1;
+                        //boxes[1] = ld2;
+                    } else if (item.equals("justtotal")) {
+                        ld2.setIconPath(ChartChecker.getCl1().get(i).totalicon);
+                        ld1.setBackgroundColor(Color.WHITE);
+                        ld2.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
+                        ld1.setData("");
+                        ld2.setData(ChartChecker.getCl1().get(i).NDT);
+
+                        //boxes[0] = ld1;
+                        //boxes[1] = ld2;
+                    } else if (item.equals("justmoney")) {
+                        ld1.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
+                        ld1.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
+                        ld2.setBackgroundColor(Color.WHITE);
+                        ld1.setData(ChartChecker.getCl1().get(i).NDM);
+                        ld2.setData("");
+
+                        //	boxes[0] = ld1;
+                        //	boxes[1] = ld2;
+                    } else if (item.equals("awayteamtotal")) {
+                        ld1.setIconPath(ChartChecker.getCl1().get(i).awayicon);
+                        ld1.setBackgroundColor(ChartChecker.getCl1().get(i).awaycolor);
+                        ld2.setBackgroundColor(Color.WHITE);
+                        ld1.setData(ChartChecker.getCl1().get(i).NDA);
+                        ld2.setData("");
+
+                    } else if (item.equals("hometeamtotal")) {
+                        ld1.setIconPath(ChartChecker.getCl1().get(i).homeicon);
+                        ld1.setBackgroundColor(ChartChecker.getCl1().get(i).homecolor);
+                        ld2.setBackgroundColor(Color.WHITE);
+                        ld1.setData(ChartChecker.getCl1().get(i).NDH);
+                        ld2.setData("");
+
+                    }
+
+
                 }
-
-                if (item.equals("spreadtotal")) {
-                    ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
-                    ld2.setIconPath(ChartChecker.getCl1().get(i).totalicon);
-                    ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
-                    ld2.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
-                    ld1.setData(ChartChecker.getCl1().get(i).NDS);
-                    ld2.setData(ChartChecker.getCl1().get(i).NDT);
-
-                    //boxes[0] = ld1;
-                    //boxes[1] = ld2;
-                } else if (item.equals("totalmoney") || item.equals("totalbothmoney")) {
-                    ld1.setIconPath(ChartChecker.getCl1().get(i).totalicon);
-                    ld2.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
-                    ld1.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
-                    ld2.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
-                    ld1.setData(ChartChecker.getCl1().get(i).NDT);
-                    ld2.setData(ChartChecker.getCl1().get(i).NDM);
-
-                    //boxes[0] = ld1;
-                    //boxes[1] = ld2;
-                } else if (item.equals("justspread")) {
-                    ld1.setIconPath(ChartChecker.getCl1().get(i).spreadicon);
-                    ld1.setBackgroundColor(ChartChecker.getCl1().get(i).spreadcolor);
-                    ld2.setBackgroundColor(Color.WHITE);
-                    ld1.setData(ChartChecker.getCl1().get(i).NDS);
-                    ld2.setData("");
-
-                    //boxes[0] = ld1;
-                    //boxes[1] = ld2;
-                } else if (item.equals("justtotal")) {
-                    ld2.setIconPath(ChartChecker.getCl1().get(i).totalicon);
-                    ld1.setBackgroundColor(Color.WHITE);
-                    ld2.setBackgroundColor(ChartChecker.getCl1().get(i).totalcolor);
-                    ld1.setData("");
-                    ld2.setData(ChartChecker.getCl1().get(i).NDT);
-
-                    //boxes[0] = ld1;
-                    //boxes[1] = ld2;
-                } else if (item.equals("justmoney")) {
-                    ld1.setIconPath(ChartChecker.getCl1().get(i).moneyicon);
-                    ld1.setBackgroundColor(ChartChecker.getCl1().get(i).moneycolor);
-                    ld2.setBackgroundColor(Color.WHITE);
-                    ld1.setData(ChartChecker.getCl1().get(i).NDM);
-                    ld2.setData("");
-
-                    //	boxes[0] = ld1;
-                    //	boxes[1] = ld2;
-                } else if (item.equals("awayteamtotal")) {
-                    ld1.setIconPath(ChartChecker.getCl1().get(i).awayicon);
-                    ld1.setBackgroundColor(ChartChecker.getCl1().get(i).awaycolor);
-                    ld2.setBackgroundColor(Color.WHITE);
-                    ld1.setData(ChartChecker.getCl1().get(i).NDA);
-                    ld2.setData("");
-
-                } else if (item.equals("hometeamtotal")) {
-                    ld1.setIconPath(ChartChecker.getCl1().get(i).homeicon);
-                    ld1.setBackgroundColor(ChartChecker.getCl1().get(i).homecolor);
-                    ld2.setBackgroundColor(Color.WHITE);
-                    ld1.setData(ChartChecker.getCl1().get(i).NDH);
-                    ld2.setData("");
-
-                }
-
-
+            } catch (Exception ex) {
+                System.out.println("exception chart view " + ex);
             }
         }
-        catch(Exception ex)
-        {
-            System.out.println("exception chart view "+ex);
-        }
-       }
         boxes[0] = ld1;
         boxes[1] = ld2;
         //	ld1.setBackgroundColor(topcolor);
@@ -162,16 +153,8 @@ public class ChartView {
         //return boxes;
 
     }
-
-    /*
-    public static  void setItem(String itm){
-        item=itm;
-    }
-    public static void setPeriod(int per){
-        period=per;
-    }
-    */
-    public static void clearColors() {
+    @Override
+    public void clearColors(long clearTime) {
         for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
 
             ChartChecker.getCl1().get(i).spreadcolor = Color.WHITE;
