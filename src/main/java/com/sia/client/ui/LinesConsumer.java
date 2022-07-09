@@ -62,30 +62,21 @@ public class LinesConsumer implements MessageListener {
 
         try {
             String username = mapMessage.getString("username");
-            if(!username.equals(""))
-            {
+            if (null != username && !username.equals("")) {
                 //log("Rescue mission");
-                if(!username.equals(AppController.getUser().getUsername()))
-                {
+                if (!username.equals(AppController.getUser().getUsername())) {
                     return;
-                }
-                else
-                {
-
                 }
             }
             long messagets = mapMessage.getJMSTimestamp();
-            if(lastmessagets != 0 && Math.abs(messagets - lastmessagets) > 60000)
-            {
-                System.out.println("HOUSTON WE HAVE A PROBLEM!\n\n\n");
-                System.out.println("NEED TO LOAD DATA FROM "+lastmessagets);
+            if (lastmessagets != 0 && Math.abs(messagets - lastmessagets) > 60000) {
+                Utils.log("HOUSTON WE HAVE A PROBLEM!\n\n\n");
+                Utils.log("NEED TO LOAD DATA FROM " + lastmessagets);
                 // use dishoutinitialdata thread but instead pass flag to use linespublisher instead
                 AppController.getUserPrefsProducer().helpsyncme(lastmessagets);
                 lastmessagets = messagets;
 
-            }
-            else
-            {
+            } else {
                 lastmessagets = messagets;
             }
             gameid = mapMessage.getInt("gameid");
@@ -153,7 +144,7 @@ public class LinesConsumer implements MessageListener {
                     sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, period);
                     //log("***************************************spreadxyzabc******************************");
                     if (isopener) {
-                       // LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
+                        // LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
                         //log("***************************************"+sportname+"******************************");
                     }
 
@@ -202,7 +193,7 @@ public class LinesConsumer implements MessageListener {
                 } else {
                     tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, newlongts, period);
                     if (isopener) {
-                      //  LineAlertOpeners.totalOpenerAlert(gameid, bookieid, period, isopenerS, newover, newoverjuice, newunder, newunderjuice);
+                        //  LineAlertOpeners.totalOpenerAlert(gameid, bookieid, period, isopenerS, newover, newoverjuice, newunder, newunderjuice);
                         //log("***************************************"+sportname+"******************************");
                     }
                     //	log("***************************************totalOpenerAlert******************************");
@@ -281,7 +272,7 @@ public class LinesConsumer implements MessageListener {
                     ttl = new TeamTotalline(gameid, bookieid, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
                             newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, newlongts, period);
                     if (isopener) {
-                      //  LineAlertOpeners.teamTotalOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice);
+                        //  LineAlertOpeners.teamTotalOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice);
                     }
                     AppController.addTeamTotalline(ttl);
                 }
@@ -338,7 +329,7 @@ public class LinesConsumer implements MessageListener {
                 } else {
                     ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, newlongts, period);
                     if (isopener) {
-                      //  LineAlertOpeners.moneyOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorjuice, newhomejuice);
+                        //  LineAlertOpeners.moneyOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorjuice, newhomejuice);
                         //log("***************************************"+sportname+"******************************");
                     }
                     //	log("***************************************moneyOpenerAlert******************************");
