@@ -792,7 +792,7 @@ public class LinesMoves {
 
                 prob = prob + arr[positiveindex] / 2.0 * negativefactor;
                 if (leagueid == 5 && period == 0 && type.equals("UNDER") && gameid == debuggameid && debug) {
-                    System.out.println("forloop...ol=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice + ".." + index + ".." + arr[positiveindex] / 2.0 * negativefactor);
+                    Utils.log("forloop...ol=" + oldline + ".." + oldjuice + "..newline=" + newline + ".." + newjuice + ".." + index + ".." + arr[positiveindex] / 2.0 * negativefactor);
                 }
 
             } catch (Exception ex) {
