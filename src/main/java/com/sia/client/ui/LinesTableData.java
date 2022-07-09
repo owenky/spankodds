@@ -152,7 +152,7 @@ public class LinesTableData extends TableSection<Game> {
         return value;
     }
     public void clearColors() {
-        log("=============cleared cols=" + getColumnCount());
+        log("=============clearing colors: columns=" + getColumnCount());
         for (int i = 0; i < getRowCount(); i++) {
 
             for (int j = 0; j < getColumnCount(); j++) {
