@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.SportName;
+import com.sia.client.config.Utils;
 import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -1005,105 +1006,120 @@ public class AppController {
     }
 
     public static void addSpreadline(Spreadline spread) {
-        int period = spread.getPeriod();
 
-        if (period == 0) {
-            spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 1) {
-            h1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 2) {
-            h2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 5) {
-            q1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 6) {
-            q2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 7) {
-            q3spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 8) {
-            q4spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else {
-            livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-            log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
+        try {
+            int period = spread.getPeriod();
+
+            if (period == 0) {
+                spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 1) {
+                h1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 2) {
+                h2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 5) {
+                q1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 6) {
+                q2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 7) {
+                q3spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 8) {
+                q4spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else {
+                livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+                log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
+            }
+            newLineNotify(spread);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(spread);
         //LineAlertOpeners.spreadOpenerAlert(spread);
     }
 
     public static void addTotalline(Totalline total) {
 
-
-        int period = total.getPeriod();
-        if (period == 0) {
-            totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 1) {
-            h1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 2) {
-            h2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 5) {
-            q1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 6) {
-            q2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 7) {
-            q3totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 8) {
-            q4totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else {
-            livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
-            log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
+        try {
+            int period = total.getPeriod();
+            if (period == 0) {
+                totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 1) {
+                h1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 2) {
+                h2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 5) {
+                q1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 6) {
+                q2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 7) {
+                q3totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 8) {
+                q4totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else {
+                livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
+                log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
+            }
+            newLineNotify(total);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(total);
         //LineAlertOpeners.totalOpenerAlert(total);
 
     }
 
     public static void addMoneyline(Moneyline ml) {
 
-
-        int period = ml.getPeriod();
-        if (period == 0) {
-            moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 1) {
-            h1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 2) {
-            h2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 5) {
-            q1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 6) {
-            q2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 7) {
-            q3moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 8) {
-            q4moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else {
-            livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-            log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
+        try {
+            int period = ml.getPeriod();
+            if (period == 0) {
+                moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 1) {
+                h1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 2) {
+                h2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 5) {
+                q1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 6) {
+                q2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 7) {
+                q3moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 8) {
+                q4moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else {
+                livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+                log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
+            }
+            newLineNotify(ml);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(ml);
 //LineAlertOpeners.moneyOpenerAlert(ml);
     }
 
     public static void addTeamTotalline(TeamTotalline teamtotal) {
 
-        int period = teamtotal.getPeriod();
-        if (period == 0) {
-            teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 1) {
-            h1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 2) {
-            h2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 5) {
-            q1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 6) {
-            q2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 7) {
-            q3teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 8) {
-            q4teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else {
-            liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-            log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
+        try {
+            int period = teamtotal.getPeriod();
+            if (period == 0) {
+                teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 1) {
+                h1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 2) {
+                h2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 5) {
+                q1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 6) {
+                q2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 7) {
+                q3teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 8) {
+                q4teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else {
+                liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+                log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
+            }
+            newLineNotify(teamtotal);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(teamtotal);
 //LineAlertOpeners.teamTotalOpenerAlert(teamtotal);
     }
 
