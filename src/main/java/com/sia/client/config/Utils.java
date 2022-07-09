@@ -84,7 +84,7 @@ public abstract class Utils {
         logger.consoleLogPeekGameId(keyword,gameId);
     }
     public static void log(Throwable e) {
-        log("",e);
+        log(e.getLocalizedMessage(),e);
     }
     public static void log(String errMsg,Throwable e) {
         logger.log(errMsg,e);
