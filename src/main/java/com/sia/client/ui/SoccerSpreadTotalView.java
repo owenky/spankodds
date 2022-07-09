@@ -10,7 +10,7 @@ import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
 
-public class SoccerSpreadTotalView extends ViewValue {
+public class SoccerSpreadTotalView extends ViewValue  implements ViewWithColor {
     public static String ICON_UP = ChartView.ICON_UP;
     public static String ICON_DOWN = ChartView.ICON_DOWN;
     public static String ICON_BLANK = "blank.gif";
@@ -1294,7 +1294,7 @@ public class SoccerSpreadTotalView extends ViewValue {
     public String toString() {
         return boxes[0].getData();
     }
-
+    @Override
     public void clearColors(long cleartime) {
         priorspreadcolor = Color.WHITE;
         priortotalcolor = Color.WHITE;

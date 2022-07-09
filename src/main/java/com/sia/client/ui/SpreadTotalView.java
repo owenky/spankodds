@@ -10,7 +10,7 @@ import java.util.Random;
 
 import static com.sia.client.config.Utils.log;
 
-public class SpreadTotalView extends ViewValue {
+public class SpreadTotalView extends ViewValue implements ViewWithColor {
     public static String ICON_UP = ImageFile.ICON_UP;
     public static String ICON_DOWN = ImageFile.ICON_DOWN;
     public static String ICON_BLANK = ImageFile.ICON_BLANK;
@@ -49,17 +49,16 @@ public class SpreadTotalView extends ViewValue {
     private String topicon = ICON_BLANK;
     private String bottomicon = ICON_BLANK;
     private long clearts;
-    private String linehistoryurl ="http://sof300732.com:9998/gamedetails/linehistory.jsp?";
+    private String linehistoryurl = "http://sof300732.com:9998/gamedetails/linehistory.jsp?";
     private final DisplayTransformer displayTransformer;
     private final UserDisplaySettings userDisplaySettings = Config.instance().getUserDisplaySettings();
-
 
 
     public SpreadTotalView(int bid, int gid, long cleartime, LinesTableData ltd) {
         displayTransformer = new DisplayTransformer(gid);
         if (bid >= 1000) {
             isopenerbookie = true;
-            if(bid != 1000) {
+            if (bid != 1000) {
                 bid = bid - 1000;
             }
         }
@@ -80,29 +79,10 @@ public class SpreadTotalView extends ViewValue {
             return boxes;
 
         }
-
-//        if (display.equals("default")) {
-//            Sport sp = getSport();
-//            if (sp.getSport_id() == 3) // baseball
-//            {
-//                display = "totalbothmoney";
-//            } else if (sp.getParentleague_id() == 9) // soccer
-//            {
-//                display = "totalmoney";
-//            } else if (sp.getMoneylinedefault()) {
-//                display = "justmoney";
-//            } else {
-//                display = "spreadtotal";
-//            }
-//        }
         String topboxS = "";
         String bottomboxS = "";
 
         period = displayTransformer.transformPeriod(period);
-//        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
-//            period = 2;
-//        }
-
         sl = AppController.getSpreadline(bid, gid, period);
         tl = AppController.getTotalline(bid, gid, period);
         ml = AppController.getMoneyline(bid, gid, period);
@@ -123,16 +103,15 @@ public class SpreadTotalView extends ViewValue {
         double homeover;
         double visitunder = 1;
         double homeunder = 1;
-        double visitoverjuice =-110;
-        double homeoverjuice =-110;
-        double visitunderjuice =-110;
-        double homeunderjuice =-110 ;
+        double visitoverjuice = -110;
+        double homeoverjuice = -110;
+        double visitunderjuice = -110;
+        double homeunderjuice = -110;
 
         String whowasbetspread = "";
         String whowasbettotal = "";
         String whowasbetmoney = "";
         String whowasbetteamtotal = "";
-//        long tsnow = System.currentTimeMillis();
         try {
             if (null != sl) {
                 visitspread = sl.getCurrentvisitspread();
@@ -142,16 +121,12 @@ public class SpreadTotalView extends ViewValue {
 
 
                 whowasbetspread = sl.getWhowasbet();
-                if (shouldGoRed(sl))
-                {
+                if (shouldGoRed(sl)) {
                     spreadcolor = userDisplaySettings.getFirstcolor();
 
-                }
-                else if (shouldGoSecondColor(sl))
-                {
+                } else if (shouldGoSecondColor(sl)) {
                     spreadcolor = userDisplaySettings.getSecondcolor();
-                }
-                else if (clearts < sl.getCurrentts())// && !iswhite(userDisplaySettings.getThirdcolor()))
+                } else if (clearts < sl.getCurrentts())// && !iswhite(userDisplaySettings.getThirdcolor()))
                 {
                     spreadcolor = userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
@@ -181,15 +156,11 @@ public class SpreadTotalView extends ViewValue {
                 underjuice = tl.getCurrentunderjuice();
                 whowasbettotal = tl.getWhowasbet();
 
-                if (shouldGoRed(tl))
-                {
+                if (shouldGoRed(tl)) {
                     totalcolor = userDisplaySettings.getFirstcolor();
-                }
-                else if (shouldGoSecondColor(tl))
-                {
+                } else if (shouldGoSecondColor(tl)) {
                     totalcolor = userDisplaySettings.getSecondcolor();
-                }
-                 else if (clearts < tl.getCurrentts()) {
+                } else if (clearts < tl.getCurrentts()) {
                     totalcolor = userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("T"+id);
@@ -212,16 +183,11 @@ public class SpreadTotalView extends ViewValue {
                 homemljuice = ml.getCurrenthomejuice();
                 whowasbetmoney = ml.getWhowasbet();
 
-                if (shouldGoRed(ml))
-                {
+                if (shouldGoRed(ml)) {
                     moneycolor = userDisplaySettings.getFirstcolor();
-                }
-                else if (shouldGoSecondColor(ml))
-                {
+                } else if (shouldGoSecondColor(ml)) {
                     moneycolor = userDisplaySettings.getSecondcolor();
-                }
-                else if (clearts < ml.getCurrentts())
-                {
+                } else if (clearts < ml.getCurrentts()) {
                     moneycolor = userDisplaySettings.getThirdcolor();
                 } else {
                     moneycolor = Color.WHITE;
@@ -250,16 +216,12 @@ public class SpreadTotalView extends ViewValue {
                 homeunderjuice = ttl.getCurrenthomeunderjuice();
                 whowasbetteamtotal = ttl.getWhowasbet();
 
-                if (shouldGoRed(ttl))
-                {
+                if (shouldGoRed(ttl)) {
                     teamtotalcolor = userDisplaySettings.getFirstcolor();
-                }
-                else if (shouldGoSecondColor(ttl))
-                {
+                } else if (shouldGoSecondColor(ttl)) {
                     teamtotalcolor = userDisplaySettings.getSecondcolor();
-                }
-               else if (clearts < ttl.getCurrentts()) {
-                    teamtotalcolor =userDisplaySettings.getThirdcolor();
+                } else if (clearts < ttl.getCurrentts()) {
+                    teamtotalcolor = userDisplaySettings.getThirdcolor();
                     //owen took out cuz maionscreen refreshes every sec
                     //FireThreadManager.remove("TT"+id);
                 } else {
@@ -296,8 +258,7 @@ public class SpreadTotalView extends ViewValue {
                     if (tl.isBestUnder()) {
                         bottomborder += "bestunder";
                     }
-                    if(overjuice+underjuice>0 && under >= over)
-                    {
+                    if (overjuice + underjuice > 0 && under >= over) {
                         bottomborder += "scalp";
                     }
 
@@ -321,8 +282,7 @@ public class SpreadTotalView extends ViewValue {
                 if (sl.isBestHomeSpread()) {
                     topborder += "besthomespread";
                 }
-                if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
-                {
+                if (visitjuice + homejuice > 0 && visitspread + homespread >= 0) {
                     topborder += "scalp";
                 }
                 if (whowasbetspread.equals("h")) {
@@ -347,8 +307,7 @@ public class SpreadTotalView extends ViewValue {
                     if (tl.isBestUnder()) {
                         bottomborder += "bestunder";
                     }
-                    if(overjuice+underjuice>0 && under >= over)
-                    {
+                    if (overjuice + underjuice > 0 && under >= over) {
                         bottomborder += "scalp";
                     }
                     if (whowasbettotal.equals("u")) {
@@ -373,8 +332,7 @@ public class SpreadTotalView extends ViewValue {
                     if (tl.isBestUnder()) {
                         topborder += "bestunder";
                     }
-                    if(overjuice+underjuice > 0 && under >= over)
-                    {
+                    if (overjuice + underjuice > 0 && under >= over) {
                         topborder += "scalp";
                     }
                     if (whowasbettotal.equals("u")) {
@@ -395,8 +353,7 @@ public class SpreadTotalView extends ViewValue {
                 if (sl.isBestHomeSpread()) {
                     bottomborder += "besthomespread";
                 }
-                if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
-                {
+                if (visitjuice + homejuice > 0 && visitspread + homespread >= 0) {
                     bottomborder += "scalp";
                 }
                 if (whowasbetspread.equals("h")) {
@@ -406,7 +363,7 @@ public class SpreadTotalView extends ViewValue {
                 } else {
                     bottomicon = ICON_BLANK;
                 }
-            } else if(visitspread == homespread && visitspread == 0) // game is a pickem ....not nececsaiirry with best column!
+            } else if (visitspread == homespread && visitspread == 0) // game is a pickem ....not nececsaiirry with best column!
             {
                 if (visitjuice < homejuice) {
                     topboxS = sl.getShortPrintedCurrentSpread();
@@ -418,8 +375,7 @@ public class SpreadTotalView extends ViewValue {
                     if (sl.isBestHomeSpread()) {
                         topborder += "besthomespread";
                     }
-                    if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
-                    {
+                    if (visitjuice + homejuice > 0 && visitspread + homespread >= 0) {
                         topborder += "scalp";
                     }
                     if (whowasbetspread.equals("h")) {
@@ -442,8 +398,7 @@ public class SpreadTotalView extends ViewValue {
                         if (tl.isBestUnder()) {
                             bottomborder += "bestunder";
                         }
-                        if(overjuice+underjuice > 0 && under >= over)
-                        {
+                        if (overjuice + underjuice > 0 && under >= over) {
                             bottomborder += "scalp";
                         }
                         if (whowasbettotal.equals("u")) {
@@ -469,8 +424,7 @@ public class SpreadTotalView extends ViewValue {
                         if (tl.isBestUnder()) {
                             topborder += "bestunder";
                         }
-                        if(overjuice+underjuice > 0 && under >= over)
-                        {
+                        if (overjuice + underjuice > 0 && under >= over) {
                             topborder += "scalp";
                         }
                         if (whowasbettotal.equals("u")) {
@@ -492,8 +446,7 @@ public class SpreadTotalView extends ViewValue {
                     if (sl.isBestHomeSpread()) {
                         bottomborder += "besthomespread";
                     }
-                    if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
-                    {
+                    if (visitjuice + homejuice > 0 && visitspread + homespread >= 0) {
                         bottomborder += "scalp";
                     }
                     if (whowasbetspread.equals("h")) {
@@ -505,61 +458,56 @@ public class SpreadTotalView extends ViewValue {
                     }
                 }
 
-            }
-            else
-                { // two positives or twonegatvles
-                    String sign = "";
-                    if(visitspread > 0)
-                    {
-                        sign= "+";
-                    }
-                    topboxS = sign+sl.getShortPrintedCurrentSpread();
-                    topcolor = spreadcolor;
-                    toptooltip = sl.showHistory();
-                    if (sl.isBestVisitSpread()) {
-                        topborder += "bestvisitspread";
-                    }
-                    if (sl.isBestHomeSpread()) {
-                        topborder += "besthomespread";
-                    }
-                    if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
-                    {
-                        topborder += "scalp";
-                    }
-                    if (whowasbetspread.equals("h")) {
-                        topicon = ICON_DOWN;
-                    } else if (whowasbetspread.equals("v")) {
-                        topicon = ICON_UP;
-                    } else {
-                        topicon = ICON_BLANK;
-                    }
+            } else { // two positives or twonegatvles
+                String sign = "";
+                if (visitspread > 0) {
+                    sign = "+";
+                }
+                topboxS = sign + sl.getShortPrintedCurrentSpread();
+                topcolor = spreadcolor;
+                toptooltip = sl.showHistory();
+                if (sl.isBestVisitSpread()) {
+                    topborder += "bestvisitspread";
+                }
+                if (sl.isBestHomeSpread()) {
+                    topborder += "besthomespread";
+                }
+                if (visitjuice + homejuice > 0 && visitspread + homespread >= 0) {
+                    topborder += "scalp";
+                }
+                if (whowasbetspread.equals("h")) {
+                    topicon = ICON_DOWN;
+                } else if (whowasbetspread.equals("v")) {
+                    topicon = ICON_UP;
+                } else {
+                    topicon = ICON_BLANK;
+                }
 
 
-                    if (over == 99999) {
-                        bottomboxS = "";
-                        bottomcolor = Color.WHITE;
-                    } else {
-                        bottomboxS = tl.getShortPrintedCurrentTotal();
-                        bottomcolor = totalcolor;
-                        bottomtooltip = tl.showHistory();
-                        if (tl.isBestOver()) {
-                            bottomborder += "bestover";
-                        }
-                        if (tl.isBestUnder()) {
-                            bottomborder += "bestunder";
-                        }
-                        if(overjuice+underjuice>0 && under >= over)
-                        {
-                            bottomborder += "scalp";
-                        }
-                        if (whowasbettotal.equals("u")) {
-                            bottomicon = ICON_DOWN;
-                        } else if (whowasbettotal.equals("o")) {
-                            bottomicon = ICON_UP;
-                        } else {
-                            bottomicon = ICON_BLANK;
-                        }
+                if (over == 99999) {
+                    bottomboxS = "";
+                    bottomcolor = Color.WHITE;
+                } else {
+                    bottomboxS = tl.getShortPrintedCurrentTotal();
+                    bottomcolor = totalcolor;
+                    bottomtooltip = tl.showHistory();
+                    if (tl.isBestOver()) {
+                        bottomborder += "bestover";
                     }
+                    if (tl.isBestUnder()) {
+                        bottomborder += "bestunder";
+                    }
+                    if (overjuice + underjuice > 0 && under >= over) {
+                        bottomborder += "scalp";
+                    }
+                    if (whowasbettotal.equals("u")) {
+                        bottomicon = ICON_DOWN;
+                    } else if (whowasbettotal.equals("o")) {
+                        bottomicon = ICON_UP;
+                    } else {
+                        bottomicon = ICON_BLANK;
+                    }
+                }
             }
         } else if (display.equals("totalmoney") || display.equals("totalbothmoney")) {
             showcomebacks = display.equals("totalbothmoney");
@@ -579,8 +527,7 @@ public class SpreadTotalView extends ViewValue {
                     if (tl.isBestUnder()) {
                         bottomborder += "bestunder";
                     }
-                    if(overjuice+underjuice > 0 && under >= over)
-                    {
+                    if (overjuice + underjuice > 0 && under >= over) {
                         bottomborder += "scalp";
                     }
                     if (whowasbettotal.equals("u")) {
@@ -613,8 +560,7 @@ public class SpreadTotalView extends ViewValue {
                 if (ml.isBestHomeMoney()) {
                     topborder += "besthomemoney";
                 }
-                if(visitmljuice+homemljuice > 0)
-                {
+                if (visitmljuice + homemljuice > 0) {
                     topborder += "scalp";
                 }
                 if (whowasbetmoney.equals("h")) {
@@ -639,8 +585,7 @@ public class SpreadTotalView extends ViewValue {
                     if (tl.isBestUnder()) {
                         bottomborder += "bestunder";
                     }
-                    if(overjuice+underjuice > 0 && under >= over)
-                    {
+                    if (overjuice + underjuice > 0 && under >= over) {
                         bottomborder += "scalp";
                     }
                     if (whowasbettotal.equals("u")) {
@@ -667,8 +612,7 @@ public class SpreadTotalView extends ViewValue {
                     if (tl.isBestUnder()) {
                         topborder += "bestunder";
                     }
-                    if(overjuice+underjuice > 0 && under >= over)
-                    {
+                    if (overjuice + underjuice > 0 && under >= over) {
                         topborder += "scalp";
                     }
                     if (whowasbettotal.equals("u")) {
@@ -695,8 +639,7 @@ public class SpreadTotalView extends ViewValue {
                 if (ml.isBestHomeMoney()) {
                     bottomborder += "besthomemoney";
                 }
-                if(visitmljuice+homemljuice > 0)
-                {
+                if (visitmljuice + homemljuice > 0) {
                     bottomborder += "scalp";
                 }
                 if (whowasbetmoney.equals("h")) {
@@ -713,49 +656,33 @@ public class SpreadTotalView extends ViewValue {
                 topboxS = "";
                 bottomboxS = "";
                 topcolor = bottomcolor = Color.WHITE; //spreadcolor;
-            } else
-                {
-                if (visitspread == 0 && homespread == 0)
-                {
-                    if (visitjuice < homejuice)
-                    {
+            } else {
+                if (visitspread == 0 && homespread == 0) {
+                    if (visitjuice < homejuice) {
                         topboxS = sl.getShortPrintedCurrentSpread();
                         bottomboxS = sl.getOtherPrintedCurrentSpread();
-                    }
-                    else
-                    {
+                    } else {
                         bottomboxS = sl.getShortPrintedCurrentSpread();
                         topboxS = sl.getOtherPrintedCurrentSpread();
                     }
-                }
-                else if (visitspread < 0 && homespread > 0)
-                {
+                } else if (visitspread < 0 && homespread > 0) {
                     topboxS = "-" + sl.getShortPrintedCurrentSpread();
                     bottomboxS = "+" + sl.getOtherPrintedCurrentSpread();
-                }
-                else if(visitspread > 0 && homespread < 0)
-                {
+                } else if (visitspread > 0 && homespread < 0) {
                     bottomboxS = "-" + sl.getShortPrintedCurrentSpread();
                     topboxS = "+" + sl.getOtherPrintedCurrentSpread();
                 }
                 // here are new cases for best column
-                else if(visitspread < 0 && homespread < 0)
-                {
+                else if (visitspread < 0 && homespread < 0) {
                     topboxS = "-" + sl.getShortPrintedCurrentSpread();
                     bottomboxS = "-" + sl.getOtherPrintedCurrentSpread();
-                }
-                else if(visitspread > 0 && homespread > 0)
-                {
+                } else if (visitspread > 0 && homespread > 0) {
                     topboxS = "+" + sl.getShortPrintedCurrentSpread();
                     bottomboxS = "+" + sl.getOtherPrintedCurrentSpread();
-                }
-                else if(visitspread < homespread )
-                {
+                } else if (visitspread < homespread) {
                     topboxS = "+" + sl.getShortPrintedCurrentSpread();
                     bottomboxS = "+" + sl.getOtherPrintedCurrentSpread();
-                }
-                else if(homespread <= visitspread)
-                {
+                } else if (homespread <= visitspread) {
                     bottomboxS = "+" + sl.getShortPrintedCurrentSpread();
                     topboxS = "+" + sl.getOtherPrintedCurrentSpread();
                 }
@@ -765,8 +692,7 @@ public class SpreadTotalView extends ViewValue {
                 if (sl.isBestHomeSpread()) {
                     bottomborder += "besthomespread";
                 }
-                if(visitjuice+homejuice > 0 && visitspread+homespread >= 0)
-                {
+                if (visitjuice + homejuice > 0 && visitspread + homespread >= 0) {
                     topborder += "scalp";
                     bottomborder += "scalp";
                 }
@@ -784,8 +710,7 @@ public class SpreadTotalView extends ViewValue {
                     topicon = bottomicon = ICON_BLANK;
                 }
             }
-        } else if (display.equals("justmoney"))
-        {
+        } else if (display.equals("justmoney")) {
             if (visitmljuice == -99999) {
                 topboxS = "";
                 bottomboxS = "";
@@ -815,8 +740,7 @@ public class SpreadTotalView extends ViewValue {
                 if (ml.isBestHomeMoney()) {
                     bottomborder += "besthomemoney";
                 }
-                if(visitmljuice+homemljuice > 0)
-                {
+                if (visitmljuice + homemljuice > 0) {
                     topborder += "scalp";
                     bottomborder += "scalp";
                 }
@@ -840,8 +764,7 @@ public class SpreadTotalView extends ViewValue {
                 if (ml.isBestHomeMoney()) {
                     bottomborder += "besthomemoney";
                 }
-                if(visitmljuice+homemljuice > 0)
-                {
+                if (visitmljuice + homemljuice > 0) {
                     topborder += "scalp";
                     bottomborder += "scalp";
                 }
@@ -882,8 +805,7 @@ public class SpreadTotalView extends ViewValue {
                 if (tl.isBestUnder()) {
                     bottomborder += "bestunder";
                 }
-                if(overjuice+underjuice > 0 && under >= over)
-                {
+                if (overjuice + underjuice > 0 && under >= over) {
                     topborder += "scalp";
                     bottomborder += "scalp";
                 }
@@ -924,8 +846,7 @@ public class SpreadTotalView extends ViewValue {
                 if (ttl.isBestVisitUnder()) {
                     bottomborder += "bestvisitunder";
                 }
-                if(visitoverjuice+visitunderjuice > 0 && visitunder >= visitover)
-                {
+                if (visitoverjuice + visitunderjuice > 0 && visitunder >= visitover) {
                     topborder += "scalp";
                     bottomborder += "scalp";
                 }
@@ -965,8 +886,7 @@ public class SpreadTotalView extends ViewValue {
                 if (ttl.isBestHomeUnder()) {
                     bottomborder += "besthomeunder";
                 }
-                if(homeoverjuice+homeunderjuice > 0 && homeunder >= homeover)
-                {
+                if (homeoverjuice + homeunderjuice > 0 && homeunder >= homeover) {
                     topborder += "scalp";
                     bottomborder += "scalp";
                 }
@@ -976,18 +896,17 @@ public class SpreadTotalView extends ViewValue {
 
         try {
             Game game = getGame();
-            if (game != null && (!topboxS.equals("") || !bottomboxS.equals("")))
-            {
-                if(bid == 996 ) // seperate tooltip for best
+            if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
+                if (bid == 996) // seperate tooltip for best
                 {
                     //System.out.println("best gmid"+gid+"..topborder="+topborder+".."+bottomborder);
                     String besthtml = "<table><th></th><th>v/o</th><th>h/u</th>";
-                    Bookie visitspreadbookie = AppController.bestvisitspread.get(period+"-"+gid);
-                    Bookie homespreadbookie = AppController.besthomespread.get(period+"-"+gid);
-                    Bookie overbookie = AppController.bestover.get(period+"-"+gid);
-                    Bookie underbookie = AppController.bestunder.get(period+"-"+gid);
-                    Bookie visitmlbookie = AppController.bestvisitml.get(period+"-"+gid);
-                    Bookie homemlbookie = AppController.besthomeml.get(period+"-"+gid);
+                    Bookie visitspreadbookie = AppController.bestvisitspread.get(period + "-" + gid);
+                    Bookie homespreadbookie = AppController.besthomespread.get(period + "-" + gid);
+                    Bookie overbookie = AppController.bestover.get(period + "-" + gid);
+                    Bookie underbookie = AppController.bestunder.get(period + "-" + gid);
+                    Bookie visitmlbookie = AppController.bestvisitml.get(period + "-" + gid);
+                    Bookie homemlbookie = AppController.besthomeml.get(period + "-" + gid);
 
                     String vsb = "";
                     String hsb = "";
@@ -995,57 +914,44 @@ public class SpreadTotalView extends ViewValue {
                     String ub = "";
                     String vmb = "";
                     String hmb = "";
-                    if(visitspreadbookie != null)
-                    {
+                    if (visitspreadbookie != null) {
                         vsb = visitspreadbookie.getShortname();
                     }
-                    if(homespreadbookie != null)
-                    {
+                    if (homespreadbookie != null) {
                         hsb = homespreadbookie.getShortname();
                     }
-                    if(overbookie != null)
-                    {
+                    if (overbookie != null) {
                         ob = overbookie.getShortname();
                     }
-                    if(underbookie != null)
-                    {
+                    if (underbookie != null) {
                         ub = underbookie.getShortname();
                     }
-                    if(visitmlbookie != null)
-                    {
+                    if (visitmlbookie != null) {
                         vmb = visitmlbookie.getShortname();
                     }
-                    if(homemlbookie != null)
-                    {
+                    if (homemlbookie != null) {
                         hmb = homemlbookie.getShortname();
                     }
 
 
-                    besthtml = besthtml+"<tr><td>S:</td><td><table border=1><tr><td align=center>"+vsb+"</td><tr><td>"+format(visitspread)+format(visitjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hsb+"</td><tr><td>"+format(homespread)+format(homejuice)+"</td></tr></table></td></tr>";
-                    besthtml = besthtml+"<tr><td>T:</td><td><table border=1><tr><td align=center>"+ob+"</td><tr><td>o"+format(over)+format(overjuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+ub+"</td><tr><td>u"+format(under)+format(underjuice)+"</td></tr></table></td></tr>";
-                    besthtml = besthtml+"<tr><td>M:</td><td><table border=1><tr><td align=center>"+vmb+"</td><tr><td>"+format(visitmljuice)+"</td></tr></table></td><td><table border=1><tr><td align=center>"+hmb+"</td><tr><td>"+format(homemljuice)+"</td></tr></table></td></tr>";
+                    besthtml = besthtml + "<tr><td>S:</td><td><table border=1><tr><td align=center>" + vsb + "</td><tr><td>" + format(visitspread) + format(visitjuice) + "</td></tr></table></td><td><table border=1><tr><td align=center>" + hsb + "</td><tr><td>" + format(homespread) + format(homejuice) + "</td></tr></table></td></tr>";
+                    besthtml = besthtml + "<tr><td>T:</td><td><table border=1><tr><td align=center>" + ob + "</td><tr><td>o" + format(over) + format(overjuice) + "</td></tr></table></td><td><table border=1><tr><td align=center>" + ub + "</td><tr><td>u" + format(under) + format(underjuice) + "</td></tr></table></td></tr>";
+                    besthtml = besthtml + "<tr><td>M:</td><td><table border=1><tr><td align=center>" + vmb + "</td><tr><td>" + format(visitmljuice) + "</td></tr></table></td><td><table border=1><tr><td align=center>" + hmb + "</td><tr><td>" + format(homemljuice) + "</td></tr></table></td></tr>";
 
-                    besthtml = besthtml+"</table>";
-                   // setTooltiptext("<html><body>" +besthtml + "</body></html>");
-                    toptooltip = bottomtooltip = "<html><body>" +besthtml + "</body></html>";
-                }
-                else if(bid == 997 )
-                {
-                    String consensushtml = "" ;
+                    besthtml = besthtml + "</table>";
+                    // setTooltiptext("<html><body>" +besthtml + "</body></html>");
+                    toptooltip = bottomtooltip = "<html><body>" + besthtml + "</body></html>";
+                } else if (bid == 997) {
+                    String consensushtml = "";
                     ConsensusMakerSettings cms = AppController.getConsensusMakerSettingsForThisGame(gid);
-                    if(cms == null)
-                    {
+                    if (cms == null) {
 
-                    }
-                    else
-                    {
-                        consensushtml =  cms.gethtmlbreakdown();
+                    } else {
+                        consensushtml = cms.gethtmlbreakdown();
                     }
 
-                    setTooltiptext("<html><body>" +consensushtml + "</body></html>");
-                }
-                else
-                {
+                    setTooltiptext("<html><body>" + consensushtml + "</body></html>");
+                } else {
                     String limithtml = "";
                     int sidelimit = 0;
                     int totallimit = 0;
@@ -1060,165 +966,47 @@ public class SpreadTotalView extends ViewValue {
                         moneylimit = ml.getLimit();
                     }
 
-                    limithtml = ""+sidelimit + " / " + totallimit + " / " + moneylimit;
+                    limithtml = "" + sidelimit + " / " + totallimit + " / " + moneylimit;
 
 
-
-                    if (!limithtml.equals("0 / 0 / 0"))
-                    {
-                        if(!userDisplaySettings.getShowcpo())
-                        {
+                    if (!limithtml.equals("0 / 0 / 0")) {
+                        if (!userDisplaySettings.getShowcpo()) {
                             toptooltip = "";
                             bottomtooltip = "";
                         }
-                        toptooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+toptooltip+"</table>";
-                        bottomtooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>"+limithtml+"</b></td></tr>"+bottomtooltip+"</table>";
+                        toptooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>" + limithtml + "</b></td></tr>" + toptooltip + "</table>";
+                        bottomtooltip = "<table><tr><td colspan=2>S/T/M:</td><td align=right><b>" + limithtml + "</b></td></tr>" + bottomtooltip + "</table>";
                         //setTooltiptext("<html><body>" + limithtml + "</body></html>");
-                    }
-                    else if(userDisplaySettings.getShowcpo())
-                    {
-                        toptooltip = "<table>"+toptooltip+"</table>";
-                        bottomtooltip = "<table>"+bottomtooltip+"</table>";
-                    }
-                    else
-                    {
+                    } else if (userDisplaySettings.getShowcpo()) {
+                        toptooltip = "<table>" + toptooltip + "</table>";
+                        bottomtooltip = "<table>" + bottomtooltip + "</table>";
+                    } else {
                         toptooltip = bottomtooltip = "";
                     }
                 }
-                linehistoryurl = linehistoryurl+"gameNum="+gid+"&bookieID="+bid+"&period="+period+"&lineType="+display+"&strgameDate=";
+                linehistoryurl = linehistoryurl + "gameNum=" + gid + "&bookieID=" + bid + "&period=" + period + "&lineType=" + display + "&strgameDate=";
                 setUrl(linehistoryurl);
 
-                if(toptooltip != null && !toptooltip.equals("") && bottomtooltip != null && !bottomtooltip.equals(""))
-                {
+                if (toptooltip != null && !toptooltip.equals("") && bottomtooltip != null && !bottomtooltip.equals("")) {
                     toptooltip = "<html><body>" + toptooltip + "</body></html>";
                     bottomtooltip = "<html><body>" + bottomtooltip + "</body></html>";
                 }
-                if(topboxS.equals(""))
-                {
-                    toptooltip ="";
+                if (topboxS.equals("")) {
+                    toptooltip = "";
 
                 }
-                if(bottomboxS.equals(""))
-                {
-                    bottomtooltip ="";
+                if (bottomboxS.equals("")) {
+                    bottomtooltip = "";
                 }
 
-                /*
-                setTooltiptext("<html><body>" +
-                        "<table border=1>" +
-                        "<tr>" +
-                        "<td align='center'><b><u>" + bookie.getName() + "</u></b></td>" +
-                        "<td align='center'><b>Cur</b></td>" +
-                        "<td align='center'><b>Lst</b></td>" +
-                        "<td align='center'><b>Opn</b></td>" +
-                        "</tr>" +
-                        "<tr>" +
-                        "<td><table>" +
-                        "<tr><td>" + game.getVisitorgamenumber() + "</td><td>" + game.getVisitorteam() + "</td></tr>" +
-                        "<tr><td>" + game.getHomegamenumber() + "</td><td>" + game.getHometeam() + "</td></tr>" +
-                        "</table></td>" +
-
-                        "<td><table>" +
-                        "<tr>");
-
-                if (sl != null) {
-                    appendTooltipText("<td align='left' >" + sl.getLimit()+".."+makeNullBlank(sl.getCurrentvisitspread() + "") + makeNullBlank(sl.getCurrentvisitjuice() + "") + "</td>");
-                }
-                if (ml != null) {
-                    appendTooltipText("<td align='left' >" + ml.getLimit()+".."+ makeNullBlank(ml.getCurrentvisitjuice() + "") + "</td>");
-                }
-                if (tl != null) {
-                    appendTooltipText("<td align='left' >" + tl.getLimit()+".."+ makeOverNullBlank(tl.getCurrentover() + "") + makeNullBlank(tl.getCurrentoverjuice() + "") + "</td>");
-                }
-                appendTooltipText("</tr><tr>");
-
-                if (sl != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getCurrenthomespread() + "") + makeNullBlank(sl.getCurrenthomejuice() + "") + "</td>");
-                }
-                if (ml != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getCurrenthomejuice() + "") + "</td>");
-                }
-                if (tl != null) {
-                    appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getCurrentunder() + "") + makeNullBlank(tl.getCurrentunderjuice() + "") + "</td>");
-                }
-
-
-                appendTooltipText("</tr></table></td><td><table><tr>");
-                if (sl != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getPriorvisitspread() + "") + makeNullBlank(sl.getPriorvisitjuice() + "") + "</td>");
-                }
-                if (ml != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getPriorvisitjuice() + "") + "</td>");
-                }
-                if (tl != null) {
-                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getPriorover() + "") + makeNullBlank(tl.getPrioroverjuice() + "") + "</td>");
-                }
-
-                appendTooltipText("</tr><tr>");
-                if (sl != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getPriorhomespread() + "") + makeNullBlank(sl.getPriorhomejuice() + "") + "</td>");
-                }
-                if (ml != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getPriorhomejuice() + "") + "</td>");
-                }
-                if (tl != null) {
-                    appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getPriorunder() + "") + makeNullBlank(tl.getPriorunderjuice() + "") + "</td>");
-                }
-                appendTooltipText("</tr></table></td><td><table><tr>");
-                if (sl != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getOpenervisitspread() + "") + makeNullBlank(sl.getOpenervisitjuice() + "") + "</td>");
-                }
-                if (ml != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getOpenervisitjuice() + "") + "</td>");
-                }
-                if (tl != null) {
-                    appendTooltipText("<td align='left' >" + makeOverNullBlank(tl.getOpenerover() + "") + makeNullBlank(tl.getOpeneroverjuice() + "") + "</td>");
-                }
-
-                appendTooltipText("</tr><tr>");
-                if (sl != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(sl.getOpenerhomespread() + "") + makeNullBlank(sl.getOpenerhomejuice() + "") + "</td>");
-                }
-                if (ml != null) {
-                    appendTooltipText("<td align='left' >" + makeNullBlank(ml.getOpenerhomejuice() + "") + "</td>");
-                }
-                if (tl != null) {
-                    appendTooltipText("<td align='left' >" + makeUnderNullBlank(tl.getOpenerunder() + "") + makeNullBlank(tl.getOpenerunderjuice() + "") + "</td>");
-                }
-
-                appendTooltipText("</tr></table></td></tr></table></body></html>");
-
-                 */
-            }
-            else
-            {
-                toptooltip ="";
-                bottomtooltip ="";
+            } else {
+                toptooltip = "";
+                bottomtooltip = "";
 
             }
         } catch (Exception ex) {
             log(ex);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //testing
-        //topicon = ICON_UP;
-        //bottomicon = ICON_DOWN;
-
-
-
         if (topicon == null) {
             topicon = ICON_BLANK;
         }
@@ -1249,7 +1037,6 @@ public class SpreadTotalView extends ViewValue {
         setCurrentBoxes(boxes);
 
 
-
         return boxes;
     }
 
@@ -1258,26 +1045,9 @@ public class SpreadTotalView extends ViewValue {
     }
 
     public LineData[] getOpenerBoxes() {
-//        if (display.equals("default")) {
-//            Sport sp = getSport();
-//            if (sp.getSport_id() == 3) // baseball
-//            {
-//                display = "totalbothmoney";
-//            } else if (sp.getParentleague_id() == 9) // soccer
-//            {
-//                display = "totalmoney";
-//            } else if (sp.getMoneylinedefault()) {
-//                display = "justmoney";
-//            } else {
-//                display = "spreadtotal";
-//            }
-//        }
         String topboxS = "";
         String bottomboxS = "";
         period = displayTransformer.transformPeriod(period);
-//        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
-//            period = 2;
-//        }
         sl = AppController.getSpreadline(bid, gid, period);
         tl = AppController.getTotalline(bid, gid, period);
         ml = AppController.getMoneyline(bid, gid, period);
@@ -1599,7 +1369,7 @@ public class SpreadTotalView extends ViewValue {
     public String toString() {
         return boxes[0].getData();
     }
-
+    @Override
     public void clearColors(long cleartime) {
         priorspreadcolor = Color.WHITE;
         priortotalcolor = Color.WHITE;
@@ -1618,26 +1388,9 @@ public class SpreadTotalView extends ViewValue {
             priorboxes = getOpenerBoxes();
             return priorboxes;
         }
-//        if (display.equals("default")) {
-//            Sport sp = getSport();
-//            if (sp.getSport_id() == 3) // baseball
-//            {
-//                display = "totalbothmoney";
-//            } else if (sp.getParentleague_id() == 9) // soccer
-//            {
-//                display = "totalmoney";
-//            } else if (sp.getMoneylinedefault()) {
-//                display = "justmoney";
-//            } else {
-//                display = "spreadtotal";
-//            }
-//        }
         String topboxS = "";
         String bottomboxS = "";
         period = displayTransformer.transformPeriod(period);
-//        if (getGame().getStatus().equalsIgnoreCase("Time") && period == 0) {
-//            period = 2;
-//        }
         sl = AppController.getSpreadline(bid, gid, period);
         tl = AppController.getTotalline(bid, gid, period);
         ml = AppController.getMoneyline(bid, gid, period);
@@ -1875,21 +1628,21 @@ public class SpreadTotalView extends ViewValue {
     }
 
     private boolean shouldGoRed(Line line) {
-       // if(iswhite(userDisplaySettings.getFirstcolor())) return false;
+        // if(iswhite(userDisplaySettings.getFirstcolor())) return false;
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
-        int ms = userDisplaySettings.getFirstmoveseconds()*1000;
+        int ms = userDisplaySettings.getFirstmoveseconds() * 1000;
         boolean isRed = (tsnow - curTime) <= ms && clearts <= curTime;
         return isRed;
     }
 
     private boolean shouldGoSecondColor(Line line) {
-      //  if(iswhite(userDisplaySettings.getSecondcolor())) return false;
+        //  if(iswhite(userDisplaySettings.getSecondcolor())) return false;
         long tsnow = System.currentTimeMillis();
         long curTime = line.getCurrentts();
-        int ms = userDisplaySettings.getFirstmoveseconds()*1000 + userDisplaySettings.getSecondmoveseconds()*1000;
+        int ms = userDisplaySettings.getFirstmoveseconds() * 1000 + userDisplaySettings.getSecondmoveseconds() * 1000;
         boolean issecondcolor = (tsnow - curTime) <= ms && clearts <= curTime;
-         return issecondcolor;
+        return issecondcolor;
     }
 
     public Game getGame() {

@@ -198,8 +198,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 // CLEAR ALL BUTTON
 
         al = (e)-> {
-                long ct = (new java.util.Date()).getTime();
-                AppController.setClearAllTime(ct);
+                AppController.setClearAllTime(System.currentTimeMillis());
                 AppController.clearAll();
         };
         clearAllBut = new JButton("Clear All");

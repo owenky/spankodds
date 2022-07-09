@@ -30,11 +30,8 @@ public class GameBatchUpdator implements TableModelListener {
     }
     private GameBatchUpdator() {
         ActionListener al = e->this.checkToUpdate();
-        //flushingScheduler is used to correct UI not updating bug, event trigger UI updating does not rely on it.
-        //so do set DataRefreshRate too small, otherwise it would cause screen not responsive. -- 07/09/2022
         flushingScheduler = new Timer(SiaConst.DataRefreshRate,al);
-        //don't use timer to refresh ui -- 07/09/2022
-//        flushingScheduler.start();
+        flushingScheduler.start();
     }
     public void flush(TableModelEvent e) {
         if ( null != e) {
