@@ -11,6 +11,7 @@ public abstract class MessageFilterFactory {
         typeMap.put("NoneFilter",NoneFilter.class.getName());
         typeMap.put("SportFilter",SportFilter.class.getName());
         typeMap.put("KeywordFilter",KeywordFilter.class.getName());
+        typeMap.put("RejectFilter",RejectFilter.class.getName());
     }
     public static MesgFilterType parse(String filterString) {
         if ( null == filterString || filterString.trim().isEmpty()) {
