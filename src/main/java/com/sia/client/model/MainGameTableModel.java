@@ -53,7 +53,7 @@ Utils.log("MainGameTableModel::processNewLines, rebuild modle");
                     firstRow = this.getRowModelIndexByGameId(tblSection,game.getGame_id());
                     lastRow = firstRow;
                 }
-                Runnable r = () -> fireTableChanged(new TableModelEvent(this, firstRow,lastRow , 0, TableModelEvent.UPDATE));
+                Runnable r = () -> flushUpdate(new TableModelEvent(this, firstRow,lastRow , 0, TableModelEvent.UPDATE));
                 Utils.checkAndRunInEDT(r);
             }
         }
