@@ -163,7 +163,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         try {
             RowSelection rowSelection = Config.instance().getRowSelection();
             rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),true);
-Utils.log("############ table update is fired -----------------------");
+Utils.log("############ ColumnCustomizableDataModel::fireTableChanged is fired -----------------------");
             delegator.fireTableChanged(e);
             rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),false);
         } catch(Exception ex) {
