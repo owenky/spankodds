@@ -10,20 +10,23 @@ import static com.sia.client.config.Utils.log;
 
 public class Totalline extends Line implements Serializable {
 
-    boolean isbestover = false;
-    boolean isbestunder = false;
-    double currentover;
-    double currentoverjuice;
-    double currentunder;
-    double currentunderjuice;
-    double priorover;
-    double prioroverjuice;
-    double priorunder;
-    double priorunderjuice;
-    double openerover;
-    double openeroverjuice;
-    double openerunder;
-    double openerunderjuice;
+    private boolean isbestover = false;
+    private boolean isbestunder = false;
+    private double currentover;
+    private double currentoverjuice;
+    private double currentunder;
+    private double currentunderjuice;
+    private double priorover;
+    private double prioroverjuice;
+    private double priorunder;
+    private double priorunderjuice;
+    private double openerover;
+    private double openeroverjuice;
+    private double openerunder;
+    private double openerunderjuice;
+    private String shortPrintedTotal_current=null;
+    private String shortPrintedTotal_prior=null;
+    private String shortPrintedTotal_opener = null;
 
     public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, int p) {
         this();
@@ -227,6 +230,7 @@ public class Totalline extends Line implements Serializable {
     public void setCurrentover(double currentover) {
         setPriorover(getCurrentover());
         this.currentover = currentover;
+        shortPrintedTotal_current = null;
     }
 
     public double getPrioroverjuice() {
@@ -240,6 +244,7 @@ public class Totalline extends Line implements Serializable {
     public void setCurrentoverjuice(double currentoverjuice) {
         setPrioroverjuice(getCurrentoverjuice());
         this.currentoverjuice = currentoverjuice;
+        shortPrintedTotal_current = null;
     }
 
     public double getPriorunderjuice() {
@@ -257,31 +262,38 @@ public class Totalline extends Line implements Serializable {
     public void setCurrentunder(double currentunder) {
         setPriorunder(getCurrentunder());
         this.currentunder = currentunder;
+        shortPrintedTotal_current = null;
     }
 
     public void setCurrentunderjuice(double currentunderjuice) {
         setPriorunderjuice(getCurrentunderjuice());
         this.currentunderjuice = currentunderjuice;
+        shortPrintedTotal_current = null;
     }
 
     public void setPriorunderjuice(double priorunderjuice) {
         this.priorunderjuice = priorunderjuice;
+        shortPrintedTotal_prior = null;
     }
 
     public void setPrioroverjuice(double prioroverjuice) {
         this.prioroverjuice = prioroverjuice;
+        shortPrintedTotal_prior = null;
     }
 
     public void setPriorover(double priorover) {
         this.priorover = priorover;
+        shortPrintedTotal_prior = null;
     }
 
     public String getShortPrintedCurrentTotal() {
-
-        return getShortPrintedTotal(currentover, currentoverjuice, currentunder, currentunderjuice);
+        if ( null == shortPrintedTotal_current) {
+            shortPrintedTotal_current = getShortPrintedTotal(currentover, currentoverjuice, currentunder, currentunderjuice);
+        }
+        return shortPrintedTotal_current;
     }
 
-    public String getShortPrintedTotal(double o, double oj, double u, double uj) {
+    private String getShortPrintedTotal(double o, double oj, double u, double uj) {
 
         String retvalue = "";
 
@@ -289,10 +301,10 @@ public class Totalline extends Line implements Serializable {
             return "";
         }
 
-        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
-        {
-           // System.out.println("short in "+o+""+oj+".."+u+""+uj);
-        }
+//        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
+//        {
+//           // System.out.println("short in "+o+""+oj+".."+u+""+uj);
+//        }
 
         double juice = 0;
         if (oj == uj && oj == -110 && o==u) {
@@ -382,12 +394,18 @@ public class Totalline extends Line implements Serializable {
 
     public String getShortPrintedPriorTotal() {
 
-        return getShortPrintedTotal(priorover, prioroverjuice, priorunder, priorunderjuice);
+        if ( null == shortPrintedTotal_prior) {
+            shortPrintedTotal_prior = getShortPrintedTotal(priorover, prioroverjuice, priorunder, priorunderjuice);
+        }
+        return shortPrintedTotal_prior;
     }
 
     public String getShortPrintedOpenerTotal() {
 
-        return getShortPrintedTotal(openerover, openeroverjuice, openerunder, openerunderjuice);
+        if ( null == shortPrintedTotal_opener) {
+            shortPrintedTotal_opener = getShortPrintedTotal(openerover, openeroverjuice, openerunder, openerunderjuice);
+        }
+        return shortPrintedTotal_opener;
     }
 
     public String getOtherPrintedCurrentTotal() {
@@ -520,6 +538,7 @@ public class Totalline extends Line implements Serializable {
 
     public void setPriorunder(double priorunder) {
         this.priorunder = priorunder;
+        shortPrintedTotal_prior = null;
     }
 
     public double getOpenerover() {
@@ -528,6 +547,7 @@ public class Totalline extends Line implements Serializable {
 
     public void setOpenerover(double openerover) {
         this.openerover = openerover;
+        shortPrintedTotal_opener = null;
     }
 
     public double getOpeneroverjuice() {
@@ -536,6 +556,7 @@ public class Totalline extends Line implements Serializable {
 
     public void setOpeneroverjuice(double openeroverjuice) {
         this.openeroverjuice = openeroverjuice;
+        shortPrintedTotal_opener = null;
     }
 
     public double getOpenerunder() {
@@ -544,6 +565,7 @@ public class Totalline extends Line implements Serializable {
 
     public void setOpenerunder(double openerunder) {
         this.openerunder = openerunder;
+        shortPrintedTotal_opener = null;
     }
 
     public double getOpenerunderjuice() {
@@ -552,6 +574,7 @@ public class Totalline extends Line implements Serializable {
 
     public void setOpenerunderjuice(double openerunderjuice) {
         this.openerunderjuice = openerunderjuice;
+        shortPrintedTotal_opener = null;
     }
 
     @Override

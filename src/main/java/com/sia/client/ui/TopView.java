@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.ui.control.MainScreen;
@@ -198,6 +199,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 // CLEAR ALL BUTTON
 
         al = (e)-> {
+Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
                 AppController.setClearAllTime(System.currentTimeMillis());
                 AppController.clearAll();
         };

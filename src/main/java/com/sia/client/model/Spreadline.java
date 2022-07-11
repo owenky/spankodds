@@ -26,8 +26,12 @@ public class Spreadline extends Line {
     double openervisitjuice;
     double openerhomespread;
     double openerhomejuice;
-
-
+    private String shortPrintedSpread_current = null;
+    private String shortPrintedSpread_prior = null;
+    private String shortPrintedSpread_opener = null;
+    private String otherPrintedSpread_current = null;
+    private String otherPrintedSpread_prior = null;
+    private String otherPrintedSpread_opener = null;
 
     public Spreadline(int gid, int bid, double vs, double vj, double hs, double hj, long ts, int p) {
         this();
@@ -148,6 +152,8 @@ public class Spreadline extends Line {
 
     public void setPriorvisitspread(double priorvisitspread) {
         this.priorvisitspread = priorvisitspread;
+        otherPrintedSpread_prior = null;
+        shortPrintedSpread_prior = null;
     }
 
     public boolean isBestVisitSpread() {
@@ -262,6 +268,8 @@ public class Spreadline extends Line {
     public void setCurrentvisitspread(double currentvisitspread) {
         setPriorvisitspread(getCurrentvisitspread());
         this.currentvisitspread = currentvisitspread;
+        otherPrintedSpread_current = null;
+        shortPrintedSpread_current = null;
     }
 
     public double getPriorvisitjuice() {
@@ -275,6 +283,8 @@ public class Spreadline extends Line {
     public void setCurrentvisitjuice(double currentvisitjuice) {
         setPriorvisitjuice(getCurrentvisitjuice());
         this.currentvisitjuice = currentvisitjuice;
+        otherPrintedSpread_current = null;
+        shortPrintedSpread_current = null;
     }
 
     public double getPriorhomejuice() {
@@ -288,6 +298,8 @@ public class Spreadline extends Line {
     public void setCurrenthomejuice(double currenthomejuice) {
         setPriorhomejuice(getCurrenthomejuice());
         this.currenthomejuice = currenthomejuice;
+        otherPrintedSpread_current = null;
+        shortPrintedSpread_current = null;
     }
     public double getCurrenthomespread() {
         return currenthomespread;
@@ -296,23 +308,32 @@ public class Spreadline extends Line {
     public void setCurrenthomespread(double currenthomespread) {
         setPriorhomespread(getCurrenthomespread());
         this.currenthomespread = currenthomespread;
+        otherPrintedSpread_current = null;
+        shortPrintedSpread_current = null;
     }
 
 
 
     public void setPriorhomejuice(double priorhomejuice) {
         this.priorhomejuice = priorhomejuice;
+        otherPrintedSpread_prior = null;
+        shortPrintedSpread_prior = null;
     }
 
     public void setPriorvisitjuice(double priorvisitjuice) {
         this.priorvisitjuice = priorvisitjuice;
+        otherPrintedSpread_prior = null;
+        shortPrintedSpread_prior = null;
     }
 
     public String getShortPrintedCurrentSpread() {
-        return getShortPrintedSpread(currentvisitspread, currentvisitjuice, currenthomespread, currenthomejuice);
+        if ( null == shortPrintedSpread_current) {
+            shortPrintedSpread_current = getShortPrintedSpread(currentvisitspread, currentvisitjuice, currenthomespread, currenthomejuice);
+        }
+        return shortPrintedSpread_current;
     }
 
-    public String getShortPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
+    private String getShortPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
         boolean debug = false;
         if(period == 0 && gameid == 951 && bookieid==599 && debug)
         {
@@ -443,18 +464,27 @@ public class Spreadline extends Line {
     }
 
     public String getShortPrintedPriorSpread() {
-        return getShortPrintedSpread(priorvisitspread, priorvisitjuice, priorhomespread, priorhomejuice);
+        if ( null == shortPrintedSpread_prior) {
+            shortPrintedSpread_prior = getShortPrintedSpread(priorvisitspread, priorvisitjuice, priorhomespread, priorhomejuice);
+        }
+        return shortPrintedSpread_prior;
     }
 
     public String getShortPrintedOpenerSpread() {
-        return getShortPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
+        if ( null == shortPrintedSpread_opener) {
+            shortPrintedSpread_opener = getShortPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
+        }
+        return shortPrintedSpread_opener;
     }
 
     public String getOtherPrintedCurrentSpread() {
-        return getOtherPrintedSpread(currentvisitspread, currentvisitjuice, currenthomespread, currenthomejuice);
+        if ( null == otherPrintedSpread_current) {
+            otherPrintedSpread_current = getOtherPrintedSpread(currentvisitspread, currentvisitjuice, currenthomespread, currenthomejuice);
+        }
+        return otherPrintedSpread_current;
     }
 
-    public String getOtherPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
+    private String getOtherPrintedSpread(double vspread, double vjuice, double hspread, double hjuice) {
         boolean debug = false;
         if(period == 0 && gameid == 951 && bookieid==599 && debug)
         {
@@ -577,11 +607,17 @@ public class Spreadline extends Line {
     }
 
     public String getOtherPrintedPriorSpread() {
-        return getOtherPrintedSpread(priorvisitspread, priorvisitjuice, priorhomespread, priorhomejuice);
+        if ( null == otherPrintedSpread_prior) {
+            otherPrintedSpread_prior = getOtherPrintedSpread(priorvisitspread, priorvisitjuice, priorhomespread, priorhomejuice);
+        }
+        return otherPrintedSpread_prior;
     }
 
     public String getOtherPrintedOpenerSpread() {
-        return getOtherPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
+        if ( null == otherPrintedSpread_opener) {
+            otherPrintedSpread_opener = getOtherPrintedSpread(openervisitspread, openervisitjuice, openerhomespread, openerhomejuice);
+        }
+        return otherPrintedSpread_opener;
     }
     public double getPriorhomespread() {
         return priorhomespread;
@@ -589,6 +625,8 @@ public class Spreadline extends Line {
 
     public void setPriorhomespread(double priorhomespread) {
         this.priorhomespread = priorhomespread;
+        otherPrintedSpread_prior = null;
+        shortPrintedSpread_prior = null;
     }
 
 
@@ -599,6 +637,8 @@ public class Spreadline extends Line {
 
     public void setOpenervisitspread(double openervisitspread) {
         this.openervisitspread = openervisitspread;
+        otherPrintedSpread_opener = null;
+        shortPrintedSpread_opener = null;
     }
 
     public double getOpenervisitjuice() {
@@ -607,6 +647,8 @@ public class Spreadline extends Line {
 
     public void setOpenervisitjuice(double openervisitjuice) {
         this.openervisitjuice = openervisitjuice;
+        otherPrintedSpread_opener = null;
+        shortPrintedSpread_opener = null;
     }
 
     public double getOpenerhomespread() {
@@ -615,6 +657,8 @@ public class Spreadline extends Line {
 
     public void setOpenerhomespread(double openerhomespread) {
         this.openerhomespread = openerhomespread;
+        otherPrintedSpread_opener = null;
+        shortPrintedSpread_opener = null;
     }
 
     public double getOpenerhomejuice() {
@@ -623,6 +667,8 @@ public class Spreadline extends Line {
 
     public void setOpenerhomejuice(double openerhomejuice) {
         this.openerhomejuice = openerhomejuice;
+        otherPrintedSpread_opener = null;
+        shortPrintedSpread_opener = null;
     }
 
     @Override

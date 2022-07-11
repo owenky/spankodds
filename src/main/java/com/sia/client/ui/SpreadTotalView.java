@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.ImageFile;
+import com.sia.client.config.TimeStat;
 import com.sia.client.model.*;
 
 import java.awt.*;
@@ -72,7 +73,13 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
         this.getCurrentBoxes();
     }
 
+    public static final TimeStat timeStat = new TimeStat();
+    public static final TimeStat timeStat2 = new TimeStat();
+    public static final TimeStat timeStat3 = new TimeStat();
+    public static final TimeStat timeStat4 = new TimeStat();
+    public static final TimeStat timeStat5 = new TimeStat();
     public LineData[] getCurrentBoxes() {
+        timeStat.beginStep(""+bid+"_"+gid+"_"+period);
         topborder = bottomborder = "";
         if (isopenerbookie) {
             boxes = getOpenerBoxes();
@@ -146,8 +153,6 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
             visitjuice = homejuice = -99999;
             log(e);
         }
-
-
         try {
             if (null != tl) {
                 over = tl.getCurrentover();
@@ -237,7 +242,7 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
             homeover = 99999;
             log(ex);
         }
-
+timeStat4.beginStep();
         String display = displayTransformer.transformDefault(displayType);
         if (display.equals("spreadtotal")) {
             if (visitspread == -99999) {
@@ -624,15 +629,16 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
                         topicon = ICON_BLANK;
                     }
                 }
-
+            timeStat3.beginStep();
                 if (showcomebacks && homemljuice != 0) {
                     bottomboxS = ml.getPrintedJuiceLine(homemljuice) + "/" + ml.getPrintedJuiceLine(visitmljuice);
                 } else {
                     bottomboxS = ml.getPrintedJuiceLine(homemljuice);
                 }
-
+                timeStat2.beginStep();
                 bottomcolor = moneycolor;
                 bottomtooltip = ml.showHistory();
+                timeStat2.endStep();
                 if (ml.isBestVisitMoney()) {
                     bottomborder += "bestvisitmoney";
                 }
@@ -649,6 +655,7 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
                 } else {
                     bottomicon = ICON_BLANK;
                 }
+                timeStat3.endStep();
             }
 
         } else if (display.equals("justspread")) {
@@ -893,7 +900,8 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
 
             }
         }
-
+        timeStat4.endStep();
+        timeStat5.beginStep();
         try {
             Game game = getGame();
             if (game != null && (!topboxS.equals("") || !bottomboxS.equals(""))) {
@@ -1035,8 +1043,8 @@ public class SpreadTotalView extends ViewValue implements ViewWithColor {
         boxes[0] = ld1;
         boxes[1] = ld2;
         setCurrentBoxes(boxes);
-
-
+        timeStat5.endStep();
+        timeStat.endStep();
         return boxes;
     }
 

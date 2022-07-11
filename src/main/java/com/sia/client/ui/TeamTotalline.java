@@ -36,6 +36,18 @@ public class TeamTotalline extends Line {
     double openerhomeoverjuice;
     double openerhomeunder;
     double openerhomeunderjuice;
+    private String shortPrintedHomeTotal_current_home = null;
+    private String shortPrintedHomeTotal_current_visit = null;
+    private String shortPrintedHomeTotal_prior_home = null;
+    private String shortPrintedHomeTotal_prior_visit = null;
+    private String shortPrintedHomeTotal_opener_home = null;
+    private String shortPrintedHomeTotal_opener_visit = null;
+    private String otherPrintedHomeTotal_current_home = null;
+    private String otherPrintedHomeTotal_current_visit = null;
+    private String otherPrintedHomeTotal_prior_home = null;
+    private String otherPrintedHomeTotal_prior_visit = null;
+    private String otherPrintedHomeTotal_opener_home = null;
+    private String otherPrintedHomeTotal_opener_visit = null;
 
     public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts, int p) {
         this();
@@ -278,6 +290,8 @@ public class TeamTotalline extends Line {
     public void setCurrentvisitover(double currentvisitover) {
         setPriorvisitover(getCurrentvisitover());
         this.currentvisitover = currentvisitover;
+        shortPrintedHomeTotal_current_visit = null;
+        otherPrintedHomeTotal_current_visit = null;
     }
 
     public double getPriorvisitoverjuice() {
@@ -291,6 +305,8 @@ public class TeamTotalline extends Line {
     public void setCurrentvisitoverjuice(double currentvisitoverjuice) {
         setPriorvisitoverjuice(getCurrentvisitoverjuice());
         this.currentvisitoverjuice = currentvisitoverjuice;
+        shortPrintedHomeTotal_current_visit = null;
+        otherPrintedHomeTotal_current_visit = null;
     }
 
     public double getPriorvisitunderjuice() {
@@ -308,6 +324,8 @@ public class TeamTotalline extends Line {
     public void setCurrentvisitunder(double currentvisitunder) {
         setPriorvisitunder(getCurrentvisitunder());
         this.currentvisitunder = currentvisitunder;
+        shortPrintedHomeTotal_current_visit = null;
+        otherPrintedHomeTotal_current_visit = null;
     }
 
     public double getCurrenthomeover() {
@@ -317,6 +335,8 @@ public class TeamTotalline extends Line {
     public void setCurrenthomeover(double currenthomeover) {
         setPriorhomeover(getCurrenthomeover());
         this.currenthomeover = currenthomeover;
+        shortPrintedHomeTotal_current_home = null;
+        otherPrintedHomeTotal_current_home = null;
     }
 
     public double getCurrenthomeoverjuice() {
@@ -326,6 +346,8 @@ public class TeamTotalline extends Line {
     public void setCurrenthomeoverjuice(double currenthomeoverjuice) {
         setPriorhomeoverjuice(getCurrenthomeoverjuice());
         this.currenthomeoverjuice = currenthomeoverjuice;
+        shortPrintedHomeTotal_current_home = null;
+        otherPrintedHomeTotal_current_home = null;
     }
 
     public double getCurrenthomeunder() {
@@ -335,6 +357,8 @@ public class TeamTotalline extends Line {
     public void setCurrenthomeunder(double currenthomeunder) {
         setPriorhomeunder(getCurrenthomeunder());
         this.currenthomeunder = currenthomeunder;
+        shortPrintedHomeTotal_current_home = null;
+        otherPrintedHomeTotal_current_home = null;
     }
 
     public double getCurrenthomeunderjuice() {
@@ -344,31 +368,43 @@ public class TeamTotalline extends Line {
     public void setCurrenthomeunderjuice(double currenthomeunderjuice) {
         setPriorhomeunderjuice(getCurrenthomeunderjuice());
         this.currenthomeunderjuice = currenthomeunderjuice;
+        shortPrintedHomeTotal_current_home = null;
+        otherPrintedHomeTotal_current_home = null;
     }
 
     public void setCurrentvisitunderjuice(double currentvisitunderjuice) {
         setPriorvisitunderjuice(getCurrentvisitunderjuice());
         this.currentvisitunderjuice = currentvisitunderjuice;
+        shortPrintedHomeTotal_current_visit = null;
+        otherPrintedHomeTotal_current_visit = null;
     }
 
     public void setPriorvisitunderjuice(double priorvisitunderjuice) {
         this.priorvisitunderjuice = priorvisitunderjuice;
+        shortPrintedHomeTotal_prior_visit = null;
+        otherPrintedHomeTotal_prior_visit = null;
     }
 
     public void setPriorvisitoverjuice(double priorvisitoverjuice) {
         this.priorvisitoverjuice = priorvisitoverjuice;
+        shortPrintedHomeTotal_prior_visit = null;
+        otherPrintedHomeTotal_prior_visit = null;
     }
 
     public void setPriorvisitover(double priorvisitover) {
         this.priorvisitover = priorvisitover;
+        shortPrintedHomeTotal_prior_visit = null;
+        otherPrintedHomeTotal_prior_visit = null;
     }
 
     public String getShortPrintedCurrentVisitTotal() {
-
-        return getShortPrintedTotal(currentvisitover, currentvisitoverjuice, currentvisitunder, currentvisitunderjuice);
+        if ( null == shortPrintedHomeTotal_current_visit) {
+            shortPrintedHomeTotal_current_visit = getShortPrintedTotal(currentvisitover, currentvisitoverjuice, currentvisitunder, currentvisitunderjuice);
+        }
+        return shortPrintedHomeTotal_current_visit;
     }
 
-    public String getShortPrintedTotal(double o, double oj, double u, double uj) {
+    private String getShortPrintedTotal(double o, double oj, double u, double uj) {
 
         String retvalue = "";
 
@@ -459,44 +495,57 @@ public class TeamTotalline extends Line {
 
     public String getShortPrintedCurrentHomeTotal() {
 
-        return getShortPrintedTotal(currenthomeover, currenthomeoverjuice, currenthomeunder, currenthomeunderjuice);
+        if ( null == shortPrintedHomeTotal_current_home) {
+            shortPrintedHomeTotal_current_home = getShortPrintedTotal(currenthomeover, currenthomeoverjuice, currenthomeunder, currenthomeunderjuice);
+        }
+        return shortPrintedHomeTotal_current_home;
     }
 
     public String getShortPrintedPriorVisitTotal() {
 
-        return getShortPrintedTotal(priorvisitover, priorvisitoverjuice, priorvisitunder, priorvisitunderjuice);
+        if ( null == shortPrintedHomeTotal_prior_visit) {
+            shortPrintedHomeTotal_prior_visit = getShortPrintedTotal(priorvisitover, priorvisitoverjuice, priorvisitunder, priorvisitunderjuice);
+        }
+        return shortPrintedHomeTotal_prior_visit;
     }
 
     public String getShortPrintedPriorHomeTotal() {
 
-        return getShortPrintedTotal(priorhomeover, priorhomeoverjuice, priorhomeunder, priorhomeunderjuice);
+        if ( null == shortPrintedHomeTotal_prior_home) {
+            shortPrintedHomeTotal_prior_home = getShortPrintedTotal(priorhomeover, priorhomeoverjuice, priorhomeunder, priorhomeunderjuice);
+        }
+        return shortPrintedHomeTotal_prior_home;
     }
 
     public String getShortPrintedOpenerVisitTotal() {
 
-        return getShortPrintedTotal(openervisitover, openervisitoverjuice, openervisitunder, openervisitunderjuice);
+        if ( null == shortPrintedHomeTotal_opener_visit) {
+            shortPrintedHomeTotal_opener_visit = getShortPrintedTotal(openervisitover, openervisitoverjuice, openervisitunder, openervisitunderjuice);
+        }
+        return shortPrintedHomeTotal_opener_visit;
     }
 
     public String getShortPrintedOpenerHomeTotal() {
 
-        return getShortPrintedTotal(openerhomeover, openerhomeoverjuice, openerhomeunder, openerhomeunderjuice);
+        if ( null == shortPrintedHomeTotal_opener_home) {
+            shortPrintedHomeTotal_opener_home = getShortPrintedTotal(openerhomeover, openerhomeoverjuice, openerhomeunder, openerhomeunderjuice);
+        }
+        return shortPrintedHomeTotal_opener_home;
     }
 
     public String getOtherPrintedCurrentVisitTotal() {
-
-        return getOtherPrintedTotal(currentvisitover, currentvisitoverjuice, currentvisitunder, currentvisitunderjuice);
+        if ( null == otherPrintedHomeTotal_current_visit) {
+            otherPrintedHomeTotal_current_visit = getOtherPrintedTotal(currentvisitover, currentvisitoverjuice, currentvisitunder, currentvisitunderjuice);
+        }
+        return otherPrintedHomeTotal_current_visit;
     }
 
-    public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
+    private String getOtherPrintedTotal(double o, double oj, double u, double uj) {
         String retvalue = "";
 
         if (oj == 0) {
             return "";
         }
-
-
-
-
         double juice = 0;
         if (oj == uj && oj == -110 && o==u) {
             retvalue = o + "";
@@ -577,28 +626,41 @@ public class TeamTotalline extends Line {
     }
 
     public String getOtherPrintedCurrentHomeTotal() {
-
-        return getOtherPrintedTotal(currenthomeover, currenthomeoverjuice, currenthomeunder, currenthomeunderjuice);
+        if ( null == otherPrintedHomeTotal_current_home) {
+            otherPrintedHomeTotal_current_home = getOtherPrintedTotal(currenthomeover, currenthomeoverjuice, currenthomeunder, currenthomeunderjuice);
+        }
+        return otherPrintedHomeTotal_current_home;
     }
 
     public String getOtherPrintedPriorVisitTotal() {
 
-        return getOtherPrintedTotal(priorvisitover, priorvisitoverjuice, priorvisitunder, priorvisitunderjuice);
+        if ( null == otherPrintedHomeTotal_prior_visit) {
+            otherPrintedHomeTotal_prior_visit = getOtherPrintedTotal(priorvisitover, priorvisitoverjuice, priorvisitunder, priorvisitunderjuice);
+        }
+        return otherPrintedHomeTotal_prior_visit;
     }
 
     public String getOtherPrintedPriorHomeTotal() {
 
-        return getOtherPrintedTotal(priorhomeover, priorhomeoverjuice, priorhomeunder, priorhomeunderjuice);
+        if ( null == otherPrintedHomeTotal_prior_home) {
+            otherPrintedHomeTotal_prior_home = getOtherPrintedTotal(priorhomeover, priorhomeoverjuice, priorhomeunder, priorhomeunderjuice);
+        }
+        return otherPrintedHomeTotal_prior_home;
     }
 
     public String getOtherPrintedOpenerVisitTotal() {
 
-        return getOtherPrintedTotal(openervisitover, openervisitoverjuice, openervisitunder, openervisitunderjuice);
+        if ( null == otherPrintedHomeTotal_opener_visit) {
+            otherPrintedHomeTotal_opener_visit = getOtherPrintedTotal(openervisitover, openervisitoverjuice, openervisitunder, openervisitunderjuice);
+        }
+        return otherPrintedHomeTotal_opener_visit;
     }
 
     public String getOtherPrintedOpenerHomeTotal() {
-
-        return getOtherPrintedTotal(openerhomeover, openerhomeoverjuice, openerhomeunder, openerhomeunderjuice);
+        if ( null == otherPrintedHomeTotal_opener_home) {
+            otherPrintedHomeTotal_opener_home = getOtherPrintedTotal(openerhomeover, openerhomeoverjuice, openerhomeunder, openerhomeunderjuice);
+        }
+        return otherPrintedHomeTotal_opener_home;
     }
 
     public boolean isOpener() {
@@ -616,6 +678,8 @@ public class TeamTotalline extends Line {
 
     public void setPriorvisitunder(double priorvisitunder) {
         this.priorvisitunder = priorvisitunder;
+        shortPrintedHomeTotal_prior_visit = null;
+        otherPrintedHomeTotal_prior_visit = null;
     }
 
     public double getOpenervisitover() {
@@ -624,6 +688,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenervisitover(double openervisitover) {
         this.openervisitover = openervisitover;
+        shortPrintedHomeTotal_opener_visit = null;
+        otherPrintedHomeTotal_opener_visit = null;
     }
 
     public double getOpenervisitoverjuice() {
@@ -632,6 +698,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenervisitoverjuice(double openervisitoverjuice) {
         this.openervisitoverjuice = openervisitoverjuice;
+        shortPrintedHomeTotal_opener_visit = null;
+        otherPrintedHomeTotal_opener_visit = null;
     }
 
     public double getOpenervisitunder() {
@@ -640,6 +708,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenervisitunder(double openervisitunder) {
         this.openervisitunder = openervisitunder;
+        shortPrintedHomeTotal_opener_visit = null;
+        otherPrintedHomeTotal_opener_visit = null;
     }
 
     public double getOpenervisitunderjuice() {
@@ -648,6 +718,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenervisitunderjuice(double openervisitunderjuice) {
         this.openervisitunderjuice = openervisitunderjuice;
+        shortPrintedHomeTotal_opener_visit = null;
+        otherPrintedHomeTotal_opener_visit = null;
     }
 
     public double getPriorhomeover() {
@@ -656,6 +728,8 @@ public class TeamTotalline extends Line {
 
     public void setPriorhomeover(double priorhomeover) {
         this.priorhomeover = priorhomeover;
+        shortPrintedHomeTotal_prior_home = null;
+        otherPrintedHomeTotal_prior_home = null;
     }
 
     public double getPriorhomeoverjuice() {
@@ -664,6 +738,8 @@ public class TeamTotalline extends Line {
 
     public void setPriorhomeoverjuice(double priorhomeoverjuice) {
         this.priorhomeoverjuice = priorhomeoverjuice;
+        shortPrintedHomeTotal_prior_home = null;
+        otherPrintedHomeTotal_prior_home = null;
     }
 
     public double getPriorhomeunder() {
@@ -672,6 +748,8 @@ public class TeamTotalline extends Line {
 
     public void setPriorhomeunder(double priorhomeunder) {
         this.priorhomeunder = priorhomeunder;
+        shortPrintedHomeTotal_prior_home = null;
+        otherPrintedHomeTotal_prior_home = null;
     }
 
     public double getPriorhomeunderjuice() {
@@ -680,6 +758,8 @@ public class TeamTotalline extends Line {
 
     public void setPriorhomeunderjuice(double priorhomeunderjuice) {
         this.priorhomeunderjuice = priorhomeunderjuice;
+        shortPrintedHomeTotal_prior_home = null;
+        otherPrintedHomeTotal_prior_home = null;
     }
 
 
@@ -689,6 +769,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenerhomeover(double openerhomeover) {
         this.openerhomeover = openerhomeover;
+        shortPrintedHomeTotal_opener_home = null;
+        otherPrintedHomeTotal_opener_home = null;
     }
 
     public double getOpenerhomeoverjuice() {
@@ -697,6 +779,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenerhomeoverjuice(double openerhomeoverjuice) {
         this.openerhomeoverjuice = openerhomeoverjuice;
+        shortPrintedHomeTotal_opener_home = null;
+        otherPrintedHomeTotal_opener_home = null;
     }
 
     public double getOpenerhomeunder() {
@@ -705,6 +789,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenerhomeunder(double openerhomeunder) {
         this.openerhomeunder = openerhomeunder;
+        shortPrintedHomeTotal_opener_home = null;
+        otherPrintedHomeTotal_opener_home = null;
     }
 
     public double getOpenerhomeunderjuice() {
@@ -713,6 +799,8 @@ public class TeamTotalline extends Line {
 
     public void setOpenerhomeunderjuice(double openerhomeunderjuice) {
         this.openerhomeunderjuice = openerhomeunderjuice;
+        shortPrintedHomeTotal_opener_home = null;
+        otherPrintedHomeTotal_opener_home = null;
     }
     @Override
     public String getOpener()
