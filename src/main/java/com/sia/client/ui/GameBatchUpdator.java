@@ -32,8 +32,7 @@ public class GameBatchUpdator implements TableModelListener {
     private GameBatchUpdator() {
         ActionListener al = e->this.checkToUpdate();
         flushingScheduler = new Timer(SiaConst.DataRefreshRate,al);
-        //TODO
-//        flushingScheduler.start();
+        flushingScheduler.start();
     }
     public void flush(TableModelEvent e) {
         if ( null != e) {
