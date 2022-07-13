@@ -1401,7 +1401,7 @@ public class BestLines {
 			Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
 			if(bestsl == null)
 			{
-				AppController.addSpreadline(new Spreadline(gameid,bestbookieid,bvsl.getCurrentvisitspread(),bvsl.getCurrentvisitjuice(),bvsl.getCurrenthomespread(),bvsl.getCurrenthomejuice(),0,period));
+				AppController.addSpreadline(new Spreadline(gameid,bestbookieid,bvsl.getCurrentvisitspread(),bvsl.getCurrentvisitjuice(),bvsl.getCurrenthomespread(),bvsl.getCurrenthomejuice(),0,period),false);
 			}
 			else
 			{

@@ -1006,6 +1006,9 @@ public class AppController {
     }
 
     public static void addSpreadline(Spreadline spread) {
+        addSpreadline(spread,true);
+    }
+    public static void addSpreadline(Spreadline spread,boolean toNotify) {
 
         try {
             int period = spread.getPeriod();
@@ -1028,11 +1031,12 @@ public class AppController {
                 livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
                 log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
             }
-            newLineNotify(spread);
+            if ( toNotify) {
+                newLineNotify(spread);
+            }
         }catch( Exception e) {
             Utils.log(e);
         }
-        //LineAlertOpeners.spreadOpenerAlert(spread);
     }
 
     public static void addTotalline(Totalline total) {
@@ -1061,8 +1065,6 @@ public class AppController {
         }catch( Exception e) {
             Utils.log(e);
         }
-        //LineAlertOpeners.totalOpenerAlert(total);
-
     }
 
     public static void addMoneyline(Moneyline ml) {
