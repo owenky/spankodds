@@ -177,7 +177,7 @@ public abstract class OngoingGameMessages {
     public static void loadMessagesFromLog() {
         AppController.waitForSpankyWindowLoaded();
         //////////////////////////////////////////////////////////
-        new ClearColorTest().start();
+//        new ClearColorTest().start();
         ////////////////////////////////////////////////////////////
         if (SpankOdds.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
             File tempDir = new File(InitialGameMessages.MesgDir);

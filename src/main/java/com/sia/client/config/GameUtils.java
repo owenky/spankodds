@@ -34,7 +34,7 @@ public abstract class GameUtils {
         return null != gameDateTime && ! gameDateTime.isAfter(now);
     }
     public static Sport getSport(Game game) {
-        return AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
+        return null==game?null: AppController.getSportByLeagueId(game.getSportIdentifyingLeagueId());
     }
     public static List<String> convertLeagueIdHeaderToGameGroupHeaderStr(List<String> headerStrList) {
 

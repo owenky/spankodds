@@ -20,7 +20,12 @@ public class SportFilter extends MesgFilterType {
            String gameId = matcher.group(2);
            Game game = AppController.getGame(Integer.parseInt(gameId));
            Sport sport = GameUtils.getSport(game);
-           status = Arrays.stream(getConditions()).anyMatch(s->s.equalsIgnoreCase(sport.getSportname()));;
+           if (null != sport) {
+               String sportName = sport.getSportname();
+               status = Arrays.stream(getConditions()).anyMatch(s -> s.equalsIgnoreCase(sportName));
+           } else {
+               status = false;
+           }
         } else {
             status = false;
         }
