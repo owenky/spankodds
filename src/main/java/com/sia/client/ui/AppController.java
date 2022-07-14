@@ -1,14 +1,13 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst.SportName;
+import com.sia.client.config.Utils;
 import com.sia.client.model.*;
 import com.sia.client.ui.control.SportsTabPane;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -30,6 +29,7 @@ public class AppController {
     public static Vector<LineAlertNode> linealertnodes = new Vector<>();
     public static Vector<SportsMenuBar> menubars = new Vector<>();
     public static Vector<Sport> sportsVec = new Vector<>();
+    public static Hashtable<String,ConsensusMakerSettings> cmshash = new Hashtable<>();
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
@@ -48,8 +48,6 @@ public class AppController {
     public static UserPrefsProducer userPrefsProducer;
     public static ChartChecker chartchecker;
     public static long clearalltime;
-    public static DefaultTableColumnModel columnmodel;
-    public static DefaultTableColumnModel fixedcolumnmodel;
     public static NewWindowAction nwa;
     public static LineOpenerAlertNode football = new LineOpenerAlertNode(SportName.Football);
     public static LineOpenerAlertNode basketball = new LineOpenerAlertNode(SportName.Basketball);
@@ -125,6 +123,90 @@ public class AppController {
     private static final Games games = Games.instance();
     private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
+    public static Hashtable getConsensusMakerSettings()
+    {
+        return cmshash;
+    }
+    public static String getConsensusMakerSettingsAsString()
+    {
+        String cmsstring = "";
+        Enumeration enum99 = cmshash.elements();
+        while(enum99.hasMoreElements())
+        {
+            ConsensusMakerSettings cms = (ConsensusMakerSettings) enum99.nextElement();
+            cmsstring = cmsstring+cms.getDelimitedString()+"~";
+        }
+        return cmsstring;
+    }
+    public static ConsensusMakerSettings getConsensusMakerSettingsForThisGame(int gameid)
+    {
+        ConsensusMakerSettings returncms = null;
+        Game g = getGame(gameid);
+        int leagueid = g.getLeague_id();
+        Enumeration enum2 = cmshash.elements();
+        while(enum2.hasMoreElements())
+        {
+            ConsensusMakerSettings cms = (ConsensusMakerSettings) enum2.nextElement();
+            if(cms.isLeagueIncluded(""+leagueid))
+
+            {
+                returncms = cms;
+                break;
+
+            }
+        }
+        return returncms;
+    }
+    public static void addConsensusMakerSetting(ConsensusMakerSettings cms)
+    {
+        String newname = "MyConsensusSetting-";
+        if(cms.getName().equals(""))
+        {
+            for(int i=1; i <100; i++)
+            {
+                if(cmshash.get(newname+i) == null)
+                {
+                    cms.setName(newname+i);
+                    cmshash.put(cms.getName(),cms);
+                    break;
+                }
+
+            }
+        }
+        else
+        {
+            cmshash.put(cms.getName(),cms);
+        }
+
+    }
+    public static void removeConsensusMakerSetting(ConsensusMakerSettings cms)
+    {
+        cmshash.remove(cms.getName());
+    }
+    public static void createConsensusMakerSettings() {
+
+        String cmsdata = getUser().getConsensussettings();
+        if(cmsdata == null || cmsdata.equals(""))
+        {
+            return;
+        }
+        String lans[] = cmsdata.split("~");
+        for(int i = 0;i < lans.length; i++)
+        {
+
+            String[] items = lans[i].split("\\|");
+            if(items.length > 1)
+            {
+                String name = items[0];
+                String sportslist = items[1];
+                String percentages = items[2];
+
+                addConsensusMakerSetting(new ConsensusMakerSettings(name,sportslist,percentages));
+
+            }
+        }
+
+    }
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = User.instance().getTabsIndex().split(",");
         for (int i = 0; i < tabsindex.length; i++) {
@@ -133,6 +215,11 @@ public class AppController {
             SportsTabPaneVector.add(tabsindex[i]);
 
         }
+    }
+
+    public static UserDisplaySettings getUserDisplaySettings()
+    {
+        return Config.instance().getUserDisplaySettings();
     }
 
     public static void signalWindowLoading() {
@@ -146,7 +233,7 @@ public class AppController {
 
     public static boolean isReadyForMessageProcessing() {
         CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
-        return 0 == messageProcessingLatch.getCount();
+        return  0 == messageProcessingLatch.getCount();
 
     }
 
@@ -307,6 +394,10 @@ public class AppController {
         LimitNodeList.add(tennislimitnode);
         LimitNodeList.add(autoracinglimitnode);
     }
+
+
+
+
     public static void createLineOpenerAlertNodeListFromUserPrefs() {
 
         String openerdata = getUser().getOpeneralert();
@@ -442,64 +533,6 @@ public class AppController {
         }
         return true;
     }
-
-    public static TableColumnModel getColumnModel() {
-        if (columnmodel == null) {
-            createColumnModel();
-        }
-        return columnmodel;
-    }
-
-    public static void createColumnModel() {
-        List<Bookie> newBookiesVec = getBookiesVec();
-        columnmodel = new DefaultTableColumnModel();
-        fixedcolumnmodel = new DefaultTableColumnModel();
-        for (int k = 0; k < newBookiesVec.size(); k++) {
-            Bookie b = newBookiesVec.get(k);
-            LineRenderer lr = new LineRenderer();
-            //renderers.add(lr);
-            TableColumn column;
-
-            column = new TableColumn(k, 30, lr, null);
-            column.setHeaderValue(b.getShortname() + "");
-            column.setIdentifier("" + b.getBookie_id());
-            if (b.getBookie_id() == 990) {
-                column.setPreferredWidth(54);
-            } else if (b.getBookie_id() == 991) {
-                column.setPreferredWidth(40);
-            } else if (b.getBookie_id() == 992) {
-                column.setPreferredWidth(45);
-            } else if (b.getBookie_id() == 993) {
-
-                column.setPreferredWidth(150);
-
-            } else {
-                //column.setPreferredWidth(50) ;
-                column.setMinWidth(10);
-                column.setPreferredWidth(10);
-            }
-            columnmodel.addColumn(column);
-
-        }
-        // here i'm adding a blank column
-        TableColumn blankcol = new TableColumn(newBookiesVec.size(), 10, null, null);
-        blankcol.setHeaderValue("");
-        blankcol.setIdentifier("9999999");
-
-        blankcol.setMaxWidth(30);
-        blankcol.setPreferredWidth(30);
-        columnmodel.addColumn(blankcol);
-
-
-        for (int i = 0; i < AppController.getNumFixedCols(); i++) {
-            TableColumn column = columnmodel.getColumn(0);
-            columnmodel.removeColumn(column);
-            fixedcolumnmodel.addColumn(column);
-        }
-
-
-    }
-
     public static List<Bookie> getBookiesVec() {
         return bookieManager.getBookiesVec();
     }
@@ -516,12 +549,6 @@ public class AppController {
         return bookieManager.reorderBookiesVec();
     }
 
-    public static TableColumnModel getFixedColumnModel() {
-        if (fixedcolumnmodel == null) {
-            createColumnModel();
-        }
-        return fixedcolumnmodel;
-    }
 
     public static NewWindowAction getNewWindowAction() {
         if (nwa == null) {
@@ -943,6 +970,12 @@ public class AppController {
     public static Color getColor(Integer bookieid) {
         return bookiecolors.get(bookieid);
     }
+    public static void removeColor(Integer bookieid) {
+        bookiecolors.remove(bookieid);
+    }
+    public static void clearColumnColors() {
+        bookiecolors.clear();
+    }
 
     public static void putColor(Integer bookieid, Color color) {
         bookiecolors.put(bookieid, color);
@@ -973,105 +1006,122 @@ public class AppController {
     }
 
     public static void addSpreadline(Spreadline spread) {
-        int period = spread.getPeriod();
+        addSpreadline(spread,true);
+    }
+    public static void addSpreadline(Spreadline spread,boolean toNotify) {
 
-        if (period == 0) {
-            spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 1) {
-            h1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 2) {
-            h2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 5) {
-            q1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 6) {
-            q2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 7) {
-            q3spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else if (period == 8) {
-            q4spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-        } else {
-            livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
-            log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
+        try {
+            int period = spread.getPeriod();
+
+            if (period == 0) {
+                spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 1) {
+                h1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 2) {
+                h2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 5) {
+                q1spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 6) {
+                q2spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 7) {
+                q3spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else if (period == 8) {
+                q4spreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+            } else {
+                livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
+                log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
+            }
+            if ( toNotify) {
+                newLineNotify(spread);
+            }
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(spread);
-        //LineAlertOpeners.spreadOpenerAlert(spread);
     }
 
     public static void addTotalline(Totalline total) {
 
-
-        int period = total.getPeriod();
-        if (period == 0) {
-            totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 1) {
-            h1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 2) {
-            h2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 5) {
-            q1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 6) {
-            q2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 7) {
-            q3totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else if (period == 8) {
-            q4totals.put(total.getBookieid() + "-" + total.getGameid(), total);
-        } else {
-            livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
-            log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
+        try {
+            int period = total.getPeriod();
+            if (period == 0) {
+                totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 1) {
+                h1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 2) {
+                h2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 5) {
+                q1totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 6) {
+                q2totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 7) {
+                q3totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else if (period == 8) {
+                q4totals.put(total.getBookieid() + "-" + total.getGameid(), total);
+            } else {
+                livetotals.put(total.getBookieid() + "-" + total.getGameid(), total);
+                log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
+            }
+            newLineNotify(total);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(total);
-        //LineAlertOpeners.totalOpenerAlert(total);
-
     }
 
     public static void addMoneyline(Moneyline ml) {
 
-
-        int period = ml.getPeriod();
-        if (period == 0) {
-            moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 1) {
-            h1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 2) {
-            h2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 5) {
-            q1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 6) {
-            q2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 7) {
-            q3moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else if (period == 8) {
-            q4moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-        } else {
-            livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
-            log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
+        try {
+            int period = ml.getPeriod();
+            if (period == 0) {
+                moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 1) {
+                h1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 2) {
+                h2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 5) {
+                q1moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 6) {
+                q2moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 7) {
+                q3moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else if (period == 8) {
+                q4moneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+            } else {
+                livemoneylines.put(ml.getBookieid() + "-" + ml.getGameid(), ml);
+                log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
+            }
+            newLineNotify(ml);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(ml);
 //LineAlertOpeners.moneyOpenerAlert(ml);
     }
 
     public static void addTeamTotalline(TeamTotalline teamtotal) {
 
-        int period = teamtotal.getPeriod();
-        if (period == 0) {
-            teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 1) {
-            h1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 2) {
-            h2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 5) {
-            q1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 6) {
-            q2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 7) {
-            q3teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else if (period == 8) {
-            q4teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-        } else {
-            liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
-            log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
+        try {
+            int period = teamtotal.getPeriod();
+            if (period == 0) {
+                teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 1) {
+                h1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 2) {
+                h2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 5) {
+                q1teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 6) {
+                q2teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 7) {
+                q3teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else if (period == 8) {
+                q4teamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+            } else {
+                liveteamtotals.put(teamtotal.getBookieid() + "-" + teamtotal.getGameid(), teamtotal);
+                log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
+            }
+            newLineNotify(teamtotal);
+        }catch( Exception e) {
+            Utils.log(e);
         }
-        newLineNotify(teamtotal);
 //LineAlertOpeners.teamTotalOpenerAlert(teamtotal);
     }
 

@@ -2,14 +2,17 @@ package com.sia.client.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sia.client.ui.SpankyWindow;
+import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -48,6 +51,10 @@ public class FontConfig implements ActionListener {
     private JScrollPane fontStylePane;
     @JsonIgnore
     private boolean changed = false;
+    @JsonIgnore
+    private Integer fontHeight = 15;
+    @JsonIgnore
+    private boolean needToCalculateFontHeight = true;
     @JsonIgnore
     private final JMenu fontFamilyMenu = new JMenu("Font Family");
     @JsonIgnore
@@ -113,6 +120,7 @@ public class FontConfig implements ActionListener {
 
     public void setSelectedFontName(String selectedFontName) {
         this.selectedFontName = selectedFontName;
+        needToCalculateFontHeight = true;
     }
 
     public int getSelectedFontSize() {
@@ -121,6 +129,7 @@ public class FontConfig implements ActionListener {
 
     public void setSelectedFontSize(int selectedFontSize) {
         this.selectedFontSize = selectedFontSize;
+        needToCalculateFontHeight = true;
     }
 
     public String getSelectedFontStyle() {
@@ -129,6 +138,7 @@ public class FontConfig implements ActionListener {
 
     public void setSelectedFontStyle(String selectedFontStyle) {
         this.selectedFontStyle = selectedFontStyle;
+        needToCalculateFontHeight = true;
     }
     @JsonIgnore
     public Font getDefaultHeaderFont() {
@@ -139,8 +149,24 @@ public class FontConfig implements ActionListener {
         if ( null == selectedFont) {
             selectedFont = systemDefaultFont;
             setSelectedFontAttributes(selectedFont);
+            needToCalculateFontHeight = true;
         }
         return selectedFont;
+    }
+    @JsonIgnore
+    public Integer getFontHeight() {
+        if (needToCalculateFontHeight) {
+            fontHeight = changeFontHeight();
+        }
+        return fontHeight;
+    }
+    @JsonIgnore
+    public Integer getNormalRowHeight() {
+        return getFontHeight() * 2;
+    }
+    @JsonIgnore
+    public Integer getSoccerRowHeight() {
+        return getFontHeight() * 4;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -157,12 +183,14 @@ public class FontConfig implements ActionListener {
                 setSelectedFontAttributes(selectedFont);
             }
             setSelectedValuesOfFontList();
+            needToCalculateFontHeight = true;
         }
     }
     private void setSelectedFontAttributes(Font f) {
         selectedFontName = getFontName(f);
         selectedFontStyle = getFontStyle(f);
         selectedFontSize = f.getSize();
+        needToCalculateFontHeight = true;
     }
     private void setSelectedValuesOfFontList() {
         fontNameList.setSelectedValue(selectedFontName,true);
@@ -275,6 +303,7 @@ public class FontConfig implements ActionListener {
     public void setApplicationDefaultFont() {
         selectedFont = createFont();
         applyApplicationDefaultFont(selectedFont);
+        needToCalculateFontHeight = true;
     }
     private void reSetApplicationDefaultFont() {
         selectedFont = systemDefaultFont;
@@ -282,6 +311,7 @@ public class FontConfig implements ActionListener {
         setSelectedFontAttributes(selectedFont);
         changed = false;
         setFontMenuProperties();
+        needToCalculateFontHeight = true;
     }
     private static void applyApplicationDefaultFont(Font font) {
         Enumeration keys = UIManager.getDefaults().keys();
@@ -326,6 +356,7 @@ public class FontConfig implements ActionListener {
                 fontStyleList.clearSelection();
                 selectedFontStyle = null;
             }
+            needToCalculateFontHeight = true;
         }
 
         if ( 0 < selectedFontSize) {
@@ -340,6 +371,7 @@ public class FontConfig implements ActionListener {
             }
         }
         setFontMenuProperties();
+        needToCalculateFontHeight = true;
     }
     private void onFontFamilyName(ListSelectionEvent event) {
         changed = !selectedFontName.equals(fontNameList.getSelectedValue());
@@ -350,6 +382,7 @@ public class FontConfig implements ActionListener {
 //        validateStyleAndSize();
         setFontMenuProperties();
         fontFamilyMenu.getPopupMenu().setVisible(false);
+        needToCalculateFontHeight = true;
     }
     private void onFontStyle(ListSelectionEvent event) {
         changed = !selectedFontStyle.equals(fontStyleList.getSelectedValue());
@@ -359,6 +392,7 @@ public class FontConfig implements ActionListener {
 
         setFontMenuProperties();
         fontStyleMenu.getPopupMenu().setVisible(false);
+        needToCalculateFontHeight = true;
     }
     private void onFontSize(ListSelectionEvent event) {
         changed = selectedFontSize != fontSizeList.getSelectedValue();
@@ -368,9 +402,33 @@ public class FontConfig implements ActionListener {
 
         setFontMenuProperties();
         fontSizeMenu.getPopupMenu().setVisible(false);
+        needToCalculateFontHeight = true;
     }
     private void createFontSizeAndStyleList(String fontFamilyName) {
         loadFontStyles(fontFamilyName);
+    }
+    private int changeFontHeight() {
+        AtomicReference<FontMetrics> fmRef = new AtomicReference<>();
+        if ( ! SwingUtilities.isEventDispatchThread() ) {
+
+            try {
+                SwingUtilities.invokeAndWait(()-> fmRef.set(SwingUtilities2.getFontMetrics(new JLabel(), getSelectedFont())));
+            } catch (InterruptedException | InvocationTargetException e) {
+                Utils.log(e);
+            }
+        } else {
+            fmRef.set(SwingUtilities2.getFontMetrics(new JLabel(), getSelectedFont()));
+        }
+        FontMetrics fm = fmRef.get();
+        int fontHeight;
+        if ( null != fm) {
+            fontHeight = fm.getHeight();// +fm.getDescent();
+        } else {
+            fontHeight = 15;
+        }
+        needToCalculateFontHeight = false;
+        System.out.println("fontHeight="+fontHeight);
+        return fontHeight;
     }
     static String getFontName(Font f) {
         String fontName = f.getName();

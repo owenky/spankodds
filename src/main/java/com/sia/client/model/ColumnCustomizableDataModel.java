@@ -10,12 +10,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
@@ -25,20 +20,25 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
 
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
-    private final List<TableColumn> allColumns;
+    private final BookieColumnModel bookieColumnModel;
     private final List<TableSectionListener> tableSectionListenerList = new ArrayList<>();
     private ColumnHeaderProperty columnHeaderProperty;
     private boolean toConfigHeaderRow = false;
-//    private boolean isDetroyed = false;
     private final Map<Integer,LtdSrhStruct<V>> ltdSrhStructCache = new HashMap<>();
     private final GameBatchUpdator gameBatchUpdator;
     private final ScreenProperty screenProperty;
 
-    public ColumnCustomizableDataModel(ScreenProperty screenProperty,List<TableColumn> allColumns) {
+    public ColumnCustomizableDataModel(ScreenProperty screenProperty,BookieColumnModel bookieColumnModel) {
         this.screenProperty = screenProperty;
-        this.allColumns = allColumns;
-        validateAndFixColumnModelIndex(allColumns);
+        this.bookieColumnModel = bookieColumnModel;
         gameBatchUpdator = GameBatchUpdator.instance();
+    }
+    public void setColumnWidths() {
+        ColumnSettings columnSettings = Config.instance().getColumnSettings();
+        for(int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn column = bookieColumnModel.get(i);
+            column.setPreferredWidth(columnSettings.getColumnWidth(column.getHeaderValue(),screenProperty.getSportName()));
+        }
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
@@ -52,12 +52,6 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public ScreenProperty getScreenProperty() {
         return screenProperty;
     }
-//    public void setDetroyed(boolean isDetroyed) {
-//        this.isDetroyed = isDetroyed;
-//    }
-//    public boolean isDetroyed() {
-//        return isDetroyed;
-//    }
     public void setToConfigHeaderRow(boolean toConfigHeaderRow) {
         this.toConfigHeaderRow = toConfigHeaderRow;
     }
@@ -68,7 +62,11 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public final Object getValueAt(int rowModelIndex, int colModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
         TableSection<V> r = ltdSrhStruct.linesTableData;
-        return r.getValueAt((rowModelIndex-ltdSrhStruct.offset),colModelIndex);
+        if ( null != r) {
+            return r.getValueAt((rowModelIndex - ltdSrhStruct.offset), colModelIndex);
+        } else {
+            return null;
+        }
     }
     @Override
     public final int getRowCount() {
@@ -80,14 +78,14 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public int getColumnCount() {
-        return allColumns.size();
+        return bookieColumnModel.size();
     }
 
     @Override
     public String getColumnName(final int columnIndex) {
-        Object columnName =  allColumns.get(columnIndex).getHeaderValue();
+        Object columnName =  bookieColumnModel.get(columnIndex).getHeaderValue();
         if ( null == columnName) {
-            columnName = allColumns.get(columnIndex).getIdentifier();
+            columnName = bookieColumnModel.get(columnIndex).getIdentifier();
         }
         if ( null == columnName) {
             columnName = "";
@@ -117,7 +115,20 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     }
     @Override
     public void setValueAt(Object value,int rowModelIndex, int colModelIndex) {
-        throw new IllegalStateException("Pending implementation");
+        TableColumn tc = getBookieColumnModel().get(colModelIndex);
+        if ( TableUtils.isNoteColumn(tc)) {
+            V game = getGame(rowModelIndex);
+            int gameId = game.getGame_id();
+            GameNotes gameNotes = Config.instance().getGameNotes();
+            gameNotes.addNote(gameId,String.valueOf(value));
+
+            //update model value.
+            LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
+            TableSection<V> section = ltdSrhStruct.linesTableData;
+            addGameToTableSection(section,game);
+        } else {
+            throw new IllegalStateException("Pending implementation");
+        }
     }
     public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet) {
         flushUpdate();
@@ -134,12 +145,16 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
         this.processTableModelEvent(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
     public void flushUpdate() {
-        this.gameBatchUpdator.flush();
+        flushUpdate(null);
+    }
+    public void flushUpdate(TableModelEvent e) {
+        this.gameBatchUpdator.flush(e);
     }
     public void processTableModelEvent(TableModelEvent e) {
         if (TableUtils.toRebuildCache(e) || toConfigHeaderRow()) {
             long begin = System.currentTimeMillis();
             buildIndexMappingCache(false);
+            setToConfigHeaderRow(false);
 Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.currentTimeMillis()-begin));
             this.gameBatchUpdator.flush(e);
         } else {
@@ -147,11 +162,18 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         }
 
     }
+    public void refreshTable() {
+        fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
+    }
     public void fireTableChanged(TableModelEvent e) {
         try {
+            RowSelection rowSelection = Config.instance().getRowSelection();
+            rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),true);
+//Utils.log("############ ColumnCustomizableDataModel::fireTableChanged is fired -----------------------");
             delegator.fireTableChanged(e);
+            rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),false);
         } catch(Exception ex) {
-            String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getName()+", window index="
+            String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getSportName()+", window index="
                     +this.getSpankyWindowConfig().getWindowIndex();
             log(errMs,ex);
         }
@@ -170,8 +192,8 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     public TableSection<V> findTableSectionByGameid(int gameId) {
         return getTableSections().stream().filter(ts-> ts.containsGame(gameId)).findAny().orElse(null);
     }
-    public List<TableColumn> getAllColumns() {
-        return this.allColumns;
+    public BookieColumnModel getBookieColumnModel() {
+        return this.bookieColumnModel;
     }
     public Integer getRowKey(int rowModelIndex) {
         LtdSrhStruct<V> ltdSrhStruct = getLinesTableData(rowModelIndex);
@@ -215,7 +237,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         } else {
             log( new Exception("can't find LinesTableData for header:"+targetGameGroupHeader));
         }
-
+        this.fireTableChanged(new TableModelEvent(this,0,Integer.MAX_VALUE,0,TableModelEvent.UPDATE));
     }
     protected void addGameToTableSection(TableSection<V> ltd, V game) {
 
@@ -390,26 +412,6 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         for(TableSectionListener l :tableSectionListenerList) {
             l.processTableSectionChanged();
         }
-    }
-    private static void validateAndFixColumnModelIndex(List<TableColumn> allColumns) {
-        if ( ! validateColumnIndex(allColumns)) {
-            for( int i=0;i<allColumns.size();i++) {
-                allColumns.get(i).setModelIndex(i);
-            }
-        }
-    }
-    private static boolean validateColumnIndex(List<TableColumn> allColumns) {
-        int modelIndex0Count=0;
-        boolean status = true;
-        for(TableColumn tc: allColumns) {
-            if ( 0 == tc.getModelIndex()) {
-                if ( ++modelIndex0Count > 1) {
-                    status = false;
-                    break;
-                }
-            }
-        }
-        return status;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct<V extends KeyedObject> {

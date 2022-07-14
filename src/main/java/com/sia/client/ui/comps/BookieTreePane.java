@@ -11,12 +11,12 @@ public class BookieTreePane implements EditablePane {
     private JScrollPane jScrollPane;
     private Dimension preferredSize;
     private final SimpleValueWraper<String> bookies;
-    private UICompValueBinder uiCompValueBinder;
+    private final UICompValueBinder uiCompValueBinder;
 
     public BookieTreePane(BookieTree bookieTree, SimpleValueWraper<String> bookies) {
         this.bookieTree = bookieTree;
         this.bookies = bookies;
-        uiCompValueBinder =  UICompValueBinder.register(this,bookies,getOnValueChangedEventFunction()).bind("value",bookieTree);
+        uiCompValueBinder =  UICompValueBinder.register(this,getOnValueChangedEventFunction()).bindCompProp("value",bookieTree).withPersistenceObject(bookies);
     }
     public void setPreferredSize(Dimension preferredSize) {
         this.preferredSize = preferredSize;
@@ -56,9 +56,6 @@ public class BookieTreePane implements EditablePane {
 
     @Override
     public UICompValueBinder getJComponentBinder() {
-        if ( null == uiCompValueBinder) {
-            uiCompValueBinder = UICompValueBinder.register(this,bookies,getOnValueChangedEventFunction()).bind("value",bookieTree);
-        }
         return uiCompValueBinder;
     }
 }

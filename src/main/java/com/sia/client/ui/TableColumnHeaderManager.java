@@ -1,30 +1,16 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.Utils;
 import com.sia.client.model.KeyedObject;
 import com.sia.client.model.MqMessageProcessor;
 
-import javax.swing.JFrame;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.TableColumn;
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,8 +122,33 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
     @Override
     public void columnMarginChanged(final ChangeEvent e) {
         invokeDrawColumnHeaders();
+        adjustTableWidthAndSaveColumnWidth(e);
     }
+    private void adjustTableWidthAndSaveColumnWidth(ChangeEvent e) {
+        JTable sourceTable;
+        TableColumn tc;
+        boolean isFromRowHeaderTable = e.getSource() instanceof RowHeaderColumnModel;
+        if ( isFromRowHeaderTable ) {
+            sourceTable = mainTable.getRowHeaderTable();
 
+        } else {
+            sourceTable = mainTable;
+        }
+        tc = sourceTable.getTableHeader().getResizingColumn();
+        if ( null != tc) {
+            Config.instance().getColumnSettings().setColumnWidth(tc.getHeaderValue(), mainTable.getTableType(),tc.getWidth());
+        }
+        if ( isFromRowHeaderTable ) {
+            int totalWidth = 0;
+            TableColumnModel tcm = mainTable.getRowHeaderTable().getColumnModel();
+            for (int i = 0; i < tcm.getColumnCount(); i++) {
+                TableColumn tblCol = tcm.getColumn(i);
+                totalWidth += tblCol.getWidth();
+            }
+            mainTable.getRowHeaderTable().optimizeTableWidth(totalWidth);
+        }
+
+    }
     @Override
     public void columnSelectionChanged(final ListSelectionEvent e) {
 
@@ -172,7 +183,9 @@ public class TableColumnHeaderManager<V extends KeyedObject> implements Hierarch
         if (TableUtils.toRebuildCache(e) ) {
             mainTable.getColumnAdjusterManager().clear();
             if (mainTable.isShowing()) {
-                adjustComumns();
+                if ( Config.instance().getUserDisplaySettings().getAutofitdata()) {
+                    adjustComumns();
+                }
                 reconfigHeaderRow();
                 invokeDrawColumnHeaders();
             }

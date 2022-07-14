@@ -1,30 +1,34 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
-import com.sia.client.config.SiaConst.SportName;
-import com.sia.client.model.*;
-import com.sia.client.ui.control.SportsTabPane;
+import com.sia.client.model.Game;
+import com.sia.client.model.MainGameTableModel;
+import com.sia.client.model.SportType;
 
-import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
-    private final LineRenderer soccerLineRenderer = new LineRenderer(SportName.Soccer);
-    private final LineRenderer lineRenderer = new LineRenderer();
-    private final SportType sporetType;
+    private final SportType sportType;
 
     public MainGameTable(MainGameTableModel tm) {
         super(false,tm);
-        sporetType = tm.getSportType();
-        this.addMouseListener(new MouseClickListener(getWindowIndex()));
+        sportType = tm.getSportType();
+        this.addMouseListener(GameTableMouseListener.instance());
     }
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
+    }
+    @Override
+    public String getTableType() {
+        return sportType.getSportName();
+    }
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        super.valueChanged(e);
+        TableUtils.updateRowSelection(this,e);
     }
     @Override
     public void setName(String name) {
@@ -40,7 +44,7 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     }
     @Override
     public TableCellRenderer getUserCellRenderer(int rowViewIndex, int colViewIndex) {
-         return isSoccer(rowViewIndex)? soccerLineRenderer:lineRenderer;
+         return isSoccer(rowViewIndex)? LineRenderer.soccerInstance():LineRenderer.instance();
     }
     @Override
     public LinesTableData getLinesTableData(int row) {
@@ -49,6 +53,10 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
     @Override
     protected int computeRowHeight(int rowModelIndex) {
         int rowHeight;
+        Game game = getGame(rowModelIndex);
+        if ( TableRowPopup.isHiddenRow(getName(), game.getGame_id())) {
+            return SiaConst.Ui.HiddenRowHeight;
+        }
 
         if ( ! getModel().getSportType().isPredifined()) {
             //for customized sport, stage table section contains mixed sport type games.
@@ -56,9 +64,9 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
             Game g  = getModel().getGame(rowModelIndex);
             boolean isSoccer = SiaConst.SoccerLeagueId == g.getLeague_id();
             if ( isSoccer) {
-                rowHeight = SiaConst.SoccerRowheight;
+                rowHeight = Config.instance().getFontConfig().getSoccerRowHeight();
             } else {
-                rowHeight = SiaConst.NormalRowheight;
+                rowHeight = Config.instance().getFontConfig().getNormalRowHeight();
             }
 
         } else {
@@ -66,46 +74,25 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
         }
         return rowHeight;
     }
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        return TableUtils.isCellEditable(this,row,col);
+    }
+    // force ctrl key down when mouse click a row by setting toggle=true
+    @Override
+    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+        if ( ! this.isCellEditable(rowIndex,columnIndex)) {
+            super.changeSelection(rowIndex, columnIndex, true, extend);
+        }
+    }
     private boolean isSoccer(int rowViewIndex) {
-        if ( sporetType.equals(SportType.Soccer)) {
+        if ( sportType.equals(SportType.Soccer)) {
             return true;
-        } else if (sporetType.isPredifined()) {
+        } else if (sportType.isPredifined()) {
             return false;
         }
         int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);
         Game g  = getModel().getGame(rowModelIndex);
         return SiaConst.SoccerLeagueId == g.getLeague_id();
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    public static class MouseClickListener extends MouseAdapter {
-
-        private final int  windowIndex;
-        public MouseClickListener(int  windowIndex) {
-            this.windowIndex = windowIndex;
-        }
-        @Override
-        public void mouseClicked(MouseEvent event) {
-            // for double click or right click, show game details
-            SportsTabPane stp = SpankyWindow.findSpankyWindow(windowIndex).getSportsTabPane();
-            if (  (2 == event.getClickCount() && event.getButton() == MouseEvent.BUTTON1)
-                    || event.getButton() == MouseEvent.BUTTON3) {
-
-                AccessableToGame<Game> accessableToGame = (AccessableToGame<Game>)event.getSource();
-                JTable table = (JTable)accessableToGame;
-                Point point = event.getPoint();
-                int row = table.rowAtPoint(point);
-                int col = table.columnAtPoint(point);
-                int rowModelIndex = table.convertRowIndexToModel(row);
-                int colModelIndex = table.convertRowIndexToModel(col);
-                TableColumn tc = table.getColumnModel().getColumn(colModelIndex);
-                String bookieShortName = String.valueOf(tc.getHeaderValue());
-                Integer bookieId = BookieManager.instance().getBookieId(bookieShortName);
-                if (  null != bookieId) {
-                    SwingUtilities.convertPointToScreen(point,table);
-                    Game game = accessableToGame.getGame(rowModelIndex);
-                    GameHistPane.showHistPane(stp,point,game,bookieId);
-                }
-            }
-        }
     }
 }

@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.LayedPaneIndex;
+import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
 import com.sia.client.model.AlertStruct;
 import com.sia.client.ui.control.MainScreen;
@@ -9,9 +10,10 @@ import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import static com.sia.client.config.Utils.checkAndRunInEDT;
 import static com.sia.client.config.Utils.log;
 
 public class TopView extends JPanel implements ItemListener, Cloneable {
@@ -144,138 +146,74 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
 
 // 1st HALF NOT VISIBLE USED TO SELECT 1st HALF FROM COMBO BOX!
 
-        Action firsthalfaction = new AbstractAction("1st half") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        ActionListener al = (e)-> {
                 log("1st half button pressed");
                 periodcb.setSelectedIndex(1);
-
-
-            }
         };
-        firsthalfaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_2, 0));
-
-        this.getActionMap().put("1sthalfAction", firsthalfaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) firsthalfaction.getValue(Action.ACCELERATOR_KEY), "1sthalfAction");
+        ShortCut.registerShortCutAction(this, ShortCut.FirstHalf,al);
 
 // FULL GAME NOT VISIBLE USED TO SELECT FULL GAME FROM COMBO BOX!
 
-        Action fullgameaction = new AbstractAction("Full Game") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)->  {
                 log("full game button pressed");
                 periodcb.setSelectedIndex(0);
-
-
-            }
         };
-        fullgameaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_G, 0));
-
-        this.getActionMap().put("fullgameAction", fullgameaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) fullgameaction.getValue(Action.ACCELERATOR_KEY), "fullgameAction");
+        ShortCut.registerShortCutAction(this, ShortCut.FullGame,al);
 
 // USED TO SELECT DEFAULT VIEW FROM COMBO BOX!
 
-        Action defaultviewaction = new AbstractAction("DefaultView") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)-> {
                 log("defaultview button pressed");
                 cb.setSelectedIndex(0);
-
-
-            }
         };
-        defaultviewaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, 0));
-
-        this.getActionMap().put("defaultviewaction", defaultviewaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) defaultviewaction.getValue(Action.ACCELERATOR_KEY), "defaultviewaction");
+        ShortCut.registerShortCutAction(this, ShortCut.DefaultView,al);
 
 // USED TO SELECT SIDES ONLY FROM COMBO BOX!
 
-        Action sidesonlyaction = new AbstractAction("SidesOnly") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        al = (e)->{
                 log("sides only button pressed");
                 cb.setSelectedIndex(4);
-
-
-            }
         };
-        sidesonlyaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_3, 0));
-
-        this.getActionMap().put("sidesonlyaction", sidesonlyaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) sidesonlyaction.getValue(Action.ACCELERATOR_KEY), "sidesonlyaction");
+        ShortCut.registerShortCutAction(this, ShortCut.SidesOnly,al);
 
 // USED TO SELECT TOTALS ONLY FROM COMBO BOX!
 
-        Action totalsonlyaction = new AbstractAction("TotalsOnly") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                log("totals only button pressed");
+        al = (e)->  {
                 cb.setSelectedIndex(5);
-
-
-            }
         };
-        totalsonlyaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_4, 0));
-
-        this.getActionMap().put("totalsonlyaction", totalsonlyaction);
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) totalsonlyaction.getValue(Action.ACCELERATOR_KEY), "totalsonlyaction");
+        ShortCut.registerShortCutAction(this, ShortCut.TotalsOnly,al);
 
 
 // CLEAR BUTTON
-
-        Action clearaction = new AbstractAction("Clear") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                log("clear button pressed");
+        al = (e)-> {
                 Component comp = stb.getSelectedComponent();
                 if (comp instanceof MainScreen) {
                     ((MainScreen) comp).setClearTime(new java.util.Date().getTime());
                 }
-            }
         };
-        clearaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));
-        clearBut = new JButton(clearaction);
-        clearBut.getActionMap().put("clearAction", clearaction);
-        clearBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) clearaction.getValue(Action.ACCELERATOR_KEY), "clearAction");
+        clearBut = new JButton("Clear");
+        Action action = ShortCut.registerShortCutAction(clearBut, ShortCut.Clear,al);
+        clearBut.setAction(action);
 
 
 // CLEAR ALL BUTTON
 
-        Action clearallaction = new AbstractAction("Clear All") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                log("clear all button pressedAAA");
-                long ct = (new java.util.Date()).getTime();
-                MainScreen ms = (MainScreen) stb.getSelectedComponent();
-                ms.setClearTime(ct);
-                AppController.setClearAllTime(ct);
+        al = (e)-> {
+Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
+                AppController.setClearAllTime(System.currentTimeMillis());
                 AppController.clearAll();
-            }
         };
-        clearallaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, 0));
-        clearAllBut = new JButton(clearallaction);
-        clearAllBut.getActionMap().put("clearAllAction", clearallaction);
-        clearAllBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) clearallaction.getValue(Action.ACCELERATOR_KEY), "clearAllAction");
-
+        clearAllBut = new JButton("Clear All");
+        action = ShortCut.registerShortCutAction(clearAllBut, ShortCut.ClearAll,al);
+        clearAllBut.setAction(action);
 
         adjustcolsBut.addActionListener(ae -> {
-            log("ajustcols button pressed");
             MainScreen ms = (MainScreen) stb.getSelectedComponent();
             ms.adjustcols();
         });
-        Action lastaction = new AbstractAction("Last") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                log("last button pressed");
+
+
+        al = (e)-> {
                 if (lastBut.getText().equals("Current")) {
                     lastBut.setText("Last");
                     stb.setLast(false);
@@ -286,23 +224,15 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                     stb.setLast(true);
                 }
                 stb.resetCurrentScreenStates();
-
-            }
         };
-        lastBut = new JButton(lastaction);
 
-        lastaction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0));
+        lastBut = new JButton("Last");
+        action = ShortCut.registerShortCutAction(lastBut, ShortCut.Last,al);
+        lastBut.setAction(action);
 
-        lastBut.getActionMap().put("lastAction", lastaction);
-        lastBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) lastaction.getValue(Action.ACCELERATOR_KEY), "lastAction");
-
-        Action openeraction = new AbstractAction("Opener") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                log("opener button pressed");
+        al = (e)-> {
                 if (openerBut.getText().equals("Current")) {
-                    openerBut.setText("Opener");
+                    openerBut.setText("");
                     stb.setOpener(false);
                     stb.showCurrent();
                 } else {
@@ -311,15 +241,12 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                     stb.setOpener(true);
                 }
                 stb.resetCurrentScreenStates();
-            }
         };
-        openerBut = new JButton(openeraction);
-        openeraction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, 0));
+        openerBut = new JButton("Opener");
+        action = ShortCut.registerShortCutAction(lastBut, ShortCut.Opener,al);
+        openerBut.setAction(action);
 
-        openerBut.getActionMap().put("openerAction", openeraction);
-        openerBut.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) openeraction.getValue(Action.ACCELERATOR_KEY), "openerAction");
-        sortBut.addActionListener(ae -> {
+        al = (e)-> {
             log("sort button pressed");
             if (sortBut.getText().equals("Time sort")) {
                 stb.setSort(true);
@@ -328,37 +255,40 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 stb.setSort(false);
                 sortBut.setText("Time sort");
             }
-            ((MainScreen) stb.getSelectedComponent()).getDataModels().sortGamesForAllTableSections();
-        });
+            MainScreen ms = (MainScreen) stb.getSelectedComponent();
+            ms.getDataModels().sortGamesForAllTableSections();
+            ms.getColumnCustomizableTable().getModel().refreshTable();
+        };
+        action = ShortCut.registerShortCutAction(sortBut, ShortCut.Sort,al);
+        sortBut.setAction(action);
 
-        addBookieBut.addActionListener(ae -> {
-            checkAndRunInEDT(() -> {
-                AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
-                BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
-            });
-        });
+        al = (e)-> {
+            AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
+            BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
+        };
+        action = ShortCut.registerShortCutAction(addBookieBut, ShortCut.AddBookie,al);
+        addBookieBut.setAction(action);
 
         //owen this one we will have to repaint somehow
-        shrinkTeamBut.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                log("shrinkTeamBut button pressed");
+        al = (e)-> {
                 if (shrinkTeamBut.getText().equals("Short Team")) {
                     stb.setShort(true);
                     shrinkTeamBut.setText("Long Team");
-                    stb.rebuildMainScreen();
                 } else {
                     stb.setShort(false);
                     shrinkTeamBut.setText("Short Team");
-                    stb.rebuildMainScreen();
-
                 }
-            }
-        });
+//                stb.rebuildMainScreen();
+                stb.resetCurrentScreenStates();
+        };
+        action = ShortCut.registerShortCutAction(shrinkTeamBut, ShortCut.ShrinkTeam,al);
+        shrinkTeamBut.setAction(action);
 
-
-        alertBut.addActionListener(ae -> {
+        al = (e)-> {
             UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
-        });
+        };
+        action = ShortCut.registerShortCutAction(alertBut, ShortCut.Alert,al);
+        alertBut.setAction(action);
 
     }
 

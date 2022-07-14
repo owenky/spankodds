@@ -6,6 +6,7 @@ import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.JideToggleButton;
 import com.jidesoft.swing.PartialEtchedBorder;
 import com.jidesoft.swing.PartialSide;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.SportName;
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
@@ -193,7 +194,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
     String[] gameperiodlist = new String[10];
     int[] gameperiodintlist = new int[10];
     String[] percentagelist = new String[100];
-    String[] audiolist = new String[8];
+    String[] audiolist = new String[12];
    Vector<String> audiofilevec = new Vector<>();
     JComboBox sportComboBox;
     JComboBox lanComboBox;
@@ -207,7 +208,7 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
 
 
     public LineAlert(SportsTabPane stp) {
-       super(stp,"Line Alerts");
+       super(stp,"Line Alerts", SiaConst.LINEMOVESHELPURL);
     }
     @Override
     protected JComponent getUserComponent() {
@@ -229,6 +230,10 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
         audiolist[5] = "Horn";
         audiolist[6] = "Double Horn";
         audiolist[7] = "Scream";
+        audiolist[8] = "Is This Real";
+        audiolist[9] = "Possible Fake";
+        audiolist[10] = "Super Sharp";
+        audiolist[11] = "WTF";
 
         audiofilevec.add("majorlinemove.wav");
         audiofilevec.add("minorlinemove.wav");
@@ -238,6 +243,10 @@ public class LineAlert extends AbstractLayeredDialog implements ItemListener {
         audiofilevec.add("horn.wav");
         audiofilevec.add("doublehorn.wav");
         audiofilevec.add("scream.wav");
+        audiofilevec.add("isthisreal.wav");
+        audiofilevec.add("possiblefake.wav");
+        audiofilevec.add("supersharp.wav");
+        audiofilevec.add("whatthefuck.wav");
 
         gameperiodlist[0] = "Full Game";
         gameperiodlist[1] = "1st Half";

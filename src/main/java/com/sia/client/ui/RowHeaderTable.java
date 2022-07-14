@@ -6,11 +6,13 @@ import com.sia.client.model.KeyedObject;
 import com.sia.client.model.TableCellRendererProvider;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RowHeaderTable<V extends KeyedObject> extends JTable implements ColumnAdjuster, AccessableToGame<V> {
@@ -19,6 +21,7 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	private final boolean hasRowNumber;
 	private TableCellRenderer headerCellRenderer;
 	private static final long serialVersionUID = 20091228L;
+	private int preferredWidth;
 
 	public RowHeaderTable(ColumnCustomizableTable<V> mainTable, boolean hasRowNumber) {
 		super(mainTable.getModel());
@@ -30,6 +33,14 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 	@Override
+	public void setPreferredSize(Dimension dim) {
+		super.setPreferredSize(dim);
+	}
+	@Override
+	public void setSize(Dimension dim) {
+		super.setSize(dim);
+	}
+	@Override
 	public V getGame(int rowModelIndex) {
 		return mainTable.getGame(rowModelIndex);
 	}
@@ -39,6 +50,11 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		//flip policy makes main table takes up space that RowHeaderTable releases. --06/25/2021
 		mainTable.getTableScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		mainTable.getTableScrollPane().setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	}
+	public void optimizeTableWidth(int width) {
+		Dimension rowHeaderTableDim = new Dimension(width, mainTable.getPreferredSize().height);
+		getParent().setPreferredSize(rowHeaderTableDim);
+		getParent().setSize(rowHeaderTableDim);
 	}
 	public ColumnCustomizableTable<V> getMainTable(){
 		return mainTable;
@@ -55,7 +71,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		}
 		return headerCellRenderer;
 	}
-
 	@Override
 	public String getToolTipText(MouseEvent e)
 	{
@@ -98,8 +113,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 
 
 	}
-
-
 	@Override
 	public void setRowMargin(int rowMargin) {
 		//don't set row margin, use main table's row margin
@@ -107,18 +120,6 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	@Override
 	public boolean getAutoCreateColumnsFromModel() {
 		return true;
-	}
-	@Override
-	public final void removeRowSelectionInterval(int index0, int index1){
-		super.removeRowSelectionInterval(index0, index1);
-	}
-	@Override
-	public final void addRowSelectionInterval(int index0, int index1){
-		super.addRowSelectionInterval(index0, index1);
-	}
-	@Override
-	public boolean isRowSelected(int row) {
-		return mainTable.isRowSelected(row);
 	}
 	@Override
 	public void createDefaultColumnsFromModel() {
@@ -133,22 +134,33 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 		if ( mainTable == null){
 			return;
 		}
-
+		preferredWidth = 0;
 		if ( hasRowNumber) {
 			TableColumn theColumn_ = cm.getRowNoColumn();
 			addColumn(theColumn_);
+			preferredWidth +=  theColumn_.getPreferredWidth();
 		}
 
-		List<Integer> lockColumns = mainTable.getLockedColumns();
-		if ( null != lockColumns) {
-			for (Integer tcIndex : lockColumns) {
-				cm.addColumn( mainTable.getColumnFromDataModel(tcIndex));
-			}
+		for (TableColumn tc : getColumns()) {
+			cm.addColumn( tc);
+			preferredWidth += tc.getPreferredWidth();
 		}
 	}
-	@Override
-	public boolean isCellEditable(int row, int col) {
-		return false;
+	protected List<TableColumn> getColumns() {
+		List<Integer> lockColumns = mainTable.getLockedColumns();
+		if ( null == lockColumns) {
+			lockColumns = new ArrayList<>(0);
+		}
+		List<TableColumn> columns = new ArrayList<>(lockColumns.size()+1);
+
+		for (Integer tcIndex : lockColumns) {
+			TableColumn tc = mainTable.getColumnFromDataModel(tcIndex);
+			columns.add(tc);
+		}
+		return columns;
+	}
+	public int getPreferredWidth() {
+		return preferredWidth;
 	}
 	@Override
     public TableColumnModel createDefaultColumnModel() {
@@ -203,12 +215,4 @@ public class RowHeaderTable<V extends KeyedObject> extends JTable implements Col
 	public String toString() {
 		return getName();
 	}
-//	@Override
-//	public void tableChanged(TableModelEvent e) {
-//		super.tableChanged(e);
-//		if ( (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) &&  null != mainTable  ) {
-//			//super method discard row model, need to re-config row height
-//			mainTable.configHeaderRow();
-//		}
-//	}
 }

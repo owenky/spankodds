@@ -3,23 +3,21 @@ package com.sia.client.ui.lineseeker;
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
-import com.sia.client.ui.AbstractLayeredDialog;
+import com.sia.client.ui.AbstractLayerEditablePanes;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.TitledPanelGenerator;
 import com.sia.client.ui.comps.BookieTree;
 import com.sia.client.ui.comps.BookieTreePane;
 import com.sia.client.ui.comps.EditablePane;
-import com.sia.client.ui.comps.ActionOnEditableLayouts;
 import com.sia.client.ui.control.SportsTabPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implements ActionOnEditableLayouts {
+public class LineSeekerAlertMethodDialog extends AbstractLayerEditablePanes {
 
     private final Map<String, LineSeekerAlertMethodStatePane> layoutMap = new HashMap<>();
     private final Dimension verticalSpacing = new Dimension(0,1);
@@ -36,10 +34,10 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
     private java.util.List<EditablePane> editablePaneList;
 
     public LineSeekerAlertMethodDialog(SportsTabPane stp,AlertSeekerMethods alertSeekerMethods) {
-        super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex);
+        super(stp,"Line Seeker Alert Method", SiaConst.LayedPaneIndex.LineSeekerAlertMethodDialogIndex,SiaConst.LINESEEKERHELPURL);
         this.alertSeekerMethods = alertSeekerMethods;
         int height = (int)SiaConst.UIProperties.LineAlertMethodDim.getHeight();
-        saveBtn.addActionListener(this::persist);
+        saveBtn.addActionListener(this::save);
         lineSeekerAlertRenotifyLayout = new LineSeekerAlertRenotifyPane(this.alertSeekerMethods);
         bookiePanelWidtHeight = height -savePanelHeight-40;
         bookiePanelWidth = 225;
@@ -47,7 +45,7 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         methodPaneHeight = (bookiePanelWidtHeight-renotifyHeight)/3;
     }
     @Override
-    public java.util.List<EditablePane> getEditablelayout() {
+    public java.util.List<EditablePane> getEditablePanes() {
         if ( null== editablePaneList) {
             editablePaneList = new ArrayList<>(5);
             for(AlertState alertState: AlertState.values()) {
@@ -112,21 +110,6 @@ public class LineSeekerAlertMethodDialog extends AbstractLayeredDialog implement
         SportsTabPane stp = getSportsTabPane();
         SpankyWindow sw = SpankyWindow.findSpankyWindow(stp.getWindowIndex());
         return layoutMap.computeIfAbsent(alertState.name(),(name)-> new LineSeekerAlertMethodStatePane(AlertAttrManager.getLineSeekerAlertMethodAttr(name),sw));
-    }
-    private void persist(ActionEvent ae) {
-        boolean status = persist();
-        if ( status ) {
-            close();
-        }
-    }
-    @Override
-    public void close() {
-        super.close();
-        ActionOnEditableLayouts.super.close();
-    }
-    @Override
-    public boolean isEdited() {
-        return ActionOnEditableLayouts.super.isEdited();
     }
 }
 

@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.ui.simulator.TestDataModel;
 import com.sia.client.ui.simulator.TestGame;
 import com.sia.client.ui.simulator.TestGameCache;
 import com.sia.client.ui.simulator.TestTableSection;
@@ -10,7 +11,6 @@ import org.junit.Test;
 import javax.swing.table.TableColumn;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,9 +20,10 @@ public class MainGameTableModelTest {
     @Before
     public void init() {
         gameCache = new TestGameCache();
-        Vector<TableColumn> allColumn = new Vector<>();
+        List<TableColumn> allColumn = new ArrayList<>();
         allColumn.add(new TableColumn());
-        model = new ColumnCustomizableDataModel<>(new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false)),allColumn);
+        model = new ColumnCustomizableDataModel<>(new ScreenProperty("TestSport",new SpankyWindowConfig(0,false, false))
+                , TestDataModel.createTestBookieColumnModel(allColumn));
     }
     @Test
     public void testAddGameLine() {

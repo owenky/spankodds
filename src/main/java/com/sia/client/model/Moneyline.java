@@ -22,6 +22,10 @@ public class Moneyline extends Line implements Serializable {
     double openervisitjuice;
     double openerhomejuice;
     double openerdrawjuice;
+    private String shortPrintedMoneyline_current = null;
+    private String shortPrintedMoneyline_prior = null;
+    private String shortPrintedMoneyline_opener = null;
+
     public Moneyline(int gid, int bid, double vj, double hj, double dj, long ts, int p) {
         this();
         currentvisitjuice = priorvisitjuice = openervisitjuice = vj;
@@ -217,6 +221,7 @@ public class Moneyline extends Line implements Serializable {
         }
 
         BestLines.calculatebestmoney(gameid, period);
+        BestLines.calculateconsensusmoney(gameid, period);
         return this.whowasbet;
 
 
@@ -233,6 +238,7 @@ public class Moneyline extends Line implements Serializable {
     public void setCurrentvisitjuice(double currentvisitjuice) {
         setPriorvisitjuice(getCurrentvisitjuice());
         this.currentvisitjuice = currentvisitjuice;
+        shortPrintedMoneyline_current = null;
     }
 
     public double getPriorhomejuice() {
@@ -246,6 +252,7 @@ public class Moneyline extends Line implements Serializable {
     public void setCurrenthomejuice(double currenthomejuice) {
         setPriorhomejuice(getCurrenthomejuice());
         this.currenthomejuice = currenthomejuice;
+        shortPrintedMoneyline_current = null;
     }
 
 
@@ -256,13 +263,16 @@ public class Moneyline extends Line implements Serializable {
     public void setCurrentdrawjuice(double currentdrawjuice) {
         setPriordrawjuice(getCurrentdrawjuice());
         this.currentdrawjuice = currentdrawjuice;
+        shortPrintedMoneyline_current = null;
     }
     public void setPriorhomejuice(double priorhomejuice) {
         this.priorhomejuice = priorhomejuice;
+        shortPrintedMoneyline_prior = null;
     }
 
     public void setPriorvisitjuice(double priorvisitjuice) {
         this.priorvisitjuice = priorvisitjuice;
+        shortPrintedMoneyline_prior = null;
     }
 
     public String getShortPrintedMoneyline() {
@@ -285,6 +295,7 @@ public class Moneyline extends Line implements Serializable {
 
     public void setPriordrawjuice(double priordrawjuice) {
         this.priordrawjuice = priordrawjuice;
+        shortPrintedMoneyline_prior = null;
     }
 
     public double getOpenervisitjuice() {
@@ -293,6 +304,7 @@ public class Moneyline extends Line implements Serializable {
 
     public void setOpenervisitjuice(double openervisitjuice) {
         this.openervisitjuice = openervisitjuice;
+        shortPrintedMoneyline_opener = null;
     }
 
 
@@ -302,6 +314,7 @@ public class Moneyline extends Line implements Serializable {
 
     public void setOpenerhomejuice(double openerhomejuice) {
         this.openerhomejuice = openerhomejuice;
+        shortPrintedMoneyline_opener = null;
     }
 
     public double getOpenerdrawjuice() {
@@ -310,21 +323,31 @@ public class Moneyline extends Line implements Serializable {
 
     public void setOpenerdrawjuice(double openerdrawjuice) {
         this.openerdrawjuice = openerdrawjuice;
+        shortPrintedMoneyline_opener = null;
     }
 
     public String getShortPrintedCurrentMoneyline()
     {
-        return getShortPrintedMoneyline(currentvisitjuice, currenthomejuice, currentdrawjuice);
+        if ( null == shortPrintedMoneyline_current) {
+            shortPrintedMoneyline_current = getShortPrintedMoneyline(currentvisitjuice, currenthomejuice, currentdrawjuice);
+        }
+        return shortPrintedMoneyline_current;
     }
     public String getShortPrintedPriorMoneyline()
     {
-        return getShortPrintedMoneyline(priorvisitjuice, priorhomejuice, priordrawjuice);
+        if ( null == shortPrintedMoneyline_prior) {
+            shortPrintedMoneyline_prior = getShortPrintedMoneyline(priorvisitjuice, priorhomejuice, priordrawjuice);
+        }
+        return shortPrintedMoneyline_prior;
     }
     public String getShortPrintedOpenerMoneyline()
     {
-        return getShortPrintedMoneyline(openervisitjuice, openerhomejuice, openerdrawjuice);
+        if ( null == shortPrintedMoneyline_opener) {
+            shortPrintedMoneyline_opener = getShortPrintedMoneyline(openervisitjuice, openerhomejuice, openerdrawjuice);
+        }
+        return shortPrintedMoneyline_opener;
     }
-    public String getShortPrintedMoneyline(double vjuice, double hjuice, double djuice)
+    private String getShortPrintedMoneyline(double vjuice, double hjuice, double djuice)
     {
         double juice = min(vjuice,hjuice);
         if(juice == -100 || juice == 100)

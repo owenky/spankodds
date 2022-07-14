@@ -48,4 +48,13 @@ public class LocalUserStore extends UserNameStore {
     public void removeUserName(final String s) {
         config.removeUser(s);
     }
+
+    public String getLastUserName()
+    {
+        String[] un = config.getUserNames();
+        if(un != null && un.length >0) return un[0];
+        else return "";
+    }
+
+
 }

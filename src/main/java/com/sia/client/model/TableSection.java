@@ -1,5 +1,6 @@
 package com.sia.client.model;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 
 import javax.swing.event.TableModelEvent;
@@ -40,7 +41,7 @@ public abstract class TableSection<V extends KeyedObject> {
                 hiddenGameIdSet.add(game.getGame_id());
             }
         }
-        rowHeight = SiaConst.NormalRowheight;
+        rowHeight = Config.instance().getFontConfig().getNormalRowHeight();
     }
     public void activateGame(V g) {
         hiddenGameIdSet.remove(g.getGame_id());

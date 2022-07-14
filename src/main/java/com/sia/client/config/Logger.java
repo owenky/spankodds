@@ -25,7 +25,13 @@ public class Logger {
     }
     public void log(String errMsg,Throwable e) {
         String logHeader = logHeader();
-        executor.execute(()->{errPs.println(logHeader+"| errMsg:"+errMsg);e.printStackTrace(errPs);});
+        final String err;
+        if ( null==errMsg || "".equals(errMsg)) {
+            err = "Following exception thrown";
+        } else {
+            err = errMsg;
+        }
+        executor.execute(()->{errPs.println(logHeader+"| errMsg:"+err);e.printStackTrace(errPs);});
     }
     public void log(Throwable e) {
         log("",e);

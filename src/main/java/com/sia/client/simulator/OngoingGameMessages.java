@@ -2,6 +2,9 @@ package com.sia.client.simulator;
 
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
+import com.sia.client.model.Line;
+import com.sia.client.model.Moneyline;
+import com.sia.client.model.Spreadline;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankOdds;
 import org.apache.activemq.command.ActiveMQMapMessage;
@@ -10,6 +13,7 @@ import org.apache.activemq.command.ActiveMQTextMessage;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.TextMessage;
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -171,6 +176,9 @@ public abstract class OngoingGameMessages {
 
     public static void loadMessagesFromLog() {
         AppController.waitForSpankyWindowLoaded();
+        //////////////////////////////////////////////////////////
+        new ClearColorTest().start();
+        ////////////////////////////////////////////////////////////
         if (SpankOdds.getMessagesFromLog && startStatus.compareAndSet(false, true)) {
             File tempDir = new File(InitialGameMessages.MesgDir);
             String[] files = tempDir.list();
@@ -203,15 +211,8 @@ public abstract class OngoingGameMessages {
         LocalMessageLogger.localMessageClock.set(ltd);
         String type = strs[1];
         String messageText = strs[2];
-        boolean toContinue=false;
-        for(String keyword: InitialGameMessages.filters) {
-            if ( text.contains(keyword)) {
-                toContinue=true;
-                break;
-            }
-        }
-
-        if ( ! toContinue && 0 < InitialGameMessages.filters.length) {
+        boolean toContinue=InitialGameMessages.mesgFilterType.test(messageText);
+        if ( ! toContinue ) {
             return;
         }
 
@@ -221,7 +222,7 @@ public abstract class OngoingGameMessages {
         if ( ! toContinue){
             return;
         }
-        log(messageText);
+//        log("OngoingGameMessages: "+messageText);
         MessageDispatcher messageDispatcher;
         Message message;
         if (MessageType.Line.name().equals(type)) {

@@ -92,16 +92,16 @@ public class LimitAlertManager
         }
         if(!leagueids.contains(""+leagueidtocheck))
         {
-            log("Limit Change but leagueid not included "+leagueidtocheck);
-            log(""+leagueids.toString());
+           // log("Limit Change but leagueid not included "+leagueidtocheck);
+          //  log(""+leagueids.toString());
             return;
         }
         //step2 check if bookie id is checked off in sport
         ArrayList bookieschecked = (ArrayList)bookieidsBySport.get(sportname);
         if(!bookieschecked.contains(bid+""))
         {
-            log("Limit Change but bookie not included "+b);
-            log(""+bookieschecked.toString());
+          //  log("Limit Change but bookie not included "+b);
+          //  log(""+bookieschecked.toString());
             return;
         }
         //step 3 check if game period is checked off
@@ -119,7 +119,7 @@ public class LimitAlertManager
         }
         else
         {
-            log("Limit Change but period not included "+period);
+         //   log("Limit Change but period not included "+period);
             return;
         }
         //step4 check if linetype is good
@@ -134,13 +134,13 @@ public class LimitAlertManager
         }
         else
         {
-            log("Limit Change but type not included "+line.getType());
+          //  log("Limit Change but type not included "+line.getType());
             return;
         }
         //step5 check if % is enough
         if(percentagechange < lan.minpercentagechange )
         {
-            log("Limit Change but % not high enough "+percentagechange);
+         //   log("Limit Change but % not high enough "+percentagechange);
             return;
         }
 

@@ -1,6 +1,11 @@
 package com.sia.client.model;
 
+import java.awt.*;
+
 public class ViewValue {
+
+    public Color LINECHANGERED = new Color(255,0,0);
+
     private String tooltiptext;
     private String url;
 
@@ -34,5 +39,16 @@ public class ViewValue {
             return String.format("%s",d);
     }
 
+    protected boolean iswhite(Color color)
+    {
+        if(color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.sia.client.ui.simulator;
 
+import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.GameGroupHeader;
 import com.sia.client.model.LineGames;
@@ -22,7 +23,7 @@ public class TestTableSection extends TableSection<TestGame> {
             gameVec.add(tg);
         }
         TestTableSection testTableSection = new TestTableSection(TestGroupGameHeaderPrefix + idSeed, testGameCache, true, gameVec);
-        int sectionRowHeight = 0 == (instanceCount++) % 2 ? SiaConst.NormalRowheight : SiaConst.SoccerRowheight;
+        int sectionRowHeight = 0 == (instanceCount++) % 2 ? Config.instance().getFontConfig().getNormalRowHeight(): Config.instance().getFontConfig().getSoccerRowHeight();
         testTableSection.setRowHeight(sectionRowHeight);
         return testTableSection;
     }

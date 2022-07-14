@@ -1,14 +1,15 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.ui.control.MainScreen;
 
-import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,18 +34,10 @@ public class GameBatchUpdator implements TableModelListener {
         flushingScheduler = new Timer(SiaConst.DataRefreshRate,al);
         flushingScheduler.start();
     }
-    public void flush() {
-        flush(null);
-    }
     public void flush(TableModelEvent e) {
         if ( null != e) {
             addUpdateEvent(e);
-            // if e == null, flush method is usually called by game delete action, must force flushing out all TableEvents
-            // otherwise delete happens before pending events, which result in update event row number invalid -- 04/28/2022
             forcing = true;
-        } else {
-            //if e is not null, no need to forcing flush, because flushingScheduler might have just invoked checkToUpdate -- 04/28/2022
-//        forcing = true;
         }
 
         checkToUpdate();
@@ -68,7 +61,7 @@ public class GameBatchUpdator implements TableModelListener {
                         }
                     }
                 }
-//Logger.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
+//Utils.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
                 pendingUpdateEvents.clear();
                 pendingUpdatedRowModelIndexSet.clear();
                 accumulateCnt = 0;
@@ -103,6 +96,11 @@ public class GameBatchUpdator implements TableModelListener {
         } else {
             pendingUpdateEvents.add(event);
             updatedRowCnt++;
+        }
+        if ( TableModelEvent.INSERT == event.getType() || TableModelEvent.DELETE == event.getType()) {
+            //insert or delete event must be executed immediately to ensure future model index calculated correctly -- 06/30/2022
+            forcing= true;
+            checkToUpdate();
         }
     }
 

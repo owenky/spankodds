@@ -1,5 +1,6 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.ui.control.SportsTabPane;
 
@@ -13,10 +14,24 @@ public abstract class AbstractLayeredDialog {
     private final AnchoredLayeredPane anchoredLayeredPane;
 
     abstract protected JComponent getUserComponent();
+    public AbstractLayeredDialog(SportsTabPane stp,String title,int layer_index,String helpurl) {
+        this(stp,layer_index);
+        anchoredLayeredPane.setTitle(title);
+        anchoredLayeredPane.setHelpUrl(helpurl);
+    }
 
     public AbstractLayeredDialog(SportsTabPane stp,String title,int layer_index) {
        this(stp,layer_index);
         anchoredLayeredPane.setTitle(title);
+    }
+    public AbstractLayeredDialog(SportsTabPane stp,String title) {
+        this(stp, SiaConst.LayedPaneIndex.SportConfigIndex);
+        anchoredLayeredPane.setTitle(title);
+    }
+    public AbstractLayeredDialog(SportsTabPane stp,String title,String helpurl) {
+        this(stp, SiaConst.LayedPaneIndex.SportConfigIndex);
+        anchoredLayeredPane.setTitle(title);
+        anchoredLayeredPane.setHelpUrl(helpurl);
     }
     public AbstractLayeredDialog(SportsTabPane stp,int layer_index) {
         anchoredLayeredPane = new AnchoredLayeredPane(stp,layer_index);
@@ -36,10 +51,6 @@ public abstract class AbstractLayeredDialog {
         anchoredLayeredPane.setIsSinglePaneMode(isSinglePaneMode);
     }
     public void setTitle(String title){
-        anchoredLayeredPane.setTitle(title);
-    }
-    public AbstractLayeredDialog(SportsTabPane stp,String title) {
-        anchoredLayeredPane = new AnchoredLayeredPane(stp);
         anchoredLayeredPane.setTitle(title);
     }
     public SportsTabPane getSportsTabPane() {

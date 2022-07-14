@@ -186,10 +186,7 @@ public class Line {
         return openerts;
     }
 	public final void setCurrentts(long currentts) {
-        if(this.priorts != this.currentts)
-        {
-            this.priorts = this.currentts;
-        }
+        this.priorts = this.currentts;
 		this.currentts = currentts;
 	}
 	public final void setOpenerts(long openerts) {

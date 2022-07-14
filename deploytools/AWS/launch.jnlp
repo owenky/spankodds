@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="6.0+" codebase="http://app1.sof300732.com.s3.us-east-1.amazonaws.com"  href="http://app1.sof300732.com.s3.us-east-1.amazonaws.com/launch.jnlp" xmlns:jfx="JavaFx"  >
+<jnlp spec="7.0+" codebase="http://app1.sof300732.com.s3.us-east-1.amazonaws.com"  href="http://app1.sof300732.com.s3.us-east-1.amazonaws.com/launch.jnlp" >
 	<information>
 		<offline-allowed/>
-		<shortcut online="true">
+		<shortcut online="true" install="true">
 			<desktop/>
 			<menu submenu="Sports Information Analysis"/>
 		</shortcut>
 		<title>Spank Odds</title>
 		<vendor>Sports Information Analysis</vendor>
 		<homepage href="http://app1.sof300732.com.s3.us-east-1.amazonaws.com/index.html"/>
-		<!-- icon kind="splash" href="splashScreen.jpg" / -->
-		<icon kind="shortcut" href="spankoddsrgb.png" width="64" height="64"/>
+		<!-- icon kind="splash" href="/media/spanky.jpg" / -->
+		<icon kind="shortcut" href="spankodds.png" />
 	</information>
 	<resources>
-		<property name="jnlp.packEnabled" value="true" />	<j2se version="1.8.0_00+" href=" http://java.sun.com/products/autodl/j2se" initial-heap-size="64m" max-heap-size="512m" java-vm-args="-dsa -Xnoclassgc  -verbose:gc -Xrunhprof:heap=sites -d32" />
+		<property name="jnlp.packEnabled" value="true" />
+		<j2se version="1.8.0_00+" href=" http://java.sun.com/products/autodl/j2se" initial-heap-size="512m" max-heap-size="4G" java-vm-args="-dsa -Xnoclassgc  -verbose:gc -Xrunhprof:heap=sites" />
 		<jar href="spankodds.jar" download="eager" />
 		<jar href="libs.jar" download="eager" />
 
-		<jfx:javafx-runtime version="2.1+" href="http://javadl.sun.com/webapps/download/GetFile/javafx-latest/windows-i586/javafx2.jnlp"/>
 	</resources>
 	<update check="always" policy="always" />
 	<security>

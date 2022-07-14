@@ -47,9 +47,17 @@ public class SpankOdds {
         initSystemProperties();
         com.jidesoft.utils.Lm.verifyLicense("Spank Odds", "Spank Odds",
                 "gJGsTI2f4lYzPcskZ7OHWXN7iPvWAbO2");
+
+        URL client_ks = SpankOdds.class.getResource(("/config/client.ks"));
+        URL client_ts = SpankOdds.class.getResource(("/config/client.ts"));
+        /*
         System.setProperty("javax.net.ssl.keyStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", System.getenv("ACTIVEMQ_HOME") + "\\conf\\client.ts");
+*/
+        System.setProperty("javax.net.ssl.keyStore", client_ks.getPath());
+        System.setProperty("javax.net.ssl.keyStorePassword", "j0llyg00dm00d");
+        System.setProperty("javax.net.ssl.trustStore", client_ts.getPath());
 
         InitialGameMessages.initMsgLoggingProps();
 
@@ -106,8 +114,8 @@ public class SpankOdds {
             }
         };
         loginPane.setBanner(Utils.getImage("spankoddstextonsoft.png"));
-       // loginPane.setBannerText("Spank Odds");
-
+        // loginPane.setBannerText("Spank Odds");
+        loginPane.setUserName(localUserStore.getLastUserName());
         LoginListener loginListener = new LoginAdapter() {
             @Override
             public void loginSucceeded(LoginEvent source) {
@@ -135,6 +143,8 @@ public class SpankOdds {
                     //Platform.runLater(new Runnable() { @Override public void run() {lbllogin.setText("Processing...");}});
                     //
                     client.login(name, String.valueOf(password));
+                    localUserStore.removeUserName(name);
+                    localPwdStore.set(name,"",password);
                     Thread.sleep(1000);
 
                 } catch (Exception ex) {

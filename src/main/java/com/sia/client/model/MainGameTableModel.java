@@ -8,15 +8,7 @@ import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
-import javax.swing.table.TableColumn;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
@@ -34,8 +26,8 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
         stageStrs.add(SiaConst.InGamePricesStr);
         stageStrs.add(SiaConst.SeriesPricesStr);
     }
-    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,Vector<TableColumn> allColumns) {
-        super(screenProperty,allColumns);
+    public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,BookieColumnModel bookieColumnModel) {
+        super(screenProperty,bookieColumnModel);
         this.sportType = sportType;
         AppController.addNewLineListener(this);
     }
@@ -49,13 +41,20 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
         if ( null != game && SportType.findAllTypesByGame(game).contains(sportType) ) {
             LinesTableData tblSection = (LinesTableData)findTableSectionByGameid(line.getGameid());
             if (null != tblSection) {
+                int firstRow;
+                int lastRow;
                 if ( tblSection.isGameHidden(line.getGameid())) {
-System.out.println("rebuild modle");
+Utils.log("MainGameTableModel::processNewLines, rebuild modle");
                     tblSection.activateGame(game);
                     buildIndexMappingCache(true);
-                    Runnable r = () -> fireTableChanged(new TableModelEvent(this, 0, Integer.MAX_VALUE, 0, TableModelEvent.UPDATE));
-                    Utils.checkAndRunInEDT(r);
+                    firstRow = 0;
+                    lastRow = Integer.MAX_VALUE;
+                } else {
+                    firstRow = this.getRowModelIndexByGameId(tblSection,game.getGame_id());
+                    lastRow = firstRow;
                 }
+                Runnable r = () -> flushUpdate(new TableModelEvent(this, firstRow,lastRow , 0, TableModelEvent.UPDATE));
+                Utils.checkAndRunInEDT(r);
             }
         }
     }
@@ -132,7 +131,7 @@ System.out.println("rebuild modle");
         for (TableSection<Game> linesTableData : gameLines) {
             ((LinesTableData)linesTableData).clearColors();
         }
-        TableUtils.processTableModelEvent(this);
+        TableUtils.flushTableModelEvent(this);
     }
     public SportType getSportType() {
         return this.sportType;
@@ -192,7 +191,7 @@ System.out.println("rebuild modle");
         String header = gameGroupHeader.getGameGroupHeaderStr();
         LinesTableData rtn;
         if ( stageStrs.contains(header)) {
-            rtn = new LinesTableData(sportType,getScreenProperty(), new Vector<>(),gameGroupHeader,getAllColumns());
+            rtn = new LinesTableData(sportType,getScreenProperty(), new Vector<>(),gameGroupHeader, getBookieColumnModel());
             sections.add(rtn);
         } else {
             rtn = null;

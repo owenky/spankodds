@@ -7,7 +7,7 @@ import com.sia.client.model.Sport;
 
 import java.awt.Color;
 
-public class SoccerChartView {
+public class SoccerChartView implements ViewWithColor {
 
     public static String ICON_UP = ImageFile.ICON_UP;
     public static String ICON_DOWN = ImageFile.ICON_DOWN;
@@ -24,10 +24,9 @@ public class SoccerChartView {
     Sport sp;
     int period;
     String item = "spreadtotal";
+    private DisplayTransformer displayTransformer;
 
     public SoccerChartView(int gid) {
-
-
         this.gid = gid;
 
         g = AppController.getGame(gid);
@@ -38,7 +37,6 @@ public class SoccerChartView {
 
 
     }
-
     public LineData[] getCurrentBoxes() {
         if ("Time".equalsIgnoreCase(g.getStatus()) && (0 == period)) {
             period = 2;
@@ -46,19 +44,19 @@ public class SoccerChartView {
         setCurrentBoxes();
         return boxes;
     }
-
     public void setCurrentBoxes() {
 
         ld1.setData("");
         ld2.setData("");
         ld3.setData("");
         ld4.setData("");
-
+        displayTransformer = new DisplayTransformer(gid);
         for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
             if ((ChartChecker.getCl1().get(i).gn == gid) && (ChartChecker.getCl1().get(i).p == period)) {
                 if (!ChartChecker.getCl1().get(i).dataexists) {
                     break;
                 }
+                item = displayTransformer.transformDefault(item);
                 if ("default".equals(item)) {
 
                     if (3 == sp.getSport_id()) // baseball
@@ -172,30 +170,15 @@ public class SoccerChartView {
                     ld4.setData(ChartChecker.getCl1().get(i).NDH);
 
                 }
-
-
             }
         }
         boxes[0] = ld1;
         boxes[1] = ld2;
         boxes[2] = ld3;
         boxes[3] = ld4;
-
-        //	ld1.setBackgroundColor(topcolor);
-        //ld2.setBackgroundColor(bottomcolor);
-
-        //return boxes;
     }
-
-    /*
-    public static void setItem(String itm){
-        item=itm;
-    }
-    public static void setPeriod(int per){
-        period=per;
-    }
-    */
-    public static void clearColors() {
+    @Override
+    public void clearColors(long clearTime) {
         for (int i = 0; i < ChartChecker.getCl1().size(); i++) {
 
             ChartChecker.getCl1().get(i).spreadcolor = Color.WHITE;

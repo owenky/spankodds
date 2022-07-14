@@ -2,7 +2,6 @@ package com.sia.client.ui.control;
 
 import com.sia.client.config.Config;
 import com.sia.client.config.GameUtils;
-import com.sia.client.config.SiaConst;
 import com.sia.client.model.*;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.MainGameTable;
@@ -31,6 +30,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.sportType = sportType;
         screenProperty = new ScreenProperty(sportType.getSportName(),spankyWindowConfig);
         final String name = sportType.getSportName();
+        //screen's name is passed to mainGameTable, name of which is used to identify sport ( i.e. TableColumnHeaderManager) -- 07/12/2022
         setName(name);
         screenGameModel = new ScreenGameModel(screenProperty,sportType);
     }
@@ -44,7 +44,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     public MainGameTableModel buildModel() {
 
         screenGameModel.build();
-        MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,screenGameModel.getAllTableColumns());
+        MainGameTableModel model = new MainGameTableModel(sportType, screenProperty,screenGameModel.getBookieColumnModel());
         model.buildCustomTabGameGroupHeader();
 
         Collection<LinesTableData> tableSections = screenGameModel.getTableSections();
@@ -73,9 +73,9 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
        return null == mainGameTable? null: mainGameTable.getModel();
     }
     public LinesTableData createLinesTableData(Vector<Game> newgamegroupvec, GameGroupHeader gameGroupHeader) {
-        LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, screenGameModel.getAllTableColumns());
+        LinesTableData tableSection = new LinesTableData(sportType,screenProperty, newgamegroupvec, gameGroupHeader, screenGameModel.getBookieColumnModel());
         if (sportType.equals(SportType.Soccer)) {
-            tableSection.setRowHeight(SiaConst.SoccerRowheight);
+            tableSection.setRowHeight(Config.instance().getFontConfig().getSoccerRowHeight());
         }
         return tableSection;
     }
@@ -119,9 +119,14 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     public void createColumnCustomizableTable(MainGameTableModel model) {
 
+        model.setColumnWidths();
         mainGameTable = new MainGameTable(model);
         mainGameTable.setIntercellSpacing(new Dimension(4, 2));
         mainGameTable.setName(getName());
+        mainGameTable.setCellSelectionEnabled(true);
+        mainGameTable.setRowSelectionAllowed(true);
+        mainGameTable.getRowHeaderTable().setCellSelectionEnabled(true);
+        mainGameTable.getRowHeaderTable().setRowSelectionAllowed(true);
         JTableHeader tableHeader = mainGameTable.getTableHeader();
         Font headerFont = Config.instance().getFontConfig().getSelectedFont().deriveFont(Font.BOLD, 11);
         tableHeader.setFont(headerFont);
@@ -168,13 +173,18 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
     }
     @Override
     public void destroyMe() {
-        removeAll();
         if ( null != mainGameTable) {
+            if ( mainGameTable.isEditing() ) {
+                mainGameTable.getCellEditor().stopCellEditing();
+            }
+            if ( mainGameTable.getRowHeaderTable().isEditing() ) {
+                mainGameTable.getRowHeaderTable().getCellEditor().stopCellEditing();
+            }
             mainGameTable.getColumnAdjusterManager().removeFromScheduler();
-//            mainGameTable.getModel().setDetroyed(true);
             mainGameTable.getModel().destroy();
             mainGameTable = null;
         }
+        removeAll();
         log("destroyed mainscreen!!!!");
     }
 

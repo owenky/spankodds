@@ -58,9 +58,10 @@ public class LineSeekerNode {
     private long lastmoneylinenotify = 0;
     private long lastawayttnotify = 0;
     private long lasthomettnotify = 0;
-    private double lineseekerwaitmin = 0;
+    private float lineseekerwaitmin = 0;
     private Game g;
     private Sport s;
+    private Bookie b;
     private static Map<String,LineSeekerNode> liveNodes = new HashMap<>();
 
     public static List<LineSeekerNode> getAllNodes() {
@@ -141,9 +142,9 @@ public class LineSeekerNode {
             LineSeekerAttribute mlAttr = alertConfig.getSectionAtrribute(AlertSectionName.mLineName);
             moneylinecheck = mlAttr.isActivateStatus();
             usemoneylinematheq = mlAttr.isUseEquivalent();
-            visitorml = Double.parseDouble(mlAttr.getVisitorColumn().getLineInput());
+            visitorml = Double.parseDouble(mlAttr.getVisitorColumn().getJuiceInput());
             visitormlalerttype = mlAttr.getVisitorColumn().getAlertState().name();
-            homeml = Double.parseDouble(mlAttr.getHomeColumn().getLineInput());
+            homeml = Double.parseDouble(mlAttr.getHomeColumn().getJuiceInput());
             homemlalerttype = mlAttr.getHomeColumn().getAlertState().name();
 
             LineSeekerAttribute awayAttr = alertConfig.getSectionAtrribute(AlertSectionName.awayName);
@@ -235,6 +236,7 @@ public class LineSeekerNode {
         s = AppController.getSportByLeagueId(g.getLeague_id());
         int leagueid = g.getLeague_id();
         int bookieid = line.getBookieid();
+        b = AppController.getBookie(bookieid);
         int periodid = line.getPeriod();
         int sportid = s.getSport_id();
         int gameid = g.getGame_id();
@@ -244,7 +246,7 @@ public class LineSeekerNode {
         // load bookiecodes from LineSeekerConfig
         String bookies = AlertAttrManager.getBookies(); // bookie names ( NOT booke id) separated by ","
         AlertSeekerMethods  alertSeekerMethods = Config.instance().getAlertSeekerMethods();
-        float lineseekerwaitmin = Float.parseFloat(alertSeekerMethods.getRenotifyInMinutes());
+        lineseekerwaitmin = Float.parseFloat(alertSeekerMethods.getRenotifyInMinutes());
 
         LineSeekerAlertMethodAttr goodAttr = alertSeekerMethods.getAlertMethodMap().get(AlertState.Good.name());
         boolean playgoodaudio = goodAttr.getAudioEnabled();
@@ -267,7 +269,7 @@ public class LineSeekerNode {
         int neutralpopuplocation = neutralAttr.getPopupLocation().getLocation();
         int neutralpopupseconds = Integer.parseInt(neutralAttr.getPopupSeconds());
 
-        if(this.gameid == gameid && this.getPeriod().getOrder() == periodid) {
+        if(this.gameid == gameid && this.getPeriod().getOrder() == periodid && b != null) {
 
             //  if (bookiecodes.contains("" + bookieid)) {
 
@@ -296,19 +298,25 @@ public class LineSeekerNode {
             }
 
             if (!html.equals("")) {
-                System.out.println("lineseekerflags...lineseekerwaitmin="+lineseekerwaitmin);
-                System.out.println("lineseekerflags...playgoodaudio="+playgoodaudio);
-                System.out.println("lineseekerflags...showgoodpopup="+showgoodpopup);
-                System.out.println("lineseekerflags...goodpopuplocation="+goodpopuplocation);
-                System.out.println("lineseekerflags...goodpopupseconds="+goodpopupseconds);
-                System.out.println("lineseekerflags...playbadaudio="+playbadaudio);
-                System.out.println("lineseekerflags...showbaddpopup="+showbadpopup);
-                System.out.println("lineseekerflags...badpopuplocation="+badpopuplocation);
-                System.out.println("lineseekerflags...badpopupseconds="+badpopupseconds);
-                System.out.println("lineseekerflags...playneutralaudio="+playneutralaudio);
-                System.out.println("lineseekerflags...showneutralpopup="+showneutralpopup);
-                System.out.println("lineseekerflags...neutralpopuplocation="+neutralpopuplocation);
-                System.out.println("lineseekerflags...neutralpopupseconds="+neutralpopupseconds);
+              //  System.out.println("lineseekerflags...lineseekerwaitmin="+lineseekerwaitmin);
+              //  System.out.println("lineseekerflags...playgoodaudio="+playgoodaudio);
+              //  System.out.println("lineseekerflags...showgoodpopup="+showgoodpopup);
+              //  System.out.println("lineseekerflags...goodpopuplocation="+goodpopuplocation);
+             //   System.out.println("lineseekerflags...goodpopupseconds="+goodpopupseconds);
+              //  System.out.println("lineseekerflags...playbadaudio="+playbadaudio);
+              //  System.out.println("lineseekerflags...showbaddpopup="+showbadpopup);
+              //  System.out.println("lineseekerflags...badpopuplocation="+badpopuplocation);
+              //  System.out.println("lineseekerflags...badpopupseconds="+badpopupseconds);
+              //  System.out.println("lineseekerflags...playneutralaudio="+playneutralaudio);
+              //  System.out.println("lineseekerflags...showneutralpopup="+showneutralpopup);
+              //  System.out.println("lineseekerflags...neutralpopuplocation="+neutralpopuplocation);
+              //  System.out.println("lineseekerflags...neutralpopupseconds="+neutralpopupseconds);
+                String mesg = html;
+                mesg = mesg.replaceAll("<H2>","<table><tr><td>");
+                mesg = mesg.replaceAll("</H2>","</td></tr></table>");
+                mesg = mesg.replaceAll("<br>","");
+                String hrmin = AppController.getCurrentHoursMinutes();
+                AppController.addAlert(hrmin,mesg);
                 if (html.indexOf("GOOD") != -1) {
                     if (playgoodaudio) {
                         new SoundPlayer(goodaudiofile);
@@ -347,6 +355,10 @@ public class LineSeekerNode {
 
 
     public String shouldIAlertSpreadline(Spreadline line) {
+        if(visitorspread == 0 && homespread == 0 && visitorjuice == -110 && homejuice == -110) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
         double thisvisitspread = line.getCurrentvisitspread();
         double thisvisitjuice = line.getCurrentvisitjuice();
@@ -354,10 +366,10 @@ public class LineSeekerNode {
         double thishomejuice = line.getCurrenthomejuice();
         String htmlvisit = "<html><body><H2>" + getVisitorspreadalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlvisit = htmlvisit + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;" + thisvisitspread + thisvisitjuice + "</td></tr>";
+        htmlvisit = htmlvisit + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;" + thisvisitspread + thisvisitjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
         String htmlhome = "<html><body><H2>" + getHomespreadalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomespread + thishomejuice + "</td></tr>";
+        htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomespread + thishomejuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
 
         if (isUsespreadmatheq()) {
@@ -375,7 +387,7 @@ public class LineSeekerNode {
 
         } else {
             if (LinesMoves.isLine1BetterThanLine2NoMath(thisvisitspread, thisvisitjuice, visitorspread, visitorjuice, line.getLeague_id(), line.getPeriod(), "SPREAD", line.getGameid())) {
-                if (nowms - lastspreadnotify > lineseekerwaitmin) {
+                if (nowms - lastspreadnotify > lineseekerwaitmin * 60 * 1000) {
                     lastspreadnotify = nowms;
                     return htmlvisit;
                 }
@@ -391,6 +403,10 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertMoneyline(Moneyline line) {
+        if(visitorml == -110 && homeml == -110) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
 
         double thisvisitml = line.getCurrentvisitjuice();
@@ -398,12 +414,13 @@ public class LineSeekerNode {
 
         String htmlvisit = "<html><body><H2>" + getVisitormlalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlvisit = htmlvisit + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;" + thisvisitml + "</td></tr>";
+        htmlvisit = htmlvisit + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;" + thisvisitml + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
         String htmlhome = "<html><body><H2>" + getHomemlalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomeml + "</td></tr>";
+        htmlhome = htmlhome + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;" + thishomeml + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
-
+        //System.out.println("VISITML.."+thisvisitml+"..is better than?"+visitorml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
+        //System.out.println("HOMEML.."+thishomeml+"..is better than?"+homeml+"..leagueid="+line.getLeague_id()+"periodid="+line.getPeriod()+"gameid="+line.getGameid());
         if (isUsespreadmatheq()) {
             if (LinesMoves.isLine1BetterThanLine2(0, thisvisitml, 0, visitorml, line.getLeague_id(), line.getPeriod(), "MONEYLINE", line.getGameid())) {
                 if (nowms - lastmoneylinenotify > lineseekerwaitmin * 60 * 1000) {
@@ -434,6 +451,12 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertTotalline(Totalline line) {
+
+        if(over == 0 && under == 0) // default
+        {
+            return "";
+        }
+
         long nowms = System.currentTimeMillis();
         double thisover = line.getCurrentover();
         double thisoverjuice = line.getCurrentoverjuice();
@@ -442,16 +465,16 @@ public class LineSeekerNode {
 
         String htmlover = "<html><body><H2>" + getOveralerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlover = htmlover + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;OVER&nbsp;" + thisover + thisoverjuice + "</td></tr>";
+        htmlover = htmlover + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;OVER&nbsp;" + thisover + thisoverjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
         String htmlunder = "<html><body><H2>" + getUnderalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlunder = htmlunder + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;UNDER&nbsp;" + thisunder + thisunderjuice + "</td></tr>";
+        htmlunder = htmlunder + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;UNDER&nbsp;" + thisunder + thisunderjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
 
         if (isUsetotalmatheq()) {
             System.out.println("using total math.."+line.getLeague_id()+".."+line.getPeriod()+"..."+thisover+thisoverjuice+".vs."+over+overjuice);
             if (LinesMoves.isLine1BetterThanLine2(thisover, thisoverjuice, over, overjuice, line.getLeague_id(), line.getPeriod(), "OVER", line.getGameid())) {
-                System.out.println("line1 is better now check.."+nowms+".."+lasttotalnotify);
+                System.out.println("line1 is better now check.."+nowms+".."+lasttotalnotify+"..vs."+lineseekerwaitmin);
                 if (nowms - lasttotalnotify > lineseekerwaitmin * 60 * 1000)
                 {
                     lasttotalnotify = nowms;
@@ -481,6 +504,10 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertAwayTeamTotalline(TeamTotalline line) {
+        if(awayttover == 0 && awayttunder == 0) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
         double thisawayover = line.getCurrentvisitover();
         double thisawayoverjuice = line.getCurrentvisitoverjuice();
@@ -489,10 +516,10 @@ public class LineSeekerNode {
 
         String htmlover = "<html><body><H2>" + getAwayttoveralerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlover = htmlover + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;OVER&nbsp;" + thisawayover + thisawayoverjuice + "</td></tr>";
+        htmlover = htmlover + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;OVER&nbsp;" + thisawayover + thisawayoverjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
         String htmlunder = "<html><body><H2>" + getAwayttunderalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlunder = htmlunder + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;UNDER&nbsp;" + thisawayunder + thisawayunderjuice + "</td></tr>";
+        htmlunder = htmlunder + "<tr><td colspan=2>" + g.getVisitorgamenumber() + "&nbsp;" + g.getVisitorteam() + "&nbsp;UNDER&nbsp;" + thisawayunder + thisawayunderjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
 
         if (isUsetotalmatheq()) {
@@ -524,6 +551,10 @@ public class LineSeekerNode {
     }
 
     public String shouldIAlertHomeTeamTotalline(TeamTotalline line) {
+        if(homettover == 0 && homettunder == 0) // default
+        {
+            return "";
+        }
         long nowms = System.currentTimeMillis();
         double thishomeover = line.getCurrenthomeover();
         double thishomeoverjuice = line.getCurrenthomeoverjuice();
@@ -532,10 +563,10 @@ public class LineSeekerNode {
 
         String htmlover = "<html><body><H2>" + getHomettoveralerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlover = htmlover + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;OVER&nbsp;" + thishomeover + thishomeoverjuice + "</td></tr>";
+        htmlover = htmlover + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;OVER&nbsp;" + thishomeover + thishomeoverjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
         String htmlunder = "<html><body><H2>" + getHomettunderalerttype().toUpperCase() + " " + "LINE SEEKER&nbsp;</H2>" +
                 "<br><table><tr><td>" + s.getLeaguename() + "</td><td colspan=2>" + g.getGameString() + "</td></tr></table><table>";
-        htmlunder = htmlunder + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;UNDER&nbsp;" + thishomeunder + thishomeunderjuice + "</td></tr>";
+        htmlunder = htmlunder + "<tr><td colspan=2>" + g.getHomegamenumber() + "&nbsp;" + g.getHometeam() + "&nbsp;UNDER&nbsp;" + thishomeunder + thishomeunderjuice + "</td></tr><tr><td>"+b.getName()+"</td></tr>";
 
         if (isUsetotalmatheq()) {
             if (LinesMoves.isLine1BetterThanLine2(thishomeover, thishomeoverjuice, homettover, homettoverjuice, line.getLeague_id(), line.getPeriod(), "TTOVER", line.getGameid())) {

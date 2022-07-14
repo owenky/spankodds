@@ -260,6 +260,9 @@ public class TableColumnAdjuster {
      *  given column.
      */
     private int getColumnDataWidth(int column) {
+        if ( 0 == table.getRowCount()) {
+            return 0;
+        }
         TableColumn tc = table.getColumnModel().getColumn(column);
         if ( firstRow < 0) {
             firstRow = 0;

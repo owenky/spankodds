@@ -46,6 +46,10 @@ public class User {
 
 
 
+    private String consensussettings;
+
+
+
     private String openeralert;
 
     private static User instance = new User();
@@ -208,6 +212,16 @@ public class User {
 
         bookiecolumnprefs = s;
     }
+
+    public String getConsensussettings()
+    {
+        return consensussettings;
+    }
+
+    public void setConsensussettings(String consensussettings) {
+        this.consensussettings = consensussettings;
+    }
+
     public void addBookieColumnChanged(int bookieId,String bookieName) {
         bookiecolumnschanged.addBookieColumnChanged(bookieId,bookieName);
     }

@@ -9,16 +9,14 @@ import com.jidesoft.swing.PaintPanel;
 import com.jidesoft.utils.PortingUtils;
 import com.sia.client.config.Utils;
 
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UrgentMessage {
 
@@ -88,6 +86,18 @@ public class UrgentMessage {
         hideAnimation.setFunctionFade(CustomAnimation.FUNC_POW_HALF);
         alert.setHideAnimation(hideAnimation);
         alert.showPopup(where);
+
+        javax.swing.Timer removealerttimer = new Timer(ms, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ag removing "+urgentmessage);
+                ag.remove(alert);
+            }
+        });
+
+        removealerttimer.setRepeats(false);
+        removealerttimer.start();
+
     }
 
     private static JideButton createButton(Icon icon) {

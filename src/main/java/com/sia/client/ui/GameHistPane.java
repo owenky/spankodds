@@ -1,6 +1,7 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.model.Bookie;
 import com.sia.client.model.Game;
 import com.sia.client.model.SpankyWindowConfig;
 import com.sia.client.ui.comps.WebViewPane;
@@ -25,6 +26,7 @@ public class GameHistPane {
     private final String gameDateStr;
     private final int period;
     private boolean embededMode = false;
+    private WebViewPane webViewPane;
 
     static {
         Platform.setImplicitExit(false);
@@ -46,6 +48,13 @@ public class GameHistPane {
             embeded.show(paneSize, () -> pointOnScreen);
         } else {
             JFrame jFrame = new JFrame();
+            jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    gameHistPane.clear();
+                    jFrame.dispose();
+                }
+            });
             jFrame.setAlwaysOnTop(true);
             jFrame.setTitle(gameHistPane.title);
             jFrame.setPreferredSize(paneSize);
@@ -70,9 +79,10 @@ public class GameHistPane {
         period = displayTransformer.transformPeriod(spankyWindowConfig.getPeriod());
         gameDateStr = gameDateFormatter.format(game.getGamedate());
         //        String title = game.getVisitorteam()+"/"+game.getHometeam()+"    View Type: "+lineType;
-        title = game.getVisitorteam() + "/" + game.getHometeam();
-    }
+        Bookie b = AppController.getBookie(bookieId);
 
+        title = b.getShortname()+" - "+game.getGame_id()+" "+game.getVisitorteam() + "/" + game.getHometeam();
+    }
     protected JComponent getUserComponent() {
         JFXPanel jFxPanel = new JFXPanel();
         Platform.runLater(() -> createGameHistScene(jFxPanel));
@@ -82,49 +92,14 @@ public class GameHistPane {
     private void createGameHistScene(JFXPanel jFxPanel) {
 
         String url = "http://" + host + "/gamedetails/linehistorynew.jsp?bookieID=" + bookieId + "&gameNum=" + game.getGame_id() + "&period=" + period + "&lineType=" + lineType + "&strgameDate=" + gameDateStr;
-        WebViewPane root = new WebViewPane();
-        Scene scene = new Scene(root);
+        webViewPane = new WebViewPane();
+        Scene scene = new Scene(webViewPane);
         jFxPanel.setScene(scene);
-        root.loadUrl(url);
+        webViewPane.loadUrl(url);
     }
-    //    public static void main(String [] argv) {
-//        JDesktopPane jDesktopPane = new JDesktopPane();
-//        JFrame jFrame = new JFrame("Test Main Frame");
-//        jFrame.setLayeredPane(new JDesktopPane());
-//        jFrame.setContentPane(jDesktopPane);
-//
-//        JPanel bckPanel = new JPanel();
-//        bckPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
-//        bckPanel.add(new JButton("test button"));
-//        jFrame.getContentPane().setLayout(new BorderLayout());
-//        jFrame.getContentPane().add(bckPanel,BorderLayout.CENTER);
-//
-//        JInternalFrame internalFrame = new EmbededFrame("HELLO",true,true,true,true);
-//        internalFrame.setLayout(new BorderLayout());
-//        internalFrame.add(new JTextField("internalFrame1"),BorderLayout.SOUTH);
-//        internalFrame.setPreferredSize(paneSize);
-//        internalFrame.toFront();
-//        internalFrame.setVisible(true);
-//
-//        JInternalFrame internalFrame2 = new EmbededFrame("HELLO2",true,true,true,true);
-//        internalFrame2.setLayout(new BorderLayout());
-//        internalFrame2.add(new JTextField("internalFrame12"),BorderLayout.SOUTH);
-//        internalFrame2.setPreferredSize(paneSize);
-//        internalFrame2.toFront();
-//        internalFrame2.setVisible(true);
-//
-//        JLayeredPane jLayeredPane = jFrame.getLayeredPane();
-//        jLayeredPane.add(internalFrame,100);
-//        jLayeredPane.add(internalFrame2,100);
-//        internalFrame.setBounds(10,10,300,300);
-//        internalFrame2.setBounds(20,20,300,300);
-//
-//        jFrame.setPreferredSize(new Dimension(1600, 800));
-//        jFrame.setLocation(100,100);
-//        jFrame.pack();
-//        jFrame.setVisible(true);
-//
-//
-//
-//    }
+    private void clear() {
+        if ( null != webViewPane) {
+            webViewPane.clear();
+        }
+    }
 }

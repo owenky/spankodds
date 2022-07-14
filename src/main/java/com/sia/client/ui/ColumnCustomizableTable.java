@@ -1,6 +1,6 @@
 package com.sia.client.ui;
 
-import com.sia.client.config.SiaConst;
+import com.sia.client.config.Config;
 import com.sia.client.config.Utils;
 import com.sia.client.model.*;
 import com.sia.client.model.ColumnCustomizableDataModel.LtdSrhStruct;
@@ -44,6 +44,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         instanceIndex = instanceCounter.addAndGet(1);
         setName(ColumnCustomizableTable.class.getSimpleName() + ":" + instanceIndex);
         ToolTipManager.sharedInstance().registerComponent(this);
+    }
+    public String getTableType() {
+        return "";
     }
     @Override
     public V getGame(int rowModelIndex) {
@@ -151,7 +154,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         if (null != section && null != section.linesTableData) {
             rowHeight = section.linesTableData.getRowHeight();
         } else {
-            rowHeight = SiaConst.NormalRowheight;
+            rowHeight = Config.instance().getFontConfig().getNormalRowHeight();
         }
         return rowHeight;
     }
@@ -252,8 +255,8 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         }
         return headerCellRenderer;
     }
-
     public JScrollPane getTableScrollPane() {
+
         if (null == tableScrollPane) {
             tableScrollPane = new JScrollPane(this);
         }
@@ -302,7 +305,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     }
 
     public TableColumn getColumnFromDataModel(int colModelIndex) {
-        return getModel().getAllColumns().get(colModelIndex);
+        return getModel().getBookieColumnModel().get(colModelIndex);
     }
 
     public void removeLockedColumnIndex(Integer... lockedColumnIndexArr) {
@@ -327,23 +330,18 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             cm.removeColumn(cm.getColumn(0));
         }
 
-        List<TableColumn> allColumns = getModel().getAllColumns();
-        for (TableColumn tc : allColumns) {
+        BookieColumnModel bookieColumnModel = getModel().getBookieColumnModel();
+        for (int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn tc = bookieColumnModel.get(i);
             if (null != lockedColumnIndex && !lockedColumnIndex.contains(tc.getModelIndex())) {
                 cm.addColumn(tc);
             }
         }
         needToCreateColumnModel = false;
-
     }
 
     @Override
     public void addColumn(TableColumn tc) {
-//        super.addColumn(tc);
-//        tc.setModelIndex(allColumns.size());
-//        //placed after super
-//        allColumns.add(tc);
-//        needToCreateColumnModel = true;
         throw new IllegalArgumentException("This method not supported.");
     }
 
@@ -351,7 +349,6 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
     public Object getValueAt(int row, int col) {
         return super.getValueAt(row, col);
     }
-
     @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);
@@ -361,6 +358,7 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
                 //super method discard row model, need to re-config row height
                 configHeaderRow();
             }
+            syncRowSelection();
         }
         //this method is called from constructor when tableChangedListenerList has not been initialized -- 2-21-11-15
         if (null != tableChangedListenerList) {
@@ -369,7 +367,12 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
             }
         }
     }
-
+    private void syncRowSelection() {
+        ListSelectionModel selectionModel= getSelectionModel();
+        if (  -1 == selectionModel.getAnchorSelectionIndex() &&  -1 == selectionModel.getLeadSelectionIndex()) {
+            TableUtils.selectRowsFromConfig(this);
+        }
+    }
     @Override
     public CustomizableTableColumnModel getColumnModel() {
         return (CustomizableTableColumnModel) super.getColumnModel();

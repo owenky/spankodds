@@ -25,7 +25,13 @@ public class InfoView {
 
         this.gid = gid;
         Game g = AppController.getGame(gid);
-        s = AppController.getSportByLeagueId(g.getLeague_id());
+        if(g.getLeague_id() == 9) {
+            s = AppController.getSportByLeagueId(g.getSubleague_id());
+        }
+        else
+        {
+            s = AppController.getSportByLeagueId(g.getLeague_id());
+        }
     }
 
     public void clearColors() {
@@ -48,9 +54,8 @@ public class InfoView {
 
         Game g = AppController.getGame(gid);
         if ((g.getStatus() == null || g.getStatus().equalsIgnoreCase("NULL") || g.getStatus().equals("")) && (g.getTimeremaining() == null || g.getTimeremaining().equalsIgnoreCase("") || g.getTimeremaining().equalsIgnoreCase("NULL"))) {
+                ld1.setData(s.getLeagueabbr());
 
-
-            ld1.setData(s.getLeagueabbr());
             ld2.setData("I W L");
             ld2.setTooltip("Injury/Weather/Lineups Coming soon");
             ld1.setBackgroundColor(topcolor);
@@ -68,12 +73,9 @@ public class InfoView {
             ld2.setBackgroundColor(Color.RED);
 
         } else {
-            if (g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)) {
-                ld1.setData(" " + g.getCurrentvisitorscore() + " " + makenullblank(g.getTimeremaining()));
-                ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus().toUpperCase());
-                ld1.setBackgroundColor(Color.RED);
-                ld2.setBackgroundColor(Color.RED);
-            } else if (g.getStatus().equalsIgnoreCase("Win")) {
+            ld1.setTooltip(g.getVisitorscoresupplemental()+g.getHomescoresupplemental());
+            ld2.setTooltip(g.getVisitorscoresupplemental()+g.getHomescoresupplemental());
+            if (g.getStatus().equalsIgnoreCase("Win")) {
                 ld1.setData(" ");
                 ld2.setData(" " + g.getStatus().toUpperCase());
                 ld1.setBackgroundColor(Color.RED);
@@ -90,14 +92,63 @@ public class InfoView {
                 ld1.setBackgroundColor(Color.RED);
                 ld2.setBackgroundColor(Color.RED);
 
-            } else {
-                if (g.getLeague_id() == 928 || g.getLeague_id() == 929 || g.getLeague_id() == 930) {
-                    ld1.setData(" " + g.getVisitorscoresupplemental());
-                    ld2.setData(" " + g.getHomescoresupplemental());
-                    ld1.setBackgroundColor(green);
-                    ld2.setBackgroundColor(green);
+            }
+           else if (g.getStatus().equalsIgnoreCase(SiaConst.FinalStr)) {
+                if(g.getLeague_id() == 12)
+                {
+                    ld1.setTooltip("");
+                    ld2.setTooltip("");
+                    String[] vscores = g.getVisitorscoresupplemental().split(",");
+                    String[] hscores = g.getHomescoresupplemental().split(",");
+                    int vwins = 0;
+                    int hwins = 0;
+                    String vwin = "";
+                    String hwin = "";
+                    for(int i = 0; i < vscores.length; i++)
+                    {
+                        try {
+                        if(Integer.parseInt(vscores[i]) > Integer.parseInt(hscores[i]))
+                        {
+                            vwins++;
+                        }
+                        else
+                        {
+                            hwins++;
+                        }
+                    }
+                        catch(Exception ex) { System.out.println("not int"+ex);}
+                    }
+                    if(vwins >  hwins)
+                    {
+                        vwin = "WIN";
+                        hwin = "   ";
+                    }
+                    else if(hwins > vwins)
+                    {
+                        vwin = "   ";
+                        hwin = "WIN";
+                    }
+                    else
+                    {
+                        vwin = hwin = "TIE";
+                    }
+                    ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+" "+vwin);
+                    ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+" "+hwin);
+                    ld1.setBackgroundColor(Color.RED);
+                    ld2.setBackgroundColor(Color.RED);
 
-                } else if (g.getStatus().equalsIgnoreCase("Time")) {
+                }
+               else {
+
+
+                    ld1.setData(" " + g.getCurrentvisitorscore() + " " + makenullblank(g.getTimeremaining()));
+                    ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus().toUpperCase());
+                    ld1.setBackgroundColor(Color.RED);
+                    ld2.setBackgroundColor(Color.RED);
+                }
+            }  else {
+                //if (g.getLeague_id() == 928 || g.getLeague_id() == 929 || g.getLeague_id() == 930)
+                 if (g.getStatus().equalsIgnoreCase("Time")) {
 
                     ld1.setData(" " + g.getCurrentvisitorscore() + " " + displayHalftimeCountdown());
                     ld2.setData(" " + g.getCurrenthomescore() + " H/T");
@@ -106,10 +157,24 @@ public class InfoView {
 
 
                 } else {
-                    ld1.setData(" " + g.getCurrentvisitorscore() + " " + g.getTimeremaining());
-                    ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus());
-                    ld1.setBackgroundColor(green);
-                    ld2.setBackgroundColor(green);
+                     if(g.getLeague_id() == 12)
+                     {
+                         ld1.setTooltip("");
+                         ld2.setTooltip("");
+                         ld1.setData(" " + (g.getVisitorscoresupplemental().replaceAll(",","-"))+ " " + g.getTimeremaining());
+                         ld2.setData(" " + (g.getHomescoresupplemental().replaceAll(",","-"))+ " " + g.getStatus());
+                         ld1.setBackgroundColor(green);
+                         ld2.setBackgroundColor(green);
+
+                     }
+                     else {
+
+
+                         ld1.setData(" " + g.getCurrentvisitorscore() + " " + g.getTimeremaining());
+                         ld2.setData(" " + g.getCurrenthomescore() + " " + g.getStatus());
+                         ld1.setBackgroundColor(green);
+                         ld2.setBackgroundColor(green);
+                     }
                 }
 
 

@@ -14,6 +14,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +48,7 @@ public class AnchoredLayeredPane implements ComponentListener {
     private EmbededFrame jInteralFrame;
     private final java.util.List<Runnable> closeActions = new ArrayList<>();
     private static final Map<String,AnchoredLayeredPane> activeLayeredPaneMap =  new HashMap<>();
-
+    private String helpurl = "";
     public AnchoredLayeredPane(SportsTabPane stp,JComponent anchoredParentComp,int layer_index) {
         this.stp = stp;
         this.layer_index = layer_index;
@@ -198,6 +201,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         } else {
             if ( isFloating ) {
                 jInteralFrame = new EmbededFrame(title,true,true,true,true);
+                jInteralFrame.setCloseAction(this::close);
                 jInteralFrame.setLayout(new BorderLayout());
                 jInteralFrame.add(jScrollPane,BorderLayout.CENTER);
                 containingComp = jInteralFrame;
@@ -216,7 +220,29 @@ public class AnchoredLayeredPane implements ComponentListener {
     private JPanel makeTitlePanel() {
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BorderLayout());
-        JLabel titleLabel = new JLabel(title);
+        JLabel titleLabel;
+
+        if(!getHelpUrl().equals(""))
+        {
+            titleLabel = new JLabel(title,new ImageIcon(Utils.getMediaResource("video-query.png")),SwingConstants.CENTER);
+            titleLabel.setToolTipText("Click to watch instructional video");
+            titleLabel.setHorizontalTextPosition(JLabel.LEFT);
+            titleLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Desktop.getDesktop().browse(new URI(getHelpUrl()));
+                    } catch (URISyntaxException | IOException ex) {
+                       System.out.println("error opening up url="+getHelpUrl());
+                    }
+                }
+            });
+        }
+        else
+            {
+                titleLabel = new JLabel(title);
+            }
+
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         Font defaultFont = Config.instance().getFontConfig().getSelectedFont();
         Font titleFont = new Font(defaultFont.getFontName(),Font.BOLD,defaultFont.getSize()+4);
@@ -247,6 +273,16 @@ public class AnchoredLayeredPane implements ComponentListener {
         westPanel.removeAll();
         westPanel.add(titlePanelLeftComp,BorderLayout.CENTER);
     }
+
+    public void setHelpUrl(String helpurl) {
+        this.helpurl = helpurl;
+
+    }
+    public String getHelpUrl() {
+       return helpurl;
+
+    }
+
     public void setTitlePanelRightComp(JComponent titlePanelLeftComp) {
         this.titlePanelLeftComp = titlePanelLeftComp;
         eastPanel.removeAll();
@@ -255,7 +291,7 @@ public class AnchoredLayeredPane implements ComponentListener {
         eastPanel.add(Box.createRigidArea(new Dimension(15, 0)));
         eastPanel.add(closeBtn);
     }
-    public void close() {
+    public boolean close() {
         boolean toClose;
         try {
             toClose = (null == closeValidor || closeValidor.call());
@@ -268,10 +304,12 @@ public class AnchoredLayeredPane implements ComponentListener {
             isOpened = false;
             anchoredParentComp.removeComponentListener(this);
             activeLayeredPaneMap.remove(this.getActiveMapKey(), this);
+
+            for(Runnable r: closeActions) {
+                r.run();
+            }
         }
-        for(Runnable r: closeActions) {
-            r.run();
-        }
+        return toClose;
     }
     protected final void hide() {
         if ( null == userComponentScrollPane) {
@@ -356,4 +394,7 @@ public class AnchoredLayeredPane implements ComponentListener {
              hasMouseEntered = true;
          }
      }
+
+
+
 }

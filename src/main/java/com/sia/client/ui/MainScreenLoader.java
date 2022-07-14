@@ -62,7 +62,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
     public void done() {
         try {
             if ( null != err) {
-                showLoadingPrompt();
+                showPrompt(err);
             } else if ( ! isCancelled()) {
                 mainScreen.createColumnCustomizableTable(mainGameTableModel);
                 MainGameTable mainGameTable = mainScreen.getColumnCustomizableTable();
@@ -79,6 +79,7 @@ public class MainScreenLoader extends SwingWorker<Void,Void> {
                 mainScreen.removeAll();
                 JComponent mainTableContainer = makeMainTableScrollPane(mainGameTable);
                 mainScreen.add(mainTableContainer, BorderLayout.CENTER);
+                TableUtils.selectRowsFromConfig(mainGameTable);
                 mainScreen.validate();
                 if ( null != listener) {
                     listener.run();

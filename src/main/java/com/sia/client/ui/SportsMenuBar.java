@@ -3,6 +3,7 @@ package com.sia.client.ui;
 import com.sia.client.config.Config;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.SiaConst.UIProperties;
+import com.sia.client.config.Utils;
 import com.sia.client.model.SportType;
 import com.sia.client.ui.control.SportsTabPane;
 import com.sia.client.ui.lineseeker.AlertAttrManager;
@@ -12,7 +13,11 @@ import com.sia.client.ui.lineseeker.LineSeekerAlertMethodDialog;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static com.sia.client.config.Utils.checkAndRunInEDT;
 
@@ -26,7 +31,9 @@ public class SportsMenuBar extends JMenuBar {
     private final JMenu tabsmenu = new JMenu("Tabs");
     private final JMenu windowmenu = new JMenu("Window");
     private final JMenu settingmenu = new JMenu("Setting");
+    private final JMenu helpmenu = new JMenu("Help");
     private final JMenu reportmenu = new JMenu("Report");
+
     private final static Dimension defaultDialogSize = new Dimension(840,840);
 
     public SportsMenuBar(SportsTabPane stb, TopView tv) {
@@ -39,9 +46,25 @@ public class SportsMenuBar extends JMenuBar {
 
         add(filemenu);
 
+
+
+
+
         JMenuItem storeprefs = new JMenuItem("Store User Prefs");
         storeprefs.addActionListener(ev -> AppController.getUserPrefsProducer().sendUserPrefs(false));
         filemenu.add(storeprefs);
+
+
+
+
+
+
+       // filemenu.add(helpvideo);
+
+
+
+
+        filemenu.addSeparator();
 
         JMenuItem logout = new JMenuItem("Exit...");
         logout.addActionListener(ev -> {
@@ -54,17 +77,27 @@ public class SportsMenuBar extends JMenuBar {
 
         add(bookiemenu);
 
-        JMenuItem bookiecolumn = new JMenuItem("Manage");
+        JMenuItem bookiecolumn = new JMenuItem("Bookies");
         bookiecolumn.addActionListener(ae -> SwingUtilities.invokeLater(() -> {
             AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb);
             anchoredLayeredPane.setTitle("Bookie Management");
+            anchoredLayeredPane.setHelpUrl(SiaConst.MANAGEBOOKIEHELPURL);
             BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
             bcc2.openAndCenter(new Dimension(700,700),false);
         }));
-        JMenuItem bookiecolumn1 = new JMenuItem("Chart");
-        bookiecolumn1.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
+
+
+
+        JMenuItem displaysettings = new JMenuItem("Display Settings");
+        displaysettings.addActionListener(ae -> checkAndRunInEDT(() -> new UserDisplayGui(stb).show(UIProperties.DisplaySettingsDim)));
+        JMenuItem charting = new JMenuItem("Chart Setup");
+        charting.addActionListener(ae -> checkAndRunInEDT(() -> new ChartHome(stb).show()));
+        JMenuItem consensusgui = new JMenuItem("Consensus Setup");
+        consensusgui.addActionListener(ae -> checkAndRunInEDT(() -> new ConsensusMakerGui(stb).show(new Dimension(1200,750))));
         bookiemenu.add(bookiecolumn);
-        bookiemenu.add(bookiecolumn1);
+        bookiemenu.add(displaysettings);
+        bookiemenu.add(charting);
+        bookiemenu.add(consensusgui);
 
         add(linealertsmenu);
 
@@ -73,9 +106,9 @@ public class SportsMenuBar extends JMenuBar {
         generallinealert.addActionListener(ae -> new LineAlert(stb).show(UIProperties.LineAlertDim));
 
         JMenu majorlinemove = new JMenu("Line Seekers");
-        JMenuItem lineSeekerConfig = new JMenuItem("Configuration");
+        JMenuItem lineSeekerConfig = new JMenuItem("Add/Update");
         lineSeekerConfig.addActionListener(ae -> new AlertPane(stb).show(AlertPane.dialogPreferredSize));
-        JMenuItem lineSeekerMethod = new JMenuItem("Alert Method");
+        JMenuItem lineSeekerMethod = new JMenuItem("Alert Method Setup");
         lineSeekerMethod.addActionListener(this::openAlertMediaSettingDialog);
         majorlinemove.add(lineSeekerConfig);
         majorlinemove.add(lineSeekerMethod);
@@ -94,13 +127,13 @@ public class SportsMenuBar extends JMenuBar {
 
         add(gamealertsmenu);
 
-        JMenuItem started = createGameAlertMenuItem("Started");
-        JMenuItem finals = createGameAlertMenuItem(SiaConst.FinalStr);
-        JMenuItem halftimes = createGameAlertMenuItem(SiaConst.HalfTimeStr);
-        JMenuItem lineups = createGameAlertMenuItem("Lineups");
-        JMenuItem officials = createGameAlertMenuItem("Officials");
-        JMenuItem injuries = createGameAlertMenuItem("Injuries");
-        JMenuItem timechange = createGameAlertMenuItem("Time Changes");
+        JMenuItem started = createGameAlertMenuItem("Started",SiaConst.STARTEDHELPURL);
+        JMenuItem finals = createGameAlertMenuItem(SiaConst.FinalStr, SiaConst.FINALHELPURL);
+        JMenuItem halftimes = createGameAlertMenuItem(SiaConst.HalfTimeStr,SiaConst.HALFTIMEHELPURL);
+        JMenuItem lineups = createGameAlertMenuItem("Lineups",SiaConst.LINEUPSHELPURL);
+        JMenuItem officials = createGameAlertMenuItem("Officials",SiaConst.OFFICIALSHELPURL);
+        JMenuItem injuries = createGameAlertMenuItem("Injuries",SiaConst.INJURIESHELPURL);
+        JMenuItem timechange = createGameAlertMenuItem("Time Changes",SiaConst.TIMECHANGESHELPURL);
         //JMenuItem limitchange = createGameAlertMenuItem("Limit Changes");
 
         JMenuItem test = new JMenuItem("Test");
@@ -142,15 +175,30 @@ public class SportsMenuBar extends JMenuBar {
         add(settingmenu);
         JMenu fontconfig = Config.instance().getFontConfig().createFontMenu();
         settingmenu.add(fontconfig);
+
+        add(helpmenu);
+
+        JMenuItem helpvideo = new JMenuItem("Help",new ImageIcon(Utils.getMediaResource("video-query.png")));
+        helpvideo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI(SiaConst.GENERALHELPURL));
+                } catch (URISyntaxException | IOException ex) {
+                    System.out.println("error opening up url="+SiaConst.GENERALHELPURL);
+                }
+            }
+        } );
+
+        helpmenu.add(helpvideo);
+
     }
     private void openAlertMediaSettingDialog(ActionEvent actionEvent) {
         LineSeekerAlertMethodDialog lineSeekerAlertMethodDialog = new LineSeekerAlertMethodDialog(this.stb, AlertAttrManager.getAlertSeekerMethods());
         lineSeekerAlertMethodDialog.show(SiaConst.UIProperties.LineAlertMethodDim);
-        lineSeekerAlertMethodDialog.updateLayout();
     }
-    private JMenuItem createGameAlertMenuItem(String command) {
+    private JMenuItem createGameAlertMenuItem(String command,String helpurl) {
         JMenuItem menuItem = new JMenuItem(command);
-        menuItem.addActionListener(ae -> new GameAlert(stb,command).show(defaultDialogSize));
+        menuItem.addActionListener(ae -> new GameAlert(stb,command,helpurl).show(defaultDialogSize));
         return menuItem;
     }
     public void populateTabsMenu() {
