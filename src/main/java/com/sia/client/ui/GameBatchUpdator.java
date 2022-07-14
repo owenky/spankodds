@@ -18,21 +18,24 @@ import java.util.Set;
 
 public class GameBatchUpdator implements TableModelListener {
 
-    private final Timer flushingScheduler;
+    private Timer flushingScheduler;
     private long lastUpdateTime = 0;
     private List<TableModelEvent> pendingUpdateEvents = new ArrayList<>(20);
     private Set<Integer> pendingUpdatedRowModelIndexSet = new HashSet<>();
     private int accumulateCnt = 0;
     private int updatedRowCnt = 0;
     private boolean forcing = false;
+private boolean batchMode = false;
 
     public static GameBatchUpdator instance() {
         return LazyInitHolder.instance;
     }
     private GameBatchUpdator() {
-        ActionListener al = e->this.checkToUpdate();
-        flushingScheduler = new Timer(SiaConst.DataRefreshRate,al);
-        flushingScheduler.start();
+        if ( batchMode ) {
+            ActionListener al = e->this.checkToUpdate();
+            flushingScheduler = new Timer(SiaConst.DataRefreshRate,al);
+            flushingScheduler.start();
+        }
     }
     public void flush(TableModelEvent e) {
         if ( null != e) {
@@ -48,14 +51,14 @@ public class GameBatchUpdator implements TableModelListener {
     private synchronized void checkToUpdate() {
         if ( AppController.isReadyForMessageProcessing()) {
             long now = System.currentTimeMillis();
-            if (SiaConst.DataRefreshRate < (now - lastUpdateTime) || forcing) {
+            if ( forcing || SiaConst.DataRefreshRate < (now - lastUpdateTime) ) {
                 for (TableModelEvent e : pendingUpdateEvents) {
                     ColumnCustomizableDataModel<?> model = (ColumnCustomizableDataModel<?>) e.getSource();
                     SpankyWindow spankyWindow = SpankyWindow.findSpankyWindow(model.getSpankyWindowConfig().getWindowIndex());
                     if ( null != spankyWindow && null != spankyWindow.getSportsTabPane()) { //when user close a window, null scenario might happen -- 2021-11-25
                         Component selectedComp = spankyWindow.getSportsTabPane().getSelectedComponent();
                         if (selectedComp instanceof MainScreen) {
-                            if (selectedComp.isShowing()) {
+                            if (selectedComp.isShowing() && ((MainScreen)selectedComp).getSportType().getSportName().equals(model.getScreenProperty().getSportName())) {
                                 model.fireTableChanged(e);
                             }
                         }
@@ -80,24 +83,29 @@ public class GameBatchUpdator implements TableModelListener {
         if ( null == event) {
             return;
         }
-        accumulateCnt++;
-        int firstRow = event.getFirstRow();
-        int lastRow = event.getLastRow();
-        List<int[]> newUpdateRegions = getNewUpdateRegions(firstRow,lastRow,pendingUpdatedRowModelIndexSet);
-        if ( null != newUpdateRegions ) {
-            for (int[] newRegion : newUpdateRegions) {
-                TableModelEvent e = new TableModelEvent((TableModel) event.getSource(), newRegion[0], newRegion[1], event.getColumn(), event.getType());
-                pendingUpdateEvents.add(e);
-                updatedRowCnt += newRegion[1] - newRegion[0] + 1;
-            }
-            for (int index = firstRow; index <= lastRow; index++) {
-                pendingUpdatedRowModelIndexSet.add(index);
+        if ( batchMode ) {
+            accumulateCnt++;
+            int firstRow = event.getFirstRow();
+            int lastRow = event.getLastRow();
+            List<int[]> newUpdateRegions = getNewUpdateRegions(firstRow, lastRow, pendingUpdatedRowModelIndexSet);
+            if (null != newUpdateRegions) {
+                for (int[] newRegion : newUpdateRegions) {
+                    TableModelEvent e = new TableModelEvent((TableModel) event.getSource(), newRegion[0], newRegion[1], event.getColumn(), event.getType());
+                    pendingUpdateEvents.add(e);
+                    updatedRowCnt += newRegion[1] - newRegion[0] + 1;
+                }
+                for (int index = firstRow; index <= lastRow; index++) {
+                    pendingUpdatedRowModelIndexSet.add(index);
+                }
+            } else {
+                pendingUpdateEvents.add(event);
+                updatedRowCnt++;
             }
         } else {
             pendingUpdateEvents.add(event);
-            updatedRowCnt++;
         }
-        if ( TableModelEvent.INSERT == event.getType() || TableModelEvent.DELETE == event.getType()) {
+
+        if ( ! batchMode || TableModelEvent.INSERT == event.getType() || TableModelEvent.DELETE == event.getType()) {
             //insert or delete event must be executed immediately to ensure future model index calculated correctly -- 06/30/2022
             forcing= true;
             checkToUpdate();

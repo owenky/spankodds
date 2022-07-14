@@ -189,7 +189,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         }
         return rtn;
     }
-    public TableSection<V> findTableSectionByGameid(int gameId) {
+    public synchronized TableSection<V> findTableSectionByGameid(int gameId) {
         return getTableSections().stream().filter(ts-> ts.containsGame(gameId)).findAny().orElse(null);
     }
     public BookieColumnModel getBookieColumnModel() {
