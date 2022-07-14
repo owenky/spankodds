@@ -478,6 +478,18 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             ms.checktofire(games);
         }
     }
+    @Override
+    public int hashCode() {
+        return this.getWindowIndex();
+    }
+    @Override
+    public boolean equals(Object aontherObj) {
+       if ( aontherObj instanceof SportsTabPane) {
+           return this.getWindowIndex() == ((SportsTabPane)aontherObj).getWindowIndex();
+       } else {
+           return false;
+       }
+    }
     private static void createMainScreen(MainScreen ms, Runnable listener) {
         ms.createMe(listener);
     }

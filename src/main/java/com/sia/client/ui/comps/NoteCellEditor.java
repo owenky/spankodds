@@ -3,6 +3,7 @@ package com.sia.client.ui.comps;
 import com.sia.client.config.SiaConst;
 import com.sia.client.model.AccessableToGame;
 import com.sia.client.model.Game;
+import com.sia.client.ui.ShortCut;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -53,9 +54,15 @@ public class NoteCellEditor extends AbstractCellEditor implements TableCellEdito
         return editorComponent.textEditor.getText();
     }
     @Override
+    public void cancelCellEditing() {
+        super.cancelCellEditing();
+        ShortCut.restoreShortCut();
+    }
+    @Override
     public boolean stopCellEditing() {
         boolean status = super.stopCellEditing();
         hideEditorComponent();
+        ShortCut.restoreShortCut();
         return status;
     }
     private void hideEditorComponent() {

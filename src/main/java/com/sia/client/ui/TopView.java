@@ -150,7 +150,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 log("1st half button pressed");
                 periodcb.setSelectedIndex(1);
         };
-        ShortCut.registerShortCutAction(this, ShortCut.FirstHalf,al);
+        ShortCut.registerShortCutAction(stb, ShortCut.FirstHalf,al);
 
 // FULL GAME NOT VISIBLE USED TO SELECT FULL GAME FROM COMBO BOX!
 
@@ -158,7 +158,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 log("full game button pressed");
                 periodcb.setSelectedIndex(0);
         };
-        ShortCut.registerShortCutAction(this, ShortCut.FullGame,al);
+        ShortCut.registerShortCutAction(stb, ShortCut.FullGame,al);
 
 // USED TO SELECT DEFAULT VIEW FROM COMBO BOX!
 
@@ -166,7 +166,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 log("defaultview button pressed");
                 cb.setSelectedIndex(0);
         };
-        ShortCut.registerShortCutAction(this, ShortCut.DefaultView,al);
+        ShortCut.registerShortCutAction(stb, ShortCut.DefaultView,al);
 
 // USED TO SELECT SIDES ONLY FROM COMBO BOX!
 
@@ -174,14 +174,14 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 log("sides only button pressed");
                 cb.setSelectedIndex(4);
         };
-        ShortCut.registerShortCutAction(this, ShortCut.SidesOnly,al);
+        ShortCut.registerShortCutAction(stb, ShortCut.SidesOnly,al);
 
 // USED TO SELECT TOTALS ONLY FROM COMBO BOX!
 
         al = (e)->  {
                 cb.setSelectedIndex(5);
         };
-        ShortCut.registerShortCutAction(this, ShortCut.TotalsOnly,al);
+        ShortCut.registerShortCutAction(stb, ShortCut.TotalsOnly,al);
 
 
 // CLEAR BUTTON
@@ -192,7 +192,7 @@ public class TopView extends JPanel implements ItemListener, Cloneable {
                 }
         };
         clearBut = new JButton("Clear");
-        Action action = ShortCut.registerShortCutAction(clearBut, ShortCut.Clear,al);
+        Action action = ShortCut.registerShortCutAction(stb, ShortCut.Clear,al);
         clearBut.setAction(action);
 
 
@@ -204,7 +204,7 @@ Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
                 AppController.clearAll();
         };
         clearAllBut = new JButton("Clear All");
-        action = ShortCut.registerShortCutAction(clearAllBut, ShortCut.ClearAll,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.ClearAll,al);
         clearAllBut.setAction(action);
 
         adjustcolsBut.addActionListener(ae -> {
@@ -227,7 +227,7 @@ Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
         };
 
         lastBut = new JButton("Last");
-        action = ShortCut.registerShortCutAction(lastBut, ShortCut.Last,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.Last,al);
         lastBut.setAction(action);
 
         al = (e)-> {
@@ -243,7 +243,7 @@ Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
                 stb.resetCurrentScreenStates();
         };
         openerBut = new JButton("Opener");
-        action = ShortCut.registerShortCutAction(lastBut, ShortCut.Opener,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.Opener,al);
         openerBut.setAction(action);
 
         al = (e)-> {
@@ -259,14 +259,14 @@ Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
             ms.getDataModels().sortGamesForAllTableSections();
             ms.getColumnCustomizableTable().getModel().refreshTable();
         };
-        action = ShortCut.registerShortCutAction(sortBut, ShortCut.Sort,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.Sort,al);
         sortBut.setAction(action);
 
         al = (e)-> {
             AnchoredLayeredPane anchoredLayeredPane = new AnchoredLayeredPane(stb, stb,LayedPaneIndex.SportConfigIndex);
             BookieColumnController2 bcc2 = new BookieColumnController2(anchoredLayeredPane);
         };
-        action = ShortCut.registerShortCutAction(addBookieBut, ShortCut.AddBookie,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.AddBookie,al);
         addBookieBut.setAction(action);
 
         //owen this one we will have to repaint somehow
@@ -281,13 +281,13 @@ Utils.log("Clear All clicked +++++++++++++++++++++++++++++++++");
 //                stb.rebuildMainScreen();
                 stb.resetCurrentScreenStates();
         };
-        action = ShortCut.registerShortCutAction(shrinkTeamBut, ShortCut.ShrinkTeam,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.ShrinkTeam,al);
         shrinkTeamBut.setAction(action);
 
         al = (e)-> {
             UrgentMessage urgent = new UrgentMessage("THIS IS SO URGENT!!!!!!");
         };
-        action = ShortCut.registerShortCutAction(alertBut, ShortCut.Alert,al);
+        action = ShortCut.registerShortCutAction(stb, ShortCut.Alert,al);
         alertBut.setAction(action);
 
     }

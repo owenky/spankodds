@@ -4,6 +4,8 @@ import com.sia.client.model.Game;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
 
 public class RowHeaderGameTable extends RowHeaderTable<Game>{
 
@@ -13,6 +15,11 @@ public class RowHeaderGameTable extends RowHeaderTable<Game>{
         setSelectionModel(listSelectionModel);
         this.addMouseListener(GameTableMouseListener.instance());
         listSelectionModel.addListSelectionListener(GameTableMouseListener.instance());
+    }
+    @Override
+    public Component prepareEditor(TableCellEditor editor, int row, int column) {
+        ShortCut.disableShortCut();
+        return super.prepareEditor(editor,row,column);
     }
     @Override
     public void valueChanged(ListSelectionEvent e) {

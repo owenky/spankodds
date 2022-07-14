@@ -76,6 +76,7 @@ public class SpankyWindow extends JFrame {
                 log("closing SpankyWindow instance "+instance.getName());
                 AppController.removeFrame(instance);
                 instance.setVisible(false);
+                ShortCut.removeSportTabPane(instance.stp);
                 instance.dispose();
             }
         });

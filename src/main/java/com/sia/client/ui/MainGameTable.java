@@ -6,8 +6,11 @@ import com.sia.client.model.Game;
 import com.sia.client.model.MainGameTableModel;
 import com.sia.client.model.SportType;
 
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
@@ -84,6 +87,11 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
         if ( ! this.isCellEditable(rowIndex,columnIndex)) {
             super.changeSelection(rowIndex, columnIndex, true, extend);
         }
+    }
+    @Override
+    public Component prepareEditor(TableCellEditor editor, int row, int column) {
+        ShortCut.disableShortCut();
+        return super.prepareEditor(editor,row,column);
     }
     private boolean isSoccer(int rowViewIndex) {
         if ( sportType.equals(SportType.Soccer)) {
