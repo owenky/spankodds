@@ -45,6 +45,9 @@ public abstract class ColumnCustomizableTable<V extends KeyedObject> extends JTa
         setName(ColumnCustomizableTable.class.getSimpleName() + ":" + instanceIndex);
         ToolTipManager.sharedInstance().registerComponent(this);
     }
+    public String getTableType() {
+        return "";
+    }
     @Override
     public V getGame(int rowModelIndex) {
         return getModel().getGame(rowModelIndex);

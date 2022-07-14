@@ -37,9 +37,9 @@ public enum ShortCut {
         };
         action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(shortCut.vk_key, 0));
 
-        jcomp.getActionMap().put(shortCut.name(), action);
-        jcomp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                (KeyStroke) action.getValue(Action.ACCELERATOR_KEY), shortCut.name());
+//        jcomp.getActionMap().put(shortCut.name(), action);
+//        jcomp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+//                (KeyStroke) action.getValue(Action.ACCELERATOR_KEY), shortCut.name());
 
         return action;
     }

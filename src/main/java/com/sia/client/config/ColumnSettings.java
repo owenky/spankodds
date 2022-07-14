@@ -10,7 +10,7 @@ import java.util.Map;
 public class ColumnSettings {
 
     @JsonProperty
-    private Map<Integer,Integer> columnWidthMap = new HashMap<>();
+    private Map<String,Integer> columnWidthMap = new HashMap<>();
     private static final Map<Integer,Integer> defaultColumnWidthMap = new HashMap<>();
 
     static {
@@ -23,18 +23,18 @@ public class ColumnSettings {
     }
 
     @JsonProperty
-    public Map<Integer, Integer> getColumnWidthMap() {
+    public Map<String, Integer> getColumnWidthMap() {
         return columnWidthMap;
     }
     @JsonProperty
-    public void setColumnWidthMap(Map<Integer, Integer> columnWidthMap) {
+    public void setColumnWidthMap(Map<String, Integer> columnWidthMap) {
         this.columnWidthMap = columnWidthMap;
     }
     @JsonIgnore
-    public int getColumnWidth(Object columnHeaderValue) {
+    public int getColumnWidth(Object columnHeaderValue,String sportName) {
         String columnName = String.valueOf(columnHeaderValue);
         int bookieId = AppController.getBookieId(String.valueOf(columnName));
-        Integer width = columnWidthMap.get(bookieId);
+        Integer width = columnWidthMap.get(keyValue(columnHeaderValue,sportName));
         if ( null == width) {
             width = defaultColumnWidthMap.get(bookieId);
             if ( null == width) {
@@ -44,8 +44,12 @@ public class ColumnSettings {
         return width;
     }
     @JsonIgnore
-    public void setColumnWidth(Object columnName,Integer width) {
+    public void setColumnWidth(Object columnName,String sportName,Integer width) {
+
+        columnWidthMap.put(keyValue(columnName,sportName),width);
+    }
+    private static String keyValue(Object columnName, String sportName) {
         int bookieId = AppController.getBookieId(String.valueOf(columnName));
-        columnWidthMap.put(bookieId,width);
+        return sportName+"_"+bookieId;
     }
 }

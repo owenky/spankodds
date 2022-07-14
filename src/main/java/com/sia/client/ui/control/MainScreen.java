@@ -30,6 +30,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
         this.sportType = sportType;
         screenProperty = new ScreenProperty(sportType.getSportName(),spankyWindowConfig);
         final String name = sportType.getSportName();
+        //screen's name is passed to mainGameTable, name of which is used to identify sport ( i.e. TableColumnHeaderManager) -- 07/12/2022
         setName(name);
         screenGameModel = new ScreenGameModel(screenProperty,sportType);
     }
@@ -118,6 +119,7 @@ public class MainScreen extends JPanel implements AbstractScreen<Game> {
 
     public void createColumnCustomizableTable(MainGameTableModel model) {
 
+        model.setColumnWidths();
         mainGameTable = new MainGameTable(model);
         mainGameTable.setIntercellSpacing(new Dimension(4, 2));
         mainGameTable.setName(getName());

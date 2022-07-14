@@ -11,15 +11,19 @@ import javax.swing.table.TableCellRenderer;
 
 public class MainGameTable extends ColumnCustomizableTable<Game>  {
 
-    private final SportType sporetType;
+    private final SportType sportType;
 
     public MainGameTable(MainGameTableModel tm) {
         super(false,tm);
-        sporetType = tm.getSportType();
+        sportType = tm.getSportType();
         this.addMouseListener(GameTableMouseListener.instance());
     }
     public int getWindowIndex() {
         return getModel().getScreenProperty().getSpankyWindowConfig().getWindowIndex();
+    }
+    @Override
+    public String getTableType() {
+        return sportType.getSportName();
     }
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -82,9 +86,9 @@ public class MainGameTable extends ColumnCustomizableTable<Game>  {
         }
     }
     private boolean isSoccer(int rowViewIndex) {
-        if ( sporetType.equals(SportType.Soccer)) {
+        if ( sportType.equals(SportType.Soccer)) {
             return true;
-        } else if (sporetType.isPredifined()) {
+        } else if (sportType.isPredifined()) {
             return false;
         }
         int rowModelIndex = this.convertRowIndexToModel(rowViewIndex);

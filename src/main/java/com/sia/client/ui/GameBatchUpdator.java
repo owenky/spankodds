@@ -61,7 +61,7 @@ public class GameBatchUpdator implements TableModelListener {
                         }
                     }
                 }
-Utils.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
+//Utils.consoleLogPeek("In GameBatchUpdator, accumulateCnt="+accumulateCnt+", updated row count="+updatedRowCnt+", ago="+(now-lastUpdateTime)+", processing time="+(System.currentTimeMillis()-now)+", forcing="+forcing);
                 pendingUpdateEvents.clear();
                 pendingUpdatedRowModelIndexSet.clear();
                 accumulateCnt = 0;

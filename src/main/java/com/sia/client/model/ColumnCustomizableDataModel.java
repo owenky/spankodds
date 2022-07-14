@@ -31,8 +31,14 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
     public ColumnCustomizableDataModel(ScreenProperty screenProperty,BookieColumnModel bookieColumnModel) {
         this.screenProperty = screenProperty;
         this.bookieColumnModel = bookieColumnModel;
-//        validateAndFixColumnModelIndex(bookieColumnModel);
         gameBatchUpdator = GameBatchUpdator.instance();
+    }
+    public void setColumnWidths() {
+        ColumnSettings columnSettings = Config.instance().getColumnSettings();
+        for(int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn column = bookieColumnModel.get(i);
+            column.setPreferredWidth(columnSettings.getColumnWidth(column.getHeaderValue(),screenProperty.getSportName()));
+        }
     }
     public synchronized ColumnHeaderProperty getColumnHeaderProperty() {
         if ( null == columnHeaderProperty) {
@@ -163,7 +169,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
         try {
             RowSelection rowSelection = Config.instance().getRowSelection();
             rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),true);
-Utils.log("############ ColumnCustomizableDataModel::fireTableChanged is fired -----------------------");
+//Utils.log("############ ColumnCustomizableDataModel::fireTableChanged is fired -----------------------");
             delegator.fireTableChanged(e);
             rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),false);
         } catch(Exception ex) {
@@ -407,27 +413,6 @@ Utils.log("############ ColumnCustomizableDataModel::fireTableChanged is fired -
             l.processTableSectionChanged();
         }
     }
-//    private static void validateAndFixColumnModelIndex(BookieColumnModel bookieColumnModel) {
-//        if ( ! validateColumnIndex(bookieColumnModel)) {
-//            for( int i=0;i<bookieColumnModel.size();i++) {
-//                bookieColumnModel.get(i).setModelIndex(i);
-//            }
-//        }
-//    }
-//    private static boolean validateColumnIndex(BookieColumnModel bookieColumnModel) {
-//        int modelIndex0Count=0;
-//        boolean status = true;
-//        for(int i=0;i<bookieColumnModel.size();i++) {
-//            TableColumn tc = bookieColumnModel.get(i);
-//            if ( 0 == tc.getModelIndex()) {
-//                if ( ++modelIndex0Count > 1) {
-//                    status = false;
-//                    break;
-//                }
-//            }
-//        }
-//        return status;
-//    }
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public static class LtdSrhStruct<V extends KeyedObject> {
         public final TableSection<V> linesTableData;

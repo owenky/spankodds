@@ -29,7 +29,7 @@ public class ScreenGameModel {
         GameGroupAggregator gameGroupAggregator = new GameGroupAggregator(sportType, gameFilter,true);
         Map<GameGroupHeader, Vector<Game>> headerListMap = gameGroupAggregator.aggregate();
         updateCurrentMaxLength(headerListMap);
-        bookieColumnModel = BookieColumnsImpl.instance();
+        bookieColumnModel = BookieColumnsImpl.instance(sportType.getSportName());
         headerMap = new HashMap<>(headerListMap.size());
 
         boolean timesort = GameUtils.isTimeSort(screenProperty.getSpankyWindowConfig().isTimesort(), sportType.isTimeSort());

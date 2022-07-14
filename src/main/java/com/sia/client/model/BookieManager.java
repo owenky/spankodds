@@ -111,7 +111,7 @@ public class BookieManager {
         if ( null != fixedCols) {
             fixedCols.clear();
         }
-        BookieColumnsImpl.instance().reset();
+        BookieColumnsImpl.reset();
     }
     public Iterator<Bookie> iterator() {
         return bookiesVec.iterator();

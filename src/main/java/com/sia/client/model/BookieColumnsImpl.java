@@ -10,7 +10,9 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BookieColumnsImpl implements BookieColumnModel{
@@ -20,14 +22,15 @@ public class BookieColumnsImpl implements BookieColumnModel{
     private List<Bookie> shownBookies;
     private List<TableColumn> shownColumns;
     private final AtomicBoolean initStatus = new AtomicBoolean(false);
+    private static Map<String,BookieColumnsImpl> sportBookieColumnModelMap = new HashMap<>();
 
-    public static BookieColumnsImpl instance() {
-        return LazyInitHolder.instance;
+    public static BookieColumnsImpl instance(String sportName) {
+        return sportBookieColumnModelMap.computeIfAbsent(sportName,key->new BookieColumnsImpl());
     }
     private BookieColumnsImpl() {
     }
-    public void reset() {
-        initStatus.set(false);
+    public static void reset() {
+        sportBookieColumnModelMap.values().forEach(impl->impl.initStatus.set(false));
     }
     private void init() {
         allBookiesVec = AppController.getBookiesVec();
@@ -83,8 +86,6 @@ public class BookieColumnsImpl implements BookieColumnModel{
 
             column.setHeaderValue(b.getShortname());
             column.setIdentifier(b.getBookie_id());
-            ColumnSettings columnSettings = Config.instance().getColumnSettings();
-            column.setPreferredWidth(columnSettings.getColumnWidth(column.getHeaderValue()));
 
             TableCellEditor tableCellEditor;
             Class<? extends TableCellEditor> editorClass = BookieManager.getTableCellEditor(b.getBookie_id());
@@ -104,9 +105,5 @@ public class BookieColumnsImpl implements BookieColumnModel{
         }
 
         return result;
-    }
-    ////////////////////////////////////////////////////////////////////////////
-    private static abstract class LazyInitHolder {
-        private static final BookieColumnsImpl instance = new BookieColumnsImpl();
     }
 }
