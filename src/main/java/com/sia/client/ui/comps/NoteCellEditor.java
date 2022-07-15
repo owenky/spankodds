@@ -11,20 +11,21 @@ import java.awt.*;
 
 public class NoteCellEditor extends AbstractCellEditor implements TableCellEditor {
 
-    private final EditorComponent editorComponent;
+    private EditorComponent editorComponent;
     private final Dimension editorComponentSize = new Dimension(500,150);
-    private final JLabel editorIndicator;
+    private JLabel editorIndicator;
     private JLayeredPane jLayeredPane;
+    private boolean initInEDTstatus = false;
     public NoteCellEditor() {
         super();
-        editorIndicator = new JLabel();
-        editorIndicator.setBorder(BorderFactory.createLineBorder(Color.RED));
-        editorComponent = new EditorComponent();
-        editorComponent.setPreferredSize(editorComponentSize);
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        if ( ! initInEDTstatus) {
+            initInEDTstatus = true;
+            initComponentInEDT();
+        }
         Rectangle rectangle = table.getCellRect(row,column,true);
         Point tblLocation =table.getLocationOnScreen();
         Point popupLocation = new Point(tblLocation.x+rectangle.x, tblLocation.y+rectangle.y+table.getRowHeight(row));
@@ -48,6 +49,12 @@ public class NoteCellEditor extends AbstractCellEditor implements TableCellEdito
         }
         editorComponent.setTitle(title);
         return editorIndicator;
+    }
+    private void initComponentInEDT() {
+        editorIndicator = new JLabel();
+        editorIndicator.setBorder(BorderFactory.createLineBorder(Color.RED));
+        editorComponent = new EditorComponent();
+        editorComponent.setPreferredSize(editorComponentSize);
     }
     @Override
     public String getCellEditorValue() {
