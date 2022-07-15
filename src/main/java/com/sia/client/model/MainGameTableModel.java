@@ -8,6 +8,7 @@ import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableColumn;
 import java.util.*;
 import java.util.function.Function;
 
@@ -43,20 +44,35 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
             if (null != tblSection) {
                 int firstRow;
                 int lastRow;
+                int column;
                 if ( tblSection.isGameHidden(line.getGameid())) {
 Utils.log("MainGameTableModel::processNewLines, rebuild modle");
                     tblSection.activateGame(game);
                     buildIndexMappingCache(true);
                     firstRow = 0;
                     lastRow = Integer.MAX_VALUE;
+                    column = 0;
                 } else {
                     firstRow = this.getRowModelIndexByGameId(tblSection,game.getGame_id());
                     lastRow = firstRow;
+                    column = getColumnModelIndex(line.getBookieid());
                 }
-                Runnable r = () -> flushUpdate(new TableModelEvent(this, firstRow,lastRow , 0, TableModelEvent.UPDATE));
+                Runnable r = () -> flushUpdate(new TableModelEvent(this, firstRow,lastRow , column, TableModelEvent.UPDATE));
                 Utils.checkAndRunInEDT(r);
             }
         }
+    }
+    public int getColumnModelIndex(Integer bookieId) {
+        BookieColumnModel bookieColumnModel = getBookieColumnModel();
+        int modelIndex = 0;
+        for(int i=0;i<bookieColumnModel.size();i++) {
+            TableColumn tc = bookieColumnModel.get(i);
+            if ( bookieId == tc.getIdentifier()) {
+                modelIndex = i;
+                break;
+            }
+        }
+        return modelIndex;
     }
     @Override
     protected Comparator<TableSection<Game>> getTableSectionComparator() {
