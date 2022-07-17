@@ -70,7 +70,7 @@ public class ColumnAdjusterManager {
                     rowHeaderTable.optimizeSize();
                 }
                 long timeConsumed = System.currentTimeMillis() - now;
-//            consoleLogPeek("ColumnAdjusterManager::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
+            consoleLogPeek("ColumnAdjusterManager::adjustColumns, update "+ mainTableAdjustRegions.size()+" regions took " +timeConsumed+", accumulatedCnt="+accumulatedCnt+", ago="+(now-lastAdjustingTime)+", table name="+mainTable.getName());
                 lastAdjustingTime = now;
                 accumulatedCnt = 0;
                 clearAdjustRegions();

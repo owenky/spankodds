@@ -1,5 +1,9 @@
 package com.sia.client.simulator.filter;
 
+import com.sia.client.simulator.OngoingGameMessages;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +16,17 @@ public abstract class MessageFilterFactory {
         typeMap.put("SportFilter",SportFilter.class.getName());
         typeMap.put("KeywordFilter",KeywordFilter.class.getName());
         typeMap.put("RejectFilter",RejectFilter.class.getName());
+        typeMap.put("MesgTypeFilter",MesgTypeFilter.class.getName());
     }
     public static MesgFilterType parse(String filterString) {
+        CompositeFilter compositeFilter = new CompositeFilter();
+        String [] parts = filterString.split("\\+");
+        Arrays.stream(parts).map(MessageFilterFactory::parseSingleFilter)
+                .forEach(compositeFilter::addFilter);
+
+        return compositeFilter;
+    }
+    private static MesgFilterType parseSingleFilter(String filterString) {
         if ( null == filterString || filterString.trim().isEmpty()) {
             filterString="NoneFilter:none";
         }
@@ -41,5 +54,9 @@ public abstract class MessageFilterFactory {
             System.exit(1);
         }
         return mesgFilterType;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////
+    public interface MesgFilter {
+        boolean test(String content, OngoingGameMessages.MessageType mesgType, LocalDateTime timeStamp);
     }
 }

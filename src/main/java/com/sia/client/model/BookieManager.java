@@ -42,7 +42,7 @@ public class BookieManager {
         return columnEditorMap.get(bookieId);
     }
     private BookieManager() {
-        addBookie(new Bookie(990, "Details", "Dtals", "", ""));
+        addBookie(new Bookie(SiaConst.DetailColumnBookieId, "Details", "Dtals", "", ""));
         addBookie(new Bookie(991, "Time", "Time", "", ""));
         addBookie(new Bookie(992, SiaConst.GameNumColIden, SiaConst.GameNumColIden, "", ""));
         addBookie(new Bookie(993, "Team", "Team", "", ""));

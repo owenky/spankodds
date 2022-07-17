@@ -1,16 +1,13 @@
 package com.sia.client.ui;
 
-import com.sia.client.model.Game;
-import com.sia.client.model.GameGroupHeader;
-import com.sia.client.model.GameStatus;
-import com.sia.client.model.MainGameTableModel;
-import com.sia.client.model.TableSection;
+import com.sia.client.config.SiaConst;
+import com.sia.client.model.*;
 import com.sia.client.ui.control.MainScreen;
 import com.sia.client.ui.control.SportsTabPane;
 
-import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
@@ -56,8 +53,9 @@ public class GameClockUpdater {
         if ( null != ts && 0 < ts.size()-1) {
             int firstRow = model.mapToRowModelIndex(ts,1); //index 0 is group header row
             int lastRow = model.mapToRowModelIndex(ts,ts.size()-1);
-            TableModelEvent me = new TableModelEvent(model,firstRow,lastRow);
-            model.fireTableChanged(me);  //don't use processTableModelEvent which delays firing.
+            int columnModelIndex = model.getColumnModelIndexByBookieId(SiaConst.DetailColumnBookieId);
+            TableModelEvent tme = new TableModelEvent(model, firstRow, lastRow, columnModelIndex, TableModelEvent.UPDATE);
+            model.fireTableChanged(tme);
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////

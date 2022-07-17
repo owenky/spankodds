@@ -1,8 +1,6 @@
 package com.sia.client.simulator.filter;
 
-import java.util.function.Predicate;
-
-public abstract class MesgFilterType implements Predicate<String> {
+public abstract class MesgFilterType implements MessageFilterFactory.MesgFilter {
 
     private String [] conditions;
 

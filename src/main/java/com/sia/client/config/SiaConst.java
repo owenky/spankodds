@@ -17,6 +17,7 @@ public abstract class SiaConst {
     public static final String SeriesPricesStr = "Series Prices";
     public static final int SoccerLeagueId = 9;
     public static final int NoteColumnBookieId = 995;
+    public static final int DetailColumnBookieId = 990;
     public static final Integer BlankGameId = -10000000; //Integer.MIN_VALUE does not work in sorting
     public static final Integer GameGroupHeaderHeight = 20;
     public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
