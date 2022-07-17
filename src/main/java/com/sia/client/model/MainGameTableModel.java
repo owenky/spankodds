@@ -3,7 +3,6 @@ package com.sia.client.model;
 import com.sia.client.config.GameUtils;
 import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
-import com.sia.client.ui.AppController;
 import com.sia.client.ui.LinesTableData;
 import com.sia.client.ui.TableUtils;
 
@@ -32,6 +31,11 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game>  {
         this.sportType = sportType;
     }
     public void destroy() {
+    }
+    public void updateColumn(int firstRow, int lastRow, int bookieId) {
+        int columnModelIndex = getColumnModelIndexByBookieId(bookieId);
+        TableModelEvent tme = new TableModelEvent(this, firstRow, lastRow, columnModelIndex, TableModelEvent.UPDATE);
+        fireTableChanged(tme);
     }
     public int getColumnModelIndexByBookieId(Integer bookieId) {
         BookieColumnModel bookieColumnModel = getBookieColumnModel();

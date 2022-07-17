@@ -53,9 +53,7 @@ public class GameClockUpdater {
         if ( null != ts && 0 < ts.size()-1) {
             int firstRow = model.mapToRowModelIndex(ts,1); //index 0 is group header row
             int lastRow = model.mapToRowModelIndex(ts,ts.size()-1);
-            int columnModelIndex = model.getColumnModelIndexByBookieId(SiaConst.DetailColumnBookieId);
-            TableModelEvent tme = new TableModelEvent(model, firstRow, lastRow, columnModelIndex, TableModelEvent.UPDATE);
-            model.fireTableChanged(tme);
+            model.updateColumn(firstRow,lastRow,SiaConst.DetailColumnBookieId);
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
