@@ -2,40 +2,41 @@ package com.sia.client.ui;
 
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Line;
+import com.sia.client.model.LineIdentity;
 
 import static com.sia.client.config.Utils.log;
 
 public class TeamTotalline extends Line {
 
 
-    boolean isbestvisitover = false;
-    boolean isbestvisitunder = false;
-    boolean isbesthomeover = false;
-    boolean isbesthomeunder = false;
-    double currentvisitover;
-    double currentvisitoverjuice;
-    double currentvisitunder;
-    double currentvisitunderjuice;
-    double currenthomeover;
-    double currenthomeoverjuice;
-    double currenthomeunder;
-    double currenthomeunderjuice;
-    double priorvisitover;
-    double priorvisitoverjuice;
-    double priorvisitunder;
-    double priorvisitunderjuice;
-    double priorhomeover;
-    double priorhomeoverjuice;
-    double priorhomeunder;
-    double priorhomeunderjuice;
-    double openervisitover;
-    double openervisitoverjuice;
-    double openervisitunder;
-    double openervisitunderjuice;
-    double openerhomeover;
-    double openerhomeoverjuice;
-    double openerhomeunder;
-    double openerhomeunderjuice;
+    private boolean isbestvisitover = false;
+    private boolean isbestvisitunder = false;
+    private boolean isbesthomeover = false;
+    private boolean isbesthomeunder = false;
+    private double currentvisitover;
+    private double currentvisitoverjuice;
+    private double currentvisitunder;
+    private double currentvisitunderjuice;
+    private double currenthomeover;
+    private double currenthomeoverjuice;
+    private double currenthomeunder;
+    private double currenthomeunderjuice;
+    private double priorvisitover;
+    private double priorvisitoverjuice;
+    private double priorvisitunder;
+    private double priorvisitunderjuice;
+    private double priorhomeover;
+    private double priorhomeoverjuice;
+    private double priorhomeunder;
+    private double priorhomeunderjuice;
+    private double openervisitover;
+    private double openervisitoverjuice;
+    private double openervisitunder;
+    private double openervisitunderjuice;
+    private double openerhomeover;
+    private double openerhomeoverjuice;
+    private double openerhomeunder;
+    private double openerhomeunderjuice;
     private String shortPrintedHomeTotal_current_home = null;
     private String shortPrintedHomeTotal_current_visit = null;
     private String shortPrintedHomeTotal_prior_home = null;
@@ -49,8 +50,8 @@ public class TeamTotalline extends Line {
     private String otherPrintedHomeTotal_opener_home = null;
     private String otherPrintedHomeTotal_opener_visit = null;
 
-    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts, int p) {
-        this();
+    public TeamTotalline(LineIdentity lineIdentity, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts) {
+        this(lineIdentity);
 
         currentvisitover = priorvisitover = openervisitover = vo;
         currenthomeover = priorhomeover = openerhomeover = ho;
@@ -61,21 +62,50 @@ public class TeamTotalline extends Line {
         currentvisitunderjuice = priorvisitunderjuice = openervisitunderjuice = vuj;
         currenthomeunderjuice = priorhomeunderjuice = openerhomeunderjuice = huj;
         currentts = priorts = openerts = ts;
-        gameid = gid;
-        bookieid = bid;
-        period = p;
-
-
     }
 
-    public TeamTotalline() {
-        type = "teamtotal";
+    public TeamTotalline(LineIdentity lineIdentity) {
+        super(lineIdentity,"teamtotal");
     }
 
-    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts,
+    public TeamTotalline(LineIdentity lineIdentity, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts,
                          double pvo, double pvoj, double pvu, double pvuj, double pho, double phoj, double phu, double phuj, long pts,
-                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, long ots, int p) {
-        this();
+                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, long ots) {
+        this(lineIdentity);
+        currentvisitover = vo;
+        currentvisitoverjuice = voj;
+        currentvisitunder = vu;
+        currentvisitunderjuice = vuj;
+        currenthomeover = ho;
+        currenthomeoverjuice = hoj;
+        currenthomeunder = hu;
+        currenthomeunderjuice = huj;
+        currentts = ts;
+
+        priorvisitover = pvo;
+        priorvisitoverjuice = pvoj;
+        priorvisitunder = pvu;
+        priorvisitunderjuice = pvuj;
+        priorhomeover = pho;
+        priorhomeoverjuice = phoj;
+        priorhomeunder = phu;
+        priorhomeunderjuice = phuj;
+        priorts = pts;
+
+        openervisitover = ovo;
+        openervisitoverjuice = ovoj;
+        openervisitunder = ovu;
+        openervisitunderjuice = ovuj;
+        openerhomeover = oho;
+        openerhomeoverjuice = ohoj;
+        openerhomeunder = ohu;
+        openerhomeunderjuice = ohuj;
+        openerts = ots;
+    }
+    public TeamTotalline(LineIdentity lineIdentity, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts,
+                         double pvo, double pvoj, double pvu, double pvuj, double pho, double phoj, double phu, double phuj, long pts,
+                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, long ots,int mb) {
+        this(lineIdentity);
         currentvisitover = vo;
         currentvisitoverjuice = voj;
         currentvisitunder = vu;
@@ -106,49 +136,6 @@ public class TeamTotalline extends Line {
         openerhomeunderjuice = ohuj;
         openerts = ots;
 
-        gameid = gid;
-        bookieid = bid;
-        period = p;
-
-
-    }
-    public TeamTotalline(int gid, int bid, double vo, double voj, double vu, double vuj, double ho, double hoj, double hu, double huj, long ts,
-                         double pvo, double pvoj, double pvu, double pvuj, double pho, double phoj, double phu, double phuj, long pts,
-                         double ovo, double ovoj, double ovu, double ovuj, double oho, double ohoj, double ohu, double ohuj, long ots, int p,int mb) {
-        this();
-        currentvisitover = vo;
-        currentvisitoverjuice = voj;
-        currentvisitunder = vu;
-        currentvisitunderjuice = vuj;
-        currenthomeover = ho;
-        currenthomeoverjuice = hoj;
-        currenthomeunder = hu;
-        currenthomeunderjuice = huj;
-        currentts = ts;
-
-        priorvisitover = pvo;
-        priorvisitoverjuice = pvoj;
-        priorvisitunder = pvu;
-        priorvisitunderjuice = pvuj;
-        priorhomeover = pho;
-        priorhomeoverjuice = phoj;
-        priorhomeunder = phu;
-        priorhomeunderjuice = phuj;
-        priorts = pts;
-
-        openervisitover = ovo;
-        openervisitoverjuice = ovoj;
-        openervisitunder = ovu;
-        openervisitunderjuice = ovuj;
-        openerhomeover = oho;
-        openerhomeoverjuice = ohoj;
-        openerhomeunder = ohu;
-        openerhomeunderjuice = ohuj;
-        openerts = ots;
-
-        gameid = gid;
-        bookieid = bid;
-        period = p;
         limit = mb;
 
     }
@@ -273,8 +260,8 @@ public class TeamTotalline extends Line {
         }
 
 
-        BestLines.calculatebestteamtotal(gameid, period);
-        BestLines.calculateconsensusteamtotal(gameid, period);
+        BestLines.calculatebestteamtotal(getGameid(), getPeriod());
+        BestLines.calculateconsensusteamtotal(getGameid(), getPeriod());
         return whowasbet;
 
     }

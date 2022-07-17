@@ -2,6 +2,7 @@ package com.sia.client.ui;
 
 import com.sia.client.model.BestLines;
 import com.sia.client.model.Line;
+import com.sia.client.model.LineIdentity;
 
 import java.io.Serializable;
 
@@ -24,33 +25,26 @@ public class Totalline extends Line implements Serializable {
     private double openeroverjuice;
     private double openerunder;
     private double openerunderjuice;
-    private String shortPrintedTotal_current=null;
-    private String shortPrintedTotal_prior=null;
+    private String shortPrintedTotal_current = null;
+    private String shortPrintedTotal_prior = null;
     private String shortPrintedTotal_opener = null;
 
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, int p) {
-        this();
-
+    public Totalline(LineIdentity lineIdentity, double o, double oj, double u, double uj, long ts) {
+        this(lineIdentity);
         currentover = priorover = openerover = o;
         currentoverjuice = prioroverjuice = openeroverjuice = oj;
         currentunder = priorunder = openerunder = u;
         currentunderjuice = priorunderjuice = openerunderjuice = uj;
         currentts = priorts = openerts = ts;
-        gameid = gid;
-        bookieid = bid;
-        period = p;
+    }
 
-
+    public Totalline(LineIdentity lineIdentity) {
+        super(lineIdentity, "total");
     }
 
 
-    public Totalline() {
-        type = "total";
-    }
-
-
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, int p) {
-        this();
+    public Totalline(LineIdentity lineIdentity, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts) {
+        this(lineIdentity);
         currentover = o;
         currentoverjuice = oj;
         currentunder = u;
@@ -62,16 +56,31 @@ public class Totalline extends Line implements Serializable {
         priorunder = u;
         priorunderjuice = uj;
         priorts = ts;
-
-        gameid = gid;
-        bookieid = bid;
-        period = p;
-
-
     }
 
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots, int p) {
-        this();
+    public Totalline(LineIdentity lineIdentity, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots) {
+        this(lineIdentity);
+        currentover = o;
+        currentoverjuice = oj;
+        currentunder = u;
+        currentunderjuice = uj;
+        currentts = ts;
+
+        priorover = po;
+        prioroverjuice = poj;
+        priorunder = pu;
+        priorunderjuice = puj;
+        priorts = pts;
+
+        openerover = oo;
+        openeroverjuice = ooj;
+        openerunder = ou;
+        openerunderjuice = ouj;
+        openerts = ots;
+    }
+
+    public Totalline(LineIdentity lineIdentity, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots, int mb) {
+        this(lineIdentity);
         currentover = o;
         currentoverjuice = oj;
         currentunder = u;
@@ -90,48 +99,17 @@ public class Totalline extends Line implements Serializable {
         openerunderjuice = ouj;
         openerts = ots;
 
-        gameid = gid;
-        bookieid = bid;
-        period = p;
-
-
-    }
-    public Totalline(int gid, int bid, double o, double oj, double u, double uj, long ts, double po, double poj, double pu, double puj, long pts, double oo, double ooj, double ou, double ouj, long ots, int p,int mb) {
-        this();
-        currentover = o;
-        currentoverjuice = oj;
-        currentunder = u;
-        currentunderjuice = uj;
-        currentts = ts;
-
-        priorover = po;
-        prioroverjuice = poj;
-        priorunder = pu;
-        priorunderjuice = puj;
-        priorts = pts;
-
-        openerover = oo;
-        openeroverjuice = ooj;
-        openerunder = ou;
-        openerunderjuice = ouj;
-        openerts = ots;
-
-        gameid = gid;
-        bookieid = bid;
-        period = p;
         limit = mb;
-
     }
+
     public boolean isBestOver() {
         return isbestover;
     }
 
-    public void setBestOver(boolean b)
-    {
+    public void setBestOver(boolean b) {
         isbestover = b;
-        if(b)
-        {
-            AppController.bestover.put(period+"-"+gameid,getBookieObject());
+        if (b) {
+            AppController.bestover.put(getPeriod() + "-" + getGameid(), getBookieObject());
         }
     }
 
@@ -139,44 +117,38 @@ public class Totalline extends Line implements Serializable {
         return isbestunder;
     }
 
-    public void setBestUnder(boolean b)
-    {
+    public void setBestUnder(boolean b) {
         isbestunder = b;
-        if(b)
-        {
-            AppController.bestunder.put(period+"-"+gameid,getBookieObject());
+        if (b) {
+            AppController.bestunder.put(getPeriod() + "-" + getGameid(), getBookieObject());
         }
     }
 
     public String recordMove(double over, double overjuice, double under, double underjuice, long ts, boolean isopener) {
-
-       // if (overjuice != 0)
-       // {
-            this.setCurrentover(over);
-            this.setCurrentoverjuice(overjuice);
-            this.setCurrentts(ts);
+        this.setCurrentover(over);
+        this.setCurrentoverjuice(overjuice);
+        this.setCurrentts(ts);
 
 
-            if (isopener)
-            {
-                this.setOpenerover(over);
-                this.setOpeneroverjuice(overjuice);
-                this.setOpenerunder(under);
-                this.setOpenerunderjuice(underjuice);
-                this.setOpenerts(ts);
-            }
-       // }
-       // if (underjuice != 0)
-       // {
-            this.setCurrentunder(under);
-            this.setCurrentunderjuice(underjuice);
-           //why call this twice this.setCurrentts(ts);
+        if (isopener) {
+            this.setOpenerover(over);
+            this.setOpeneroverjuice(overjuice);
+            this.setOpenerunder(under);
+            this.setOpenerunderjuice(underjuice);
+            this.setOpenerts(ts);
+        }
+        // }
+        // if (underjuice != 0)
+        // {
+        this.setCurrentunder(under);
+        this.setCurrentunderjuice(underjuice);
+        //why call this twice this.setCurrentts(ts);
 
-            if (isopener) {
+        if (isopener) {
 
-                LineAlertOpenerManager.openerAlert(this.getGameid(),this.getBookieid(),this.getPeriod(), this);
-            }
-       // }
+            LineAlertOpenerManager.openerAlert(this.getGameid(), this.getBookieid(), this.getPeriod(), this);
+        }
+        // }
 
         try {
             if (this.getPriorover() < this.getCurrentover()) // 215 to 216
@@ -209,12 +181,12 @@ public class Totalline extends Line implements Serializable {
                 LineAlertManager.checkMove(this);
             }
         } catch (Exception ex) {
-            log( ex);
+            log(ex);
         }
 
 
-        BestLines.calculatebesttotal(gameid, period);
-        BestLines.calculateconsensustotal(gameid, period);
+        BestLines.calculatebesttotal(getGameid(), getPeriod());
+        BestLines.calculateconsensustotal(getGameid(), getPeriod());
         return this.whowasbet;
 
     }
@@ -287,7 +259,7 @@ public class Totalline extends Line implements Serializable {
     }
 
     public String getShortPrintedCurrentTotal() {
-        if ( null == shortPrintedTotal_current) {
+        if (null == shortPrintedTotal_current) {
             shortPrintedTotal_current = getShortPrintedTotal(currentover, currentoverjuice, currentunder, currentunderjuice);
         }
         return shortPrintedTotal_current;
@@ -307,7 +279,7 @@ public class Totalline extends Line implements Serializable {
 //        }
 
         double juice = 0;
-        if (oj == uj && oj == -110 && o==u) {
+        if (oj == uj && oj == -110 && o == u) {
             retvalue = o + "";
             if (Math.abs(o) < 1 && retvalue.startsWith("0")) {
                 retvalue = retvalue.substring(1);
@@ -317,7 +289,7 @@ public class Totalline extends Line implements Serializable {
 
 
             retvalue = retvalue.replace(".5", "\u00BD");
-            if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+            if (AppController.getUserDisplaySettings().getSoccerquarter()) {
                 retvalue = retvalue.replace(".25", "\u00BC");
                 retvalue = retvalue.replace(".75", "\u00BE");
             }
@@ -379,14 +351,13 @@ public class Totalline extends Line implements Serializable {
         char half = AsciiChar.getAscii(170);
 
         retvalue = retvalue.replace(".5", "\u00BD");
-        if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+        if (AppController.getUserDisplaySettings().getSoccerquarter()) {
             retvalue = retvalue.replace(".25", "\u00BC");
             retvalue = retvalue.replace(".75", "\u00BE");
         }
 
-        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
-        {
-           // System.out.println("short out"+retvalue);
+        if (getGameid() > 900 && getGameid() < 999 && getBookieid() == 997) {
+            // System.out.println("short out"+retvalue);
         }
         return retvalue;
 
@@ -394,7 +365,7 @@ public class Totalline extends Line implements Serializable {
 
     public String getShortPrintedPriorTotal() {
 
-        if ( null == shortPrintedTotal_prior) {
+        if (null == shortPrintedTotal_prior) {
             shortPrintedTotal_prior = getShortPrintedTotal(priorover, prioroverjuice, priorunder, priorunderjuice);
         }
         return shortPrintedTotal_prior;
@@ -402,7 +373,7 @@ public class Totalline extends Line implements Serializable {
 
     public String getShortPrintedOpenerTotal() {
 
-        if ( null == shortPrintedTotal_opener) {
+        if (null == shortPrintedTotal_opener) {
             shortPrintedTotal_opener = getShortPrintedTotal(openerover, openeroverjuice, openerunder, openerunderjuice);
         }
         return shortPrintedTotal_opener;
@@ -415,8 +386,7 @@ public class Totalline extends Line implements Serializable {
 
     public String getOtherPrintedTotal(double o, double oj, double u, double uj) {
 
-        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
-        {
+        if (getGameid() > 900 && getGameid() < 999 && getBookieid() == 997) {
             //System.out.println("other in "+o+""+oj+".."+u+""+uj);
         }
 
@@ -427,9 +397,8 @@ public class Totalline extends Line implements Serializable {
         }
 
 
-
         double juice = 0;
-        if (oj == uj && uj == -110 && o==u) {
+        if (oj == uj && uj == -110 && o == u) {
             retvalue = u + "";
             if (Math.abs(u) < 1 && retvalue.startsWith("0")) {
                 retvalue = retvalue.substring(1);
@@ -439,7 +408,7 @@ public class Totalline extends Line implements Serializable {
 
 
             retvalue = retvalue.replace(".5", "\u00BD");
-            if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+            if (AppController.getUserDisplaySettings().getSoccerquarter()) {
                 retvalue = retvalue.replace(".25", "\u00BC");
                 retvalue = retvalue.replace(".75", "\u00BE");
             }
@@ -499,13 +468,12 @@ public class Totalline extends Line implements Serializable {
         char half = AsciiChar.getAscii(170);
 
         retvalue = retvalue.replace(".5", "\u00BD");
-        if(AppController.getUserDisplaySettings().getSoccerquarter()) {
+        if (AppController.getUserDisplaySettings().getSoccerquarter()) {
             retvalue = retvalue.replace(".25", "\u00BC");
             retvalue = retvalue.replace(".75", "\u00BE");
         }
-        if(getGameid() > 900 && getGameid() < 999 && getBookieid() == 997)
-        {
-          //  System.out.println("other out"+retvalue);
+        if (getGameid() > 900 && getGameid() < 999 && getBookieid() == 997) {
+            //  System.out.println("other out"+retvalue);
         }
 
 
@@ -578,27 +546,23 @@ public class Totalline extends Line implements Serializable {
     }
 
     @Override
-    public String getOpener()
-    {
-        String s = getCurrentover()+"o"+getCurrentoverjuice()+"<br>"+getCurrentunder()+"u"+getCurrentunderjuice();
+    public String getOpener() {
+        String s = getCurrentover() + "o" + getCurrentoverjuice() + "<br>" + getCurrentunder() + "u" + getCurrentunderjuice();
 
 
         return s;
     }
-    public String showHistory()
-    {
-        try
-        {
-        String s =
-                "<tr><td>C:</td><td>"+getShortPrintedCurrentTotal()+"</td><td>"+formatts(getCurrentts())+"</td></tr>"+
-                "<tr><td>P:</td><td>"+getShortPrintedPriorTotal()+"</td><td>"+formatts(getPriorts())+"</td></tr>"+
-                "<tr><td>O:</td><td>"+getShortPrintedOpenerTotal()+"</td><td>"+formatts(getOpenerts())+"</td></tr>";
 
-        return s;
-        }
-            catch(Exception ex)
-        {
-            log("total show history exception "+ex);
+    public String showHistory() {
+        try {
+            String s =
+                    "<tr><td>C:</td><td>" + getShortPrintedCurrentTotal() + "</td><td>" + formatts(getCurrentts()) + "</td></tr>" +
+                            "<tr><td>P:</td><td>" + getShortPrintedPriorTotal() + "</td><td>" + formatts(getPriorts()) + "</td></tr>" +
+                            "<tr><td>O:</td><td>" + getShortPrintedOpenerTotal() + "</td><td>" + formatts(getOpenerts()) + "</td></tr>";
+
+            return s;
+        } catch (Exception ex) {
+            log("total show history exception " + ex);
         }
         return "";
     }

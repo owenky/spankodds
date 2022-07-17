@@ -29,7 +29,7 @@ public class AppController {
     public static Vector<LineAlertNode> linealertnodes = new Vector<>();
     public static Vector<SportsMenuBar> menubars = new Vector<>();
     public static Vector<Sport> sportsVec = new Vector<>();
-    public static Hashtable<String,ConsensusMakerSettings> cmshash = new Hashtable<>();
+    public static Hashtable<String, ConsensusMakerSettings> cmshash = new Hashtable<>();
     public static String brokerURL = "failover:(tcp://71.172.25.164:61616)";
     public static ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerURL);
     public static Connection guestConnection;
@@ -70,7 +70,6 @@ public class AppController {
     public static LimitNode tennislimitnode = new LimitNode(SportName.Tennis);
     public static LimitNode autoracinglimitnode = new LimitNode(SportName.Auto_Racing);
     public static List<LimitNode> LimitNodeList = new ArrayList<>();
-
 
 
     public static SortedMap<Integer, String> SpotsTabPaneVector = new TreeMap<>();
@@ -121,35 +120,29 @@ public class AppController {
 
     private static final BookieManager bookieManager = BookieManager.instance();
     private static final Games games = Games.instance();
-    private static final List<NewLineListener> NEW_LINE_LISTENERS = new ArrayList<>();
 
-    public static Hashtable getConsensusMakerSettings()
-    {
+    public static Hashtable getConsensusMakerSettings() {
         return cmshash;
     }
-    public static String getConsensusMakerSettingsAsString()
-    {
+
+    public static String getConsensusMakerSettingsAsString() {
         String cmsstring = "";
         Enumeration enum99 = cmshash.elements();
-        while(enum99.hasMoreElements())
-        {
+        while (enum99.hasMoreElements()) {
             ConsensusMakerSettings cms = (ConsensusMakerSettings) enum99.nextElement();
-            cmsstring = cmsstring+cms.getDelimitedString()+"~";
+            cmsstring = cmsstring + cms.getDelimitedString() + "~";
         }
         return cmsstring;
     }
-    public static ConsensusMakerSettings getConsensusMakerSettingsForThisGame(int gameid)
-    {
+
+    public static ConsensusMakerSettings getConsensusMakerSettingsForThisGame(int gameid) {
         ConsensusMakerSettings returncms = null;
         Game g = getGame(gameid);
         int leagueid = g.getLeague_id();
         Enumeration enum2 = cmshash.elements();
-        while(enum2.hasMoreElements())
-        {
+        while (enum2.hasMoreElements()) {
             ConsensusMakerSettings cms = (ConsensusMakerSettings) enum2.nextElement();
-            if(cms.isLeagueIncluded(""+leagueid))
-
-            {
+            if (cms.isLeagueIncluded("" + leagueid)) {
                 returncms = cms;
                 break;
 
@@ -157,56 +150,50 @@ public class AppController {
         }
         return returncms;
     }
-    public static void addConsensusMakerSetting(ConsensusMakerSettings cms)
-    {
+
+    public static void addConsensusMakerSetting(ConsensusMakerSettings cms) {
         String newname = "MyConsensusSetting-";
-        if(cms.getName().equals(""))
-        {
-            for(int i=1; i <100; i++)
-            {
-                if(cmshash.get(newname+i) == null)
-                {
-                    cms.setName(newname+i);
-                    cmshash.put(cms.getName(),cms);
+        if (cms.getName().equals("")) {
+            for (int i = 1; i < 100; i++) {
+                if (cmshash.get(newname + i) == null) {
+                    cms.setName(newname + i);
+                    cmshash.put(cms.getName(), cms);
                     break;
                 }
 
             }
-        }
-        else
-        {
-            cmshash.put(cms.getName(),cms);
+        } else {
+            cmshash.put(cms.getName(), cms);
         }
 
     }
-    public static void removeConsensusMakerSetting(ConsensusMakerSettings cms)
-    {
+
+    public static void removeConsensusMakerSetting(ConsensusMakerSettings cms) {
         cmshash.remove(cms.getName());
     }
+
     public static void createConsensusMakerSettings() {
 
         String cmsdata = getUser().getConsensussettings();
-        if(cmsdata == null || cmsdata.equals(""))
-        {
+        if (cmsdata == null || cmsdata.equals("")) {
             return;
         }
         String lans[] = cmsdata.split("~");
-        for(int i = 0;i < lans.length; i++)
-        {
+        for (int i = 0; i < lans.length; i++) {
 
             String[] items = lans[i].split("\\|");
-            if(items.length > 1)
-            {
+            if (items.length > 1) {
                 String name = items[0];
                 String sportslist = items[1];
                 String percentages = items[2];
 
-                addConsensusMakerSetting(new ConsensusMakerSettings(name,sportslist,percentages));
+                addConsensusMakerSetting(new ConsensusMakerSettings(name, sportslist, percentages));
 
             }
         }
 
     }
+
     public static void initializeSportsTabPaneVectorFromUser() {
         String[] tabsindex = User.instance().getTabsIndex().split(",");
         for (int i = 0; i < tabsindex.length; i++) {
@@ -217,8 +204,7 @@ public class AppController {
         }
     }
 
-    public static UserDisplaySettings getUserDisplaySettings()
-    {
+    public static UserDisplaySettings getUserDisplaySettings() {
         return Config.instance().getUserDisplaySettings();
     }
 
@@ -233,7 +219,7 @@ public class AppController {
 
     public static boolean isReadyForMessageProcessing() {
         CountDownLatch messageProcessingLatch = messageProcessingLatchRef.get();
-        return  0 == messageProcessingLatch.getCount();
+        return 0 == messageProcessingLatch.getCount();
 
     }
 
@@ -260,8 +246,7 @@ public class AppController {
     }
 
     public static void initializeLineAlertVectorFromUser() {
-        if(User.instance().getLineAlerts() == null || User.instance().getLineAlerts().equals("") || User.instance().getLineAlerts().equals("a"))
-        {
+        if (User.instance().getLineAlerts() == null || User.instance().getLineAlerts().equals("") || User.instance().getLineAlerts().equals("a")) {
             return;
         }
         String[] linealerts = User.instance().getLineAlerts().split("\\?");
@@ -383,6 +368,7 @@ public class AppController {
         LineOpenerAlertNodeList.add(tennis);
         LineOpenerAlertNodeList.add(autoracing);
     }
+
     public static void createLimitNodeList() {
         LimitNodeList.add(footballlimitnode);
         LimitNodeList.add(basketballlimitnode);
@@ -396,23 +382,18 @@ public class AppController {
     }
 
 
-
-
     public static void createLineOpenerAlertNodeListFromUserPrefs() {
 
         String openerdata = getUser().getOpeneralert();
-        if(openerdata == null || openerdata.equals(""))
-        {
+        if (openerdata == null || openerdata.equals("")) {
             return;
         }
         String lans[] = openerdata.split("~");
-        for(int i = 0;i < lans.length; i++)
-        {
+        for (int i = 0; i < lans.length; i++) {
             String[] items = lans[i].split("\\|");
-            if(items.length > 1)
-            {
+            if (items.length > 1) {
 
-                 String[] sportcodeselements = items[1].split(",\\s* ");
+                String[] sportcodeselements = items[1].split(",\\s* ");
                 List<String> sportcodeslist = Arrays.asList(sportcodeselements);
                 ArrayList<String> sportcodesarraylist = new ArrayList<String>(sportcodeslist);
 
@@ -443,8 +424,8 @@ public class AppController {
                         Double.parseDouble(items[18]),
                         items[19],
                         Boolean.parseBoolean(items[20]));
-                log("about to add opener="+lan);
-                LineOpenerAlertNodeList.set(i,lan);
+                log("about to add opener=" + lan);
+                LineOpenerAlertNodeList.set(i, lan);
 
             }
         }
@@ -455,11 +436,9 @@ public class AppController {
 
         String limitdata = getUser().getLimitchangeAlert();
         String lans[] = limitdata.split("@");
-        for(int i = 0;i < lans.length; i++)
-        {
+        for (int i = 0; i < lans.length; i++) {
             String[] items = lans[i].split("\\|");
-            if(items.length > 1)
-            {
+            if (items.length > 1) {
 
                 String[] sportcodeselements = items[1].split(",\\s* ");
                 List<String> sportcodeslist = Arrays.asList(sportcodeselements);
@@ -497,17 +476,14 @@ public class AppController {
                         Integer.parseInt(items[23]));
 
 
-
-
-
-
-                log("about to add limitnode="+lan);
-                LimitNodeList.set(i,lan);
+                log("about to add limitnode=" + lan);
+                LimitNodeList.set(i, lan);
 
             }
         }
 
     }
+
     public static void addLineAlertNode(LineAlertNode lan) {
 
         checkAndRunInEDT(() -> linealertnodes.add(lan));
@@ -533,6 +509,7 @@ public class AppController {
         }
         return true;
     }
+
     public static List<Bookie> getBookiesVec() {
         return bookieManager.getBookiesVec();
     }
@@ -556,12 +533,15 @@ public class AppController {
         }
         return nwa;
     }
+
     public static Vector<String> getCustomTabsVec() {
         return customTabsVec;
     }
+
     public static Vector<LineAlertNode> getLineAlertNodes() {
         return linealertnodes;
     }
+
     public static SportsTabPane getMainTabPane() {
         return SpankyWindow.getFirstSpankyWindow().getSportsTabPane();
     }
@@ -826,9 +806,11 @@ public class AppController {
     public static void addBookie(Bookie b) {
         bookieManager.addBookie(b);
     }
-    public static void changeBookieShortName(String oldShortName,String newShortName) {
-        bookieManager.changeBookieShortName(oldShortName,newShortName);
+
+    public static void changeBookieShortName(String oldShortName, String newShortName) {
+        bookieManager.changeBookieShortName(oldShortName, newShortName);
     }
+
     public static void addOpenerBookie(Bookie b) {
         bookieManager.addOpenerBookie(b);
     }
@@ -872,7 +854,7 @@ public class AppController {
             try {
                 games.removeGame(gameIdStr);
                 Iterator<Bookie> iterator = bookieManager.iterator();
-                while (iterator.hasNext() ) {
+                while (iterator.hasNext()) {
                     Bookie b = iterator.next();
                     int bid = b.getBookie_id();
                     final String key = bid + "-" + gameIdStr;
@@ -970,9 +952,11 @@ public class AppController {
     public static Color getColor(Integer bookieid) {
         return bookiecolors.get(bookieid);
     }
+
     public static void removeColor(Integer bookieid) {
         bookiecolors.remove(bookieid);
     }
+
     public static void clearColumnColors() {
         bookiecolors.clear();
     }
@@ -1006,9 +990,10 @@ public class AppController {
     }
 
     public static void addSpreadline(Spreadline spread) {
-        addSpreadline(spread,true);
+        addSpreadline(spread, true);
     }
-    public static void addSpreadline(Spreadline spread,boolean toNotify) {
+
+    public static void addSpreadline(Spreadline spread, boolean toNotify) {
 
         try {
             int period = spread.getPeriod();
@@ -1031,10 +1016,10 @@ public class AppController {
                 livespreads.put(spread.getBookieid() + "-" + spread.getGameid(), spread);
                 log("unknown spread period " + period + "...." + spread.getBookieid() + "-" + spread.getGameid());
             }
-            if ( toNotify) {
+            if (toNotify) {
                 newLineNotify(spread);
             }
-        }catch( Exception e) {
+        } catch (Exception e) {
             Utils.log(e);
         }
     }
@@ -1062,7 +1047,7 @@ public class AppController {
                 log("unknown total period " + period + "...." + total.getBookieid() + "-" + total.getGameid());
             }
             newLineNotify(total);
-        }catch( Exception e) {
+        } catch (Exception e) {
             Utils.log(e);
         }
     }
@@ -1090,7 +1075,7 @@ public class AppController {
                 log("unknown money period " + period + "...." + ml.getBookieid() + "-" + ml.getGameid());
             }
             newLineNotify(ml);
-        }catch( Exception e) {
+        } catch (Exception e) {
             Utils.log(e);
         }
 //LineAlertOpeners.moneyOpenerAlert(ml);
@@ -1119,7 +1104,7 @@ public class AppController {
                 log("unknown tt period " + period + "...." + teamtotal.getBookieid() + "-" + teamtotal.getGameid());
             }
             newLineNotify(teamtotal);
-        }catch( Exception e) {
+        } catch (Exception e) {
             Utils.log(e);
         }
 //LineAlertOpeners.teamTotalOpenerAlert(teamtotal);
@@ -1224,19 +1209,9 @@ public class AppController {
     public static void addAlert(String hrmin, String mesg) {
         alertsVector.addAlert(hrmin, mesg);
     }
-    public static void addNewLineListener(NewLineListener newLineListener) {
-        NEW_LINE_LISTENERS.add(newLineListener);
-    }
-    public static void rmNewLineListener(NewLineListener newLineListener) {
-        NEW_LINE_LISTENERS.remove(newLineListener);
-    }
+
     private static final Set<Integer> gameIdsWithAnyLine = new HashSet<>();
     private static void newLineNotify(Line newLine) {
-        //since MainGameTableModel is removed from NEW_LINE_LISTENERS when it is switched off , NEW_LINE_LISTENERS only contains one MainGameTableModel that is currently displayed.
-        //So no need to filter for displayed model. 2022-02-27
-        for (NewLineListener newLineListener : NEW_LINE_LISTENERS) {
-            newLineListener.processNewLines(newLine);
-        }
         gameIdsWithAnyLine.add(newLine.getGameid());
     }
     public static boolean containAnyLine(int gameId) {

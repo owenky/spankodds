@@ -15,7 +15,7 @@ import java.util.function.Function;
 import static com.sia.client.config.SiaConst.StageGroupAnchorOffset;
 import static com.sia.client.config.Utils.log;
 
-public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implements NewLineListener {
+public class MainGameTableModel extends ColumnCustomizableDataModel<Game>  {
 
     private final SportType sportType;
     private static final Set<String> stageStrs = new HashSet<>();
@@ -30,39 +30,10 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game> implem
     public MainGameTableModel(SportType sportType,ScreenProperty screenProperty,BookieColumnModel bookieColumnModel) {
         super(screenProperty,bookieColumnModel);
         this.sportType = sportType;
-        AppController.addNewLineListener(this);
     }
     public void destroy() {
-        AppController.rmNewLineListener(this);
     }
-    @Override
-    public void processNewLines(Line line) {
-
-        Game game = AppController.getGame(line.getGameid());
-        if ( null != game && SportType.findAllTypesByGame(game).contains(sportType) ) {
-            LinesTableData tblSection = (LinesTableData)findTableSectionByGameid(line.getGameid());
-            if (null != tblSection) {
-                int firstRow;
-                int lastRow;
-                int column;
-                if ( tblSection.isGameHidden(line.getGameid())) {
-Utils.log("MainGameTableModel::processNewLines, rebuild modle");
-                    tblSection.activateGame(game);
-                    buildIndexMappingCache(true);
-                    firstRow = 0;
-                    lastRow = Integer.MAX_VALUE;
-                    column = 0;
-                } else {
-                    firstRow = this.getRowModelIndexByGameId(tblSection,game.getGame_id());
-                    lastRow = firstRow;
-                    column = getColumnModelIndex(line.getBookieid());
-                }
-                Runnable r = () -> flushUpdate(new TableModelEvent(this, firstRow,lastRow , column, TableModelEvent.UPDATE));
-                Utils.checkAndRunInEDT(r);
-            }
-        }
-    }
-    public int getColumnModelIndex(Integer bookieId) {
+    public int getColumnModelIndexByBookieId(Integer bookieId) {
         BookieColumnModel bookieColumnModel = getBookieColumnModel();
         int modelIndex = 0;
         for(int i=0;i<bookieColumnModel.size();i++) {

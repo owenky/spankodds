@@ -133,6 +133,14 @@ public abstract class Utils {
             return defaultValue;
         }
     }
+    public static double getDouble(MapMessage mapMessage, String name,double defaultValue) {
+        try {
+            return mapMessage.getDouble(name);
+        } catch ( Exception e) {
+            log(e);
+            return defaultValue;
+        }
+    }
     public static int parseInt(String str, int defaultValue) {
         try {
             return Integer.parseInt(str);

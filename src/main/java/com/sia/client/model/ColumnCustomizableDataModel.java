@@ -18,6 +18,7 @@ import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 
 public class ColumnCustomizableDataModel<V extends KeyedObject> implements TableModel {
 
+    private boolean isFiringTableChangeEvent = false;
     private final List<TableSection<V>> tableSections = new ArrayList<>();
     private final DefaultTableModel delegator = new DefaultTableModel();
     private final BookieColumnModel bookieColumnModel;
@@ -144,6 +145,9 @@ public class ColumnCustomizableDataModel<V extends KeyedObject> implements Table
 //        this.buildIndexMappingCache(false); //moved to be exceuted by this.fireTableChanged -- 2021-11-06
         this.processTableModelEvent(new TableModelEvent(this,0,Integer.MAX_VALUE,ALL_COLUMNS,TableModelEvent.UPDATE));
     }
+    public boolean isFiringTableChangeEvent() {
+        return isFiringTableChangeEvent;
+    }
     public void flushUpdate() {
         flushUpdate(null);
     }
@@ -167,6 +171,7 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
     }
     public void fireTableChanged(TableModelEvent e) {
         try {
+            isFiringTableChangeEvent = true;
             RowSelection rowSelection = Config.instance().getRowSelection();
             rowSelection.setSportRowSelectionLocked(screenProperty.getSportName(),true);
 //Utils.log("############ ColumnCustomizableDataModel::fireTableChanged is fired -----------------------");
@@ -176,6 +181,8 @@ Utils.log("debug.... rebuild table model cache..... time elapsed:"+(System.curre
             String errMs = "TableModelEvent is thrown following, TableModelEvent firstRow="+e.getFirstRow()+", lastRow="+e.getLastRow()+", column="+e.getColumn()+", name="+this.getScreenProperty().getSportName()+", window index="
                     +this.getSpankyWindowConfig().getWindowIndex();
             log(errMs,ex);
+        } finally {
+            isFiringTableChangeEvent = false;
         }
     }
     public TableSection<V> findTableSectionByHeaderValue(GameGroupHeader gameGroupHeader) {

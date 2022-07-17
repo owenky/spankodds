@@ -1,6 +1,7 @@
 package com.sia.client.simulator;
 
 import com.sia.client.config.SiaConst;
+import com.sia.client.config.TimeStat;
 import com.sia.client.config.Utils;
 import com.sia.client.model.Line;
 import com.sia.client.model.Moneyline;
@@ -193,6 +194,7 @@ public abstract class OngoingGameMessages {
                     }
                 }
                 log("Finished loading messages from local..... linesMesgCnt="+linesMesgCnt+", gamesMesgCnt="+gamesMesgCnt+", scoresMesgCnt="+scoresMesgCnt);
+                stat();
             }
         }
     }
@@ -278,6 +280,12 @@ public abstract class OngoingGameMessages {
             return str;
         }
 
+    }
+    public static final TimeStat cellRenderingStat = new TimeStat();
+    public static final TimeStat lineUpdateStat = new TimeStat();
+    private static void stat() {
+        System.out.println("cellRenderingStat="+cellRenderingStat.flushStat());
+        System.out.println("lineUpdateStat="+lineUpdateStat.flushStat());
     }
     /////////////////////////////////////////////////////////////
     public enum MessageType {

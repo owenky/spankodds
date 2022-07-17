@@ -21,7 +21,10 @@ public class Logger {
     }
     public void log(String mesg) {
         String fullMsg = logHeader()+mesg;
-        executor.execute(()->logPs.println(fullMsg));
+        Runnable r = ()-> {
+            logPs.println(fullMsg);
+        };
+        executor.execute(r);
     }
     public void log(String errMsg,Throwable e) {
         String logHeader = logHeader();

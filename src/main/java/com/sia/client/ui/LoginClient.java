@@ -1,26 +1,13 @@
 package com.sia.client.ui;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sia.client.config.*;
-import com.sia.client.model.Bookie;
-import com.sia.client.model.Moneyline;
-import com.sia.client.model.Sport;
-import com.sia.client.model.Spreadline;
-import com.sia.client.model.User;
+import com.sia.client.config.Config;
+import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
+import com.sia.client.config.Utils;
+import com.sia.client.model.*;
 import com.sia.client.simulator.InitialGameMessages;
-import com.sia.client.ui.lineseeker.AlertAttrManager;
 
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -282,12 +269,13 @@ public class LoginClient implements MessageListener {
                 String text = textMessage.getText();
                 String[] array = text.split(SiaConst.MessageDelimiter);
 
-                Spreadline line = new Spreadline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[17]));
+                Spreadline line = new Spreadline(lineIdentity , Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
                         Utils.parseTimestamp(array[6]),
                         Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
                         Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
-                        Integer.parseInt(array[17]),Integer.parseInt(array[18]));
+                        Integer.parseInt(array[18]));
                 AppController.addSpreadline(line);
                 //setLoginResultBack(true);
                 //owen took out 7/11/20 and moved back to loginconnection
@@ -297,13 +285,12 @@ public class LoginClient implements MessageListener {
                 String text = textMessage.getText();
                 String[] array = text.split(SiaConst.MessageDelimiter);
 
-                Totalline line = new Totalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[17]));
+                Totalline line = new Totalline(lineIdentity, Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
                         Utils.parseTimestamp(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]),
                         Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
-                        Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
-
-                        Integer.parseInt(array[17]),Integer.parseInt(array[18]));
+                        Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]), Integer.parseInt(array[18]));
                 int period = Integer.parseInt(array[17]);
 
                 AppController.addTotalline(line);
@@ -314,8 +301,8 @@ public class LoginClient implements MessageListener {
                 String text = textMessage.getText();
                 String[] array = text.split(SiaConst.MessageDelimiter);
 
-
-                TeamTotalline line = new TeamTotalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[29]));
+                TeamTotalline line = new TeamTotalline(lineIdentity, Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
                         Double.parseDouble(array[6]),
                         Double.parseDouble(array[7]),
@@ -345,10 +332,7 @@ public class LoginClient implements MessageListener {
                         Double.parseDouble(array[27]),
 
                         Utils.parseTimestamp(array[28]),
-                        Integer.parseInt(array[29]),
                         Integer.parseInt(array[30]));
-                int period = Integer.parseInt(array[29]);
-
                 AppController.addTeamTotalline(line);
 
 
@@ -357,15 +341,13 @@ public class LoginClient implements MessageListener {
                 String text = textMessage.getText();
                 String[] array = text.split(SiaConst.MessageDelimiter);
 
-                Moneyline line = new Moneyline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[14]));
+                Moneyline line = new Moneyline(lineIdentity, Double.parseDouble(array[2]),
                         Double.parseDouble(array[3]), Double.parseDouble(array[4]), Utils.parseTimestamp(array[5]),
                         Double.parseDouble(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]),
                         Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
                         Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
-
-                        Integer.parseInt(array[14]),
                         Integer.parseInt(array[15]));
-                int period = Integer.parseInt(array[14]);
 
                 AppController.addMoneyline(line);
 
@@ -382,12 +364,13 @@ public class LoginClient implements MessageListener {
 
                     String[] array = text.split(SiaConst.MessageDelimiter);
 
-                    Spreadline line = new Spreadline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                    LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[17]));
+                    Spreadline line = new Spreadline(lineIdentity, Double.parseDouble(array[2]),
                             Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
                             Utils.parseTimestamp(array[6]),
                             Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]), Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]),
                             Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
-                            Integer.parseInt(array[17]), Integer.parseInt(array[18]));
+                            Integer.parseInt(array[18]));
                     AppController.addSpreadline(line);
                 }
 
@@ -400,14 +383,13 @@ public class LoginClient implements MessageListener {
                     text = mainarray[i];
                     String[] array = text.split(SiaConst.MessageDelimiter);
 
-                    Totalline line = new Totalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                    LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[17]));
+                    Totalline line = new Totalline(lineIdentity, Double.parseDouble(array[2]),
                             Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
                             Utils.parseTimestamp(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]), Double.parseDouble(array[9]),
                             Double.parseDouble(array[10]), Utils.parseTimestamp(array[11]), Double.parseDouble(array[12]), Double.parseDouble(array[13]),
                             Double.parseDouble(array[14]), Double.parseDouble(array[15]), Utils.parseTimestamp(array[16]),
-
-                            Integer.parseInt(array[17]), Integer.parseInt(array[18]));
-                    int period = Integer.parseInt(array[17]);
+                            Integer.parseInt(array[18]));
 
                     AppController.addTotalline(line);
                 }
@@ -420,8 +402,8 @@ public class LoginClient implements MessageListener {
                     text = mainarray[i];
                     String[] array = text.split(SiaConst.MessageDelimiter);
 
-
-                    TeamTotalline line = new TeamTotalline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                    LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[29]));
+                    TeamTotalline line = new TeamTotalline(lineIdentity, Double.parseDouble(array[2]),
                             Double.parseDouble(array[3]), Double.parseDouble(array[4]), Double.parseDouble(array[5]),
                             Double.parseDouble(array[6]),
                             Double.parseDouble(array[7]),
@@ -451,9 +433,7 @@ public class LoginClient implements MessageListener {
                             Double.parseDouble(array[27]),
 
                             Utils.parseTimestamp(array[28]),
-                            Integer.parseInt(array[29]),
                             Integer.parseInt(array[30]));
-                    int period = Integer.parseInt(array[29]);
 
                     AppController.addTeamTotalline(line);
                 }
@@ -467,24 +447,18 @@ public class LoginClient implements MessageListener {
                     text = mainarray[i];
                     String[] array = text.split(SiaConst.MessageDelimiter);
 
-                    Moneyline line = new Moneyline(Integer.parseInt(array[0]), Integer.parseInt(array[1]), Double.parseDouble(array[2]),
+                    LineIdentity lineIdentity = new LineIdentity(Integer.parseInt(array[1]),Integer.parseInt(array[0]),Integer.parseInt(array[14]));
+                    Moneyline line = new Moneyline(lineIdentity, Double.parseDouble(array[2]),
                             Double.parseDouble(array[3]), Double.parseDouble(array[4]), Utils.parseTimestamp(array[5]),
                             Double.parseDouble(array[6]), Double.parseDouble(array[7]), Double.parseDouble(array[8]),
                             Utils.parseTimestamp(array[9]), Double.parseDouble(array[10]), Double.parseDouble(array[11]),
                             Double.parseDouble(array[12]), Utils.parseTimestamp(array[13]),
-
-                            Integer.parseInt(array[14]),
                             Integer.parseInt(array[15]));
-                    int period = Integer.parseInt(array[14]);
 
                     AppController.addMoneyline(line);
                 }
 
             }
-
-
-
-
             else if (messageType.equals("Unsubscribe")) {
 
                 AppController.createLineOpenerAlertNodeListFromUserPrefs();

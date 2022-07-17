@@ -15,11 +15,11 @@ public class ClearColorTest implements Runnable {
     private static final Integer gameId = 901;
     @Override
     public void run() {
-        Utils.log("***** new money line *****"+" timeStat STAT="+SpreadTotalView.timeStat.getStat());
-        Utils.log("***** new money line *****"+" timeStat2 STAT="+SpreadTotalView.timeStat2.getStat());
-        Utils.log("***** new money line *****"+" timeStat3 STAT="+SpreadTotalView.timeStat3.getStat());
-        Utils.log("***** new money line *****"+" timeStat4 STAT="+SpreadTotalView.timeStat4.getStat());
-        Utils.log("***** new money line *****"+" timeStat5 STAT="+SpreadTotalView.timeStat5.getStat());
+        Utils.log("***** new money line *****"+" timeStat STAT="+SpreadTotalView.timeStat.flushStat());
+        Utils.log("***** new money line *****"+" timeStat2 STAT="+SpreadTotalView.timeStat2.flushStat());
+        Utils.log("***** new money line *****"+" timeStat3 STAT="+SpreadTotalView.timeStat3.flushStat());
+        Utils.log("***** new money line *****"+" timeStat4 STAT="+SpreadTotalView.timeStat4.flushStat());
+        Utils.log("***** new money line *****"+" timeStat5 STAT="+SpreadTotalView.timeStat5.flushStat());
         for(Integer bid: bookieIds) {
             for(int p=0;p<=8;p++){
                 Spreadline line;
@@ -34,11 +34,11 @@ public class ClearColorTest implements Runnable {
                 }
             }
         }
-        Utils.log("***** AFTER new money line *****"+"STAT="+SpreadTotalView.timeStat.getStat());
-        Utils.log("***** AFTER new money line *****"+" timeStat2 STAT="+SpreadTotalView.timeStat2.getStat());
-        Utils.log("***** AFTER new money line *****"+" timeStat3 STAT="+SpreadTotalView.timeStat3.getStat());
-        Utils.log("***** AFTER new money line *****"+" timeStat4 STAT="+SpreadTotalView.timeStat4.getStat());
-        Utils.log("***** AFTER new money line *****"+" timeStat5 STAT="+SpreadTotalView.timeStat5.getStat());
+        Utils.log("***** AFTER new money line *****"+"STAT="+SpreadTotalView.timeStat.flushStat());
+        Utils.log("***** AFTER new money line *****"+" timeStat2 STAT="+SpreadTotalView.timeStat2.flushStat());
+        Utils.log("***** AFTER new money line *****"+" timeStat3 STAT="+SpreadTotalView.timeStat3.flushStat());
+        Utils.log("***** AFTER new money line *****"+" timeStat4 STAT="+SpreadTotalView.timeStat4.flushStat());
+        Utils.log("***** AFTER new money line *****"+" timeStat5 STAT="+SpreadTotalView.timeStat5.flushStat());
     }
     public void start() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

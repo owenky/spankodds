@@ -36,7 +36,6 @@ public class MqMessageProcessor implements TableModelListener {
         }
     }
 
-
     private Consumer<List<Game>> createConsumer() {
         return (buffer) -> {
             if ( uiUpdateInterval < (System.currentTimeMillis()-lastTableUpdateTime)) {

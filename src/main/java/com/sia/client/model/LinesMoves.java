@@ -797,7 +797,7 @@ public class LinesMoves {
 
             } catch (Exception ex) {
                 Utils.log(ex);
-                Utils.log("The abotve Exception occurred " + ex + "..index=" + positiveindex + "..gameid=" + gameid);
+                Utils.log("The above Exception occurred " + ex + "..index=" + positiveindex + "..gameid=" + gameid);
 //                break;
             }
         }

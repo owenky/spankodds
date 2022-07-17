@@ -313,35 +313,14 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             }
         }
     }
-//    public void removeGame(int gameid, boolean repaint) {
-//        int totalTabs = getTabCount();
-//        for (int i = 0; i < totalTabs; i++) {
-//            Component c = getComponentAt(i);
-//            if (c instanceof MainScreen) {
-//                MainScreen ms = (MainScreen) c;
-//                if ( ms.isShowing()) {
-//                    Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, ms.isShowing()));
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//    public void removeGame(int gameid, boolean repaint) {
-//        int selectedIndex = getSelectedIndex();
-//        Component c = getComponentAt(selectedIndex);
-//        if (c instanceof MainScreen) {
-//            MainScreen ms = (MainScreen) c;
-//            Utils.checkAndRunInEDT(()-> ms.removeGame(gameid, true));
-//        }
-//
-//    }
-//
-//    public void disableTabs() {
-//        int totalTabs = getTabCount();
-//        for (int i = 0; i < totalTabs; i++) {
-//            setEnabledAt(i, false);
-//        }
-//    }
+    public SportType getSelectedSportType() {
+        Object obj = getSelectedComponent();
+        if ( obj instanceof MainScreen) {
+            return ((MainScreen)obj).getSportType();
+        } else {
+            return null;
+        }
+    }
 
     public void enableTabs() {
         int totalTabs = getTabCount();
@@ -349,21 +328,6 @@ public class SportsTabPane extends JTabbedPane implements Cloneable {
             setEnabledAt(i, true);
         }
     }
-
-//    public void removeGames(String[] gameids) {
-//        int totalTabs = getTabCount();
-//        for (int i = 0; i < totalTabs; i++) {
-//
-//            Component c = getComponentAt(i);
-//            if (c instanceof MainScreen) {
-//                MainScreen ms = (MainScreen) c;
-//                if ( ms.isShowing()) {
-//                    Utils.checkAndRunInEDT(()-> ms.removeGames(gameids));
-//                    break;
-//                }
-//            }
-//        }
-//    }
     public void removeGamesAndCleanup(Set<Integer> gameIdRemovedSet, CountDownLatch latch) {
         Component c = getSelectedComponent();
         if (c instanceof MainScreen) {

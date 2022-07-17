@@ -1,24 +1,15 @@
 package com.sia.client.ui;
 
 import com.sia.client.config.Utils;
-import com.sia.client.model.Game;
+import com.sia.client.model.LineEvent;
+import com.sia.client.model.LineIdentity;
 import com.sia.client.model.Moneyline;
-import com.sia.client.model.MqMessageProcessor;
 import com.sia.client.model.Spreadline;
-import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.simulator.OngoingGameMessages.MessageType;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQMapMessage;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.Session;
+import javax.jms.*;
 
 import static com.sia.client.config.Utils.log;
 
@@ -58,9 +49,10 @@ public class LinesConsumer implements MessageListener {
     }
 
     public void processMessage(MapMessage mapMessage) {
-        int gameid = 0;
+        int gameid;
 
         try {
+            LineIdentity lineIdentity = LineIdentity.parse(mapMessage);
             String username = mapMessage.getString("username");
             if (null != username && !username.equals("")) {
                 //log("Rescue mission");
@@ -79,7 +71,7 @@ public class LinesConsumer implements MessageListener {
             } else {
                 lastmessagets = messagets;
             }
-            gameid = mapMessage.getInt("gameid");
+            gameid = lineIdentity.getGameId();
             if (0 == gameid) {
                 return;
             }
@@ -90,50 +82,27 @@ public class LinesConsumer implements MessageListener {
                 }
                 return;
             }
-//            log("LinesConsumer::processMessage: gameid="+gameid);
-//            Logger.consoleLogPeekGameId("LinesConsumer::processMessage", gameid);
-            int bookieid = mapMessage.getInt("bookieid");
-            int period = mapMessage.getInt("period");
-            String isopenerS = mapMessage.getString("isopener");
+            int bookieid = lineIdentity.getBookieId();
+            int period = lineIdentity.getPeriod();
             String changetype = mapMessage.getStringProperty("messageType");
             long newlongts;
 
-            boolean isopener = false;
-            if ("1".equals(isopenerS) || "true".equals(isopenerS)) {
-                isopener = true;
-            }
+            String isopenerS = mapMessage.getString("isopener");
+            boolean isopener = ("1".equals(isopenerS) || "true".equalsIgnoreCase(isopenerS));
 
             if ("LineChangeSpread".equals(changetype)) {
-                double newvisitorspread = 0;
-                double newhomespread = 0;
-                double newvisitorjuice = 0;
-                double newhomejuice = 0;
-                try {
-                    newvisitorspread = mapMessage.getDouble("newvisitorspread");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newhomespread = mapMessage.getDouble("newhomespread");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newvisitorjuice = mapMessage.getDouble("newvisitorjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newhomejuice = mapMessage.getDouble("newhomejuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + (1000 * 60 * 60 * 3);
-                } catch (Exception ex) {
-                    log(ex);
-                }
+                double newvisitorspread;
+                double newhomespread;
+                double newvisitorjuice;
+                double newhomejuice;
+
+                newvisitorspread = Utils.getDouble(mapMessage,"newvisitorspread",0d);
+                newhomespread = Utils.getDouble(mapMessage,"newhomespread",0d);
+                newvisitorjuice = Utils.getDouble(mapMessage,"newvisitorjuice",0d);
+                newhomejuice = Utils.getDouble(mapMessage,"newhomejuice",0d);
+                newlongts = Utils.getLong(mapMessage,"newlongts",0L);
+                newlongts = newlongts + (1000 * 60 * 60 * 3);
+
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
 
@@ -141,47 +110,28 @@ public class LinesConsumer implements MessageListener {
                 if (null != sl) {
                     sl.recordMove(newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, isopener);
                 } else {
-                    sl = new Spreadline(gameid, bookieid, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts, period);
+                    sl = new Spreadline(lineIdentity, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice, newlongts);
                     //log("***************************************spreadxyzabc******************************");
                     if (isopener) {
                         // LineAlertOpeners.spreadOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorspread, newvisitorjuice, newhomespread, newhomejuice);
                         //log("***************************************"+sportname+"******************************");
                     }
-
                     AppController.addSpreadline(sl);
                 }
-            } else if ("LineChangeTotal".equals(changetype)) {
+            }
+            else if ("LineChangeTotal".equals(changetype)) {
 
-                double newover = 0;
-                double newunder = 0;
-                double newoverjuice = 0;
-                double newunderjuice = 0;
-                try {
-                    newover = mapMessage.getDouble("newover");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newunder = mapMessage.getDouble("newunder");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newoverjuice = mapMessage.getDouble("newoverjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newunderjuice = mapMessage.getDouble("newunderjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + (1000 * 60 * 60 * 3);
-                } catch (Exception ex) {
-                    log(ex);
-                }
+                double newover;
+                double newunder;
+                double newoverjuice;
+                double newunderjuice;
+
+                newover = Utils.getDouble(mapMessage,"newover",0d);
+                newunder = Utils.getDouble(mapMessage,"newunder",0d);
+                newoverjuice = Utils.getDouble(mapMessage,"newoverjuice",0d);
+                newunderjuice = Utils.getDouble(mapMessage,"newunderjuice",0d);
+                newlongts = Utils.getLong(mapMessage,"newlongts",0L);
+                newlongts = newlongts + (1000 * 60 * 60 * 3);
 
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
@@ -191,7 +141,7 @@ public class LinesConsumer implements MessageListener {
                 if (null != tl) {
                     tl.recordMove(newover, newoverjuice, newunder, newunderjuice, newlongts, isopener);
                 } else {
-                    tl = new Totalline(gameid, bookieid, newover, newoverjuice, newunder, newunderjuice, newlongts, period);
+                    tl = new Totalline(lineIdentity, newover, newoverjuice, newunder, newunderjuice, newlongts);
                     if (isopener) {
                         //  LineAlertOpeners.totalOpenerAlert(gameid, bookieid, period, isopenerS, newover, newoverjuice, newunder, newunderjuice);
                         //log("***************************************"+sportname+"******************************");
@@ -200,7 +150,8 @@ public class LinesConsumer implements MessageListener {
                     AppController.addTotalline(tl);
                 }
 
-            } else if ("LineChangeTeamTotal".equals(changetype)) {
+            }
+            else if ("LineChangeTeamTotal".equals(changetype)) {
                 double newvisitorover = 0;
                 double newvisitorunder = 0;
                 double newvisitoroverjuice = 0;
@@ -210,53 +161,17 @@ public class LinesConsumer implements MessageListener {
                 double newhomeunder = 0;
                 double newhomeoverjuice = 0;
                 double newhomeunderjuice = 0;
-                try {
-                    newvisitorover = mapMessage.getDouble("newvisitorover");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newvisitorunder = mapMessage.getDouble("newvisitorunder");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newvisitoroverjuice = mapMessage.getDouble("newvisitoroverjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newvisitorunderjuice = mapMessage.getDouble("newvisitorunderjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
 
-                try {
-                    newhomeover = mapMessage.getDouble("newhomeover");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newhomeunder = mapMessage.getDouble("newhomeunder");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newhomeoverjuice = mapMessage.getDouble("newhomeoverjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newhomeunderjuice = mapMessage.getDouble("newhomeunderjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + 1000 * 60 * 60 * 3;
-                } catch (Exception ex) {
-                    log(ex);
-                }
+                newvisitorover = Utils.getDouble(mapMessage,"newvisitorover",0d);
+                newvisitorunder = Utils.getDouble(mapMessage,"newvisitorunder",0d);
+                newvisitoroverjuice = Utils.getDouble(mapMessage,"newvisitoroverjuice",0d);
+                newvisitorunderjuice = Utils.getDouble(mapMessage,"newvisitorunderjuice",0d);
+                newhomeover = Utils.getDouble(mapMessage,"newhomeover",0d);
+                newhomeunder = Utils.getDouble(mapMessage,"newhomeunder",0d);
+                newhomeoverjuice = Utils.getDouble(mapMessage,"newhomeoverjuice",0d);
+                newhomeunderjuice = Utils.getDouble(mapMessage,"newhomeunderjuice",0d);
+                newlongts = Utils.getLong(mapMessage,"newlongts",0L);
+                newlongts = newlongts + 1000 * 60 * 60 * 3;
 
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
@@ -269,40 +184,25 @@ public class LinesConsumer implements MessageListener {
                             newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice,
                             newlongts, isopener);
                 } else {
-                    ttl = new TeamTotalline(gameid, bookieid, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
-                            newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, newlongts, period);
+                    ttl = new TeamTotalline(lineIdentity, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice,
+                            newhomeover, newhomeoverjuice, newhomeunder, newhomeunderjuice, newlongts);
                     if (isopener) {
                         //  LineAlertOpeners.teamTotalOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorover, newvisitoroverjuice, newvisitorunder, newvisitorunderjuice);
                     }
                     AppController.addTeamTotalline(ttl);
                 }
 
-            } else if ("LineChangeMoney".equals(changetype)) {
-                double newvisitorjuice = 0;
-                double newhomejuice = 0;
-                double newdrawjuice = 0;
-                try {
-                    newvisitorjuice = mapMessage.getDouble("newvisitorjuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newhomejuice = mapMessage.getDouble("newhomejuice");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newdrawjuice = mapMessage.getDouble("newdrawjuice");
-                } catch (Exception ex) {
-                    newdrawjuice = 0;
-                    log(ex);
-                }
-                try {
-                    newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + 1000 * 60 * 60 * 3;
-                } catch (Exception ex) {
-                    log(ex);
-                }
+            }
+            else if ("LineChangeMoney".equals(changetype)) {
+                double newvisitorjuice;
+                double newhomejuice;
+                double newdrawjuice;
+
+                newvisitorjuice = Utils.getDouble(mapMessage,"newvisitorjuice",0d);
+                newhomejuice = Utils.getDouble(mapMessage,"newhomejuice",0d);
+                newdrawjuice = Utils.getDouble(mapMessage,"newdrawjuice",0d);
+                newlongts = Utils.getLong(mapMessage,"newlongts",0L);
+                newlongts = newlongts + 1000 * 60 * 60 * 3;
 
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
@@ -327,7 +227,7 @@ public class LinesConsumer implements MessageListener {
                 if (null != ml) {
                     ml.recordMove(newvisitorjuice, newhomejuice, newdrawjuice, newlongts, isopener);
                 } else {
-                    ml = new Moneyline(gameid, bookieid, newvisitorjuice, newhomejuice, newdrawjuice, newlongts, period);
+                    ml = new Moneyline(lineIdentity, newvisitorjuice, newhomejuice, newdrawjuice, newlongts);
                     if (isopener) {
                         //  LineAlertOpeners.moneyOpenerAlert(gameid, bookieid, period, isopenerS, newvisitorjuice, newhomejuice);
                         //log("***************************************"+sportname+"******************************");
@@ -338,28 +238,15 @@ public class LinesConsumer implements MessageListener {
 
 
                 // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
-            } else if ("LimitChange".equals(changetype)) {
+            }
+            else if ("LimitChange".equals(changetype)) {
                 int newlimit = 0;
-                int oldlimit = 0;
-                String linetype = "";
+                String linetype;
 
-                try {
-                    linetype = mapMessage.getString("linetype");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-                try {
-                    newlimit = mapMessage.getInt("newlimit");
-                } catch (Exception ex) {
-                    log(ex);
-                }
-
-                try {
-                    newlongts = mapMessage.getLong("newlongts");
-                    newlongts = newlongts + 1000 * 60 * 60 * 3;
-                } catch (Exception ex) {
-                    log(ex);
-                }
+                linetype = Utils.getString(mapMessage,"linetype");
+                newlimit = Utils.getInt(mapMessage,"newlimit");
+                newlongts = Utils.getLong(mapMessage,"newlongts",0L);
+                newlongts = newlongts + 1000 * 60 * 60 * 3;
 
                 // owen put this in cuz db sending us garbage timestamps!!!
                 newlongts = mapMessage.getJMSTimestamp();
@@ -385,28 +272,27 @@ public class LinesConsumer implements MessageListener {
                         ttl.setLimit(newlimit);
                     }
                 }
-
-
-                // {gameid=207277, newdrawjuice=244.0, isopener=1, newlongts=1590351296000, bookieid=140}
             }
-            //com.sia.client.ui.AppController.getLinesTableData().fireTableDataChanged();
-
+//            Game game = AppController.getGame(gameid);
+//            if (null == game) {
+//                if (mapMessage instanceof ActiveMQMapMessage) {
+//                log(new Exception("null game detected...gameid=" + gameid + ", message=" + OngoingGameMessages.convert((ActiveMQMapMessage)mapMessage)));
+//                } else {
+//                    log("LinesConsumer: null game detected...gameid=" + gameid);
+//                }
+//            } else {
+//                lineIdentity.updateTable();
+//            }
+            updateTableWithLine(lineIdentity);
 
         } catch (Exception e) {
             log(mapMessage.toString());
             log(e);
 
         }
-        Game game = AppController.getGame(gameid);
-        if (null == game) {
-            if (mapMessage instanceof ActiveMQMapMessage) {
-//                log(new Exception("null game detected...gameid=" + gameid + ", message=" + OngoingGameMessages.convert((ActiveMQMapMessage)mapMessage)));
-                log("LinesConsumer: null game detected...gameid=" + gameid);
-            } else {
-                log("LinesConsumer: null game detected...gameid=" + gameid);
-            }
-        } else {
-            MqMessageProcessor.getInstance().addGame(game);
-        }
+    }
+    private void updateTableWithLine(LineIdentity lineIdentity) {
+        LineEvent lineEvent = new LineEvent(lineIdentity);
+        lineEvent.updateTable();
     }
 }

@@ -1,9 +1,11 @@
 package com.sia.client.ui;
 
+import com.sia.client.config.Utils;
 import com.sia.client.model.ColumnCustomizableDataModel;
 import com.sia.client.model.ColumnHeaderProperty;
 import com.sia.client.model.TableCellRendererProvider;
 import com.sia.client.model.UserDisplaySettings;
+import com.sia.client.simulator.OngoingGameMessages;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -38,7 +40,10 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column) {
-
+//if ( row==0 && column==0 && table instanceof MainGameTable) {
+//    Utils.log("cell painted rowModelIndex="+table.convertRowIndexToModel(row)+" columnModelIndex="+table.convertColumnIndexToModel(column));
+//}
+        OngoingGameMessages.cellRenderingStat.beginStep(row+"_"+column);
         JComponent cellRenderComp;
         if ( null != ColumnCustomizableDataModel.retrieveGameGroupHeader(value) ) {
             return headerCellRender;
@@ -50,6 +55,7 @@ public class ColumnHeaderCellRenderer implements TableCellRenderer {
         }
         TableUtils.highLightCellWhenRowSelected(table,cellRenderComp,row, AppController.getUserDisplaySettings().getRowhighlightcolor());
 
+        OngoingGameMessages.cellRenderingStat.endStep();
         return cellRenderComp;
     }
     private static JPanel createJPanelWithPadding(JComponent userComponent, int rowCount, int colCount, int row, int col) {
