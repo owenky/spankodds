@@ -20,9 +20,13 @@ public abstract class MessageFilterFactory {
     }
     public static MesgFilterType parse(String filterString) {
         CompositeFilter compositeFilter = new CompositeFilter();
-        String [] parts = filterString.split("\\+");
-        Arrays.stream(parts).map(MessageFilterFactory::parseSingleFilter)
-                .forEach(compositeFilter::addFilter);
+        if ( null != filterString) {
+            String[] parts = filterString.split("\\+");
+            Arrays.stream(parts).map(MessageFilterFactory::parseSingleFilter)
+                    .forEach(compositeFilter::addFilter);
+        } else {
+            compositeFilter.addFilter(new NoneFilter());
+        }
 
         return compositeFilter;
     }
