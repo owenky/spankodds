@@ -558,7 +558,7 @@ public class BestLines {
 
             Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
             if (bestsl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addSpreadline(new Spreadline(lineIdentity, bvsl.getCurrentvisitspread(), bvsl.getCurrentvisitjuice(), bvsl.getCurrenthomespread(), bvsl.getCurrenthomejuice(), 0));
             } else {
                 bestsl.setCurrentvisitspread(bvsl.getCurrentvisitspread());
@@ -570,7 +570,7 @@ public class BestLines {
 
             Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
             if (bestsl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addSpreadline(new Spreadline(lineIdentity, bhsl.getCurrentvisitspread(), bhsl.getCurrentvisitjuice(), bhsl.getCurrenthomespread(), bhsl.getCurrenthomejuice(), 0));
             } else {
                 bestsl.setCurrenthomespread(bhsl.getCurrenthomespread());
@@ -681,7 +681,7 @@ public class BestLines {
 
             Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
             if (besttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTotalline(new Totalline(lineIdentity, bo.getCurrentover(), bo.getCurrentoverjuice(), bo.getCurrentunder(), bo.getCurrentunderjuice(), 0));
             } else {
                 besttl.setCurrentover(bo.getCurrentover());
@@ -693,7 +693,7 @@ public class BestLines {
 
             Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
             if (besttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTotalline(new Totalline(lineIdentity, bu.getCurrentover(), bu.getCurrentoverjuice(), bu.getCurrentunder(), bu.getCurrentunderjuice(), 0));
             } else {
                 besttl.setCurrentunder(bu.getCurrentunder());
@@ -792,7 +792,7 @@ public class BestLines {
             bvo.setBestVisitOver(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bvo.getCurrentvisitover(), bvo.getCurrentvisitoverjuice(), bvo.getCurrentvisitunder(), bvo.getCurrentvisitunderjuice(), bvo.getCurrenthomeover(), bvo.getCurrenthomeoverjuice(), bvo.getCurrenthomeunder(), bvo.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrentvisitover(bvo.getCurrentvisitover());
@@ -804,7 +804,7 @@ public class BestLines {
             bvu.setBestVisitUnder(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bvu.getCurrentvisitover(), bvo.getCurrentvisitoverjuice(), bvu.getCurrentvisitunder(), bvu.getCurrentvisitunderjuice(), bvu.getCurrenthomeover(), bvu.getCurrenthomeoverjuice(), bvu.getCurrenthomeunder(), bvu.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrentvisitunder(bvu.getCurrentvisitunder());
@@ -815,7 +815,7 @@ public class BestLines {
             bho.setBestHomeOver(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bho.getCurrentvisitover(), bho.getCurrentvisitoverjuice(), bho.getCurrentvisitunder(), bho.getCurrentvisitunderjuice(), bho.getCurrenthomeover(), bho.getCurrenthomeoverjuice(), bho.getCurrenthomeunder(), bho.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrenthomeover(bho.getCurrenthomeover());
@@ -826,7 +826,7 @@ public class BestLines {
             bhu.setBestHomeUnder(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bhu.getCurrentvisitover(), bhu.getCurrentvisitoverjuice(), bhu.getCurrentvisitunder(), bhu.getCurrentvisitunderjuice(), bhu.getCurrenthomeover(), bhu.getCurrenthomeoverjuice(), bhu.getCurrenthomeunder(), bhu.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrenthomeunder(bhu.getCurrenthomeunder());
@@ -893,7 +893,7 @@ public class BestLines {
 
             Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
             if (bestml == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addMoneyline(new Moneyline(lineIdentity, bvml.getCurrentvisitjuice(), bvml.getCurrenthomejuice(), bvml.getCurrentdrawjuice(), 0));
             } else {
                 bestml.setCurrentvisitjuice(bvml.getCurrentvisitjuice());
@@ -906,7 +906,7 @@ public class BestLines {
 
             Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
             if (bestml == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addMoneyline(new Moneyline(lineIdentity, bhml.getCurrentvisitjuice(), bhml.getCurrenthomejuice(), bhml.getCurrentdrawjuice(), 0));
             } else {
                 bestml.setCurrenthomejuice(bhml.getCurrenthomejuice());
@@ -916,7 +916,7 @@ public class BestLines {
             bdml.setBestDrawMoney(true);
             Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
             if (bestml == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addMoneyline(new Moneyline(lineIdentity, bdml.getCurrentvisitjuice(), bdml.getCurrenthomejuice(), bdml.getCurrentdrawjuice(), 0));
             } else {
                 bestml.setCurrentdrawjuice(bdml.getCurrentdrawjuice());
@@ -1273,7 +1273,7 @@ public class BestLines {
             bvsl.setBestVisitSpread(true);
             Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
             if (bestsl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addSpreadline(new Spreadline(lineIdentity, bvsl.getCurrentvisitspread(), bvsl.getCurrentvisitjuice(), bvsl.getCurrenthomespread(), bvsl.getCurrenthomejuice(), 0), false);
             } else {
                 bestsl.setCurrentvisitspread(bvsl.getCurrentvisitspread());
@@ -1284,7 +1284,7 @@ public class BestLines {
             bhsl.setBestHomeSpread(true);
             Spreadline bestsl = AppController.getSpreadline(bestbookieid, gameid, period);
             if (bestsl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addSpreadline(new Spreadline(lineIdentity, bhsl.getCurrentvisitspread(), bhsl.getCurrentvisitjuice(), bhsl.getCurrenthomespread(), bhsl.getCurrenthomejuice(), 0));
             } else {
                 bestsl.setCurrenthomespread(bhsl.getCurrenthomespread());
@@ -1295,7 +1295,7 @@ public class BestLines {
             bo.setBestOver(true);
             Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
             if (besttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTotalline(new Totalline(lineIdentity, bo.getCurrentover(), bo.getCurrentoverjuice(), bo.getCurrentunder(), bo.getCurrentunderjuice(), 0));
             } else {
                 besttl.setCurrentover(bo.getCurrentover());
@@ -1306,7 +1306,7 @@ public class BestLines {
             bu.setBestUnder(true);
             Totalline besttl = AppController.getTotalline(bestbookieid, gameid, period);
             if (besttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTotalline(new Totalline(lineIdentity, bu.getCurrentover(), bu.getCurrentoverjuice(), bu.getCurrentunder(), bu.getCurrentunderjuice(), 0));
             } else {
                 besttl.setCurrentunder(bu.getCurrentunder());
@@ -1317,7 +1317,7 @@ public class BestLines {
             bvml.setBestVisitMoney(true);
             Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
             if (bestml == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addMoneyline(new Moneyline(lineIdentity, bvml.getCurrentvisitjuice(), bvml.getCurrenthomejuice(), bvml.getCurrentdrawjuice(), 0));
             } else {
                 bestml.setCurrentvisitjuice(bvml.getCurrentvisitjuice());
@@ -1329,7 +1329,7 @@ public class BestLines {
             bhml.setBestHomeMoney(true);
             Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
             if (bestml == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addMoneyline(new Moneyline(lineIdentity, bhml.getCurrentvisitjuice(), bhml.getCurrenthomejuice(), bhml.getCurrentdrawjuice(), 0));
             } else {
                 bestml.setCurrenthomejuice(bhml.getCurrenthomejuice());
@@ -1339,7 +1339,7 @@ public class BestLines {
             bdml.setBestDrawMoney(true);
             Moneyline bestml = AppController.getMoneyline(bestbookieid, gameid, period);
             if (bestml == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addMoneyline(new Moneyline(lineIdentity, bdml.getCurrentvisitjuice(), bdml.getCurrenthomejuice(), bdml.getCurrentdrawjuice(), 0));
             } else {
                 bestml.setCurrentdrawjuice(bdml.getCurrentdrawjuice());
@@ -1350,7 +1350,7 @@ public class BestLines {
             bvo.setBestVisitOver(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bvo.getCurrentvisitover(), bvo.getCurrentvisitoverjuice(), bvo.getCurrentvisitunder(), bvo.getCurrentvisitunderjuice(), bvo.getCurrenthomeover(), bvo.getCurrenthomeoverjuice(), bvo.getCurrenthomeunder(), bvo.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrentvisitover(bvo.getCurrentvisitover());
@@ -1362,7 +1362,7 @@ public class BestLines {
             bvu.setBestVisitUnder(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bvu.getCurrentvisitover(), bvo.getCurrentvisitoverjuice(), bvu.getCurrentvisitunder(), bvu.getCurrentvisitunderjuice(), bvu.getCurrenthomeover(), bvu.getCurrenthomeoverjuice(), bvu.getCurrenthomeunder(), bvu.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrentvisitunder(bvu.getCurrentvisitunder());
@@ -1373,7 +1373,7 @@ public class BestLines {
             bho.setBestHomeOver(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bho.getCurrentvisitover(), bho.getCurrentvisitoverjuice(), bho.getCurrentvisitunder(), bho.getCurrentvisitunderjuice(), bho.getCurrenthomeover(), bho.getCurrenthomeoverjuice(), bho.getCurrenthomeunder(), bho.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrenthomeover(bho.getCurrenthomeover());
@@ -1384,7 +1384,7 @@ public class BestLines {
             bhu.setBestHomeUnder(true);
             TeamTotalline bestttl = AppController.getTeamTotalline(bestbookieid, gameid, period);
             if (bestttl == null) {
-                LineIdentity lineIdentity = new LineIdentity(consensusbookieid,gameid,period);
+                LineIdentity lineIdentity = new LineIdentity(bestbookieid,gameid,period);
                 AppController.addTeamTotalline(new TeamTotalline(lineIdentity, bhu.getCurrentvisitover(), bhu.getCurrentvisitoverjuice(), bhu.getCurrentvisitunder(), bhu.getCurrentvisitunderjuice(), bhu.getCurrenthomeover(), bhu.getCurrenthomeoverjuice(), bhu.getCurrenthomeunder(), bhu.getCurrenthomeunderjuice(), 0));
             } else {
                 bestttl.setCurrenthomeunder(bhu.getCurrenthomeunder());
