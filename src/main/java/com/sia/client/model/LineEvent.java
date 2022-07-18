@@ -1,6 +1,7 @@
 package com.sia.client.model;
 
 import com.sia.client.config.GameUtils;
+import com.sia.client.config.SiaConst;
 import com.sia.client.config.Utils;
 import com.sia.client.simulator.OngoingGameMessages;
 import com.sia.client.ui.AppController;
@@ -17,6 +18,8 @@ public class LineEvent {
     private final LineIdentity lineIdentity;
     private int rowModelIndex = -1;
     private int columnModelIndex = -1;
+    private int bestColumnModelIndex = -1;
+    private int consensusColumnModelIndex = -1;
     private int lastRowModelIndex = -1;
     private TableSection<Game> tableSection;
     private boolean initStatus = false;
@@ -58,6 +61,14 @@ public class LineEvent {
                         if (!gameTableModel.isFiringTableChangeEvent()) {
                             TableModelEvent tme = new TableModelEvent(gameTableModel, rowModelIndex, lastRowModelIndex, columnModelIndex, TableModelEvent.UPDATE);
                             gameTableModel.fireTableChanged(tme);
+                            if ( 0 <= bestColumnModelIndex) {
+                                tme = new TableModelEvent(gameTableModel, rowModelIndex, lastRowModelIndex, bestColumnModelIndex, TableModelEvent.UPDATE);
+                                gameTableModel.fireTableChanged(tme);
+                            }
+                            if ( 0 <= consensusColumnModelIndex) {
+                                tme = new TableModelEvent(gameTableModel, rowModelIndex, lastRowModelIndex, consensusColumnModelIndex, TableModelEvent.UPDATE);
+                                gameTableModel.fireTableChanged(tme);
+                            }
                         }
                     } else {
 //                    Utils.log("game id not found in the sport " + selectedSportType.getSportName() + " table. Skip line event updating");
@@ -83,6 +94,13 @@ public class LineEvent {
                 rowModelIndex = gameTableModel.getRowModelIndexByGameId(tableSection,lineIdentity.getGameId());
                 lastRowModelIndex = rowModelIndex;
                 columnModelIndex = gameTableModel.getColumnModelIndexByBookieId(lineIdentity.getBookieId());
+                if ( lineIdentity.getBookieId() != SiaConst.BookieId.Bestbookieid && lineIdentity.getBookieId() != SiaConst.BookieId.Consensusbookieid) {
+                    bestColumnModelIndex = gameTableModel.getColumnModelIndexByBookieId(SiaConst.BookieId.Bestbookieid);
+                    consensusColumnModelIndex = gameTableModel.getColumnModelIndexByBookieId(SiaConst.BookieId.Consensusbookieid);
+                } else {
+                    bestColumnModelIndex = -1;
+                    consensusColumnModelIndex = -1;
+                }
             }
         }
     }
