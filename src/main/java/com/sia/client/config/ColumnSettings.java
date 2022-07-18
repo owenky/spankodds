@@ -19,7 +19,7 @@ public class ColumnSettings {
         defaultColumnWidthMap.put(991,40);  //Time
         defaultColumnWidthMap.put(992,45);   //Gm#
         defaultColumnWidthMap.put(993,30); //Team
-        defaultColumnWidthMap.put(SiaConst.NoteColumnBookieId,40); //Note
+        defaultColumnWidthMap.put(SiaConst.BookieId.NoteColumnBookieId,40); //Note
     }
 
     @JsonProperty

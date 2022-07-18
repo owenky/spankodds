@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class SiaConst {
 
-    public static final String Version="(v21.20.10.53)";
+    public static final String Version="(v21.20.10.54)";
     public static final int StageGroupAnchorOffset = 10000;
     public static final ReentrantLock GameLock = new ReentrantLock();
     public static final String ImgPath = "/media/";
@@ -16,8 +16,6 @@ public abstract class SiaConst {
     public static final String InGamePricesStr = "In Game Prices";
     public static final String SeriesPricesStr = "Series Prices";
     public static final int SoccerLeagueId = 9;
-    public static final int NoteColumnBookieId = 995;
-    public static final int DetailColumnBookieId = 990;
     public static final Integer BlankGameId = -10000000; //Integer.MIN_VALUE does not work in sorting
     public static final Integer GameGroupHeaderHeight = 20;
     public static final Color DefaultHeaderColor = new Color(0,0,128); //Color.BLUE;
@@ -30,6 +28,12 @@ public abstract class SiaConst {
     public static final String DefaultGameTimeZone = "US/Eastern";
     public static final long diffBetweenEasternAndUTC = 5*3600*1000L;
 
+    public interface BookieId {
+        int NoteColumnBookieId = 995;
+        int DetailColumnBookieId = 990;
+        int Bestbookieid = 996;
+        int Consensusbookieid = 997;
+    }
     public interface Ui {
         Color COLOR_WINDOW_BCK = new java.awt.Color(255,255,255);
         Color COLOR_UNDERLINE = new java.awt.Color(121, 124, 128);

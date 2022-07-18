@@ -36,6 +36,10 @@ public class MainGameTableModel extends ColumnCustomizableDataModel<Game>  {
         int columnModelIndex = getColumnModelIndexByBookieId(bookieId);
         TableModelEvent tme = new TableModelEvent(this, firstRow, lastRow, columnModelIndex, TableModelEvent.UPDATE);
         fireTableChanged(tme);
+        if ( bookieId != SiaConst.BookieId.Bestbookieid && bookieId != SiaConst.BookieId.Consensusbookieid) {
+            updateColumn(firstRow, lastRow, SiaConst.BookieId.Bestbookieid);
+            updateColumn(firstRow, lastRow, SiaConst.BookieId.Consensusbookieid);
+        }
     }
     public int getColumnModelIndexByBookieId(Integer bookieId) {
         BookieColumnModel bookieColumnModel = getBookieColumnModel();

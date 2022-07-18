@@ -26,13 +26,13 @@ public class BookieManager {
     private int numfixedcols;
 
     static {
-        Integer [] fixedColArr = {SiaConst.NoteColumnBookieId,994, 990, 991, 992, 993, 1017};
+        Integer [] fixedColArr = {SiaConst.BookieId.NoteColumnBookieId,994, SiaConst.BookieId.DetailColumnBookieId, 991, 992, 993, 1017};
         defaultFixedColList = Arrays.stream(fixedColArr).map(String::valueOf).collect(Collectors.toList());
         Integer [] shownColArr = {17, 620, 271, 880, 42, 299, 46, 256, 16, 140, 320, 33, 20, 19, 205, 107, 175, 133, 14, 41, 53, 71, 70, 72, 99, 57, 188,
-                214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, SiaConst.NoteColumnBookieId};
+                214, 181, 5, 22, 26, 31, 37, 43, 47, 49, 59, 68, 73, 110, 120, 118, 222, 62, 994, 990, 991, 992, 993, 1017, SiaConst.BookieId.NoteColumnBookieId};
         defaultShownColList =  Arrays.stream(shownColArr).map(String::valueOf).collect(Collectors.toList());
 
-        columnEditorMap.put(SiaConst.NoteColumnBookieId, NoteCellEditor.class);
+        columnEditorMap.put(SiaConst.BookieId.NoteColumnBookieId, NoteCellEditor.class);
     }
 
     public static BookieManager instance() {
@@ -42,14 +42,14 @@ public class BookieManager {
         return columnEditorMap.get(bookieId);
     }
     private BookieManager() {
-        addBookie(new Bookie(SiaConst.DetailColumnBookieId, "Details", "Dtals", "", ""));
+        addBookie(new Bookie(SiaConst.BookieId.DetailColumnBookieId, "Details", "Dtals", "", ""));
         addBookie(new Bookie(991, "Time", "Time", "", ""));
         addBookie(new Bookie(992, SiaConst.GameNumColIden, SiaConst.GameNumColIden, "", ""));
         addBookie(new Bookie(993, "Team", "Team", "", ""));
         addBookie(new Bookie(994, "*Chart", "*Chart", "", ""));
-        addBookie(new Bookie(SiaConst.NoteColumnBookieId, "*Notes", "*Notes", "", ""));
-        addBookie(new Bookie(996, "*Best", "*Best", "", ""));
-        addBookie(new Bookie(997, "*Consensus", "*Cnus", "", ""));
+        addBookie(new Bookie(SiaConst.BookieId.NoteColumnBookieId, "*Notes", "*Notes", "", ""));
+        addBookie(new Bookie(SiaConst.BookieId.Bestbookieid, "*Best", "*Best", "", ""));
+        addBookie(new Bookie(SiaConst.BookieId.Consensusbookieid, "*Consensus", "*Cnus", "", ""));
         addBookie(new Bookie(998, "*Details2", "*Dtals2", "", ""));
     }
     public int getNumFixedCols() {

@@ -1,10 +1,10 @@
 package com.sia.client.model;
 
+import com.sia.client.config.SiaConst;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.TeamTotalline;
 import com.sia.client.ui.Totalline;
 
-import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,12 +15,10 @@ import static com.sia.client.config.Utils.log;
 
 public class BestLines {
 
-    static int bestbookieid = 996;
-    static int consensusbookieid = 997;
+    static int bestbookieid = SiaConst.BookieId.Bestbookieid;
+    static int consensusbookieid = SiaConst.BookieId.Consensusbookieid;
 
     static double upanddownforalt = 1.0;
-
-
     public static void calculateconsensusspread(int gameid, int period) {
         double defaulthold = .0454;
         if (AppController.getUserDisplaySettings().getConsensusnovig()) {

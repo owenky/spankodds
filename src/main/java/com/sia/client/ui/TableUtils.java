@@ -36,7 +36,7 @@ public abstract class TableUtils {
         return isNoteColumn(tc);
     }
     public static boolean isNoteColumn(TableColumn tc) {
-        return tc.getIdentifier() instanceof Integer && (Integer) tc.getIdentifier() == SiaConst.NoteColumnBookieId;
+        return tc.getIdentifier() instanceof Integer && (Integer) tc.getIdentifier() == SiaConst.BookieId.NoteColumnBookieId;
     }
     public static void updateRowSelection(ColumnCustomizableTable<?> gameTable, ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
