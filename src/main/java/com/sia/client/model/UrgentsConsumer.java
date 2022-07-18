@@ -45,6 +45,7 @@ public class UrgentsConsumer implements MessageListener {
             connection.close();
         }
     }
+
     @Override
     public void onMessage(Message message) {
         String messageType = "";
@@ -52,45 +53,37 @@ public class UrgentsConsumer implements MessageListener {
         try {
             mapMessage = (MapMessage) message;
             messageType = mapMessage.getStringProperty("messageType");
-            if(messageType.equals("Logout") && ! InitialGameMessages.Debug )
-            {
+            if (messageType.equals("Logout") && !InitialGameMessages.Debug) {
                 String username = mapMessage.getString("username");
                 String loginkey = mapMessage.getString("loginkey");
                 //long thislogintime = mapMessage.getLong("logintime");
-                if(AppController.getUser().getUsername().equals(username)) // duplicate login?
+                if (AppController.getUser().getUsername().equals(username)) // duplicate login?
                 {
                     long userlogintime = AppController.getUser().getLoginTime();
                     long nowms = System.currentTimeMillis();
-                    System.out.println(userlogintime+".."+nowms);
+                    System.out.println(userlogintime + ".." + nowms);
                     long diff = Math.abs(userlogintime - nowms);
                     //if(diff > 30000)
-                    System.out.println("loginkey="+loginkey);
-                    System.out.println("prevloginkey="+AppController.getUser().getLoginKey());
-                    if(!AppController.getUser().getLoginKey().equals(loginkey))
-                    {
+                    System.out.println("loginkey=" + loginkey);
+                    System.out.println("prevloginkey=" + AppController.getUser().getLoginKey());
+                    if (!AppController.getUser().getLoginKey().equals(loginkey)) {
                         // no longer doing this
-                      //  AppController.getUserPrefsProducer().sendUserPrefs(true);
+                        //  AppController.getUserPrefsProducer().sendUserPrefs(true);
 
 
-
-                        new Thread(new Runnable()
-                        {
-                            public void run()
-                            {
-                                try
-                                {
+                        new Thread(new Runnable() {
+                            public void run() {
+                                try {
                                     Thread.sleep(30000);
                                     System.out.println("exit by timeout..");
                                     System.exit(0);
 
-                                }
-                                catch ( Exception ex )
-                                {
+                                } catch (Exception ex) {
                                     log(ex);
                                 }
                             }
                         }).start();
-                        Runnable r =  ()->JOptionPane.showMessageDialog(SpankyWindow.getFirstSpankyWindow(), "Another instance of SpankOdds has logged in. You will now be logged out.",
+                        Runnable r = () -> JOptionPane.showMessageDialog(SpankyWindow.getFirstSpankyWindow(), "Another instance of SpankOdds has logged in. You will now be logged out.",
                                 "Attention!", JOptionPane.WARNING_MESSAGE);
                         SwingUtilities.invokeAndWait(r);
 //                        System.out.println("exit by confirmation..");
@@ -99,18 +92,16 @@ public class UrgentsConsumer implements MessageListener {
                     }
 
                 }
-            }
-            else if(messageType.equals("Urgent")) // force show!
+            } else if (messageType.equals("Urgent")) // force show!
             {
                 log("messageType:" + messageType + ", message=" + message);
                 String mesg = mapMessage.getString("urgentmessage");
 
                 addMessageToAlertVector(mesg);
                 new SoundPlayer("urgentmessage.wav");
-                new UrgentMessage("<HTML><H2>URGENT MESSAGE</H2>" +mesg+
+                new UrgentMessage("<HTML><H2>URGENT MESSAGE</H2>" + mesg +
                         "</HTML>", 20000, 2, AppController.getMainTabPane());
-            }
-            else // game related
+            } else // game related
             {
                 String prefs = "";
                 String mesg = "";
@@ -120,33 +111,25 @@ public class UrgentsConsumer implements MessageListener {
 
                 Sport s = AppController.getSportByLeagueId(g.getLeague_id());
 
-                if (messageType.equals("Injury"))
-                {
+                if (messageType.equals("Injury")) {
                     prefs = AppController.getUser().getInjuryAlert();
                     log("messageType:" + messageType + ", message=" + message);
                     mesg = mapMessage.getString("urgentmessage");
                     addMessageToAlertVector(mesg);
-                }
-                else if (messageType.equals("Officials"))
-                {
+                } else if (messageType.equals("Officials")) {
 
                     prefs = AppController.getUser().getOfficialAlert();
                     log("messageType:" + messageType + ", message=" + message);
                     mesg = mapMessage.getString("urgentmessage");
                     addMessageToAlertVector(mesg);
-                }
-                else if (messageType.equals("Lineups"))
-                {
+                } else if (messageType.equals("Lineups")) {
                     prefs = AppController.getUser().getLineupAlert();
                     log("messageType:" + messageType + ", message=" + message);
                     mesg = mapMessage.getString("urgentmessage");
                     addMessageToAlertVector(mesg);
-                }
-                else
-                {
+                } else {
                     return;
                 }
-
 
 
                 String[] arr = prefs.split("\\|");
@@ -177,14 +160,11 @@ public class UrgentsConsumer implements MessageListener {
                 }
 
 
-                if (goodsport)
-                {
-                    if (popup)
-                    {
-                        new UrgentMessage("<HTML><H2>"+messageType.toUpperCase()+"</H2>"+mesg, popupsecs * 1000, location, AppController.getMainTabPane());
+                if (goodsport) {
+                    if (popup) {
+                        new UrgentMessage("<HTML><H2>" + messageType.toUpperCase() + "</H2>" + mesg, popupsecs * 1000, location, AppController.getMainTabPane());
                     }
-                    if (sound)
-                    {
+                    if (sound) {
                         new SoundPlayer(audiofile);
                     }
                 }
@@ -192,16 +172,16 @@ public class UrgentsConsumer implements MessageListener {
 
             }
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             log(e);
         }
     }
+
     private void addMessageToAlertVector(String str) {
         Utils.ensureNotEdtThread();
         try {
             String hrmin = AppController.getCurrentHoursMinutes();
-            AppController.addAlert(hrmin,str);
+            AppController.addAlert(hrmin, str);
 
         } catch (Exception e) {
             log(e);
