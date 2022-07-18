@@ -2,6 +2,7 @@ package com.sia.client.model;
 
 import com.sia.client.config.Utils;
 import com.sia.client.media.SoundPlayer;
+import com.sia.client.simulator.InitialGameMessages;
 import com.sia.client.ui.AppController;
 import com.sia.client.ui.SpankyWindow;
 import com.sia.client.ui.UrgentMessage;
@@ -51,7 +52,7 @@ public class UrgentsConsumer implements MessageListener {
         try {
             mapMessage = (MapMessage) message;
             messageType = mapMessage.getStringProperty("messageType");
-            if(messageType.equals("Logout"))
+            if(messageType.equals("Logout") && ! InitialGameMessages.Debug )
             {
                 String username = mapMessage.getString("username");
                 String loginkey = mapMessage.getString("loginkey");
